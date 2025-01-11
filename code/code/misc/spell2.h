@@ -387,6 +387,7 @@ enum discLearnDoT {
 
 class spellInfo {
   public:
+    spellNumT spellNum{TYPE_UNDEFINED};
     const char* name{"\n"};
     statTypeT modifierStat{STAT_INT};
     int start{START_0};
@@ -472,7 +473,7 @@ class spellInfo {
     std::map<int, int> weatherData{};
 
     spellInfo() = default;
-    spellInfo(skillUseClassT typ, discNumT disc, discNumT assDisc,
+    spellInfo(spellNumT num, skillUseClassT typ, discNumT disc, discNumT assDisc,
       statTypeT modifierStat, const char* name, taskDiffT task, lag_t lag,
       positionTypeT minPosition, manaCostT minMana, lifeforceCostT minLifeforce,
       pietyCostT minPiety, uint32_t targets, symbolStressT holyStrength,

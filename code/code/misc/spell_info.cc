@@ -9,25 +9,19 @@
 //
 /////////////////////////////////////////////////////////////////
 
+#include "spell_info.h"
 #include "extern.h"
 #include "spell2.h"
 #include "toggle.h"
 #include "stats.h"
 
 spellInfo* discArray[MAX_SKILL + 1];
+std::vector<spellNumT>spellsOfDiscipline[MAX_DISCS];
 
 // Helper function to obtain the spellNumT for a given spellInfo object, as
 // spellInfo doesn't actually contain its relevant spellNumT for some reason.
 spellNumT spellInfo::getSpellNum() const {
-  const auto* begin = std::begin(discArray);
-  const auto* end = std::end(discArray);
-  for (const auto* it = begin; it != end; it = std::next(it)) {
-    if (strcmp(name, (*it)->name) != 0)
-      continue;
-
-    return static_cast<spellNumT>(std::distance(begin, it));
-  }
-  return spellNumT::MAX_SKILL;
+  return spellNum;
 }
 
 // Safely search discArray for the spellInfo entry for the given skill number.
@@ -45,7 +39,7 @@ spellInfo* getSpellInfo(spellNumT skillNum) {
   return static_cast<spellInfo*>(nullptr);
 };
 
-spellInfo::spellInfo(skillUseClassT typ, discNumT disc, discNumT assDisc,
+spellInfo::spellInfo(spellNumT num, skillUseClassT typ, discNumT disc, discNumT assDisc,
   statTypeT modifierStat, const char* name, taskDiffT task, lag_t lag,
   positionTypeT minPosition, manaCostT minMana, lifeforceCostT minLifeforce,
   pietyCostT minPiety, uint32_t targets, symbolStressT holyStrength,
@@ -54,6 +48,7 @@ spellInfo::spellInfo(skillUseClassT typ, discNumT disc, discNumT assDisc,
   discStartDoT startLearnDo, discLearnDoT amtLearnDo,
   discStartDoT secStartLearnDo, discLearnDoT secAmtLearnDo, int learnDoDiff,
   float alignMod, uint32_t comp_types, uint32_t toggle) :
+  spellNum(num),
   name(name),
   modifierStat(modifierStat),
   start(start),
@@ -92,7 +87,7 @@ void buildSpellArray() {
   // disc_mage
 
   discArray[SPELL_GUST] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_AIR, STAT_INT, "gust",
+    new spellInfo(SPELL_GUST, SPELL_MAGE, DISC_MAGE, DISC_AIR, STAT_INT, "gust",
       TASK_NORMAL, LAG_1, POSITION_SITTING, MANA_10, LIFEFORCE_0, PRAY_0,
       TAR_VIOLENT | TAR_FIGHT_VICT | TAR_CHAR_ROOM | TAR_SELF_NONO,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_100, START_DO_30,
@@ -102,7 +97,7 @@ void buildSpellArray() {
       0);
 
   discArray[SPELL_SLING_SHOT] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_EARTH, STAT_INT, "sling shot",
+    new spellInfo(SPELL_SLING_SHOT, SPELL_MAGE, DISC_MAGE, DISC_EARTH, STAT_INT, "sling shot",
       TASK_EASY, LAG_1, POSITION_SITTING, MANA_15, LIFEFORCE_0, PRAY_0,
       TAR_CHAR_ROOM | TAR_VIOLENT | TAR_FIGHT_VICT | TAR_SELF_NONO,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_100, START_DO_30,
@@ -112,7 +107,7 @@ void buildSpellArray() {
       0);
 
   discArray[SPELL_GUSHER] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_WATER, STAT_INT, "gusher",
+    new spellInfo(SPELL_GUSHER, SPELL_MAGE, DISC_MAGE, DISC_WATER, STAT_INT, "gusher",
       TASK_EASY, LAG_1, POSITION_SITTING, MANA_20, LIFEFORCE_0, PRAY_0,
       TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_100, START_DO_30,
@@ -122,7 +117,7 @@ void buildSpellArray() {
       0);
 
   discArray[SPELL_HANDS_OF_FLAME] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_FIRE, STAT_INT, "hands of flame",
+    new spellInfo(SPELL_HANDS_OF_FLAME, SPELL_MAGE, DISC_MAGE, DISC_FIRE, STAT_INT, "hands of flame",
       TASK_EASY, LAG_1, POSITION_SITTING, MANA_20, LIFEFORCE_0, PRAY_0,
       TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
       SYMBOL_STRESS_0, "", "", "", "", START_10, LEARN_100, START_DO_30,
@@ -132,7 +127,7 @@ void buildSpellArray() {
       0);
 
   discArray[SPELL_MYSTIC_DARTS] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_SORCERY, STAT_INT, "mystic darts",
+    new spellInfo(SPELL_MYSTIC_DARTS, SPELL_MAGE, DISC_MAGE, DISC_SORCERY, STAT_INT, "mystic darts",
       TASK_NORMAL, LAG_1, POSITION_SITTING, MANA_23, LIFEFORCE_0, PRAY_0,
       TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
       SYMBOL_STRESS_0, "", "", "", "", START_12, LEARN_25, START_DO_30,
@@ -141,7 +136,7 @@ void buildSpellArray() {
         SPELL_TASKED,
       0);
 
-  discArray[SPELL_FLARE] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_FIRE,
+  discArray[SPELL_FLARE] = new spellInfo(SPELL_FLARE, SPELL_MAGE, DISC_MAGE, DISC_FIRE,
     STAT_EXT, "flare", TASK_TRIVIAL, LAG_1, POSITION_CRAWLING, MANA_25,
     LIFEFORCE_0, PRAY_0, TAR_IGNORE, SYMBOL_STRESS_0, "", "", "", "", START_6,
     LEARN_35, START_DO_45, LEARN_DO_7, START_DO_NO, LEARN_DO_NO,
@@ -151,7 +146,7 @@ void buildSpellArray() {
     0);
 
   discArray[SPELL_SORCERERS_GLOBE] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_SORCERY, STAT_INT,
+    new spellInfo(SPELL_SORCERERS_GLOBE, SPELL_MAGE, DISC_MAGE, DISC_SORCERY, STAT_INT,
       "sorcerers globe", TASK_TRIVIAL, LAG_1, POSITION_CRAWLING, MANA_15,
       LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
       "The air around you seems to become less dense.",
@@ -163,7 +158,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_FAERIE_FIRE] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_FIRE,
+  discArray[SPELL_FAERIE_FIRE] = new spellInfo(SPELL_FAERIE_FIRE, SPELL_MAGE, DISC_MAGE, DISC_FIRE,
     STAT_INT, "faerie fire", TASK_EASY, LAG_2, POSITION_SITTING, MANA_15,
     LIFEFORCE_0, PRAY_0,
     TAR_VIOLENT | TAR_FIGHT_VICT | TAR_CHAR_ROOM | TAR_SELF_NONO |
@@ -178,7 +173,7 @@ void buildSpellArray() {
     0);
 
   discArray[SPELL_ILLUMINATE] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_ALCHEMY, STAT_INT, "illuminate",
+    new spellInfo(SPELL_ILLUMINATE, SPELL_MAGE, DISC_MAGE, DISC_ALCHEMY, STAT_INT, "illuminate",
       TASK_TRIVIAL, LAG_1, POSITION_CRAWLING, MANA_20, LIFEFORCE_0, PRAY_0,
       TAR_OBJ_INV | TAR_OBJ_EQUIP, SYMBOL_STRESS_0, "", "", "", "", START_3,
       LEARN_17, START_DO_35, LEARN_DO_7, START_DO_NO, LEARN_DO_NO,
@@ -188,7 +183,7 @@ void buildSpellArray() {
       0);
 
   discArray[SPELL_DETECT_MAGIC] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_ALCHEMY, STAT_INT, "detect magic",
+    new spellInfo(SPELL_DETECT_MAGIC, SPELL_MAGE, DISC_MAGE, DISC_ALCHEMY, STAT_INT, "detect magic",
       TASK_TRIVIAL, LAG_1, POSITION_CRAWLING, MANA_15, LIFEFORCE_0, PRAY_0,
       TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
       "Your eyes don't tingle anymore.", "$n's eyes don't twinkle anymore.",
@@ -199,7 +194,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_STUNNING_ARROW] = new spellInfo(SPELL_MAGE, DISC_MAGE,
+  discArray[SPELL_STUNNING_ARROW] = new spellInfo(SPELL_STUNNING_ARROW, SPELL_MAGE, DISC_MAGE,
     DISC_SORCERY, STAT_INT, "stunning arrow", TASK_NORMAL, LAG_1,
     POSITION_SITTING, MANA_45, LIFEFORCE_0, PRAY_0,
     TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
@@ -210,7 +205,7 @@ void buildSpellArray() {
     0);
 
   discArray[SPELL_MATERIALIZE] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_ALCHEMY, STAT_EXT, "materialize",
+    new spellInfo(SPELL_MATERIALIZE, SPELL_MAGE, DISC_MAGE, DISC_ALCHEMY, STAT_EXT, "materialize",
       TASK_TRIVIAL, LAG_1, POSITION_CRAWLING, MANA_15, LIFEFORCE_0, PRAY_0,
       TAR_NAME, SYMBOL_STRESS_0, "", "", "", "", START_15, LEARN_25,
       START_DO_40, LEARN_DO_7, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.0,
@@ -218,7 +213,7 @@ void buildSpellArray() {
         SPELL_TASKED,
       0);
 
-  discArray[SPELL_PROTECTION_FROM_EARTH] = new spellInfo(SPELL_MAGE, DISC_MAGE,
+  discArray[SPELL_PROTECTION_FROM_EARTH] = new spellInfo(SPELL_PROTECTION_FROM_EARTH, SPELL_MAGE, DISC_MAGE,
     DISC_EARTH, STAT_INT, "protection from earth", TASK_TRIVIAL, LAG_2,
     POSITION_CRAWLING, MANA_15, LIFEFORCE_0, PRAY_0,
     TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
@@ -228,7 +223,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_PROTECTION_FROM_AIR] = new spellInfo(SPELL_MAGE, DISC_MAGE,
+  discArray[SPELL_PROTECTION_FROM_AIR] = new spellInfo(SPELL_PROTECTION_FROM_AIR, SPELL_MAGE, DISC_MAGE,
     DISC_AIR, STAT_INT, "protection from air", TASK_TRIVIAL, LAG_1,
     POSITION_CRAWLING, MANA_15, LIFEFORCE_0, PRAY_0,
     TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
@@ -238,7 +233,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_PROTECTION_FROM_FIRE] = new spellInfo(SPELL_MAGE, DISC_MAGE,
+  discArray[SPELL_PROTECTION_FROM_FIRE] = new spellInfo(SPELL_PROTECTION_FROM_FIRE, SPELL_MAGE, DISC_MAGE,
     DISC_FIRE, STAT_INT, "protection from fire", TASK_TRIVIAL, LAG_1,
     POSITION_CRAWLING, MANA_15, LIFEFORCE_0, PRAY_0,
     TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
@@ -248,7 +243,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_PROTECTION_FROM_WATER] = new spellInfo(SPELL_MAGE, DISC_MAGE,
+  discArray[SPELL_PROTECTION_FROM_WATER] = new spellInfo(SPELL_PROTECTION_FROM_WATER, SPELL_MAGE, DISC_MAGE,
     DISC_WATER, STAT_INT, "protection from water", TASK_TRIVIAL, LAG_1,
     POSITION_CRAWLING, MANA_15, LIFEFORCE_0, PRAY_0,
     TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
@@ -258,7 +253,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_PROTECTION_FROM_ELEMENTS] = new spellInfo(SPELL_MAGE,
+  discArray[SPELL_PROTECTION_FROM_ELEMENTS] = new spellInfo(SPELL_PROTECTION_FROM_ELEMENTS, SPELL_MAGE,
     DISC_MAGE, DISC_SORCERY, STAT_INT, "protection from elements", TASK_EASY,
     LAG_2, POSITION_CRAWLING, MANA_15, LIFEFORCE_0, PRAY_0,
     TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
@@ -269,7 +264,7 @@ void buildSpellArray() {
     0);
 
   discArray[SPELL_PEBBLE_SPRAY] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_EARTH, STAT_INT, "pebble spray",
+    new spellInfo(SPELL_PEBBLE_SPRAY, SPELL_MAGE, DISC_MAGE, DISC_EARTH, STAT_INT, "pebble spray",
       TASK_EASY, LAG_1, POSITION_SITTING, MANA_25, LIFEFORCE_0, PRAY_0,
       TAR_AREA | TAR_FIGHT_VICT | TAR_VIOLENT | TAR_IGNORE, SYMBOL_STRESS_0, "",
       "", "", "", START_15, LEARN_15, START_DO_45, LEARN_DO_5, START_DO_NO,
@@ -278,7 +273,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_ARCTIC_BLAST] = new spellInfo(SPELL_MAGE, DISC_MAGE,
+  discArray[SPELL_ARCTIC_BLAST] = new spellInfo(SPELL_ARCTIC_BLAST, SPELL_MAGE, DISC_MAGE,
     DISC_WATER, STAT_INT, "arctic blast", TASK_NORMAL, LAG_1, POSITION_SITTING,
     MANA_25, LIFEFORCE_0, PRAY_0, TAR_AREA | TAR_IGNORE | TAR_VIOLENT,
     SYMBOL_STRESS_0, "", "", "", "", START_16, LEARN_15, START_DO_45,
@@ -288,7 +283,7 @@ void buildSpellArray() {
     0);
 
   discArray[SPELL_COLOR_SPRAY] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_SORCERY, STAT_INT, "color spray",
+    new spellInfo(SPELL_COLOR_SPRAY, SPELL_MAGE, DISC_MAGE, DISC_SORCERY, STAT_INT, "color spray",
       TASK_DIFFICULT, LAG_1, POSITION_SITTING, MANA_38, LIFEFORCE_0, PRAY_0,
       TAR_AREA | TAR_IGNORE | TAR_FIGHT_VICT | TAR_VIOLENT, SYMBOL_STRESS_0, "",
       "", "", "", START_35, LEARN_10, START_DO_45, LEARN_DO_5, START_DO_NO,
@@ -297,7 +292,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_INFRAVISION] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_FIRE,
+  discArray[SPELL_INFRAVISION] = new spellInfo(SPELL_INFRAVISION, SPELL_MAGE, DISC_MAGE, DISC_FIRE,
     STAT_INT, "infravision", TASK_TRIVIAL, LAG_2, POSITION_CRAWLING, MANA_20,
     LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
     "Your eyes lose their red glow.", "$n's eyes don't glow red anymore.",
@@ -308,7 +303,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_IDENTIFY] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_ALCHEMY,
+  discArray[SPELL_IDENTIFY] = new spellInfo(SPELL_IDENTIFY, SPELL_MAGE, DISC_MAGE, DISC_ALCHEMY,
     STAT_EXT, "identify", TASK_TRIVIAL, LAG_2, POSITION_CRAWLING, MANA_20,
     LIFEFORCE_0, PRAY_0, TAR_OBJ_INV | TAR_OBJ_EQUIP | TAR_CHAR_ROOM,
     SYMBOL_STRESS_0, "", "", "", "", START_40, LEARN_20, START_DO_50,
@@ -317,7 +312,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_POWERSTONE] = new spellInfo(SPELL_MAGE, DISC_MAGE,
+  discArray[SPELL_POWERSTONE] = new spellInfo(SPELL_POWERSTONE, SPELL_MAGE, DISC_MAGE,
     DISC_ALCHEMY, STAT_EXT, "powerstone", TASK_EASY, LAG_2, POSITION_CRAWLING,
     MANA_25, LIFEFORCE_0, PRAY_0, TAR_OBJ_INV, SYMBOL_STRESS_0, "", "", "", "",
     START_55, LEARN_15, START_DO_50, LEARN_DO_10, START_DO_NO, LEARN_DO_NO,
@@ -327,7 +322,7 @@ void buildSpellArray() {
     TOG_HAS_POWERSTONE);
 
   discArray[SPELL_FAERIE_FOG] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_WATER, STAT_INT, "faerie fog",
+    new spellInfo(SPELL_FAERIE_FOG, SPELL_MAGE, DISC_MAGE, DISC_WATER, STAT_INT, "faerie fog",
       TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_20, LIFEFORCE_0, PRAY_0,
       TAR_IGNORE, SYMBOL_STRESS_0, "", "", "", "", START_52, LEARN_13,
       START_DO_40, LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.0,
@@ -335,7 +330,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_TELEPORT] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_SORCERY,
+  discArray[SPELL_TELEPORT] = new spellInfo(SPELL_TELEPORT, SPELL_MAGE, DISC_MAGE, DISC_SORCERY,
     STAT_INT, "teleport", TASK_EASY, LAG_1, POSITION_SITTING, MANA_25,
     LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0, "",
     "", "", "", START_58, LEARN_15, START_DO_40, LEARN_DO_5, START_DO_NO,
@@ -344,7 +339,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_POLYMORPH] = new spellInfo(SPELL_MAGE, DISC_SPIRIT,
+  discArray[SPELL_POLYMORPH] = new spellInfo(SPELL_POLYMORPH, SPELL_MAGE, DISC_SPIRIT,
     DISC_SPIRIT, STAT_INT, "polymorph", TASK_EASY, LAG_2, POSITION_CRAWLING,
     MANA_40, LIFEFORCE_0, PRAY_0, TAR_NAME, SYMBOL_STRESS_0,
     "You are not able to hold this form any longer.", "",
@@ -355,7 +350,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_SENSE_LIFE] = new spellInfo(SPELL_MAGE, DISC_MAGE,
+  discArray[SPELL_SENSE_LIFE] = new spellInfo(SPELL_SENSE_LIFE, SPELL_MAGE, DISC_MAGE,
     DISC_SPIRIT, STAT_INT, "sense life", TASK_EASY, LAG_1, POSITION_CRAWLING,
     MANA_15, LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF,
     SYMBOL_STRESS_0, "The aqua blue aura fades from your eyes.",
@@ -367,7 +362,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_CALM] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_SPIRIT,
+  discArray[SPELL_CALM] = new spellInfo(SPELL_CALM, SPELL_MAGE, DISC_MAGE, DISC_SPIRIT,
     STAT_CHA, "calm", TASK_NORMAL, LAG_1, POSITION_CRAWLING, MANA_25,
     LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT,
     SYMBOL_STRESS_0, "You aren't so calm anymore.",
@@ -378,7 +373,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_ACCELERATE] = new spellInfo(SPELL_MAGE, DISC_MAGE,
+  discArray[SPELL_ACCELERATE] = new spellInfo(SPELL_ACCELERATE, SPELL_MAGE, DISC_MAGE,
     DISC_SPIRIT, STAT_INT, "accelerate", TASK_EASY, LAG_2, POSITION_CRAWLING,
     MANA_30, LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF,
     SYMBOL_STRESS_0, "You don't move with as much ease.",
@@ -388,7 +383,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_DUST_STORM] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_AIR,
+  discArray[SPELL_DUST_STORM] = new spellInfo(SPELL_DUST_STORM, SPELL_MAGE, DISC_MAGE, DISC_AIR,
     STAT_INT, "dust storm", TASK_NORMAL, LAG_1, POSITION_SITTING, MANA_17,
     LIFEFORCE_0, PRAY_0, TAR_AREA | TAR_FIGHT_VICT | TAR_VIOLENT | TAR_IGNORE,
     SYMBOL_STRESS_0, "", "", "", "", START_33, LEARN_13, START_DO_40,
@@ -397,7 +392,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_LEVITATE] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_AIR,
+  discArray[SPELL_LEVITATE] = new spellInfo(SPELL_LEVITATE, SPELL_MAGE, DISC_MAGE, DISC_AIR,
     STAT_INT, "levitate", TASK_EASY, LAG_2, POSITION_SITTING, MANA_25,
     LIFEFORCE_0, PRAY_0, TAR_FIGHT_SELF | TAR_CHAR_ROOM, SYMBOL_STRESS_0,
     "You lose your gift of levitation.", "$n sinks back onto the $g.",
@@ -407,7 +402,7 @@ void buildSpellArray() {
       SPELL_TASKED,
     0);
 
-  discArray[SPELL_FEATHERY_DESCENT] = new spellInfo(SPELL_MAGE, DISC_MAGE,
+  discArray[SPELL_FEATHERY_DESCENT] = new spellInfo(SPELL_FEATHERY_DESCENT, SPELL_MAGE, DISC_MAGE,
     DISC_AIR, STAT_INT, "feathery descent", TASK_EASY, LAG_1, POSITION_CRAWLING,
     MANA_25, LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF,
     SYMBOL_STRESS_0, "You don't seem to be light as a feather anymore.",
@@ -418,7 +413,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_STEALTH] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_SPIRIT,
+  discArray[SPELL_STEALTH] = new spellInfo(SPELL_STEALTH, SPELL_MAGE, DISC_MAGE, DISC_SPIRIT,
     STAT_INT, "stealth", TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_20,
     LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
     "You seem to be making a bit more noise now.",
@@ -429,7 +424,7 @@ void buildSpellArray() {
     0);
 
   discArray[SPELL_GRANITE_FISTS] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_EARTH, STAT_INT, "granite fists",
+    new spellInfo(SPELL_GRANITE_FISTS, SPELL_MAGE, DISC_MAGE, DISC_EARTH, STAT_INT, "granite fists",
       TASK_NORMAL, LAG_1, POSITION_SITTING, MANA_30, LIFEFORCE_0, PRAY_0,
       TAR_CHAR_ROOM | TAR_VIOLENT | TAR_FIGHT_VICT | TAR_SELF_NONO,
       SYMBOL_STRESS_0, "", "", "", "", START_31, LEARN_9, START_DO_40,
@@ -439,7 +434,7 @@ void buildSpellArray() {
       0);
 
   discArray[SPELL_ICY_GRIP] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_WATER, STAT_INT, "icy grip",
+    new spellInfo(SPELL_ICY_GRIP, SPELL_MAGE, DISC_MAGE, DISC_WATER, STAT_INT, "icy grip",
       TASK_NORMAL, LAG_1, POSITION_SITTING, MANA_30, LIFEFORCE_0, PRAY_0,
       TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
       SYMBOL_STRESS_0, "", "", "", "", START_40, LEARN_9, START_DO_40,
@@ -449,7 +444,7 @@ void buildSpellArray() {
       0);
 
   discArray[SPELL_GILLS_OF_FLESH] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_WATER, STAT_INT, "gills of flesh",
+    new spellInfo(SPELL_GILLS_OF_FLESH, SPELL_MAGE, DISC_MAGE, DISC_WATER, STAT_INT, "gills of flesh",
       TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_20, LIFEFORCE_0, PRAY_0,
       TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
       "The gills on your neck disappear.", "The gills on $n's neck disappear.",
@@ -460,7 +455,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_TELEPATHY] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_SPIRIT,
+  discArray[SPELL_TELEPATHY] = new spellInfo(SPELL_TELEPATHY, SPELL_MAGE, DISC_MAGE, DISC_SPIRIT,
     STAT_EXT, "telepathy", TASK_NORMAL, LAG_0, POSITION_CRAWLING, MANA_20,
     LIFEFORCE_0, PRAY_0, TAR_NAME, SYMBOL_STRESS_0, "", "", "", "", START_47,
     LEARN_15, START_DO_50, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
@@ -469,7 +464,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_FEAR] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_SPIRIT,
+  discArray[SPELL_FEAR] = new spellInfo(SPELL_FEAR, SPELL_MAGE, DISC_MAGE, DISC_SPIRIT,
     STAT_CHA, "fear", TASK_NORMAL, LAG_2, POSITION_SITTING, MANA_25,
     LIFEFORCE_0, PRAY_0,
     TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
@@ -482,7 +477,7 @@ void buildSpellArray() {
     0);
 
   discArray[SPELL_SLUMBER] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_SPIRIT, STAT_EXT, "slumber",
+    new spellInfo(SPELL_SLUMBER, SPELL_MAGE, DISC_MAGE, DISC_SPIRIT, STAT_EXT, "slumber",
       TASK_NORMAL, LAG_3, POSITION_SITTING, MANA_35, LIFEFORCE_0, PRAY_0,
       TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_FIGHT_VICT | TAR_VIOLENT,
       SYMBOL_STRESS_0, "Your magical exhaustion ceases.", "", "", "", START_39,
@@ -492,7 +487,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_CONJURE_EARTH] = new spellInfo(SPELL_MAGE, DISC_MAGE,
+  discArray[SPELL_CONJURE_EARTH] = new spellInfo(SPELL_CONJURE_EARTH, SPELL_MAGE, DISC_MAGE,
     DISC_EARTH, STAT_EXT, "conjure elemental earth", TASK_NORMAL, LAG_1,
     POSITION_CRAWLING, MANA_40, LIFEFORCE_0, PRAY_0, TAR_IGNORE,
     SYMBOL_STRESS_0, "", "", "", "", START_63, LEARN_15, START_DO_50,
@@ -501,7 +496,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_CONJURE_FIRE] = new spellInfo(SPELL_MAGE, DISC_MAGE,
+  discArray[SPELL_CONJURE_FIRE] = new spellInfo(SPELL_CONJURE_FIRE, SPELL_MAGE, DISC_MAGE,
     DISC_FIRE, STAT_EXT, "conjure elemental fire", TASK_NORMAL, LAG_1,
     POSITION_CRAWLING, MANA_40, LIFEFORCE_0, PRAY_0, TAR_IGNORE,
     SYMBOL_STRESS_0, "", "", "", "", START_57, LEARN_13, START_DO_50,
@@ -510,7 +505,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_CONJURE_WATER] = new spellInfo(SPELL_MAGE, DISC_MAGE,
+  discArray[SPELL_CONJURE_WATER] = new spellInfo(SPELL_CONJURE_WATER, SPELL_MAGE, DISC_MAGE,
     DISC_WATER, STAT_EXT, "conjure elemental water", TASK_NORMAL, LAG_1,
     POSITION_CRAWLING, MANA_40, LIFEFORCE_0, PRAY_0, TAR_IGNORE,
     SYMBOL_STRESS_0, "", "", "", "", START_71, LEARN_10, START_DO_50,
@@ -519,7 +514,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_CONJURE_AIR] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_AIR,
+  discArray[SPELL_CONJURE_AIR] = new spellInfo(SPELL_CONJURE_AIR, SPELL_MAGE, DISC_MAGE, DISC_AIR,
     STAT_EXT, "conjure elemental air", TASK_NORMAL, LAG_1, POSITION_CRAWLING,
     MANA_40, LIFEFORCE_0, PRAY_0, TAR_IGNORE, SYMBOL_STRESS_0, "", "", "", "",
     START_35, LEARN_15, START_DO_50, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
@@ -529,7 +524,7 @@ void buildSpellArray() {
     0);
 
   discArray[SPELL_DISPEL_MAGIC] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_ALCHEMY, STAT_EXT, "dispel magic",
+    new spellInfo(SPELL_DISPEL_MAGIC, SPELL_MAGE, DISC_MAGE, DISC_ALCHEMY, STAT_EXT, "dispel magic",
       TASK_NORMAL, LAG_1, POSITION_SITTING, MANA_50, LIFEFORCE_0, PRAY_0,
       TAR_CHAR_ROOM | TAR_FIGHT_VICT | TAR_OBJ_INV | TAR_OBJ_ROOM,
       SYMBOL_STRESS_0, "", "", "", "", START_61, LEARN_10, START_DO_40,
@@ -539,7 +534,7 @@ void buildSpellArray() {
       0);
 
   discArray[SPELL_ENHANCE_WEAPON] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_ALCHEMY, STAT_EXT,
+    new spellInfo(SPELL_ENHANCE_WEAPON, SPELL_MAGE, DISC_MAGE, DISC_ALCHEMY, STAT_EXT,
       "enhance weapon", TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_50,
       LIFEFORCE_0, PRAY_0, TAR_OBJ_INV | TAR_OBJ_EQUIP, SYMBOL_STRESS_0, "", "",
       "", "", START_72, LEARN_6, START_DO_60, LEARN_DO_5, START_DO_NO,
@@ -548,7 +543,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_GALVANIZE] = new spellInfo(SPELL_MAGE, DISC_MAGE,
+  discArray[SPELL_GALVANIZE] = new spellInfo(SPELL_GALVANIZE, SPELL_MAGE, DISC_MAGE,
     DISC_ALCHEMY, STAT_EXT, "galvanize", TASK_EASY, LAG_1, POSITION_CRAWLING,
     MANA_50, LIFEFORCE_0, PRAY_0, TAR_OBJ_INV | TAR_OBJ_EQUIP, SYMBOL_STRESS_0,
     "", "", "", "", START_55, LEARN_11, START_DO_40, LEARN_DO_10, START_DO_NO,
@@ -557,7 +552,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     TOG_HAS_GALVANIZE);
 
-  discArray[SPELL_DETECT_INVISIBLE] = new spellInfo(SPELL_MAGE, DISC_MAGE,
+  discArray[SPELL_DETECT_INVISIBLE] = new spellInfo(SPELL_DETECT_INVISIBLE, SPELL_MAGE, DISC_MAGE,
     DISC_SPIRIT, STAT_INT, "detect invisibility", TASK_EASY, LAG_1,
     POSITION_CRAWLING, MANA_15, LIFEFORCE_0, PRAY_0,
     TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
@@ -571,7 +566,7 @@ void buildSpellArray() {
     0);
 
   discArray[SPELL_DISPEL_INVISIBLE] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_SPIRIT, STAT_EXT,
+    new spellInfo(SPELL_DISPEL_INVISIBLE, SPELL_MAGE, DISC_MAGE, DISC_SPIRIT, STAT_EXT,
       "dispel invisible", TASK_EASY, LAG_1, POSITION_CRAWLING, MANA_30,
       LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_OBJ_INV | TAR_OBJ_ROOM,
       SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_12, START_DO_40,
@@ -580,7 +575,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_TORNADO] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_AIR,
+  discArray[SPELL_TORNADO] = new spellInfo(SPELL_TORNADO, SPELL_MAGE, DISC_MAGE, DISC_AIR,
     STAT_INT, "tornado", TASK_NORMAL, LAG_1, POSITION_SITTING, MANA_23,
     LIFEFORCE_0, PRAY_0, TAR_FIGHT_VICT | TAR_AREA | TAR_VIOLENT | TAR_IGNORE,
     SYMBOL_STRESS_0, "", "", "", "", START_43, LEARN_10, START_DO_40,
@@ -589,7 +584,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_ALMOST_END | SPELL_TASKED,
     TOG_HAS_TORNADO);
 
-  discArray[SPELL_SAND_BLAST] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_EARTH,
+  discArray[SPELL_SAND_BLAST] = new spellInfo(SPELL_SAND_BLAST, SPELL_MAGE, DISC_MAGE, DISC_EARTH,
     STAT_INT, "sand blast", TASK_DIFFICULT, LAG_2, POSITION_SITTING, MANA_35,
     LIFEFORCE_0, PRAY_0, TAR_AREA | TAR_FIGHT_VICT | TAR_VIOLENT | TAR_IGNORE,
     SYMBOL_STRESS_0, "", "", "", "", START_58, LEARN_8, START_DO_40, LEARN_DO_5,
@@ -598,7 +593,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_ICE_STORM] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_WATER,
+  discArray[SPELL_ICE_STORM] = new spellInfo(SPELL_ICE_STORM, SPELL_MAGE, DISC_MAGE, DISC_WATER,
     STAT_INT, "ice storm", TASK_NORMAL, LAG_1, POSITION_SITTING, MANA_35,
     LIFEFORCE_0, PRAY_0, TAR_AREA | TAR_IGNORE | TAR_VIOLENT, SYMBOL_STRESS_0,
     "", "", "", "", START_58, LEARN_12, START_DO_40, LEARN_DO_5, START_DO_NO,
@@ -608,7 +603,7 @@ void buildSpellArray() {
     TOG_HAS_ICE_STORM);
 
   discArray[SPELL_FLAMING_SWORD] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_FIRE, STAT_INT, "flaming sword",
+    new spellInfo(SPELL_FLAMING_SWORD, SPELL_MAGE, DISC_MAGE, DISC_FIRE, STAT_INT, "flaming sword",
       TASK_NORMAL, LAG_1, POSITION_SITTING, MANA_40, LIFEFORCE_0, PRAY_0,
       TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
       SYMBOL_STRESS_0, "", "", "", "", START_55, LEARN_20, START_DO_40,
@@ -618,7 +613,7 @@ void buildSpellArray() {
       0);
 
   discArray[SPELL_ACID_BLAST] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_SORCERY, STAT_INT, "acid blast",
+    new spellInfo(SPELL_ACID_BLAST, SPELL_MAGE, DISC_MAGE, DISC_SORCERY, STAT_INT, "acid blast",
       TASK_NORMAL, LAG_2, POSITION_SITTING, MANA_53, LIFEFORCE_0, PRAY_0,
       TAR_AREA | TAR_IGNORE | TAR_FIGHT_VICT | TAR_VIOLENT, SYMBOL_STRESS_0, "",
       "", "", "", START_75, LEARN_9, START_DO_40, LEARN_DO_5, START_DO_NO,
@@ -627,7 +622,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_FIREBALL] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_FIRE,
+  discArray[SPELL_FIREBALL] = new spellInfo(SPELL_FIREBALL, SPELL_MAGE, DISC_MAGE, DISC_FIRE,
     STAT_INT, "fireball", TASK_NORMAL, LAG_2, POSITION_SITTING, MANA_33,
     LIFEFORCE_0, PRAY_0, TAR_AREA | TAR_IGNORE | TAR_VIOLENT, SYMBOL_STRESS_0,
     "", "", "", "", START_40, LEARN_15, START_DO_45, LEARN_DO_5, START_DO_NO,
@@ -637,7 +632,7 @@ void buildSpellArray() {
     TOG_HAS_FIREBALL);
 
   discArray[SPELL_FARLOOK] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_ALCHEMY, STAT_INT, "farlook",
+    new spellInfo(SPELL_FARLOOK, SPELL_MAGE, DISC_MAGE, DISC_ALCHEMY, STAT_INT, "farlook",
       TASK_EASY, LAG_1, POSITION_CRAWLING, MANA_20, LIFEFORCE_0, PRAY_0,
       TAR_CHAR_VIS_WORLD, SYMBOL_STRESS_0, "", "", "", "", START_75, LEARN_7,
       START_DO_45, LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.0,
@@ -645,7 +640,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_FALCON_WINGS] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_AIR,
+  discArray[SPELL_FALCON_WINGS] = new spellInfo(SPELL_FALCON_WINGS, SPELL_MAGE, DISC_MAGE, DISC_AIR,
     STAT_INT, "falcon wings", TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_20,
     LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
     "The last of your feathers fall from your arms!",
@@ -657,7 +652,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_INVISIBILITY] = new spellInfo(SPELL_MAGE, DISC_MAGE,
+  discArray[SPELL_INVISIBILITY] = new spellInfo(SPELL_INVISIBILITY, SPELL_MAGE, DISC_MAGE,
     DISC_SORCERY, STAT_INT, "invisibility", TASK_EASY, LAG_2, POSITION_CRAWLING,
     MANA_30, LIFEFORCE_0, PRAY_0,
     TAR_CHAR_ROOM | TAR_OBJ_INV | TAR_OBJ_ROOM | TAR_OBJ_EQUIP | TAR_FIGHT_SELF,
@@ -670,7 +665,7 @@ void buildSpellArray() {
     0);
 
 #if 1
-  discArray[SPELL_ENSORCER] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_SORCERY,
+  discArray[SPELL_ENSORCER] = new spellInfo(SPELL_ENSORCER, SPELL_MAGE, DISC_MAGE, DISC_SORCERY,
     STAT_CHA, "ensorcer", TASK_NORMAL, LAG_1, POSITION_CRAWLING, MANA_40,
     LIFEFORCE_0, PRAY_0,
     TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_FIGHT_VICT | TAR_VIOLENT,
@@ -686,7 +681,7 @@ void buildSpellArray() {
 #endif
 
   discArray[SPELL_EYES_OF_FERTUMAN] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_ALCHEMY, STAT_EXT,
+    new spellInfo(SPELL_EYES_OF_FERTUMAN, SPELL_MAGE, DISC_MAGE, DISC_ALCHEMY, STAT_EXT,
       "eyes of Fertuman", TASK_EASY, LAG_1, POSITION_CRAWLING, MANA_30,
       LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0, "",
       "", "", "", START_65, LEARN_13, START_DO_50, LEARN_DO_5, START_DO_NO,
@@ -695,7 +690,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_COPY] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_ALCHEMY,
+  discArray[SPELL_COPY] = new spellInfo(SPELL_COPY, SPELL_MAGE, DISC_MAGE, DISC_ALCHEMY,
     STAT_EXT, "copy", TASK_NORMAL, LAG_3, POSITION_CRAWLING, MANA_40,
     LIFEFORCE_0, PRAY_0, TAR_OBJ_INV | TAR_OBJ_EQUIP, SYMBOL_STRESS_0, "", "",
     "", "", START_70, LEARN_6, START_DO_35, LEARN_DO_5, START_DO_NO,
@@ -704,7 +699,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_HASTE] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_SPIRIT,
+  discArray[SPELL_HASTE] = new spellInfo(SPELL_HASTE, SPELL_MAGE, DISC_MAGE, DISC_SPIRIT,
     STAT_INT, "haste", TASK_NORMAL, LAG_2, POSITION_CRAWLING, MANA_50,
     LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
     "You lose the bounce in your step.", "$n loses the bounce in $s step.", "",
@@ -715,7 +710,7 @@ void buildSpellArray() {
     0);
 
   discArray[SKILL_REPAIR_MAGE] =
-    new spellInfo(SKILL_MAGE, DISC_MAGE, DISC_BLACKSMITHING, STAT_EXT,
+    new spellInfo(SKILL_REPAIR_MAGE, SKILL_MAGE, DISC_MAGE, DISC_BLACKSMITHING, STAT_EXT,
       "mage repair", TASK_NORMAL, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_3, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
@@ -723,7 +718,7 @@ void buildSpellArray() {
   // disc_air
 
   discArray[SPELL_IMMOBILIZE] =
-    new spellInfo(SPELL_MAGE, DISC_AIR, DISC_AIR, STAT_EXT, "immobilize",
+    new spellInfo(SPELL_IMMOBILIZE, SPELL_MAGE, DISC_AIR, DISC_AIR, STAT_EXT, "immobilize",
       TASK_NORMAL, LAG_2, POSITION_SITTING, MANA_20, LIFEFORCE_0, PRAY_0,
       TAR_VIOLENT | TAR_FIGHT_VICT | TAR_CHAR_ROOM | TAR_SELF_NONO,
       SYMBOL_STRESS_0, "", "", "", "", START_37, LEARN_9, START_DO_45,
@@ -733,7 +728,7 @@ void buildSpellArray() {
       0);
 
   discArray[SPELL_SUFFOCATE] =
-    new spellInfo(SPELL_MAGE, DISC_AIR, DISC_AIR, STAT_INT, "suffocate",
+    new spellInfo(SPELL_SUFFOCATE, SPELL_MAGE, DISC_AIR, DISC_AIR, STAT_INT, "suffocate",
       TASK_NORMAL, LAG_2, POSITION_SITTING, MANA_27, LIFEFORCE_0, PRAY_0,
       TAR_VIOLENT | TAR_FIGHT_VICT | TAR_CHAR_ROOM | TAR_SELF_NONO,
       SYMBOL_STRESS_0, "", "", "", "", START_60, LEARN_4, START_DO_45,
@@ -742,7 +737,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_FLY] = new spellInfo(SPELL_MAGE, DISC_AIR, DISC_AIR, STAT_INT,
+  discArray[SPELL_FLY] = new spellInfo(SPELL_FLY, SPELL_MAGE, DISC_AIR, DISC_AIR, STAT_INT,
     "flight", TASK_EASY, LAG_1, POSITION_SITTING, MANA_30, LIFEFORCE_0, PRAY_0,
     TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
     "Your ability to fly leaves you.", "$n loses $s ability to fly.",
@@ -753,7 +748,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_ANTIGRAVITY] = new spellInfo(SPELL_MAGE, DISC_AIR, DISC_AIR,
+  discArray[SPELL_ANTIGRAVITY] = new spellInfo(SPELL_ANTIGRAVITY, SPELL_MAGE, DISC_AIR, DISC_AIR,
     STAT_INT, "antigravity", TASK_EASY, LAG_1, POSITION_CRAWLING, MANA_50,
     LIFEFORCE_0, PRAY_0, TAR_AREA | TAR_IGNORE, SYMBOL_STRESS_0,
     "The forces of nature have resumed their regular strength",
@@ -764,7 +759,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SKILL_PIERCE_RESIST] = new spellInfo(SKILL_MAGE_TYPES, DISC_AIR,
+  discArray[SKILL_PIERCE_RESIST] = new spellInfo(SKILL_PIERCE_RESIST, SKILL_MAGE_TYPES, DISC_AIR,
     DISC_AIR, STAT_INT, "pierce resistances", TASK_NORMAL, LAG_0,
     POSITION_RESTING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_75, LEARN_10, START_DO_55, LEARN_DO_5, START_DO_NO,
@@ -772,7 +767,7 @@ void buildSpellArray() {
 
   // disc_alchemy
 
-  discArray[SPELL_DIVINATION] = new spellInfo(SPELL_MAGE, DISC_ALCHEMY,
+  discArray[SPELL_DIVINATION] = new spellInfo(SPELL_DIVINATION, SPELL_MAGE, DISC_ALCHEMY,
     DISC_ALCHEMY, STAT_EXT, "divination", TASK_EASY, LAG_1, POSITION_CRAWLING,
     MANA_35, LIFEFORCE_0, PRAY_0, TAR_OBJ_INV | TAR_CHAR_ROOM, SYMBOL_STRESS_0,
     "", "", "", "", START_68, LEARN_10, START_DO_55, LEARN_DO_5, START_DO_NO,
@@ -781,7 +776,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_SHATTER] = new spellInfo(SPELL_MAGE, DISC_ALCHEMY,
+  discArray[SPELL_SHATTER] = new spellInfo(SPELL_SHATTER, SPELL_MAGE, DISC_ALCHEMY,
     DISC_ALCHEMY, STAT_EXT, "shatter", TASK_NORMAL, LAG_1, POSITION_SITTING,
     MANA_40, LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM, SYMBOL_STRESS_0, "", "", "",
     "", START_8, LEARN_34, START_DO_50, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
@@ -791,25 +786,25 @@ void buildSpellArray() {
     0);
 
   discArray[SKILL_SCRIBE] =
-    new spellInfo(SKILL_MAGE, DISC_ALCHEMY, DISC_ALCHEMY, STAT_EXT, "scribe",
+    new spellInfo(SKILL_SCRIBE, SKILL_MAGE, DISC_ALCHEMY, DISC_ALCHEMY, STAT_EXT, "scribe",
       TASK_NORMAL, LAG_0, POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1, LEARN_DO_5,
       START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.0, 0, 0);
 
   discArray[SPELL_SPONTANEOUS_GENERATION] =
-    new spellInfo(SPELL_MAGE, DISC_ALCHEMY, DISC_ALCHEMY, STAT_EXT,
+    new spellInfo(SPELL_SPONTANEOUS_GENERATION, SPELL_MAGE, DISC_ALCHEMY, DISC_ALCHEMY, STAT_EXT,
       "spontaneous generation", TASK_EASY, LAG_1, POSITION_CRAWLING, MANA_35,
       LIFEFORCE_0, PRAY_0, TAR_NAME, SYMBOL_STRESS_0, "", "", "", "", START_25,
       LEARN_5, START_DO_50, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
       LEARN_DIFF_SPELLS, 0.0, COMP_GESTURAL | COMP_VERBAL | SPELL_TASKED, 0);
 
   discArray[SKILL_STAVECHARGE] =
-    new spellInfo(SKILL_MAGE, DISC_ALCHEMY, DISC_ALCHEMY, STAT_EXT,
+    new spellInfo(SKILL_STAVECHARGE, SKILL_MAGE, DISC_ALCHEMY, DISC_ALCHEMY, STAT_EXT,
       "charge stave", TASK_EASY, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_20,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.0, 0, 0);
 
-  discArray[SPELL_ETHER_GATE] = new spellInfo(SPELL_MAGE, DISC_ALCHEMY,
+  discArray[SPELL_ETHER_GATE] = new spellInfo(SPELL_ETHER_GATE, SPELL_MAGE, DISC_ALCHEMY,
     DISC_ALCHEMY, STAT_EXT, "ethereal gate", TASK_EASY, LAG_3, POSITION_SITTING,
     MANA_50, LIFEFORCE_0, PRAY_0, TAR_NAME, SYMBOL_STRESS_0, "", "", "", "",
     START_80, LEARN_5, START_DO_35, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
@@ -818,7 +813,7 @@ void buildSpellArray() {
   // disc_earth
 
   discArray[SPELL_METEOR_SWARM] =
-    new spellInfo(SPELL_MAGE, DISC_EARTH, DISC_EARTH, STAT_INT, "meteor swarm",
+    new spellInfo(SPELL_METEOR_SWARM, SPELL_MAGE, DISC_EARTH, DISC_EARTH, STAT_INT, "meteor swarm",
       TASK_NORMAL, LAG_3, POSITION_SITTING, MANA_40, LIFEFORCE_0, PRAY_0,
       TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
       SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_5, START_DO_50,
@@ -828,7 +823,7 @@ void buildSpellArray() {
       0);
 
   discArray[SPELL_LAVA_STREAM] =
-    new spellInfo(SPELL_MAGE, DISC_EARTH, DISC_EARTH, STAT_INT, "lava stream",
+    new spellInfo(SPELL_LAVA_STREAM, SPELL_MAGE, DISC_EARTH, DISC_EARTH, STAT_INT, "lava stream",
       TASK_DIFFICULT, LAG_3, POSITION_SITTING, MANA_50, LIFEFORCE_0, PRAY_0,
       TAR_AREA | TAR_FIGHT_VICT | TAR_VIOLENT | TAR_IGNORE, SYMBOL_STRESS_0, "",
       "", "", "", START_75, LEARN_5, START_DO_50, LEARN_DO_5, START_DO_NO,
@@ -837,7 +832,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_STONE_SKIN] = new spellInfo(SPELL_MAGE, DISC_EARTH,
+  discArray[SPELL_STONE_SKIN] = new spellInfo(SPELL_STONE_SKIN, SPELL_MAGE, DISC_EARTH,
     DISC_EARTH, STAT_INT, "stone skin", TASK_EASY, LAG_1, POSITION_CRAWLING,
     MANA_40, LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_SELF_ONLY,
     SYMBOL_STRESS_0, "Your skin returns to normal.",
@@ -849,7 +844,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     TOG_HAS_STONESKIN);
 
-  discArray[SPELL_TRAIL_SEEK] = new spellInfo(SPELL_MAGE, DISC_EARTH,
+  discArray[SPELL_TRAIL_SEEK] = new spellInfo(SPELL_TRAIL_SEEK, SPELL_MAGE, DISC_EARTH,
     DISC_EARTH, STAT_EXT, "trail seek", TASK_NORMAL, LAG_1, POSITION_CRAWLING,
     MANA_20, LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF,
     SYMBOL_STRESS_0, "The blue hue fades from your eyes.",
@@ -863,7 +858,7 @@ void buildSpellArray() {
   // disc_fire
 
   discArray[SPELL_INFERNO] =
-    new spellInfo(SPELL_MAGE, DISC_FIRE, DISC_FIRE, STAT_INT, "inferno",
+    new spellInfo(SPELL_INFERNO, SPELL_MAGE, DISC_FIRE, DISC_FIRE, STAT_INT, "inferno",
       TASK_NORMAL, LAG_1, POSITION_SITTING, MANA_54, LIFEFORCE_0, PRAY_0,
       TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
       SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_5, START_DO_50,
@@ -872,7 +867,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_INIT | SPELL_TASKED,
       0);
 
-  discArray[SPELL_HELLFIRE] = new spellInfo(SPELL_MAGE, DISC_FIRE, DISC_FIRE,
+  discArray[SPELL_HELLFIRE] = new spellInfo(SPELL_HELLFIRE, SPELL_MAGE, DISC_FIRE, DISC_FIRE,
     STAT_INT, "hellfire", TASK_DIFFICULT, LAG_2, POSITION_SITTING, MANA_47,
     LIFEFORCE_0, PRAY_0, TAR_AREA | TAR_IGNORE | TAR_VIOLENT, SYMBOL_STRESS_0,
     "", "", "", "", START_75, LEARN_5, START_DO_50, LEARN_DO_5, START_DO_NO,
@@ -881,7 +876,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_FLAMING_FLESH] = new spellInfo(SPELL_MAGE, DISC_FIRE,
+  discArray[SPELL_FLAMING_FLESH] = new spellInfo(SPELL_FLAMING_FLESH, SPELL_MAGE, DISC_FIRE,
     DISC_FIRE, STAT_INT, "flaming flesh", TASK_EASY, LAG_1, POSITION_CRAWLING,
     MANA_20, LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_SELF_ONLY,
     SYMBOL_STRESS_0, "The ring of fire surrounding your body fades away.",
@@ -895,7 +890,7 @@ void buildSpellArray() {
 
   // disc_sorcery
 
-  discArray[SPELL_BLAST_OF_FURY] = new spellInfo(SPELL_MAGE, DISC_SORCERY,
+  discArray[SPELL_BLAST_OF_FURY] = new spellInfo(SPELL_BLAST_OF_FURY, SPELL_MAGE, DISC_SORCERY,
     DISC_SORCERY, STAT_INT, "blast of fury", TASK_NORMAL, LAG_2,
     POSITION_SITTING, MANA_60, LIFEFORCE_0, PRAY_0,
     TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
@@ -905,7 +900,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_ENERGY_DRAIN] = new spellInfo(SPELL_MAGE, DISC_SORCERY,
+  discArray[SPELL_ENERGY_DRAIN] = new spellInfo(SPELL_ENERGY_DRAIN, SPELL_MAGE, DISC_SORCERY,
     DISC_SORCERY, STAT_INT, "energy drain", TASK_DIFFICULT, LAG_3,
     POSITION_SITTING, MANA_40, LIFEFORCE_0, PRAY_0,
     TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
@@ -916,7 +911,7 @@ void buildSpellArray() {
     0);
 
   discArray[SPELL_ATOMIZE] =
-    new spellInfo(SPELL_MAGE, DISC_SORCERY, DISC_SORCERY, STAT_INT, "atomize",
+    new spellInfo(SPELL_ATOMIZE, SPELL_MAGE, DISC_SORCERY, DISC_SORCERY, STAT_INT, "atomize",
       TASK_DIFFICULT, LAG_3, POSITION_SITTING, MANA_75, LIFEFORCE_0, PRAY_0,
       TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
       SYMBOL_STRESS_0, "", "", "", "", START_80, LEARN_5, START_DO_35,
@@ -926,7 +921,7 @@ void buildSpellArray() {
       0);
 
   discArray[SPELL_ANIMATE] =
-    new spellInfo(SPELL_MAGE, DISC_SORCERY, DISC_SORCERY, STAT_EXT, "animate",
+    new spellInfo(SPELL_ANIMATE, SPELL_MAGE, DISC_SORCERY, DISC_SORCERY, STAT_EXT, "animate",
       TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_40, LIFEFORCE_0, PRAY_0,
       TAR_IGNORE, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_10,
       START_DO_50, LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.0,
@@ -934,7 +929,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_BIND] = new spellInfo(SPELL_MAGE, DISC_SORCERY, DISC_SORCERY,
+  discArray[SPELL_BIND] = new spellInfo(SPELL_BIND, SPELL_MAGE, DISC_SORCERY, DISC_SORCERY,
     STAT_INT, "bind", TASK_NORMAL, LAG_1, POSITION_SITTING, MANA_50,
     LIFEFORCE_0, PRAY_0,
     TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
@@ -949,7 +944,7 @@ void buildSpellArray() {
   // disc_spirit
 
   discArray[SPELL_FUMBLE] =
-    new spellInfo(SPELL_MAGE, DISC_SPIRIT, DISC_SPIRIT, STAT_INT, "fumble",
+    new spellInfo(SPELL_FUMBLE, SPELL_MAGE, DISC_SPIRIT, DISC_SPIRIT, STAT_INT, "fumble",
       TASK_DIFFICULT, LAG_1, POSITION_SITTING, MANA_35, LIFEFORCE_0, PRAY_0,
       TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
       SYMBOL_STRESS_0, "You feel more in control and less clumsy.",
@@ -959,7 +954,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_TRUE_SIGHT] = new spellInfo(SPELL_MAGE, DISC_SPIRIT,
+  discArray[SPELL_TRUE_SIGHT] = new spellInfo(SPELL_TRUE_SIGHT, SPELL_MAGE, DISC_SPIRIT,
     DISC_SPIRIT, STAT_INT, "true sight", TASK_EASY, LAG_1, POSITION_CRAWLING,
     MANA_25, LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF,
     SYMBOL_STRESS_0, "The silver aura in your eyes fades.",
@@ -971,7 +966,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_CLOUD_OF_CONCEALMENT] = new spellInfo(SPELL_MAGE, DISC_SPIRIT,
+  discArray[SPELL_CLOUD_OF_CONCEALMENT] = new spellInfo(SPELL_CLOUD_OF_CONCEALMENT, SPELL_MAGE, DISC_SPIRIT,
     DISC_SPIRIT, STAT_INT, "cloud of concealment", TASK_EASY, LAG_2,
     POSITION_CRAWLING, MANA_50, LIFEFORCE_0, PRAY_0, TAR_AREA | TAR_IGNORE,
     SYMBOL_STRESS_0, "The mystic vapors surrounding you disappear.",
@@ -982,7 +977,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_SILENCE] = new spellInfo(SPELL_MAGE, DISC_SPIRIT, DISC_SPIRIT,
+  discArray[SPELL_SILENCE] = new spellInfo(SPELL_SILENCE, SPELL_MAGE, DISC_SPIRIT, DISC_SPIRIT,
     STAT_INT, "silence", TASK_NORMAL, LAG_2, POSITION_SITTING, MANA_30,
     LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_VIOLENT, SYMBOL_STRESS_0,
     "Your muzzle disappears.", "", "", "", START_80, LEARN_10, START_DO_35,
@@ -991,7 +986,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_KNOT] = new spellInfo(SPELL_MAGE, DISC_SPIRIT, DISC_SPIRIT,
+  discArray[SPELL_KNOT] = new spellInfo(SPELL_KNOT, SPELL_MAGE, DISC_SPIRIT, DISC_SPIRIT,
     STAT_EXT, "knot", TASK_EASY, LAG_1, POSITION_SITTING, MANA_200, LIFEFORCE_0,
     PRAY_0, TAR_SELF_ONLY | TAR_FIGHT_SELF | TAR_CHAR_ROOM, SYMBOL_STRESS_0, "",
     "", "", "", START_85, LEARN_15, START_DO_40, LEARN_DO_5, START_DO_NO,
@@ -1003,7 +998,7 @@ void buildSpellArray() {
   // disc_water
 
   discArray[SPELL_WATERY_GRAVE] =
-    new spellInfo(SPELL_MAGE, DISC_WATER, DISC_WATER, STAT_INT, "watery grave",
+    new spellInfo(SPELL_WATERY_GRAVE, SPELL_MAGE, DISC_WATER, DISC_WATER, STAT_INT, "watery grave",
       TASK_NORMAL, LAG_1, POSITION_SITTING, MANA_40, LIFEFORCE_0, PRAY_0,
       TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
       SYMBOL_STRESS_0, "", "", "", "", START_25, LEARN_3, START_DO_40,
@@ -1012,7 +1007,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_TSUNAMI] = new spellInfo(SPELL_MAGE, DISC_WATER, DISC_WATER,
+  discArray[SPELL_TSUNAMI] = new spellInfo(SPELL_TSUNAMI, SPELL_MAGE, DISC_WATER, DISC_WATER,
     STAT_INT, "tsunami", TASK_DIFFICULT, LAG_2, POSITION_SITTING, MANA_50,
     LIFEFORCE_0, PRAY_0, TAR_AREA | TAR_IGNORE | TAR_VIOLENT, SYMBOL_STRESS_0,
     "", "", "", "", START_50, LEARN_2, START_DO_40, LEARN_DO_5, START_DO_NO,
@@ -1022,7 +1017,7 @@ void buildSpellArray() {
     0);
 
   discArray[SPELL_BREATH_OF_SARAHAGE] =
-    new spellInfo(SPELL_MAGE, DISC_WATER, DISC_WATER, STAT_INT,
+    new spellInfo(SPELL_BREATH_OF_SARAHAGE, SPELL_MAGE, DISC_WATER, DISC_WATER, STAT_INT,
       "breath of Sarahage", TASK_NORMAL, LAG_2, POSITION_CRAWLING, MANA_35,
       LIFEFORCE_0, PRAY_0, TAR_AREA | TAR_IGNORE, SYMBOL_STRESS_0,
       "Your ability to breathe underwater leaves you.", "$n gasps briefly.",
@@ -1033,7 +1028,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_PLASMA_MIRROR] = new spellInfo(SPELL_MAGE, DISC_WATER,
+  discArray[SPELL_PLASMA_MIRROR] = new spellInfo(SPELL_PLASMA_MIRROR, SPELL_MAGE, DISC_WATER,
     DISC_WATER, STAT_INT, "plasma mirror", TASK_EASY, LAG_3, POSITION_CRAWLING,
     MANA_50, LIFEFORCE_0, PRAY_0,
     TAR_SELF_ONLY | TAR_FIGHT_SELF | TAR_CHAR_ROOM, SYMBOL_STRESS_0,
@@ -1045,7 +1040,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_GARMULS_TAIL] = new spellInfo(SPELL_MAGE, DISC_WATER,
+  discArray[SPELL_GARMULS_TAIL] = new spellInfo(SPELL_GARMULS_TAIL, SPELL_MAGE, DISC_WATER,
     DISC_WATER, STAT_EXT, "Garmul's tail", TASK_NORMAL, LAG_3,
     POSITION_CRAWLING, MANA_20, LIFEFORCE_0, PRAY_0,
     TAR_FIGHT_SELF | TAR_CHAR_ROOM, SYMBOL_STRESS_0,
@@ -1059,7 +1054,7 @@ void buildSpellArray() {
 
   // CLERIC CLASS
   // disc_cleric
-  discArray[SPELL_HEAL_LIGHT] = new spellInfo(SPELL_CLERIC, DISC_CLERIC,
+  discArray[SPELL_HEAL_LIGHT] = new spellInfo(SPELL_HEAL_LIGHT, SPELL_CLERIC, DISC_CLERIC,
     DISC_CURES, STAT_WIS, "heal light", TASK_EASY, LAG_2, POSITION_SITTING,
     MANA_0, LIFEFORCE_0, PRAY_100, TAR_CHAR_ROOM | TAR_FIGHT_SELF,
     SYMBOL_STRESS_12, "", "", "", "", START_1, LEARN_10, START_DO_50,
@@ -1067,7 +1062,7 @@ void buildSpellArray() {
     COMP_GESTURAL | SPELL_TASKED | SPELL_TASKED_EVERY, 0);
 
   discArray[SPELL_HARM_LIGHT] =
-    new spellInfo(SPELL_CLERIC, DISC_CLERIC, DISC_AFFLICTIONS, STAT_WIS,
+    new spellInfo(SPELL_HARM_LIGHT, SPELL_CLERIC, DISC_CLERIC, DISC_AFFLICTIONS, STAT_WIS,
       "harm light", TASK_NORMAL, LAG_1, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_100, TAR_CHAR_ROOM | TAR_FIGHT_VICT | TAR_SELF_NONO | TAR_VIOLENT,
       SYMBOL_STRESS_5, "", "", "", "", START_1, LEARN_10, START_DO_50,
@@ -1075,20 +1070,20 @@ void buildSpellArray() {
       COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_CREATE_FOOD] =
-    new spellInfo(SPELL_CLERIC, DISC_CLERIC, DISC_HAND_OF_GOD, STAT_EXT,
+    new spellInfo(SPELL_CREATE_FOOD, SPELL_CLERIC, DISC_CLERIC, DISC_HAND_OF_GOD, STAT_EXT,
       "create food", TASK_TRIVIAL, LAG_1, POSITION_CRAWLING, MANA_0,
       LIFEFORCE_0, PRAY_025, TAR_IGNORE, SYMBOL_STRESS_5, "", "", "", "",
       START_11, LEARN_25, START_DO_40, LEARN_DO_10, START_DO_NO, LEARN_DO_NO,
       LEARN_DIFF_PRAYERS, 0.0, COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_CREATE_WATER] = new spellInfo(SPELL_CLERIC, DISC_CLERIC,
+  discArray[SPELL_CREATE_WATER] = new spellInfo(SPELL_CREATE_WATER, SPELL_CLERIC, DISC_CLERIC,
     DISC_HAND_OF_GOD, STAT_EXT, "create water", TASK_TRIVIAL, LAG_2,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_025, TAR_OBJ_INV,
     SYMBOL_STRESS_5, "", "", "", "", START_11, LEARN_25, START_DO_40,
     LEARN_DO_10, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.0,
     COMP_GESTURAL | COMP_VERBAL | SPELL_TASKED | SPELL_TASKED_EVERY, 0);
 
-  discArray[SPELL_ARMOR] = new spellInfo(SPELL_CLERIC, DISC_CLERIC, DISC_AEGIS,
+  discArray[SPELL_ARMOR] = new spellInfo(SPELL_ARMOR, SPELL_CLERIC, DISC_CLERIC, DISC_AEGIS,
     STAT_WIS, "armor", TASK_TRIVIAL, LAG_1, POSITION_SITTING, MANA_0,
     LIFEFORCE_0, PRAY_025, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_15,
     "The protection around your body fades.", "The protection around $n fades.",
@@ -1097,7 +1092,7 @@ void buildSpellArray() {
     COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_BLESS] =
-    new spellInfo(SPELL_CLERIC, DISC_CLERIC, DISC_AEGIS, STAT_WIS, "bless",
+    new spellInfo(SPELL_BLESS, SPELL_CLERIC, DISC_CLERIC, DISC_AEGIS, STAT_WIS, "bless",
       TASK_TRIVIAL, LAG_1, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_050,
       TAR_OBJ_INV | TAR_OBJ_EQUIP | TAR_CHAR_ROOM | TAR_FIGHT_SELF,
       SYMBOL_STRESS_10, "You feel less holy.", "$n doesn't seem as holy.",
@@ -1105,13 +1100,13 @@ void buildSpellArray() {
       START_1, LEARN_33, START_DO_30, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
       LEARN_DIFF_PRAYERS, 0.05, COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_CLOT] = new spellInfo(SPELL_CLERIC, DISC_CLERIC, DISC_CURES,
+  discArray[SPELL_CLOT] = new spellInfo(SPELL_CLOT, SPELL_CLERIC, DISC_CLERIC, DISC_CURES,
     STAT_EXT, "clot", TASK_TRIVIAL, LAG_1, POSITION_SITTING, MANA_0,
     LIFEFORCE_0, PRAY_100, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_15, "",
     "", "", "", START_6, LEARN_10, START_DO_40, LEARN_DO_5, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.04, COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_RAIN_BRIMSTONE] = new spellInfo(SPELL_CLERIC, DISC_CLERIC,
+  discArray[SPELL_RAIN_BRIMSTONE] = new spellInfo(SPELL_RAIN_BRIMSTONE, SPELL_CLERIC, DISC_CLERIC,
     DISC_WRATH, STAT_WIS, "rain brimstone", TASK_NORMAL, LAG_2,
     POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_150,
     TAR_CHAR_ROOM | TAR_VIOLENT | TAR_FIGHT_VICT | TAR_SELF_NONO,
@@ -1119,7 +1114,7 @@ void buildSpellArray() {
     LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.01,
     COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_HEAL_SERIOUS] = new spellInfo(SPELL_CLERIC, DISC_CLERIC,
+  discArray[SPELL_HEAL_SERIOUS] = new spellInfo(SPELL_HEAL_SERIOUS, SPELL_CLERIC, DISC_CLERIC,
     DISC_CURES, STAT_WIS, "heal serious", TASK_EASY, LAG_2, POSITION_SITTING,
     MANA_0, LIFEFORCE_0, PRAY_150, TAR_CHAR_ROOM | TAR_FIGHT_SELF,
     SYMBOL_STRESS_18, "", "", "", "", START_18, LEARN_5, START_DO_30,
@@ -1127,33 +1122,33 @@ void buildSpellArray() {
     COMP_GESTURAL | COMP_VERBAL | SPELL_TASKED | SPELL_TASKED_EVERY, 0);
 
   discArray[SPELL_HARM_SERIOUS] =
-    new spellInfo(SPELL_CLERIC, DISC_CLERIC, DISC_AFFLICTIONS, STAT_WIS,
+    new spellInfo(SPELL_HARM_SERIOUS, SPELL_CLERIC, DISC_CLERIC, DISC_AFFLICTIONS, STAT_WIS,
       "harm serious", TASK_NORMAL, LAG_1, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_150, TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_FIGHT_VICT | TAR_VIOLENT,
       SYMBOL_STRESS_20, "", "", "", "", START_38, LEARN_5, START_DO_20,
       LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.02,
       COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_STERILIZE] = new spellInfo(SPELL_CLERIC, DISC_CLERIC,
+  discArray[SPELL_STERILIZE] = new spellInfo(SPELL_STERILIZE, SPELL_CLERIC, DISC_CLERIC,
     DISC_CURES, STAT_EXT, "sterilize", TASK_EASY, LAG_1, POSITION_SITTING,
     MANA_0, LIFEFORCE_0, PRAY_150, TAR_CHAR_ROOM, SYMBOL_STRESS_15, "", "", "",
     "", START_21, LEARN_5, START_DO_30, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_PRAYERS, 0.04, COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_EXPEL] = new spellInfo(SPELL_CLERIC, DISC_CLERIC, DISC_CURES,
+  discArray[SPELL_EXPEL] = new spellInfo(SPELL_EXPEL, SPELL_CLERIC, DISC_CLERIC, DISC_CURES,
     STAT_EXT, "expel", TASK_EASY, LAG_2, POSITION_SITTING, MANA_0, LIFEFORCE_0,
     PRAY_500, TAR_CHAR_ROOM, SYMBOL_STRESS_30, "", "", "", "", START_51,
     LEARN_5, START_DO_50, LEARN_DO_10, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_PRAYERS, 0.04, COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_CURE_DISEASE] =
-    new spellInfo(SPELL_CLERIC, DISC_CLERIC, DISC_CURES, STAT_EXT,
+    new spellInfo(SPELL_CURE_DISEASE, SPELL_CLERIC, DISC_CLERIC, DISC_CURES, STAT_EXT,
       "cure disease", TASK_EASY, LAG_2, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_450, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_50, "", "", "",
       "", START_30, LEARN_5, START_DO_40, LEARN_DO_10, START_DO_NO, LEARN_DO_NO,
       LEARN_DIFF_PRAYERS, 0.02, COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_CURSE] = new spellInfo(SPELL_CLERIC, DISC_CLERIC,
+  discArray[SPELL_CURSE] = new spellInfo(SPELL_CURSE, SPELL_CLERIC, DISC_CLERIC,
     DISC_AFFLICTIONS, STAT_EXT, "curse", TASK_TRIVIAL, LAG_1, POSITION_FIGHTING,
     MANA_0, LIFEFORCE_0, PRAY_050,
     TAR_VIOLENT | TAR_CHAR_ROOM | TAR_OBJ_ROOM | TAR_OBJ_INV | TAR_OBJ_EQUIP |
@@ -1162,7 +1157,7 @@ void buildSpellArray() {
     LEARN_10, START_DO_20, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_PRAYERS, 0.05, COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_REMOVE_CURSE] = new spellInfo(SPELL_CLERIC, DISC_CLERIC,
+  discArray[SPELL_REMOVE_CURSE] = new spellInfo(SPELL_REMOVE_CURSE, SPELL_CLERIC, DISC_CLERIC,
     DISC_AEGIS, STAT_EXT, "remove curse", TASK_EASY, LAG_2, POSITION_SITTING,
     MANA_0, LIFEFORCE_0, PRAY_100,
     TAR_CHAR_ROOM | TAR_FIGHT_SELF | TAR_OBJ_INV | TAR_OBJ_EQUIP | TAR_OBJ_ROOM,
@@ -1171,26 +1166,26 @@ void buildSpellArray() {
     COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_CURE_POISON] =
-    new spellInfo(SPELL_CLERIC, DISC_CLERIC, DISC_AEGIS, STAT_EXT,
+    new spellInfo(SPELL_CURE_POISON, SPELL_CLERIC, DISC_CLERIC, DISC_AEGIS, STAT_EXT,
       "cure poison", TASK_EASY, LAG_2, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_100, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_35, "", "", "",
       "", START_11, LEARN_5, START_DO_30, LEARN_DO_10, START_DO_NO, LEARN_DO_NO,
       LEARN_DIFF_PRAYERS, 0.02, COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_HEAL_CRITICAL] = new spellInfo(SPELL_CLERIC, DISC_CLERIC,
+  discArray[SPELL_HEAL_CRITICAL] = new spellInfo(SPELL_HEAL_CRITICAL, SPELL_CLERIC, DISC_CLERIC,
     DISC_CURES, STAT_WIS, "heal critical", TASK_EASY, LAG_2, POSITION_SITTING,
     MANA_0, LIFEFORCE_0, PRAY_200, TAR_CHAR_ROOM | TAR_FIGHT_SELF,
     SYMBOL_STRESS_25, "", "", "", "", START_36, LEARN_5, START_DO_20,
     LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.04,
     COMP_GESTURAL | COMP_VERBAL | SPELL_TASKED | SPELL_TASKED_EVERY, 0);
 
-  discArray[SPELL_SALVE] = new spellInfo(SPELL_CLERIC, DISC_CLERIC, DISC_CURES,
+  discArray[SPELL_SALVE] = new spellInfo(SPELL_SALVE, SPELL_CLERIC, DISC_CLERIC, DISC_CURES,
     STAT_EXT, "salve", TASK_TRIVIAL, LAG_1, POSITION_SITTING, MANA_0,
     LIFEFORCE_0, PRAY_150, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_10, "",
     "", "", "", START_15, LEARN_8, START_DO_30, LEARN_DO_2, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.02, COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_POISON] = new spellInfo(SPELL_CLERIC, DISC_CLERIC,
+  discArray[SPELL_POISON] = new spellInfo(SPELL_POISON, SPELL_CLERIC, DISC_CLERIC,
     DISC_AFFLICTIONS, STAT_EXT, "poison", TASK_NORMAL, LAG_1, POSITION_SITTING,
     MANA_0, LIFEFORCE_0, PRAY_100,
     TAR_CHAR_ROOM | TAR_OBJ_INV | TAR_FIGHT_VICT | TAR_VIOLENT |
@@ -1200,7 +1195,7 @@ void buildSpellArray() {
     START_DO_30, LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.02,
     COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_HARM_CRITICAL] = new spellInfo(SPELL_CLERIC, DISC_CLERIC,
+  discArray[SPELL_HARM_CRITICAL] = new spellInfo(SPELL_HARM_CRITICAL, SPELL_CLERIC, DISC_CLERIC,
     DISC_AFFLICTIONS, STAT_WIS, "harm critical", TASK_NORMAL, LAG_2,
     POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_200,
     TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_FIGHT_VICT | TAR_VIOLENT,
@@ -1209,21 +1204,21 @@ void buildSpellArray() {
     COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_INFECT] =
-    new spellInfo(SPELL_CLERIC, DISC_CLERIC, DISC_AFFLICTIONS, STAT_EXT,
+    new spellInfo(SPELL_INFECT, SPELL_CLERIC, DISC_CLERIC, DISC_AFFLICTIONS, STAT_EXT,
       "infect", TASK_NORMAL, LAG_1, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_150, TAR_CHAR_ROOM | TAR_FIGHT_VICT | TAR_VIOLENT | TAR_SELF_NONO,
       SYMBOL_STRESS_40, "", "", "", "", START_63, LEARN_8, START_DO_20,
       LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.04,
       COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_REFRESH] = new spellInfo(SPELL_CLERIC, DISC_CLERIC,
+  discArray[SPELL_REFRESH] = new spellInfo(SPELL_REFRESH, SPELL_CLERIC, DISC_CLERIC,
     DISC_AEGIS, STAT_EXT, "refresh", TASK_EASY, LAG_2, POSITION_SITTING, MANA_0,
     LIFEFORCE_0, PRAY_100, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_20, "",
     "", "", "", START_32, LEARN_7, START_DO_20, LEARN_DO_5, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.02, COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_NUMB] =
-    new spellInfo(SPELL_CLERIC, DISC_CLERIC, DISC_AFFLICTIONS, STAT_WIS, "numb",
+    new spellInfo(SPELL_NUMB, SPELL_CLERIC, DISC_CLERIC, DISC_AFFLICTIONS, STAT_WIS, "numb",
       TASK_EASY, LAG_2, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_100,
       TAR_CHAR_ROOM | TAR_FIGHT_VICT | TAR_VIOLENT | TAR_SELF_NONO,
       SYMBOL_STRESS_30, "", "", "", "", START_59, LEARN_5, START_DO_40,
@@ -1231,7 +1226,7 @@ void buildSpellArray() {
       COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_DISEASE] =
-    new spellInfo(SPELL_CLERIC, DISC_CLERIC, DISC_AFFLICTIONS, STAT_EXT,
+    new spellInfo(SPELL_DISEASE, SPELL_CLERIC, DISC_CLERIC, DISC_AFFLICTIONS, STAT_EXT,
       "disease", TASK_NORMAL, LAG_2, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_150, TAR_CHAR_ROOM | TAR_VIOLENT | TAR_FIGHT_VICT | TAR_SELF_NONO,
       SYMBOL_STRESS_45, "", "", "", "", START_56, LEARN_4, START_DO_40,
@@ -1239,14 +1234,14 @@ void buildSpellArray() {
       COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_FLAMESTRIKE] =
-    new spellInfo(SPELL_CLERIC, DISC_CLERIC, DISC_WRATH, STAT_WIS,
+    new spellInfo(SPELL_FLAMESTRIKE, SPELL_CLERIC, DISC_CLERIC, DISC_WRATH, STAT_WIS,
       "flamestrike", TASK_NORMAL, LAG_3, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_200, TAR_CHAR_ROOM | TAR_VIOLENT | TAR_FIGHT_VICT | TAR_SELF_NONO,
       SYMBOL_STRESS_30, "", "", "", "", START_51, LEARN_10, START_DO_25,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.04,
       COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_PLAGUE_LOCUSTS] = new spellInfo(SPELL_CLERIC, DISC_CLERIC,
+  discArray[SPELL_PLAGUE_LOCUSTS] = new spellInfo(SPELL_PLAGUE_LOCUSTS, SPELL_CLERIC, DISC_CLERIC,
     DISC_WRATH, STAT_WIS, "plague of locusts", TASK_NORMAL, LAG_3,
     POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_500,
     TAR_CHAR_ROOM | TAR_VIOLENT | TAR_FIGHT_VICT | TAR_SELF_NONO,
@@ -1256,19 +1251,19 @@ void buildSpellArray() {
     COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_CURE_BLINDNESS] =
-    new spellInfo(SPELL_CLERIC, DISC_CLERIC, DISC_AEGIS, STAT_EXT,
+    new spellInfo(SPELL_CURE_BLINDNESS, SPELL_CLERIC, DISC_CLERIC, DISC_AEGIS, STAT_EXT,
       "cure blindness", TASK_EASY, LAG_2, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_250, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_40, "", "", "",
       "", START_45, LEARN_5, START_DO_40, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
       LEARN_DIFF_PRAYERS, 0.02, COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_SUMMON] = new spellInfo(SPELL_CLERIC, DISC_CLERIC,
+  discArray[SPELL_SUMMON] = new spellInfo(SPELL_SUMMON, SPELL_CLERIC, DISC_CLERIC,
     DISC_HAND_OF_GOD, STAT_EXT, "summon", TASK_EASY, LAG_2, POSITION_CRAWLING,
     MANA_0, LIFEFORCE_0, PRAY_300, TAR_CHAR_WORLD, SYMBOL_STRESS_75, "", "", "",
     "", START_76, LEARN_10, START_DO_50, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_PRAYERS, 0.0, COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_HEAL] = new spellInfo(SPELL_CLERIC, DISC_CLERIC, DISC_CURES,
+  discArray[SPELL_HEAL] = new spellInfo(SPELL_HEAL, SPELL_CLERIC, DISC_CLERIC, DISC_CURES,
     STAT_WIS, "heal", TASK_NORMAL, LAG_2, POSITION_SITTING, MANA_0, LIFEFORCE_0,
     PRAY_250, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_48, "", "", "", "",
     START_65, LEARN_5, START_DO_20, LEARN_DO_2, START_DO_NO, LEARN_DO_NO,
@@ -1276,7 +1271,7 @@ void buildSpellArray() {
     COMP_GESTURAL | COMP_VERBAL | SPELL_TASKED | SPELL_TASKED_EVERY, 0);
 
   discArray[SPELL_PARALYZE_LIMB] =
-    new spellInfo(SPELL_CLERIC, DISC_CLERIC, DISC_AFFLICTIONS, STAT_WIS,
+    new spellInfo(SPELL_PARALYZE_LIMB, SPELL_CLERIC, DISC_CLERIC, DISC_AFFLICTIONS, STAT_WIS,
       "paralyze limb", TASK_EASY, LAG_3, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_200, TAR_CHAR_ROOM | TAR_FIGHT_VICT | TAR_VIOLENT | TAR_SELF_NONO,
       SYMBOL_STRESS_50, "", "", "", "", START_86, LEARN_10, START_DO_20,
@@ -1284,14 +1279,14 @@ void buildSpellArray() {
       COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_WORD_OF_RECALL] =
-    new spellInfo(SPELL_CLERIC, DISC_CLERIC, DISC_HAND_OF_GOD, STAT_EXT,
+    new spellInfo(SPELL_WORD_OF_RECALL, SPELL_CLERIC, DISC_CLERIC, DISC_HAND_OF_GOD, STAT_EXT,
       "word of recall", TASK_TRIVIAL, LAG_3, POSITION_SITTING, MANA_0,
       LIFEFORCE_0, PRAY_500, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_100,
       "", "", "", "", START_83, LEARN_10, START_DO_40, LEARN_DO_5, START_DO_NO,
       LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.0, COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_HARM] =
-    new spellInfo(SPELL_CLERIC, DISC_CLERIC, DISC_AFFLICTIONS, STAT_WIS, "harm",
+    new spellInfo(SPELL_HARM, SPELL_CLERIC, DISC_CLERIC, DISC_AFFLICTIONS, STAT_WIS, "harm",
       TASK_NORMAL, LAG_3, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_250,
       TAR_CHAR_ROOM | TAR_FIGHT_VICT | TAR_SELF_NONO | TAR_VIOLENT,
       SYMBOL_STRESS_50, "", "", "", "", START_79, LEARN_10, START_DO_20,
@@ -1299,14 +1294,14 @@ void buildSpellArray() {
       COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_BLINDNESS] =
-    new spellInfo(SPELL_CLERIC, DISC_CLERIC, DISC_AFFLICTIONS, STAT_EXT,
+    new spellInfo(SPELL_BLINDNESS, SPELL_CLERIC, DISC_CLERIC, DISC_AFFLICTIONS, STAT_EXT,
       "blindness", TASK_NORMAL, LAG_2, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_250, TAR_CHAR_ROOM | TAR_VIOLENT | TAR_FIGHT_VICT | TAR_SELF_NONO,
       SYMBOL_STRESS_80, "You can see again!", "", "", "", START_84, LEARN_6,
       START_DO_20, LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_PRAYERS,
       0.02, COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SKILL_REPAIR_CLERIC] = new spellInfo(SKILL_CLERIC, DISC_CLERIC,
+  discArray[SKILL_REPAIR_CLERIC] = new spellInfo(SKILL_REPAIR_CLERIC, SKILL_CLERIC, DISC_CLERIC,
     DISC_BLACKSMITHING, STAT_EXT, "cleric repair", TASK_NORMAL, LAG_0,
     POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_50, LEARN_3, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
@@ -1314,7 +1309,7 @@ void buildSpellArray() {
 
   // disc_wrath
 
-  discArray[SPELL_PILLAR_SALT] = new spellInfo(SPELL_CLERIC, DISC_WRATH,
+  discArray[SPELL_PILLAR_SALT] = new spellInfo(SPELL_PILLAR_SALT, SPELL_CLERIC, DISC_WRATH,
     DISC_WRATH, STAT_WIS, "pillar of salt", TASK_NORMAL, LAG_3,
     POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_200,
     TAR_CHAR_ROOM | TAR_VIOLENT | TAR_FIGHT_VICT | TAR_SELF_NONO,
@@ -1322,14 +1317,14 @@ void buildSpellArray() {
     START_DO_NO, LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.01,
     COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_EARTHQUAKE] = new spellInfo(SPELL_CLERIC, DISC_WRATH,
+  discArray[SPELL_EARTHQUAKE] = new spellInfo(SPELL_EARTHQUAKE, SPELL_CLERIC, DISC_WRATH,
     DISC_WRATH, STAT_WIS, "earthquake", TASK_DIFFICULT, LAG_3, POSITION_SITTING,
     MANA_0, LIFEFORCE_0, PRAY_400, TAR_AREA | TAR_IGNORE | TAR_VIOLENT,
     SYMBOL_STRESS_90, "", "", "", "", START_26, LEARN_4, START_DO_20,
     LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.04,
     COMP_GESTURAL | COMP_VERBAL, TOG_HAS_EARTHQUAKE);
 
-  discArray[SPELL_CALL_LIGHTNING] = new spellInfo(SPELL_CLERIC, DISC_WRATH,
+  discArray[SPELL_CALL_LIGHTNING] = new spellInfo(SPELL_CALL_LIGHTNING, SPELL_CLERIC, DISC_WRATH,
     DISC_WRATH, STAT_WIS, "call lightning", TASK_DIFFICULT, LAG_2,
     POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_300,
     TAR_CHAR_ROOM | TAR_VIOLENT | TAR_FIGHT_VICT | TAR_SELF_NONO,
@@ -1337,7 +1332,7 @@ void buildSpellArray() {
     LEARN_DO_3, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.06,
     COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_SPONTANEOUS_COMBUST] = new spellInfo(SPELL_CLERIC, DISC_WRATH,
+  discArray[SPELL_SPONTANEOUS_COMBUST] = new spellInfo(SPELL_SPONTANEOUS_COMBUST, SPELL_CLERIC, DISC_WRATH,
     DISC_WRATH, STAT_WIS, "spontaneous combust", TASK_DIFFICULT, LAG_5,
     POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_400,
     TAR_CHAR_ROOM | TAR_VIOLENT | TAR_FIGHT_VICT | TAR_SELF_NONO,
@@ -1348,7 +1343,7 @@ void buildSpellArray() {
   // disc_afflictions
 
   discArray[SPELL_BLEED] =
-    new spellInfo(SPELL_CLERIC, DISC_AFFLICTIONS, DISC_AFFLICTIONS, STAT_EXT,
+    new spellInfo(SPELL_BLEED, SPELL_CLERIC, DISC_AFFLICTIONS, DISC_AFFLICTIONS, STAT_EXT,
       "bleed", TASK_EASY, LAG_1, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_100, TAR_CHAR_ROOM | TAR_FIGHT_VICT | TAR_VIOLENT | TAR_SELF_NONO,
       SYMBOL_STRESS_35, "", "", "", "", START_1, LEARN_4, START_DO_30,
@@ -1356,7 +1351,7 @@ void buildSpellArray() {
       COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_PARALYZE] =
-    new spellInfo(SPELL_CLERIC, DISC_AFFLICTIONS, DISC_AFFLICTIONS, STAT_WIS,
+    new spellInfo(SPELL_PARALYZE, SPELL_CLERIC, DISC_AFFLICTIONS, DISC_AFFLICTIONS, STAT_WIS,
       "paralyze", TASK_NORMAL, LAG_3, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_300, TAR_CHAR_ROOM | TAR_VIOLENT | TAR_FIGHT_VICT | TAR_SELF_NONO,
       SYMBOL_STRESS_95,
@@ -1365,7 +1360,7 @@ void buildSpellArray() {
       LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.02, COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_BONE_BREAKER] =
-    new spellInfo(SPELL_CLERIC, DISC_AFFLICTIONS, DISC_AFFLICTIONS, STAT_WIS,
+    new spellInfo(SPELL_BONE_BREAKER, SPELL_CLERIC, DISC_AFFLICTIONS, DISC_AFFLICTIONS, STAT_WIS,
       "bone breaker", TASK_NORMAL, LAG_3, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_300, TAR_CHAR_ROOM | TAR_FIGHT_VICT | TAR_VIOLENT | TAR_SELF_NONO,
       SYMBOL_STRESS_85, "", "", "", "", START_51, LEARN_4, START_DO_20,
@@ -1373,7 +1368,7 @@ void buildSpellArray() {
       COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_WITHER_LIMB] =
-    new spellInfo(SPELL_CLERIC, DISC_AFFLICTIONS, DISC_AFFLICTIONS, STAT_WIS,
+    new spellInfo(SPELL_WITHER_LIMB, SPELL_CLERIC, DISC_AFFLICTIONS, DISC_AFFLICTIONS, STAT_WIS,
       "wither limb", TASK_NORMAL, LAG_3, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_250, TAR_CHAR_ROOM | TAR_FIGHT_VICT | TAR_VIOLENT | TAR_SELF_NONO,
       SYMBOL_STRESS_70, "", "", "", "", START_76, LEARN_4, START_DO_20,
@@ -1382,7 +1377,7 @@ void buildSpellArray() {
 
   // disc_aegis
 
-  discArray[SPELL_SANCTUARY] = new spellInfo(SPELL_CLERIC, DISC_AEGIS,
+  discArray[SPELL_SANCTUARY] = new spellInfo(SPELL_SANCTUARY, SPELL_CLERIC, DISC_AEGIS,
     DISC_AEGIS, STAT_WIS, "sanctuary", TASK_EASY, LAG_3, POSITION_SITTING,
     MANA_0, LIFEFORCE_0, PRAY_500, TAR_CHAR_ROOM | TAR_FIGHT_SELF,
     SYMBOL_STRESS_75, "The white aura around your body fades.",
@@ -1393,26 +1388,26 @@ void buildSpellArray() {
     COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_CURE_PARALYSIS] =
-    new spellInfo(SPELL_CLERIC, DISC_AEGIS, DISC_AEGIS, STAT_EXT,
+    new spellInfo(SPELL_CURE_PARALYSIS, SPELL_CLERIC, DISC_AEGIS, DISC_AEGIS, STAT_EXT,
       "cure paralysis", TASK_EASY, LAG_2, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_300, TAR_CHAR_ROOM | TAR_FIGHT_VICT, SYMBOL_STRESS_75, "", "", "",
       "", START_40, LEARN_4, START_DO_50, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
       LEARN_DIFF_PRAYERS, 0.02, COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_SECOND_WIND] =
-    new spellInfo(SPELL_CLERIC, DISC_AEGIS, DISC_AEGIS, STAT_EXT, "second wind",
+    new spellInfo(SPELL_SECOND_WIND, SPELL_CLERIC, DISC_AEGIS, DISC_AEGIS, STAT_EXT, "second wind",
       TASK_EASY, LAG_2, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_300,
       TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_45, "", "", "", "",
       START_26, LEARN_20, START_DO_30, LEARN_DO_2, START_DO_NO, LEARN_DO_NO,
       LEARN_DIFF_PRAYERS, 0.01, COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_RELIVE] = new spellInfo(SPELL_CLERIC, DISC_AEGIS, DISC_AEGIS,
+  discArray[SPELL_RELIVE] = new spellInfo(SPELL_RELIVE, SPELL_CLERIC, DISC_AEGIS, DISC_AEGIS,
     STAT_EXT, "relive", TASK_NORMAL, LAG_2, POSITION_SITTING, MANA_0,
     LIFEFORCE_0, PRAY_300, TAR_CHAR_ROOM, SYMBOL_STRESS_100, "", "", "", "",
     START_80, LEARN_5, START_DO_50, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_PRAYERS, 0.02, COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_CRUSADE] = new spellInfo(SPELL_CLERIC, DISC_AEGIS, DISC_AEGIS,
+  discArray[SPELL_CRUSADE] = new spellInfo(SPELL_CRUSADE, SPELL_CLERIC, DISC_AEGIS, DISC_AEGIS,
     STAT_WIS, "crusade", TASK_EASY, LAG_2, POSITION_SITTING, MANA_0,
     LIFEFORCE_0, PRAY_500, TAR_AREA | TAR_IGNORE, SYMBOL_STRESS_45, "", "", "",
     "", START_80, LEARN_5, START_DO_50, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
@@ -1421,27 +1416,27 @@ void buildSpellArray() {
   // disc_hand_of_god
 
   discArray[SPELL_HEROES_FEAST] =
-    new spellInfo(SPELL_CLERIC, DISC_HAND_OF_GOD, DISC_HAND_OF_GOD, STAT_EXT,
+    new spellInfo(SPELL_HEROES_FEAST, SPELL_CLERIC, DISC_HAND_OF_GOD, DISC_HAND_OF_GOD, STAT_EXT,
       "heroes feast", TASK_TRIVIAL, LAG_2, POSITION_CRAWLING, MANA_0,
       LIFEFORCE_0, PRAY_075, TAR_AREA | TAR_IGNORE, SYMBOL_STRESS_15, "", "",
       "", "", START_1, LEARN_10, START_DO_20, LEARN_DO_5, START_DO_NO,
       LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.1, COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_ASTRAL_WALK] =
-    new spellInfo(SPELL_CLERIC, DISC_HAND_OF_GOD, DISC_HAND_OF_GOD, STAT_EXT,
+    new spellInfo(SPELL_ASTRAL_WALK, SPELL_CLERIC, DISC_HAND_OF_GOD, DISC_HAND_OF_GOD, STAT_EXT,
       "astral walk", TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_200, TAR_CHAR_WORLD, SYMBOL_STRESS_50, "", "", "", "", START_33,
       LEARN_3, START_DO_40, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
       LEARN_DIFF_PRAYERS, 0.0, COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_PORTAL] = new spellInfo(SPELL_CLERIC, DISC_HAND_OF_GOD,
+  discArray[SPELL_PORTAL] = new spellInfo(SPELL_PORTAL, SPELL_CLERIC, DISC_HAND_OF_GOD,
     DISC_HAND_OF_GOD, STAT_EXT, "portal", TASK_NORMAL, LAG_3, POSITION_CRAWLING,
     MANA_0, LIFEFORCE_0, PRAY_300, TAR_NAME, SYMBOL_STRESS_75, "", "", "", "",
     START_80, LEARN_5, START_DO_50, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_PRAYERS, 0.0, COMP_GESTURAL | COMP_VERBAL, 0);
 
   // disc_cures
-  discArray[SPELL_HEAL_FULL] = new spellInfo(SPELL_CLERIC, DISC_CURES,
+  discArray[SPELL_HEAL_FULL] = new spellInfo(SPELL_HEAL_FULL, SPELL_CLERIC, DISC_CURES,
     DISC_CURES, STAT_WIS, "heal full", TASK_NORMAL, LAG_2, POSITION_SITTING,
     MANA_0, LIFEFORCE_0, PRAY_300, TAR_CHAR_ROOM | TAR_FIGHT_SELF,
     SYMBOL_STRESS_60, "", "", "", "", START_12, LEARN_6, START_DO_20,
@@ -1449,34 +1444,34 @@ void buildSpellArray() {
     COMP_GESTURAL | COMP_VERBAL | SPELL_TASKED | SPELL_TASKED_EVERY, 0);
 
   discArray[SPELL_HEAL_CRITICAL_SPRAY] =
-    new spellInfo(SPELL_CLERIC, DISC_CURES, DISC_CURES, STAT_WIS,
+    new spellInfo(SPELL_HEAL_CRITICAL_SPRAY, SPELL_CLERIC, DISC_CURES, DISC_CURES, STAT_WIS,
       "heal critical spray", TASK_EASY, LAG_3, POSITION_SITTING, MANA_0,
       LIFEFORCE_0, PRAY_250, TAR_AREA | TAR_IGNORE, SYMBOL_STRESS_70, "", "",
       "", "", START_46, LEARN_6, START_DO_30, LEARN_DO_5, START_DO_NO,
       LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.04, COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_HEAL_SPRAY] = new spellInfo(SPELL_CLERIC, DISC_CURES,
+  discArray[SPELL_HEAL_SPRAY] = new spellInfo(SPELL_HEAL_SPRAY, SPELL_CLERIC, DISC_CURES,
     DISC_CURES, STAT_WIS, "heal spray", TASK_NORMAL, LAG_3, POSITION_SITTING,
     MANA_0, LIFEFORCE_0, PRAY_300, TAR_AREA | TAR_IGNORE, SYMBOL_STRESS_85, "",
     "", "", "", START_60, LEARN_6, START_DO_30, LEARN_DO_5, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.06, COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_HEAL_FULL_SPRAY] =
-    new spellInfo(SPELL_CLERIC, DISC_CURES, DISC_CURES, STAT_WIS,
+    new spellInfo(SPELL_HEAL_FULL_SPRAY, SPELL_CLERIC, DISC_CURES, DISC_CURES, STAT_WIS,
       "heal full spray", TASK_NORMAL, LAG_3, POSITION_SITTING, MANA_0,
       LIFEFORCE_0, PRAY_350, TAR_AREA | TAR_IGNORE, SYMBOL_STRESS_100, "", "",
       "", "", START_84, LEARN_6, START_DO_30, LEARN_DO_5, START_DO_NO,
       LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.07, COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_RESTORE_LIMB] =
-    new spellInfo(SPELL_CLERIC, DISC_CURES, DISC_CURES, STAT_EXT,
+    new spellInfo(SPELL_RESTORE_LIMB, SPELL_CLERIC, DISC_CURES, DISC_CURES, STAT_EXT,
       "restore limb", TASK_EASY, LAG_2, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_250, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_80, "", "", "",
       "", START_1, LEARN_8, START_DO_50, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
       LEARN_DIFF_PRAYERS, 0.02, COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_KNIT_BONE] =
-    new spellInfo(SPELL_CLERIC, DISC_CLERIC, DISC_CURES, STAT_EXT, "knit bone",
+    new spellInfo(SPELL_KNIT_BONE, SPELL_CLERIC, DISC_CLERIC, DISC_CURES, STAT_EXT, "knit bone",
       TASK_EASY, LAG_2, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_300,
       TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_70, "", "", "", "",
       START_99, LEARN_100, START_DO_40, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
@@ -1486,62 +1481,62 @@ void buildSpellArray() {
 
   // disc_warrior
   discArray[SKILL_SLAM] =
-    new spellInfo(SKILL_WARRIOR, DISC_WARRIOR, DISC_SOLDIERING, STAT_STR,
+    new spellInfo(SKILL_SLAM, SKILL_WARRIOR, DISC_WARRIOR, DISC_SOLDIERING, STAT_STR,
       "slam", TASK_EASY, LAG_2, POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0,
       0, SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_5, START_DO_50,
       LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_BASH] =
-    new spellInfo(SKILL_WARRIOR, DISC_WARRIOR, DISC_BRAWLING, STAT_STR, "bash",
+    new spellInfo(SKILL_BASH, SKILL_WARRIOR, DISC_WARRIOR, DISC_BRAWLING, STAT_STR, "bash",
       TASK_EASY, LAG_3, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_5, START_DO_1, LEARN_DO_1,
       START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_RESCUE] =
-    new spellInfo(SKILL_WARRIOR, DISC_WARRIOR, DISC_DUELING, STAT_EXT, "rescue",
+    new spellInfo(SKILL_RESCUE, SKILL_WARRIOR, DISC_WARRIOR, DISC_DUELING, STAT_EXT, "rescue",
       TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_11, LEARN_3, START_DO_10,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.15, 0, 0);
 
-  discArray[SKILL_BLACKSMITHING] = new spellInfo(SKILL_WARRIOR, DISC_WARRIOR,
+  discArray[SKILL_BLACKSMITHING] = new spellInfo(SKILL_BLACKSMITHING, SKILL_WARRIOR, DISC_WARRIOR,
     DISC_BLACKSMITHING, STAT_EXT, "blacksmithing", TASK_NORMAL, LAG_0,
     POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_50, LEARN_3, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_DISARM] =
-    new spellInfo(SKILL_WARRIOR, DISC_WARRIOR, DISC_DUELING, STAT_EXT, "disarm",
+    new spellInfo(SKILL_DISARM, SKILL_WARRIOR, DISC_WARRIOR, DISC_DUELING, STAT_EXT, "disarm",
       TASK_DANGEROUS, LAG_2, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_45, LEARN_5, START_DO_1,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_BERSERK] =
-    new spellInfo(SKILL_WARRIOR, DISC_WARRIOR, DISC_SOLDIERING, STAT_EXT,
+    new spellInfo(SKILL_BERSERK, SKILL_WARRIOR, DISC_WARRIOR, DISC_SOLDIERING, STAT_EXT,
       "berserk", TASK_NORMAL, LAG_2, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_2, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_SWITCH_OPP] = new spellInfo(SKILL_WARRIOR, DISC_WARRIOR,
+  discArray[SKILL_SWITCH_OPP] = new spellInfo(SKILL_SWITCH_OPP, SKILL_WARRIOR, DISC_WARRIOR,
     DISC_DUELING, STAT_EXT, "switch opponents", TASK_EASY, LAG_2,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_61, LEARN_3, START_DO_10, LEARN_DO_2, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_BLOODLUST] =
-    new spellInfo(SKILL_WARRIOR, DISC_WARRIOR, DISC_BRAWLING, STAT_STR,
+    new spellInfo(SKILL_BLOODLUST, SKILL_WARRIOR, DISC_WARRIOR, DISC_BRAWLING, STAT_STR,
       "bloodlust", TASK_NORMAL, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "Your <R>bloodlust <z>has been sated.", "",
       "", "", START_1, LEARN_4, START_DO_10, LEARN_DO_2, START_DO_NO,
       LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_WHIRLWIND] = new spellInfo(SKILL_WARRIOR, DISC_WARRIOR,
+  discArray[SKILL_WHIRLWIND] = new spellInfo(SKILL_WHIRLWIND, SKILL_WARRIOR, DISC_WARRIOR,
     DISC_SOLDIERING, STAT_STR, "whirlwind", TASK_DANGEROUS, LAG_2,
     POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0,
     "You feel ready to attempt another <R>whirlwind attack<z>.", "", "", "",
     START_60, LEARN_4, START_DO_1, LEARN_DO_2, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_RALLY] = new spellInfo(SKILL_WARRIOR, DISC_WARRIOR,
+  discArray[SKILL_RALLY] = new spellInfo(SKILL_RALLY, SKILL_WARRIOR, DISC_WARRIOR,
     DISC_BRAWLING, STAT_CHA, "rally", TASK_NORMAL, LAG_0, POSITION_CRAWLING,
     MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0,
     "Your motivation to continue the battle diminishes as the effects from the "
@@ -1549,7 +1544,7 @@ void buildSpellArray() {
     "", "", "", START_1, LEARN_4, START_DO_10, LEARN_DO_2, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_FOCUS_ATTACK] = new spellInfo(SKILL_WARRIOR, DISC_WARRIOR,
+  discArray[SKILL_FOCUS_ATTACK] = new spellInfo(SKILL_FOCUS_ATTACK, SKILL_WARRIOR, DISC_WARRIOR,
     DISC_DUELING, STAT_EXT, "focus attack", TASK_NORMAL, LAG_1,
     POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0,
     "Your <Y>focus <z>returns and you feel ready to attempt another "
@@ -1560,36 +1555,36 @@ void buildSpellArray() {
   // disc_dueling
 
   discArray[SKILL_RETREAT] =
-    new spellInfo(SKILL_WARRIOR, DISC_DUELING, DISC_DUELING, STAT_EXT,
+    new spellInfo(SKILL_RETREAT, SKILL_WARRIOR, DISC_DUELING, DISC_DUELING, STAT_EXT,
       "retreat", TASK_EASY, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_SHOVE] =
-    new spellInfo(SKILL_WARRIOR, DISC_DUELING, DISC_DUELING, STAT_EXT, "shove",
+    new spellInfo(SKILL_SHOVE, SKILL_WARRIOR, DISC_DUELING, DISC_DUELING, STAT_EXT, "shove",
       TASK_NORMAL, LAG_3, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_21, LEARN_4, START_DO_1,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_PARRY_WARRIOR] =
-    new spellInfo(SKILL_WARRIOR, DISC_DUELING, DISC_DUELING, STAT_EXT, "parry",
+    new spellInfo(SKILL_PARRY_WARRIOR, SKILL_WARRIOR, DISC_DUELING, DISC_DUELING, STAT_EXT, "parry",
       TASK_EASY, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1, LEARN_DO_1,
       START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_RIPOSTE] =
-    new spellInfo(SKILL_WARRIOR, DISC_DUELING, DISC_DUELING, STAT_EXT,
+    new spellInfo(SKILL_RIPOSTE, SKILL_WARRIOR, DISC_DUELING, DISC_DUELING, STAT_EXT,
       "riposte", TASK_NORMAL, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0,
       0, SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_2, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_TRANCE_OF_BLADES] = new spellInfo(SKILL_WARRIOR, DISC_DUELING,
+  discArray[SKILL_TRANCE_OF_BLADES] = new spellInfo(SKILL_TRANCE_OF_BLADES, SKILL_WARRIOR, DISC_DUELING,
     DISC_DUELING, STAT_EXT, "defensive trance", TASK_NORMAL, LAG_4,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_75, LEARN_4, START_DO_10, LEARN_DO_1, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_WEAPON_RETENTION] = new spellInfo(SKILL_WARRIOR, DISC_DUELING,
+  discArray[SKILL_WEAPON_RETENTION] = new spellInfo(SKILL_WEAPON_RETENTION, SKILL_WARRIOR, DISC_DUELING,
     DISC_DUELING, STAT_EXT, "weapon retention", TASK_EASY, LAG_4,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_75, LEARN_4, START_DO_10, LEARN_DO_1, START_DO_NO,
@@ -1598,66 +1593,66 @@ void buildSpellArray() {
   // disc_brawling
 
   discArray[SKILL_GRAPPLE] =
-    new spellInfo(SKILL_WARRIOR, DISC_BRAWLING, DISC_BRAWLING, STAT_STR,
+    new spellInfo(SKILL_GRAPPLE, SKILL_WARRIOR, DISC_BRAWLING, DISC_BRAWLING, STAT_STR,
       "grapple", TASK_NORMAL, LAG_4, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_3, START_DO_10,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_STOMP] = new spellInfo(SKILL_WARRIOR, DISC_BRAWLING,
+  discArray[SKILL_STOMP] = new spellInfo(SKILL_STOMP, SKILL_WARRIOR, DISC_BRAWLING,
     DISC_BRAWLING, STAT_STR, "stomp", TASK_NORMAL, LAG_4, POSITION_CRAWLING,
     MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_50,
     LEARN_2, START_DO_10, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_BRAWL_AVOIDANCE] = new spellInfo(SKILL_WARRIOR, DISC_BRAWLING,
+  discArray[SKILL_BRAWL_AVOIDANCE] = new spellInfo(SKILL_BRAWL_AVOIDANCE, SKILL_WARRIOR, DISC_BRAWLING,
     DISC_BRAWLING, STAT_EXT, "brawl avoidance", TASK_NORMAL, LAG_4,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_75, LEARN_4, START_DO_10, LEARN_DO_1, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_HEADBUTT] =
-    new spellInfo(SKILL_WARRIOR, DISC_BRAWLING, DISC_BRAWLING, STAT_STR,
+    new spellInfo(SKILL_HEADBUTT, SKILL_WARRIOR, DISC_BRAWLING, DISC_BRAWLING, STAT_STR,
       "headbutt", TASK_NORMAL, LAG_4, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_41, LEARN_5, START_DO_1,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_KNEESTRIKE] =
-    new spellInfo(SKILL_WARRIOR, DISC_BRAWLING, DISC_BRAWLING, STAT_STR,
+    new spellInfo(SKILL_KNEESTRIKE, SKILL_WARRIOR, DISC_BRAWLING, DISC_BRAWLING, STAT_STR,
       "kneestrike", TASK_NORMAL, LAG_4, POSITION_STANDING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_60, LEARN_4, START_DO_1,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_TAUNT] = new spellInfo(SKILL_WARRIOR, DISC_BRAWLING,
+  discArray[SKILL_TAUNT] = new spellInfo(SKILL_TAUNT, SKILL_WARRIOR, DISC_BRAWLING,
     DISC_BRAWLING, STAT_CHA, "taunting", TASK_DIFFICULT, LAG_2,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_55, LEARN_4, START_DO_10, LEARN_DO_1, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_CLOSE_QUARTERS_FIGHTING] = new spellInfo(SKILL_WARRIOR,
+  discArray[SKILL_CLOSE_QUARTERS_FIGHTING] = new spellInfo(SKILL_CLOSE_QUARTERS_FIGHTING, SKILL_WARRIOR,
     DISC_BRAWLING, DISC_BRAWLING, STAT_EXT, "close quarters fighting",
     TASK_NORMAL, LAG_4, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "", "", "", "", START_85, LEARN_7, START_DO_10, LEARN_DO_1,
     START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_TRIP] =
-    new spellInfo(SKILL_WARRIOR, DISC_BRAWLING, DISC_BRAWLING, STAT_DEX, "trip",
+    new spellInfo(SKILL_TRIP, SKILL_WARRIOR, DISC_BRAWLING, DISC_BRAWLING, STAT_DEX, "trip",
       TASK_NORMAL, LAG_3, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_5, START_DO_1, LEARN_DO_1,
       START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_BODYSLAM] = new spellInfo(SKILL_WARRIOR, DISC_BRAWLING,
+  discArray[SKILL_BODYSLAM] = new spellInfo(SKILL_BODYSLAM, SKILL_WARRIOR, DISC_BRAWLING,
     DISC_BRAWLING, STAT_STR, "bodyslam", TASK_DIFFICULT, LAG_4,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_30, LEARN_4, START_DO_10, LEARN_DO_1, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_SPIN] =
-    new spellInfo(SKILL_WARRIOR, DISC_BRAWLING, DISC_BRAWLING, STAT_STR, "spin",
+    new spellInfo(SKILL_SPIN, SKILL_WARRIOR, DISC_BRAWLING, DISC_BRAWLING, STAT_STR, "spin",
       TASK_NORMAL, LAG_6, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_45, LEARN_4, START_DO_10,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_ADVANCED_BERSERKING] = new spellInfo(SKILL_WARRIOR,
+  discArray[SKILL_ADVANCED_BERSERKING] = new spellInfo(SKILL_ADVANCED_BERSERKING, SKILL_WARRIOR,
     DISC_BRAWLING, DISC_BRAWLING, STAT_STR, "advanced berserking", TASK_NORMAL,
     LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "",
     "", "", "", START_50, LEARN_4, START_DO_NO, LEARN_DO_NO, START_DO_NO,
@@ -1666,14 +1661,14 @@ void buildSpellArray() {
   // disc_soldiering
 
   discArray[SKILL_DOORBASH] =
-    new spellInfo(SKILL_WARRIOR, DISC_SOLDIERING, DISC_SOLDIERING, STAT_EXT,
+    new spellInfo(SKILL_DOORBASH, SKILL_WARRIOR, DISC_SOLDIERING, DISC_SOLDIERING, STAT_EXT,
       "doorbash", TASK_EASY, LAG_3, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "You shake the cobwebs from your brain.",
       "$n shakes $s head and comes back to reality.", "", "", START_1, LEARN_2,
       START_DO_10, LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0,
       0, 0);
 
-  discArray[SKILL_DEATHSTROKE] = new spellInfo(SKILL_WARRIOR, DISC_SOLDIERING,
+  discArray[SKILL_DEATHSTROKE] = new spellInfo(SKILL_DEATHSTROKE, SKILL_WARRIOR, DISC_SOLDIERING,
     DISC_SOLDIERING, STAT_STR, "deathstroke", TASK_NORMAL, LAG_5,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0,
     "You regain your balance and feel ready to attempt another "
@@ -1682,24 +1677,24 @@ void buildSpellArray() {
     LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_DUAL_WIELD] =
-    new spellInfo(SKILL_WARRIOR, DISC_SOLDIERING, DISC_SOLDIERING, STAT_EXT,
+    new spellInfo(SKILL_DUAL_WIELD, SKILL_WARRIOR, DISC_SOLDIERING, DISC_SOLDIERING, STAT_EXT,
       "dual wield", TASK_EASY, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_5, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_POWERMOVE] =
-    new spellInfo(SKILL_WARRIOR, DISC_SOLDIERING, DISC_SOLDIERING, STAT_EXT,
+    new spellInfo(SKILL_POWERMOVE, SKILL_WARRIOR, DISC_SOLDIERING, DISC_SOLDIERING, STAT_EXT,
       "power move", TASK_EASY, LAG_0, POSITION_STANDING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_2H_SPEC] = new spellInfo(SKILL_WARRIOR, DISC_SOLDIERING,
+  discArray[SKILL_2H_SPEC] = new spellInfo(SKILL_2H_SPEC, SKILL_WARRIOR, DISC_SOLDIERING,
     DISC_SOLDIERING, STAT_EXT, "2h specialization", TASK_NORMAL, LAG_0,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_1, LEARN_2, START_DO_10, LEARN_DO_2, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_FORTIFY] = new spellInfo(SKILL_WARRIOR, DISC_SOLDIERING,
+  discArray[SKILL_FORTIFY] = new spellInfo(SKILL_FORTIFY, SKILL_WARRIOR, DISC_SOLDIERING,
     DISC_SOLDIERING, STAT_BRA, "fortify", TASK_NORMAL, LAG_0, POSITION_CRAWLING,
     MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0,
     "You collect your composure and are ready to <G>fortify <z>your defenses "
@@ -1709,7 +1704,7 @@ void buildSpellArray() {
 
   // disc_blacksmithing
 
-  discArray[SKILL_BLACKSMITHING_ADVANCED] = new spellInfo(SKILL_WARRIOR,
+  discArray[SKILL_BLACKSMITHING_ADVANCED] = new spellInfo(SKILL_BLACKSMITHING_ADVANCED, SKILL_WARRIOR,
     DISC_BLACKSMITHING, DISC_BLACKSMITHING, STAT_EXT, "advanced blacksmithing",
     TASK_NORMAL, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1, LEARN_DO_1,
@@ -1722,26 +1717,26 @@ void buildSpellArray() {
   // disc_ranger
 
   discArray[SKILL_BEAST_SOOTHER] =
-    new spellInfo(SPELL_RANGER, DISC_RANGER, DISC_ANIMAL, STAT_EXT,
+    new spellInfo(SKILL_BEAST_SOOTHER, SPELL_RANGER, DISC_RANGER, DISC_ANIMAL, STAT_EXT,
       "beast soother", TASK_NORMAL, LAG_3, POSITION_CRAWLING, MANA_0,
       LIFEFORCE_0, PRAY_0, TAR_SELF_NONO | TAR_CHAR_ROOM, SYMBOL_STRESS_0, "",
       "", "", "", START_6, LEARN_4, START_DO_40, LEARN_DO_5, START_DO_NO,
       LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.04, COMP_VERBAL | COMP_MATERIAL, 0);
 
   discArray[SKILL_BEFRIEND_BEAST] =
-    new spellInfo(SPELL_RANGER, DISC_RANGER, DISC_ANIMAL, STAT_EXT,
+    new spellInfo(SKILL_BEFRIEND_BEAST, SPELL_RANGER, DISC_RANGER, DISC_ANIMAL, STAT_EXT,
       "befriend beast", TASK_DIFFICULT, LAG_3, POSITION_CRAWLING, MANA_0,
       LIFEFORCE_0, PRAY_0, TAR_SELF_NONO | TAR_CHAR_ROOM, SYMBOL_STRESS_0, "",
       "", "", "", START_25, LEARN_3, START_DO_40, LEARN_DO_5, START_DO_NO,
       LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.02, COMP_VERBAL | COMP_MATERIAL, 0);
 
-  discArray[SKILL_BEAST_SUMMON] = new spellInfo(SPELL_RANGER, DISC_RANGER,
+  discArray[SKILL_BEAST_SUMMON] = new spellInfo(SKILL_BEAST_SUMMON, SPELL_RANGER, DISC_RANGER,
     DISC_ANIMAL, STAT_EXT, "beast summon", TASK_DANGEROUS, LAG_3,
     POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, TAR_NAME, SYMBOL_STRESS_0,
     "", "", "", "", START_56, LEARN_5, START_DO_40, LEARN_DO_5, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.0, COMP_VERBAL | COMP_MATERIAL, 0);
 
-  discArray[SKILL_BARKSKIN] = new spellInfo(SPELL_RANGER, DISC_RANGER,
+  discArray[SKILL_BARKSKIN] = new spellInfo(SKILL_BARKSKIN, SPELL_RANGER, DISC_RANGER,
     DISC_PLANTS, STAT_EXT, "barkskin", TASK_EASY, LAG_3, POSITION_CRAWLING,
     MANA_0, LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF,
     SYMBOL_STRESS_0, "Your skin loses its barklike qualities.",
@@ -1756,7 +1751,7 @@ void buildSpellArray() {
 
   // disc_nature
 
-  discArray[SPELL_TREE_WALK] = new spellInfo(SPELL_RANGER, DISC_NATURE,
+  discArray[SPELL_TREE_WALK] = new spellInfo(SPELL_TREE_WALK, SPELL_RANGER, DISC_NATURE,
     DISC_NATURE, STAT_EXT, "tree walk", TASK_NORMAL, LAG_3, POSITION_CRAWLING,
     MANA_0, LIFEFORCE_0, PRAY_0, TAR_NAME, SYMBOL_STRESS_0, "", "", "", "",
     START_66, LEARN_35, START_DO_40, LEARN_DO_2, START_DO_NO, LEARN_DO_NO,
@@ -1765,14 +1760,13 @@ void buildSpellArray() {
   // disc_animal
 
   discArray[SKILL_BEAST_CHARM] =
-    new spellInfo(SPELL_RANGER, DISC_ANIMAL, DISC_ANIMAL, STAT_EXT,
+    new spellInfo(SKILL_BEAST_CHARM, SPELL_RANGER, DISC_ANIMAL, DISC_ANIMAL, STAT_EXT,
       "beast charm", TASK_DIFFICULT, LAG_3, POSITION_CRAWLING, MANA_0,
       LIFEFORCE_0, PRAY_0, TAR_SELF_NONO | TAR_CHAR_ROOM, SYMBOL_STRESS_0, "",
       "", "", "", START_1, LEARN_2, START_DO_30, LEARN_DO_5, START_DO_NO,
       LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.02, COMP_VERBAL | COMP_MATERIAL, 0);
 
-#if 1
-  discArray[SPELL_FERAL_WRATH] = new spellInfo(SPELL_RANGER, DISC_ANIMAL,
+  discArray[SPELL_FERAL_WRATH] = new spellInfo(SPELL_FERAL_WRATH, SPELL_RANGER, DISC_ANIMAL,
     DISC_ANIMAL, STAT_EXT, "feral wrath", TASK_NORMAL, LAG_3, POSITION_SITTING,
     MANA_0, LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_SELF_ONLY, SYMBOL_STRESS_0,
     "You lose your feral wrath.",
@@ -1783,21 +1777,17 @@ void buildSpellArray() {
     COMP_GESTURAL | COMP_VERBAL | COMP_MATERIAL | COMP_MATERIAL_END, 0);
 
   discArray[SPELL_SKY_SPIRIT] =
-    new spellInfo(SPELL_RANGER, DISC_ANIMAL, DISC_ANIMAL, STAT_EXT,
+    new spellInfo(SPELL_SKY_SPIRIT, SPELL_RANGER, DISC_ANIMAL, DISC_ANIMAL, STAT_EXT,
       "sky spirit", TASK_NORMAL, LAG_3, POSITION_SITTING, MANA_10, LIFEFORCE_0,
       PRAY_0, TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_FIGHT_VICT | TAR_VIOLENT,
       SYMBOL_STRESS_0, "", "", "", "", START_41, LEARN_4, START_DO_40,
       LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.04,
       COMP_GESTURAL | COMP_VERBAL | COMP_MATERIAL, 0);
-#endif
 
   // disc_plants
 
-#if 1
-#endif
-
   discArray[SKILL_APPLY_HERBS] =
-    new spellInfo(SKILL_RANGER, DISC_PLANTS, DISC_PLANTS, STAT_EXT,
+    new spellInfo(SKILL_APPLY_HERBS, SKILL_RANGER, DISC_PLANTS, DISC_PLANTS, STAT_EXT,
       "apply herbs", TASK_NORMAL, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_2, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
@@ -1805,7 +1795,7 @@ void buildSpellArray() {
   // disc_deikhan
 
   discArray[SPELL_HEAL_LIGHT_DEIKHAN] =
-    new spellInfo(SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_ABSOLUTION,
+    new spellInfo(SPELL_HEAL_LIGHT_DEIKHAN, SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_ABSOLUTION,
       STAT_WIS, "heal light", TASK_EASY, LAG_2, POSITION_SITTING, MANA_0,
       LIFEFORCE_0, PRAY_100, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_12,
       "", "", "", "", START_1, LEARN_10, START_DO_40, LEARN_DO_5, START_DO_NO,
@@ -1813,13 +1803,13 @@ void buildSpellArray() {
       COMP_GESTURAL | COMP_VERBAL | SPELL_TASKED | SPELL_TASKED_EVERY, 0);
 
   discArray[SKILL_CHIVALRY] =
-    new spellInfo(SKILL_DEIKHAN, DISC_DEIKHAN, DISC_MOUNTED, STAT_EXT,
+    new spellInfo(SKILL_CHIVALRY, SKILL_DEIKHAN, DISC_DEIKHAN, DISC_MOUNTED, STAT_EXT,
       "chivalry", TASK_EASY, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0,
       0, SYMBOL_STRESS_0, "", "", "", "", START_11, LEARN_2, START_DO_10,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SPELL_HARM_LIGHT_DEIKHAN] =
-    new spellInfo(SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_VENGEANCE, STAT_WIS,
+    new spellInfo(SPELL_HARM_LIGHT_DEIKHAN, SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_VENGEANCE, STAT_WIS,
       "harm light", TASK_NORMAL, LAG_2, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_100, TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_FIGHT_VICT | TAR_VIOLENT,
       SYMBOL_STRESS_5, "", "", "", "", START_1, LEARN_10, START_DO_20,
@@ -1827,7 +1817,7 @@ void buildSpellArray() {
       COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_ARMOR_DEIKHAN] =
-    new spellInfo(SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_GUARDIAN, STAT_WIS,
+    new spellInfo(SPELL_ARMOR_DEIKHAN, SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_GUARDIAN, STAT_WIS,
       "armor", TASK_TRIVIAL, LAG_1, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_025, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_15,
       "The protection around your body fades.",
@@ -1836,7 +1826,7 @@ void buildSpellArray() {
       LEARN_DIFF_PRAYERS, 0.2, COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_BLESS_DEIKHAN] =
-    new spellInfo(SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_GUARDIAN, STAT_WIS,
+    new spellInfo(SPELL_BLESS_DEIKHAN, SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_GUARDIAN, STAT_WIS,
       "bless", TASK_TRIVIAL, LAG_1, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_050, TAR_OBJ_INV | TAR_OBJ_EQUIP | TAR_CHAR_ROOM | TAR_FIGHT_SELF,
       SYMBOL_STRESS_10, "You feel less holy.", "$n doesn't seem as holy.",
@@ -1845,33 +1835,33 @@ void buildSpellArray() {
       LEARN_DIFF_PRAYERS, 0.05, COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SKILL_BASH_DEIKHAN] =
-    new spellInfo(SKILL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_MARTIAL, STAT_STR,
+    new spellInfo(SKILL_BASH_DEIKHAN, SKILL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_MARTIAL, STAT_STR,
       "bash-deikhan", TASK_EASY, LAG_3, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_5, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SPELL_EXPEL_DEIKHAN] =
-    new spellInfo(SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_ABSOLUTION,
+    new spellInfo(SPELL_EXPEL_DEIKHAN, SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_ABSOLUTION,
       STAT_EXT, "expel", TASK_EASY, LAG_4, POSITION_SITTING, MANA_0,
       LIFEFORCE_0, PRAY_500, TAR_CHAR_ROOM, SYMBOL_STRESS_100, "", "", "", "",
       START_51, LEARN_5, START_DO_50, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
       LEARN_DIFF_PRAYERS, 0.04, COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_CLOT_DEIKHAN] =
-    new spellInfo(SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_ABSOLUTION,
+    new spellInfo(SPELL_CLOT_DEIKHAN, SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_ABSOLUTION,
       STAT_EXT, "clot", TASK_EASY, LAG_2, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_100, TAR_CHAR_ROOM, SYMBOL_STRESS_15, "", "", "", "", START_16,
       LEARN_10, START_DO_20, LEARN_DO_3, START_DO_NO, LEARN_DO_NO,
       LEARN_DIFF_PRAYERS, 0.04, COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_STERILIZE_DEIKHAN] =
-    new spellInfo(SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_ABSOLUTION,
+    new spellInfo(SPELL_STERILIZE_DEIKHAN, SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_ABSOLUTION,
       STAT_EXT, "sterilize", TASK_EASY, LAG_3, POSITION_SITTING, MANA_0,
       LIFEFORCE_0, PRAY_150, TAR_CHAR_ROOM, SYMBOL_STRESS_15, "", "", "", "",
       START_21, LEARN_5, START_DO_30, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
       LEARN_DIFF_PRAYERS, 0.04, COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_REMOVE_CURSE_DEIKHAN] = new spellInfo(SPELL_DEIKHAN,
+  discArray[SPELL_REMOVE_CURSE_DEIKHAN] = new spellInfo(SPELL_REMOVE_CURSE_DEIKHAN, SPELL_DEIKHAN,
     DISC_DEIKHAN, DISC_DEIKHAN_ABSOLUTION, STAT_EXT, "remove curse", TASK_EASY,
     LAG_3, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_100,
     TAR_CHAR_ROOM | TAR_OBJ_INV | TAR_OBJ_EQUIP | TAR_OBJ_ROOM,
@@ -1879,7 +1869,7 @@ void buildSpellArray() {
     LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.04,
     COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_CURSE_DEIKHAN] = new spellInfo(SPELL_DEIKHAN, DISC_DEIKHAN,
+  discArray[SPELL_CURSE_DEIKHAN] = new spellInfo(SPELL_CURSE_DEIKHAN, SPELL_DEIKHAN, DISC_DEIKHAN,
     DISC_DEIKHAN_VENGEANCE, STAT_EXT, "curse", TASK_EASY, LAG_3,
     POSITION_FIGHTING, MANA_0, LIFEFORCE_0, PRAY_050,
     TAR_CHAR_ROOM | TAR_OBJ_ROOM | TAR_OBJ_INV | TAR_OBJ_EQUIP | TAR_VIOLENT |
@@ -1888,14 +1878,14 @@ void buildSpellArray() {
     LEARN_10, START_DO_10, LEARN_DO_2, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_PRAYERS, 0.05, COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SKILL_RESCUE_DEIKHAN] = new spellInfo(SKILL_DEIKHAN, DISC_DEIKHAN,
+  discArray[SKILL_RESCUE_DEIKHAN] = new spellInfo(SKILL_RESCUE_DEIKHAN, SKILL_DEIKHAN, DISC_DEIKHAN,
     DISC_DEIKHAN_GUARDIAN, STAT_EXT, "rescue", TASK_EASY, LAG_2,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_11, LEARN_2, START_DO_10, LEARN_DO_1, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.15, 0, 0);
 
   discArray[SPELL_INFECT_DEIKHAN] =
-    new spellInfo(SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_VENGEANCE, STAT_EXT,
+    new spellInfo(SPELL_INFECT_DEIKHAN, SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_VENGEANCE, STAT_EXT,
       "infect", TASK_EASY, LAG_3, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_150, TAR_CHAR_ROOM | TAR_FIGHT_VICT | TAR_VIOLENT | TAR_SELF_NONO,
       SYMBOL_STRESS_40, "", "", "", "", START_63, LEARN_8, START_DO_20,
@@ -1903,20 +1893,20 @@ void buildSpellArray() {
       COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_CURE_DISEASE_DEIKHAN] =
-    new spellInfo(SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_ABSOLUTION,
+    new spellInfo(SPELL_CURE_DISEASE_DEIKHAN, SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_ABSOLUTION,
       STAT_EXT, "cure disease", TASK_EASY, LAG_4, POSITION_SITTING, MANA_0,
       LIFEFORCE_0, PRAY_450, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_50,
       "", "", "", "", START_30, LEARN_5, START_DO_40, LEARN_DO_5, START_DO_NO,
       LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.02, COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SPELL_CREATE_FOOD_DEIKHAN] =
-    new spellInfo(SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_ABSOLUTION,
+    new spellInfo(SPELL_CREATE_FOOD_DEIKHAN, SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_ABSOLUTION,
       STAT_EXT, "create food", TASK_TRIVIAL, LAG_1, POSITION_CRAWLING, MANA_0,
       LIFEFORCE_0, PRAY_025, TAR_IGNORE, SYMBOL_STRESS_5, "", "", "", "",
       START_11, LEARN_10, START_DO_40, LEARN_DO_2, START_DO_NO, LEARN_DO_NO,
       LEARN_DIFF_PRAYERS, 0.0, COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_CREATE_WATER_DEIKHAN] = new spellInfo(SPELL_DEIKHAN,
+  discArray[SPELL_CREATE_WATER_DEIKHAN] = new spellInfo(SPELL_CREATE_WATER_DEIKHAN, SPELL_DEIKHAN,
     DISC_DEIKHAN, DISC_DEIKHAN_ABSOLUTION, STAT_EXT, "create water",
     TASK_TRIVIAL, LAG_2, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_025,
     TAR_OBJ_INV, SYMBOL_STRESS_5, "", "", "", "", START_11, LEARN_10,
@@ -1924,7 +1914,7 @@ void buildSpellArray() {
     COMP_GESTURAL | COMP_VERBAL | SPELL_TASKED | SPELL_TASKED_EVERY, 0);
 
   discArray[SPELL_HEAL_SERIOUS_DEIKHAN] =
-    new spellInfo(SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_ABSOLUTION,
+    new spellInfo(SPELL_HEAL_SERIOUS_DEIKHAN, SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_ABSOLUTION,
       STAT_WIS, "heal serious", TASK_EASY, LAG_2, POSITION_SITTING, MANA_0,
       LIFEFORCE_0, PRAY_150, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_18,
       "", "", "", "", START_41, LEARN_5, START_DO_30, LEARN_DO_2, START_DO_NO,
@@ -1932,27 +1922,27 @@ void buildSpellArray() {
       COMP_GESTURAL | COMP_VERBAL | SPELL_TASKED | SPELL_TASKED_EVERY, 0);
 
   discArray[SPELL_CURE_POISON_DEIKHAN] =
-    new spellInfo(SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_ABSOLUTION,
+    new spellInfo(SPELL_CURE_POISON_DEIKHAN, SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_ABSOLUTION,
       STAT_EXT, "cure poison", TASK_EASY, LAG_3, POSITION_SITTING, MANA_0,
       LIFEFORCE_0, PRAY_100, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_35,
       "", "", "", "", START_11, LEARN_5, START_DO_40, LEARN_DO_5, START_DO_NO,
       LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.02, COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SKILL_CHARGE] =
-    new spellInfo(SKILL_DEIKHAN, DISC_DEIKHAN, DISC_MOUNTED, STAT_CHA, "charge",
+    new spellInfo(SKILL_CHARGE, SKILL_DEIKHAN, DISC_DEIKHAN, DISC_MOUNTED, STAT_CHA, "charge",
       TASK_NORMAL, LAG_4, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_26, LEARN_2, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SPELL_HARM_SERIOUS_DEIKHAN] =
-    new spellInfo(SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_VENGEANCE, STAT_WIS,
+    new spellInfo(SPELL_HARM_SERIOUS_DEIKHAN, SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_VENGEANCE, STAT_WIS,
       "harm serious", TASK_NORMAL, LAG_3, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_150, TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_FIGHT_VICT | TAR_VIOLENT,
       SYMBOL_STRESS_20, "", "", "", "", START_39, LEARN_8, START_DO_20,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.02,
       COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_POISON_DEIKHAN] = new spellInfo(SPELL_DEIKHAN, DISC_DEIKHAN,
+  discArray[SPELL_POISON_DEIKHAN] = new spellInfo(SPELL_POISON_DEIKHAN, SPELL_DEIKHAN, DISC_DEIKHAN,
     DISC_DEIKHAN_VENGEANCE, STAT_EXT, "poison", TASK_EASY, LAG_3,
     POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_100,
     TAR_CHAR_ROOM | TAR_OBJ_INV | TAR_FIGHT_VICT | TAR_VIOLENT |
@@ -1962,21 +1952,21 @@ void buildSpellArray() {
     START_DO_30, LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.02,
     COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SKILL_DISARM_DEIKHAN] = new spellInfo(SKILL_DEIKHAN, DISC_DEIKHAN,
+  discArray[SKILL_DISARM_DEIKHAN] = new spellInfo(SKILL_DISARM_DEIKHAN, SKILL_DEIKHAN, DISC_DEIKHAN,
     DISC_DEIKHAN_MARTIAL, STAT_EXT, "disarm", TASK_EASY, LAG_2,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_35, LEARN_3, START_DO_10, LEARN_DO_1, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SPELL_HEAL_CRITICAL_DEIKHAN] =
-    new spellInfo(SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_ABSOLUTION,
+    new spellInfo(SPELL_HEAL_CRITICAL_DEIKHAN, SPELL_DEIKHAN, DISC_DEIKHAN, DISC_DEIKHAN_ABSOLUTION,
       STAT_WIS, "heal critical", TASK_EASY, LAG_2, POSITION_SITTING, MANA_0,
       LIFEFORCE_0, PRAY_200, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_25,
       "", "", "", "", START_76, LEARN_5, START_DO_20, LEARN_DO_2, START_DO_NO,
       LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.04,
       COMP_GESTURAL | COMP_VERBAL | SPELL_TASKED | SPELL_TASKED_EVERY, 0);
 
-  discArray[SPELL_HARM_CRITICAL_DEIKHAN] = new spellInfo(SPELL_DEIKHAN,
+  discArray[SPELL_HARM_CRITICAL_DEIKHAN] = new spellInfo(SPELL_HARM_CRITICAL_DEIKHAN, SPELL_DEIKHAN,
     DISC_DEIKHAN, DISC_DEIKHAN_VENGEANCE, STAT_WIS, "harm critical",
     TASK_NORMAL, LAG_3, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_200,
     TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_FIGHT_VICT | TAR_VIOLENT,
@@ -1984,20 +1974,20 @@ void buildSpellArray() {
     LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.03,
     COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SKILL_REPAIR_DEIKHAN] = new spellInfo(SKILL_DEIKHAN, DISC_DEIKHAN,
+  discArray[SKILL_REPAIR_DEIKHAN] = new spellInfo(SKILL_REPAIR_DEIKHAN, SKILL_DEIKHAN, DISC_DEIKHAN,
     DISC_BLACKSMITHING, STAT_EXT, "deikhan repair", TASK_NORMAL, LAG_0,
     POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_50, LEARN_3, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_AURA_MIGHT] = new spellInfo(SKILL_DEIKHAN, DISC_DEIKHAN,
+  discArray[SKILL_AURA_MIGHT] = new spellInfo(SKILL_AURA_MIGHT, SKILL_DEIKHAN, DISC_DEIKHAN,
     DISC_DEIKHAN_MARTIAL, STAT_EXT, "aura of might", TASK_NORMAL, LAG_2,
     POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0,
     "You stop projecting an aura of might.", "", "", "", START_70, LEARN_4,
     START_DO_NO, LEARN_DO_NO, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0,
     0, 0);
 
-  discArray[SKILL_AURA_REGENERATION] = new spellInfo(SKILL_DEIKHAN,
+  discArray[SKILL_AURA_REGENERATION] = new spellInfo(SKILL_AURA_REGENERATION, SKILL_DEIKHAN,
     DISC_DEIKHAN, DISC_DEIKHAN_ABSOLUTION, STAT_EXT, "aura of regeneration",
     TASK_NORMAL, LAG_2, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "You stop projecting an aura of regeneration.", "", "", "",
@@ -2006,37 +1996,37 @@ void buildSpellArray() {
 
   // disc_martial_deikhan
 
-  discArray[SKILL_SWITCH_DEIKHAN] = new spellInfo(SKILL_DEIKHAN,
+  discArray[SKILL_SWITCH_DEIKHAN] = new spellInfo(SKILL_SWITCH_DEIKHAN, SKILL_DEIKHAN,
     DISC_DEIKHAN_MARTIAL, DISC_DEIKHAN_MARTIAL, STAT_EXT, "switch opponents",
     TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "", "", "", "", START_21, LEARN_3, START_DO_10, LEARN_DO_1,
     START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_RETREAT_DEIKHAN] = new spellInfo(SKILL_DEIKHAN,
+  discArray[SKILL_RETREAT_DEIKHAN] = new spellInfo(SKILL_RETREAT_DEIKHAN, SKILL_DEIKHAN,
     DISC_DEIKHAN_MARTIAL, DISC_DEIKHAN_MARTIAL, STAT_EXT, "retreat", TASK_EASY,
     LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0,
     "", "", "", "", START_65, LEARN_3, START_DO_1, LEARN_DO_1, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_SHOVE_DEIKHAN] = new spellInfo(SKILL_DEIKHAN,
+  discArray[SKILL_SHOVE_DEIKHAN] = new spellInfo(SKILL_SHOVE_DEIKHAN, SKILL_DEIKHAN,
     DISC_DEIKHAN_MARTIAL, DISC_DEIKHAN_MARTIAL, STAT_EXT, "shove", TASK_EASY,
     LAG_3, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0,
     "", "", "", "", START_33, LEARN_3, START_DO_20, LEARN_DO_1, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_2H_SPEC_DEIKHAN] = new spellInfo(SKILL_DEIKHAN,
+  discArray[SKILL_2H_SPEC_DEIKHAN] = new spellInfo(SKILL_2H_SPEC_DEIKHAN, SKILL_DEIKHAN,
     DISC_DEIKHAN_MARTIAL, DISC_DEIKHAN_MARTIAL, STAT_EXT, "2h specialization",
     TASK_NORMAL, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_2, START_DO_10, LEARN_DO_2,
     START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_SHOCK_CAVALRY] = new spellInfo(SKILL_DEIKHAN,
+  discArray[SKILL_SHOCK_CAVALRY] = new spellInfo(SKILL_SHOCK_CAVALRY, SKILL_DEIKHAN,
     DISC_DEIKHAN_MARTIAL, DISC_DEIKHAN_MARTIAL, STAT_CHA, "shock cavalry",
     TASK_NORMAL, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_4, START_DO_NO,
     LEARN_DO_NO, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_ORIENT] = new spellInfo(SKILL_DEIKHAN, DISC_DEIKHAN_MARTIAL,
+  discArray[SKILL_ORIENT] = new spellInfo(SKILL_ORIENT, SKILL_DEIKHAN, DISC_DEIKHAN_MARTIAL,
     DISC_DEIKHAN_MARTIAL, STAT_CHA, "orient mount", TASK_NORMAL, LAG_3,
     POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_26, LEARN_2, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
@@ -2044,43 +2034,43 @@ void buildSpellArray() {
 
   // disc_mount
   discArray[SKILL_CALM_MOUNT] =
-    new spellInfo(SKILL_DEIKHAN, DISC_MOUNTED, DISC_MOUNTED, STAT_EXT,
+    new spellInfo(SKILL_CALM_MOUNT, SKILL_DEIKHAN, DISC_MOUNTED, DISC_MOUNTED, STAT_EXT,
       "calm mount", TASK_NORMAL, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_2, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_TRAIN_MOUNT] =
-    new spellInfo(SKILL_DEIKHAN, DISC_MOUNTED, DISC_MOUNTED, STAT_EXT,
+    new spellInfo(SKILL_TRAIN_MOUNT, SKILL_DEIKHAN, DISC_MOUNTED, DISC_MOUNTED, STAT_EXT,
       "train mount", TASK_EASY, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_26, LEARN_2, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_ADVANCED_RIDING] = new spellInfo(SKILL_DEIKHAN, DISC_MOUNTED,
+  discArray[SKILL_ADVANCED_RIDING] = new spellInfo(SKILL_ADVANCED_RIDING, SKILL_DEIKHAN, DISC_MOUNTED,
     DISC_MOUNTED, STAT_EXT, "advanced riding", TASK_NORMAL, LAG_0,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_46, LEARN_2, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_RIDE_DOMESTIC] = new spellInfo(SKILL_DEIKHAN, DISC_MOUNTED,
+  discArray[SKILL_RIDE_DOMESTIC] = new spellInfo(SKILL_RIDE_DOMESTIC, SKILL_DEIKHAN, DISC_MOUNTED,
     DISC_MOUNTED, STAT_EXT, "ride domestic", TASK_TRIVIAL, LAG_0,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_5, LEARN_2, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_RIDE_NONDOMESTIC] = new spellInfo(SKILL_DEIKHAN, DISC_MOUNTED,
+  discArray[SKILL_RIDE_NONDOMESTIC] = new spellInfo(SKILL_RIDE_NONDOMESTIC, SKILL_DEIKHAN, DISC_MOUNTED,
     DISC_MOUNTED, STAT_EXT, "ride non-domestic", TASK_EASY, LAG_0,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_36, LEARN_2, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_RIDE_WINGED] =
-    new spellInfo(SKILL_DEIKHAN, DISC_MOUNTED, DISC_MOUNTED, STAT_EXT,
+    new spellInfo(SKILL_RIDE_WINGED, SKILL_DEIKHAN, DISC_MOUNTED, DISC_MOUNTED, STAT_EXT,
       "ride winged", TASK_NORMAL, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_66, LEARN_3, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_RIDE_EXOTIC] =
-    new spellInfo(SKILL_DEIKHAN, DISC_MOUNTED, DISC_MOUNTED, STAT_EXT,
+    new spellInfo(SKILL_RIDE_EXOTIC, SKILL_DEIKHAN, DISC_MOUNTED, DISC_MOUNTED, STAT_EXT,
       "ride exotic", TASK_NORMAL, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_85, LEARN_7, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
@@ -2088,7 +2078,7 @@ void buildSpellArray() {
   // disc_guardian_deikhan
 
   discArray[SPELL_SYNOSTODWEOMER] =
-    new spellInfo(SPELL_DEIKHAN, DISC_DEIKHAN_GUARDIAN, DISC_DEIKHAN_GUARDIAN,
+    new spellInfo(SPELL_SYNOSTODWEOMER, SPELL_DEIKHAN, DISC_DEIKHAN_GUARDIAN, DISC_DEIKHAN_GUARDIAN,
       STAT_WIS, "synostodweomer", TASK_EASY, LAG_3, POSITION_CRAWLING, MANA_0,
       LIFEFORCE_0, PRAY_300, TAR_CHAR_ROOM, SYMBOL_STRESS_65,
       "Synostodweomer leaves you and your hitpoints return to normal.",
@@ -2096,26 +2086,26 @@ void buildSpellArray() {
       LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.0,
       COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SKILL_DIVINE_GRACE] = new spellInfo(SKILL_DEIKHAN,
+  discArray[SKILL_DIVINE_GRACE] = new spellInfo(SKILL_DIVINE_GRACE, SKILL_DEIKHAN,
     DISC_DEIKHAN_GUARDIAN, DISC_DEIKHAN_GUARDIAN, STAT_EXT, "divine grace",
     TASK_NORMAL, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_NO, LEARN_DO_NO,
     START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_DIVINE_RESCUE] = new spellInfo(SKILL_DEIKHAN,
+  discArray[SKILL_DIVINE_RESCUE] = new spellInfo(SKILL_DIVINE_RESCUE, SKILL_DEIKHAN,
     DISC_DEIKHAN_GUARDIAN, DISC_DEIKHAN_GUARDIAN, STAT_EXT, "divine rescue",
     TASK_NORMAL, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "", "", "", "", START_40, LEARN_5, START_DO_NO,
     LEARN_DO_NO, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_GUARDIANS_LIGHT] = new spellInfo(SKILL_DEIKHAN,
+  discArray[SKILL_GUARDIANS_LIGHT] = new spellInfo(SKILL_GUARDIANS_LIGHT, SKILL_DEIKHAN,
     DISC_DEIKHAN_GUARDIAN, DISC_DEIKHAN_GUARDIAN, STAT_EXT, "guardians light",
     TASK_NORMAL, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "", "", "", "", START_60, LEARN_5, START_DO_NO,
     LEARN_DO_NO, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_AURA_GUARDIAN] =
-    new spellInfo(SKILL_DEIKHAN, DISC_DEIKHAN_GUARDIAN, DISC_DEIKHAN_GUARDIAN,
+    new spellInfo(SKILL_AURA_GUARDIAN, SKILL_DEIKHAN, DISC_DEIKHAN_GUARDIAN, DISC_DEIKHAN_GUARDIAN,
       STAT_EXT, "aura of the guardian", TASK_NORMAL, LAG_2, POSITION_SITTING,
       MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0,
       "You stop projecting an aura of the guardian.", "", "", "", START_30,
@@ -2124,35 +2114,35 @@ void buildSpellArray() {
 
   // disc_absolution_deikhan
 
-  discArray[SPELL_REFRESH_DEIKHAN] = new spellInfo(SPELL_DEIKHAN,
+  discArray[SPELL_REFRESH_DEIKHAN] = new spellInfo(SPELL_REFRESH_DEIKHAN, SPELL_DEIKHAN,
     DISC_DEIKHAN_ABSOLUTION, DISC_DEIKHAN_ABSOLUTION, STAT_EXT, "refresh",
     TASK_EASY, LAG_2, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_100,
     TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_20, "", "", "", "", START_1,
     LEARN_5, START_DO_20, LEARN_DO_2, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_PRAYERS, 0.02, COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_SALVE_DEIKHAN] = new spellInfo(SPELL_DEIKHAN,
+  discArray[SPELL_SALVE_DEIKHAN] = new spellInfo(SPELL_SALVE_DEIKHAN, SPELL_DEIKHAN,
     DISC_DEIKHAN_ABSOLUTION, DISC_DEIKHAN_ABSOLUTION, STAT_EXT, "salve",
     TASK_TRIVIAL, LAG_3, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_200,
     TAR_CHAR_ROOM, SYMBOL_STRESS_10, "", "", "", "", START_11, LEARN_5,
     START_DO_20, LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.02,
     COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SPELL_HEROES_FEAST_DEIKHAN] = new spellInfo(SPELL_DEIKHAN,
+  discArray[SPELL_HEROES_FEAST_DEIKHAN] = new spellInfo(SPELL_HEROES_FEAST_DEIKHAN, SPELL_DEIKHAN,
     DISC_DEIKHAN_ABSOLUTION, DISC_DEIKHAN_ABSOLUTION, STAT_EXT, "heroes feast",
     TASK_TRIVIAL, LAG_3, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_075,
     TAR_AREA | TAR_IGNORE, SYMBOL_STRESS_15, "", "", "", "", START_31, LEARN_4,
     START_DO_20, LEARN_DO_3, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.1,
     COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SKILL_LAY_HANDS] = new spellInfo(SKILL_DEIKHAN,
+  discArray[SKILL_LAY_HANDS] = new spellInfo(SKILL_LAY_HANDS, SKILL_DEIKHAN,
     DISC_DEIKHAN_ABSOLUTION, DISC_DEIKHAN_ABSOLUTION, STAT_EXT, "lay hands",
     TASK_EASY, LAG_1, POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "", "", "", "", START_51, LEARN_4, START_DO_35, LEARN_DO_2,
     START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.4, 0, 0);
 
   discArray[SKILL_AURA_ABSOLUTION] =
-    new spellInfo(SKILL_DEIKHAN, DISC_DEIKHAN_ABSOLUTION,
+    new spellInfo(SKILL_AURA_ABSOLUTION, SKILL_DEIKHAN, DISC_DEIKHAN_ABSOLUTION,
       DISC_DEIKHAN_ABSOLUTION, STAT_EXT, "aura of absolution", TASK_NORMAL,
       LAG_2, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0,
       "You stop projecting an aura of absolution.", "", "", "", START_40,
@@ -2161,7 +2151,7 @@ void buildSpellArray() {
 
   // disc_vengeance_deikhan
 
-  discArray[SPELL_HARM_DEIKHAN] = new spellInfo(SPELL_DEIKHAN,
+  discArray[SPELL_HARM_DEIKHAN] = new spellInfo(SPELL_HARM_DEIKHAN, SPELL_DEIKHAN,
     DISC_DEIKHAN_VENGEANCE, DISC_DEIKHAN_VENGEANCE, STAT_WIS, "harm",
     TASK_NORMAL, LAG_3, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_250,
     TAR_CHAR_ROOM | TAR_FIGHT_VICT | TAR_SELF_NONO | TAR_VIOLENT,
@@ -2169,14 +2159,14 @@ void buildSpellArray() {
     LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.06,
     COMP_GESTURAL | COMP_VERBAL, 0);
 
-  discArray[SKILL_SMITE] = new spellInfo(SKILL_DEIKHAN, DISC_DEIKHAN_VENGEANCE,
+  discArray[SKILL_SMITE] = new spellInfo(SKILL_SMITE, SKILL_DEIKHAN, DISC_DEIKHAN_VENGEANCE,
     DISC_DEIKHAN_VENGEANCE, STAT_WIS, "smite", TASK_NORMAL, LAG_3,
     POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_51, LEARN_4, START_DO_50, LEARN_DO_3, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SPELL_NUMB_DEIKHAN] =
-    new spellInfo(SPELL_DEIKHAN, DISC_DEIKHAN_VENGEANCE, DISC_DEIKHAN_VENGEANCE,
+    new spellInfo(SPELL_NUMB_DEIKHAN, SPELL_DEIKHAN, DISC_DEIKHAN_VENGEANCE, DISC_DEIKHAN_VENGEANCE,
       STAT_WIS, "numb", TASK_EASY, LAG_2, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_100, TAR_CHAR_ROOM | TAR_FIGHT_VICT | TAR_VIOLENT | TAR_SELF_NONO,
       SYMBOL_STRESS_30, "", "", "", "", START_1, LEARN_4, START_DO_40,
@@ -2184,7 +2174,7 @@ void buildSpellArray() {
       COMP_GESTURAL | COMP_VERBAL, 0);
 
   discArray[SKILL_AURA_VENGEANCE] =
-    new spellInfo(SKILL_DEIKHAN, DISC_DEIKHAN_VENGEANCE, DISC_DEIKHAN_VENGEANCE,
+    new spellInfo(SKILL_AURA_VENGEANCE, SKILL_DEIKHAN, DISC_DEIKHAN_VENGEANCE, DISC_DEIKHAN_VENGEANCE,
       STAT_EXT, "aura of vengeance", TASK_NORMAL, LAG_2, POSITION_SITTING,
       MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0,
       "You stop projecting an aura of vengeance.", "", "", "", START_10,
@@ -2196,140 +2186,140 @@ void buildSpellArray() {
   // disc_monk
 
   discArray[SKILL_YOGINSA] =
-    new spellInfo(SKILL_MONK, DISC_MONK, DISC_MEDITATION_MONK, STAT_EXT,
+    new spellInfo(SKILL_YOGINSA, SKILL_MONK, DISC_MONK, DISC_MEDITATION_MONK, STAT_EXT,
       "yoginsa", TASK_TRIVIAL, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_CINTAI] =
-    new spellInfo(SKILL_MONK, DISC_MONK, DISC_FOCUSED_ATTACKS, STAT_EXT,
+    new spellInfo(SKILL_CINTAI, SKILL_MONK, DISC_MONK, DISC_FOCUSED_ATTACKS, STAT_EXT,
       "cintai", TASK_EASY, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_5, LEARN_2, START_DO_1, LEARN_DO_1,
       START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_OOMLAT] =
-    new spellInfo(SKILL_MONK, DISC_MONK, DISC_MINDBODY, STAT_EXT,
+    new spellInfo(SKILL_OOMLAT, SKILL_MONK, DISC_MONK, DISC_MINDBODY, STAT_EXT,
       "Oomlat Philosophy", TASK_EASY, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_KICK_MONK] =
-    new spellInfo(SKILL_MONK, DISC_MONK, DISC_LEVERAGE, STAT_STR, "kick",
+    new spellInfo(SKILL_KICK_MONK, SKILL_MONK, DISC_MONK, DISC_LEVERAGE, STAT_STR, "kick",
       TASK_EASY, LAG_3, POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_5, LEARN_5, START_DO_1, LEARN_DO_1,
       START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_ADVANCED_KICKING] = new spellInfo(SKILL_MONK, DISC_MONK,
+  discArray[SKILL_ADVANCED_KICKING] = new spellInfo(SKILL_ADVANCED_KICKING, SKILL_MONK, DISC_MONK,
     DISC_LEVERAGE, STAT_EXT, "advanced kicking", TASK_EASY, LAG_0,
     POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "",
     "", START_25, LEARN_2, START_DO_10, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, TOG_HAS_ADVANCED_KICKING);
 
   discArray[SKILL_GROUNDFIGHTING] =
-    new spellInfo(SKILL_MONK, DISC_MONK, DISC_LEVERAGE, STAT_EXT,
+    new spellInfo(SKILL_GROUNDFIGHTING, SKILL_MONK, DISC_MONK, DISC_LEVERAGE, STAT_EXT,
       "groundfighting", TASK_NORMAL, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_10, LEARN_3, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_SPRINGLEAP] =
-    new spellInfo(SKILL_MONK, DISC_MONK, DISC_LEVERAGE, STAT_DEX, "springleap",
+    new spellInfo(SKILL_SPRINGLEAP, SKILL_MONK, DISC_MONK, DISC_LEVERAGE, STAT_DEX, "springleap",
       TASK_NORMAL, LAG_2, POSITION_RESTING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_20, LEARN_3, START_DO_1,
       LEARN_DO_3, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_RETREAT_MONK] =
-    new spellInfo(SKILL_MONK, DISC_MONK, DISC_MONK, STAT_EXT, "retreat",
+    new spellInfo(SKILL_RETREAT_MONK, SKILL_MONK, DISC_MONK, DISC_MONK, STAT_EXT, "retreat",
       TASK_EASY, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_30, LEARN_2, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_SNOFALTE] =
-    new spellInfo(SKILL_MONK, DISC_MONK, DISC_MEDITATION_MONK, STAT_EXT,
+    new spellInfo(SKILL_SNOFALTE, SKILL_MONK, DISC_MONK, DISC_MEDITATION_MONK, STAT_EXT,
       "snofalte", TASK_EASY, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0,
       0, SYMBOL_STRESS_0, "", "", "", "", START_40, LEARN_2, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_COUNTER_MOVE] =
-    new spellInfo(SKILL_MONK, DISC_MONK, DISC_LEVERAGE, STAT_EXT,
+    new spellInfo(SKILL_COUNTER_MOVE, SKILL_MONK, DISC_MONK, DISC_LEVERAGE, STAT_EXT,
       "counter move", TASK_EASY, LAG_1, POSITION_RESTING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_2, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_SWITCH_MONK] = new spellInfo(SKILL_MONK, DISC_MONK,
+  discArray[SKILL_SWITCH_MONK] = new spellInfo(SKILL_SWITCH_MONK, SKILL_MONK, DISC_MONK,
     DISC_LEVERAGE, STAT_EXT, "switch opponents", TASK_EASY, LAG_2,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_50, LEARN_100, START_DO_1, LEARN_DO_2, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_JIRIN] = new spellInfo(SKILL_MONK, DISC_MONK, DISC_MINDBODY,
+  discArray[SKILL_JIRIN] = new spellInfo(SKILL_JIRIN, SKILL_MONK, DISC_MONK, DISC_MINDBODY,
     STAT_EXT, "jirin", TASK_NORMAL, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0,
     PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1,
     LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_KUBO] =
-    new spellInfo(SKILL_MONK, DISC_MONK, DISC_MEDITATION_MONK, STAT_EXT, "kubo",
+    new spellInfo(SKILL_KUBO, SKILL_MONK, DISC_MONK, DISC_MEDITATION_MONK, STAT_EXT, "kubo",
       TASK_NORMAL, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1, LEARN_DO_1,
       START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_DUFALI] =
-    new spellInfo(SKILL_MONK, DISC_MONK, DISC_MEDITATION_MONK, STAT_EXT,
+    new spellInfo(SKILL_DUFALI, SKILL_MONK, DISC_MONK, DISC_MEDITATION_MONK, STAT_EXT,
       "dufali", TASK_NORMAL, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0,
       0, SYMBOL_STRESS_0, "", "", "", "", START_70, LEARN_4, START_DO_NO,
       LEARN_DO_NO, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_CHOP] =
-    new spellInfo(SKILL_MONK, DISC_MONK, DISC_FOCUSED_ATTACKS, STAT_STR, "chop",
+    new spellInfo(SKILL_CHOP, SKILL_MONK, DISC_MONK, DISC_FOCUSED_ATTACKS, STAT_STR, "chop",
       TASK_NORMAL, LAG_4, POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_51, LEARN_2, START_DO_1,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_DISARM_MONK] =
-    new spellInfo(SKILL_MONK, DISC_MONK, DISC_LEVERAGE, STAT_EXT, "disarm",
+    new spellInfo(SKILL_DISARM_MONK, SKILL_MONK, DISC_MONK, DISC_LEVERAGE, STAT_EXT, "disarm",
       TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_2, START_DO_1, LEARN_DO_4,
       START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_CHI] =
-    new spellInfo(SKILL_MONK, DISC_MONK, DISC_MEDITATION_MONK, STAT_INT, "chi",
+    new spellInfo(SKILL_CHI, SKILL_MONK, DISC_MONK, DISC_MEDITATION_MONK, STAT_INT, "chi",
       TASK_NORMAL, LAG_4, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "You feel your inner chi recharge.", "",
       "You feel your chi running low.", "", START_1, LEARN_1, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_CATFALL] =
-    new spellInfo(SKILL_MONK, DISC_MONK, DISC_MINDBODY, STAT_EXT, "catfall",
+    new spellInfo(SKILL_CATFALL, SKILL_MONK, DISC_MONK, DISC_MINDBODY, STAT_EXT, "catfall",
       TASK_NORMAL, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_2, START_DO_1, LEARN_DO_5,
       START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, TOG_HAS_CATFALL);
 
   discArray[SKILL_REPAIR_MONK] =
-    new spellInfo(SKILL_MONK, DISC_MONK, DISC_BLACKSMITHING, STAT_EXT,
+    new spellInfo(SKILL_REPAIR_MONK, SKILL_MONK, DISC_MONK, DISC_BLACKSMITHING, STAT_EXT,
       "monk repair", TASK_NORMAL, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_3, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_CATLEAP] =
-    new spellInfo(SKILL_MONK, DISC_MONK, DISC_MINDBODY, STAT_EXT, "catleap",
+    new spellInfo(SKILL_CATLEAP, SKILL_MONK, DISC_MONK, DISC_MINDBODY, STAT_EXT, "catleap",
       TASK_NORMAL, LAG_0, POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_2, START_DO_1, LEARN_DO_5,
       START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   // disc_chidoki
 
-  discArray[SKILL_WOHLIN] = new spellInfo(SKILL_MONK, DISC_MEDITATION_MONK,
+  discArray[SKILL_WOHLIN] = new spellInfo(SKILL_WOHLIN, SKILL_MONK, DISC_MEDITATION_MONK,
     DISC_MEDITATION_MONK, STAT_EXT, "wohlin meditation", TASK_EASY, LAG_0,
     POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "",
     "", START_1, LEARN_1, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_VOPLAT] = new spellInfo(SKILL_MONK, DISC_MEDITATION_MONK,
+  discArray[SKILL_VOPLAT] = new spellInfo(SKILL_VOPLAT, SKILL_MONK, DISC_MEDITATION_MONK,
     DISC_MEDITATION_MONK, STAT_EXT, "voplat", TASK_NORMAL, LAG_0, POSITION_DEAD,
     MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1,
     LEARN_1, START_DO_NO, LEARN_DO_NO, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_BLINDFIGHTING] = new spellInfo(SKILL_MONK,
+  discArray[SKILL_BLINDFIGHTING] = new spellInfo(SKILL_BLINDFIGHTING, SKILL_MONK,
     DISC_MEDITATION_MONK, DISC_MEDITATION_MONK, STAT_EXT, "blindfighting",
     TASK_NORMAL, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_NO, LEARN_DO_NO,
@@ -2338,30 +2328,30 @@ void buildSpellArray() {
   // disc_karoki
 
   discArray[SKILL_BONEBREAK] =
-    new spellInfo(SKILL_MONK, DISC_LEVERAGE, DISC_LEVERAGE, STAT_STR,
+    new spellInfo(SKILL_BONEBREAK, SKILL_MONK, DISC_LEVERAGE, DISC_LEVERAGE, STAT_STR,
       "bonebreak", TASK_EASY, LAG_4, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_75, LEARN_4, START_DO_1,
       LEARN_DO_10, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_DEFENESTRATE] =
-    new spellInfo(SKILL_MONK, DISC_LEVERAGE, DISC_LEVERAGE, STAT_STR,
+    new spellInfo(SKILL_DEFENESTRATE, SKILL_MONK, DISC_LEVERAGE, DISC_LEVERAGE, STAT_STR,
       "defenestrate", TASK_EASY, LAG_4, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_2, START_DO_1,
       LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_HURL] =
-    new spellInfo(SKILL_MONK, DISC_LEVERAGE, DISC_LEVERAGE, STAT_STR, "hurl",
+    new spellInfo(SKILL_HURL, SKILL_MONK, DISC_LEVERAGE, DISC_LEVERAGE, STAT_STR, "hurl",
       TASK_NORMAL, LAG_4, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_2, START_DO_1, LEARN_DO_2,
       START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_SHOULDER_THROW] = new spellInfo(SKILL_MONK, DISC_LEVERAGE,
+  discArray[SKILL_SHOULDER_THROW] = new spellInfo(SKILL_SHOULDER_THROW, SKILL_MONK, DISC_LEVERAGE,
     DISC_LEVERAGE, STAT_STR, "shoulder throw", TASK_NORMAL, LAG_4,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_35, LEARN_2, START_DO_1, LEARN_DO_2, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_CHAIN_ATTACK] = new spellInfo(SKILL_MONK, DISC_LEVERAGE,
+  discArray[SKILL_CHAIN_ATTACK] = new spellInfo(SKILL_CHAIN_ATTACK, SKILL_MONK, DISC_LEVERAGE,
     DISC_LEVERAGE, STAT_EXT, "chain attack", TASK_TRIVIAL, LAG_0,
     POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_1, LEARN_1, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
@@ -2370,26 +2360,26 @@ void buildSpellArray() {
   // disc_taedoki
 
   discArray[SKILL_FEIGN_DEATH] =
-    new spellInfo(SKILL_MONK, DISC_MINDBODY, DISC_MINDBODY, STAT_EXT,
+    new spellInfo(SKILL_FEIGN_DEATH, SKILL_MONK, DISC_MINDBODY, DISC_MINDBODY, STAT_EXT,
       "feign death", TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_10,
       LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_BLUR] =
-    new spellInfo(SKILL_MONK, DISC_MINDBODY, DISC_MINDBODY, STAT_EXT, "blur",
+    new spellInfo(SKILL_BLUR, SKILL_MONK, DISC_MINDBODY, DISC_MINDBODY, STAT_EXT, "blur",
       TASK_TRIVIAL, LAG_0, POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1, LEARN_DO_1,
       START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   // disc_fattacks
 
-  discArray[SKILL_QUIV_PALM] = new spellInfo(SKILL_MONK, DISC_FOCUSED_ATTACKS,
+  discArray[SKILL_QUIV_PALM] = new spellInfo(SKILL_QUIV_PALM, SKILL_MONK, DISC_FOCUSED_ATTACKS,
     DISC_MEDITATION_MONK, STAT_EXT, "quivering palm", TASK_NORMAL, LAG_4,
     POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_51, LEARN_8, START_DO_1, LEARN_DO_2, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_CRIT_HIT] = new spellInfo(SKILL_MONK, DISC_FOCUSED_ATTACKS,
+  discArray[SKILL_CRIT_HIT] = new spellInfo(SKILL_CRIT_HIT, SKILL_MONK, DISC_FOCUSED_ATTACKS,
     DISC_FOCUSED_ATTACKS, STAT_EXT, "critical hitting", TASK_TRIVIAL, LAG_0,
     POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_1, LEARN_1, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
@@ -2397,42 +2387,42 @@ void buildSpellArray() {
 
   // disc iron body
   discArray[SKILL_IRON_FIST] =
-    new spellInfo(SKILL_MONK, DISC_IRON_BODY, DISC_IRON_BODY, STAT_EXT,
+    new spellInfo(SKILL_IRON_FIST, SKILL_MONK, DISC_IRON_BODY, DISC_IRON_BODY, STAT_EXT,
       "iron fist", TASK_TRIVIAL, LAG_0, POSITION_STANDING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_IRON_FLESH] = new spellInfo(SKILL_MONK, DISC_IRON_BODY,
+  discArray[SKILL_IRON_FLESH] = new spellInfo(SKILL_IRON_FLESH, SKILL_MONK, DISC_IRON_BODY,
     DISC_IRON_BODY, STAT_EXT, "iron flesh", TASK_NORMAL, LAG_0,
     POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_20, LEARN_2, START_DO_NO, LEARN_DO_NO, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_IRON_SKIN] = new spellInfo(SKILL_MONK, DISC_IRON_BODY,
+  discArray[SKILL_IRON_SKIN] = new spellInfo(SKILL_IRON_SKIN, SKILL_MONK, DISC_IRON_BODY,
     DISC_IRON_BODY, STAT_EXT, "iron skin", TASK_NORMAL, LAG_0,
     POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_30, LEARN_2, START_DO_NO, LEARN_DO_NO, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_IRON_BONES] = new spellInfo(SKILL_MONK, DISC_IRON_BODY,
+  discArray[SKILL_IRON_BONES] = new spellInfo(SKILL_IRON_BONES, SKILL_MONK, DISC_IRON_BODY,
     DISC_IRON_BODY, STAT_EXT, "iron bones", TASK_NORMAL, LAG_0,
     POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_40, LEARN_2, START_DO_NO, LEARN_DO_NO, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_IRON_MUSCLES] = new spellInfo(SKILL_MONK, DISC_IRON_BODY,
+  discArray[SKILL_IRON_MUSCLES] = new spellInfo(SKILL_IRON_MUSCLES, SKILL_MONK, DISC_IRON_BODY,
     DISC_IRON_BODY, STAT_EXT, "iron muscles", TASK_NORMAL, LAG_0,
     POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_50, LEARN_2, START_DO_NO, LEARN_DO_NO, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_IRON_LEGS] = new spellInfo(SKILL_MONK, DISC_IRON_BODY,
+  discArray[SKILL_IRON_LEGS] = new spellInfo(SKILL_IRON_LEGS, SKILL_MONK, DISC_IRON_BODY,
     DISC_IRON_BODY, STAT_EXT, "iron legs", TASK_NORMAL, LAG_0,
     POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_60, LEARN_3, START_DO_NO, LEARN_DO_NO, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_IRON_WILL] = new spellInfo(SKILL_MONK, DISC_IRON_BODY,
+  discArray[SKILL_IRON_WILL] = new spellInfo(SKILL_IRON_WILL, SKILL_MONK, DISC_IRON_BODY,
     DISC_IRON_BODY, STAT_EXT, "iron will", TASK_NORMAL, LAG_0,
     POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_70, LEARN_4, START_DO_NO, LEARN_DO_NO, START_DO_NO,
@@ -2441,78 +2431,78 @@ void buildSpellArray() {
   // CLASS THIEF
   // disc_thief
 
-  discArray[SKILL_TRACK] = new spellInfo(SKILL_THIEF, DISC_THIEF, DISC_STEALTH,
+  discArray[SKILL_TRACK] = new spellInfo(SKILL_TRACK, SKILL_THIEF, DISC_THIEF, DISC_STEALTH,
     STAT_EXT, "track", TASK_EASY, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
     PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_27, LEARN_3, START_DO_1,
     LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_SWINDLE] =
-    new spellInfo(SKILL_THIEF, DISC_THIEF, DISC_LOOTING, STAT_EXT, "swindle",
+    new spellInfo(SKILL_SWINDLE, SKILL_THIEF, DISC_THIEF, DISC_LOOTING, STAT_EXT, "swindle",
       TASK_EASY, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1, LEARN_DO_1,
       START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_SNEAK] = new spellInfo(SKILL_THIEF, DISC_THIEF, DISC_STEALTH,
+  discArray[SKILL_SNEAK] = new spellInfo(SKILL_SNEAK, SKILL_THIEF, DISC_THIEF, DISC_STEALTH,
     STAT_EXT, "sneak", TASK_EASY, LAG_1, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
     PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_5, START_DO_1,
     LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_STABBING] =
-    new spellInfo(SKILL_THIEF, DISC_THIEF, DISC_MURDER, STAT_STR, "stab",
+    new spellInfo(SKILL_STABBING, SKILL_THIEF, DISC_THIEF, DISC_MURDER, STAT_STR, "stab",
       TASK_EASY, LAG_3, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_33, LEARN_3, START_DO_1,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_RETREAT_THIEF] =
-    new spellInfo(SKILL_THIEF, DISC_THIEF, DISC_THIEF_FIGHT, STAT_EXT,
+    new spellInfo(SKILL_RETREAT_THIEF, SKILL_THIEF, DISC_THIEF, DISC_THIEF_FIGHT, STAT_EXT,
       "retreat", TASK_NORMAL, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_KICK] =
-    new spellInfo(SKILL_THIEF, DISC_THIEF, DISC_THIEF_FIGHT, STAT_STR, "kick",
+    new spellInfo(SKILL_KICK, SKILL_THIEF, DISC_THIEF, DISC_THIEF_FIGHT, STAT_STR, "kick",
       TASK_EASY, LAG_3, POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_5, START_DO_1, LEARN_DO_1,
       START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_PICK_LOCK] =
-    new spellInfo(SKILL_THIEF, DISC_THIEF, DISC_TRAPS, STAT_EXT, "picklock",
+    new spellInfo(SKILL_PICK_LOCK, SKILL_THIEF, DISC_THIEF, DISC_TRAPS, STAT_EXT, "picklock",
       TASK_NORMAL, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_31, LEARN_5, START_DO_1,
       LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_BACKSTAB] =
-    new spellInfo(SKILL_THIEF, DISC_THIEF, DISC_MURDER, STAT_DEX, "backstab",
+    new spellInfo(SKILL_BACKSTAB, SKILL_THIEF, DISC_THIEF, DISC_MURDER, STAT_DEX, "backstab",
       TASK_NORMAL, LAG_5, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1, LEARN_DO_2,
       START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_THROATSLIT] =
-    new spellInfo(SKILL_THIEF, DISC_MURDER, DISC_MURDER, STAT_DEX, "slit",
+    new spellInfo(SKILL_THROATSLIT, SKILL_THIEF, DISC_MURDER, DISC_MURDER, STAT_DEX, "slit",
       TASK_NORMAL, LAG_6, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1, LEARN_DO_2,
       START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_SEARCH] =
-    new spellInfo(SKILL_THIEF, DISC_THIEF, DISC_LOOTING, STAT_EXT, "search",
+    new spellInfo(SKILL_SEARCH, SKILL_THIEF, DISC_THIEF, DISC_LOOTING, STAT_EXT, "search",
       TASK_EASY, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1, LEARN_DO_1,
       START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_SPY] = new spellInfo(SKILL_THIEF, DISC_THIEF, DISC_STEALTH,
+  discArray[SKILL_SPY] = new spellInfo(SKILL_SPY, SKILL_THIEF, DISC_THIEF, DISC_STEALTH,
     STAT_EXT, "spy", TASK_EASY, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
     PRAY_0, 0, SYMBOL_STRESS_0, "You cease your espionage activities.", "", "",
     "", START_61, LEARN_5, START_DO_1, LEARN_DO_2, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_SWITCH_THIEF] = new spellInfo(SKILL_THIEF, DISC_THIEF,
+  discArray[SKILL_SWITCH_THIEF] = new spellInfo(SKILL_SWITCH_THIEF, SKILL_THIEF, DISC_THIEF,
     DISC_THIEF_FIGHT, STAT_EXT, "switch opponents", TASK_EASY, LAG_2,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_21, LEARN_3, START_DO_10, LEARN_DO_3, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_STEAL] =
-    new spellInfo(SKILL_THIEF, DISC_THIEF, DISC_LOOTING, STAT_EXT, "steal",
+    new spellInfo(SKILL_STEAL, SKILL_THIEF, DISC_THIEF, DISC_LOOTING, STAT_EXT, "steal",
       TASK_NORMAL, LAG_2, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_10,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
@@ -2520,36 +2510,36 @@ void buildSpellArray() {
   // detect trap can go long way before learn by do takes over
   // it's mostly book learning
   discArray[SKILL_DETECT_TRAP] =
-    new spellInfo(SKILL_THIEF, DISC_THIEF, DISC_TRAPS, STAT_EXT, "detect trap",
+    new spellInfo(SKILL_DETECT_TRAP, SKILL_THIEF, DISC_THIEF, DISC_TRAPS, STAT_EXT, "detect trap",
       TASK_EASY, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_3, START_DO_60,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_SUBTERFUGE] =
-    new spellInfo(SKILL_THIEF, DISC_THIEF, DISC_STEALTH, STAT_EXT, "subterfuge",
+    new spellInfo(SKILL_SUBTERFUGE, SKILL_THIEF, DISC_THIEF, DISC_STEALTH, STAT_EXT, "subterfuge",
       TASK_NORMAL, LAG_2, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_41, LEARN_2, START_DO_20,
       LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_DISARM_TRAP] =
-    new spellInfo(SKILL_THIEF, DISC_THIEF, DISC_TRAPS, STAT_EXT, "disarm trap",
+    new spellInfo(SKILL_DISARM_TRAP, SKILL_THIEF, DISC_THIEF, DISC_TRAPS, STAT_EXT, "disarm trap",
       TASK_NORMAL, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_33, LEARN_3, START_DO_25,
       LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_CUDGEL] =
-    new spellInfo(SKILL_THIEF, DISC_THIEF, DISC_MURDER, STAT_EXT, "cudgel",
+    new spellInfo(SKILL_CUDGEL, SKILL_THIEF, DISC_THIEF, DISC_MURDER, STAT_EXT, "cudgel",
       TASK_EASY, LAG_4, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_66, LEARN_3, START_DO_1,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_HIDE] = new spellInfo(SKILL_THIEF, DISC_THIEF, DISC_STEALTH,
+  discArray[SKILL_HIDE] = new spellInfo(SKILL_HIDE, SKILL_THIEF, DISC_THIEF, DISC_STEALTH,
     STAT_EXT, "hide", TASK_EASY, LAG_1, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
     PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_3, START_DO_1,
     LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_DISARM_THIEF] =
-    new spellInfo(SKILL_THIEF, DISC_THIEF, DISC_THIEF_FIGHT, STAT_EXT, "disarm",
+    new spellInfo(SKILL_DISARM_THIEF, SKILL_THIEF, DISC_THIEF, DISC_THIEF_FIGHT, STAT_EXT, "disarm",
       TASK_NORMAL, LAG_2, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_33, LEARN_3, START_DO_1,
       LEARN_DO_4, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
@@ -2557,25 +2547,25 @@ void buildSpellArray() {
   // disc_thief_fight
 
   discArray[SKILL_DODGE_THIEF] =
-    new spellInfo(SKILL_THIEF, DISC_THIEF_FIGHT, DISC_THIEF_FIGHT, STAT_EXT,
+    new spellInfo(SKILL_DODGE_THIEF, SKILL_THIEF, DISC_THIEF_FIGHT, DISC_THIEF_FIGHT, STAT_EXT,
       "dodge", TASK_EASY, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1, LEARN_DO_1,
       START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_DUAL_WIELD_THIEF] =
-    new spellInfo(SKILL_THIEF, DISC_THIEF_FIGHT, DISC_THIEF_FIGHT, STAT_EXT,
+    new spellInfo(SKILL_DUAL_WIELD_THIEF, SKILL_THIEF, DISC_THIEF_FIGHT, DISC_THIEF_FIGHT, STAT_EXT,
       "dual wield", TASK_NORMAL, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_2, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_GARROTTE] =
-    new spellInfo(SKILL_THIEF, DISC_THIEF_FIGHT, DISC_THIEF_FIGHT, STAT_EXT,
+    new spellInfo(SKILL_GARROTTE, SKILL_THIEF, DISC_THIEF_FIGHT, DISC_THIEF_FIGHT, STAT_EXT,
       "garrotte", TASK_NORMAL, LAG_3, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_3, START_DO_1,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_REPAIR_THIEF] =
-    new spellInfo(SKILL_THIEF, DISC_THIEF, DISC_BLACKSMITHING, STAT_EXT,
+    new spellInfo(SKILL_REPAIR_THIEF, SKILL_THIEF, DISC_THIEF, DISC_BLACKSMITHING, STAT_EXT,
       "thief repair", TASK_NORMAL, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_3, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
@@ -2584,20 +2574,20 @@ void buildSpellArray() {
 
   // disc_looting
   discArray[SKILL_COUNTER_STEAL] =
-    new spellInfo(SKILL_THIEF, DISC_LOOTING, DISC_LOOTING, STAT_EXT,
+    new spellInfo(SKILL_COUNTER_STEAL, SKILL_THIEF, DISC_LOOTING, DISC_LOOTING, STAT_EXT,
       "counter steal", TASK_NORMAL, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_PLANT] =
-    new spellInfo(SKILL_THIEF, DISC_LOOTING, DISC_LOOTING, STAT_EXT, "plant",
+    new spellInfo(SKILL_PLANT, SKILL_THIEF, DISC_LOOTING, DISC_LOOTING, STAT_EXT, "plant",
       TASK_NORMAL, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_3, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   // disc_poison
 
-  discArray[SKILL_POISON_WEAPON] = new spellInfo(SKILL_THIEF, DISC_POISONS,
+  discArray[SKILL_POISON_WEAPON] = new spellInfo(SKILL_POISON_WEAPON, SKILL_THIEF, DISC_POISONS,
     DISC_POISONS, STAT_EXT, "poison weapons", TASK_EASY, LAG_4,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_1, LEARN_1, START_DO_1, LEARN_DO_2, START_DO_NO, LEARN_DO_NO,
@@ -2605,7 +2595,7 @@ void buildSpellArray() {
 
   // disc_stealth
 
-  discArray[SKILL_CONCEALMENT] = new spellInfo(SKILL_THIEF, DISC_STEALTH,
+  discArray[SKILL_CONCEALMENT] = new spellInfo(SKILL_CONCEALMENT, SKILL_THIEF, DISC_STEALTH,
     DISC_STEALTH, STAT_EXT, "concealment", TASK_NORMAL, LAG_0,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0,
     "Your path is no longer concealed.", "$n's path is no longer concealed.",
@@ -2613,7 +2603,7 @@ void buildSpellArray() {
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_DISGUISE] =
-    new spellInfo(SKILL_THIEF, DISC_STEALTH, DISC_STEALTH, STAT_EXT, "disguise",
+    new spellInfo(SKILL_DISGUISE, SKILL_THIEF, DISC_STEALTH, DISC_STEALTH, STAT_EXT, "disguise",
       TASK_NORMAL, LAG_0, POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "You can not hold your disguise any longer.", "",
       "You do not know how much longer you can keep this shape.", "", START_1,
@@ -2622,105 +2612,105 @@ void buildSpellArray() {
 
   // disc_traps
 
-  discArray[SKILL_SET_TRAP_ARROW] = new spellInfo(SKILL_THIEF, DISC_TRAPS,
+  discArray[SKILL_SET_TRAP_ARROW] = new spellInfo(SKILL_SET_TRAP_ARROW, SKILL_THIEF, DISC_TRAPS,
     DISC_TRAPS, STAT_EXT, "set arrow trap", TASK_NORMAL, LAG_0,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_1, LEARN_3, START_DO_40, LEARN_DO_2, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_SET_TRAP_CONT] = new spellInfo(SKILL_THIEF, DISC_TRAPS,
+  discArray[SKILL_SET_TRAP_CONT] = new spellInfo(SKILL_SET_TRAP_CONT, SKILL_THIEF, DISC_TRAPS,
     DISC_TRAPS, STAT_EXT, "set container trap", TASK_NORMAL, LAG_0,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_1, LEARN_3, START_DO_40, LEARN_DO_2, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_SET_TRAP_DOOR] = new spellInfo(SKILL_THIEF, DISC_TRAPS,
+  discArray[SKILL_SET_TRAP_DOOR] = new spellInfo(SKILL_SET_TRAP_DOOR, SKILL_THIEF, DISC_TRAPS,
     DISC_TRAPS, STAT_EXT, "set door trap", TASK_NORMAL, LAG_0,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_30, LEARN_3, START_DO_40, LEARN_DO_2, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_SET_TRAP_MINE] = new spellInfo(SKILL_THIEF, DISC_TRAPS,
+  discArray[SKILL_SET_TRAP_MINE] = new spellInfo(SKILL_SET_TRAP_MINE, SKILL_THIEF, DISC_TRAPS,
     DISC_TRAPS, STAT_EXT, "set mine trap", TASK_NORMAL, LAG_0,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_60, LEARN_3, START_DO_40, LEARN_DO_2, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_SET_TRAP_GREN] = new spellInfo(SKILL_THIEF, DISC_TRAPS,
+  discArray[SKILL_SET_TRAP_GREN] = new spellInfo(SKILL_SET_TRAP_GREN, SKILL_THIEF, DISC_TRAPS,
     DISC_TRAPS, STAT_EXT, "set grenade trap", TASK_NORMAL, LAG_0,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_80, LEARN_5, START_DO_40, LEARN_DO_2, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   // disc_advanced_adventuring
-  discArray[SKILL_HIKING] = new spellInfo(SKILL_GENERAL,
+  discArray[SKILL_HIKING] = new spellInfo(SKILL_HIKING, SKILL_GENERAL,
     DISC_ADVANCED_ADVENTURING, DISC_ADVANCED_ADVENTURING, STAT_EXT, "hiking",
     TASK_EASY, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_NO, LEARN_DO_NO,
     START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_FORAGE] = new spellInfo(SKILL_GENERAL,
+  discArray[SKILL_FORAGE] = new spellInfo(SKILL_FORAGE, SKILL_GENERAL,
     DISC_ADVANCED_ADVENTURING, DISC_ADVANCED_ADVENTURING, STAT_EXT, "forage",
     TASK_EASY, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "You are able to forage again.", "", "", "", START_1,
     LEARN_5, START_DO_30, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_SEEKWATER] = new spellInfo(SKILL_GENERAL,
+  discArray[SKILL_SEEKWATER] = new spellInfo(SKILL_SEEKWATER, SKILL_GENERAL,
     DISC_ADVANCED_ADVENTURING, DISC_ADVANCED_ADVENTURING, STAT_EXT, "seekwater",
     TASK_EASY, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "", "", "", "", START_6, LEARN_5, START_DO_1, LEARN_DO_5,
     START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_DIVINATION] = new spellInfo(SKILL_GENERAL,
+  discArray[SKILL_DIVINATION] = new spellInfo(SKILL_DIVINATION, SKILL_GENERAL,
     DISC_ADVANCED_ADVENTURING, DISC_ADVANCED_ADVENTURING, STAT_EXT, "divine",
     TASK_EASY, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "", "", "", "", START_51, LEARN_2, START_DO_10, LEARN_DO_1,
     START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_ENCAMP] = new spellInfo(SKILL_GENERAL, DISC_ADVENTURING,
+  discArray[SKILL_ENCAMP] = new spellInfo(SKILL_ENCAMP, SKILL_GENERAL, DISC_ADVENTURING,
     DISC_ADVANCED_ADVENTURING, STAT_EXT, "encamp", TASK_EASY, LAG_0,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_26, LEARN_2, START_DO_1, LEARN_DO_2, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_SKIN] = new spellInfo(SKILL_GENERAL,
+  discArray[SKILL_SKIN] = new spellInfo(SKILL_SKIN, SKILL_GENERAL,
     DISC_ADVANCED_ADVENTURING, DISC_ADVANCED_ADVENTURING, STAT_EXT, "skinning",
     TASK_EASY, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "", "", "", "", START_26, LEARN_2, START_DO_10, LEARN_DO_1,
     START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_FISHLORE] = new spellInfo(SKILL_GENERAL,
+  discArray[SKILL_FISHLORE] = new spellInfo(SKILL_FISHLORE, SKILL_GENERAL,
     DISC_ADVANCED_ADVENTURING, DISC_ADVANCED_ADVENTURING, STAT_EXT, "fishlore",
     TASK_EASY, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1, LEARN_DO_1,
     START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_TROLLISH] = new spellInfo(SKILL_GENERAL,
+  discArray[SKILL_TROLLISH] = new spellInfo(SKILL_TROLLISH, SKILL_GENERAL,
     DISC_ADVANCED_ADVENTURING, DISC_ADVANCED_ADVENTURING, STAT_EXT, "trollish",
     TASK_NORMAL, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_2, START_DO_25, LEARN_DO_1,
     START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_BULLYWUGCROAK] = new spellInfo(SKILL_GENERAL,
+  discArray[SKILL_BULLYWUGCROAK] = new spellInfo(SKILL_BULLYWUGCROAK, SKILL_GENERAL,
     DISC_ADVANCED_ADVENTURING, DISC_ADVANCED_ADVENTURING, STAT_EXT,
     "bullycroak", TASK_NORMAL, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0,
     PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_2, START_DO_25,
     LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_AVIAN] = new spellInfo(SKILL_GENERAL,
+  discArray[SKILL_AVIAN] = new spellInfo(SKILL_AVIAN, SKILL_GENERAL,
     DISC_ADVANCED_ADVENTURING, DISC_ADVANCED_ADVENTURING, STAT_EXT, "avian",
     TASK_NORMAL, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_2, START_DO_25, LEARN_DO_1,
     START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_FISHBURBLE] = new spellInfo(SKILL_GENERAL,
+  discArray[SKILL_FISHBURBLE] = new spellInfo(SKILL_FISHBURBLE, SKILL_GENERAL,
     DISC_ADVANCED_ADVENTURING, DISC_ADVANCED_ADVENTURING, STAT_EXT,
     "fish burble", TASK_NORMAL, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0,
     PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_2, START_DO_25,
     LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_COMMON] = new spellInfo(SKILL_GENERAL,
+  discArray[SKILL_COMMON] = new spellInfo(SKILL_COMMON, SKILL_GENERAL,
     DISC_ADVANCED_ADVENTURING, DISC_ADVANCED_ADVENTURING, STAT_EXT, "common",
     TASK_NORMAL, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_2, START_DO_25, LEARN_DO_1,
@@ -2729,168 +2719,168 @@ void buildSpellArray() {
   // disc_adventuring
 
   discArray[SKILL_BUTCHER] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_BUTCHER, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "butcher", TASK_EASY, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_2, START_DO_10,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_FISHING] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_FISHING, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "fishing", TASK_EASY, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_LOGGING] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_LOGGING, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "lumberjack", TASK_EASY, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_ALCOHOLISM] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_ALCOHOLISM, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "alcoholism", TASK_TRIVIAL, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_4, START_DO_1,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_RIDE] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_RIDE, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "ride", TASK_TRIVIAL, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_4, START_DO_25,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_SIGN] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_SIGN, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "sign", TASK_EASY, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0,
       0, SYMBOL_STRESS_0, "", "", "", "", START_26, LEARN_4, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_SWIM] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_SWIM, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "swim", TASK_NORMAL, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_40,
       LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_CONS_UNDEAD] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_CONS_UNDEAD, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "know undead", TASK_EASY, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_61, LEARN_5, START_DO_1,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_CONS_VEGGIE] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_CONS_VEGGIE, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "know veggie", TASK_EASY, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_21, LEARN_5, START_DO_1,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_CONS_DEMON] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_CONS_DEMON, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "know demon", TASK_EASY, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_81, LEARN_5, START_DO_1,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_CONS_ANIMAL] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_CONS_ANIMAL, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "know animal", TASK_EASY, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_5, START_DO_1,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_CONS_REPTILE] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_CONS_REPTILE, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "know reptile", TASK_EASY, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_31, LEARN_5, START_DO_1,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_CONS_PEOPLE] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_CONS_PEOPLE, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "know people", TASK_EASY, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_2, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_CONS_GIANT] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_CONS_GIANT, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "know giantkin", TASK_EASY, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_41, LEARN_5, START_DO_1,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_CONS_OTHER] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_CONS_OTHER, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "know other", TASK_EASY, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_51, LEARN_5, START_DO_1,
       LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_READ_MAGIC] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_READ_MAGIC, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "read magic", TASK_EASY, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1,
       LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_BANDAGE] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_BANDAGE, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "bandage", TASK_EASY, LAG_1, POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0,
       0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_10, START_DO_30,
       LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.3, 0, 0);
 
   discArray[SKILL_CLIMB] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_CLIMB, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "climbing", TASK_EASY, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0,
       0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_3, START_DO_20,
       LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_DISSECT] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_DISSECT, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "dissect", TASK_EASY, LAG_1, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_4, START_DO_10,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_EVALUATE] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_EVALUATE, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "evaluate", TASK_EASY, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_51, LEARN_4, START_DO_1,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_TACTICS] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_TACTICS, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "tactics", TASK_EASY, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_5, START_DO_NO,
       LEARN_DO_NO, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_DEFENSE] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_DEFENSE, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "defense", TASK_EASY, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_OFFENSE] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_OFFENSE, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "offense", TASK_EASY, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_WHITTLE] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
+    new spellInfo(SKILL_WHITTLE, SKILL_GENERAL, DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT,
       "whittle", TASK_EASY, LAG_0, POSITION_STANDING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_2, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_MEND] =
-    new spellInfo(SKILL_GENERAL, DISC_ADVENTURING, DISC_BLACKSMITHING, STAT_EXT,
+    new spellInfo(SKILL_MEND, SKILL_GENERAL, DISC_ADVENTURING, DISC_BLACKSMITHING, STAT_EXT,
       "mend", TASK_EASY, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0,
       0, SYMBOL_STRESS_0, "", "", "", "", START_26, LEARN_3, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_GUTTER_CANT] = new spellInfo(SKILL_GENERAL, DISC_ADVENTURING,
+  discArray[SKILL_GUTTER_CANT] = new spellInfo(SKILL_GUTTER_CANT, SKILL_GENERAL, DISC_ADVENTURING,
     DISC_ADVENTURING, STAT_EXT, "gutter cant", TASK_EASY, LAG_0,
     POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_65, LEARN_4, START_DO_25, LEARN_DO_1, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_GNOLL_JARGON] = new spellInfo(SKILL_GENERAL, DISC_ADVENTURING,
+  discArray[SKILL_GNOLL_JARGON] = new spellInfo(SKILL_GNOLL_JARGON, SKILL_GENERAL, DISC_ADVENTURING,
     DISC_ADVENTURING, STAT_EXT, "gnoll jargon", TASK_EASY, LAG_0,
     POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_65, LEARN_4, START_DO_25, LEARN_DO_1, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_TROGLODYTE_PIDGIN] = new spellInfo(SKILL_GENERAL,
+  discArray[SKILL_TROGLODYTE_PIDGIN] = new spellInfo(SKILL_TROGLODYTE_PIDGIN, SKILL_GENERAL,
     DISC_ADVENTURING, DISC_ADVENTURING, STAT_EXT, "troglodyte pidgin",
     TASK_EASY, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "", "", "", "", START_65, LEARN_4, START_DO_25, LEARN_DO_1,
@@ -2898,43 +2888,43 @@ void buildSpellArray() {
 
   // disc_combat
 
-  discArray[SKILL_SLASH_PROF] = new spellInfo(SKILL_GENERAL, DISC_COMBAT,
+  discArray[SKILL_SLASH_PROF] = new spellInfo(SKILL_SLASH_PROF, SKILL_GENERAL, DISC_COMBAT,
     DISC_COMBAT, STAT_EXT, "slash proficiency", TASK_NORMAL, LAG_0,
     POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "",
     "", START_1, LEARN_1, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_RANGED_PROF] = new spellInfo(SKILL_GENERAL, DISC_COMBAT,
+  discArray[SKILL_RANGED_PROF] = new spellInfo(SKILL_RANGED_PROF, SKILL_GENERAL, DISC_COMBAT,
     DISC_COMBAT, STAT_EXT, "ranged proficiency", TASK_NORMAL, LAG_0,
     POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "",
     "", START_51, LEARN_3, START_DO_1, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_PIERCE_PROF] = new spellInfo(SKILL_GENERAL, DISC_COMBAT,
+  discArray[SKILL_PIERCE_PROF] = new spellInfo(SKILL_PIERCE_PROF, SKILL_GENERAL, DISC_COMBAT,
     DISC_COMBAT, STAT_EXT, "pierce proficiency", TASK_NORMAL, LAG_0,
     POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "",
     "", START_1, LEARN_1, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_BLUNT_PROF] = new spellInfo(SKILL_GENERAL, DISC_COMBAT,
+  discArray[SKILL_BLUNT_PROF] = new spellInfo(SKILL_BLUNT_PROF, SKILL_GENERAL, DISC_COMBAT,
     DISC_COMBAT, STAT_EXT, "blunt proficiency", TASK_NORMAL, LAG_0,
     POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "",
     "", START_1, LEARN_1, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_SHARPEN] =
-    new spellInfo(SKILL_WARRIOR, DISC_COMBAT, DISC_COMBAT, STAT_EXT, "sharpen",
+    new spellInfo(SKILL_SHARPEN, SKILL_WARRIOR, DISC_COMBAT, DISC_COMBAT, STAT_EXT, "sharpen",
       TASK_NORMAL, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_51, LEARN_2, START_DO_10,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_DULL] =
-    new spellInfo(SKILL_WARRIOR, DISC_COMBAT, DISC_COMBAT, STAT_EXT, "smooth",
+    new spellInfo(SKILL_DULL, SKILL_WARRIOR, DISC_COMBAT, DISC_COMBAT, STAT_EXT, "smooth",
       TASK_NORMAL, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_51, LEARN_2, START_DO_10,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_BAREHAND_PROF] = new spellInfo(SKILL_GENERAL, DISC_COMBAT,
+  discArray[SKILL_BAREHAND_PROF] = new spellInfo(SKILL_BAREHAND_PROF, SKILL_GENERAL, DISC_COMBAT,
     DISC_COMBAT, STAT_EXT, "barehand proficiency", TASK_NORMAL, LAG_0,
     POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "",
     "", START_1, LEARN_1, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
@@ -2942,34 +2932,34 @@ void buildSpellArray() {
 
   // disc_defense
 
-  discArray[SKILL_ADVANCED_DEFENSE] = new spellInfo(SKILL_GENERAL, DISC_DEFENSE,
+  discArray[SKILL_ADVANCED_DEFENSE] = new spellInfo(SKILL_ADVANCED_DEFENSE, SKILL_GENERAL, DISC_DEFENSE,
     DISC_DEFENSE, STAT_EXT, "advanced defense", TASK_EASY, LAG_0,
     POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_1, LEARN_1, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_FOCUSED_AVOIDANCE] = new spellInfo(SKILL_GENERAL,
+  discArray[SKILL_FOCUSED_AVOIDANCE] = new spellInfo(SKILL_FOCUSED_AVOIDANCE, SKILL_GENERAL,
     DISC_DEFENSE, DISC_DEFENSE, STAT_EXT, "focused avoidance", TASK_EASY, LAG_0,
     POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_1, LEARN_1, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_TOUGHNESS] =
-    new spellInfo(SKILL_GENERAL, DISC_DEFENSE, DISC_DEFENSE, STAT_EXT,
+    new spellInfo(SKILL_TOUGHNESS, SKILL_GENERAL, DISC_DEFENSE, DISC_DEFENSE, STAT_EXT,
       "toughness", TASK_EASY, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   // disc_offense
 
-  discArray[SKILL_ADVANCED_OFFENSE] = new spellInfo(SKILL_GENERAL, DISC_OFFENSE,
+  discArray[SKILL_ADVANCED_OFFENSE] = new spellInfo(SKILL_ADVANCED_OFFENSE, SKILL_GENERAL, DISC_OFFENSE,
     DISC_OFFENSE, STAT_EXT, "advanced offense", TASK_EASY, LAG_0,
     POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_1, LEARN_1, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_INEVITABILITY] =
-    new spellInfo(SKILL_GENERAL, DISC_OFFENSE, DISC_OFFENSE, STAT_EXT,
+    new spellInfo(SKILL_INEVITABILITY, SKILL_GENERAL, DISC_OFFENSE, DISC_OFFENSE, STAT_EXT,
       "inevitability", TASK_EASY, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
@@ -2977,7 +2967,7 @@ void buildSpellArray() {
   // disc_wizardry
 
   discArray[SKILL_WIZARDRY] =
-    new spellInfo(SKILL_MAGE, DISC_WIZARDRY, DISC_WIZARDRY, STAT_EXT,
+    new spellInfo(SKILL_WIZARDRY, SKILL_MAGE, DISC_WIZARDRY, DISC_WIZARDRY, STAT_EXT,
       "wizardry", TASK_EASY, LAG_0, POSITION_SLEEPING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_NO,
       LEARN_DO_NO, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
@@ -2985,19 +2975,19 @@ void buildSpellArray() {
   // disc_lore
   // disc_theology
 
-  discArray[SKILL_ATTUNE] = new spellInfo(SKILL_CLERIC_TYPES, DISC_THEOLOGY,
+  discArray[SKILL_ATTUNE] = new spellInfo(SKILL_ATTUNE, SKILL_CLERIC_TYPES, DISC_THEOLOGY,
     DISC_THEOLOGY, STAT_EXT, "attune", TASK_NORMAL, LAG_0, POSITION_SITTING,
     MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_10,
     LEARN_10, START_DO_50, LEARN_DO_2, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_UNUSUAL, 0.0, SPELL_IGNORE_POSITION, 0);
 
-  discArray[SKILL_MANA] = new spellInfo(SKILL_MAGE_TYPES, DISC_LORE, DISC_LORE,
+  discArray[SKILL_MANA] = new spellInfo(SKILL_MANA, SKILL_MAGE_TYPES, DISC_LORE, DISC_LORE,
     STAT_EXT, "mana", TASK_NORMAL, LAG_0, POSITION_RESTING, MANA_0, LIFEFORCE_0,
     PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1,
     LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0,
     SPELL_IGNORE_POSITION, 0);
 
-  discArray[SKILL_MEDITATE] = new spellInfo(SKILL_MAGE_TYPES, DISC_LORE,
+  discArray[SKILL_MEDITATE] = new spellInfo(SKILL_MEDITATE, SKILL_MAGE_TYPES, DISC_LORE,
     DISC_LORE, STAT_EXT, "meditate", TASK_EASY, LAG_0, POSITION_RESTING, MANA_0,
     LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1,
     START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0,
@@ -3009,7 +2999,7 @@ void buildSpellArray() {
   // ritualism
 
   discArray[SKILL_RITUALISM] =
-    new spellInfo(SKILL_SHAMAN, DISC_RITUALISM, DISC_RITUALISM, STAT_EXT,
+    new spellInfo(SKILL_RITUALISM, SKILL_SHAMAN, DISC_RITUALISM, DISC_RITUALISM, STAT_EXT,
       "ritualism", TASK_EASY, LAG_0, POSITION_SLEEPING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_NO,
       LEARN_DO_NO, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
@@ -3017,7 +3007,7 @@ void buildSpellArray() {
   // shaman basic
 
   discArray[SPELL_CHASE_SPIRIT] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_ARMADILLO, STAT_INT,
+    new spellInfo(SPELL_CHASE_SPIRIT, SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_ARMADILLO, STAT_INT,
       "chase spirits", TASK_EASY, LAG_1, POSITION_SITTING, MANA_0, LIFEFORCE_70,
       PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_VICT | TAR_OBJ_INV | TAR_OBJ_ROOM,
       SYMBOL_STRESS_0, "", "", "", "", START_61, LEARN_10, START_DO_40,
@@ -3027,7 +3017,7 @@ void buildSpellArray() {
       0);
 
   discArray[SPELL_FLATULENCE] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_SKUNK, STAT_INT,
+    new spellInfo(SPELL_FLATULENCE, SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_SKUNK, STAT_INT,
       "flatulence", TASK_EASY, LAG_1, POSITION_SITTING, MANA_0, LIFEFORCE_50,
       PRAY_0, TAR_AREA | TAR_FIGHT_VICT | TAR_VIOLENT | TAR_IGNORE,
       SYMBOL_STRESS_0, "", "", "", "", START_15, LEARN_15, START_DO_45,
@@ -3036,7 +3026,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_STUPIDITY] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN,
+  discArray[SPELL_STUPIDITY] = new spellInfo(SPELL_STUPIDITY, SPELL_SHAMAN, DISC_SHAMAN,
     DISC_SHAMAN_SPIDER, STAT_INT, "stupidity", TASK_EASY, LAG_2,
     POSITION_SITTING, MANA_0, LIFEFORCE_30, PRAY_0,
     TAR_VIOLENT | TAR_FIGHT_VICT | TAR_CHAR_ROOM | TAR_SELF_NONO |
@@ -3051,7 +3041,7 @@ void buildSpellArray() {
     0);
 
   discArray[SPELL_DISTORT] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_FROG, STAT_INT,
+    new spellInfo(SPELL_DISTORT, SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_FROG, STAT_INT,
       "distort", TASK_NORMAL, LAG_1, POSITION_SITTING, MANA_0, LIFEFORCE_25,
       PRAY_0, TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
       SYMBOL_STRESS_0, "", "", "", "", START_12, LEARN_25, START_DO_40,
@@ -3061,7 +3051,7 @@ void buildSpellArray() {
       0);
 
   discArray[SPELL_LEGBA] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_ARMADILLO, STAT_INT,
+    new spellInfo(SPELL_LEGBA, SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_ARMADILLO, STAT_INT,
       "legba's guidance", TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_0,
       LIFEFORCE_70, PRAY_0, TAR_FIGHT_SELF | TAR_CHAR_ROOM, SYMBOL_STRESS_0, "",
       "", "", "", START_80, LEARN_10, START_DO_30, LEARN_DO_5, START_DO_NO,
@@ -3071,7 +3061,7 @@ void buildSpellArray() {
       0);
 
   discArray[SPELL_DJALLA] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_ARMADILLO, STAT_INT,
+    new spellInfo(SPELL_DJALLA, SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_ARMADILLO, STAT_INT,
       "djalla's protection", TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_0,
       LIFEFORCE_60, PRAY_0, TAR_FIGHT_SELF | TAR_CHAR_ROOM, SYMBOL_STRESS_0, "",
       "", "", "", START_75, LEARN_10, START_DO_30, LEARN_DO_5, START_DO_NO,
@@ -3080,7 +3070,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_SENSE_LIFE_SHAMAN] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN,
+  discArray[SPELL_SENSE_LIFE_SHAMAN] = new spellInfo(SPELL_SENSE_LIFE_SHAMAN, SPELL_SHAMAN, DISC_SHAMAN,
     DISC_SHAMAN_ARMADILLO, STAT_INT, "sense presence", TASK_EASY, LAG_1,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_30, PRAY_0,
     TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
@@ -3093,7 +3083,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_DETECT_SHADOW] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN,
+  discArray[SPELL_DETECT_SHADOW] = new spellInfo(SPELL_DETECT_SHADOW, SPELL_SHAMAN, DISC_SHAMAN,
     DISC_SHAMAN_ARMADILLO, STAT_INT, "detect shadow", TASK_EASY, LAG_2,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_70, PRAY_0,
     TAR_CHAR_ROOM | TAR_FIGHT_SELF | TAR_CHAR_ROOM, SYMBOL_STRESS_0,
@@ -3105,7 +3095,7 @@ void buildSpellArray() {
     0);
 
   discArray[SPELL_INTIMIDATE] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_SKUNK, STAT_INT,
+    new spellInfo(SPELL_INTIMIDATE, SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_SKUNK, STAT_INT,
       "intimidate", TASK_NORMAL, LAG_2, POSITION_SITTING, MANA_0, LIFEFORCE_40,
       PRAY_0, TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
       SYMBOL_STRESS_0, "You are less intimidated.",
@@ -3116,7 +3106,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_ROMBLER] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN,
+  discArray[SPELL_ROMBLER] = new spellInfo(SPELL_ROMBLER, SPELL_SHAMAN, DISC_SHAMAN,
     DISC_SHAMAN, STAT_INT, "romble", TASK_EASY, LAG_1, POSITION_CRAWLING,
     MANA_0, LIFEFORCE_20, PRAY_0, TAR_NAME, SYMBOL_STRESS_0, "", "", "", "",
     START_47, LEARN_15, START_DO_50, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
@@ -3125,7 +3115,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_EMBALM] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN,
+  discArray[SPELL_EMBALM] = new spellInfo(SPELL_EMBALM, SPELL_SHAMAN, DISC_SHAMAN,
     DISC_SHAMAN, STAT_EXT, "embalm", TASK_EASY, LAG_1, POSITION_CRAWLING,
     MANA_0, LIFEFORCE_20, PRAY_0, TAR_OBJ_ROOM | TAR_SELF_NONO, SYMBOL_STRESS_0,
     "", "", "", "", START_47, LEARN_15, START_DO_50, LEARN_DO_5, START_DO_NO,
@@ -3135,13 +3125,13 @@ void buildSpellArray() {
     0);
 
   discArray[SKILL_SACRIFICE] =
-    new spellInfo(SKILL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN, STAT_EXT, "sacrifice",
+    new spellInfo(SKILL_SACRIFICE, SKILL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN, STAT_EXT, "sacrifice",
       TASK_EASY, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
       SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_2, START_DO_35,
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SPELL_CHRISM] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_ALCHEMY, STAT_INT,
+    new spellInfo(SPELL_CHRISM, SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_ALCHEMY, STAT_INT,
       "chrism", TASK_TRIVIAL, LAG_1, POSITION_CRAWLING, MANA_0, LIFEFORCE_40,
       PRAY_0, TAR_NAME, SYMBOL_STRESS_0, "", "", "", "", START_15, LEARN_25,
       START_DO_40, LEARN_DO_7, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.0,
@@ -3149,7 +3139,7 @@ void buildSpellArray() {
         SPELL_TASKED,
       0);
 
-  discArray[SPELL_VAMPIRIC_TOUCH] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN,
+  discArray[SPELL_VAMPIRIC_TOUCH] = new spellInfo(SPELL_VAMPIRIC_TOUCH, SPELL_SHAMAN, DISC_SHAMAN,
     DISC_SHAMAN_SKUNK, STAT_INT, "vampiric touch", TASK_DIFFICULT, LAG_2,
     POSITION_SITTING, MANA_0, LIFEFORCE_80, PRAY_0,
     TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
@@ -3160,7 +3150,7 @@ void buildSpellArray() {
     0);
 
   discArray[SPELL_CHEVAL] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_ARMADILLO, STAT_INT,
+    new spellInfo(SPELL_CHEVAL, SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_ARMADILLO, STAT_INT,
       "cheval", TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_0, LIFEFORCE_60,
       PRAY_0, TAR_SELF_ONLY | TAR_FIGHT_SELF | TAR_CHAR_ROOM, SYMBOL_STRESS_0,
       "The loa are growing tired of your body.", "$n seems to be calming down.",
@@ -3171,7 +3161,7 @@ void buildSpellArray() {
       0);
 
   discArray[SPELL_SQUISH] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_SPIDER, STAT_INT,
+    new spellInfo(SPELL_SQUISH, SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_SPIDER, STAT_INT,
       "squish", TASK_NORMAL, LAG_1, POSITION_SITTING, MANA_0, LIFEFORCE_50,
       PRAY_0, TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
       SYMBOL_STRESS_0, "", "", "", "", START_15, LEARN_5, START_DO_40,
@@ -3180,7 +3170,7 @@ void buildSpellArray() {
         SPELL_TASKED,
       0);
 
-  discArray[SPELL_SOUL_TWIST] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN,
+  discArray[SPELL_SOUL_TWIST] = new spellInfo(SPELL_SOUL_TWIST, SPELL_SHAMAN, DISC_SHAMAN,
     DISC_SHAMAN_SKUNK, STAT_INT, "soul twister", TASK_NORMAL, LAG_1,
     POSITION_SITTING, MANA_0, LIFEFORCE_60, PRAY_0,
     TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
@@ -3191,7 +3181,7 @@ void buildSpellArray() {
     0);
 
   discArray[SPELL_VOODOO] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_CONTROL, STAT_EXT,
+    new spellInfo(SPELL_VOODOO, SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_CONTROL, STAT_EXT,
       "voodoo", TASK_EASY, LAG_2, POSITION_SITTING, MANA_0, LIFEFORCE_50,
       PRAY_0, TAR_OBJ_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
       SYMBOL_STRESS_0, "", "", "", "", START_21, LEARN_8, START_DO_40,
@@ -3200,7 +3190,7 @@ void buildSpellArray() {
         SPELL_TASKED,
       0);
 
-  discArray[SPELL_DANCING_BONES] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN,
+  discArray[SPELL_DANCING_BONES] = new spellInfo(SPELL_DANCING_BONES, SPELL_SHAMAN, DISC_SHAMAN,
     DISC_SHAMAN_CONTROL, STAT_EXT, "dancing bones", TASK_EASY, LAG_3,
     POSITION_SITTING, MANA_0, LIFEFORCE_110, PRAY_0,
     TAR_OBJ_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
@@ -3211,7 +3201,7 @@ void buildSpellArray() {
     0);
 
   discArray[SPELL_SHIELD_OF_MISTS] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN, STAT_INT,
+    new spellInfo(SPELL_SHIELD_OF_MISTS, SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN, STAT_INT,
       "shield of mists", TASK_EASY, LAG_1, POSITION_CRAWLING, MANA_0,
       LIFEFORCE_20, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
       "The mist surrounding you has faded into memory.",
@@ -3224,7 +3214,7 @@ void buildSpellArray() {
       0);
 
   discArray[SPELL_LIFE_LEECH] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_SPIDER, STAT_INT,
+    new spellInfo(SPELL_LIFE_LEECH, SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_SPIDER, STAT_INT,
       "life leech", TASK_EASY, LAG_1, POSITION_SITTING, MANA_0, LIFEFORCE_20,
       PRAY_0, TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
       SYMBOL_STRESS_0, "", "", "", "", START_3, LEARN_5, START_DO_25,
@@ -3233,7 +3223,7 @@ void buildSpellArray() {
         SPELL_TASKED,
       0);
 
-  discArray[SPELL_ENTHRALL_SPECTRE] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN,
+  discArray[SPELL_ENTHRALL_SPECTRE] = new spellInfo(SPELL_ENTHRALL_SPECTRE, SPELL_SHAMAN, DISC_SHAMAN,
     DISC_SHAMAN_CONTROL, STAT_EXT, "enthrall spectre", TASK_EASY, LAG_1,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_70, PRAY_0, TAR_IGNORE,
     SYMBOL_STRESS_0, "", "", "", "", START_35, LEARN_15, START_DO_50,
@@ -3242,7 +3232,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_ENTHRALL_GHAST] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN,
+  discArray[SPELL_ENTHRALL_GHAST] = new spellInfo(SPELL_ENTHRALL_GHAST, SPELL_SHAMAN, DISC_SHAMAN,
     DISC_SHAMAN_CONTROL, STAT_EXT, "enthrall ghast", TASK_EASY, LAG_1,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_90, PRAY_0, TAR_IGNORE,
     SYMBOL_STRESS_0, "", "", "", "", START_57, LEARN_13, START_DO_50,
@@ -3251,7 +3241,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_ENTHRALL_GHOUL] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN,
+  discArray[SPELL_ENTHRALL_GHOUL] = new spellInfo(SPELL_ENTHRALL_GHOUL, SPELL_SHAMAN, DISC_SHAMAN,
     DISC_SHAMAN_CONTROL, STAT_EXT, "enthrall ghoul", TASK_EASY, LAG_1,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_120, PRAY_0, TAR_IGNORE,
     SYMBOL_STRESS_0, "", "", "", "", START_80, LEARN_15, START_DO_50,
@@ -3261,14 +3251,14 @@ void buildSpellArray() {
     0);
 
   discArray[SKILL_REPAIR_SHAMAN] =
-    new spellInfo(SKILL_SHAMAN, DISC_SHAMAN, DISC_BLACKSMITHING, STAT_EXT,
+    new spellInfo(SKILL_REPAIR_SHAMAN, SKILL_SHAMAN, DISC_SHAMAN, DISC_BLACKSMITHING, STAT_EXT,
       "shaman repair", TASK_EASY, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_3, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   // shaman control
 
-  discArray[SPELL_ENTHRALL_DEMON] = new spellInfo(SPELL_SHAMAN,
+  discArray[SPELL_ENTHRALL_DEMON] = new spellInfo(SPELL_ENTHRALL_DEMON, SPELL_SHAMAN,
     DISC_SHAMAN_CONTROL, DISC_SHAMAN_CONTROL, STAT_EXT, "enthrall demon",
     TASK_EASY, LAG_1, POSITION_CRAWLING, MANA_0, LIFEFORCE_150, PRAY_0,
     TAR_IGNORE, SYMBOL_STRESS_0, "", "", "", "", START_41, LEARN_10,
@@ -3277,7 +3267,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_CREATE_WOOD_GOLEM] = new spellInfo(SPELL_SHAMAN,
+  discArray[SPELL_CREATE_WOOD_GOLEM] = new spellInfo(SPELL_CREATE_WOOD_GOLEM, SPELL_SHAMAN,
     DISC_SHAMAN_CONTROL, DISC_SHAMAN_CONTROL, STAT_EXT, "create wood golem",
     TASK_NORMAL, LAG_1, POSITION_CRAWLING, MANA_0, LIFEFORCE_170, PRAY_0,
     TAR_IGNORE, SYMBOL_STRESS_0, "", "", "", "", START_60, LEARN_10,
@@ -3286,7 +3276,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_CREATE_ROCK_GOLEM] = new spellInfo(SPELL_SHAMAN,
+  discArray[SPELL_CREATE_ROCK_GOLEM] = new spellInfo(SPELL_CREATE_ROCK_GOLEM, SPELL_SHAMAN,
     DISC_SHAMAN_CONTROL, DISC_SHAMAN_CONTROL, STAT_EXT, "create rock golem",
     TASK_NORMAL, LAG_1, POSITION_CRAWLING, MANA_0, LIFEFORCE_190, PRAY_0,
     TAR_IGNORE, SYMBOL_STRESS_0, "", "", "", "", START_70, LEARN_10,
@@ -3295,7 +3285,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_CREATE_IRON_GOLEM] = new spellInfo(SPELL_SHAMAN,
+  discArray[SPELL_CREATE_IRON_GOLEM] = new spellInfo(SPELL_CREATE_IRON_GOLEM, SPELL_SHAMAN,
     DISC_SHAMAN_CONTROL, DISC_SHAMAN_CONTROL, STAT_EXT, "create iron golem",
     TASK_NORMAL, LAG_1, POSITION_CRAWLING, MANA_0, LIFEFORCE_190, PRAY_0,
     TAR_IGNORE, SYMBOL_STRESS_0, "", "", "", "", START_75, LEARN_10,
@@ -3304,7 +3294,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_CREATE_DIAMOND_GOLEM] = new spellInfo(SPELL_SHAMAN,
+  discArray[SPELL_CREATE_DIAMOND_GOLEM] = new spellInfo(SPELL_CREATE_DIAMOND_GOLEM, SPELL_SHAMAN,
     DISC_SHAMAN_CONTROL, DISC_SHAMAN_CONTROL, STAT_EXT, "create diamond golem",
     TASK_NORMAL, LAG_1, POSITION_CRAWLING, MANA_0, LIFEFORCE_210, PRAY_0,
     TAR_IGNORE, SYMBOL_STRESS_0, "", "", "", "", START_85, LEARN_10,
@@ -3313,7 +3303,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_RESURRECTION] = new spellInfo(SPELL_SHAMAN,
+  discArray[SPELL_RESURRECTION] = new spellInfo(SPELL_RESURRECTION, SPELL_SHAMAN,
     DISC_SHAMAN_CONTROL, DISC_SHAMAN_CONTROL, STAT_EXT, "resurrection",
     TASK_DANGEROUS, LAG_5, POSITION_SITTING, MANA_0, LIFEFORCE_330, PRAY_0,
     TAR_OBJ_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
@@ -3325,7 +3315,7 @@ void buildSpellArray() {
 
   // shaman spider
 
-  discArray[SPELL_ROOT_CONTROL] = new spellInfo(SPELL_SHAMAN,
+  discArray[SPELL_ROOT_CONTROL] = new spellInfo(SPELL_ROOT_CONTROL, SPELL_SHAMAN,
     DISC_SHAMAN_SPIDER, DISC_SHAMAN_SPIDER, STAT_INT, "root control",
     TASK_NORMAL, LAG_3, POSITION_SITTING, MANA_15, LIFEFORCE_0, PRAY_0,
     TAR_CHAR_ROOM | TAR_VIOLENT | TAR_FIGHT_VICT | TAR_SELF_NONO,
@@ -3334,7 +3324,7 @@ void buildSpellArray() {
     COMP_GESTURAL | COMP_VERBAL | COMP_MATERIAL, 0);
 
   discArray[SKILL_TRANSFIX] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_SPIDER, DISC_SHAMAN_SPIDER,
+    new spellInfo(SKILL_TRANSFIX, SPELL_SHAMAN, DISC_SHAMAN_SPIDER, DISC_SHAMAN_SPIDER,
       STAT_INT, "transfix", TASK_DIFFICULT, LAG_3, POSITION_FIGHTING, MANA_0,
       LIFEFORCE_0, PRAY_0, TAR_SELF_NONO | TAR_CHAR_ROOM, SYMBOL_STRESS_0,
       "You're not transfixed anymore.",
@@ -3345,13 +3335,13 @@ void buildSpellArray() {
       COMP_VERBAL | COMP_MATERIAL, 0);
 
   discArray[SPELL_LIVING_VINES] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_SPIDER, DISC_SHAMAN_SPIDER,
+    new spellInfo(SPELL_LIVING_VINES, SPELL_SHAMAN, DISC_SHAMAN_SPIDER, DISC_SHAMAN_SPIDER,
       STAT_INT, "living vines", TASK_NORMAL, LAG_3, POSITION_SITTING, MANA_0,
       LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM, SYMBOL_STRESS_0, "", "", "", "",
       START_41, LEARN_4, START_DO_40, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
       LEARN_DIFF_SPELLS, 0.04, COMP_GESTURAL | COMP_VERBAL | COMP_MATERIAL, 0);
 
-  discArray[SPELL_RAZE] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_SPIDER,
+  discArray[SPELL_RAZE] = new spellInfo(SPELL_RAZE, SPELL_SHAMAN, DISC_SHAMAN_SPIDER,
     DISC_SHAMAN_SPIDER, STAT_INT, "raze", TASK_DANGEROUS, LAG_3,
     POSITION_SITTING, MANA_0, LIFEFORCE_400, PRAY_0,
     TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
@@ -3361,7 +3351,7 @@ void buildSpellArray() {
       COMP_MATERIAL_INIT,
     0);
 
-  discArray[SPELL_STICKS_TO_SNAKES] = new spellInfo(SPELL_SHAMAN,
+  discArray[SPELL_STICKS_TO_SNAKES] = new spellInfo(SPELL_STICKS_TO_SNAKES, SPELL_SHAMAN,
     DISC_SHAMAN_SPIDER, DISC_SHAMAN_SPIDER, STAT_INT, "sticks to snakes",
     TASK_NORMAL, LAG_3, POSITION_SITTING, MANA_0, LIFEFORCE_130, PRAY_0,
     TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
@@ -3371,7 +3361,7 @@ void buildSpellArray() {
       COMP_MATERIAL_INIT,
     0);
 
-  discArray[SPELL_HYPNOSIS] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_SPIDER,
+  discArray[SPELL_HYPNOSIS] = new spellInfo(SPELL_HYPNOSIS, SPELL_SHAMAN, DISC_SHAMAN_SPIDER,
     DISC_SHAMAN_SPIDER, STAT_CHA, "hypnosis", TASK_NORMAL, LAG_1,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_300, PRAY_0,
     TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_FIGHT_VICT | TAR_VIOLENT,
@@ -3385,7 +3375,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_CLARITY] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_SPIDER,
+  discArray[SPELL_CLARITY] = new spellInfo(SPELL_CLARITY, SPELL_SHAMAN, DISC_SHAMAN_SPIDER,
     DISC_SHAMAN_SPIDER, STAT_INT, "clarity", TASK_EASY, LAG_1,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_150, PRAY_0,
     TAR_CHAR_ROOM | TAR_SELF_ONLY, SYMBOL_STRESS_0,
@@ -3398,7 +3388,7 @@ void buildSpellArray() {
     0);
 
   discArray[SPELL_CONTROL_UNDEAD] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_SPIDER, DISC_SHAMAN_SPIDER,
+    new spellInfo(SPELL_CONTROL_UNDEAD, SPELL_SHAMAN, DISC_SHAMAN_SPIDER, DISC_SHAMAN_SPIDER,
       STAT_INT, "control undead", TASK_NORMAL, LAG_1, POSITION_CRAWLING, MANA_0,
       LIFEFORCE_240, PRAY_0, TAR_CHAR_ROOM | TAR_SELF_NONO, SYMBOL_STRESS_0, "",
       "", "", "", START_70, LEARN_5, START_DO_30, LEARN_DO_3, START_DO_NO,
@@ -3410,7 +3400,7 @@ void buildSpellArray() {
   // shaman frog
 
   discArray[SKILL_TRANSFORM_LIMB] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_FROG, DISC_SHAMAN_FROG, STAT_EXT,
+    new spellInfo(SKILL_TRANSFORM_LIMB, SPELL_SHAMAN, DISC_SHAMAN_FROG, DISC_SHAMAN_FROG, STAT_EXT,
       "transform limb", TASK_NORMAL, LAG_3, POSITION_CRAWLING, MANA_0,
       LIFEFORCE_0, PRAY_0, TAR_NAME, SYMBOL_STRESS_0,
       "Your limbs tingles as the transforming magic starts to leave your body.",
@@ -3422,7 +3412,7 @@ void buildSpellArray() {
       START_21, LEARN_4, START_DO_20, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
       LEARN_DIFF_SPELLS, 0.04, COMP_MATERIAL, 0);
 
-  discArray[SPELL_CREEPING_DOOM] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_FROG,
+  discArray[SPELL_CREEPING_DOOM] = new spellInfo(SPELL_CREEPING_DOOM, SPELL_SHAMAN, DISC_SHAMAN_FROG,
     DISC_SHAMAN_FROG, STAT_INT, "creeping doom", TASK_NORMAL, LAG_3,
     POSITION_SITTING, MANA_10, LIFEFORCE_0, PRAY_0,
     TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_FIGHT_VICT | TAR_VIOLENT,
@@ -3430,7 +3420,7 @@ void buildSpellArray() {
     START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.04,
     COMP_GESTURAL | COMP_VERBAL | COMP_MATERIAL, 0);
 
-  discArray[SPELL_STORMY_SKIES] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_FROG,
+  discArray[SPELL_STORMY_SKIES] = new spellInfo(SPELL_STORMY_SKIES, SPELL_SHAMAN, DISC_SHAMAN_FROG,
     DISC_SHAMAN_FROG, STAT_INT, "stormy skies", TASK_DANGEROUS, LAG_4,
     POSITION_SITTING, MANA_0, LIFEFORCE_170, PRAY_0,
     TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
@@ -3440,7 +3430,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_AQUATIC_BLAST] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_FROG,
+  discArray[SPELL_AQUATIC_BLAST] = new spellInfo(SPELL_AQUATIC_BLAST, SPELL_SHAMAN, DISC_SHAMAN_FROG,
     DISC_SHAMAN_FROG, STAT_INT, "aquatic blast", TASK_DANGEROUS, LAG_4,
     POSITION_SITTING, MANA_0, LIFEFORCE_230, PRAY_0,
     TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
@@ -3450,7 +3440,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_DEATHWAVE] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_FROG,
+  discArray[SPELL_DEATHWAVE] = new spellInfo(SPELL_DEATHWAVE, SPELL_SHAMAN, DISC_SHAMAN_FROG,
     DISC_SHAMAN_FROG, STAT_INT, "death wave", TASK_DANGEROUS, LAG_4,
     POSITION_SITTING, MANA_0, LIFEFORCE_160, PRAY_0,
     TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
@@ -3460,7 +3450,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_SHAPESHIFT] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_FROG,
+  discArray[SPELL_SHAPESHIFT] = new spellInfo(SPELL_SHAPESHIFT, SPELL_SHAMAN, DISC_SHAMAN_FROG,
     DISC_SHAMAN_FROG, STAT_INT, "shapeshift", TASK_NORMAL, LAG_2,
     POSITION_CRAWLING, MANA_0, LIFEFORCE_200, PRAY_0, TAR_NAME, SYMBOL_STRESS_0,
     "You are not able to hold this form any longer.", "",
@@ -3473,7 +3463,7 @@ void buildSpellArray() {
 
   // shaman skunk
 
-  discArray[SPELL_BLOOD_BOIL] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_SKUNK,
+  discArray[SPELL_BLOOD_BOIL] = new spellInfo(SPELL_BLOOD_BOIL, SPELL_SHAMAN, DISC_SHAMAN_SKUNK,
     DISC_SHAMAN_SKUNK, STAT_INT, "boiling blood", TASK_NORMAL, LAG_2,
     POSITION_SITTING, MANA_0, LIFEFORCE_150, PRAY_0,
     TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
@@ -3483,7 +3473,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_CLEANSE] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_SKUNK,
+  discArray[SPELL_CLEANSE] = new spellInfo(SPELL_CLEANSE, SPELL_SHAMAN, DISC_SHAMAN_SKUNK,
     DISC_SHAMAN_SKUNK, STAT_INT, "cleanse", TASK_EASY, LAG_2, POSITION_SITTING,
     MANA_0, LIFEFORCE_300, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF,
     SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_5, START_DO_40, LEARN_DO_10,
@@ -3493,7 +3483,7 @@ void buildSpellArray() {
     0);
 
   discArray[SPELL_DEATH_MIST] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_SKUNK, DISC_SHAMAN_SKUNK, STAT_INT,
+    new spellInfo(SPELL_DEATH_MIST, SPELL_SHAMAN, DISC_SHAMAN_SKUNK, DISC_SHAMAN_SKUNK, STAT_INT,
       "death mist", TASK_NORMAL, LAG_3, POSITION_SITTING, MANA_0, LIFEFORCE_260,
       PRAY_0, TAR_AREA | TAR_FIGHT_VICT | TAR_VIOLENT | TAR_IGNORE,
       SYMBOL_STRESS_0, "", "", "", "", START_25, LEARN_5, START_DO_50,
@@ -3502,7 +3492,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_CARDIAC_STRESS] = new spellInfo(SPELL_SHAMAN,
+  discArray[SPELL_CARDIAC_STRESS] = new spellInfo(SPELL_CARDIAC_STRESS, SPELL_SHAMAN,
     DISC_SHAMAN_SKUNK, DISC_SHAMAN_SKUNK, STAT_INT, "coronary", TASK_DANGEROUS,
     LAG_4, POSITION_SITTING, MANA_0, LIFEFORCE_240, PRAY_0,
     TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
@@ -3512,7 +3502,7 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
 
-  discArray[SPELL_LICH_TOUCH] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_SKUNK,
+  discArray[SPELL_LICH_TOUCH] = new spellInfo(SPELL_LICH_TOUCH, SPELL_SHAMAN, DISC_SHAMAN_SKUNK,
     DISC_SHAMAN_SKUNK, STAT_INT, "lich touch", TASK_DANGEROUS, LAG_3,
     POSITION_SITTING, MANA_0, LIFEFORCE_120, PRAY_0,
     TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
@@ -3523,14 +3513,14 @@ void buildSpellArray() {
     0);
 
   discArray[SKILL_TURN] =
-    new spellInfo(SKILL_SHAMAN, DISC_SHAMAN_SKUNK, DISC_SHAMAN_SKUNK, STAT_EXT,
+    new spellInfo(SKILL_TURN, SKILL_SHAMAN, DISC_SHAMAN_SKUNK, DISC_SHAMAN_SKUNK, STAT_EXT,
       "turn", TASK_NORMAL, LAG_3, POSITION_STANDING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_86, LEARN_8, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   // shaman armadillo
 
-  discArray[SPELL_EARTHMAW] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_ARMADILLO,
+  discArray[SPELL_EARTHMAW] = new spellInfo(SPELL_EARTHMAW, SPELL_SHAMAN, DISC_SHAMAN_ARMADILLO,
     DISC_SHAMAN_ARMADILLO, STAT_INT, "earthmaw", TASK_NORMAL, LAG_3,
     POSITION_SITTING, MANA_10, LIFEFORCE_0, PRAY_0,
     TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_FIGHT_VICT | TAR_VIOLENT,
@@ -3539,7 +3529,7 @@ void buildSpellArray() {
     COMP_GESTURAL | COMP_VERBAL | COMP_MATERIAL, 0);
 
   discArray[SPELL_CELERITE] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_ARMADILLO, DISC_SHAMAN_ARMADILLO,
+    new spellInfo(SPELL_CELERITE, SPELL_SHAMAN, DISC_SHAMAN_ARMADILLO, DISC_SHAMAN_ARMADILLO,
       STAT_INT, "celerite", TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_0,
       LIFEFORCE_260, PRAY_0, TAR_SELF_ONLY | TAR_FIGHT_SELF | TAR_CHAR_ROOM,
       SYMBOL_STRESS_0, "You dont seem to be as protected as you once were.",
@@ -3550,7 +3540,7 @@ void buildSpellArray() {
       0);
 
   discArray[SPELL_AQUALUNG] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_ARMADILLO, DISC_SHAMAN_ARMADILLO,
+    new spellInfo(SPELL_AQUALUNG, SPELL_SHAMAN, DISC_SHAMAN_ARMADILLO, DISC_SHAMAN_ARMADILLO,
       STAT_INT, "aqualung", TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_0,
       LIFEFORCE_100, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
       "The transparent globe around your head disappears.",
@@ -3562,7 +3552,7 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_THORNFLESH] = new spellInfo(SPELL_SHAMAN,
+  discArray[SPELL_THORNFLESH] = new spellInfo(SPELL_THORNFLESH, SPELL_SHAMAN,
     DISC_SHAMAN_ARMADILLO, DISC_SHAMAN_ARMADILLO, STAT_INT, "thornflesh",
     TASK_EASY, LAG_3, POSITION_CRAWLING, MANA_0, LIFEFORCE_300, PRAY_0,
     TAR_SELF_ONLY | TAR_FIGHT_SELF | TAR_CHAR_ROOM, SYMBOL_STRESS_0,
@@ -3575,7 +3565,7 @@ void buildSpellArray() {
     0);
 
   discArray[SPELL_SHADOW_WALK] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_ARMADILLO, DISC_SHAMAN_ARMADILLO,
+    new spellInfo(SPELL_SHADOW_WALK, SPELL_SHAMAN, DISC_SHAMAN_ARMADILLO, DISC_SHAMAN_ARMADILLO,
       STAT_INT, "shadow walk", TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_0,
       LIFEFORCE_300, PRAY_0, TAR_CHAR_ROOM | TAR_SELF_ONLY, SYMBOL_STRESS_0,
       "You no longer walk in the shadows.", "$n blinks into view.", "", "",
@@ -3587,7 +3577,7 @@ void buildSpellArray() {
 
   // shaman alchemy
 
-  discArray[SKILL_BREW] = new spellInfo(SKILL_SHAMAN, DISC_SHAMAN_ALCHEMY,
+  discArray[SKILL_BREW] = new spellInfo(SKILL_BREW, SKILL_SHAMAN, DISC_SHAMAN_ALCHEMY,
     DISC_SHAMAN_ALCHEMY, STAT_EXT, "brew", TASK_EASY, LAG_0, POSITION_STANDING,
     MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1,
     LEARN_1, START_DO_1, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
@@ -3595,7 +3585,7 @@ void buildSpellArray() {
 
   // healing abilities
   discArray[SPELL_HEALING_GRASP] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_HEALING, DISC_SHAMAN_HEALING,
+    new spellInfo(SPELL_HEALING_GRASP, SPELL_SHAMAN, DISC_SHAMAN_HEALING, DISC_SHAMAN_HEALING,
       STAT_INT, "healing grasp", TASK_EASY, LAG_2, POSITION_SITTING, MANA_0,
       LIFEFORCE_100, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
       "", "", "", "", START_1, LEARN_1, START_DO_35, LEARN_DO_5, START_DO_NO,
@@ -3605,7 +3595,7 @@ void buildSpellArray() {
       0);
 
   discArray[SPELL_ENLIVEN] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_HEALING, DISC_SHAMAN_HEALING,
+    new spellInfo(SPELL_ENLIVEN, SPELL_SHAMAN, DISC_SHAMAN_HEALING, DISC_SHAMAN_HEALING,
       STAT_INT, "enliven", TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_0,
       LIFEFORCE_150, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
       "You don't seem as lively.", "$n doesn't seem as lively.", "", "",
@@ -3621,14 +3611,14 @@ void buildSpellArray() {
   // disc_piety
 
   discArray[SKILL_DEVOTION] =
-    new spellInfo(SKILL_CLERIC_TYPES, DISC_FAITH, DISC_FAITH, STAT_EXT,
+    new spellInfo(SKILL_DEVOTION, SKILL_CLERIC_TYPES, DISC_FAITH, DISC_FAITH, STAT_EXT,
       "devotion", TASK_NORMAL, LAG_0, POSITION_RESTING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_NO,
       LEARN_DO_NO, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   // disc_theology
 
-  discArray[SKILL_PENANCE] = new spellInfo(SKILL_CLERIC_TYPES, DISC_THEOLOGY,
+  discArray[SKILL_PENANCE] = new spellInfo(SKILL_PENANCE, SKILL_CLERIC_TYPES, DISC_THEOLOGY,
     DISC_THEOLOGY, STAT_EXT, "penance", TASK_EASY, LAG_0, POSITION_RESTING,
     MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1,
     LEARN_1, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
@@ -3636,7 +3626,7 @@ void buildSpellArray() {
 
   // disc_slash
 
-  discArray[SKILL_SLASH_SPEC] = new spellInfo(SKILL_WARRIOR, DISC_SLASH,
+  discArray[SKILL_SLASH_SPEC] = new spellInfo(SKILL_SLASH_SPEC, SKILL_WARRIOR, DISC_SLASH,
     DISC_SLASH, STAT_EXT, "slash specialization", TASK_NORMAL, LAG_0,
     POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "",
     "", START_1, LEARN_1, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
@@ -3644,7 +3634,7 @@ void buildSpellArray() {
 
   // disc_blunt
 
-  discArray[SKILL_BLUNT_SPEC] = new spellInfo(SKILL_WARRIOR, DISC_BLUNT,
+  discArray[SKILL_BLUNT_SPEC] = new spellInfo(SKILL_BLUNT_SPEC, SKILL_WARRIOR, DISC_BLUNT,
     DISC_BLUNT, STAT_EXT, "blunt specialization", TASK_NORMAL, LAG_0,
     POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "",
     "", START_1, LEARN_1, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
@@ -3652,7 +3642,7 @@ void buildSpellArray() {
 
   // disc_pierce
 
-  discArray[SKILL_PIERCE_SPEC] = new spellInfo(SKILL_WARRIOR, DISC_PIERCE,
+  discArray[SKILL_PIERCE_SPEC] = new spellInfo(SKILL_PIERCE_SPEC, SKILL_WARRIOR, DISC_PIERCE,
     DISC_PIERCE, STAT_EXT, "pierce specialization", TASK_NORMAL, LAG_0,
     POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "",
     "", START_1, LEARN_1, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
@@ -3660,111 +3650,94 @@ void buildSpellArray() {
 
   // disc_ranged
 
-  discArray[SKILL_RANGED_SPEC] = new spellInfo(SKILL_WARRIOR, DISC_RANGED,
+  discArray[SKILL_RANGED_SPEC] = new spellInfo(SKILL_RANGED_SPEC, SKILL_WARRIOR, DISC_RANGED,
     DISC_RANGED, STAT_EXT, "ranged specialization", TASK_NORMAL, LAG_0,
     POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "",
     "", START_1, LEARN_1, START_DO_1, LEARN_DO_2, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   discArray[SKILL_FAST_LOAD] =
-    new spellInfo(SKILL_WARRIOR, DISC_RANGED, DISC_RANGED, STAT_EXT,
+    new spellInfo(SKILL_FAST_LOAD, SKILL_WARRIOR, DISC_RANGED, DISC_RANGED, STAT_EXT,
       "fast load", TASK_NORMAL, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_2, START_DO_1,
       LEARN_DO_4, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
   // disc_barehand
 
-  discArray[SKILL_BAREHAND_SPEC] = new spellInfo(SKILL_MONK, DISC_BAREHAND,
+  discArray[SKILL_BAREHAND_SPEC] = new spellInfo(SKILL_BAREHAND_SPEC, SKILL_MONK, DISC_BAREHAND,
     DISC_BAREHAND, STAT_EXT, "barehand specialization", TASK_NORMAL, LAG_0,
     POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "",
     "", START_1, LEARN_1, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-#if 0
-  discArray[SKILL_ARMOR_USE] = new spellInfo(SKILL_GENERAL, DISC_COMBAT, DISC_COMBAT, "armor proficiency", TASK_NORMAL, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
-
-  discArray[SPELL_CHAIN_LIGHTNING] = new spellInfo(SPELL_MAGE, DISC_SORCERY, DISC_SORCERY, "chain lightning", TASK_NORMAL, LAG_1, POSITION_SITTING, MANA_40, 0,  TAR_AREA | TAR_IGNORE | TAR_FIGHT_VICT | TAR_VIOLENT, SYMBOL_STRESS_0, "", "", "", "", START_60, LEARN_5, START_DO_50, LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.04, COMP_GESTURAL | COMP_VERBAL | COMP_MATERIAL, 0);
-
-  discArray[SPELL_REPAIR] = new spellInfo(SPELL_MAGE, DISC_ALCHEMY, DISC_ALCHEMY, "repair", LAG_2, POSITION_CRAWLING, MANA_50, LIFEFORCE_0, PRAY_0, TAR_OBJ_INV | TAR_OBJ_EQUIP, SYMBOL_STRESS_0, "", "", "", "", START_65, LEARN_5, START_DO_50, LEARN_DO_5, 0.0, COMP_GESTURAL | COMP_VERBAL | COMP_MATERIAL, 0);
-
-  discArray[SKILL_CASTING] = new spellInfo(SPELL_MAGE, DISC_WIZARDRY, DISC_WIZARDRY, "casting", TASK_NORMAL, LAG_0, POSITION_RESTING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_100, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
-
-  discArray[SKILL_PRAYING] = new spellInfo(SKILL_CLERIC_TYPES, DISC_FAITH, DISC_FAITH, "praying", TASK_NORMAL, LAG_0, POSITION_RESTING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_100, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
-
-  discArray[SKILL_MASS_FORAGE] = new spellInfo(SKILL_RANGER, DISC_SURVIVAL, DISC_SURVIVAL, "mass forage", TASK_NORMAL, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_26, LEARN_4, START_DO_10, LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
-
-  discArray[SKILL_TAN] = new spellInfo(SKILL_RANGER, DISC_SURVIVAL, DISC_SURVIVAL, "tanning", TASK_NORMAL, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_4, START_DO_1, LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
-
-#endif
-
   // psionics
-  discArray[SKILL_PSITELEPATHY] = new spellInfo(SKILL_GENERAL, DISC_PSIONICS,
+  discArray[SKILL_PSITELEPATHY] = new spellInfo(SKILL_PSITELEPATHY, SKILL_GENERAL, DISC_PSIONICS,
     DISC_PSIONICS, STAT_INT, "psionic telepathy", TASK_EASY, LAG_0,
     POSITION_STANDING, MANA_10, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_1, LEARN_5, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_TELE_SIGHT] = new spellInfo(SKILL_GENERAL, DISC_PSIONICS,
+  discArray[SKILL_TELE_SIGHT] = new spellInfo(SKILL_TELE_SIGHT, SKILL_GENERAL, DISC_PSIONICS,
     DISC_PSIONICS, STAT_INT, "telepathic sight", TASK_NORMAL, LAG_0,
     POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_10, LEARN_100, START_DO_NO, LEARN_DO_NO, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_TELE_VISION] = new spellInfo(SKILL_GENERAL, DISC_PSIONICS,
+  discArray[SKILL_TELE_VISION] = new spellInfo(SKILL_TELE_VISION, SKILL_GENERAL, DISC_PSIONICS,
     DISC_PSIONICS, STAT_INT, "telepathic vision", TASK_NORMAL, LAG_3,
     POSITION_STANDING, MANA_40, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_70, LEARN_4, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_MIND_FOCUS] =
-    new spellInfo(SKILL_GENERAL, DISC_PSIONICS, DISC_PSIONICS, STAT_INT,
+    new spellInfo(SKILL_MIND_FOCUS, SKILL_GENERAL, DISC_PSIONICS, DISC_PSIONICS, STAT_INT,
       "mind focus", TASK_NORMAL, LAG_1, POSITION_STANDING, MANA_50, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_25, LEARN_2, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_PSI_BLAST] = new spellInfo(SKILL_GENERAL, DISC_PSIONICS,
+  discArray[SKILL_PSI_BLAST] = new spellInfo(SKILL_PSI_BLAST, SKILL_GENERAL, DISC_PSIONICS,
     DISC_PSIONICS, STAT_INT, "psionic blast", TASK_NORMAL, LAG_3,
     POSITION_STANDING, MANA_20, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_20, LEARN_2, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_MIND_THRUST] = new spellInfo(SKILL_GENERAL, DISC_PSIONICS,
+  discArray[SKILL_MIND_THRUST] = new spellInfo(SKILL_MIND_THRUST, SKILL_GENERAL, DISC_PSIONICS,
     DISC_PSIONICS, STAT_INT, "mind thrust", TASK_NORMAL, LAG_3,
     POSITION_STANDING, MANA_25, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_40, LEARN_2, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_PSYCHIC_CRUSH] = new spellInfo(SKILL_GENERAL, DISC_PSIONICS,
+  discArray[SKILL_PSYCHIC_CRUSH] = new spellInfo(SKILL_PSYCHIC_CRUSH, SKILL_GENERAL, DISC_PSIONICS,
     DISC_PSIONICS, STAT_INT, "psychic crush", TASK_NORMAL, LAG_3,
     POSITION_STANDING, MANA_30, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_60, LEARN_3, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_KINETIC_WAVE] =
-    new spellInfo(SKILL_GENERAL, DISC_PSIONICS, DISC_PSIONICS, STAT_INT,
+    new spellInfo(SKILL_KINETIC_WAVE, SKILL_GENERAL, DISC_PSIONICS, DISC_PSIONICS, STAT_INT,
       "kinetic wave", TASK_EASY, LAG_3, POSITION_STANDING, MANA_40, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_80, LEARN_5, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_MIND_PRESERVATION] = new spellInfo(SKILL_GENERAL,
+  discArray[SKILL_MIND_PRESERVATION] = new spellInfo(SKILL_MIND_PRESERVATION, SKILL_GENERAL,
     DISC_PSIONICS, DISC_PSIONICS, STAT_INT, "mind preservation", TASK_NORMAL,
     LAG_0, POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0,
     "", "", "", "", START_1, LEARN_1, START_DO_NO, LEARN_DO_NO, START_DO_NO,
     LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_TELEKINESIS] =
-    new spellInfo(SKILL_GENERAL, DISC_PSIONICS, DISC_PSIONICS, STAT_INT,
+    new spellInfo(SKILL_TELEKINESIS, SKILL_GENERAL, DISC_PSIONICS, DISC_PSIONICS, STAT_INT,
       "telekinesis", TASK_NORMAL, LAG_1, POSITION_STANDING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_PSIDRAIN] = new spellInfo(SKILL_GENERAL, DISC_PSIONICS,
+  discArray[SKILL_PSIDRAIN] = new spellInfo(SKILL_PSIDRAIN, SKILL_GENERAL, DISC_PSIONICS,
     DISC_PSIONICS, STAT_INT, "psionic drain", TASK_DIFFICULT, LAG_1,
     POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
     "", "", START_1, LEARN_1, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
-  discArray[SKILL_DIMENSIONAL_FOLD] = new spellInfo(SKILL_GENERAL,
+  discArray[SKILL_DIMENSIONAL_FOLD] = new spellInfo(SKILL_DIMENSIONAL_FOLD, SKILL_GENERAL,
     DISC_PSIONICS, DISC_PSIONICS, STAT_INT, "dimensional fold", TASK_EASY,
     LAG_2, POSITION_STANDING, MANA_50, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0,
     "", "", "", "", START_80, LEARN_5, START_DO_1, LEARN_DO_1, START_DO_NO,
@@ -3785,5 +3758,10 @@ void buildSpellArray() {
         format("skill '%s' has bad learning (start: %i, learn: %i)") %
           spell->name % spell->start % spell->learn);
     }
+  }
+
+  for (auto spellInfo : discArray) {
+    if (spellInfo != nullptr)
+      spellsOfDiscipline[spellInfo->disc].push_back(spellInfo->spellNum);
   }
 }

@@ -2419,7 +2419,7 @@ static spellNumT get_cleric_heal_spell(TMonster& ch, TBeing& targ) {
   }
 
   // cure blindness
-  if(ch.doesKnowSkill(SPELL_CURE_BLINDNESS) && 
+  if(ch.doesKnowSkill(SPELL_CURE_BLINDNESS) &&
      ch.getSkillValue(SPELL_CURE_BLINDNESS) > 33 &&
 #if 0
      targ.isAffected(AFF_BLIND)) {
@@ -2739,7 +2739,7 @@ static spellNumT get_cleric_spell(TMonster& ch, TBeing& vict, bool& on_me) {
 #if 0
     spell = SPELL_HARM_FULL;
     if (!::number(0, 6) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'Hurts, doesn't it?\?'",
@@ -3393,7 +3393,7 @@ int TMonster::mobileActivity(int pulse) {
   if (oldRoom == Room::NOWHERE)
     oldRoom = inRoom();
 
-#if 0 
+#if 0
   if (isPet(PETTYPE_PET) && !isElemental()) {
     if (getCond(FULL) < 0) {
       setCond(FULL, 20);
@@ -4316,7 +4316,7 @@ int TMonster::findABetterWeapon() {
         // skip training gear
         if (tobj && tobj->objVnum() == Obj::WEAPON_T_DAGGER)
           return FALSE;
-        vlogf(LOG_LOW,format("%s (%d) removed %s (%d : base=%.2f) as hands are better.") % 
+        vlogf(LOG_LOW,format("%s (%d) removed %s (%d : base=%.2f) as hands are better.") %
                   getName() % mobVnum() % tobj->getName() % tobj->objVnum() % tobj->baseDamage());
 
         return TRUE;
@@ -4466,7 +4466,7 @@ int TMonster::defendOther(TBeing& targ) {
       spell = SPELL_SANCTUARY;
       if ( !targ.affectedBySpell(spell) && !targ.isAffected(AFF_SANCTUARY) &&
            doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
-        act("$n utters, \"White aura, surround me!\"", 
+        act("$n utters, \"White aura, surround me!\"",
                  TRUE, this, 0, 0, TO_ROOM);
         found = TRUE;
       }
@@ -4831,10 +4831,10 @@ int TMonster::defendSelf(int) {
 #if 0
     if ((susp()-defsusp()) > 9){
       if (!found){
-	int mentals[]={SPELL_CONJURE_AIR, SPELL_CONJURE_FIRE, 
-		       SPELL_CONJURE_EARTH, SPELL_CONJURE_WATER, 
+	int mentals[]={SPELL_CONJURE_AIR, SPELL_CONJURE_FIRE,
+		       SPELL_CONJURE_EARTH, SPELL_CONJURE_WATER,
 		       SPELL_ENTHRALL_SPECTRE, SPELL_ENTHRALL_GHAST,
-		       SPELL_ENTHRALL_GHOUL, SPELL_ENTHRALL_DEMON, 
+		       SPELL_ENTHRALL_GHOUL, SPELL_ENTHRALL_DEMON,
 		       SPELL_CREATE_WOOD_GOLEM, SPELL_CREATE_ROCK_GOLEM,
 		       SPELL_CREATE_IRON_GOLEM, SPELL_CREATE_DIAMOND_GOLEM};
 	int count=12, i, foundmental=0;
@@ -4843,7 +4843,7 @@ int TMonster::defendSelf(int) {
 
 	// pick a conjure spell
 	for(i=::number(0,11),count+=i;i<count;++i)
-	  if (doesKnowSkill(mentals[i%4]) && 
+	  if (doesKnowSkill(mentals[i%4]) &&
 	      (getSkillValue(mentals[i%4]) > 33))
 	    spell=mentals[i%4];
 
@@ -4863,51 +4863,51 @@ int TMonster::defendSelf(int) {
 	  switch(spell){
 	    case SPELL_CONJURE_AIR:
 	      act("$n utters the words, 'Atmospheric Aid!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_CONJURE_FIRE:
 	      act("$n utters the words, 'Fiery Friend!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_CONJURE_EARTH:
 	      act("$n utters the words, 'Earthly Endorsement!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_CONJURE_WATER:
 	      act("$n utters the words, 'Watery Waiter!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_ENTHRALL_SPECTRE:
 	      act("$n sings the rada, 'Xebec Kamala!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_ENTHRALL_GHAST:
 	      act("$n sings the rada, 'Xebec Romula!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_ENTHRALL_GHOUL:
 	      act("$n sings the rada, 'Xebec Pumula!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_ENTHRALL_DEMON:
 	      act("$n sings the rada, 'Xebec Tamala!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_CREATE_WOOD_GOLEM:
 	      act("$n sings the rada, 'Xebec Oakala!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_CREATE_ROCK_GOLEM:
 	      act("$n sings the rada, 'Xebec Rokala!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_CREATE_IRON_GOLEM:
 	      act("$n sings the rada, 'Xebec Metala!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_CREATE_DIAMOND_GOLEM:
 	      act("$n sings the rada, 'Xebec Diala!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	  }
 	  found = TRUE;

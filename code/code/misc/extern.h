@@ -149,7 +149,6 @@ extern void allocate_room(int);
 extern void buildCommandArray();
 extern void assign_objects(void);
 extern void assign_rooms(void);
-extern void buildSpellArray();
 extern void buildSpellDamArray();
 extern void buildTerrainDamMap();
 extern void buildWeatherDamMap();
