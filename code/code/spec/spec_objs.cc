@@ -662,6 +662,11 @@ int JewelJudgment(TBeing*, cmdTypeT cmd, const char*, TObj* me, TObj*) {
       TO_ROOM, ANSI_ORANGE);
     act("You grunt softly as energy seeps from your body into $p.", TRUE, tmp,
       me, 0, TO_CHAR, ANSI_ORANGE);
+    
+    dam = ::number(6, 16);
+
+    ch->addToMana(dam);
+
     if (tmp->reconcileDamage(dynamic_cast<TBeing*>(me->equippedBy),
           number(3, 8), DAMAGE_DRAIN) == -1) {
       delete tmp;
