@@ -331,7 +331,6 @@ int TBeing::getSkillDam(const TBeing* victim, spellNumT skill, int level,
     case SPELL_BLOOD_BOIL:
     case SPELL_DEATHWAVE:
     case SPELL_RAZE:
-    case SPELL_LICH_TOUCH:
       dam = genericDam(victim, this, skill, DISC_SHAMAN, level, adv_learn,
         1.5 * HARD_TO_FIND_COMPONENT, REDUCE_YES, !isPc(), TRIM_NO);
       break;
@@ -340,10 +339,14 @@ int TBeing::getSkillDam(const TBeing* victim, spellNumT skill, int level,
     case SPELL_SOUL_TWIST:
     case SPELL_SQUISH:
     case SPELL_FLATULENCE:
-    case SPELL_VAMPIRIC_TOUCH:
     case SPELL_LIFE_LEECH:
       dam = genericDam(victim, this, skill, DISC_SHAMAN, level, adv_learn,
-        2.0 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
+        2.150 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
+      break;
+    case SPELL_LICH_TOUCH:
+    case SPELL_VAMPIRIC_TOUCH:
+      dam = genericDam(victim, this, skill, DISC_SHAMAN, level, adv_learn,
+        1.9 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
       break;
       ///////////////////////
       // END SHAMAN STUFF
