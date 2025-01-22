@@ -242,11 +242,13 @@ int lichTouch(TBeing* caster, TBeing* victim, int level, short bKnown,
   }
 
   int dam = caster->getSkillDam(victim, SPELL_LICH_TOUCH, level, adv_learn);
+
+  int hpGain = ::number(70, 105) * (caster->getSkillValue(SPELL_LICH_TOUCH) / 100);
+  int lfGain = ::number(140, 200) * (caster->getSkillValue(SPELL_LICH_TOUCH) / 100);
+  int vit = ::number(50, 100) * (caster->getSkillValue(SPELL_LICH_TOUCH) / 100);
+
   caster->reconcileHurt(victim, discArray[SPELL_LICH_TOUCH]->alignMod);
   bool save = victim->isLucky(caster->spellLuckModifier(SPELL_LICH_TOUCH));
-  int vit = dice(number(1, level), 4);
-  int lfmod = ::number(20, (level * 5));
-  int hpgain = ::number(30, (level * 2));
 
   if (victim->getImmunity(IMMUNE_DRAIN) >= 100) {
     act("$N is immune to draining!", FALSE, caster, NULL, victim, TO_CHAR);
@@ -264,8 +266,6 @@ int lichTouch(TBeing* caster, TBeing* victim, int level, short bKnown,
       victim, TO_CHAR);
     act("You groan in pain as life is drawn from your body!", FALSE, caster,
       NULL, victim, TO_VICT);
-    caster->addToHit(hpgain);
-    caster->updatePos();
     TPerson* pers;
     switch (critSuccess(caster, SPELL_LICH_TOUCH)) {
       case CRIT_S_DOUBLE:
@@ -273,7 +273,7 @@ int lichTouch(TBeing* caster, TBeing* victim, int level, short bKnown,
         CS(SPELL_LICH_TOUCH);
         dam *= 2;
         vit *= 2;
-        lfmod *= 2;
+        lfGain *= 2;
         break;
       case CRIT_S_KILL:
         CS(SPELL_LICH_TOUCH);
@@ -293,38 +293,40 @@ int lichTouch(TBeing* caster, TBeing* victim, int level, short bKnown,
       SV(SPELL_LICH_TOUCH);
       dam /= 2;
       vit /= 2;
-      lfmod /= 2;
+      lfGain /= 2;
     }
-    caster->addToLifeforce(lfmod);
+    caster->addToHit(hpGain);
+    caster->addToLifeforce(lfGain);
+    caster->updatePos();
     if (!victim->isImmortal())
       victim->addToMove(-vit);
     if (caster->reconcileDamage(victim, dam, SPELL_LICH_TOUCH) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;
-  } else {
-    switch (critFail(caster, SPELL_LICH_TOUCH)) {
-      case CRIT_F_HITSELF:
-      case CRIT_F_HITOTHER:
-        CF(SPELL_LICH_TOUCH);
-        act("$n's body glows a dark, evil-looking red!", FALSE, caster, NULL,
-          NULL, TO_ROOM);
-        act(
-          "You sang the invokation incorrectly! The ancestors are EXTREMELY "
-          "pissed!",
-          FALSE, caster, NULL, NULL, TO_CHAR);
-        caster->addToMove(-vit);
-        caster->addToLifeforce(0);
-        caster->updatePos();
-        dam /= 3;
-        if (caster->reconcileDamage(caster, dam, SPELL_LICH_TOUCH) == -1)
-          return SPELL_CRIT_FAIL + CASTER_DEAD;
-        return SPELL_CRIT_FAIL;
-      case CRIT_F_NONE:
-        break;
-    }
-    caster->nothingHappens();
-    return SPELL_FAIL;
   }
+
+  switch (critFail(caster, SPELL_LICH_TOUCH)) {
+    case CRIT_F_HITSELF:
+    case CRIT_F_HITOTHER:
+      CF(SPELL_LICH_TOUCH);
+      act("$n's body glows a dark, evil-looking red!", FALSE, caster, NULL,
+        NULL, TO_ROOM);
+      act(
+        "You sang the invokation incorrectly! The ancestors are EXTREMELY "
+        "pissed!",
+        FALSE, caster, NULL, NULL, TO_CHAR);
+      caster->addToMove(-vit);
+      caster->addToLifeforce(0);
+      caster->updatePos();
+      dam /= 3;
+      if (caster->reconcileDamage(caster, dam, SPELL_LICH_TOUCH) == -1)
+        return SPELL_CRIT_FAIL + CASTER_DEAD;
+      return SPELL_CRIT_FAIL;
+    case CRIT_F_NONE:
+      break;
+  }
+  caster->nothingHappens();
+  return SPELL_FAIL;
 }
 
 int lichTouch(TBeing* caster, TBeing* victim) {
