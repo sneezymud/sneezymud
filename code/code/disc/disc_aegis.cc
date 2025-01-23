@@ -22,7 +22,7 @@ void crusade(TBeing* ch) {
 
   if (!ch->bSuccess(ch->getSkillValue(SPELL_CRUSADE), ch->getPerc(),
         SPELL_CRUSADE)) {
-    ch->nothingHappens();
+    ch->deityIgnore();
     return;
   }
 
