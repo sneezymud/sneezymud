@@ -87,7 +87,7 @@
 #include "being.h"
 #include "obj_symbol.h"
 
-#define SPELLTASK_DEBUG 1
+#define SPELLTASK_DEBUG 0
 
 // FYI: CMD_TASK_CONTINUE is checked once per Pulse::COMBAT
 void spellTaskData::getNextUpdate(int pulse, int interval) {
