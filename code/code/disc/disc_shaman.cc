@@ -838,11 +838,11 @@ int vampiricTouch(TBeing* caster, TBeing* victim, int level, short bKnown,
       lfGain /= 2;
     }
     caster->reconcileHurt(victim, discArray[SPELL_VAMPIRIC_TOUCH]->alignMod);
-    if (caster->reconcileDamage(victim, damage, SPELL_VAMPIRIC_TOUCH) == -1)
-      return SPELL_SUCCESS + VICTIM_DEAD;
     caster->addToHit(hpGain);
     caster->addToLifeforce(lfGain);
     caster->updatePos();
+    if (caster->reconcileDamage(victim, damage, SPELL_VAMPIRIC_TOUCH) == -1)
+      return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;
   }
   // Failure
@@ -963,11 +963,11 @@ int lifeLeech(TBeing* caster, TBeing* victim, int level, short bKnown,
         break;
     }
     caster->reconcileHurt(victim, discArray[SPELL_LIFE_LEECH]->alignMod);
-    if (caster->reconcileDamage(victim, damage, SPELL_LIFE_LEECH) == -1)
-      return SPELL_SUCCESS + VICTIM_DEAD;
     caster->addToHit(hpGain);
     caster->addToLifeforce(lfGain);
     caster->updatePos();
+    if (caster->reconcileDamage(victim, damage, SPELL_LIFE_LEECH) == -1)
+      return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;
   }
 
