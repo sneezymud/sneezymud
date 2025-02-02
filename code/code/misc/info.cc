@@ -1159,6 +1159,7 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme) const {
       case SPELL_PILLAR_SALT:
       case SPELL_FIREBALL:
       case SPELL_HANDS_OF_FLAME:
+      case SPELL_LAVA_LANCE:
       case SPELL_INFERNO:
       case SPELL_HELLFIRE:
       case SPELL_RAIN_BRIMSTONE:

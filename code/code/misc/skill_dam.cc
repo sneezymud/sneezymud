@@ -8,7 +8,7 @@
 #include "being.h"
 #include "statistics.h"
 
-#define SKILL_DAMAGE_DEBUG 0
+#define SKILL_DAMAGE_DEBUG 1
 
 double getSkillDiffModifier(spellNumT skill) {
   int amt = 0;
@@ -284,6 +284,7 @@ int TBeing::getSkillDam(const TBeing* victim, spellNumT skill, int level,
     case SPELL_ARCTIC_BLAST:
     case SPELL_ICY_GRIP:
     case SPELL_FIREBALL:
+    case SPELL_LAVA_LANCE:
     case SPELL_INFERNO:
     case SPELL_HANDS_OF_FLAME:
     case SPELL_SLING_SHOT:

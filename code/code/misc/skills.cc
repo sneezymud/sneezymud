@@ -312,6 +312,8 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
       return &((CDFire*)cd)->skHellFire;
     case SPELL_FLAMING_FLESH:
       return &((CDFire*)cd)->skFlamingFlesh;
+    case SPELL_LAVA_LANCE:
+      return &((CDFire*)cd)->skLavaLance;
 
       // disc_sorcery
 

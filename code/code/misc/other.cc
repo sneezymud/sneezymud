@@ -2941,6 +2941,9 @@ int doObjSpell(TBeing* caster, TBeing* victim, TMagicItem* obj, TObj* target,
     case SPELL_FLAMING_SWORD:
       rc = flamingSword(caster, victim, obj);
       break;
+    case SPELL_LAVA_LANCE:
+      rc = lavaLance(caster, victim, obj);
+      break;
     case SPELL_INFERNO:
       rc = inferno(caster, victim, obj);
       break;

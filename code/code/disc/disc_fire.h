@@ -24,13 +24,15 @@
 
 class CDFire : public CDiscipline {
   public:
+    CSkill skLavaLance;
     CSkill skInferno;   // NEW  12th level area affect
     CSkill skHellFire;  // NEW  36th level area affect
     CSkill skFlamingFlesh;
 
-    CDFire() : CDiscipline(), skInferno(), skHellFire(), skFlamingFlesh() {}
+    CDFire() : CDiscipline(), skLavaLance(), skInferno(), skHellFire(), skFlamingFlesh() {}
     CDFire(const CDFire& a) :
       CDiscipline(a),
+      skLavaLance(a.skLavaLance),
       skInferno(a.skInferno),
       skHellFire(a.skHellFire),
       skFlamingFlesh(a.skFlamingFlesh) {}
@@ -38,6 +40,7 @@ class CDFire : public CDiscipline {
       if (this == &a)
         return *this;
       CDiscipline::operator=(a);
+      skLavaLance = a.skLavaLance;
       skInferno = a.skInferno;
       skHellFire = a.skHellFire;
       skFlamingFlesh = a.skFlamingFlesh;
@@ -63,6 +66,11 @@ int castFlamingSword(TBeing*, TBeing*);
 int flamingSword(TBeing*, TBeing*);
 int flamingSword(TBeing*, TBeing*, TMagicItem*);
 int flamingSword(TBeing*, TBeing*, int, short, int);
+
+int castLavaLance(TBeing*, TBeing*);
+int lavaLance(TBeing*, TBeing*);
+int lavaLance(TBeing*, TBeing*, int, short, int);
+int lavaLance(TBeing*, TBeing*, TMagicItem*);
 
 int castInferno(TBeing*, TBeing*);
 int inferno(TBeing*, TBeing*);

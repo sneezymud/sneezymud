@@ -1236,6 +1236,7 @@ namespace {
     {SPELL_DEATH_MIST, "SPELL_DEATH_MIST"},
     {SPELL_STONE_SKIN, "SPELL_STONE_SKIN"},
     {SPELL_TRAIL_SEEK, "SPELL_TRAIL_SEEK"},
+    {SPELL_LAVA_LANCE, "SPELL_LAVA_LANCE"},
     {SPELL_INFERNO, "SPELL_INFERNO"},
     {SPELL_HELLFIRE, "SPELL_HELLFIRE"},
     {SPELL_FLAMING_FLESH, "SPELL_FLAMING_FLESH"},
@@ -1966,6 +1967,9 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
       break;
     case SPELL_FLAMING_SWORD:
       rc = flamingSword(this, ch);
+      break;
+    case SPELL_LAVA_LANCE:
+      rc = lavaLance(this, ch);
       break;
     case SPELL_INFERNO:
       rc = inferno(this, ch);

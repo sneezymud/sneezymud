@@ -260,6 +260,8 @@ int mapSpellnumToFile(spellNumT stt) {
       return 82;
     case SPELL_TRAIL_SEEK:
       return 83;
+    case SPELL_LAVA_LANCE:
+      return 86;
     case SPELL_INFERNO:
       return 87;
     case SPELL_HELLFIRE:
@@ -1417,6 +1419,8 @@ spellNumT mapFileToSpellnum(int stt) {
       return SPELL_STONE_SKIN;
     case 83:
       return SPELL_TRAIL_SEEK;
+    case 86:
+      return SPELL_LAVA_LANCE;
     case 87:
       return SPELL_INFERNO;
     case 88:

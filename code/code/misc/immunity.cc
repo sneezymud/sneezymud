@@ -226,6 +226,7 @@ immuneTypeT getTypeImmunity(spellNumT type) {
     case SPELL_FLAMESTRIKE:
     case SPELL_FIRE_BREATH:
     case SPELL_RAIN_BRIMSTONE:
+    case SPELL_LAVA_LANCE:
     case SPELL_INFERNO:
     case SPELL_HELLFIRE:
     case SPELL_FLAMING_SWORD:

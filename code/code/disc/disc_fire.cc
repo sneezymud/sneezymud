@@ -15,6 +15,165 @@
 #include "obj_light.h"
 #include "obj_magic_item.h"
 
+int lavaLance(TBeing* caster, TBeing* victim, int level, short bKnown, int adv_learn) {
+  int ret = 0;
+
+  int dam = caster->getSkillDam(victim, SPELL_LAVA_LANCE, level, adv_learn);
+
+  caster->reconcileHurt(victim, discArray[SPELL_LAVA_LANCE]->alignMod);
+
+  if (caster->bSuccess(bKnown, SPELL_LAVA_LANCE)) {
+    switch (critSuccess(caster, SPELL_LAVA_LANCE)) {
+      case CRIT_S_KILL:
+      case CRIT_S_TRIPLE:
+      case CRIT_S_DOUBLE:
+        CS(SPELL_LAVA_LANCE);
+        dam *= 2;
+        act("<r>You create an <R>intense lava lance<z><r> and pierce $N with it!<z>",
+          FALSE, caster, NULL, victim, TO_CHAR);
+        act("<r>$n creates an <R>intense lava lance<z><r> and pierces $N with it.<z>",
+          FALSE, caster, NULL, victim, TO_NOTVICT);
+        act("<r>$n creates an <R>intense lava lance<z><r> and pierces you with it.<z>",
+          FALSE, caster, NULL, victim, TO_VICT);
+        ret = SPELL_CRIT_SUCCESS;
+        break;
+      case CRIT_S_NONE:
+        act("<r>You create a lava lance and pierce $N with it!<z>", FALSE, caster,
+          NULL, victim, TO_CHAR);
+        act("<r>$n creates a lava lance and pierces $N with it.<z>", FALSE, caster,
+          NULL, victim, TO_NOTVICT);
+        act("<r>$n creates a lava lance and pierces you with it.<z>", FALSE,
+          caster, NULL, victim, TO_VICT);
+        ret = SPELL_SUCCESS;
+        break;
+    }
+
+    if (victim->isLucky(caster->spellLuckModifier(SPELL_LAVA_LANCE))) {
+      SV(SPELL_LAVA_LANCE);
+      ret |= SPELL_SAVE;
+      dam /= 2;
+      act("<r>$N manages to avoid direct impact from the lava lance!<z>",
+        FALSE, caster, NULL, victim, TO_CHAR);
+      act("<r>$N manages to avoid direct impact from the lava lance!<z>",
+        FALSE, caster, NULL, victim, TO_NOTVICT);
+      act("<r>You manage to avoid direct impact from the lava lance.<z>",
+        FALSE, caster, NULL, victim, TO_VICT);
+    }
+    if (caster->reconcileDamage(victim, dam, SPELL_LAVA_LANCE) == -1)
+      ret |= VICTIM_DEAD;
+    return ret;
+  } else {
+    switch (critFail(caster, SPELL_LAVA_LANCE)) {
+      case CRIT_F_HITOTHER:
+      case CRIT_F_HITSELF:
+        CF(SPELL_LAVA_LANCE);
+        act(
+          "<r>You create a lava lance and fumble it! You stab yourself in the foot!<z>",
+          FALSE, caster, NULL, victim, TO_CHAR);
+        act(
+          "<r>$n creates a lava lance and fumbles it, stabbing $mself in the foot!<z>",
+          FALSE, caster, NULL, victim, TO_ROOM);
+
+        if (caster->reconcileDamage(caster, dam, SPELL_LAVA_LANCE) == -1)
+          return SPELL_CRIT_FAIL | CASTER_DEAD;
+        return SPELL_CRIT_FAIL;
+      case CRIT_F_NONE:
+        act("Your attempt to create a lava lance fizzles.", FALSE,
+          caster, NULL, victim, TO_CHAR);
+        act("$n fails to create a lava lance.", FALSE,
+          caster, NULL, victim, TO_NOTVICT);
+        act("$n fails to create a lava lance..", FALSE,
+          caster, NULL, victim, TO_VICT);
+        return SPELL_FAIL;
+    }
+    return SPELL_FAIL;
+  }
+}
+
+int castLavaLance(TBeing* caster, TBeing* victim) {
+  int ret, level;
+  int rc = 0;
+
+  level = caster->getSkillLevel(SPELL_LAVA_LANCE);
+
+  ret = lavaLance(caster, victim, level,
+    caster->getSkillValue(SPELL_LAVA_LANCE),
+    caster->getAdvLearning(SPELL_LAVA_LANCE));
+
+  if (IS_SET(ret, SPELL_SUCCESS)) {
+  } else if (IS_SET(ret, SPELL_CRIT_SUCCESS)) {
+  }
+  if (IS_SET(ret, SPELL_SAVE)) {}
+  if (IS_SET(ret, SPELL_CRIT_FAIL)) {
+  } else if (IS_SET(ret, SPELL_FAIL)) {
+  } else {
+  }
+
+  if (IS_SET(ret, VICTIM_DEAD))
+    ADD_DELETE(rc, DELETE_VICT);
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+  return rc;
+}
+
+int lavaLance(TBeing* caster, TBeing* victim) {
+  taskDiffT diff;
+
+  if (caster->roomp->isUnderwaterSector()) {
+    caster->sendTo("You cannot cast that under these wet conditions!\n\r");
+    return FALSE;
+  }
+
+  if (!bPassMageChecks(caster, SPELL_LAVA_LANCE, victim))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_LAVA_LANCE]->lag;
+  diff = discArray[SPELL_LAVA_LANCE]->task;
+
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_LAVA_LANCE, diff, 1, "",
+    rounds, caster->in_room, 0, 0, TRUE, 0);
+
+  return TRUE;
+}
+
+int lavaLance(TBeing* caster, TBeing* victim, TMagicItem* obj) {
+  int ret = 0;
+  int rc = 0;
+
+  act("$p starts to glow and a shard of molten lava shoots out.", FALSE, caster, obj, victim,
+    TO_CHAR);
+  act("$p starts to glow and a shard of molten lava shoots out.", FALSE, caster, obj, victim,
+    TO_ROOM);
+
+  if (caster->roomp->isUnderwaterSector()) {
+    act("The glow is quickly extinguished by the waters.", FALSE, caster, obj,
+      NULL, TO_CHAR);
+    act("The glow is quickly extinguished by the waters.", FALSE, caster, obj,
+      NULL, TO_ROOM);
+    caster->sendTo("You cannot cast that under these wet conditions!\n\r");
+    return FALSE;
+  } else {
+    ret = lavaLance(caster, victim, obj->getMagicLevel(),
+      obj->getMagicLearnedness(), 0);
+  }
+  if (IS_SET(ret, SPELL_SUCCESS)) {
+  } else if (IS_SET(ret, SPELL_CRIT_SUCCESS)) {
+  } else if (IS_SET(ret, SPELL_SAVE)) {
+  } else {
+    if (IS_SET(ret, SPELL_CRIT_FAIL)) {
+    } else {
+    }
+  }
+  if (IS_SET(ret, VICTIM_DEAD))
+    ADD_DELETE(rc, DELETE_VICT);
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+  return rc;
+}
+
+
+
+
 int handsOfFlame(TBeing* caster, TBeing* victim, int level, short bKnown,
   int* damage, int adv_learn) {
   int ret = 0;

@@ -1550,6 +1550,7 @@ int TBeing::checkBadSpellCondition(TBeing* caster, int which) {
       }
       return FALSE;
     case SPELL_FLAMING_SWORD:
+    case SPELL_LAVA_LANCE:
     case SPELL_INFERNO:
     case SPELL_HELLFIRE:
     case SPELL_FIREBALL:
@@ -2551,6 +2552,12 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
         rc = castFlamingSword(this, victim);
       } else
         vlogf(LOG_BUG, "SPELL_FLAMING_SWORD called with null obj");
+      break;
+    case SPELL_LAVA_LANCE:
+      if (!o) {
+        rc = castLavaLance(this, victim);
+      } else
+        vlogf(LOG_BUG, "SPELL_LAVA_LANCE called with null obj");
       break;
     case SPELL_INFERNO:
       if (!o) {

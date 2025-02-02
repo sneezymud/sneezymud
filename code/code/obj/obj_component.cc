@@ -1028,6 +1028,12 @@ void buildComponentArray() {
       "$n grips $p, slashing it at the air before you.",
       "You grip $p, slashing at the air around you.",
       "$n grips $p, slashing at the air around $m.", "", ""));
+  CompInfo.push_back(compInfo(SPELL_LAVA_LANCE,
+    "You fling $p towards $N.",
+    "$n flings $p towards $N.", 
+    "$n flings $p towards you.",
+    "You fling $p towards yourself.",
+    "$n flings $p towards $mself.", "", ""));
   CompInfo.push_back(compInfo(SPELL_INFERNO, "You blow $p in $N's direction.",
     "$n blows $p in $N's direction.", "$n blows $p in your direction.",
     "You blow $p in a cloud about yourself.",

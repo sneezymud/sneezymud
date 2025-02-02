@@ -317,6 +317,7 @@ TThing* TBeing::makeCorpse(spellNumT dmg_type, TBeing* tKiller,
         break;
       case SPELL_FIREBALL:
       case SPELL_HANDS_OF_FLAME:
+      case SPELL_LAVA_LANCE:
       case SPELL_INFERNO:
       case SPELL_HELLFIRE:
       case SPELL_RAIN_BRIMSTONE:

@@ -1697,7 +1697,12 @@ static spellNumT get_mage_spell(TMonster& ch, TBeing& vict, bool& on_me) {
     spell = SPELL_FAERIE_FIRE;
     if (faerieFireCheck(ch, vict, spell))
       return spell;
-
+    spell = SPELL_LAVA_LANCE;
+    if (!::number(0, 2) && (cutoff < discArray[spell]->start) &&
+        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+      act("$n utters the words, 'Eat Lava!'", TRUE, &ch, 0, 0, TO_ROOM);
+      return spell;
+    }
     spell = SPELL_INFERNO;
     if (!::number(0, 6) && (cutoff < discArray[spell]->start) &&
         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
