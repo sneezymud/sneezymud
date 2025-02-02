@@ -857,18 +857,31 @@ int flamingSword(TBeing* caster, TBeing* victim, TMagicItem* obj) {
 
 int inferno(TBeing* caster, TBeing* victim, int level, short bKnown,
   int adv_learn) {
+  affectedData aff;
+
   int dam = caster->getSkillDam(victim, SPELL_INFERNO, level, adv_learn);
 
   if (caster->bSuccess(bKnown, SPELL_INFERNO)) {
     caster->reconcileHurt(victim, discArray[SPELL_INFERNO]->alignMod);
 
+    aff.type = SPELL_INFERNO;
+    aff.duration = caster->durationModify(SPELL_INFERNO, 16 * Pulse::TICK);
+    aff.location = APPLY_IMMUNITY;
+    aff.modifier = IMMUNE_HEAT;
+    aff.modifier2 = -20;
+    aff.bitvector = 0;
+    aff.level = level;
+
     if (victim->isLucky(caster->spellLuckModifier(SPELL_INFERNO))) {
       SV(SPELL_INFERNO);
       dam /= 2;
+      aff.modifier2 /= 2;
     } else if (critSuccess(caster, SPELL_INFERNO) == CRIT_S_DOUBLE) {
       CS(SPELL_INFERNO);
       dam *= 2;
     }
+
+    victim->affectTo(&aff);
     if (caster->reconcileDamage(victim, dam, SPELL_INFERNO) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
 

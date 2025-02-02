@@ -876,7 +876,8 @@ void buildSpellArray() {
     new spellInfo(SPELL_MAGE, DISC_FIRE, DISC_FIRE, STAT_INT, "inferno",
       TASK_NORMAL, LAG_1, POSITION_SITTING, MANA_54, LIFEFORCE_0, PRAY_0,
       TAR_CHAR_ROOM | TAR_SELF_NONO | TAR_VIOLENT | TAR_FIGHT_VICT,
-      SYMBOL_STRESS_0, "", "", "", "", START_50, LEARN_5, START_DO_50,
+      SYMBOL_STRESS_0, "The burning sensation on your skin fades away.",
+      "$n's skin stops glowing red.", "", "", START_15, LEARN_5, START_DO_50,
       LEARN_DO_3, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.06,
       COMP_GESTURAL | COMP_GESTURAL_RANDOM | COMP_VERBAL | COMP_VERBAL_RANDOM |
         COMP_MATERIAL | COMP_MATERIAL_INIT | SPELL_TASKED,
