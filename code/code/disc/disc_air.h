@@ -30,6 +30,7 @@
 
 class CDAir : public CDiscipline {
   public:
+    CSkill skProtectionFromAir;
     CSkill skImmobilize;  // NEW  30th level individual
     CSkill skSuffocate;   //      40th level individual
     CSkill skFly;
@@ -96,9 +97,8 @@ void falconWings(TBeing*, TBeing*, TMagicItem*);
 int falconWings(TBeing*, TBeing*, int, short);
 int castFalconWings(TBeing*, TBeing*);
 
-int castProtectionFromAir(TBeing*, TBeing*);
-int protectionFromAir(TBeing*, TBeing*);
-void protectionFromAir(TBeing*, TBeing*, TMagicItem*);
-int protectionFromAir(TBeing*, TBeing*, int, short);
+int protectionFromAir(TBeing*);
+void protectionFromAir(TBeing*, TMagicItem*);
+int protectionFromAir(TBeing*, int, short);
 
 void weightCorrectDuration(const TBeing*, affectedData*);

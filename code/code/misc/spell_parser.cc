@@ -1180,7 +1180,7 @@ namespace {
     {SPELL_PROTECTION_FROM_AIR, "SPELL_PROTECTION_FROM_AIR"},
     {SPELL_PROTECTION_FROM_FIRE, "SPELL_PROTECTION_FROM_FIRE"},
     {SPELL_PROTECTION_FROM_WATER, "SPELL_PROTECTION_FROM_WATER"},
-    {SPELL_PROTECTION_FROM_ELEMENTS, "SPELL_PROTECTION_FROM_ELEMENTS"},
+    {SPELL_PROTECTION_FROM_ENERGY, "SPELL_PROTECTION_FROM_ENERGY"},
     {SPELL_PEBBLE_SPRAY, "SPELL_PEBBLE_SPRAY"},
     {SPELL_ARCTIC_BLAST, "SPELL_ARCTIC_BLAST"},
     {SPELL_COLOR_SPRAY, "SPELL_COLOR_SPRAY"},
@@ -1867,7 +1867,7 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
       levitate(this, ch);
       break;
     case SPELL_PROTECTION_FROM_AIR:
-      rc = protectionFromAir(this, ch);
+      rc = protectionFromAir(this);
       break;
     case SPELL_DJALLA:
       rc = djallasProtection(this, ch);
@@ -1957,7 +1957,7 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
       conjureElemEarth(this);
       break;
     case SPELL_PROTECTION_FROM_EARTH:
-      protectionFromEarth(this, ch);
+      protectionFromEarth(this);
       break;
     case SPELL_HANDS_OF_FLAME:
       rc = handsOfFlame(this, ch);
@@ -2002,7 +2002,7 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
       infravision(this, ch);
       break;
     case SPELL_PROTECTION_FROM_FIRE:
-      protectionFromFire(this, ch);
+      protectionFromFire(this);
       break;
     case SPELL_MYSTIC_DARTS:
       rc = mysticDarts(this, ch);
@@ -2063,8 +2063,8 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
     case SPELL_KNOT:
       rc = knot(this, ch);
       break;
-    case SPELL_PROTECTION_FROM_ELEMENTS:
-      protectionFromElements(this, ch);
+    case SPELL_PROTECTION_FROM_ENERGY:
+      protectionFromEnergy(this);
       break;
     case SPELL_SENSE_LIFE:
       senseLife(this, ch);
@@ -2181,7 +2181,7 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
       rc = breathOfSarahage(this);
       break;
     case SPELL_PROTECTION_FROM_WATER:
-      protectionFromWater(this, ch);
+      protectionFromWater(this);
       break;
     case SPELL_PLASMA_MIRROR:
       rc = plasmaMirror(this);

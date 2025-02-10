@@ -166,16 +166,6 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
       return &((CDMage*)cd)->skStunningArrow;
     case SPELL_MATERIALIZE:  // 11
       return &((CDMage*)cd)->skMaterialize;
-    case SPELL_PROTECTION_FROM_EARTH:  // 12
-      return &((CDMage*)cd)->skProtectionFromEarth;
-    case SPELL_PROTECTION_FROM_AIR:  // 13
-      return &((CDMage*)cd)->skProtectionFromAir;
-    case SPELL_PROTECTION_FROM_FIRE:  // 14
-      return &((CDMage*)cd)->skProtectionFromFire;
-    case SPELL_PROTECTION_FROM_WATER:  // 15
-      return &((CDMage*)cd)->skProtectionFromWater;
-    case SPELL_PROTECTION_FROM_ELEMENTS:  // 16
-      return &((CDMage*)cd)->skProtectionFromElements;
     case SPELL_PEBBLE_SPRAY:  // 17
       return &((CDMage*)cd)->skPebbleSpray;
     case SPELL_ARCTIC_BLAST:  // 18
@@ -267,6 +257,8 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
 
       // disc_air
 
+    case SPELL_PROTECTION_FROM_AIR:
+      return &((CDAir*)cd)->skProtectionFromAir;
     case SPELL_IMMOBILIZE:
       return &((CDAir*)cd)->skImmobilize;
     case SPELL_SUFFOCATE:
@@ -303,6 +295,8 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
       return &((CDEarth*)cd)->skStoneSkin;
     case SPELL_TRAIL_SEEK:
       return &((CDEarth*)cd)->skTrailSeek;
+    case SPELL_PROTECTION_FROM_EARTH:
+      return &((CDEarth*)cd)->skProtectionFromEarth;
 
       // disc_fire
 
@@ -314,6 +308,8 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
       return &((CDFire*)cd)->skFlamingFlesh;
     case SPELL_LAVA_LANCE:
       return &((CDFire*)cd)->skLavaLance;
+    case SPELL_PROTECTION_FROM_FIRE:
+      return &((CDFire*)cd)->skProtectionFromFire;
 
       // disc_sorcery
 
@@ -327,6 +323,8 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
       return &((CDSorcery*)cd)->skAnimate;
     case SPELL_BIND:
       return &((CDSorcery*)cd)->skBind;
+    case SPELL_PROTECTION_FROM_ENERGY:
+      return &((CDSorcery*)cd)->skProtectionFromEnergy;
 
       // disc_spirit
 
@@ -355,6 +353,8 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
       return &((CDWater*)cd)->skPlasmaMirror;
     case SPELL_GARMULS_TAIL:
       return &((CDWater*)cd)->skGarmulsTail;
+    case SPELL_PROTECTION_FROM_WATER:  // 15
+      return &((CDWater*)cd)->skProtectionFromWater;
 
       // CLASS CLERIC
 

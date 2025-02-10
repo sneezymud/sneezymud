@@ -2891,7 +2891,7 @@ int doObjSpell(TBeing* caster, TBeing* victim, TMagicItem* obj, TObj* target,
       rc = meteorSwarm(caster, victim, obj);
       break;
     case SPELL_PROTECTION_FROM_AIR:
-      protectionFromAir(caster, victim, obj);
+      protectionFromAir(caster, obj);
       break;
     case SPELL_CHASE_SPIRIT:
       if (target)
@@ -2906,16 +2906,16 @@ int doObjSpell(TBeing* caster, TBeing* victim, TMagicItem* obj, TObj* target,
       legbasGuidance(caster, victim, obj);
       break;
     case SPELL_PROTECTION_FROM_EARTH:
-      protectionFromEarth(caster, victim, obj);
+      protectionFromEarth(caster, obj);
       break;
-    case SPELL_PROTECTION_FROM_ELEMENTS:
-      protectionFromElements(caster, victim, obj);
+    case SPELL_PROTECTION_FROM_ENERGY:
+      protectionFromEnergy(caster, obj);
       break;
     case SPELL_PROTECTION_FROM_FIRE:
-      protectionFromFire(caster, victim, obj);
+      protectionFromFire(caster, obj);
       break;
     case SPELL_PROTECTION_FROM_WATER:
-      protectionFromWater(caster, victim, obj);
+      protectionFromWater(caster, obj);
       break;
     case SPELL_STONE_SKIN:
       stoneSkin(caster, victim, obj);

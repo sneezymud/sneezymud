@@ -1532,95 +1532,65 @@ int castTeleport(TBeing* caster, TBeing* victim) {
     ADD_DELETE(rc, DELETE_THIS);
   return rc;
 }
-int protectionFromElements(TBeing* caster, TBeing* victim, int level,
-  short bKnown) {
-  affectedData aff, aff2;
 
-  aff.type = SPELL_PROTECTION_FROM_ELEMENTS;
-  aff.level = level;
-  aff.duration = caster->durationModify(SPELL_PROTECTION_FROM_ELEMENTS,
-    (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR);
-  aff.location = APPLY_IMMUNITY;
-  aff.modifier = IMMUNE_ACID;
-  aff.modifier2 = ((level * 2) / 3);
-  aff.bitvector = 0;
 
-  aff2.type = SPELL_PROTECTION_FROM_ELEMENTS;
-  aff2.level = level;
-  aff2.duration = aff.duration;
-  aff2.location = APPLY_IMMUNITY;
-  aff2.modifier = IMMUNE_ELECTRICITY;
-  aff2.modifier2 = ((level * 2) / 3);
-  aff2.bitvector = 0;
+int protectionFromEnergy(TBeing* caster, int level, short bKnown) {
+  affectedData aff;
+  TBeing* tmp_victim = nullptr;
+  TThing* t = nullptr;
 
-  if (caster->bSuccess(bKnown, SPELL_PROTECTION_FROM_ELEMENTS)) {
-    act("$n glows with a faint orange aura for a brief moment.", FALSE, victim,
-      NULL, NULL, TO_ROOM);
-    act("You glow with a faint orange aura for a brief moment.", FALSE, victim,
-      NULL, NULL, TO_CHAR);
-    switch (critSuccess(caster, SPELL_PROTECTION_FROM_ELEMENTS)) {
-      case CRIT_S_DOUBLE:
-      case CRIT_S_TRIPLE:
-      case CRIT_S_KILL:
-        CS(SPELL_PROTECTION_FROM_ELEMENTS);
-        aff.duration = caster->durationModify(SPELL_PROTECTION_FROM_ELEMENTS,
-          (10 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR);
-        aff.modifier2 = (level * 2);
-        aff2.duration = aff.duration;
-        aff2.modifier2 = (level * 2);
-        break;
-      case CRIT_S_NONE:
-        break;
-    }
-    if (caster != victim) {
-      aff.modifier2 /= 2;
-      aff2.modifier2 /= 2;
-    }
-    if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES)) {
-      caster->nothingHappens();
-      return FALSE;
-    }
-    if (!victim->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES)) {
-      caster->nothingHappens();
-      return FALSE;
-    }
-    caster->reconcileHelp(victim,
-      discArray[SPELL_PROTECTION_FROM_ELEMENTS]->alignMod);
-    return SPELL_SUCCESS;
-  } else {
+  if (!caster->bSuccess(bKnown, SPELL_PROTECTION_FROM_ENERGY)) {
     caster->nothingHappens();
     return SPELL_FAIL;
   }
+
+  int immunityPerc = 5 + (level / 2) + (caster->getAdvLearning(SPELL_PROTECTION_FROM_ENERGY) / 10);
+
+  aff.type = SPELL_PROTECTION_FROM_ENERGY;
+  aff.level = level;
+  aff.duration = caster->durationModify(SPELL_PROTECTION_FROM_ENERGY, 
+    (20 + level)  * Pulse::TICK);
+  aff.location = APPLY_IMMUNITY;
+  aff.modifier = IMMUNE_ENERGY;
+  aff.modifier2 = immunityPerc;
+  aff.bitvector = 0;
+
+  int found = false;
+    for (StuffIter it = caster->roomp->stuff.begin();
+        it != caster->roomp->stuff.end() && (t = *it); ++it) {
+      tmp_victim = dynamic_cast<TBeing*>(t);
+      if (!tmp_victim)
+        continue;
+      if (caster->inGroup(*tmp_victim)) {
+        caster->reconcileHelp(tmp_victim, discArray[SPELL_PROTECTION_FROM_ENERGY]->alignMod);
+        act("$n glows with a faint orange aura for a brief moment.", FALSE, tmp_victim, NULL,
+          NULL, TO_ROOM);
+        act("You glow with a faint orange aura for a brief moment.", FALSE, tmp_victim, NULL,
+          NULL, TO_CHAR);
+        tmp_victim->removeAllProtection();
+        tmp_victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
+        found = true;
+    }
+  }
+  if (!found)
+    caster->sendTo("But, there's nobody in your group.\n\r");
+
+  return SPELL_SUCCESS;
 }
-void protectionFromElements(TBeing* caster, TBeing* victim, TMagicItem* obj) {
-  protectionFromElements(caster, victim, obj->getMagicLevel(),
+
+// entrypoint for objects
+void protectionFromEnergy(TBeing* caster, TMagicItem* obj) {
+  protectionFromEnergy(caster, obj->getMagicLevel(),
     obj->getMagicLearnedness());
 }
 
-int protectionFromElements(TBeing* caster, TBeing* victim) {
-  taskDiffT diff;
+// entrypoint for casted version
+int protectionFromEnergy(TBeing* caster) {
 
-  if (!bPassMageChecks(caster, SPELL_PROTECTION_FROM_ELEMENTS, victim))
+  if (!bPassMageChecks(caster, SPELL_PROTECTION_FROM_ENERGY, NULL))
     return FALSE;
 
-  lag_t rounds = discArray[SPELL_PROTECTION_FROM_ELEMENTS]->lag;
-  diff = discArray[SPELL_PROTECTION_FROM_ELEMENTS]->task;
-
-  start_cast(caster, victim, NULL, caster->roomp,
-    SPELL_PROTECTION_FROM_ELEMENTS, diff, 1, "", rounds, caster->in_room, 0, 0,
-    TRUE, 0);
-  return TRUE;
-}
-
-int castProtectionFromElements(TBeing* caster, TBeing* victim) {
-  int ret, level;
-
-  level = caster->getSkillLevel(SPELL_PROTECTION_FROM_ELEMENTS);
-  int bKnown = caster->getSkillValue(SPELL_PROTECTION_FROM_ELEMENTS);
-
-  if ((ret = protectionFromElements(caster, victim, level, bKnown)) ==
-      SPELL_SUCCESS) {
-  } else {
-  }
-  return TRUE;
+  return protectionFromEnergy(caster, 
+    caster->getSkillLevel(SPELL_PROTECTION_FROM_ENERGY), 
+    caster->getSkillValue(SPELL_PROTECTION_FROM_ENERGY));
 }

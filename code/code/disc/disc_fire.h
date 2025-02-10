@@ -28,14 +28,17 @@ class CDFire : public CDiscipline {
     CSkill skInferno;   // NEW  12th level area affect
     CSkill skHellFire;  // NEW  36th level area affect
     CSkill skFlamingFlesh;
+    CSkill skProtectionFromFire;
 
-    CDFire() : CDiscipline(), skLavaLance(), skInferno(), skHellFire(), skFlamingFlesh() {}
+
+    CDFire() : CDiscipline(), skLavaLance(), skInferno(), skHellFire(), skFlamingFlesh(), skProtectionFromFire() {}
     CDFire(const CDFire& a) :
       CDiscipline(a),
       skLavaLance(a.skLavaLance),
       skInferno(a.skInferno),
       skHellFire(a.skHellFire),
-      skFlamingFlesh(a.skFlamingFlesh) {}
+      skFlamingFlesh(a.skFlamingFlesh),
+      skProtectionFromFire(a.skProtectionFromFire) {}
     CDFire& operator=(const CDFire& a) {
       if (this == &a)
         return *this;
@@ -44,6 +47,7 @@ class CDFire : public CDiscipline {
       skInferno = a.skInferno;
       skHellFire = a.skHellFire;
       skFlamingFlesh = a.skFlamingFlesh;
+      skProtectionFromFire = a.skProtectionFromFire;
       return *this;
     }
     virtual ~CDFire() {}
@@ -106,7 +110,6 @@ void infravision(TBeing*, TBeing*, TMagicItem*);
 int infravision(TBeing*, TBeing*, int, short);
 int castInfravision(TBeing*, TBeing*);
 
-int protectionFromFire(TBeing*, TBeing*);
-int castProtectionFromFire(TBeing*, TBeing*);
-void protectionFromFire(TBeing*, TBeing*, TMagicItem*);
-int protectionFromFire(TBeing*, TBeing*, int, short);
+int protectionFromFire(TBeing*);
+void protectionFromFire(TBeing*, TMagicItem*);
+int protectionFromFire(TBeing*, int, short);

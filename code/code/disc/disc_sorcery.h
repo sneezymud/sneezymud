@@ -19,6 +19,7 @@ class CDSorcery : public CDiscipline {
     //    CSkill skChainLightning;
     CSkill skAnimate;
     CSkill skBind;
+    CSkill skProtectionFromEnergy;
 
     CDSorcery() :
       CDiscipline(),
@@ -27,7 +28,8 @@ class CDSorcery : public CDiscipline {
       skBlastOfFury(),
       //      skChainLightning(),
       skAnimate(),
-      skBind() {}
+      skBind(),
+      skProtectionFromEnergy() {}
     CDSorcery(const CDSorcery& a) :
       CDiscipline(a),
       skEnergyDrain(a.skEnergyDrain),
@@ -35,7 +37,8 @@ class CDSorcery : public CDiscipline {
       skBlastOfFury(a.skBlastOfFury),
       //      skChainLightning(a.skChainLightning),
       skAnimate(a.skAnimate),
-      skBind(a.skBind) {}
+      skBind(a.skBind),
+      skProtectionFromEnergy(a.skProtectionFromEnergy) {}
     CDSorcery& operator=(const CDSorcery& a) {
       if (this == &a)
         return *this;
@@ -46,6 +49,7 @@ class CDSorcery : public CDiscipline {
       //      skChainLightning = a.skChainLightning;
       skAnimate = a.skAnimate;
       skBind = a.skBind;
+      skProtectionFromEnergy = a.skProtectionFromEnergy;
       return *this;
     }
     virtual ~CDSorcery() {}
@@ -107,10 +111,9 @@ int castTeleport(TBeing*, TBeing*);
 int teleport(TBeing*, TBeing*, TMagicItem*);
 int teleport(TBeing*, TBeing*, int, short);
 
-int protectionFromElements(TBeing*, TBeing*);
-int castProtectionFromElements(TBeing*, TBeing*);
-void protectionFromElements(TBeing*, TBeing*, TMagicItem*);
-int protectionFromElements(TBeing*, TBeing*, int, short);
+int protectionFromEnergy(TBeing*);
+void protectionFromEnergy(TBeing*, TMagicItem*);
+int protectionFromEnergy(TBeing*, int, short);
 
 #if 0
     int chainLightning(TBeing *, TBeing *);

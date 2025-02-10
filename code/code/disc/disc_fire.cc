@@ -1994,75 +1994,68 @@ int castInfravision(TBeing* caster, TBeing* victim) {
   return rc;
 }
 
-int protectionFromFire(TBeing* caster, TBeing* v, int level, short bKnown) {
+// pff spell logic
+int protectionFromFire(TBeing* caster, int level, short bKnown) {
   affectedData aff;
+  TBeing* tmp_victim = nullptr;
+  TThing* t = nullptr;
 
-  aff.type = SPELL_PROTECTION_FROM_FIRE;
-  aff.level = level;
-  aff.duration = caster->durationModify(SPELL_PROTECTION_FROM_FIRE,
-    (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR);
-  aff.location = APPLY_IMMUNITY;
-  aff.modifier = IMMUNE_HEAT;
-  aff.modifier2 = ((level * 2) / 3);
-  aff.bitvector = 0;
-
-  if (caster->bSuccess(bKnown, SPELL_PROTECTION_FROM_FIRE)) {
-    act("$n glows with a faint red aura for a brief moment.", FALSE, v, NULL,
-      NULL, TO_ROOM);
-    act("You glow with a faint red aura for a brief moment.", FALSE, v, NULL,
-      NULL, TO_CHAR);
-    switch (critSuccess(caster, SPELL_PROTECTION_FROM_FIRE)) {
-      case CRIT_S_DOUBLE:
-      case CRIT_S_TRIPLE:
-      case CRIT_S_KILL:
-        CS(SPELL_PROTECTION_FROM_FIRE);
-        aff.duration = caster->durationModify(SPELL_PROTECTION_FROM_FIRE,
-          (10 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR);
-        aff.modifier2 = (level * 2);
-        break;
-      case CRIT_S_NONE:
-        break;
-    }
-
-    if (caster != v)
-      aff.modifier2 /= 2;
-
-    v->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
-    caster->reconcileHelp(v, discArray[SPELL_PROTECTION_FROM_FIRE]->alignMod);
-    return SPELL_SUCCESS;
-  } else {
+  if (!caster->bSuccess(bKnown, SPELL_PROTECTION_FROM_FIRE)) {
     caster->nothingHappens();
     return SPELL_FAIL;
   }
+
+  // This is the percent immunity provided. The old spell provided 33% and
+  // 100% on crit at level 50. At level 25 it might generally be 12%
+  // So now we'll have a range of ~25-40% 
+  int immunityPerc = 5 + (level / 2) + (caster->getAdvLearning(SPELL_PROTECTION_FROM_FIRE) / 10);
+
+  aff.type = SPELL_PROTECTION_FROM_FIRE;
+  aff.level = level;
+  aff.duration = caster->durationModify(SPELL_PROTECTION_FROM_FIRE, 
+    (20 + level)  * Pulse::TICK);
+  aff.location = APPLY_IMMUNITY;
+  aff.modifier = IMMUNE_HEAT;
+  aff.modifier2 = immunityPerc;
+  aff.bitvector = 0;
+
+
+  int found = false;
+    for (StuffIter it = caster->roomp->stuff.begin();
+        it != caster->roomp->stuff.end() && (t = *it); ++it) {
+      tmp_victim = dynamic_cast<TBeing*>(t);
+      if (!tmp_victim)
+        continue;
+      if (caster->inGroup(*tmp_victim)) {
+        caster->reconcileHelp(tmp_victim, discArray[SPELL_PROTECTION_FROM_FIRE]->alignMod);
+        act("$n glows with a faint red aura for a brief moment.", FALSE, tmp_victim, NULL,
+          NULL, TO_ROOM);
+        act("You glow with a faint red aura for a brief moment.", FALSE, tmp_victim, NULL,
+          NULL, TO_CHAR);
+        tmp_victim->removeAllProtection();
+        tmp_victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
+        found = true;
+    }
+  }
+  if (!found)
+    caster->sendTo("But, there's nobody in your group.\n\r");
+
+  return SPELL_SUCCESS;
 }
 
-void protectionFromFire(TBeing* caster, TBeing* v, TMagicItem* obj) {
-  protectionFromFire(caster, v, obj->getMagicLevel(),
+// Entry point for objects
+void protectionFromFire(TBeing* caster, TMagicItem* obj) {
+  protectionFromFire(caster, obj->getMagicLevel(),
     obj->getMagicLearnedness());
 }
 
-int protectionFromFire(TBeing* caster, TBeing* v) {
-  taskDiffT diff;
+// Entry point for casted version
+int protectionFromFire(TBeing* caster) {
 
-  if (!bPassMageChecks(caster, SPELL_PROTECTION_FROM_FIRE, v))
+  if (!bPassMageChecks(caster, SPELL_PROTECTION_FROM_FIRE, NULL))
     return FALSE;
 
-  lag_t rounds = discArray[SPELL_PROTECTION_FROM_FIRE]->lag;
-  diff = discArray[SPELL_PROTECTION_FROM_FIRE]->task;
-
-  start_cast(caster, v, NULL, caster->roomp, SPELL_PROTECTION_FROM_FIRE, diff,
-    1, "", rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
-}
-
-int castProtectionFromFire(TBeing* caster, TBeing* v) {
-  int ret, level;
-
-  level = caster->getSkillLevel(SPELL_PROTECTION_FROM_FIRE);
-
-  if ((ret = protectionFromFire(caster, v, level,
-         caster->getSkillValue(SPELL_PROTECTION_FROM_FIRE))) == SPELL_SUCCESS) {
-  } else {
-  }
-  return TRUE;
+  return protectionFromFire(caster, 
+    caster->getSkillLevel(SPELL_PROTECTION_FROM_FIRE), 
+    caster->getSkillValue(SPELL_PROTECTION_FROM_FIRE));
 }

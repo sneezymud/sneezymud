@@ -1115,73 +1115,75 @@ int castBreathOfSarahage(TBeing* caster) {
   return TRUE;
 }
 
-int protectionFromWater(TBeing* caster, TBeing* victim, int level,
-  short bKnown) {
-  affectedData aff;
+int protectionFromWater(TBeing* caster, int level, short bKnown) {
+  affectedData aff, aff2;
+  TBeing* tmp_victim = nullptr;
+  TThing* t = nullptr;
 
-  aff.type = SPELL_PROTECTION_FROM_WATER;
-  aff.level = level;
-  aff.duration = (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
-  aff.location = APPLY_IMMUNITY;
-  aff.modifier = IMMUNE_WATER;
-  aff.modifier2 = ((level * 2) / 3);
-  aff.bitvector = 0;
-
-  if (caster->bSuccess(bKnown, SPELL_PROTECTION_FROM_WATER)) {
-    act("$n glows with a faint blue-green aura for a brief moment.", FALSE,
-      victim, NULL, NULL, TO_ROOM, ANSI_GREEN);
-    act("You glow with a faint blue-green aura for a brief moment.", FALSE,
-      victim, NULL, NULL, TO_CHAR, ANSI_GREEN);
-    switch (critSuccess(caster, SPELL_PROTECTION_FROM_WATER)) {
-      case CRIT_S_DOUBLE:
-      case CRIT_S_TRIPLE:
-      case CRIT_S_KILL:
-        CS(SPELL_PROTECTION_FROM_WATER);
-        aff.duration = (10 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
-        aff.modifier2 = (level * 2);
-        break;
-      case CRIT_S_NONE:
-        break;
-    }
-
-    if (caster != victim)
-      aff.modifier2 /= 2;
-
-    victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
-    caster->reconcileHelp(victim,
-      discArray[SPELL_PROTECTION_FROM_WATER]->alignMod);
-    return SPELL_SUCCESS;
-  } else {
+  if (!caster->bSuccess(bKnown, SPELL_PROTECTION_FROM_WATER)) {
     caster->nothingHappens();
     return SPELL_FAIL;
   }
+
+  int immunityPerc = 5 + (level / 2) + (caster->getAdvLearning(SPELL_PROTECTION_FROM_WATER) / 10);
+
+
+  aff.type = SPELL_PROTECTION_FROM_WATER;
+  aff.level = level;
+  aff.duration = caster->durationModify(SPELL_PROTECTION_FROM_WATER, 
+    (20 + level)  * Pulse::TICK);
+  aff.location = APPLY_IMMUNITY;
+  aff.modifier = IMMUNE_WATER;
+  aff.modifier2 = immunityPerc;
+  aff.bitvector = 0;
+
+  aff2.type = SPELL_PROTECTION_FROM_WATER;
+  aff2.level = level;
+  aff2.duration = caster->durationModify(SPELL_PROTECTION_FROM_WATER, 
+    (20 + level)  * Pulse::TICK);
+  aff2.location = APPLY_IMMUNITY;
+  aff2.modifier = IMMUNE_COLD;
+  aff2.modifier2 = immunityPerc;
+  aff2.bitvector = 0;
+
+  int found = false;
+    for (StuffIter it = caster->roomp->stuff.begin();
+        it != caster->roomp->stuff.end() && (t = *it); ++it) {
+      tmp_victim = dynamic_cast<TBeing*>(t);
+      if (!tmp_victim)
+        continue;
+      if (caster->inGroup(*tmp_victim)) {
+        caster->reconcileHelp(tmp_victim, discArray[SPELL_PROTECTION_FROM_WATER]->alignMod);
+        act("$n glows with a faint blue-green aura for a brief moment.", FALSE, tmp_victim, NULL,
+          NULL, TO_ROOM);
+        act("You glow with a faint blue-green aura for a brief moment.", FALSE, tmp_victim, NULL,
+          NULL, TO_CHAR);
+        tmp_victim->removeAllProtection();
+        tmp_victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
+        tmp_victim->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);
+
+        found = true;
+    }
+  }
+  if (!found)
+    caster->sendTo("But, there's nobody in your group.\n\r");
+
+  return SPELL_SUCCESS;
 }
-void protectionFromWater(TBeing* caster, TBeing* victim, TMagicItem* obj) {
-  protectionFromWater(caster, victim, obj->getMagicLevel(),
+
+void protectionFromWater(TBeing* caster, TMagicItem* obj) {
+  protectionFromWater(caster, obj->getMagicLevel(),
     obj->getMagicLearnedness());
 }
 
-int protectionFromWater(TBeing* caster, TBeing* victim) {
-  if (!bPassMageChecks(caster, SPELL_PROTECTION_FROM_WATER, victim))
+int protectionFromWater(TBeing* caster) {
+
+  if (!bPassMageChecks(caster, SPELL_PROTECTION_FROM_WATER, NULL))
     return FALSE;
 
-  lag_t rounds = discArray[SPELL_PROTECTION_FROM_WATER]->lag;
-  taskDiffT diff = discArray[SPELL_PROTECTION_FROM_WATER]->task;
-
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_PROTECTION_FROM_WATER,
-    diff, 1, "", rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
-}
-
-int castProtectionFromWater(TBeing* caster, TBeing* victim) {
-  int level = caster->getSkillLevel(SPELL_PROTECTION_FROM_WATER);
-  int bKnown = caster->getSkillValue(SPELL_PROTECTION_FROM_WATER);
-
-  int ret = protectionFromWater(caster, victim, level, bKnown);
-  if (ret == SPELL_SUCCESS) {
-  } else {
-  }
-  return TRUE;
+  return protectionFromWater(caster, 
+    caster->getSkillLevel(SPELL_PROTECTION_FROM_WATER), 
+    caster->getSkillValue(SPELL_PROTECTION_FROM_WATER));
 }
 
 int gusher(TBeing* caster, TBeing* victim, int level, short bKnown,
@@ -1317,14 +1319,16 @@ CDWater::CDWater() :
   skWateryGrave(),
   skTsunami(),
   skBreathOfSarahage(),
-  skPlasmaMirror() {}
+  skPlasmaMirror(),
+  skProtectionFromWater() {}
 
 CDWater::CDWater(const CDWater& a) :
   CDiscipline(a),
   skWateryGrave(a.skWateryGrave),
   skTsunami(a.skTsunami),
   skBreathOfSarahage(a.skBreathOfSarahage),
-  skPlasmaMirror(a.skPlasmaMirror) {}
+  skPlasmaMirror(a.skPlasmaMirror),
+  skProtectionFromWater(a.skProtectionFromWater) {}
 
 CDWater& CDWater::operator=(const CDWater& a) {
   if (this == &a)
@@ -1334,6 +1338,7 @@ CDWater& CDWater::operator=(const CDWater& a) {
   skTsunami = a.skTsunami;
   skBreathOfSarahage = a.skBreathOfSarahage;
   skPlasmaMirror = a.skPlasmaMirror;
+  skProtectionFromWater = a.skProtectionFromWater;
   return *this;
 }
 

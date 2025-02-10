@@ -1517,7 +1517,7 @@ int TBeing::checkBadSpellCondition(TBeing* caster, int which) {
     case SPELL_CLEANSE:
     case SPELL_TELEPORT:
     case SPELL_KNOT:
-    case SPELL_PROTECTION_FROM_ELEMENTS:
+    case SPELL_PROTECTION_FROM_ENERGY:
     case SPELL_STUNNING_ARROW:
     case SPELL_SOUL_TWIST:  // shaman
       return FALSE;
@@ -1991,12 +1991,6 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
       } else
         vlogf(LOG_BUG, "SPELL_CONJURE_AIR called with null obj");
       break;
-    case SPELL_PROTECTION_FROM_AIR:
-      if (!o) {
-        rc = castProtectionFromAir(this, victim);
-      } else
-        vlogf(LOG_BUG, "SPELL_PROTECTION_FROM_AIR called with null obj");
-      break;
 
       // disc_air
     case SPELL_SLING_SHOT:
@@ -2070,12 +2064,6 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
         rc = castCardiacStress(this, victim);
       } else
         vlogf(LOG_BUG, "SPELL_CARDIAC_STRESS [coronary] called with NULL obj");
-      break;
-    case SPELL_PROTECTION_FROM_EARTH:
-      if (!o) {
-        rc = castProtectionFromEarth(this, victim);
-      } else
-        vlogf(LOG_BUG, "SPELL_PROTECTION_FROM_EARTH called with null obj");
       break;
     case SPELL_HEALING_GRASP:
       if (!o)
@@ -2179,9 +2167,6 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
       break;
     case SPELL_BREATH_OF_SARAHAGE:
       rc = castBreathOfSarahage(this);
-      break;
-    case SPELL_PROTECTION_FROM_WATER:
-      rc = castProtectionFromWater(this, victim);
       break;
     case SPELL_DJALLA:
       rc = castDjallasProtection(this, victim);
@@ -2501,12 +2486,6 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
       } else
         vlogf(LOG_BUG, "SPELL_DEATH_MIST called with null obj");
       break;
-    case SPELL_PROTECTION_FROM_ELEMENTS:
-      if (!o)
-        rc = castProtectionFromElements(this, victim);
-      else
-        vlogf(LOG_BUG, "SPELL_PROTECTION_FROM_ELEMENTS called with null obj");
-      break;
     case SPELL_STUNNING_ARROW:
       if (!o) {
         rc = castStunningArrow(this, victim);
@@ -2606,12 +2585,6 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
         rc = castStupidity(this, victim);
       } else
         vlogf(LOG_BUG, "SPELL_STUPIDITY called with null obj");
-      break;
-    case SPELL_PROTECTION_FROM_FIRE:
-      if (!o) {
-        rc = castProtectionFromFire(this, victim);
-      } else
-        vlogf(LOG_BUG, "SPELL_PROTECTION_FROM_FIRE called with null obj");
       break;
     case SPELL_EMBALM:
       if (o) {  // !o

@@ -1429,82 +1429,78 @@ int castFalconWings(TBeing* caster, TBeing* victim) {
   return FALSE;
 }
 
-int protectionFromAir(TBeing* caster, TBeing* victim, int level, short bKnown) {
-  affectedData aff;
+int protectionFromAir(TBeing* caster, int level, short bKnown) {
+  affectedData aff, aff2;
+  TBeing* tmp_victim = nullptr;
+  TThing* t = nullptr;
 
-  aff.type = SPELL_PROTECTION_FROM_AIR;
-  aff.level = level;
-  aff.duration = caster->durationModify(SPELL_PROTECTION_FROM_AIR,
-    (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR);
-  aff.location = APPLY_IMMUNITY;
-  aff.modifier = IMMUNE_AIR;
-  aff.modifier2 = ((level * 2) / 3);
-  aff.bitvector = 0;
-
-  if (caster->bSuccess(bKnown, SPELL_PROTECTION_FROM_AIR)) {
-    act("$n glows with a faint blue aura for a brief moment.", FALSE, victim,
-      NULL, NULL, TO_ROOM);
-    act("You glow with a faint blue aura for a brief moment.", FALSE, victim,
-      NULL, NULL, TO_CHAR);
-    switch (critSuccess(caster, SPELL_PROTECTION_FROM_AIR)) {
-      case CRIT_S_DOUBLE:
-      case CRIT_S_TRIPLE:
-      case CRIT_S_KILL:
-        CS(SPELL_PROTECTION_FROM_AIR);
-        aff.duration = (10 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
-        aff.modifier2 = (level * 2);
-        break;
-      case CRIT_S_NONE:
-        break;
-    }
-
-    if (caster != victim) {
-      aff.modifier2 /= 2;
-    }
-
-    victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
-    caster->reconcileHelp(victim,
-      discArray[SPELL_PROTECTION_FROM_AIR]->alignMod);
-    return SPELL_SUCCESS;
-  } else {
+  if (!caster->bSuccess(bKnown, SPELL_PROTECTION_FROM_AIR)) {
     caster->nothingHappens();
     return SPELL_FAIL;
   }
+
+  int immunityPerc = 5 + (level / 2) + (caster->getAdvLearning(SPELL_PROTECTION_FROM_AIR) / 10);
+
+  aff.type = SPELL_PROTECTION_FROM_AIR;
+  aff.level = level;
+  aff.duration = caster->durationModify(SPELL_PROTECTION_FROM_AIR, 
+    (20 + level)  * Pulse::TICK);
+  aff.location = APPLY_IMMUNITY;
+  aff.modifier = IMMUNE_AIR;
+  aff.modifier2 = immunityPerc;
+  aff.bitvector = 0;
+
+  aff2.type = SPELL_PROTECTION_FROM_AIR;
+  aff2.level = level;
+  aff2.duration = caster->durationModify(SPELL_PROTECTION_FROM_AIR, 
+    (20 + level)  * Pulse::TICK);
+  aff2.location = APPLY_IMMUNITY;
+  aff2.modifier = IMMUNE_ELECTRICITY;
+  aff2.modifier2 = immunityPerc;
+  aff2.bitvector = 0;
+
+  int found = false;
+    for (StuffIter it = caster->roomp->stuff.begin();
+        it != caster->roomp->stuff.end() && (t = *it); ++it) {
+      tmp_victim = dynamic_cast<TBeing*>(t);
+      if (!tmp_victim)
+        continue;
+      if (caster->inGroup(*tmp_victim)) {
+        caster->reconcileHelp(tmp_victim, discArray[SPELL_PROTECTION_FROM_AIR]->alignMod);
+        act("$n glows with a faint blue aura for a brief moment.", FALSE, tmp_victim, NULL,
+          NULL, TO_ROOM);
+        act("You glow with a faint blue aura for a brief moment.", FALSE, tmp_victim, NULL,
+          NULL, TO_CHAR);
+        tmp_victim->removeAllProtection();
+        tmp_victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
+        tmp_victim->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);
+        found = true;
+    }
+  }
+  if (!found)
+    caster->sendTo("But, there's nobody in your group.\n\r");
+
+  return SPELL_SUCCESS;
 }
 
-void protectionFromAir(TBeing* caster, TBeing* victim, TMagicItem* obj) {
-  protectionFromAir(caster, victim, obj->getMagicLevel(),
+void protectionFromAir(TBeing* caster, TMagicItem* obj) {
+  protectionFromAir(caster, obj->getMagicLevel(),
     obj->getMagicLearnedness());
 }
 
-int protectionFromAir(TBeing* caster, TBeing* victim) {
-  taskDiffT diff;
+int protectionFromAir(TBeing* caster) {
 
-  if (!bPassMageChecks(caster, SPELL_PROTECTION_FROM_AIR, victim))
+  if (!bPassMageChecks(caster, SPELL_PROTECTION_FROM_AIR, NULL))
     return FALSE;
 
-  lag_t rounds = discArray[SPELL_PROTECTION_FROM_AIR]->lag;
-  diff = discArray[SPELL_PROTECTION_FROM_AIR]->task;
-
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_PROTECTION_FROM_AIR,
-    diff, 1, "", rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
-}
-
-int castProtectionFromAir(TBeing* caster, TBeing* victim) {
-  int ret, level;
-
-  level = caster->getSkillLevel(SPELL_PROTECTION_FROM_AIR);
-
-  if ((ret = protectionFromAir(caster, victim, level,
-         caster->getSkillValue(SPELL_PROTECTION_FROM_AIR))) == SPELL_SUCCESS) {
-  } else {
-  }
-  return TRUE;
+  return protectionFromAir(caster, 
+    caster->getSkillLevel(SPELL_PROTECTION_FROM_AIR), 
+    caster->getSkillValue(SPELL_PROTECTION_FROM_AIR));
 }
 
 CDAir::CDAir() :
   CDiscipline(),
+  skProtectionFromAir(),
   skImmobilize(),
   skSuffocate(),
   skFly(),
@@ -1513,6 +1509,7 @@ CDAir::CDAir() :
 
 CDAir::CDAir(const CDAir& a) :
   CDiscipline(a),
+  skProtectionFromAir(a.skProtectionFromAir),
   skImmobilize(a.skImmobilize),
   skSuffocate(a.skSuffocate),
   skFly(a.skFly),
@@ -1524,6 +1521,7 @@ CDAir& CDAir::operator=(const CDAir& a) {
     return *this;
 
   CDiscipline::operator=(a);
+  skProtectionFromAir = a.skProtectionFromAir;
   skImmobilize = a.skImmobilize;
   skSuffocate = a.skSuffocate;
   skFly = a.skFly;

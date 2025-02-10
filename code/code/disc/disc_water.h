@@ -29,6 +29,7 @@ class CDWater : public CDiscipline {
     CSkill skBreathOfSarahage;
     CSkill skPlasmaMirror;
     CSkill skGarmulsTail;
+    CSkill skProtectionFromWater;
 
     CDWater();
     CDWater(const CDWater& a);
@@ -84,10 +85,9 @@ int breathOfSarahage(TBeing*);
 int castBreathOfSarahage(TBeing*);
 int breathOfSarahage(TBeing*, int, short);
 
-int protectionFromWater(TBeing*, TBeing*);
-int castProtectionFromWater(TBeing*, TBeing*);
-void protectionFromWater(TBeing*, TBeing*, TMagicItem*);
-int protectionFromWater(TBeing*, TBeing*, int, short);
+int protectionFromWater(TBeing*);
+void protectionFromWater(TBeing*, TMagicItem*);
+int protectionFromWater(TBeing*, int, short);
 
 // this spell is intentionally NOT an object spell - too powerful
 int plasmaMirror(TBeing*);

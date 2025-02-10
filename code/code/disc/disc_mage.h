@@ -54,13 +54,6 @@ class CDMage : public CDiscipline {
     CSkill skStunningArrow;  //      10th level individual
     CSkill skMaterialize;
 
-    // Level 12
-    CSkill skProtectionFromEarth;
-    CSkill skProtectionFromAir;
-    CSkill skProtectionFromFire;
-    CSkill skProtectionFromWater;
-    CSkill skProtectionFromElements;
-
     // Level 14
     CSkill skPebbleSpray;  // NEW  12th level area affect
     CSkill skArcticBlast;  // NEW  12th level area affect

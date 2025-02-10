@@ -20,11 +20,6 @@ CDMage::CDMage() :
   skDetectMagic(),
   skStunningArrow(),
   skMaterialize(),
-  skProtectionFromEarth(),
-  skProtectionFromAir(),
-  skProtectionFromFire(),
-  skProtectionFromWater(),
-  skProtectionFromElements(),
   skPebbleSpray(),
   skArcticBlast(),
   skColorSpray(),
@@ -84,11 +79,6 @@ CDMage::CDMage(const CDMage& a) :
   skDetectMagic(a.skDetectMagic),
   skStunningArrow(a.skStunningArrow),
   skMaterialize(a.skMaterialize),
-  skProtectionFromEarth(a.skProtectionFromEarth),
-  skProtectionFromAir(a.skProtectionFromAir),
-  skProtectionFromFire(a.skProtectionFromFire),
-  skProtectionFromWater(a.skProtectionFromWater),
-  skProtectionFromElements(a.skProtectionFromElements),
   skPebbleSpray(a.skPebbleSpray),
   skArcticBlast(a.skArcticBlast),
   skColorSpray(a.skColorSpray),
@@ -150,11 +140,6 @@ CDMage& CDMage::operator=(const CDMage& a) {
   skDetectMagic = a.skDetectMagic;
   skStunningArrow = a.skStunningArrow;
   skMaterialize = a.skMaterialize;
-  skProtectionFromEarth = a.skProtectionFromEarth;
-  skProtectionFromAir = a.skProtectionFromAir;
-  skProtectionFromFire = a.skProtectionFromFire;
-  skProtectionFromWater = a.skProtectionFromWater;
-  skProtectionFromElements = a.skProtectionFromElements;
   skPebbleSpray = a.skPebbleSpray;
   skArcticBlast = a.skArcticBlast;
   skColorSpray = a.skColorSpray;

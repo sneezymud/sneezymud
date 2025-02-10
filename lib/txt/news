@@ -1,5 +1,16 @@
 02-10-25: Summoning group members now ignores summon immunity
 
+02-09-25: Protection Spell Rework
+          Protection spells are now instant cast, short duration group buffs.
+          This should change their use from fire and forget buffs to something
+          a mages uses right before a fight or in response to a spell being cast.
+          - Protection from Elements renamed to protection from energy and now
+            provides immunity to energy
+          - Protection from water now provides cold immunity as well as water
+          - Protection from Air now provides electricity immunity as well as Air
+          - All protection spells moved from the mage disc to early in advanced
+            disciplines
+
 02-01-25: Updates to mage fire spells
           - Inferno moved to earlier in the fire disc
           - Inferno added a short duration fire immunity debuff

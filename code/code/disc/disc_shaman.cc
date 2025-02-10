@@ -2857,7 +2857,7 @@ int genericChaseSpirits(TBeing* caster, TBeing* victim, int,
     // sorcery
     {SPELL_SORCERERS_GLOBE, true, true, false},
     {SPELL_BIND, false, false, false},
-    {SPELL_PROTECTION_FROM_ELEMENTS, true, true, false},
+    {SPELL_PROTECTION_FROM_ENERGY, true, true, false},
     // spirit
     {SPELL_SILENCE, false, true, false},
     {SPELL_ENSORCER, false, false, false},

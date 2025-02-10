@@ -1344,7 +1344,7 @@ void buildComponentArray() {
     "You touch $p to $N's forehead.", "$n touches $p to $N's forehead.",
     "$n touches $p to your forehead.", "You touch $p to your forehead.",
     "$n touches $p to $s forehead.", "", ""));
-  CompInfo.push_back(compInfo(SPELL_PROTECTION_FROM_ELEMENTS,
+  CompInfo.push_back(compInfo(SPELL_PROTECTION_FROM_ENERGY,
     "You touch $p to $N's forehead.", "$n touches $p to $N's forehead.",
     "$n touches $p to your forehead.", "You touch $p to your forehead.",
     "$n touches $p to $s forehead.", "", ""));

@@ -756,6 +756,8 @@ class TBeing : public TThing {
     void affectModify(applyTypeT, long, long, uint64_t, bool, silentTypeT);
     void affectChange(uint64_t, silentTypeT);
     void affectRemove(affectedData*, silentTypeT = SILENT_NO);
+    void removeAllProtection();
+    void affectRemoveBySpell(spellNumT);
     void affectFrom(spellNumT);
     void addObjUsed(TObj*, int);
     bool checkObjUsed(TObj*);

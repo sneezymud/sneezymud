@@ -951,75 +951,60 @@ int castConjureElemEarth(TBeing* caster) {
   return TRUE;
 }
 
-int protectionFromEarth(TBeing* caster, TBeing* victim, int level,
-  short bKnown) {
+int protectionFromEarth(TBeing* caster, int level, short bKnown) {
   affectedData aff;
+  TBeing* tmp_victim = nullptr;
+  TThing* t = nullptr;
 
-  aff.type = SPELL_PROTECTION_FROM_EARTH;
-  aff.level = level;
-  aff.duration = caster->durationModify(SPELL_PROTECTION_FROM_EARTH,
-    (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR);
-  aff.location = APPLY_IMMUNITY;
-  aff.modifier = IMMUNE_EARTH;
-  aff.modifier2 = ((level * 2) / 3);
-  aff.bitvector = 0;
-
-  if (caster->bSuccess(bKnown, SPELL_PROTECTION_FROM_EARTH)) {
-    act("$n glows with a faint brown aura for a brief moment.", FALSE, victim,
-      NULL, NULL, TO_ROOM);
-    act("You glow with a faint brown aura for a brief moment.", FALSE, victim,
-      NULL, NULL, TO_CHAR);
-    switch (critSuccess(caster, SPELL_PROTECTION_FROM_EARTH)) {
-      case CRIT_S_DOUBLE:
-      case CRIT_S_TRIPLE:
-      case CRIT_S_KILL:
-        CS(SPELL_PROTECTION_FROM_EARTH);
-        aff.duration *= 2;
-        aff.modifier2 = (level * 2);
-        break;
-      case CRIT_S_NONE:
-        break;
-    }
-
-    if (caster != victim) {
-      aff.modifier2 /= 2;
-    }
-
-    victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
-
-    caster->reconcileHelp(victim,
-      discArray[SPELL_PROTECTION_FROM_EARTH]->alignMod);
-    return SPELL_SUCCESS;
-  } else {
+  if (!caster->bSuccess(bKnown, SPELL_PROTECTION_FROM_EARTH)) {
     caster->nothingHappens();
     return SPELL_FAIL;
   }
+
+  int immunityPerc = 5 + (level / 2) + (caster->getAdvLearning(SPELL_PROTECTION_FROM_EARTH) / 10);
+
+  aff.type = SPELL_PROTECTION_FROM_EARTH;
+  aff.level = level;
+  aff.duration = caster->durationModify(SPELL_PROTECTION_FROM_EARTH, 
+    (20 + level)  * Pulse::TICK);
+  aff.location = APPLY_IMMUNITY;
+  aff.modifier = IMMUNE_EARTH;
+  aff.modifier2 = immunityPerc;
+  aff.bitvector = 0;
+
+  int found = false;
+    for (StuffIter it = caster->roomp->stuff.begin();
+        it != caster->roomp->stuff.end() && (t = *it); ++it) {
+      tmp_victim = dynamic_cast<TBeing*>(t);
+      if (!tmp_victim)
+        continue;
+      if (caster->inGroup(*tmp_victim)) {
+        caster->reconcileHelp(tmp_victim, discArray[SPELL_PROTECTION_FROM_EARTH]->alignMod);
+        act("$n glows with a faint brown aura for a brief moment.", FALSE, tmp_victim, NULL,
+          NULL, TO_ROOM);
+        act("You glow with a faint brown aura for a brief moment.", FALSE, tmp_victim, NULL,
+          NULL, TO_CHAR);
+        tmp_victim->removeAllProtection();
+        tmp_victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
+        found = true;
+    }
+  }
+  if (!found)
+    caster->sendTo("But, there's nobody in your group.\n\r");
+
+  return SPELL_SUCCESS;
 }
 
-void protectionFromEarth(TBeing* caster, TBeing* victim, TMagicItem* obj) {
-  protectionFromEarth(caster, victim, obj->getMagicLevel(),
+void protectionFromEarth(TBeing* caster, TMagicItem* obj) {
+  protectionFromEarth(caster, obj->getMagicLevel(),
     obj->getMagicLearnedness());
 }
 
-int protectionFromEarth(TBeing* caster, TBeing* v) {
-  if (!bPassMageChecks(caster, SPELL_PROTECTION_FROM_EARTH, v))
+int protectionFromEarth(TBeing* caster) {
+  if (!bPassMageChecks(caster, SPELL_PROTECTION_FROM_EARTH, NULL))
     return FALSE;
 
-  lag_t rounds = discArray[SPELL_PROTECTION_FROM_EARTH]->lag;
-  taskDiffT diff = discArray[SPELL_PROTECTION_FROM_EARTH]->task;
-
-  start_cast(caster, v, NULL, caster->roomp, SPELL_PROTECTION_FROM_EARTH, diff,
-    1, "", rounds, caster->in_room, 0, 0, TRUE, 0);
-  return FALSE;
-}
-
-int castProtectionFromEarth(TBeing* caster, TBeing* victim) {
-  int level = caster->getSkillLevel(SPELL_PROTECTION_FROM_EARTH);
-
-  int ret = protectionFromEarth(caster, victim, level,
+  return protectionFromEarth(caster, 
+    caster->getSkillLevel(SPELL_PROTECTION_FROM_EARTH), 
     caster->getSkillValue(SPELL_PROTECTION_FROM_EARTH));
-  if (ret == SPELL_SUCCESS) {
-  } else {
-  }
-  return TRUE;
 }

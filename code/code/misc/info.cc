@@ -1241,7 +1241,7 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme) const {
       case SPELL_PROTECTION_FROM_AIR:
       case SPELL_PROTECTION_FROM_FIRE:
       case SPELL_PROTECTION_FROM_WATER:
-      case SPELL_PROTECTION_FROM_ELEMENTS:
+      case SPELL_PROTECTION_FROM_ENERGY:
       case SPELL_INFRAVISION:
       case SPELL_IDENTIFY:
       case SPELL_POWERSTONE:

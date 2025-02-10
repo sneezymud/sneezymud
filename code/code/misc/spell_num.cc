@@ -148,7 +148,7 @@ int mapSpellnumToFile(spellNumT stt) {
       return 14;
     case SPELL_PROTECTION_FROM_WATER:
       return 15;
-    case SPELL_PROTECTION_FROM_ELEMENTS:
+    case SPELL_PROTECTION_FROM_ENERGY:
       return 16;
     case SPELL_PEBBLE_SPRAY:
       return 17;
@@ -1308,7 +1308,7 @@ spellNumT mapFileToSpellnum(int stt) {
     case 15:
       return SPELL_PROTECTION_FROM_WATER;
     case 16:
-      return SPELL_PROTECTION_FROM_ELEMENTS;
+      return SPELL_PROTECTION_FROM_ENERGY;
     case 17:
       return SPELL_PEBBLE_SPRAY;
     case 18:

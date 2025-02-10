@@ -28,19 +28,22 @@ class CDEarth : public CDiscipline {
     CSkill skLavaStream;   // NEW  36th level area affect
     CSkill skStoneSkin;
     CSkill skTrailSeek;
+    CSkill skProtectionFromEarth;
 
     CDEarth() :
       CDiscipline(),
       skMeteorSwarm(),
       skLavaStream(),
       skStoneSkin(),
-      skTrailSeek() {}
+      skTrailSeek(),
+      skProtectionFromEarth() {}
     CDEarth(const CDEarth& a) :
       CDiscipline(a),
       skMeteorSwarm(a.skMeteorSwarm),
       skLavaStream(a.skLavaStream),
       skStoneSkin(a.skStoneSkin),
-      skTrailSeek(a.skTrailSeek) {}
+      skTrailSeek(a.skTrailSeek),
+      skProtectionFromEarth(a.skProtectionFromEarth) {}
     CDEarth& operator=(const CDEarth& a) {
       if (this == &a)
         return *this;
@@ -49,6 +52,7 @@ class CDEarth : public CDiscipline {
       skLavaStream = a.skLavaStream;
       skStoneSkin = a.skStoneSkin;
       skTrailSeek = a.skTrailSeek;
+      skProtectionFromEarth = a.skProtectionFromEarth;
       return *this;
     }
     virtual ~CDEarth() {}
@@ -98,7 +102,6 @@ int conjureElemEarth(TBeing*);
 int castConjureElemEarth(TBeing*);
 int conjureElemEarth(TBeing*, int, short);
 
-int protectionFromEarth(TBeing*, TBeing*);
-int castProtectionFromEarth(TBeing*, TBeing*);
-void protectionFromEarth(TBeing*, TBeing*, TMagicItem*);
-int protectionFromEarth(TBeing*, TBeing*, int, short);
+int protectionFromEarth(TBeing*);
+void protectionFromEarth(TBeing*, TMagicItem*);
+int protectionFromEarth(TBeing*, int, short);
