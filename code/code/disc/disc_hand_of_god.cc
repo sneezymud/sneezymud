@@ -485,14 +485,14 @@ int summon(TBeing* caster, TBeing* victim, int level, short bKnown) {
   int location = 0;
   TRoom* room = NULL;
 
-  int immun = victim->getImmunity(IMMUNE_SUMMON);
   TMonster* tmon = dynamic_cast<TMonster*>(victim);
 
   // check for immunity to summon
   // prevent some mobs used in quests from being moved around
-  if (((immun > 0) && ::number(0, 100) <= immun) ||
-      (tmon && ((tmon->mobVnum() == Mob::TIGER_SHARK) ||
-                 (tmon->mobVnum() == Mob::ELEPHANT)))) {
+ if (!caster->inGroup(*victim) &&
+      (victim->isImmune(IMMUNE_SUMMON, WEAR_BODY) ||
+        (tmon && (tmon->mobVnum() == Mob::TIGER_SHARK ||
+                   tmon->mobVnum() == Mob::ELEPHANT)))) {
     act("You feel unable to summon $N.", FALSE, caster, NULL, victim, TO_CHAR);
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FAIL;
