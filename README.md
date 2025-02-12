@@ -118,14 +118,19 @@ Optionally delete the extraneous .o files:
 ## /lib - Flat Files
 
 The 'lib' dir, as it is known, contains various text and data files that
-Sneezy reads and occasionally writes. To keep paths simple in the source code,
-Sneezy changes directory to the lib dir on startup. By default, Sneezy looks
-for a `lib/` subdir of the directory it was started in.
+Sneezy reads and occasionally writes. Files written to by the game are in
+`lib/mutable`, whereas anything outside that dir is only ever read. This
+structure is important for the Docker build to function correctly due to
+the way Docker volumes work.
+
+To keep paths simple in the source code, Sneezy changes directory to the
+lib dir on startup. By default, Sneezy looks for a `lib/` subdir of the
+directory it was started in.
 
 First you'll need to make the required empty directories, because git doesn't
 store them (the .. part of the cmd only works in bash):
 
-    $ cd lib && mkdir -p roomdata/saved immortals \
+    $ mkdir -p lib/mutable && cd lib/mutable && mkdir -p roomdata/saved immortals \
         corpses/corrupt rent/corrupt player/corrupt \
         rent/{a..z} account/{a..z} player/{a..z}
 
