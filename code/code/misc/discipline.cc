@@ -527,15 +527,22 @@ bool bPassMageChecks(TBeing* caster, spellNumT spell, TThing* target) {
   if (!enforceGestural(caster, spell))
     return FALSE;
 
+  // For tasked spells component use is handled in spelltask.cc
+  // This is to check each round during casting and consume when appropriate
+  // Non-tasked spells should consume the component here during mage checks
+  checkOnlyT checkType = CHECK_ONLY_YES;
+  if (!IS_SET(discArray[spell]->comp_types, SPELL_TASKED))
+    checkType = CHECK_ONLY_NO;
+
   // if spell uses component, check for it
   if (IS_SET(discArray[spell]->comp_types, COMP_MATERIAL)) {
     TBeing* vict = dynamic_cast<TBeing*>(target);
     TObj* obj = dynamic_cast<TObj*>(target);
-    if (vict && !caster->useComponent(caster->findComponent(spell), vict,
-                  CHECK_ONLY_YES))
+
+    if (obj && !caster->useComponentObj(caster->findComponent(spell), obj, checkType))
       return FALSE;
-    if (obj && !caster->useComponentObj(caster->findComponent(spell), obj,
-                 CHECK_ONLY_YES))
+    // if target is not an object OR if target is NULL (area effects)
+    if (!caster->useComponent(caster->findComponent(spell), vict, checkType))
       return FALSE;
   }
 
@@ -559,15 +566,22 @@ bool bPassShamanChecks(TBeing* caster, spellNumT spell, TThing* target) {
   if (!enforceGestural(caster, spell))
     return FALSE;
 
+  // For tasked spells component use is handled in spelltask.cc
+  // This is to check each round during casting and consume when appropriate
+  // Non-tasked spells should consume the component here during mage checks
+  checkOnlyT checkType = CHECK_ONLY_YES;
+  if (!IS_SET(discArray[spell]->comp_types, SPELL_TASKED))
+    checkType = CHECK_ONLY_NO;
+
   // if spell uses component, check for it
   if (IS_SET(discArray[spell]->comp_types, COMP_MATERIAL)) {
     TBeing* vict = dynamic_cast<TBeing*>(target);
     TObj* obj = dynamic_cast<TObj*>(target);
-    if (vict && !caster->useComponent(caster->findComponent(spell), vict,
-                  CHECK_ONLY_YES))
+
+    if (obj && !caster->useComponentObj(caster->findComponent(spell), obj, checkType))
       return FALSE;
-    if (obj && !caster->useComponentObj(caster->findComponent(spell), obj,
-                 CHECK_ONLY_YES))
+    // if target is not an object OR if target is NULL (area effects)
+    if (!caster->useComponent(caster->findComponent(spell), vict, checkType))
       return FALSE;
   }
 
