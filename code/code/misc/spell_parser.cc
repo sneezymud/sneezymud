@@ -1869,7 +1869,7 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
         rc = divinationObj(this, o);
       break;
     case SPELL_EYES_OF_FERTUMAN:
-      rc = eyesOfFertuman(this, ch);
+      rc = eyesOfFertuman(this, n);
       break;
     case SPELL_POWERSTONE:
       rc = powerstone(this, o);

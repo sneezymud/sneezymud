@@ -1,3 +1,8 @@
+03-09-25: Restored the old Eyes of Fertuman spell
+          - The spell now can be used to find mobs and objects by name
+          - The spell has less restrictions on what it can find than it did
+            before. Have fun!
+          
 02-25-25: Spell Parser Update
           Updated the spell parser for mage/shaman spellcasting. The parser
           now requires a unique match for spells. You might notice you have 

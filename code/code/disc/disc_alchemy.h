@@ -86,9 +86,11 @@ int castDivinationObj(TBeing*, const TObj*);
 int divinationObj(TBeing*, TBeing*, int, short);
 void divinationObj(TBeing*, TObj*, TMagicItem*);
 
-int eyesOfFertuman(TBeing*, TBeing*);
-int castEyesOfFertuman(TBeing*, TBeing*);
-int eyesOfFertuman(TBeing*, TBeing*, int, short);
+int eyesOfFertuman(TBeing*, const char*);
+int castEyesOfFertuman(TBeing*, const char*);
+//int eyesOfFertuman(TBeing*, TBeing*, int, short);
+int eyesOfFertuman(TBeing*, const char*, int, short);
+
 
 int powerstone(TBeing*, TObj*);
 int castPowerstone(TBeing*, TObj*);
