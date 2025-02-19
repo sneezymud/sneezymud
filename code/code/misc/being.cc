@@ -1647,34 +1647,10 @@ bool TBeing::debuffResist() {
 
 void TBeing::removeAllProtection() {
 
-  affectRemoveBySpell(SPELL_PROTECTION_FROM_FIRE);
-  affectRemoveBySpell(SPELL_PROTECTION_FROM_WATER);
-  affectRemoveBySpell(SPELL_PROTECTION_FROM_EARTH);
-  affectRemoveBySpell(SPELL_PROTECTION_FROM_AIR);
-  affectRemoveBySpell(SPELL_PROTECTION_FROM_ENERGY);
+  affectFrom(SPELL_PROTECTION_FROM_FIRE);
+  affectFrom(SPELL_PROTECTION_FROM_WATER);
+  affectFrom(SPELL_PROTECTION_FROM_EARTH);
+  affectFrom(SPELL_PROTECTION_FROM_AIR);
+  affectFrom(SPELL_PROTECTION_FROM_ENERGY);
 
-}
-
-// Spells can have multiple affects. In order to remove all
-// affects we need to traverse the whole list
-void TBeing::affectRemoveBySpell(spellNumT spell) {
-  affectedData* current = this->affected;
-  affectedData* previous = nullptr;
-
-  while (current != nullptr) {
-    if (current->type == spell) {
-      if (previous == nullptr) {
-        this->affected = current->next;
-        delete current;
-        current = this->affected;
-      } else {
-        previous->next = current->next;
-        delete current;
-        current = previous->next;
-      }
-    } else {
-      previous = current;
-      current = current->next;
-    }
-  }
 }
