@@ -1,3 +1,11 @@
+02-25-25: Spell Parser Update
+          Updated the spell parser for mage/shaman spellcasting. The parser
+          now requires a unique match for spells. You might notice you have 
+          to give it a bit more.
+          For instance: 'cast d i' used to match detect invisibility but now
+          requires you to type 'cast de i' to disambiguate it from 
+          dispel invisibility
+
 02-10-25: Summoning group members now ignores summon immunity
 
 02-09-25: Protection Spell Rework

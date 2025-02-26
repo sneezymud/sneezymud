@@ -42,6 +42,18 @@
 
 #include <boost/algorithm/string.hpp>
 
+std::tuple<spellNumT, sstring> TBeing::parseSpellNum(const sstring& base, const sstring& args) const {
+
+  if (base.trim() == "")
+    return std::make_tuple(TYPE_UNDEFINED, args);
+
+  spellNumT found = searchForSpellNum(base, EXACT_NO);
+  if (found != TYPE_UNDEFINED)
+    return std::make_tuple(found, args.trimLeft());
+
+  return parseSpellNum(base.dropLastWord(), " " + base.lastWord() + args);
+}
+
 int TBeing::useMana(spellNumT spl) {
   int arrayMana;
   int rounds;
@@ -538,24 +550,36 @@ char* skip_spaces(char* sstring) {
   return (sstring);
 }
 
-spellNumT searchForSpellNum(const sstring& arg, exactTypeT exact) {
+spellNumT searchForSpellNum(const sstring& arg, exactTypeT exact, bool unique) {
   spellNumT i = MIN_SPELL;
+  spellNumT ret = TYPE_UNDEFINED;
+  int matches = 0;
 
   for (i = MIN_SPELL; i < MAX_SKILL; i++) {
     if (hideThisSpell(i))
       continue;
 
     if (!exact) {
-      if (is_abbrev(arg, discArray[i]->name, MULTIPLE_YES))
-        return i;
+      if (is_abbrev(arg, discArray[i]->name, MULTIPLE_YES)) {
+        if (!unique)
+          return i;
+        matches++;
+        ret = i;
+      }
     } else {
-      //  if (is_exact_name(arg, discArray[i]->name))
-      if (is_exact_spellname(arg, discArray[i]->name))
-        return i;
+      if (is_exact_spellname(arg, discArray[i]->name)) {
+        if (!unique)
+          return i;
+        matches++;
+        ret = i;        
+      }
     }
   }
 
-  return TYPE_UNDEFINED;
+  if (matches != 1)
+    return TYPE_UNDEFINED;
+
+  return ret;
 }
 
 static void badCastSyntax(const TBeing* ch, spellNumT which) {
@@ -730,63 +754,6 @@ int TBeing::doPray(const char* argument) {
   return FALSE;
 }
 
-std::tuple<spellNumT, sstring> TBeing::parseSpellNum(
-  const sstring& args) const {
-  if (args.trim().empty()) {
-    badCastSyntax(this, TYPE_UNDEFINED);
-    sendTo("You do NOT need to include ''s around <spell name>.\n\r");
-    return std::make_tuple(TYPE_UNDEFINED, "");
-  }
-
-  const sstring& arg1 = args.word(0);
-
-  if (isname(arg1, "telepathy")) {
-    if (!doesKnowSkill(SPELL_TELEPATHY)) {
-      sendTo("You don't know that spell!\n\r");
-      return std::make_tuple(TYPE_UNDEFINED, "");
-    }
-    return std::make_tuple(SPELL_TELEPATHY, args.dropWord());
-  }
-  if (isname(arg1, "romble")) {
-    if (!doesKnowSkill(SPELL_ROMBLER)) {
-      sendTo("You don't know that spell!\n\r");
-      return std::make_tuple(TYPE_UNDEFINED, "");
-    }
-    return std::make_tuple(SPELL_ROMBLER, args.dropWord());
-  }
-
-  auto findSpellByName = [this](const sstring& name) {
-    spellNumT which = TYPE_UNDEFINED;
-    if (((which = searchForSpellNum(name, EXACT_YES)) > TYPE_UNDEFINED) ||
-        ((which = searchForSpellNum(name, EXACT_NO)) > TYPE_UNDEFINED)) {
-      if (discArray[which]->typ != SPELL_MAGE &&
-          discArray[which]->typ != SPELL_SHAMAN) {
-        sendTo("That's not a magic spell!\n\r");
-        return TYPE_UNDEFINED;
-      }
-      if (!doesKnowSkill(getSkillNum(which))) {
-        sendTo("You don't know that spell!\n\r");
-        return TYPE_UNDEFINED;
-      }
-      return which;
-    }
-    return TYPE_UNDEFINED;
-  };
-
-  spellNumT which = findSpellByName(args);
-  if (which != TYPE_UNDEFINED)
-    return std::make_tuple(which, "");
-
-  if (args.words().size() > 1) {
-    which = findSpellByName(args.dropLastWord());
-    if (which != TYPE_UNDEFINED)
-      return std::make_tuple(which, args.lastWord());
-  }
-
-  sendTo("No such spell exists.\n\r");
-  return std::make_tuple(TYPE_UNDEFINED, "");
-}
-
 int TBeing::preCastCheck() {
   if (!isPc() && !desc)
     return FALSE;
@@ -835,10 +802,24 @@ int TBeing::doCast(const char* argument) {
     return FALSE;
 
   auto [spell, target] = parseSpellNum(argument);
-  if (spell != TYPE_UNDEFINED)
-    return doDiscipline(spell, target);
 
-  return FALSE;
+  if (spell == TYPE_UNDEFINED) {
+    sendTo("No such spell exists.\n\r");
+    return FALSE;
+  }
+
+  if (discArray[spell]->typ != SPELL_MAGE &&
+          discArray[spell]->typ != SPELL_SHAMAN) {
+    sendTo("That's not a magic spell!\n\r");
+    return FALSE;
+  }
+
+  if (!doesKnowSkill(getSkillNum(spell))) {
+    sendTo("You don't know that spell!\n\r");
+    return FALSE;
+  }
+
+  return doDiscipline(spell, target);
 }
 
 // finds the target indicated in n, for spell which and sets ret to it

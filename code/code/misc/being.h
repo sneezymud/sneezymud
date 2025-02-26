@@ -1002,8 +1002,7 @@ class TBeing : public TThing {
     int preCastCheck();
     int preDiscCheck(spellNumT);
     int doCast(const char*);
-    std::tuple<spellNumT, sstring> parseSpellNum(
-      const sstring&) const;  // returns spell and target
+    std::tuple<spellNumT, sstring> parseSpellNum(const sstring&, const sstring& = "") const;
     int parseTarget(spellNumT, char*, TThing** ret);
     int doTrigger(const char*);
     int doStore(const char*);
