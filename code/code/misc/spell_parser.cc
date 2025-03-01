@@ -47,7 +47,7 @@ std::tuple<spellNumT, sstring> TBeing::parseSpellNum(const sstring& base, const 
   if (base.trim() == "")
     return std::make_tuple(TYPE_UNDEFINED, args);
 
-  spellNumT found = searchForSpellNum(base, EXACT_NO);
+  spellNumT found = searchForSpellNum(base, EXACT_NO, TRUE);
   if (found != TYPE_UNDEFINED)
     return std::make_tuple(found, args.trimLeft());
 

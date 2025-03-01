@@ -233,7 +233,7 @@ extern TPCorpse* pc_corpse_list;
 extern const int spec_skill_array[50];
 unsigned int CountBits(unsigned int);
 extern bool exit_ok(roomDirData*, TRoom**);
-extern spellNumT searchForSpellNum(const sstring& arg, exactTypeT exact, bool unique = TRUE);
+extern spellNumT searchForSpellNum(const sstring& arg, exactTypeT exact, bool unique = FALSE);
 extern bool thingsInRoomVis(TThing*, TRoom*);
 extern int get(TBeing*, TThing*, TThing*, getTypeT, bool);
 extern void portal_flag_change(TPortal*, unsigned int, const char*, setRemT);
