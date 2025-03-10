@@ -8,7 +8,7 @@
 #include "handler.h"
 #include "room.h"
 #include "being.h"
-#include "disc_looting.h"
+#include "disc_thief_looting.h"
 #include "obj_open_container.h"
 #include "obj_component.h"
 #include "loadset.h"

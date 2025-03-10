@@ -17,7 +17,7 @@
 #include "monster.h"
 #include "obj_pool.h"
 #include "obj_plant.h"
-#include "disc_sorcery.h"
+#include "disc_mage_sorcery.h"
 #include "liquids.h"
 #include "obj_drinkcon.h"
 #include "obj_drug.h"

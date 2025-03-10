@@ -12,8 +12,8 @@
 #include "being.h"
 #include "combat.h"
 #include "disc_monk.h"
-#include "disc_cures.h"
-#include "disc_aegis.h"
+#include "disc_cleric_cures.h"
+#include "disc_cleric_aegis.h"
 #include "obj_light.h"
 
 int TBeing::doLeap(const sstring& arg) {

@@ -8,7 +8,7 @@
 #include "being.h"
 #include "disease.h"
 #include "combat.h"
-#include "disc_cures.h"
+#include "disc_cleric_cures.h"
 #include "disc_deikhan.h"
 
 // DEIKHAN AURAS

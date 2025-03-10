@@ -28,7 +28,7 @@
 #include "combat.h"
 #include "games.h"
 #include "client.h"
-#include "disc_looting.h"
+#include "disc_thief_looting.h"
 #include "room.h"
 #include "obj_base_corpse.h"
 #include "spec_mobs.h"

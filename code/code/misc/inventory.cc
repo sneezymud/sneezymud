@@ -16,7 +16,7 @@
 #include "monster.h"
 #include "games.h"
 #include "statistics.h"
-#include "disc_looting.h"
+#include "disc_thief_looting.h"
 #include "shop.h"
 #include "shopowned.h"
 #include "materials.h"

@@ -3,7 +3,7 @@
 #include "disease.h"
 #include "combat.h"
 #include "spelltask.h"
-#include "disc_alchemy.h"
+#include "disc_mage_alchemy.h"
 #include "obj_component.h"
 #include "obj_potion.h"
 

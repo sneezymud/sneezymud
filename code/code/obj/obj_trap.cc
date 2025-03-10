@@ -8,7 +8,7 @@
 #include "extern.h"
 #include "room.h"
 #include "monster.h"
-#include "disc_looting.h"
+#include "disc_thief_looting.h"
 #include "disease.h"
 #include "obj_trap.h"
 #include "trap.h"

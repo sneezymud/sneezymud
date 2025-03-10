@@ -83,7 +83,7 @@
 #include "obj_potion.h"
 #include "obj_staff.h"
 #include "obj_wand.h"
-#include "disc_fire.h"
+#include "disc_mage_fire.h"
 #include "obj_note.h"
 #include "pathfinder.h"
 #include "liquids.h"

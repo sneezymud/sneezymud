@@ -1,7 +1,7 @@
 #include "comm.h"
 #include "low.h"
 #include "spec_objs_sweeps.h"
-#include "disc_sorcery.h"
+#include "disc_mage_sorcery.h"
 #include "being.h"
 
 int sweepsScratch(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {

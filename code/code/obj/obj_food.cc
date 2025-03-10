@@ -22,7 +22,7 @@
 #include "obj_food.h"
 #include "obj_base_cup.h"
 #include "obj_pool.h"
-#include "disc_aegis.h"
+#include "disc_cleric_aegis.h"
 #include "disc_shaman_armadillo.h"
 #include "shopowned.h"
 #include "corporation.h"

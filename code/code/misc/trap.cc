@@ -13,7 +13,7 @@
 #include "being.h"
 #include "low.h"
 #include "monster.h"
-#include "disc_looting.h"
+#include "disc_thief_looting.h"
 #include "disease.h"
 #include "obj_trap.h"
 #include "obj_portal.h"

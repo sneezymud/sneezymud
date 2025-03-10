@@ -4,10 +4,10 @@
 #include "monster.h"
 #include "obj_component.h"
 #include "extern.h"
-#include "disc_sorcery.h"
-#include "disc_earth.h"
-#include "disc_water.h"
-#include "disc_afflictions.h"
+#include "disc_mage_sorcery.h"
+#include "disc_mage_earth.h"
+#include "disc_mage_water.h"
+#include "disc_cleric_afflictions.h"
 #include "materials.h"
 
 int vampire(TBeing* ch, cmdTypeT cmd, const char*, TMonster*, TObj*) {

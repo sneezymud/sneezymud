@@ -7,7 +7,7 @@
 #include "room.h"
 #include "being.h"
 #include "combat.h"
-#include "disc_mindbody.h"
+#include "disc_monk_mind_body.h"
 #include "monster.h"
 
 static int feignDeath(TBeing* caster) {

@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 #include "monster.h"
-#include "disc_looting.h"
+#include "disc_thief_looting.h"
 #include "obj_quiver.h"
 
 TQuiver::TQuiver() : TExpandableContainer() {}

@@ -4,7 +4,7 @@
 #include "being.h"
 #include "combat.h"
 #include "disc_monk.h"
-#include "disc_leverage.h"
+#include "disc_monk_leverage.h"
 #include "spells.h"
 #include "extern.h"
 

@@ -1,0 +1,30 @@
+//////////////////////////////////////////////////////////////////////////
+//
+// SneezyMUD - All rights reserved, SneezyMUD Coding Team
+//
+//////////////////////////////////////////////////////////////////////////
+
+#include "disc_monk_focused_attacks.h"
+
+CDFAttacks::CDFAttacks() :
+  CDiscipline(),
+  skQuiveringPalm(),
+  skCriticalHitting() {}
+
+CDFAttacks::CDFAttacks(const CDFAttacks& a) :
+  CDiscipline(a),
+  skQuiveringPalm(a.skQuiveringPalm),
+  skCriticalHitting(a.skCriticalHitting) {}
+
+CDFAttacks& CDFAttacks::operator=(const CDFAttacks& a) {
+  if (this == &a)
+    return *this;
+  CDiscipline::operator=(a);
+  skQuiveringPalm = a.skQuiveringPalm;
+  skCriticalHitting = a.skCriticalHitting;
+  return *this;
+}
+
+CDFAttacks::~CDFAttacks() {}
+
+CDFAttacks* CDFAttacks::cloneMe() { return new CDFAttacks(*this); }
