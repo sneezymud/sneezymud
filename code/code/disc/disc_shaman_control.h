@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "discipline.h"
@@ -13,35 +12,6 @@ class CDShamanControl : public CDiscipline {
     CSkill skCreateDiamondGolem;
     CSkill skResurrection;
 
-    CDShamanControl() :
-      CDiscipline(),
-      skEnthrallDemon(),
-      skCreateWoodGolem(),
-      skCreateRockGolem(),
-      skCreateIronGolem(),
-      skCreateDiamondGolem(),
-      skResurrection() {}
-    CDShamanControl(const CDShamanControl& a) :
-      CDiscipline(a),
-      skEnthrallDemon(a.skEnthrallDemon),
-      skCreateWoodGolem(a.skCreateWoodGolem),
-      skCreateRockGolem(a.skCreateRockGolem),
-      skCreateIronGolem(a.skCreateIronGolem),
-      skCreateDiamondGolem(a.skCreateDiamondGolem),
-      skResurrection(a.skResurrection) {}
-    CDShamanControl& operator=(const CDShamanControl& a) {
-      if (this == &a)
-        return *this;
-      CDiscipline::operator=(a);
-      skEnthrallDemon = a.skEnthrallDemon;
-      skCreateWoodGolem = a.skCreateWoodGolem;
-      skCreateRockGolem = a.skCreateRockGolem;
-      skCreateIronGolem = a.skCreateIronGolem;
-      skCreateDiamondGolem = a.skCreateDiamondGolem;
-      skResurrection = a.skResurrection;
-      return *this;
-    }
-    virtual ~CDShamanControl() {}
     virtual CDShamanControl* cloneMe() { return new CDShamanControl(*this); }
 
   private:

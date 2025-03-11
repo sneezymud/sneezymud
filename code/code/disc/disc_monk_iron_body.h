@@ -20,39 +20,6 @@ class CDIronBody : public CDiscipline {
     CSkill skIronLegs;
     CSkill skIronWill;
 
-    CDIronBody() :
-      CDiscipline(),
-      skIronFist(),
-      skIronFlesh(),
-      skIronSkin(),
-      skIronBones(),
-      skIronMuscles(),
-      skIronLegs(),
-      skIronWill() {}
-    CDIronBody(const CDIronBody& a) :
-      CDiscipline(a),
-      skIronFist(a.skIronFist),
-      skIronFlesh(a.skIronFlesh),
-      skIronSkin(a.skIronSkin),
-      skIronBones(a.skIronBones),
-      skIronMuscles(a.skIronMuscles),
-      skIronLegs(a.skIronLegs),
-      skIronWill(a.skIronWill) {}
-    CDIronBody& operator=(const CDIronBody& a) {
-      if (this == &a)
-        return *this;
-      CDiscipline::operator=(a);
-      skIronFist = a.skIronFist;
-      skIronFlesh = a.skIronFlesh;
-      skIronSkin = a.skIronSkin;
-      skIronBones = a.skIronBones;
-      skIronMuscles = a.skIronMuscles;
-      skIronLegs = a.skIronLegs;
-      skIronWill = a.skIronWill;
-
-      return *this;
-    }
-    virtual ~CDIronBody() {}
     virtual CDIronBody* cloneMe() { return new CDIronBody(*this); }
 
   private:

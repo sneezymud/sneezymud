@@ -1,35 +1,5 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//////////////////////////////////////////////////////////////////////////
-
 #include "disc_advanced_defense.h"
 #include "being.h"
-
-CDDefense::CDDefense() :
-  CDiscipline(),
-  skAdvancedDefense(),
-  skFocusedAvoidance(),
-  skToughness() {}
-
-CDDefense::CDDefense(const CDDefense& a) :
-  CDiscipline(a),
-  skAdvancedDefense(a.skAdvancedDefense),
-  skFocusedAvoidance(a.skFocusedAvoidance),
-  skToughness(a.skToughness) {}
-
-CDDefense& CDDefense::operator=(const CDDefense& a) {
-  if (this == &a)
-    return *this;
-  CDiscipline::operator=(a);
-  skAdvancedDefense = a.skAdvancedDefense;
-  skFocusedAvoidance = a.skFocusedAvoidance;
-  skToughness = a.skToughness;
-  return *this;
-}
-
-CDDefense::~CDDefense() {}
 
 // The larger perc is passed in the harder it is to avoid
 bool TBeing::canFocusedAvoidance(int perc) {

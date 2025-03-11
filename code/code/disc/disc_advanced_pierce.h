@@ -31,10 +31,6 @@ class CDPierce : public CDiscipline {
   public:
     CSkill skPierceSpec;
 
-    CDPierce();
-    CDPierce(const CDPierce& a);
-    CDPierce& operator=(const CDPierce& a);
-    virtual ~CDPierce();
     virtual CDPierce* cloneMe() { return new CDPierce(*this); }
 
     bool isFast() { return true; }

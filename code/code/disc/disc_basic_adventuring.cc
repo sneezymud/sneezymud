@@ -1,10 +1,3 @@
-/* *******************************************************************
-    disc_adventuring.cc : all procedures related to the adventuring discipline
-
-    Copyright 1999 SneezyMUD development team
-    All rights reserved.
-******************************************************************** */
-
 #include <stdio.h>
 
 #include "extern.h"

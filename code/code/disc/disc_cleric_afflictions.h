@@ -1,23 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: disc_afflictions.h,v $
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
-// This is the AFFLICT discipline.
 
 #include "discipline.h"
 #include "skills.h"
@@ -33,41 +14,6 @@ class CDAfflict : public CDiscipline {
     CSkill skBoneBreaker;
     CSkill skWitherLimb;
 
-    CDAfflict() :
-      CDiscipline(),
-      skHarmFull(),
-      skHarmCritSpray(),
-      skHarmSpray(),
-      skHarmFullSpray(),
-      skBleed(),
-      skParalyze(),
-      skBoneBreaker(),
-      skWitherLimb() {}
-    CDAfflict(const CDAfflict& a) :
-      CDiscipline(a),
-      skHarmFull(a.skHarmFull),
-      skHarmCritSpray(a.skHarmCritSpray),
-      skHarmSpray(a.skHarmSpray),
-      skHarmFullSpray(a.skHarmFullSpray),
-      skBleed(a.skBleed),
-      skParalyze(a.skParalyze),
-      skBoneBreaker(a.skBoneBreaker),
-      skWitherLimb(a.skWitherLimb) {}
-    CDAfflict& operator=(const CDAfflict& a) {
-      if (this == &a)
-        return *this;
-      CDiscipline::operator=(a);
-      skHarmFull = a.skHarmFull;
-      skHarmCritSpray = a.skHarmCritSpray;
-      skHarmSpray = a.skHarmSpray;
-      skHarmFullSpray = a.skHarmFullSpray;
-      skBleed = a.skBleed;
-      skParalyze = a.skParalyze;
-      skBoneBreaker = a.skBoneBreaker;
-      skWitherLimb = a.skWitherLimb;
-      return *this;
-    }
-    virtual ~CDAfflict() {}
     virtual CDAfflict* cloneMe() { return new CDAfflict(*this); }
 
   private:

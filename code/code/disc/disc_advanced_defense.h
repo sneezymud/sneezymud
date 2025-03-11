@@ -1,9 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//////////////////////////////////////////////////////////////////////////
-
 #pragma once
 
 #include "discipline.h"
@@ -15,10 +9,6 @@ class CDDefense : public CDiscipline {
     CSkill skFocusedAvoidance;
     CSkill skToughness;
 
-    CDDefense();
-    CDDefense(const CDDefense& a);
-    CDDefense& operator=(const CDDefense& a);
-    virtual ~CDDefense();
     virtual CDDefense* cloneMe() { return new CDDefense(*this); }
 
     bool isFast() { return true; }

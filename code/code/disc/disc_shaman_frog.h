@@ -15,35 +15,6 @@ class CDShamanFrog : public CDiscipline {
     CSkill skCreepingDoom;
     CSkill skShapeShift;
 
-    CDShamanFrog() :
-      CDiscipline(),
-      skStormySkies(),
-      skDeathWave(),
-      skAquaticBlast(),
-      skTransformLimb(),
-      skCreepingDoom(),
-      skShapeShift() {}
-    CDShamanFrog(const CDShamanFrog& a) :
-      CDiscipline(a),
-      skStormySkies(a.skStormySkies),
-      skDeathWave(a.skDeathWave),
-      skAquaticBlast(a.skAquaticBlast),
-      skTransformLimb(a.skTransformLimb),
-      skCreepingDoom(a.skCreepingDoom),
-      skShapeShift(a.skShapeShift) {}
-    CDShamanFrog& operator=(const CDShamanFrog& a) {
-      if (this == &a)
-        return *this;
-      CDiscipline::operator=(a);
-      skStormySkies = a.skStormySkies;
-      skDeathWave = a.skDeathWave;
-      skAquaticBlast = a.skAquaticBlast;
-      skShapeShift = a.skShapeShift;
-      skTransformLimb = a.skTransformLimb;
-      skCreepingDoom = a.skCreepingDoom;
-      return *this;
-    }
-    virtual ~CDShamanFrog() {}
     virtual CDShamanFrog* cloneMe() { return new CDShamanFrog(*this); }
 
   private:

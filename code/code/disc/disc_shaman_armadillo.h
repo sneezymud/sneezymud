@@ -1,7 +1,5 @@
 #pragma once
 
-// This is the ARMADILLO discipline for shaman.
-
 #include "discipline.h"
 #include "skills.h"
 
@@ -13,35 +11,7 @@ class CDShamanArmadillo : public CDiscipline {
     CSkill skEarthmaw;
     CSkill skShadowWalk;
 
-    CDShamanArmadillo() :
-      CDiscipline(),
-      skAqualung(),
-      skThornflesh(),
-      skCelerite(),
-      skEarthmaw(),
-      skShadowWalk() {}
-    CDShamanArmadillo(const CDShamanArmadillo& a) :
-      CDiscipline(a),
-      skAqualung(a.skAqualung),
-      skThornflesh(a.skThornflesh),
-      skCelerite(a.skCelerite),
-      skEarthmaw(a.skEarthmaw),
-      skShadowWalk(a.skShadowWalk) {}
-    CDShamanArmadillo& operator=(const CDShamanArmadillo& a) {
-      if (this == &a)
-        return *this;
-      CDiscipline::operator=(a);
-      skAqualung = a.skAqualung;
-      skThornflesh = a.skThornflesh;
-      skCelerite = a.skCelerite;
-      skEarthmaw = a.skEarthmaw;
-      skShadowWalk = a.skShadowWalk;
-      return *this;
-    }
-    virtual ~CDShamanArmadillo() {}
-    virtual CDShamanArmadillo* cloneMe() {
-      return new CDShamanArmadillo(*this);
-    }
+    virtual CDShamanArmadillo* cloneMe() { return new CDShamanArmadillo(*this);}
 
   private:
 };

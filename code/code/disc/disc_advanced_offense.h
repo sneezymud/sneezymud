@@ -8,10 +8,6 @@ class CDOffense : public CDiscipline {
     CSkill skAdvancedOffense;
     CSkill skInevitability;
 
-    CDOffense();
-    CDOffense(const CDOffense& a);
-    CDOffense& operator=(const CDOffense& a);
-    virtual ~CDOffense();
     virtual CDOffense* cloneMe() { return new CDOffense(*this); }
 
     bool isFast() { return true; }

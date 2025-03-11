@@ -1,9 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//////////////////////////////////////////////////////////////////////////
-
 #pragma once
 
 #include "discipline.h"
@@ -24,10 +18,6 @@ class CDPsionics : public CDiscipline {
     CSkill skPsiDrain;
     CSkill skDimensionalFold;
 
-    CDPsionics();
-    CDPsionics(const CDPsionics& a);
-    CDPsionics& operator=(const CDPsionics& a);
-    virtual ~CDPsionics();
     virtual CDPsionics* cloneMe() { return new CDPsionics(*this); }
 
     bool isFast() { return true; }

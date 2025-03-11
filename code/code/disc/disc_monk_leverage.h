@@ -17,32 +17,6 @@ class CDLeverage : public CDiscipline {
     CSkill skDefenestrate;
     CSkill skBoneBreak;
 
-    CDLeverage() :
-      CDiscipline(),
-      skShoulderThrow(),
-      skHurl(),
-      skChainAttack(),
-      skDefenestrate(),
-      skBoneBreak() {}
-    CDLeverage(const CDLeverage& a) :
-      CDiscipline(a),
-      skShoulderThrow(a.skShoulderThrow),
-      skHurl(a.skHurl),
-      skChainAttack(a.skChainAttack),
-      skDefenestrate(a.skDefenestrate),
-      skBoneBreak(a.skBoneBreak) {}
-    CDLeverage& operator=(const CDLeverage& a) {
-      if (this == &a)
-        return *this;
-      CDiscipline::operator=(a);
-      skShoulderThrow = a.skShoulderThrow;
-      skHurl = a.skHurl;
-      skChainAttack = a.skChainAttack;
-      skDefenestrate = a.skDefenestrate;
-      skBoneBreak = a.skBoneBreak;
-      return *this;
-    }
-    virtual ~CDLeverage() {}
     virtual CDLeverage* cloneMe() { return new CDLeverage(*this); }
 
   private:

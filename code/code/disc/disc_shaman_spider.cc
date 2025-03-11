@@ -1,12 +1,3 @@
-/*******************************************************************
- *                                                                 *
- *                                                                 *
- *   disc_shaman_spider.cc             Shaman Discipline Disc      *
- *                                                                 *
- *   SneezyMUD Development - All Rights Reserved                   *
- *                                                                 *
- *******************************************************************/
-
 #include <stdio.h>
 
 #include "handler.h"

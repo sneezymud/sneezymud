@@ -1,12 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
-// This is the SORCERY discipline.
 
 #include "discipline.h"
 #include "skills.h"
@@ -16,43 +8,10 @@ class CDSorcery : public CDiscipline {
     CSkill skEnergyDrain;
     CSkill skAtomize;
     CSkill skBlastOfFury;
-    //    CSkill skChainLightning;
     CSkill skAnimate;
     CSkill skBind;
     CSkill skProtectionFromEnergy;
 
-    CDSorcery() :
-      CDiscipline(),
-      skEnergyDrain(),
-      skAtomize(),
-      skBlastOfFury(),
-      //      skChainLightning(),
-      skAnimate(),
-      skBind(),
-      skProtectionFromEnergy() {}
-    CDSorcery(const CDSorcery& a) :
-      CDiscipline(a),
-      skEnergyDrain(a.skEnergyDrain),
-      skAtomize(a.skAtomize),
-      skBlastOfFury(a.skBlastOfFury),
-      //      skChainLightning(a.skChainLightning),
-      skAnimate(a.skAnimate),
-      skBind(a.skBind),
-      skProtectionFromEnergy(a.skProtectionFromEnergy) {}
-    CDSorcery& operator=(const CDSorcery& a) {
-      if (this == &a)
-        return *this;
-      CDiscipline::operator=(a);
-      skEnergyDrain = a.skEnergyDrain;
-      skAtomize = a.skAtomize;
-      skBlastOfFury = a.skBlastOfFury;
-      //      skChainLightning = a.skChainLightning;
-      skAnimate = a.skAnimate;
-      skBind = a.skBind;
-      skProtectionFromEnergy = a.skProtectionFromEnergy;
-      return *this;
-    }
-    virtual ~CDSorcery() {}
     virtual CDSorcery* cloneMe() { return new CDSorcery(*this); }
 
   private:
@@ -114,8 +73,3 @@ int teleport(TBeing*, TBeing*, int, short);
 int protectionFromEnergy(TBeing*);
 void protectionFromEnergy(TBeing*, TMagicItem*);
 int protectionFromEnergy(TBeing*, int, short);
-
-#if 0
-    int chainLightning(TBeing *, TBeing *);
-    int chainLightning(TBeing *, TBeing *, int, short);
-#endif

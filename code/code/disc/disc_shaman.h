@@ -1,7 +1,4 @@
-
 #pragma once
-
-// This is the SHAMAN discipline.
 
 #include "discipline.h"
 #include "skills.h"
@@ -34,92 +31,6 @@ class CDShaman : public CDiscipline {
     CSkill skRepairShaman;
     CSkill skEmbalm;
 
-    CDShaman() :
-      CDiscipline(),
-      skSacrifice(),
-      skShieldOfMists(),
-      skEnthrallSpectre(),
-      skEnthrallGhast(),
-      skEnthrallGhoul(),
-      skVoodoo(),
-      skFlatulence(),
-      skStupidity(),
-      skSoulTwist(),
-      skDistort(),
-      skSquish(),
-      skIntimidate(),
-      skCheval(),
-      skChaseSpirits(),
-      skChrism(),
-      skRombler(),
-      skVampiricTouch(),
-      skLifeLeech(),
-      skSenseLifeShaman(),
-      skDetectShadow(),
-      skDjallasProtection(),
-      skLegbasGuidance(),
-      skDancingBones(),
-      skRepairShaman(),
-      skEmbalm() {}
-    CDShaman(const CDShaman& a) :
-      CDiscipline(a),
-      skSacrifice(a.skSacrifice),
-      skShieldOfMists(a.skShieldOfMists),
-      skEnthrallSpectre(a.skEnthrallSpectre),
-      skEnthrallGhast(a.skEnthrallGhast),
-      skEnthrallGhoul(a.skEnthrallGhoul),
-      skVoodoo(a.skVoodoo),
-      skFlatulence(a.skFlatulence),
-      skStupidity(a.skStupidity),
-      skSoulTwist(a.skSoulTwist),
-      skDistort(a.skDistort),
-      skSquish(a.skSquish),
-      skIntimidate(a.skIntimidate),
-      skCheval(a.skCheval),
-      skChaseSpirits(a.skChaseSpirits),
-      skChrism(a.skChrism),
-      skRombler(a.skRombler),
-      skVampiricTouch(a.skVampiricTouch),
-      skLifeLeech(a.skLifeLeech),
-      skSenseLifeShaman(a.skSenseLifeShaman),
-      skDetectShadow(a.skDetectShadow),
-      skDjallasProtection(a.skDjallasProtection),
-      skLegbasGuidance(a.skLegbasGuidance),
-      skDancingBones(a.skDancingBones),
-      skRepairShaman(a.skRepairShaman),
-      skEmbalm(a.skEmbalm) {}
-    CDShaman& operator=(const CDShaman& a) {
-      if (this == &a)
-        return *this;
-      CDiscipline::operator=(a);
-      skSacrifice = a.skSacrifice;
-      skShieldOfMists = a.skShieldOfMists;
-      skEnthrallSpectre = a.skEnthrallSpectre;
-      skEnthrallGhast = a.skEnthrallGhast;
-      skEnthrallGhoul = a.skEnthrallGhoul;
-      skVoodoo = a.skVoodoo;
-      skFlatulence = a.skFlatulence;
-      skStupidity = a.skStupidity;
-      skSoulTwist = a.skSoulTwist;
-      skDistort = a.skDistort;
-      skSquish = a.skSquish;
-      skIntimidate = a.skIntimidate;
-      skCheval = a.skCheval;
-      skChaseSpirits = a.skChaseSpirits;
-      skChrism = a.skChrism;
-      skRombler = a.skRombler;
-      skVampiricTouch = a.skVampiricTouch;
-      skLifeLeech = a.skLifeLeech;
-      skSenseLifeShaman = a.skSenseLifeShaman;
-      skDetectShadow = a.skDetectShadow;
-      skDjallasProtection = a.skDjallasProtection;
-      skLegbasGuidance = a.skLegbasGuidance;
-      skDancingBones = a.skDancingBones;
-      skRepairShaman = a.skRepairShaman;
-      skEmbalm = a.skEmbalm;
-      return *this;
-    }
-    virtual ~CDShaman() {}
     virtual CDShaman* cloneMe() { return new CDShaman(*this); }
 
     bool isBasic() { return true; }

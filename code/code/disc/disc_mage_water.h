@@ -1,23 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: disc_water.h,v $
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
-// This is the WATER discipline.
 
 #include "discipline.h"
 #include "skills.h"
@@ -31,11 +12,7 @@ class CDWater : public CDiscipline {
     CSkill skGarmulsTail;
     CSkill skProtectionFromWater;
 
-    CDWater();
-    CDWater(const CDWater& a);
-    CDWater& operator=(const CDWater& a);
-    virtual ~CDWater();
-    virtual CDWater* cloneMe();
+    virtual CDWater* cloneMe() { return new CDWater(*this); }
 
   private:
 };

@@ -1,9 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//////////////////////////////////////////////////////////////////////////
-
 #include "extern.h"
 #include "room.h"
 #include "low.h"
@@ -1313,38 +1307,6 @@ int gusher(TBeing* caster, TBeing* victim, TMagicItem* obj) {
     ADD_DELETE(rc, DELETE_THIS);
   return rc;
 }
-
-CDWater::CDWater() :
-  CDiscipline(),
-  skWateryGrave(),
-  skTsunami(),
-  skBreathOfSarahage(),
-  skPlasmaMirror(),
-  skProtectionFromWater() {}
-
-CDWater::CDWater(const CDWater& a) :
-  CDiscipline(a),
-  skWateryGrave(a.skWateryGrave),
-  skTsunami(a.skTsunami),
-  skBreathOfSarahage(a.skBreathOfSarahage),
-  skPlasmaMirror(a.skPlasmaMirror),
-  skProtectionFromWater(a.skProtectionFromWater) {}
-
-CDWater& CDWater::operator=(const CDWater& a) {
-  if (this == &a)
-    return *this;
-  CDiscipline::operator=(a);
-  skWateryGrave = a.skWateryGrave;
-  skTsunami = a.skTsunami;
-  skBreathOfSarahage = a.skBreathOfSarahage;
-  skPlasmaMirror = a.skPlasmaMirror;
-  skProtectionFromWater = a.skProtectionFromWater;
-  return *this;
-}
-
-CDWater::~CDWater() {}
-
-CDWater* CDWater::cloneMe() { return new CDWater(*this); }
 
 int plasmaMirror(TBeing* caster) {
   if (caster->affectedBySpell(SPELL_PLASMA_MIRROR)) {

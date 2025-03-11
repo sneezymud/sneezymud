@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "discipline.h"
@@ -14,35 +12,6 @@ class CDShamanSkunk : public CDiscipline {
     CSkill skCleanse;
     CSkill skLichTouch;
 
-    CDShamanSkunk() :
-      CDiscipline(),
-      skTurnSkill(),
-      skDeathMist(),
-      skBloodBoil(),
-      skCardiacStress(),
-      skCleanse(),
-      skLichTouch() {}
-    CDShamanSkunk(const CDShamanSkunk& a) :
-      CDiscipline(a),
-      skTurnSkill(a.skTurnSkill),
-      skDeathMist(a.skDeathMist),
-      skBloodBoil(a.skBloodBoil),
-      skCardiacStress(a.skCardiacStress),
-      skCleanse(a.skCleanse),
-      skLichTouch(a.skLichTouch) {}
-    CDShamanSkunk& operator=(const CDShamanSkunk& a) {
-      if (this == &a)
-        return *this;
-      CDiscipline::operator=(a);
-      skTurnSkill = a.skTurnSkill;
-      skDeathMist = a.skDeathMist;
-      skBloodBoil = a.skBloodBoil;
-      skCardiacStress = a.skCardiacStress;
-      skCleanse = a.skCleanse;
-      skLichTouch = a.skLichTouch;
-      return *this;
-    }
-    virtual ~CDShamanSkunk() {}
     virtual CDShamanSkunk* cloneMe() { return new CDShamanSkunk(*this); }
 
   private:

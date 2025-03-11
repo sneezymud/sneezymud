@@ -1,61 +1,16 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: disc_earth.h,v $
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
-// This is the EARTH discipline.
 
 #include "discipline.h"
 #include "skills.h"
 
 class CDEarth : public CDiscipline {
   public:
-    CSkill skMeteorSwarm;  //      40th level individual
-    CSkill skLavaStream;   // NEW  36th level area affect
+    CSkill skMeteorSwarm;
+    CSkill skLavaStream;
     CSkill skStoneSkin;
     CSkill skTrailSeek;
     CSkill skProtectionFromEarth;
 
-    CDEarth() :
-      CDiscipline(),
-      skMeteorSwarm(),
-      skLavaStream(),
-      skStoneSkin(),
-      skTrailSeek(),
-      skProtectionFromEarth() {}
-    CDEarth(const CDEarth& a) :
-      CDiscipline(a),
-      skMeteorSwarm(a.skMeteorSwarm),
-      skLavaStream(a.skLavaStream),
-      skStoneSkin(a.skStoneSkin),
-      skTrailSeek(a.skTrailSeek),
-      skProtectionFromEarth(a.skProtectionFromEarth) {}
-    CDEarth& operator=(const CDEarth& a) {
-      if (this == &a)
-        return *this;
-      CDiscipline::operator=(a);
-      skMeteorSwarm = a.skMeteorSwarm;
-      skLavaStream = a.skLavaStream;
-      skStoneSkin = a.skStoneSkin;
-      skTrailSeek = a.skTrailSeek;
-      skProtectionFromEarth = a.skProtectionFromEarth;
-      return *this;
-    }
-    virtual ~CDEarth() {}
     virtual CDEarth* cloneMe() { return new CDEarth(*this); }
 
   private:

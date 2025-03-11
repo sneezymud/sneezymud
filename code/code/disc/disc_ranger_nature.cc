@@ -1,9 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//////////////////////////////////////////////////////////////////////////
-
 #include "handler.h"
 #include "extern.h"
 #include "room.h"
@@ -312,5 +306,3 @@ int treeWalk(TBeing* caster, const char* arg) {
     return DELETE_THIS;
   return FALSE;
 }
-
-// END TREE WALK

@@ -1,23 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: disc_wrath.h,v $
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
-// This is the WRATH discipline.
 
 #include "discipline.h"
 #include "skills.h"
@@ -31,35 +12,6 @@ class CDWrath : public CDiscipline {
     CSkill skHailStorm;
     CSkill skHolocaust;
 
-    CDWrath() :
-      CDiscipline(),
-      skPillarOfSalt(),
-      skEarthquake(),
-      skCallLightning(),
-      skSpontaneousCombust(),
-      skHailStorm(),
-      skHolocaust() {}
-    CDWrath(const CDWrath& a) :
-      CDiscipline(a),
-      skPillarOfSalt(a.skPillarOfSalt),
-      skEarthquake(a.skEarthquake),
-      skCallLightning(a.skCallLightning),
-      skSpontaneousCombust(a.skSpontaneousCombust),
-      skHailStorm(a.skHailStorm),
-      skHolocaust(a.skHolocaust) {}
-    CDWrath& operator=(const CDWrath& a) {
-      if (this == &a)
-        return *this;
-      CDiscipline::operator=(a);
-      skPillarOfSalt = a.skPillarOfSalt;
-      skEarthquake = a.skEarthquake;
-      skCallLightning = a.skCallLightning;
-      skSpontaneousCombust = a.skSpontaneousCombust;
-      skHailStorm = a.skHailStorm;
-      skHolocaust = a.skHolocaust;
-      return *this;
-    }
-    virtual ~CDWrath() {}
     virtual CDWrath* cloneMe() { return new CDWrath(*this); }
 
   private:

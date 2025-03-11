@@ -1,26 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: disc_alchemy.h,v $
-// Revision 5.2  2004/09/12 23:53:06  maror
-// divination scroll will now work
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
-// This is the ALCHEMY discipline.
 
 #include "discipline.h"
 #include "skills.h"
@@ -34,35 +12,6 @@ class CDAlchemy : public CDiscipline {
     CSkill skEtherGate;
     CSkill skStaveCharge;
 
-    CDAlchemy() :
-      CDiscipline(),
-      skDivination(),
-      skShatter(),
-      skScribe(),
-      skSpontaneousGeneration(),
-      skEtherGate(),
-      skStaveCharge() {}
-    CDAlchemy(const CDAlchemy& a) :
-      CDiscipline(a),
-      skDivination(a.skDivination),
-      skShatter(a.skShatter),
-      skScribe(a.skScribe),
-      skSpontaneousGeneration(a.skSpontaneousGeneration),
-      skEtherGate(a.skEtherGate),
-      skStaveCharge() {}
-    CDAlchemy& operator=(const CDAlchemy& a) {
-      if (this == &a)
-        return *this;
-      CDiscipline::operator=(a);
-      skDivination = a.skDivination;
-      skShatter = a.skShatter;
-      skScribe = a.skScribe;
-      skSpontaneousGeneration = a.skSpontaneousGeneration;
-      skEtherGate = a.skEtherGate;
-      skStaveCharge = a.skStaveCharge;
-      return *this;
-    }
-    virtual ~CDAlchemy() {}
     virtual CDAlchemy* cloneMe() { return new CDAlchemy(*this); }
 
   private:

@@ -1,9 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//////////////////////////////////////////////////////////////////////////
-
 #include <stdio.h>
 
 #include "handler.h"
@@ -18,59 +12,6 @@
 #include "obj_portal.h"
 #include "monster.h"
 #include "disc_psionics.h"
-
-CDPsionics::CDPsionics() :
-  CDiscipline(),
-  skTelepathy(),
-  skTeleSight(),
-  skTeleVision(),
-  skMindFocus(),
-  skPsiBlast(),
-  skMindThrust(),
-  skPsyCrush(),
-  skKineticWave(),
-  skMindPreservation(),
-  skTelekinesis(),
-  skPsiDrain(),
-  skDimensionalFold() {}
-
-CDPsionics::CDPsionics(const CDPsionics& a) :
-  CDiscipline(a),
-  skTelepathy(a.skTelepathy),
-  skTeleSight(a.skTeleSight),
-  skTeleVision(a.skTeleVision),
-  skMindFocus(a.skMindFocus),
-  skPsiBlast(a.skPsiBlast),
-  skMindThrust(a.skMindThrust),
-  skPsyCrush(a.skPsyCrush),
-  skKineticWave(a.skKineticWave),
-  skMindPreservation(a.skMindPreservation),
-  skTelekinesis(a.skTelekinesis),
-  skPsiDrain(a.skPsiDrain),
-  skDimensionalFold(a.skDimensionalFold) {}
-
-CDPsionics& CDPsionics::operator=(const CDPsionics& a) {
-  if (this == &a)
-    return *this;
-  CDiscipline::operator=(a);
-  //  skAdvancedPsionics = a.skAdvancedPsionics;
-  skTelepathy = a.skTelepathy;
-  skTeleSight = a.skTeleSight;
-  skTeleVision = a.skTeleVision;
-  skMindFocus = a.skMindFocus;
-  skPsiBlast = a.skPsiBlast;
-  skMindThrust = a.skMindThrust;
-  skPsyCrush = a.skPsyCrush;
-  skKineticWave = a.skKineticWave;
-  skMindPreservation = a.skMindPreservation;
-  skTelekinesis = a.skTelekinesis;
-  skPsiDrain = a.skPsiDrain;
-  skDimensionalFold = a.skDimensionalFold;
-
-  return *this;
-}
-
-CDPsionics::~CDPsionics() {}
 
 int TBeing::doPTell(const char* arg, bool visible) {
   if (!doesKnowSkill(SKILL_PSITELEPATHY)) {

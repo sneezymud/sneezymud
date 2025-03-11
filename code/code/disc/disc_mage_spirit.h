@@ -1,26 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: disc_spirit.h,v $
-// Revision 5.2  2002/06/22 22:19:46  peel
-// added knot spell and knot room proc
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
-// This is the SPIRIT discipline.
 
 #include "discipline.h"
 #include "skills.h"
@@ -34,35 +12,6 @@ class CDSpirit : public CDiscipline {
     CSkill skFumble;
     CSkill skKnot;
 
-    CDSpirit() :
-      CDiscipline(),
-      skSilence(),
-      skCloudOfConcealment(),
-      skTrueSight(),
-      skPolymorph(),
-      skFumble(),
-      skKnot() {}
-    CDSpirit(const CDSpirit& a) :
-      CDiscipline(a),
-      skSilence(a.skSilence),
-      skCloudOfConcealment(a.skCloudOfConcealment),
-      skTrueSight(a.skTrueSight),
-      skPolymorph(a.skPolymorph),
-      skFumble(a.skFumble),
-      skKnot(a.skKnot) {}
-    CDSpirit& operator=(const CDSpirit& a) {
-      if (this == &a)
-        return *this;
-      CDiscipline::operator=(a);
-      skSilence = a.skSilence;
-      skCloudOfConcealment = a.skCloudOfConcealment;
-      skTrueSight = a.skTrueSight;
-      skPolymorph = a.skPolymorph;
-      skFumble = a.skFumble;
-      skKnot = a.skKnot;
-      return *this;
-    }
-    virtual ~CDSpirit() {}
     virtual CDSpirit* cloneMe() { return new CDSpirit(*this); }
 
   private:

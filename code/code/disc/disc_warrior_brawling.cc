@@ -1,9 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//////////////////////////////////////////////////////////////////////////
-
 #include "handler.h"
 #include "extern.h"
 #include "obj_base_weapon.h"
@@ -11,54 +5,6 @@
 #include "being.h"
 #include "disc_warrior_brawling.h"
 #include "obj_base_clothing.h"
-
-CDBrawling::CDBrawling() :
-  CDiscipline(),
-  skGrapple(),
-  skStomp(),
-  skBrawlAvoidance(),
-  skBodyslam(),
-  skHeadbutt(),
-  skKneestrike(),
-  skSpin(),
-  skCloseQuartersFighting(),
-  skTaunt(),
-  skTrip(),
-  skAdvBerserk() {}
-
-CDBrawling::CDBrawling(const CDBrawling& a) :
-  CDiscipline(a),
-  skGrapple(a.skGrapple),
-  skStomp(a.skStomp),
-  skBrawlAvoidance(a.skBrawlAvoidance),
-  skBodyslam(a.skBodyslam),
-  skHeadbutt(a.skHeadbutt),
-  skKneestrike(a.skKneestrike),
-  skSpin(a.skSpin),
-  skCloseQuartersFighting(a.skCloseQuartersFighting),
-  skTaunt(a.skTaunt),
-  skTrip(a.skTrip),
-  skAdvBerserk(a.skAdvBerserk) {}
-
-CDBrawling& CDBrawling::operator=(const CDBrawling& a) {
-  if (this == &a)
-    return *this;
-  CDiscipline::operator=(a);
-  skGrapple = a.skGrapple;
-  skStomp = a.skStomp;
-  skBrawlAvoidance = a.skBrawlAvoidance;
-  skBodyslam = a.skBodyslam;
-  skHeadbutt = a.skHeadbutt;
-  skKneestrike = a.skKneestrike;
-  skSpin = a.skSpin;
-  skCloseQuartersFighting = a.skCloseQuartersFighting;
-  skTaunt = a.skTaunt;
-  skTrip = a.skTrip;
-  skAdvBerserk = a.skAdvBerserk;
-  return *this;
-}
-
-CDBrawling::~CDBrawling() {}
 
 int TBeing::doTaunt(const sstring& arg) {
   TBeing* victim;

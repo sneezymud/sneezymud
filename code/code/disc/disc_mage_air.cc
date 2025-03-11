@@ -1,9 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//////////////////////////////////////////////////////////////////////////
-
 #include <stdio.h>
 
 #include "extern.h"
@@ -1497,39 +1491,3 @@ int protectionFromAir(TBeing* caster) {
     caster->getSkillLevel(SPELL_PROTECTION_FROM_AIR), 
     caster->getSkillValue(SPELL_PROTECTION_FROM_AIR));
 }
-
-CDAir::CDAir() :
-  CDiscipline(),
-  skProtectionFromAir(),
-  skImmobilize(),
-  skSuffocate(),
-  skFly(),
-  skAntigravity(),
-  skPierceResist() {}
-
-CDAir::CDAir(const CDAir& a) :
-  CDiscipline(a),
-  skProtectionFromAir(a.skProtectionFromAir),
-  skImmobilize(a.skImmobilize),
-  skSuffocate(a.skSuffocate),
-  skFly(a.skFly),
-  skAntigravity(a.skAntigravity),
-  skPierceResist(a.skPierceResist) {}
-
-CDAir& CDAir::operator=(const CDAir& a) {
-  if (this == &a)
-    return *this;
-
-  CDiscipline::operator=(a);
-  skProtectionFromAir = a.skProtectionFromAir;
-  skImmobilize = a.skImmobilize;
-  skSuffocate = a.skSuffocate;
-  skFly = a.skFly;
-  skAntigravity = a.skAntigravity;
-  skPierceResist = a.skPierceResist;
-  return *this;
-}
-
-CDAir::~CDAir() {}
-
-CDAir* CDAir::cloneMe() { return new CDAir(*this); }

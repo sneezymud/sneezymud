@@ -1,29 +1,4 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-// $Log: disc_cures.h,v $
-// Revision 5.3  2002/11/29 20:03:36  peel
-// fixed a few incorrect prototypes
-//
-// Revision 5.2  2002/11/28 22:43:17  peel
-// fixed a bad a prototype
-//
-// Revision 5.1.1.1  1999/10/16 04:32:20  batopr
-// new branch
-//
-// Revision 5.1  1999/10/16 04:31:17  batopr
-// new branch
-//
-// Revision 1.1  1999/09/12 17:24:04  sneezy
-// Initial revision
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
-// This is the CLERIC CURES discipline.
 
 #include "discipline.h"
 #include "skills.h"
@@ -36,32 +11,6 @@ class CDCures : public CDiscipline {
     CSkill skHealFullSpray;  // NEW  45th level area affect
     CSkill skRestoreLimb;
 
-    CDCures() :
-      CDiscipline(),
-      skHealFull(),
-      skHealCritSpray(),
-      skHealSpray(),
-      skHealFullSpray(),
-      skRestoreLimb() {}
-    CDCures(const CDCures& a) :
-      CDiscipline(a),
-      skHealFull(a.skHealFull),
-      skHealCritSpray(a.skHealCritSpray),
-      skHealSpray(a.skHealSpray),
-      skHealFullSpray(a.skHealFullSpray),
-      skRestoreLimb(a.skRestoreLimb) {}
-    CDCures& operator=(const CDCures& a) {
-      if (this == &a)
-        return *this;
-      CDiscipline::operator=(a);
-      skHealFull = a.skHealFull;
-      skHealCritSpray = a.skHealCritSpray;
-      skHealSpray = a.skHealSpray;
-      skHealFullSpray = a.skHealFullSpray;
-      skRestoreLimb = a.skRestoreLimb;
-      return *this;
-    }
-    virtual ~CDCures() {}
     virtual CDCures* cloneMe() { return new CDCures(*this); }
 
   private:

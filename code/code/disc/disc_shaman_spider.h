@@ -15,41 +15,6 @@ class CDShamanSpider : public CDiscipline {
     CSkill skTransfix;
     CSkill skClarity;
 
-    CDShamanSpider() :
-      CDiscipline(),
-      skSticksToSnakes(),
-      skControlUndead(),
-      skHypnosis(),
-      skRaze(),
-      skRootControl(),
-      skLivingVines(),
-      skTransfix(),
-      skClarity() {}
-    CDShamanSpider(const CDShamanSpider& a) :
-      CDiscipline(a),
-      skSticksToSnakes(a.skSticksToSnakes),
-      skControlUndead(a.skControlUndead),
-      skHypnosis(a.skHypnosis),
-      skRaze(a.skRaze),
-      skRootControl(a.skRootControl),
-      skLivingVines(a.skLivingVines),
-      skTransfix(a.skTransfix),
-      skClarity(a.skClarity) {}
-    CDShamanSpider& operator=(const CDShamanSpider& a) {
-      if (this == &a)
-        return *this;
-      CDiscipline::operator=(a);
-      skSticksToSnakes = a.skSticksToSnakes;
-      skControlUndead = a.skControlUndead;
-      skHypnosis = a.skHypnosis;
-      skRaze = a.skRaze;
-      skRootControl = a.skRootControl;
-      skLivingVines = a.skLivingVines;
-      skTransfix = a.skTransfix;
-      skClarity = a.skClarity;
-      return *this;
-    }
-    virtual ~CDShamanSpider() {}
     virtual CDShamanSpider* cloneMe() { return new CDShamanSpider(*this); }
 
   private:

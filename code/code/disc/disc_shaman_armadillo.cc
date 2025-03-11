@@ -1,12 +1,3 @@
-/*******************************************************************
- *                                                                 *
- *                                                                 *
- *   disc_shaman_armadillo.cc          Shaman Discipline Disc      *
- *                                                                 *
- *   SneezyMUD Development - All Rights Reserved                   *
- *                                                                 *
- *******************************************************************/
-
 #include "extern.h"
 #include "handler.h"
 #include "room.h"

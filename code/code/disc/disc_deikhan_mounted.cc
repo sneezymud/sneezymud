@@ -1,16 +1,9 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//////////////////////////////////////////////////////////////////////////
-
 #include "being.h"
 #include "monster.h"
 #include "disc_deikhan_mounted.h"
 
 // return 0-100, which is an average of advanced riding and ride xxx
 // does learning
-// Peel
 int TBeing::advancedRidingBonus(TMonster* mount) {
   int skillTotal = 0;
 
@@ -29,7 +22,6 @@ int TBeing::advancedRidingBonus(TMonster* mount) {
   return (skillTotal / 2);
 }
 
-// Peel
 void TBeing::calmMount(TBeing* m) {
   TMonster* mount = NULL;
   int skillTotal = 0, amt;
