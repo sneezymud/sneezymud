@@ -10,7 +10,7 @@
 #include "extern.h"
 #include "room.h"
 #include "being.h"
-#include "disc_deikhan.h"
+#include "disc_deikhan_guardian.h"
 
 static int rescue(TBeing* caster, TBeing* victim, spellNumT skill) {
   TBeing* tmp_ch = NULL;

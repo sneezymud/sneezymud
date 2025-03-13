@@ -15,3 +15,7 @@ class CDDeikhanGuardian : public CDiscipline {
       return new CDDeikhanGuardian(*this);
     }
 };
+
+int synostodweomer(TBeing* caster, TBeing* victim);
+int synostodweomer(TBeing* caster, TBeing* victim, int, short);
+void divineRescue(TBeing* caster, TBeing* victim);

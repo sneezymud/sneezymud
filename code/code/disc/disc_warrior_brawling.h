@@ -22,3 +22,5 @@ class CDBrawling : public CDiscipline {
 
   private:
 };
+
+int berserk(TBeing*);

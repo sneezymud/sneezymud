@@ -1152,3 +1152,185 @@ int castDeathWave(TBeing* caster, TBeing* victim) {
 
   return rc;
 }
+
+int distort(TBeing* caster, TBeing* victim, int level, short bKnown,
+  int adv_learn) {
+  char buf[256];
+  sstring bBuf;
+
+  int dam = caster->getSkillDam(victim, SPELL_DISTORT, level, adv_learn);
+  int beams = (dam / 3) + ::number(0, (caster->GetMaxLevel() / 10));
+  beams = max(beams, 1);
+
+  caster->reconcileHurt(victim, discArray[SPELL_DISTORT]->alignMod);
+
+  if (victim->getImmunity(IMMUNE_ENERGY) >= 100) {
+    act("$N is immune to energy and thaumaturgy!", FALSE, caster, NULL, victim,
+      TO_CHAR);
+    act("$N ignores $n's weak ritual!", FALSE, caster, NULL, victim,
+      TO_NOTVICT);
+    act("$n's ritual fails because of your immunity!", FALSE, caster, NULL,
+      victim, TO_VICT);
+    return SPELL_FAIL;
+  }
+
+  if (caster->bSuccess(bKnown, SPELL_DISTORT)) {
+    switch (critSuccess(caster, SPELL_DISTORT)) {
+      case CRIT_S_DOUBLE:
+        CS(SPELL_DISTORT);
+        dam *= 2;
+        beams *= 2;
+        sprintf(buf, "%d", beams);
+        bBuf = buf;
+        bBuf += " intense energy beam";
+        if (beams != 1)
+          bBuf += "s expel";
+        else
+          bBuf += " expels";
+
+        sprintf(buf, "%s from $n's hands and course into $N's body!",
+          bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
+        sprintf(buf, "%s from your hands and course into $N's body!",
+          bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+        sprintf(buf,
+          "%s from $n's hands and course into your body distorting your soul!",
+          bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_VICT);
+        break;
+      case CRIT_S_TRIPLE:
+      case CRIT_S_KILL:
+        CS(SPELL_DISTORT);
+        dam *= 3;
+        beams *= 3;
+
+        sprintf(buf, "%d", beams);
+        bBuf = buf;
+        bBuf += " BRILLIANT energy beam";
+        if (beams != 1)
+          bBuf += "s stream";
+        else
+          bBuf += " streams";
+
+        sprintf(buf, "%s from $n's hands and course into $N's body!",
+          bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
+        sprintf(buf, "%s from your hands and course into $N's body!",
+          bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+        sprintf(buf,
+          "%s from $n's hands and course into your body distorting your soul!",
+          bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_VICT);
+        break;
+      case CRIT_S_NONE:
+        sprintf(buf, "%d", beams);
+        bBuf = buf;
+        bBuf += " energy beam";
+        if (beams != 1)
+          bBuf += "s stream";
+        else
+          bBuf += " streams";
+
+        sprintf(buf, "%s from $n's hands and course into $N's body!",
+          bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
+        sprintf(buf, "%s from your hands and course into $N's body!",
+          bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+        sprintf(buf,
+          "%s from $n's hands and course into your body distorting your soul!",
+          bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_VICT);
+        if (victim->isLucky(caster->spellLuckModifier(SPELL_DISTORT))) {
+          SV(SPELL_DISTORT);
+          dam /= 2;
+        }
+    }
+    if (caster->reconcileDamage(victim, dam, SPELL_DISTORT) == -1)
+      return SPELL_SUCCESS + VICTIM_DEAD;
+    return SPELL_SUCCESS;
+  } else {
+    switch (critFail(caster, SPELL_DISTORT)) {
+      case CRIT_F_HITSELF:
+      case CRIT_F_HITOTHER:
+        CF(SPELL_DISTORT);
+        sprintf(buf, "%d", beams);
+        bBuf = buf;
+        bBuf += " energy beam";
+        if (beams != 1)
+          bBuf += "s stream";
+        else
+          bBuf += " streams";
+
+        sprintf(buf, "%s from $n's hands and blow up in $n's face!",
+          bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
+        sprintf(buf, "%s from your hands and blow up in your face!",
+          bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+        sprintf(buf, "%s from $n's hands and blow up in $n's face!",
+          bBuf.c_str());
+        act(buf, FALSE, caster, NULL, victim, TO_VICT);
+        if (caster->reconcileDamage(caster, dam, SPELL_DISTORT) == -1)
+          return SPELL_CRIT_FAIL + CASTER_DEAD;
+
+        return SPELL_CRIT_FAIL;
+        break;
+      case CRIT_F_NONE:
+        break;
+    }
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+}
+
+int distort(TBeing* caster, TBeing* victim, TMagicItem* obj) {
+  int rc = 0;
+  int ret = 0;
+
+  ret = distort(caster, victim, obj->getMagicLevel(),
+    obj->getMagicLearnedness(), 0);
+  if (IS_SET(ret, VICTIM_DEAD))
+    ADD_DELETE(rc, DELETE_VICT);
+
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+
+  return rc;
+}
+
+int distort(TBeing* caster, TBeing* victim) {
+  taskDiffT diff;
+
+  if (!bPassShamanChecks(caster, SPELL_DISTORT, victim))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_DISTORT]->lag;
+  diff = discArray[SPELL_DISTORT]->task;
+
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_DISTORT, diff, 1, "",
+    rounds, caster->in_room, 0, 0, TRUE, 0);
+
+  return TRUE;
+}
+
+int castDistort(TBeing* caster, TBeing* victim) {
+  int level;
+  int rc = 0;
+  int ret = 0;
+
+  level = caster->getSkillLevel(SPELL_DISTORT);
+  int bKnown = caster->getSkillValue(SPELL_DISTORT);
+
+  ret = distort(caster, victim, level, bKnown,
+    caster->getAdvLearning(SPELL_DISTORT));
+
+  if (IS_SET(ret, VICTIM_DEAD))
+    ADD_DELETE(rc, DELETE_VICT);
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+
+  return rc;
+}

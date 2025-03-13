@@ -17,3 +17,5 @@ class CDMounted : public CDiscipline {
 
   private:
 };
+
+extern void startChargeTask(TBeing*, const char*);

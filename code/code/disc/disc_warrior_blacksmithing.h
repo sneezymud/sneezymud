@@ -11,3 +11,5 @@ class CDBlacksmithing : public CDiscipline {
     
   private:
 };
+
+void repair(TBeing*, TObj*);

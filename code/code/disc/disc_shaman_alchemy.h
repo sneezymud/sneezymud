@@ -11,3 +11,9 @@ class CDShamanAlchemy : public CDiscipline {
 
   private:
 };
+
+extern bool shaman_create_deny(int);
+const int CHRISM_PRICE = 250;
+int castChrism(TBeing*, const char*);
+int chrism(TBeing*, const char*);
+int chrism(TBeing*, TObj**, int, const char*, short);

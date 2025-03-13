@@ -803,3 +803,176 @@ int defenestrate(TBeing* caster, TBeing* victim, sstring direction) {
   }
   return FALSE;
 }
+
+// this function is meant to be called from brawling commands so monks
+// automatically springleap.  They can still force it thru doSpringleap
+int TBeing::trySpringleap(TBeing* vict) {
+  if (!doesKnowSkill(SKILL_SPRINGLEAP))
+    return FALSE;
+
+  return doSpringleap("", false, vict);
+}
+
+int TBeing::doSpringleap(sstring argument, bool should_lag, TBeing* vict) {
+  TBeing* victim;
+  sstring name_buf;
+  int rc;
+
+  if (!doesKnowSkill(SKILL_SPRINGLEAP)) {
+    sendTo("You don't know how.\n\r");
+    return FALSE;
+  }
+  one_argument(argument, name_buf);
+
+  if (!(victim = vict)) {
+    if (!(victim = get_char_room_vis(this, name_buf))) {
+      if (!(victim = fight())) {
+        sendTo("Springleap at whom?\n\r");
+        return FALSE;
+      }
+#if 0
+    } else if (!fight()) {
+      sendTo("You are not able to initiate combat with a springleap.\n\r");
+      return FALSE;
+#endif
+    }
+  }
+  if (!sameRoom(*victim)) {
+    sendTo("That person isn't around.\n\r");
+    return FALSE;
+  }
+  rc = springleap(this, victim, should_lag);
+  if (rc && should_lag)  // auto springleap doesn't lag
+    addSkillLag(SKILL_SPRINGLEAP, rc);
+
+  if (IS_SET_DELETE(rc, DELETE_VICT)) {
+    if (vict)
+      return rc;
+    delete victim;
+    victim = NULL;
+    REM_DELETE(rc, DELETE_VICT);
+  }
+  return rc;
+}
+
+int springleap(TBeing* caster, TBeing* victim, bool should_lag) {
+  int i, d = 0;
+  int percent;
+  spellNumT iSkill = SKILL_SPRINGLEAP;
+
+  if (caster->checkPeaceful(
+        "You feel too peaceful to contemplate violence.\n\r"))
+    return FALSE;
+
+  if (!caster->doesKnowSkill(iSkill)) {
+    caster->sendTo("You don't know how to do that!\n\r");
+    return FALSE;
+  }
+
+  if (caster->getPosition() > POSITION_SITTING) {
+    caster->sendTo("You're not in position for that!\n\r");
+    return FALSE;
+  }
+
+  if (victim == caster) {
+    caster->sendTo("Aren't we funny today...\n\r");
+    return FALSE;
+  }
+
+  if (caster->noHarmCheck(victim))
+    return FALSE;
+
+  percent = 0;
+  int bKnown = caster->getSkillValue(SKILL_SPRINGLEAP);
+
+  act("$n does a really nifty move, and aims a leg towards $N.", FALSE, caster,
+    0, victim, TO_NOTVICT);
+  act("You leap off the $g at $N.", FALSE, caster, 0, victim, TO_CHAR);
+  act("$n leaps off the $g at you.", FALSE, caster, 0, victim, TO_VICT);
+  caster->reconcileHurt(victim, 0.04);
+
+  if (caster->bSuccess(bKnown + percent, SKILL_SPRINGLEAP)) {
+    if ((i = caster->specialAttack(victim, SKILL_SPRINGLEAP)) ||
+        (i == GUARANTEED_SUCCESS)) {
+      if (victim->getPosition() > POSITION_DEAD) {
+        if (!(d = caster->getActualDamage(victim, NULL,
+                caster->getSkillLevel(SKILL_SPRINGLEAP) >> 1, SKILL_KICK))) {
+          act(
+            "You attempt to kick $N but lose your balance and fall face down "
+            "in some mud that has suddenly appeared.",
+            FALSE, caster, NULL, victim, TO_CHAR);
+          act(
+            "When $n tries to kick you, you quickly make $m fall in some mud "
+            "you create.",
+            FALSE, caster, NULL, victim, TO_VICT);
+          act("$n falls face down in some mud created by $N.", FALSE, caster,
+            NULL, victim, TO_NOTVICT);
+        } else if (caster->willKill(victim, d, SKILL_KICK, TRUE)) {
+          act("Your kick at $N's face splits $S head open.", FALSE, caster,
+            NULL, victim, TO_CHAR);
+          act("$n aims a kick at your face which splits your head in two.",
+            FALSE, caster, NULL, victim, TO_VICT);
+          act("$n neatly kicks $N's head into pieces.", FALSE, caster, NULL,
+            victim, TO_NOTVICT);
+          iSkill = DAMAGE_KICK_HEAD;
+        } else {
+          act("Your kick hits $N in the solar plexus.", FALSE, caster, NULL,
+            victim, TO_CHAR);
+          act("You're hit in the solar plexus, wow, this is breathtaking!",
+            FALSE, caster, NULL, victim, TO_VICT);
+          act("$n kicks $N in the solar plexus, $N is rendered breathless.",
+            FALSE, caster, NULL, victim, TO_NOTVICT);
+        }
+      }
+      if (caster->reconcileDamage(victim, d, iSkill) == -1)
+        return DELETE_VICT;
+    } else {
+      act("You miss your kick at $N's groin, much to $S relief.", FALSE, caster,
+        NULL, victim, TO_CHAR);
+      act("$n misses a kick at your groin, you breathe lighter now.", FALSE,
+        caster, NULL, victim, TO_VICT);
+      act("$n misses a kick at $N's groin.", FALSE, caster, NULL, victim,
+        TO_NOTVICT);
+      caster->reconcileDamage(victim, 0, SKILL_SPRINGLEAP);
+    }
+    if (victim)
+      victim->addToWait(combatRound(1));
+  } else {
+    if (victim->getPosition() > POSITION_DEAD) {
+      caster->sendTo("You fall on your butt.\n\r");
+      act("$n falls on $s butt.", FALSE, caster, 0, 0, TO_ROOM);
+      if (caster->reconcileDamage(victim, 0, SKILL_SPRINGLEAP) == -1)
+        return DELETE_VICT;
+    }
+    return TRUE;
+  }
+  caster->setPosition(POSITION_STANDING);
+  caster->updatePos();
+  return TRUE;
+}
+
+bool TBeing::canCounterMove(int perc) {
+  // perc is based on the person doing the move's skill
+  // it is somewhat reduced based on arbitray rating of the skill's difficulty
+
+  if (!doesKnowSkill(SKILL_COUNTER_MOVE))
+    return FALSE;
+
+  if (!awake() || getPosition() < POSITION_CRAWLING)
+    return FALSE;
+
+  int skill = getSkillValue(SKILL_COUNTER_MOVE);
+  skill -= perc;
+
+  if (eitherArmHurt())
+    skill /= 2;
+  if (eitherLegHurt())
+    skill = (int)(skill * 0.75);
+
+  skill = max(skill, 1);
+
+  if (!bSuccess(skill, SKILL_COUNTER_MOVE))
+    return FALSE;
+
+  return TRUE;
+}

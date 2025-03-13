@@ -41,13 +41,6 @@ class CDDeikhan : public CDiscipline {
   private:
 };
 
-void divineRescue(TBeing* caster, TBeing* victim);
-
-int synostodweomer(TBeing* caster, TBeing* victim);
-int synostodweomer(TBeing* caster, TBeing* victim, int, short);
-
-int smite(TBeing*, TBeing*);
-
 int procAuraOfMight(TBeing* caster);
 int auraOfMightOnHit(TBeing* caster, TBeing* vict);
 int procAuraOfRegeneration(TBeing* caster);

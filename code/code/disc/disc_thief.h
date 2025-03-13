@@ -31,10 +31,3 @@ class CDThief : public CDiscipline {
 
   private:
 };
-
-int sneak(TBeing*, spellNumT);
-int subterfuge(TBeing*, TBeing*);
-int pickLocks(TBeing*, const char*, const char*, const char*);
-int spy(TBeing*);
-int hide(TBeing*, spellNumT);
-int disguise(TBeing*, char*);

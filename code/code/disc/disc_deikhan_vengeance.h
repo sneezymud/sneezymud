@@ -15,3 +15,5 @@ class CDDeikhanVengeance : public CDiscipline {
       return new CDDeikhanVengeance(*this);
     }
 };
+
+int smite(TBeing*, TBeing*);

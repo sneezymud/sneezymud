@@ -6,6 +6,102 @@
 #include "disc_warrior_brawling.h"
 #include "obj_base_clothing.h"
 
+using std::max;
+using std::min;
+
+int TBeing::doBerserk() {
+  int rc;
+
+  if (!doesKnowSkill(SKILL_BERSERK)) {
+    sendTo("You lack the bloodlust.\n\r");
+    return FALSE;
+  }
+  if (checkBusy()) {
+    return FALSE;
+  }
+  if (affectedBySpell(SKILL_BERSERK)) {
+    sendTo("You are unable to work up the bloodlust at this time.\n\r");
+    return FALSE;
+  }
+  if (affectedBySpell(SKILL_DISGUISE)) {
+    sendTo(
+      "You can't work up the bloodlust while pretending to be someone "
+      "else.\n\r");
+    return FALSE;
+  }
+
+  rc = berserk(this);
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_THIS;
+  return FALSE;
+}
+
+int berserk(TBeing* caster) {
+  int level;
+  affectedData af;
+
+  if (caster->riding) {
+    act("Not while riding.", TRUE, caster, 0, 0, TO_CHAR);
+    return FALSE;
+  }
+  if (caster->getCombatMode() == ATTACK_BERSERK) {
+    act("You are already berserking!", TRUE, caster, 0, 0, TO_CHAR);
+    return FALSE;
+  }
+
+  if (caster->checkPeaceful("This room is too tranquil to go berserk in.\n\r"))
+    return FALSE;
+
+  if (!caster->isPc())
+    return FALSE;
+
+  level = caster->getSkillLevel(SKILL_BERSERK);
+  int bKnown = caster->getSkillValue(SKILL_BERSERK);
+  if (caster->bSuccess(bKnown, SKILL_BERSERK)) {
+    caster->setCombatMode(ATTACK_BERSERK);
+    act("You go berserk!", TRUE, caster, 0, 0, TO_CHAR);
+    act("$n goes berserk!", TRUE, caster, 0, 0, TO_ROOM);
+
+    if (caster->getHit() > (caster->hitLimit() / 2)) {
+      af.type = SKILL_BERSERK;
+      af.modifier = ::number(caster->getSkillValue(SKILL_BERSERK),
+        caster->getSkillValue(SKILL_BERSERK) * 2);
+      af.level = level;
+      //      af.duration = caster->getSkillValue(SKILL_BERSERK);
+      af.duration = PERMANENT_DURATION;
+      af.location = APPLY_HIT;
+      af.bitvector = 0;
+      caster->affectTo(&af, -1);
+
+      af.location = APPLY_CURRENT_HIT;
+      caster->affectTo(&af, -1);
+
+      caster->sendTo(
+        "Berserking increases your ability to withstand damage!\n\r");
+    }
+
+    if (!caster->fight())
+      caster->goBerserk(NULL);
+  } else {
+    act("You try to go berserk and bite yourself in the tongue!", TRUE, caster,
+      0, 0, TO_CHAR);
+    act("$n bites $mself in the tongue while trying to go berserk!", TRUE,
+      caster, 0, 0, TO_ROOM);
+    if (caster->reconcileDamage(caster, 1, SKILL_BERSERK) == -1)
+      return DELETE_THIS;
+
+    af.type = SKILL_BERSERK;
+    af.level = level;
+    af.duration = Pulse::UPDATES_PER_MUDHOUR / 2;
+    af.location = APPLY_NONE;
+    af.modifier = 0;
+    af.bitvector = 0;
+    caster->affectTo(&af, -1);
+  }
+
+  return TRUE;
+}
+
 int TBeing::doTaunt(const sstring& arg) {
   TBeing* victim;
   char name_buf[256];

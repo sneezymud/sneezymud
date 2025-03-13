@@ -1517,7 +1517,7 @@ void buildSpellArray() {
       LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_BERSERK] =
-    new spellInfo(SKILL_WARRIOR, DISC_WARRIOR, DISC_SOLDIERING, STAT_EXT,
+    new spellInfo(SKILL_WARRIOR, DISC_WARRIOR, DISC_BRAWLING, STAT_EXT,
       "berserk", TASK_NORMAL, LAG_2, POSITION_CRAWLING, MANA_0, LIFEFORCE_0,
       PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_2, START_DO_1,
       LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
@@ -3212,7 +3212,7 @@ void buildSpellArray() {
     0);
 
   discArray[SPELL_SHIELD_OF_MISTS] =
-    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN, STAT_INT,
+    new spellInfo(SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_ARMADILLO, STAT_INT,
       "shield of mists", TASK_EASY, LAG_1, POSITION_CRAWLING, MANA_0,
       LIFEFORCE_20, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
       "The mist surrounding you has faded into memory.",

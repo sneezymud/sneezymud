@@ -55,3 +55,12 @@ int raze(TBeing*, TBeing*);
 int castRaze(TBeing*, TBeing*);
 int raze(TBeing*, TBeing*, int, short, int);
 int raze(TBeing*, TBeing*, TMagicItem*);
+
+int squish(TBeing*, TBeing*);
+int castSquish(TBeing*, TBeing*);
+int squish(TBeing*, TBeing*, int, short, int);
+
+void stupidity(TBeing*, TBeing*);
+void stupidity(TBeing*, TBeing*, TMagicItem*);
+int castStupidity(TBeing*, TBeing*);
+int stupidity(TBeing*, TBeing*, int, short);

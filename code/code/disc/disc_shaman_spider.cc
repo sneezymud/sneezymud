@@ -1109,3 +1109,327 @@ int raze(TBeing* tMaster, TBeing* tSucker, TMagicItem* tMagItem) {
 
   return tRc;
 }
+
+
+int squish(TBeing* caster, TBeing* victim, int level, short bKnown,
+  int adv_learn) {
+  int dam = caster->getSkillDam(victim, SPELL_SQUISH, level, adv_learn);
+
+  if (victim->getImmunity(IMMUNE_BONE_COND) >= 100) {
+    act("$N is immune to bone ailments!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("$N ignores $n's weak grasp!", FALSE, caster, NULL, victim, TO_NOTVICT);
+    act("$n's ritual fails because of your immunity!", FALSE, caster, NULL,
+      victim, TO_VICT);
+    return SPELL_FAIL;
+  }
+
+  caster->reconcileHurt(victim, discArray[SPELL_SQUISH]->alignMod);
+
+  if (caster->bSuccess(bKnown, SPELL_SQUISH)) {
+    switch (critSuccess(caster, SPELL_SQUISH)) {
+      case CRIT_S_KILL:
+      case CRIT_S_TRIPLE:
+      case CRIT_S_DOUBLE:
+        dam *= 2;
+        act("Your hands become ENORMOUS and you squish $N's body HARD!", FALSE,
+          caster, NULL, victim, TO_CHAR);
+        act(
+          "$n's hands somehow become ENORMOUS and $e squishes $N's body REALLY "
+          "HARD!",
+          FALSE, caster, NULL, victim, TO_NOTVICT);
+        act(
+          "$n's hands somehow become ENORMOUS and $e squishes your body REALLY "
+          "HARD!",
+          FALSE, caster, NULL, victim, TO_VICT);
+        break;
+      case CRIT_S_NONE:
+        act("Your hands become enlarged and you reach out and squish $N!",
+          FALSE, caster, NULL, victim, TO_CHAR);
+        act("$n's hands become enlarged and $e reaches out and squishes $N!",
+          FALSE, caster, NULL, victim, TO_NOTVICT);
+        act(
+          "$n's hands become enlarged and $e reaches out and squishes your "
+          "body!",
+          FALSE, caster, NULL, victim, TO_VICT);
+        if (victim->isLucky(caster->spellLuckModifier(SPELL_SQUISH))) {
+          SV(SPELL_SQUISH);
+          dam /= 2;
+        }
+        break;
+    }
+    if (caster->reconcileDamage(victim, dam, SPELL_SQUISH) == -1)
+      return SPELL_SUCCESS + VICTIM_DEAD;
+    return SPELL_SUCCESS;
+  } else {
+    caster->setCharFighting(victim);
+    caster->setVictFighting(victim);
+    act("$n just tried to attack you!", FALSE, caster, NULL, victim, TO_VICT);
+    if (critFail(caster, SPELL_SQUISH) == CRIT_F_HITSELF) {
+      CF(SPELL_SQUISH);
+      act(
+        "Your hands have a mind of their own and you grab the wrong thing! "
+        "OWWW!",
+        FALSE, caster, NULL, victim, TO_CHAR);
+      act("$n fondles $mself fondly, and a bit rough...oww!", FALSE, caster,
+        NULL, victim, TO_ROOM);
+      if (caster->reconcileDamage(caster, dam, SPELL_SQUISH) == -1)
+        return SPELL_CRIT_FAIL + CASTER_DEAD;
+      return SPELL_CRIT_FAIL;
+    }
+    caster->nothingHappens();
+    return SPELL_FAIL;
+  }
+}
+
+int squish(TBeing* caster, TBeing* victim) {
+  taskDiffT diff;
+
+  if (!bPassShamanChecks(caster, SPELL_SQUISH, victim))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_SQUISH]->lag;
+  diff = discArray[SPELL_SQUISH]->task;
+
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_SQUISH, diff, 1, "",
+    rounds, caster->in_room, 0, 0, TRUE, 0);
+
+  return TRUE;
+}
+
+int castSquish(TBeing* caster, TBeing* victim) {
+  int ret, level;
+  int rc = 0;
+
+  level = caster->getSkillLevel(SPELL_SQUISH);
+
+  ret = squish(caster, victim, level, caster->getSkillValue(SPELL_SQUISH),
+    caster->getAdvLearning(SPELL_SQUISH));
+  if (IS_SET(ret, SPELL_SUCCESS)) {
+  } else {
+    if (ret == SPELL_CRIT_FAIL) {
+    } else {
+    }
+  }
+  if (IS_SET(ret, VICTIM_DEAD))
+    ADD_DELETE(rc, DELETE_VICT);
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+  return rc;
+}
+
+
+int stupidity(TBeing* caster, TBeing* victim, int level, short bKnown) {
+  affectedData aff;
+  int ret = 0;
+
+  if (victim->affectedBySpell(SPELL_STUPIDITY)) {
+    act("You sense that $N is already stupid!", FALSE, caster, NULL, victim,
+      TO_CHAR);
+    act("$n just tried to invoke something on you!", 0, caster, NULL, victim,
+      TO_VICT);
+    caster->nothingHappens(SILENT_YES);
+    return SPELL_FALSE;
+  }
+
+  caster->reconcileHurt(victim, discArray[SPELL_STUPIDITY]->alignMod);
+
+  aff.type = SPELL_STUPIDITY;
+  aff.level = level;
+  aff.location = APPLY_INT;
+  aff.bitvector = 0;
+
+  // we'd like it to last about 10 minutes
+  aff.duration = caster->durationModify(SPELL_STUPIDITY,
+    10 * Pulse::UPDATES_PER_MUDHOUR / 2);
+
+  // let the affect be level dependant
+  aff.modifier = -(aff.level / 4);
+
+  if (caster->bSuccess(bKnown, SPELL_STUPIDITY)) {
+    ret = SPELL_SUCCESS;
+    switch (critSuccess(caster, SPELL_STUPIDITY)) {
+      case CRIT_S_DOUBLE:
+      case CRIT_S_TRIPLE:
+      case CRIT_S_KILL:
+        CS(SPELL_STUPIDITY);
+        aff.duration *= 2;
+        aff.modifier *= 2;
+        ret += SPELL_CRIT_SUCCESS + SPELL_CSUC_DOUBLE;
+        break;
+      case CRIT_S_NONE:
+        if (victim->isLucky(caster->spellLuckModifier(SPELL_STUPIDITY))) {
+          SV(SPELL_STUPIDITY);
+          aff.duration /= 2;
+          aff.modifier /= 2;
+          ret += SPELL_SAVE;
+        }
+        break;
+    }
+    victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
+
+    // this spell is non-violent, cause it to piss off mobs though
+    if (!victim->isPc()) {
+      TMonster* tmons = dynamic_cast<TMonster*>(victim);
+      tmons->UM(4);
+      tmons->US(5);
+      tmons->UA(7);
+      tmons->aiTarget(caster);
+    }
+    return ret;
+  } else {
+    ret += SPELL_FAIL;
+    switch (critFail(caster, SPELL_STUPIDITY)) {
+      case CRIT_F_HITSELF:
+      case CRIT_F_HITOTHER:
+        CF(SPELL_STUPIDITY);
+        caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
+        ret += SPELL_CFAIL_DEFAULT + SPELL_CRIT_FAIL;
+        break;
+      case CRIT_F_NONE:
+        break;
+    }
+    return ret;
+  }
+}
+
+void stupidity(TBeing* caster, TBeing* victim, TMagicItem* obj) {
+  int ret;
+
+  if (victim->affectedBySpell(SPELL_STUPIDITY)) {
+    act("You sense that $N is already stupid!", FALSE, caster, NULL, victim,
+      TO_CHAR);
+    act("$n just tried to invoke something on you!", 0, caster, NULL, victim,
+      TO_VICT);
+    caster->nothingHappens(SILENT_YES);
+    return;
+  }
+
+  ret =
+    stupidity(caster, victim, obj->getMagicLevel(), obj->getMagicLearnedness());
+
+  if (IS_SET(ret, SPELL_SUCCESS)) {
+    act("A drab olive green aura engulfs $N!", TRUE, caster, NULL, victim,
+      TO_NOTVICT);
+    act("A drab olive green aura engulfs $N!", TRUE, caster, NULL, victim,
+      TO_CHAR);
+    act("A drab olive green aura engulfs your head!", FALSE, caster, NULL,
+      victim, TO_VICT);
+  }
+  if (IS_SET(ret, SPELL_SAVE)) {
+    act("The fog of stupidity weakens.", FALSE, caster, NULL, victim, TO_CHAR);
+    act("The fog of stupidity weakens.", FALSE, caster, NULL, victim, TO_ROOM);
+  } else {
+  }
+
+  if (IS_SET(ret, SPELL_CRIT_SUCCESS)) {
+    if (IS_SET(ret, SPELL_CSUC_DEFAULT)) {}
+    if (IS_SET(ret, SPELL_CSUC_DOUBLE)) {
+      act("Yep...really stupid....", FALSE, caster, NULL, victim, TO_CHAR);
+      act("Yep...really stupid....", FALSE, caster, NULL, victim, TO_ROOM);
+    }
+    if (IS_SET(ret, SPELL_CSUC_TRIPLE)) {}
+  }
+
+  if (IS_SET(ret, SPELL_FAIL) && !IS_SET(ret, SPELL_CRIT_FAIL)) {
+    caster->nothingHappens();
+  }
+  if (IS_SET(ret, SPELL_CRIT_FAIL) || IS_SET(ret, SPELL_CFAIL_DEFAULT)) {
+    act("A drab olive green aura engulfs $n!", TRUE, caster, NULL, victim,
+      TO_ROOM);
+    act("A drab olive green aura engulfs your head!", TRUE, caster, NULL,
+      victim, TO_CHAR);
+  } else {
+    if (IS_SET(ret, SPELL_CFAIL_SELF)) {}
+    if (IS_SET(ret, SPELL_CFAIL_OTHER)) {}
+  }
+
+  if (IS_SET(ret, SPELL_FAIL_SAVE)) {}
+  if (IS_SET(ret, SPELL_ACTION)) {}
+  if (IS_SET(ret, SPELL_FALSE)) {}
+}
+
+void stupidity(TBeing* caster, TBeing* victim) {
+  taskDiffT diff;
+  // 1. First check for unusual fails
+  if (victim->affectedBySpell(SPELL_STUPIDITY)) {
+    act("You sense that $N is already stupid!", FALSE, caster, NULL, victim,
+      TO_CHAR);
+    act("$n just tried to invoke something on you!", 0, caster, NULL, victim,
+      TO_VICT);
+    caster->nothingHappens(SILENT_YES);
+    return;
+  }
+
+  // 2. Second send to general mage check function
+  if (!bPassShamanChecks(caster, SPELL_STUPIDITY, victim))
+    return;
+
+  // 4.   Get lag and difficulty for adding to casting object
+  lag_t rounds = discArray[SPELL_STUPIDITY]->lag;
+  diff = discArray[SPELL_STUPIDITY]->task;
+
+  // 5.   Initialize the casting object with data
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_STUPIDITY, diff, 1, "",
+    rounds, caster->in_room, 0, 0, TRUE, 0);
+
+  // 6.   Start them fighting with 0 damage
+  // this spell is non-violent, it piss off mobs if it hits
+}
+
+int castStupidity(TBeing* caster, TBeing* victim) {
+  int ret, level;
+
+  level = caster->getSkillLevel(SPELL_STUPIDITY);
+
+  ret =
+    stupidity(caster, victim, level, caster->getSkillValue(SPELL_STUPIDITY));
+
+  if (!IS_SET(ret, SPELL_FALSE)) {
+    act("You point at $N.", TRUE, caster, NULL, victim, TO_CHAR);
+    act("$n points at $N.", TRUE, caster, NULL, victim, TO_NOTVICT);
+    act("$n points at you.", TRUE, caster, NULL, victim, TO_VICT);
+  }
+
+  if (IS_SET(ret, SPELL_SUCCESS)) {
+    act("A drab olive green aura engulfs $N!", TRUE, caster, NULL, victim,
+      TO_NOTVICT);
+    act("A drab olive green aura engulfs $N!", TRUE, caster, NULL, victim,
+      TO_CHAR);
+    act("A drab olive green aura engulfs your head!", FALSE, caster, NULL,
+      victim, TO_VICT);
+  }
+  if (IS_SET(ret, SPELL_SAVE)) {
+    act("The fog of stupidity weakens.", FALSE, caster, NULL, victim, TO_CHAR);
+    act("The fog of stupidity weakens.", FALSE, caster, NULL, victim, TO_ROOM);
+  } else {
+  }
+  if (IS_SET(ret, SPELL_CRIT_SUCCESS)) {
+    if (IS_SET(ret, SPELL_CSUC_DEFAULT)) {}
+    if (IS_SET(ret, SPELL_CSUC_DOUBLE)) {
+      act("Yep....really stupid....", FALSE, caster, NULL, victim, TO_CHAR);
+      act("Yep....really stupid....", FALSE, caster, NULL, victim, TO_ROOM);
+    }
+    if (IS_SET(ret, SPELL_CSUC_TRIPLE)) {}
+  }
+
+  //  if (IS_SET(ret, SPELL_SAVE)) {
+  //  }
+
+  if (IS_SET(ret, SPELL_FAIL) && !IS_SET(ret, SPELL_CRIT_FAIL)) {
+    caster->nothingHappens();
+  }
+  if (IS_SET(ret, SPELL_CRIT_FAIL) || IS_SET(ret, SPELL_CFAIL_DEFAULT)) {
+    act("A drab olive green aura engulfs $n!", TRUE, caster, NULL, victim,
+      TO_ROOM);
+    act("A drab olive green aura engulfs your head!", TRUE, caster, NULL,
+      victim, TO_CHAR);
+  } else {
+    if (IS_SET(ret, SPELL_CFAIL_SELF)) {}
+    if (IS_SET(ret, SPELL_CFAIL_OTHER)) {}
+  }
+  if (IS_SET(ret, SPELL_FAIL_SAVE)) {}
+  if (IS_SET(ret, SPELL_ACTION)) {}
+  if (IS_SET(ret, SPELL_FALSE)) {}
+  // spell doesnt cause damage so return false
+  return FALSE;
+}

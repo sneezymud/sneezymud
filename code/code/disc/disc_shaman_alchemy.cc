@@ -4,6 +4,7 @@
 #include "combat.h"
 #include "spelltask.h"
 #include "disc_mage_alchemy.h"
+#include "disc_shaman_alchemy.h"
 #include "obj_component.h"
 #include "obj_potion.h"
 
@@ -129,4 +130,107 @@ void TBeing::doBrew(const char* arg) {
 
   start_task(this, NULL, NULL, TASK_BREWING, "", 0, in_room, how_many,
     which_spell, 0);
+}
+
+
+bool shaman_create_deny(int numberx) {
+  objIndexData oid = obj_index[numberx];
+
+  if (!isname("[chrism_object]", oid.name))
+    return true;
+
+  return false;
+}
+
+int chrism(TBeing* caster, TObj** obj, int, const char* name, short bKnown) {
+  unsigned int numberx;
+
+  caster->sendTo("You drop some talens and they sink into the ground.\n\r");
+  act("$n drops some money.", TRUE, caster, 0, 0, TO_ROOM, ANSI_WHITE);
+  caster->addToMoney(-CHRISM_PRICE, GOLD_HOSPITAL);
+
+  for (numberx = 0; numberx < obj_index.size(); numberx++) {
+    if (!isname(name, obj_index[numberx].name))
+      continue;
+    if (obj_index[numberx].value > CHRISM_PRICE)
+      continue;
+    if (shaman_create_deny(numberx))
+      continue;
+    break;
+  }
+  if (numberx >= obj_index.size()) {
+    caster->sendTo(
+      "The loa know what your needs are, so don't try and confuse things!\n\r");
+    caster->nothingHappens(SILENT_YES);
+    return SPELL_FAIL;
+  }
+
+  if (caster->bSuccess(bKnown, SPELL_CHRISM)) {
+    *obj = read_object(numberx, REAL);
+    (*obj)->remObjStat(ITEM_NEWBIE);
+    (*obj)->setEmpty();
+
+    act("The loa have blessed you with $p to aid you.", TRUE, caster, *obj,
+      NULL, TO_CHAR);
+
+    if (!caster->heldInPrimHand()) {
+      caster->equipChar(*obj, caster->getPrimaryHold(), SILENT_YES);
+      act("Out of the sky $p gently falls into $n's hands.", TRUE, caster, *obj,
+        NULL, TO_ROOM);
+      act("You catch $p as it gently falls from the sky.", TRUE, caster, *obj,
+        NULL, TO_CHAR);
+    } else {
+      *caster->roomp += **obj;
+      act("Out of the sky $p gently falls to the ground.", TRUE, caster, *obj,
+        NULL, TO_ROOM);
+      act("Out of the sky $p gently falls to the ground.", TRUE, caster, *obj,
+        NULL, TO_CHAR);
+    }
+
+    return SPELL_SUCCESS;
+  }
+
+  caster->nothingHappens();
+  return SPELL_FAIL;
+}
+
+int chrism(TBeing* caster, const char* name) {
+  if (!bPassShamanChecks(caster, SPELL_CHRISM, NULL))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_CHRISM]->lag;
+  taskDiffT diff = discArray[SPELL_CHRISM]->task;
+
+  start_cast(caster, NULL, NULL, caster->roomp, SPELL_CHRISM, diff, 2, name,
+    rounds, caster->in_room, 0, 0, TRUE, 0);
+  return TRUE;
+}
+
+int castChrism(TBeing* caster, const char* name) {
+  if (caster->getMoney() < CHRISM_PRICE) {
+    caster->sendTo("You don't have the money for that!\n\r");
+    return FALSE;
+  }
+
+  if (!name || !*name) {
+    caster->sendTo("You need to specify an item. (insert item name)\n\r");
+    return FALSE;
+  }
+  if (strlen(name) < 3) {
+    caster->sendTo("You must specify something more specific.\n\r");
+    return FALSE;
+  }
+
+  int level = caster->getSkillLevel(SPELL_CHRISM);
+  TObj* obj = NULL;
+
+  act("$n places $s hands on $s head and howls at the sky.", TRUE, caster, NULL,
+    NULL, TO_ROOM);
+  act(
+    "You place your hands on the sides of your head and call unto the loa to "
+    "hear your plea.",
+    TRUE, caster, NULL, NULL, TO_CHAR);
+
+  chrism(caster, &obj, level, name, caster->getSkillValue(SPELL_CHRISM));
+  return TRUE;
 }

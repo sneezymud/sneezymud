@@ -39,3 +39,26 @@ int bloodBoil(TBeing*, TBeing*);
 int castBloodBoil(TBeing*, TBeing*);
 int bloodBoil(TBeing*, TBeing*, TMagicItem*);
 int bloodBoil(TBeing*, TBeing*, int, short, int);
+
+int vampiricTouch(TBeing*, TBeing*);
+int castVampiricTouch(TBeing*, TBeing*);
+int vampiricTouch(TBeing*, TBeing*, int, short, int);
+int vampiricTouch(TBeing*, TBeing*, TMagicItem*);
+
+int lifeLeech(TBeing*, TBeing*);
+int castLifeLeech(TBeing*, TBeing*);
+int lifeLeech(TBeing*, TBeing*, int, short, int);
+int lifeLeech(TBeing*, TBeing*, TMagicItem*);
+
+int intimidate(TBeing*, TBeing*);
+int castIntimidate(TBeing*, TBeing*);
+int intimidate(TBeing*, TBeing*, int, short);
+
+int flatulence(TBeing*);
+int castFlatulence(TBeing*);
+int flatulence(TBeing*, int, short, int);
+
+int soulTwist(TBeing*, TBeing*);
+int castSoulTwist(TBeing*, TBeing*);
+int soulTwist(TBeing*, TBeing*, TMagicItem*);
+int soulTwist(TBeing*, TBeing*, int, short, int);

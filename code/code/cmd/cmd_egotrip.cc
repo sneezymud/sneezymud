@@ -10,7 +10,7 @@
 #include "handler.h"
 #include "room.h"
 #include "being.h"
-#include "disc_shaman.h"
+#include "disc_shaman_spider.h"
 #include "disc_shaman_healing.h"
 #include "disc_mage_fire.h"
 #include "disc_cleric_wrath.h"

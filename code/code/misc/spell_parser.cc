@@ -28,7 +28,7 @@
 #include "disc_cleric_afflictions.h"
 #include "disc_cleric_cures.h"
 #include "disc_cleric_hand_of_god.h"
-#include "disc_deikhan.h"
+#include "disc_deikhan_guardian.h"
 #include "disc_ranger_animal.h"
 #include "disc_ranger_nature.h"
 #include "disc_advanced_ranged.h"
@@ -37,6 +37,8 @@
 #include "disc_shaman_spider.h"
 #include "disc_shaman_skunk.h"
 #include "disc_shaman_control.h"
+#include "disc_shaman_alchemy.h"
+#include "disc_shaman.h"
 #include "obj_opal.h"
 #include "weather.h"
 

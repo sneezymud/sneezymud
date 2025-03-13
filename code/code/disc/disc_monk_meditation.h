@@ -13,3 +13,8 @@ class CDMeditationMonk : public CDiscipline {
 
   private:
 };
+
+int task_yoginsa(TBeing*, cmdTypeT, const char*, int, TRoom*, TObj*);
+int chiMe(TBeing*);
+int chi(TBeing*, TBeing*);
+int chi(TBeing*, TObj*);

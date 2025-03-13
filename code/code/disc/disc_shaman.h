@@ -38,115 +38,11 @@ class CDShaman : public CDiscipline {
   private:
 };
 
-int voodoo(TBeing*, TObj*, int, short);
-void voodoo(TBeing*, TObj*, TMagicItem*);
-int voodoo(TBeing*, TObj*);
-int castVoodoo(TBeing*, TObj*);
-
-int dancingBones(TBeing*, TObj*, int, short);
-void dancingBones(TBeing*, TObj*, TMagicItem*);
-int dancingBones(TBeing*, TObj*);
-int castDancingBones(TBeing*, TObj*);
-
-int enthrallSpectre(TBeing* caster, int level, short bKnown);
-int enthrallSpectre(TBeing* caster);
-int castEnthrallSpectre(TBeing* caster);
-
-int enthrallGhast(TBeing* caster, int level, short bKnown);
-int enthrallGhast(TBeing* caster);
-int castEnthrallGhast(TBeing* caster);
-
-int enthrallGhoul(TBeing* caster, int level, short bKnown);
-int enthrallGhoul(TBeing* caster);
-int castEnthrallGhoul(TBeing* caster);
-
-int chaseSpirits(TBeing*, TObj*);
-int castChaseSpirits(TBeing*, TObj*);
-void chaseSpirits(TBeing*, TObj*, TMagicItem*);
-int chaseSpirits(TBeing*, TObj*, int, short);
-int chaseSpirits(TBeing*, TBeing*);
-int castChaseSpirits(TBeing*, TBeing*);
-int chaseSpirits(TBeing*, TBeing*, TMagicItem*);
-int chaseSpirits(TBeing*, TBeing*, int, short);
-
-int vampiricTouch(TBeing*, TBeing*);
-int castVampiricTouch(TBeing*, TBeing*);
-int vampiricTouch(TBeing*, TBeing*, int, short, int);
-int vampiricTouch(TBeing*, TBeing*, TMagicItem*);
-
-int lifeLeech(TBeing*, TBeing*);
-int castLifeLeech(TBeing*, TBeing*);
-int lifeLeech(TBeing*, TBeing*, int, short, int);
-int lifeLeech(TBeing*, TBeing*, TMagicItem*);
-
-int shieldOfMists(TBeing*, TBeing*);
-int castShieldOfMists(TBeing*, TBeing*);
-void shieldOfMists(TBeing*, TBeing*, TMagicItem*);
-int shieldOfMists(TBeing*, TBeing*, int, short);
-
 void sacrifice(TBeing*, TBaseCorpse*);
-
-int cheval(TBeing*, TBeing*);
-int castCheval(TBeing*, TBeing*);
-void cheval(TBeing*, TBeing*, TMagicItem*);
-int cheval(TBeing*, TBeing*, int, short);
-
-extern bool shaman_create_deny(int);
-const int CHRISM_PRICE = 250;
-int castChrism(TBeing*, const char*);
-int chrism(TBeing*, const char*);
-int chrism(TBeing*, TObj**, int, const char*, short);
 
 int castRombler(TBeing*);
 int rombler(TBeing*, const char*);
 int rombler(TBeing*, const char*, int, short);
-
-int intimidate(TBeing*, TBeing*);
-int castIntimidate(TBeing*, TBeing*);
-int intimidate(TBeing*, TBeing*, int, short);
-
-int senseLifeShaman(TBeing*, TBeing*);
-int castSenseLifeShaman(TBeing*, TBeing*);
-void senseLifeShaman(TBeing*, TBeing*, TMagicItem*);
-int senseLifeShaman(TBeing*, TBeing*, int, short);
-
-int detectShadow(TBeing*, TBeing*);
-int castDetectShadow(TBeing*, TBeing*);
-void detectShadow(TBeing*, TBeing*, TMagicItem*);
-int detectShadow(TBeing*, TBeing*, int, short);
-
-int djallasProtection(TBeing*, TBeing*);
-int castDjallasProtection(TBeing*, TBeing*);
-void djallasProtection(TBeing*, TBeing*, TMagicItem*);
-int djallasProtection(TBeing*, TBeing*, int, short);
-
-int legbasGuidance(TBeing*, TBeing*);
-int castLegbasGuidance(TBeing*, TBeing*);
-void legbasGuidance(TBeing*, TBeing*, TMagicItem*);
-int legbasGuidance(TBeing*, TBeing*, int, short);
-
-int squish(TBeing*, TBeing*);
-int castSquish(TBeing*, TBeing*);
-int squish(TBeing*, TBeing*, int, short, int);
-
-int distort(TBeing*, TBeing*);
-int castDistort(TBeing*, TBeing*);
-int distort(TBeing*, TBeing*, TMagicItem*);
-int distort(TBeing*, TBeing*, int, short, int);
-
-int soulTwist(TBeing*, TBeing*);
-int castSoulTwist(TBeing*, TBeing*);
-int soulTwist(TBeing*, TBeing*, TMagicItem*);
-int soulTwist(TBeing*, TBeing*, int, short, int);
-
-void stupidity(TBeing*, TBeing*);
-void stupidity(TBeing*, TBeing*, TMagicItem*);
-int castStupidity(TBeing*, TBeing*);
-int stupidity(TBeing*, TBeing*, int, short);
-
-int flatulence(TBeing*);
-int castFlatulence(TBeing*);
-int flatulence(TBeing*, int, short, int);
 
 int embalm(TBeing*, TObj*);
 int castEmbalm(TBeing*, TObj*);

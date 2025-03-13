@@ -23,6 +23,3 @@ class CDWarrior : public CDiscipline {
 
   private:
 };
-
-int berserk(TBeing*);
-void repair(TBeing*, TObj*);

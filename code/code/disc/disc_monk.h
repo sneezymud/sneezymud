@@ -1,10 +1,3 @@
-//////////////////////////////////////////////////////////////////////////
-//
-// SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//
-//
-//////////////////////////////////////////////////////////////////////////
-
 #pragma once
 
 #include "discipline.h"
@@ -42,10 +35,3 @@ class CDMonk : public CDiscipline {
 
   private:
 };
-
-int task_yoginsa(TBeing*, cmdTypeT, const char*, int, TRoom*, TObj*);
-int grappleMonk(TBeing*, TBeing*, int);
-int springleap(TBeing*, TBeing*, bool);
-int chiMe(TBeing*);
-int chi(TBeing*, TBeing*);
-int chi(TBeing*, TObj*);

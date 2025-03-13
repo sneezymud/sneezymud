@@ -15,3 +15,5 @@ class CDTraps : public CDiscipline {
 
   private:
 };
+
+int pickLocks(TBeing*, const char*, const char*, const char*);

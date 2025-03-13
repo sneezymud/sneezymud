@@ -40,3 +40,25 @@ int resurrection(TBeing*, TObj*, int, short);
 void resurrection(TBeing*, TObj*, TMagicItem*);
 int resurrection(TBeing*, TObj*);
 int castResurrection(TBeing*, TObj*);
+
+int voodoo(TBeing*, TObj*, int, short);
+void voodoo(TBeing*, TObj*, TMagicItem*);
+int voodoo(TBeing*, TObj*);
+int castVoodoo(TBeing*, TObj*);
+
+int dancingBones(TBeing*, TObj*, int, short);
+void dancingBones(TBeing*, TObj*, TMagicItem*);
+int dancingBones(TBeing*, TObj*);
+int castDancingBones(TBeing*, TObj*);
+
+int enthrallSpectre(TBeing* caster, int level, short bKnown);
+int enthrallSpectre(TBeing* caster);
+int castEnthrallSpectre(TBeing* caster);
+
+int enthrallGhast(TBeing* caster, int level, short bKnown);
+int enthrallGhast(TBeing* caster);
+int castEnthrallGhast(TBeing* caster);
+
+int enthrallGhoul(TBeing* caster, int level, short bKnown);
+int enthrallGhoul(TBeing* caster);
+int castEnthrallGhoul(TBeing* caster);

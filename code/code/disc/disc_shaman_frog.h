@@ -41,3 +41,8 @@ int deathWave(TBeing*, TBeing*, int, short, int);
 int transformLimb(TBeing*, const char*);
 int castTransformLimb(TBeing*);
 int transformLimb(TBeing*, const char*, int, short);
+
+int distort(TBeing*, TBeing*);
+int castDistort(TBeing*, TBeing*);
+int distort(TBeing*, TBeing*, TMagicItem*);
+int distort(TBeing*, TBeing*, int, short, int);
