@@ -2402,6 +2402,12 @@ void setPrompts(fd_set out) {
                 ch->getName() % ch->task->orig_arg);
           }
         }
+      } else {
+        if (ch && ch->spelltask && IS_SET(ch->desc->autobits, AUTO_SPELLTASK)) {
+          sprintf(promptbuf, "\n\r%s : %2d > ", discArray[ch->spelltask->spell]->name, ch->spelltask->rounds);
+          d->output.push(
+            CommPtr(new UncategorizedComm(sstring(promptbuf).cap())));
+        }
       }
 
       if (d->str && (d->prompt_mode != DONT_SEND)) {

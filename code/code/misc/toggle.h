@@ -46,8 +46,9 @@ const unsigned int AUTO_NOTELL = (1 << 23);
 const unsigned int AUTO_AUTOGROUP = (1 << 24);
 const unsigned int AUTO_MAP = (1 << 25);
 const unsigned int AUTO_MAPTAGS = (1 << 26);
+const unsigned int AUTO_SPELLTASK = (1 << 27);
 
-const int MAX_AUTO = 27;  // move and change
+const int MAX_AUTO = 28;  // move and change
 
 const unsigned long PLR_BRIEF = (1 << 0);
 const unsigned long PLR_COMPACT = (1 << 1);

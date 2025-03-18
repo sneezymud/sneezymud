@@ -1,3 +1,8 @@
+03-17-25: New Toggle: "spelltask"
+          - This toggle will show the spell you are casting in the prompt
+          along with the number of rounds remaining until the spell is 
+          complete. This toggle is off by default.
+          
 03-09-25: Restored the old Eyes of Fertuman spell
           - The spell now can be used to find mobs and objects by name
           - The spell has less restrictions on what it can find than it did

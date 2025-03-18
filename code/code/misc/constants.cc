@@ -1275,6 +1275,7 @@ const char* const auto_name[MAX_AUTO] = {
   "Auto Group",
   "No Map",
   "Map Tags",
+  "Spelltask"
 };
 
 // disc_num, class_nums, practice

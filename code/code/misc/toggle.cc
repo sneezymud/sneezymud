@@ -1211,6 +1211,15 @@ void TBeing::doToggle(const char* arg2) {
       sendTo("You will now automatically group new followers.\n\r");
       SET_BIT(desc->autobits, AUTO_AUTOGROUP);
     }
+  } else if (is_abbrev(arg, "spelltask")) {
+    if (IS_SET(desc->autobits, AUTO_SPELLTASK)) {
+      sendTo("You will no longer see spelltask updates in the prompt.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_SPELLTASK);
+    } else {
+      sendTo(
+        "You will now see spelltask updates in the prompt.\n\r");
+      SET_BIT(desc->autobits, AUTO_SPELLTASK);
+    }
   } else if (is_abbrev(arg, "list") && hasWizPower(POWER_TOGGLE)) {
     for (togTypeT t = TOG_NONE; t < MAX_TOG_TYPES; t++) {
       if (t == TOG_NONE)
