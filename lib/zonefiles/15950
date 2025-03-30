@@ -427,182 +427,204 @@ O 0 14300 1 15995  load Dolgan's glowing stone for the shed
 ******Mobs******
 ****************
 
+
+X 1  1    16456 'an iron-bound ring'
+X 1  2    16456 'an iron-bound ring'
+X 1  3    16464 'an iron-bound collar'
+X 1  4    16463 'a hauberk of iron-bound mail'
+X 1  5    16465 'a coif of iron-bound mail'
+X 1  6    16457 'a legging of iron-bound mail'
+X 1  7    16457 'a legging of iron-bound mail'
+X 1  8    16467 'an iron-bound boot'
+X 1  9    16467 'an iron-bound boot'
+X 1  10   16460 'a glove of iron-bound mail'
+X 1  11   16460 'a glove of iron-bound mail'
+X 1  12   16462 'a sleeve of iron-bound mail'
+X 1  13   16462 'a sleeve of iron-bound mail'
+X 1  14   16454 'a cloak of iron-bound mail'
+X 1  15   16459 'a belt of iron-bound mail'
+X 1  16   16458 'a bracer of iron-bound mail'
+X 1  17   16458 'a bracer of iron-bound mail'
+X 
+
 M 0 15954 2 15975 scholar library gnome male [diurnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 M 0 15955 2 15958 scholar library gnome female [diurnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 M 0 15954 2 15963 scholar library gnome male [diurnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 M 0 15955 2 15982 scholar library gnome female [diurnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 
 M 0 15956 2 15975 scholar library elf male elven [nocturnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 M 0 15958 2 15958 scholar library elf female elven [nocturnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 M 0 15956 2 15977 scholar library elf male elven [nocturnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 M 0 15958 2 15970 scholar library elf female elven [nocturnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 
 M 0 15957 4 15963 scholar library tired human male [nocturnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 M 0 15957 4 15984 scholar library tired human male [nocturnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 M 0 15957 4 15979 scholar library tired human male [nocturnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 M 0 15957 4 15972 scholar library tired human male [nocturnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 
 M 0 15964 4 15969 scholar library tired human female [nocturnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 M 0 15964 4 15977 scholar library tired human female [nocturnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 M 0 15964 4 15976 scholar library tired human female [nocturnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 M 0 15964 4 15972 scholar library tired human female [nocturnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 
 M 0 15963 4 15963 scholar library busy human male [diurnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 M 0 15963 4 15969 scholar library busy human male [diurnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 M 0 15963 4 15983 scholar library busy human male [diurnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 M 0 15963 4 15976 scholar library busy human male [diurnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 
 M 0 15969 4 15976 scholar library busy human female [diurnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 M 0 15969 4 15977 scholar library busy human female [diurnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 M 0 15969 4 15972 scholar library busy human female [diurnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 M 0 15969 4 15991 scholar library busy human female [diurnal]
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 
 M 0 15959 1 15963 scholar library human male Quentin insane
-? 0 3 0 E
-E 1 15962 32 5		3% cap of insanity
-? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15967 32 5		3% cap of insanity
+? 0 5 0 E
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 
 M 0 15960 1 15950 beggar pathetic Burdok
-? 0 3 0 E
-E 1 15967 32 14		3% tattered old cloak (of disguise)
+? 0 5 0 E
+E 1 15962 32 14		3% tattered old cloak (of disguise)
 
 
 M 0 15961 1 15951 library warder guard
-Y 0 8 3  		3% chance at loading some studded leather
+Y 0 60 4 			; Obsidian Scale Armor Set
 M 0 15961 2 15960 library warder guard
-Y 0 8 3  		3% chance at loading some studded leather
+Y 0 60 4 			; Obsidian Scale Armor Set
 M 0 15961 1 15970 library warder guard
-Y 0 8 3  		3% chance at loading some studded leather
+Y 0 60 4 			; Obsidian Scale Armor Set
 M 0 15961 1 15981 library warder guard
-Y 0 8 3  		3% chance at loading some studded leather
+Y 0 60 4 			; Obsidian Scale Armor Set
 
 
 M 0 15962 1 15961 Library warder guard captain Vassus impressive
-Y 0 10 4  		4% chance at loading some metal
+Y 0 60 4 			; Obsidian Scale Armor Set
+? 0 5 0 E
+E 1 7016 1 18 		obsidian mining hammer
 
 
 M 0 15965 1 15995 groundskeeper keeper Willon disgruntled
@@ -619,9 +641,9 @@ E 1 15981 9999 18 	4% pen glass slender
 ? 0 4 0 G
 G 1 15980 9999		4% case scrollcase ivory
 ? 0 1 0 E
-E 1 15964 200 1		1% ring silver gold flecked
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+E 1 15964 200 1		5% ring silver gold flecked
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 
 M 0 15967 1 15980 Assistant librarian Agorix library
@@ -632,40 +654,41 @@ E 1 15979 9999 19 	4% glass magnifying
 E 1 15981 9999 18 	4% pen glass slender
 ? 0 4 0 G
 G 1 15980 9999		4% case scrollcase ivory
-? 0 2 0 E
+? 0 5 0 E
 E 1 15954 16 5 		2% circlet meditation golden
-? 0 1 0 E
-E 1 15968 200 2		1% ring greenish copper
+? 0 5 0 E
+E 1 15968 200 2		5% ring greenish copper
 
 
 M 0 15968 1 15989 Devarsi shaman researcher elf elven
-? 0 1 0 E
-E 1 15952 16 16		1% bracelet ravens silver
-? 0 1 0 E
-E 1 15952 16 17		1% bracelet ravens silver
+? 0 5 0 E
+E 1 15952 16 16		5% bracelet ravens silver
+? 0 5 0 E
+E 1 15952 16 17		5% bracelet ravens silver
 
 
 M 0 15970 1 15978 Krug ogre researcher
-? 0 25 0 E
-E 1 15983 1 18 		25% book iron-bound nursery rhyme [no-rent]
+Z 0 1 5      Iron-bound Armor Set
+? 0 5 0 E
+E 1 15983 1 18 		book iron-bound nursery rhyme
 
 
 M 0 15971 1 15988 Tyra human female researcher woman
-? 0 1 0 E
-E 1 15953 16 12		1% armband ivory beasts animals ornate
-? 0 1 0 E
-E 1 15953 16 13		1% armband ivory beasts animals ornate
+? 0 5 0 E
+E 1 15953 16 12		5% armband ivory beasts animals ornate
+? 0 5 0 E
+E 1 15953 16 13		5% armband ivory beasts animals ornate
 
 
 M 0 15972 1 15985 Tormod dwarf dwarven researcher
-? 0 1 0 E
-E 1 15955 16 10		1% gauntlet prayer
-? 0 1 0 E
-E 1 15955 16 11		1% gauntlet prayer
+? 0 5 0 E
+E 1 15955 16 10		5% gauntlet prayer
+? 0 5 0 E
+E 1 15955 16 11		5% gauntlet prayer
 
 
 M 0 15973 1 15990 Gnayana gnome gnomish researcher
-? 0 2 0 E
+? 0 5 0 E
 E 1 15961 16 15		2% belt tiger's eye brown
 
 
