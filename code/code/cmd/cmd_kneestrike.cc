@@ -369,7 +369,7 @@ int TBeing::kneestrikeHit(TBeing* victim) {
       TO_NOTVICT);
     act("The spikes on $n's $o sink into you.", FALSE, this, item, victim,
       TO_VICT);
-
+    spikesHit(victim, this, item, pos);
   } else {
     // apply damage to victim if no eq on targetted spot
     if (!(item = dynamic_cast<TObj*>(victim->equipment[pos]))) {
