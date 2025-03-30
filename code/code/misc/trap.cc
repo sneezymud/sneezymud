@@ -1949,7 +1949,7 @@ int TBeing::trapSpike(int amt, TTrap* trap) {
   // embed spikes
   int limbDam = ::number(amt/2, amt);
   limbDam = limbDam * (getImmunity(IMMUNE_PIERCE) / 100);
-  TObj* spike = read_object(31349, VIRTUAL);
+  TObj* spike = read_object(937, VIRTUAL);
   wearSlotT limb = pickRandomLimb();
   
   // Check if limb already has something stuck in it
@@ -2005,7 +2005,7 @@ int TBeing::trapBolt(int amt, TTrap* trap) {
   while (numLimbs > 0 && !validLimbs.empty()) {
     unsigned int index = ::number(0, validLimbs.size() - 1);
     wearSlotT limb = validLimbs[index];
-    TObj* bolt = read_object(31349, VIRTUAL);
+    TObj* bolt = read_object(10008, VIRTUAL);
 
     if (equipment[limb]) {
       auto* eq = dynamic_cast<TObj*>(equipment[limb]);
@@ -2049,7 +2049,7 @@ int TBeing::trapBolt(int amt, TTrap* trap) {
 int TBeing::trapAcid(int amt, TTrap* trap) {
   int maxNumLimbs = trap->getTrapLevel() / 3;
   int numLimbs = ::number((maxNumLimbs / 3), maxNumLimbs);
-  int limbDam = ::number(amt/5, amt/2.5);
+  int limbDam = ::number(amt/3, amt/1.5);
   limbDam = limbDam * (getImmunity(IMMUNE_ACID) / 100);
 
   std::vector<wearSlotT> validLimbs;
@@ -2062,7 +2062,7 @@ int TBeing::trapAcid(int amt, TTrap* trap) {
   while (numLimbs > 0 && !validLimbs.empty()) {
     unsigned int index = ::number(0, validLimbs.size() - 1);
     wearSlotT limb = validLimbs[index];
-    TObj* glob = read_object(31349, VIRTUAL);
+    TObj* glob = read_object(942, VIRTUAL);
     
     // Set the special object number for acid effect
     glob->spec = 167; // acidBlob special procedure
@@ -2096,7 +2096,7 @@ int TBeing::trapExplosive(int amt, TTrap* trap) {
   //// eat armor, equip glob of acid, does damage on pulse
   int maxNumLimbs = trap->getTrapLevel() / 3;
   int numLimbs = ::number((maxNumLimbs / 3), maxNumLimbs);
-  int limbDam = ::number(amt/5, amt/2.5);
+  int limbDam = ::number(amt/2, amt);
   limbDam = limbDam * (getImmunity(IMMUNE_ACID) / 100);
 
   std::vector<wearSlotT> validLimbs;
@@ -2128,7 +2128,7 @@ int TBeing::trapExplosive(int amt, TTrap* trap) {
     describeBodySlot(limb);
   act(buf, false, this, nullptr, nullptr, TO_CHAR, ANSI_WHITE_BOLD);
   if (!isAgile(0)) {
-    TObj* shrapnel = read_object(31349, VIRTUAL);
+    TObj* shrapnel = read_object(941, VIRTUAL);
     shrapnel->addObjStat(ITEM_BURNING);
     stickIn(shrapnel, limb);
     act("$n is hit directly by a chunk of debris, which embeds in $n flesh!",
@@ -2158,7 +2158,7 @@ int TBeing::trapFrost(int amt, TTrap* trap) {
   int limbDam = ::number(amt/2, amt);
   limbDam = limbDam * (getImmunity(IMMUNE_COLD) / 100);
 
-  TObj* icicle = read_object(31349, VIRTUAL);
+  TObj* icicle = read_object(936, VIRTUAL);
 
   std::vector<wearSlotT> validLimbs;
 

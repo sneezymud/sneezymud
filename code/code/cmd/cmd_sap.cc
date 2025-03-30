@@ -166,14 +166,14 @@ int TBeing::sapSuccess(TBeing* victim) {
   auto* weapon = dynamic_cast<TGenWeapon*>(heldInPrimHand());
 
   // Define the possible limbs and select one
-  static const wearSlotT upperLimbs[] = {
+  static const wearSlotT upperLimbs[] = { 
     WEAR_ARM_R, WEAR_ARM_L,
     WEAR_WRIST_R, WEAR_WRIST_L,
     WEAR_HAND_R, WEAR_HAND_L,
     WEAR_FINGER_R, WEAR_FINGER_L,
     WEAR_BACK
   };
-  
+
   wearSlotT limb;
   do {
     limb = upperLimbs[::number(0, 8)];  // 9 slots (0-8)
@@ -181,13 +181,13 @@ int TBeing::sapSuccess(TBeing* victim) {
 
   sstring buf = format("$n whaps $N with $s $o, rattling $S %s!") % victim->describeBodySlot(limb);
   act(buf, FALSE, this, weapon, victim, TO_NOTVICT);
-  
+
   buf = format("You whap $N with your $o, rattling $S %s!") % victim->describeBodySlot(limb);
   act(buf, FALSE, this, weapon, victim, TO_CHAR);
-  
+
   buf = format("$n whaps you with $s $o, rattling your %s!") % victim->describeBodySlot(limb);
   act(buf, FALSE, this, weapon, victim, TO_VICT);
-  
+
   int limbDam = dam/2;
   if (victim->isBruised(limb)) {
     limbDam = limbDam * 1.5;
@@ -215,46 +215,52 @@ int TBeing::sapSuccess(TBeing* victim) {
     // Mauls do 50% more damage to limb
     limbDam = limbDam * 1.5;
   }
-  if (limbDam * 2 > victim->getCurLimbHealth(limb) && !victim->isTough()) {
-  // Paralyze the limb
-  victim->addToLimbFlags(limb, PART_PARALYZED);
-  
-  // Set up affect to remove paralysis after 2 rounds
-  affectedData aff;
-  aff.type = AFFECT_SKILL_ATTEMPT;
-  aff.level = getSkillLevel(SKILL_SAP);
-  aff.duration = 2;  // 2 rounds
-  aff.location = APPLY_NONE;  // Use APPLY_NONE for the affect
-  aff.modifier = SKILL_SAP;
-  aff.modifier2 = limb;       // Store limb information in modifier2
-  aff.bitvector = 0;
-  victim->affectTo(&aff);
-  victim->dropWeapon(limb);
-  buf = format("Your $p smashes into $s %s, making it go numb!") % victim->describeBodySlot(limb);
-  act(buf, false, this, weapon, victim, TO_CHAR);
-  
-  buf = format("$n's $p smashes into $s %s, making it go numb!") % victim->describeBodySlot(limb);
-  act(buf, false, this, weapon, victim, TO_NOTVICT);
-  
-  buf = format("$n's $p smashes into your %s, making it go numb!") % victim->describeBodySlot(limb);
-  act(buf, false, this, weapon, victim, TO_VICT);
 
+  int rc = victim->hurtLimb(limbDam, limb);
+  if (IS_SET_DELETE(rc, DELETE_THIS)) {
+    return DELETE_VICT;
   }
-  victim->hurtLimb(limbDam, limb);
+
   if (!victim->isTough()) {
     rawBruise(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
   }
-  spellNumT damageType = DAMAGE_NORMAL;
 
-  if (reconcileDamage(victim, dam, damageType) == -1)
+  if (limbDam * 2 > victim->getCurLimbHealth(limb) && !victim->isTough()) {
+    // Paralyze the limb
+    victim->addToLimbFlags(limb, PART_PARALYZED);
+
+    // Set up affect to remove paralysis after 2 rounds
+    affectedData aff;
+    aff.type = AFFECT_SKILL_ATTEMPT;
+    aff.level = getSkillLevel(SKILL_SAP);
+    aff.duration = 2;  // 2 rounds
+    aff.location = APPLY_NONE;  // Use APPLY_NONE for the affect
+    aff.modifier = SKILL_SAP;
+    aff.modifier2 = limb;       // Store limb information in modifier2
+    aff.bitvector = 0;
+    victim->affectTo(&aff);
+    victim->dropWeapon(limb);
+    buf = format("Your $p smashes into $s %s, making it go numb!") % victim->describeBodySlot(limb);
+    act(buf, false, this, weapon, victim, TO_CHAR);
+
+    buf = format("$n's $p smashes into $s %s, making it go numb!") % victim->describeBodySlot(limb);
+    act(buf, false, this, weapon, victim, TO_NOTVICT);
+
+    buf = format("$n's $p smashes into your %s, making it go numb!") % victim->describeBodySlot(limb);
+    act(buf, false, this, weapon, victim, TO_VICT);
+  }
+
+  rc = reconcileDamage(victim, dam, SKILL_SAP);
+  if (rc == -1) {
     return DELETE_VICT;
+  }
 
   return true;
 }
 
 int TBeing::sapFail(TBeing* victim) {
   auto* weapon = dynamic_cast<TGenWeapon*>(heldInPrimHand());
-  
+
   if (victim->getPosition() > POSITION_DEAD) {
     act("$n's attempt to sap $N with $s $p fails awkwardly.",
       FALSE, this, weapon, victim, TO_NOTVICT);
