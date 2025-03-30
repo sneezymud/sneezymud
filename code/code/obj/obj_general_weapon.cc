@@ -163,5 +163,31 @@ bool TGenWeapon::canBackstab() const {
 }
 
 bool TGenWeapon::canStab() const {
-  return isPierceWeapon() && getVolume() <= 2000;
+  return (isPierceWeapon() && getVolume() <= 2500) || isSpear();
 }
+ bool TGenWeapon::isSpear() const {
+  return isPaired() && isPierceWeapon() && getVolume() <= 4500;
+ }
+
+ bool TGenWeapon::canSap() const {
+  // Case 1: Blunt, small (<=2500), not paired
+  if (isBluntWeapon() && getVolume() <= 2500 && !isPaired()) {
+    return true;
+  }
+  
+  // Case 2: Blunt, medium (<=3500), paired
+  if (isBluntWeapon() && getVolume() <= 3500 && isPaired()) {
+    return true;
+  }
+  
+  return false;
+} bool TGenWeapon::isMaul() const {
+  return isBluntWeapon() && isPaired() && getVolume() <= 3500;
+ }
+
+ bool TGenWeapon::canHamstring() const {
+  return isSlashWeapon() && getVolume() <= 2500;
+ }
+ bool TGenWeapon::hasSpikes() const {
+  return isObjStat(ITEM_SPIKED);
+ }

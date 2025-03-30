@@ -409,6 +409,11 @@ int TBeing::getSkillDam(const TBeing* victim, spellNumT skill, int level,
       dam = genericDam(victim, this, skill, DISC_THIEF, level, adv_learn, 2.01,
         REDUCE_NO, !isPc(), TRIM_NO);
       break;
+    case SKILL_SAP:
+      // Similar to backstab (2.00) but using 1.90 multiplier for slightly less damage
+      dam = genericDam(victim, this, skill, DISC_THIEF, level, adv_learn, 1.90,
+        REDUCE_NO, !isPc(), TRIM_NO);
+      break;
     case SKILL_BASH_DEIKHAN:
       dam = genericDam(victim, this, skill, DISC_DEIKHAN, level, adv_learn,
         0.639, REDUCE_NO, !isPc(), TRIM_NO);

@@ -374,6 +374,7 @@ int sleepTagRoom(TBeing* tBeing, cmdTypeT tCmd, const char* tArg,
     case CMD_POISON_WEAPON:
     case CMD_GARROTTE:
     case CMD_STAB:
+    case CMD_SAP:  // Add SAP to list of restricted combat commands
     case CMD_CUDGEL:
     case CMD_SMITE:
     case CMD_CHARGE:

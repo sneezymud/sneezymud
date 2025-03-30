@@ -507,6 +507,9 @@ TThing* TBeing::makeCorpse(spellNumT dmg_type, TBeing* tKiller,
       case SKILL_STABBING:
         sprintf(buf, "%s's corpse has a large, gaping stab wound.", namebuf);
         break;
+      case SKILL_SAP:
+        sprintf(buf, "%s's corpse is covered in large, bruised welts.", namebuf);
+        break;
       case DAMAGE_ARROWS:
         sprintf(buf,
           "Arrows decorate %s's corpse, making %s look like a pincushion.",

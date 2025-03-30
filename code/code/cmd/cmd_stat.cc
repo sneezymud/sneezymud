@@ -1594,6 +1594,7 @@ void TBeing::statBeing(TBeing* k) {
       case SPELL_SUFFOCATE:
       case SKILL_GARROTTE:
       case SKILL_STABBING:
+      case SKILL_SAP:
       case SKILL_BACKSTAB:
       case SKILL_THROATSLIT:
       case SKILL_HEADBUTT:

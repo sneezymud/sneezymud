@@ -2026,7 +2026,17 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme) const {
                    "Approx. duration : %s\n\r") %
                  aff->modifier % describeDuration(this, aff->duration);
         }
-
+        case SKILL_SAP:
+        if (show) {
+          if (aff->modifier2 > 0) {  // modifier2 stores the limb information
+            str += format("Your %s is paralyzed from being sapped. Duration: %s\n\r") %
+                   describeBodySlot(static_cast<wearSlotT>(aff->modifier2)) % describeDuration(this, aff->duration);
+          } else {
+            str += format("You are recovering from being sapped. Duration: %s\n\r") %
+                   describeDuration(this, aff->duration);
+          }
+        }
+        break;
       case AFFECT_BITTEN_BY_VAMPIRE:
         // secret!
         break;
@@ -4740,6 +4750,9 @@ void TBeing::describeOtherFeatures(const TGenWeapon* obj, int learn) const {
   }
 
   if (hasClass(CLASS_THIEF) || isImmortal()) {
+    if (obj->isObjStat(ITEM_SPIKED))
+      sendTo(COLOR_OBJECTS,
+        format("%s seems to have spikes on it.\n\r") % sstring(capbuf).cap());
     if (obj->canCudgel())
       sendTo(COLOR_OBJECTS,
         format("%s seems small enough to be used for cudgeling.\n\r") %
@@ -4747,6 +4760,18 @@ void TBeing::describeOtherFeatures(const TGenWeapon* obj, int learn) const {
     if (obj->canStab())
       sendTo(COLOR_OBJECTS,
         format("%s seems small enough to be used for stabbing.\n\r") %
+          sstring(capbuf).cap());
+    if (obj->isSpear())
+      sendTo(COLOR_OBJECTS,
+        format("%s seems like it could be used as a spear.\n\r") %
+          sstring(capbuf).cap());
+    if (obj->canSap())
+      sendTo(COLOR_OBJECTS,
+        format("%s seems like it could be used as a sap.\n\r") %
+          sstring(capbuf).cap());
+    if (obj->isMaul())
+      sendTo(COLOR_OBJECTS,
+        format("%s seems like it could be used as a maul.\n\r") %
           sstring(capbuf).cap());
     if (obj->canBackstab())
       sendTo(COLOR_OBJECTS, format("%s seems small enough to be used for "
