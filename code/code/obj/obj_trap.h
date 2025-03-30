@@ -59,8 +59,14 @@ class TTrap : public TObj {
     void setTrapCharges(int r);
     int getTrapDamAmount() const;
 
+    virtual bool isGrenade() const;
+    virtual bool isLandMine() const;
+
+
     TTrap();
     TTrap(const TTrap& a);
     TTrap& operator=(const TTrap& a);
     virtual ~TTrap();
+
+
 };

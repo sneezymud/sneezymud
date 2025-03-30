@@ -1798,6 +1798,43 @@ int TBeing::frostEngulfed() {
   int i;
   int res;
   TThing* t = NULL;
+  
+  // Check if the being is wet and not immune to cold
+  if (affectedBySpell(AFFECT_WET) && !isImmune(IMMUNE_COLD, WEAR_BODY)) {
+    // Apply frostbite disease if not already affected
+    if (!hasDisease(DISEASE_FROSTBITE)) {
+      affectedData af;
+      af.type = AFFECT_DISEASE;  // Same as in frostbiter function
+      af.level = 0;
+      af.duration = 200;         // Same duration as in frostbiter
+      af.modifier = DISEASE_FROSTBITE;
+      af.location = APPLY_NONE;
+      af.bitvector = 0;
+      
+      // Apply the disease directly to the victim (this)
+      affectTo(&af, TRUE);
+      
+      // Start the disease effects
+      if (af.type == AFFECT_DISEASE)
+        disease_start(this, &af);
+      
+      sendTo("Your wet body begins to freeze in the intense cold!\n\r");
+      sendTo("You feel the onset of frostbite as your skin takes on a bluish tint!\n\r");
+      act("$n's wet body begins to freeze in the intense cold!", TRUE, this, 0, 0, TO_ROOM);
+      act("$n's skin takes on a bluish tint as frostbite sets in.", TRUE, this, 0, 0, TO_ROOM);
+      
+      // Reduce wetness as water freezes
+      if (0 == Weather::addWetness(this, -25))
+        sendTo("The water on your body freezes completely.\n\r");
+      else
+        sendTo(format("Some of the water on your body freezes!  You feel %s.\n\r") %
+               Weather::describeWet(this));
+      
+      // Apply additional damage due to being wet in freezing conditions
+      return reconcileDamage(this, ::number(10, 20), DAMAGE_FROST);
+    }
+  }
+  
   // Need to account for worn containers
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
     if (!(t = equipment[i]) || !(obj = dynamic_cast<TObj*>(t)))

@@ -199,7 +199,7 @@ void TBow::bloadArrowBow(TBeing* ch, TArrow* the_arrow) {
 
   --(*this);
   ch->equipChar(this, ch->getPrimaryHold());
-
+  this->checkSpec(ch, CMD_BLOAD, "", the_arrow);  // Pass the_arrow instead of NULL
   ch->addToWait(combatRound(1.5));
 }
 
@@ -348,6 +348,14 @@ int TBow::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count, dirTypeT dir,
     // as sanity check, verify that person has an arrow to reload at this
     // point too.
     sprintf(buf, "%s", fname(the_arrow->name).c_str());
+
+    // Add checkSpec for CMD_SHOOT here
+    rc = checkSpec(ch, CMD_SHOOT, "", the_arrow);
+    if (IS_SET_DELETE(rc, DELETE_ITEM)) {
+      delete the_arrow;
+      the_arrow = NULL;
+      return FALSE;
+    }
 
     rc = throwThing(the_arrow, dir, ch->in_room, &targ, shoot_dist,
       max_distance, ch);

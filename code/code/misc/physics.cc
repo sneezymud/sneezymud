@@ -64,7 +64,7 @@ bool TBeing::canClimb() {
 
   learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_CLIMB, 1);
 
-  skill += plotStat(STAT_CURRENT, STAT_AGI, 15, 100, 65);
+  skill += 65 + (getAgiReaction() * 7); // Scale reaction to match original range
   skill -= 10 * drunkMinus();
   skill -= (int)(getTotalWeight(FALSE) / 5.0);
   skill -= getCarriedVolume() / 100;

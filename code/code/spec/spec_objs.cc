@@ -61,9 +61,11 @@
 #include <stdio.h>
 
 #include <cmath>
-
+#include <string.h>
+#include "being.h"
 #include "handler.h"
 #include "extern.h"
+#include "limbs.h"
 #include "room.h"
 #include "low.h"
 #include "monster.h"
@@ -89,7 +91,9 @@
 #include "liquids.h"
 #include "obj_chest.h"
 #include "materials.h"
+#include "spells.h"
 #include "weather.h"
+#include "obj_arrow.h"
 
 // CMD_OBJ_GOTTEN returns DELETE_THIS if this goes bye bye
 // returns DELETE_VICT if t goes bye bye
@@ -647,30 +651,31 @@ int magicGills(TBeing*, cmdTypeT cmd, const char*, TObj* me, TObj*) {
   return TRUE;
 }
 
-int JewelJudgment(TBeing*, cmdTypeT cmd, const char*, TObj* me, TObj*) {
-  TBeing* tmp;
+int JewelJudgment(TBeing*, cmdTypeT cmd, const char*, TObj* jj, TObj*) {
+  TBeing* ch;
+int rc;
+  if (cmd != CMD_GENERIC_PULSE || ::number(0, 24))
+    return false;
 
-  if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
-  if (!(tmp = dynamic_cast<TBeing*>(me->equippedBy)))
-    return FALSE;
-  if (number(0, 2)) {
-    return FALSE;
-  } else {
-    obj_act("pulses with a warm glow.", tmp, me, tmp, ANSI_ORANGE);
-    act("$n looks drained as energy seeps from $m into $p.", TRUE, tmp, me, 0,
+  if (!(ch = dynamic_cast<TBeing*>(jj->equippedBy)))
+    return false;
+    
+   int mdDam = ::number(8, 16);
+   act("pulses with a warm glow.", false, ch, jj, 0, TO_ROOM, ANSI_ORANGE);
+   act("$n looks drained as energy seeps from $m into $p.", false, ch, jj, 0,
       TO_ROOM, ANSI_ORANGE);
-    act("You grunt softly as energy seeps from your body into $p.", TRUE, tmp,
-      me, 0, TO_CHAR, ANSI_ORANGE);
-    if (tmp->reconcileDamage(dynamic_cast<TBeing*>(me->equippedBy),
-          number(3, 8), DAMAGE_DRAIN) == -1) {
-      delete tmp;
-      tmp = NULL;
+   act("You grunt softly as energy seeps from your body into $p.", false, ch,
+      jj, 0, TO_CHAR, ANSI_ORANGE);
+  rc = ch->reconcileDamage(ch, mdDam, DAMAGE_DRAIN);
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    return DELETE_VICT;
+        if (ch->getMana() < ch->manaLimit()) {
+    act("Your skill crackles as$p feeds you some of its power.", true, ch, jj, 0, TO_CHAR, ANSI_RED);
+    ch->addToMana(mdDam);
     }
-
     return TRUE;
-  }
 }
+
 
 int bowl_of_blood(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* me, TObj*) {
   char buf[MAX_INPUT_LENGTH];
@@ -1422,32 +1427,9 @@ int featherFallItem(TBeing*, cmdTypeT cmd, const char*, TObj* me, TObj*) {
 
   return FALSE;
 }
+/*
 
-int bloodDrain(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*) {
-  TBeing* ch;
-  int rc, dam;
-
-  ch = genericWeaponProcCheck(vict, cmd, o, 8);
-  if (!ch)
-    return FALSE;
-
-  dam = ::number(4, 10);
-  act(
-    "$p <1><r>pulses with an <k>unholy<1><r> light and oozes blood as it draws "
-    "<y>life<1><r> essence from<1> $n.",
-    0, vict, o, 0, TO_ROOM);
-  act(
-    "$p <1><r>pulses with an <k>unholy<1><r> light and oozes blood as it draws "
-    "your very <y>life<1><r> essence from you<1>.",
-    0, vict, o, 0, TO_CHAR);
-
-  ch->dropPool(3, LIQ_BLOOD);
-
-  rc = ch->reconcileDamage(vict, dam, DAMAGE_DRAIN);
-  if (IS_SET_DELETE(rc, DELETE_VICT))
-    return DELETE_VICT;
-  return TRUE;
-}
+*/
 
 int stoneAltar(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* obj, TObj*) {
   if (!ch)
@@ -6149,17 +6131,21 @@ int pirateHatDispenser(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o,
 }
 
 int regeneration(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
-  if (!o)
-    return FALSE;
-  if (!(ch = dynamic_cast<TBeing*>(o->equippedBy)))
-    return FALSE;  // weapon not equipped (carried or on ground)
-
-  if (cmd == CMD_GENERIC_PULSE)
-    ch->addToHit(max(1, (int)(ch->hitGain() / 10.0)));
-
-  return FALSE;
+  int num = ::number(2,8);
+  ch = dynamic_cast<TBeing*>(o->equippedBy);
+    if (!ch || (ch->getHit() < ch->hitLimit()))
+      return false;
+  if (cmd == CMD_GENERIC_PULSE && !::number(0, 24)) {  
+    if (ch->getCond(FULL)>num) {
+    ch->addToHit(num);
+    ch->gainCondition(FULL, num);
+        act("You feel your wounds begin to knit together.", false, ch, nullptr, nullptr, TO_CHAR);
+    } else {
+      act("The magic of your $o cannot repair your wounds. You must eat.", false, ch, nullptr, nullptr, TO_CHAR);
+    }
+  }
+  return true;
 }
-
 int pietyRegen(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
   if (!o)
     return FALSE;
@@ -6197,21 +6183,229 @@ int stickerBush(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
 }
 
 int rechargingWand(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
-  TWand* tw;
+  if (cmd != CMD_GENERIC_PULSE || ::number(0, 49 || !o))
+    return false;
 
+  ch = dynamic_cast<TBeing*>(o->equippedBy);
+
+  // The proc should only work when a mage mob or PC has the object equipped
+  if (!ch || !ch->hasClass(CLASS_MAGE))
+    return false;
+
+  int manaCost = ::number(10,50);
+
+  // The PC/mob should have enough mana for the proc to work
+  if (ch->getMana() < manaCost)
+    return false;
+
+  TWand* wand = dynamic_cast<TWand*>(o);
+
+  // The proc should only work on wands that aren't already at max charges
+  if (!wand || wand->getCurCharges() >= wand->getMaxCharges())
+    return false;
+
+  wand->addToCurCharges(1);
+  ch->addToMana(-manaCost);
+  act("You feel <P>energy<z> pulled from you and into $o.", false, ch, wand, nullptr, TO_CHAR);
+  return true;
+}
+
+int poisonQuiver(TBeing* ch, cmdTypeT cmd, const char*, TObj* q, TObj* a) {
+  if (cmd != CMD_OBJ_HAVING_SOMETHING_PUT_INTO || !a || !q || !ch || !q->equippedBy) {
+    return false;
+  }
+  auto* arrow = dynamic_cast<TArrow*>(a);
+  
+  if (!arrow || arrow->isPoisoned()) {
+    return false;
+  }
+
+  arrow->setPoison(LIQ_POISON_STANDARD);
+  act( "The arrow glows a <g>sickly green<1> as it enters the $p.", TRUE, ch, q, 0, TO_CHAR);
+  act( "The arrow glows a <g>sickly green<1> as it enters the $p.", TRUE, ch, q, 0, TO_ROOM);
+
+  return true;
+}
+
+int flamingArrowBow(TBeing* ch, cmdTypeT cmd, const char*, TObj* bow, TObj* arrow) {
+  // Only trigger on bow loading
+  if (cmd != CMD_SHOOT) {
+    return false;
+  }
+
+  // Basic validity checks
+  if (!ch || !arrow) {
+    return false;
+  }
+
+  // Set the arrow on fire
+  arrow->addObjStat(ITEM_BURNING);
+  act("The $p <r>bursts into flames<1> as it flies through the air!", TRUE, ch, arrow, bow, TO_CHAR);
+  act("$n's $p <r>bursts into flames<1> as it flies through the air!", TRUE, ch, arrow, bow, TO_ROOM);
+  return false;  // Return false to allow normal loading to continue
+}
+
+int spikeBag(TBeing* ch, cmdTypeT cmd, const char*, TObj* obj, TObj* b, TObj*) {
+if (cmd != CMD_OBJ_HAVING_SOMETHING_PUT_INTO || !obj || !ch || !b->equippedBy) {
+    return false;
+  }
+
+if (!ch->hasClass(CLASS_THIEF)) {
+  return false;
+}
+  
+  auto* bag = dynamic_cast<TBaseContainer*>(b);
+
+
+  if (obj->isObjStat(ITEM_SPIKED) || !bag) {
+    return false;
+  }
+  int strDam = ::number(5, 10);
+  if (!ch->doesKnowSkill(SKILL_SET_TRAP_CONT)) {
+   strDam *= 2;
+  }
+  act( "You hear a jangling noise as $p is put into the $P.", TRUE, ch, obj, bag, TO_ROOM);
+  act( "You feel like the $p has been altered.", TRUE, ch, obj, bag, TO_CHAR);
+  if (percentChance(50-ch->getFocusMod())) {
+    act( "The new spikes on $p puncture the $P, damaging it from within!", TRUE, ch, bag, 0, TO_ROOM);
+    bag->addToStructPoints(-strDam);
+    bag->addToMaxStructPoints(strDam/2);
+    }
+    if (bag->getMaxStructPoints() <= 0) {
+      bag->makeScraps();
+      return true;
+    }
+ obj->addObjStat(ITEM_SPIKED);  
+
+return true;
+}
+
+
+int acidBlob(TBeing*, cmdTypeT cmd, const char*, TObj* blob, TObj*) {
+  TBeing* ch;
+  int rc;
+  int dam = blob->getMaxStructPoints()/3;
+
+  if (!(ch = dynamic_cast<TBeing*>(blob->equippedBy)))
+    return FALSE;  // Return FALSE to allow normal command processing
+
+  // Only process on pulse, ignore other commands
   if (cmd != CMD_GENERIC_PULSE)
+    return FALSE;  // Return FALSE for non-pulse commands
+    
+  if (percentChance(20)) {
+    for (wearSlotT limb = MIN_WEAR; limb < MAX_WEAR; limb++) {
+      if (ch->equipment[limb] == blob) {
+        ch->hurtLimb((dam+::number(dam/2, dam)), limb);
+        blob->addToStructPoints(-dam);
+        if (blob->getStructPoints() <= 0) {
+          blob->makeScraps();
+          return true;
+        }
+        rc = ch->reconcileDamage(ch, dam, DAMAGE_ACID);
+        
+        sstring buf = format("The %s corrodes your %s!") % blob->getName() % ch->describeBodySlot(limb);
+        act(buf, false, ch, blob, nullptr, TO_CHAR);
+        buf = format("The %s corrodes $n's %s!") % blob->getName() % ch->describeBodySlot(limb);
+        act(buf, false, ch, blob, nullptr, TO_ROOM);
+        
+        if (IS_SET_DELETE(rc, DELETE_VICT))
+          return DELETE_VICT;
+      }
+    }
+  }
+  
+  return FALSE;  // Always return FALSE to allow normal command processing
+}
+
+int caltrop(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
+  if (!ch || !o) {
     return FALSE;
-
-  if (!(tw = dynamic_cast<TWand*>(o)))
+  }
+  
+  int dam = ::number(5, 10);
+  auto* calt = dynamic_cast<TGenWeapon*>(o);
+  if (!calt) {
     return FALSE;
-
-  if (::number(0, 99))
+  }
+  
+  if (cmd != CMD_OBJ_MOVEMENT && (!ch->isLevitating() || ch->isSwimming() || !ch->isFlying())) {
     return FALSE;
-
-  if (tw->getCurCharges() < tw->getMaxCharges())
-    tw->addToCurCharges(1);
-
-  return TRUE;
+  }
+     
+  wearSlotT foot = WEAR_FOOT_R;
+    if (percentChance(50)) {
+      foot = WEAR_FOOT_L;
+    } 
+  
+    if (ch->isImmune(IMMUNE_PIERCE, foot) || ch->equipment[foot] || ch->getRace() == RACE_HOBBIT) {
+      act("You step on $p, crunching it underfoot.", TRUE, ch, o, 0, TO_CHAR);
+      act("$n steps on $p, crunching it underfoot.", TRUE, ch, o, 0, TO_ROOM);
+      o->addToStructPoints(-dam);
+      auto eq = dynamic_cast<TObj*>(ch->equipment[foot]);
+      if (eq) {
+        eq->addToStructPoints(-dam);
+        act("Your $o is damaged by the $o.", TRUE, ch, eq, o, TO_CHAR, ANSI_ORANGE);
+      }
+    return FALSE;
+  }
+  
+  if (!o->parent && !o->equippedBy) {
+    act("Ouch! You step on $p.", TRUE, ch, o, 0, TO_CHAR, ANSI_WHITE_BOLD);
+    act("$n steps on $p. Ouch!", TRUE, ch, o, 0, TO_ROOM, ANSI_WHITE_BOLD);
+    
+    if ((ch->canSee(o) && !ch->isAgile(0)) || (!ch->canSee(o) && !ch->isAgile(0) && !ch->isAgile(0))) {
+      ch->hurtLimb(dam, foot);
+      
+      if (!ch->isTough()) {
+        TObj* shd = read_object(939, VIRTUAL);
+        if (!shd) {
+          return FALSE;
+        }
+        auto* shard = dynamic_cast<TGenWeapon*>(shd);
+        
+        if (!shard) {
+          delete shd;
+          return FALSE;
+        }
+        
+        // Transfer material type from caltrop to shard
+        shard->setMaterial(calt->getMaterial());
+        calt->addToStructPoints(-dam);
+        calt->addToMaxStructPoints(-dam);
+        ch->stickIn(shard, foot);
+        //stickIn has a message. no need to repeat with our own
+        if (!ch->isUndead() || !ch->isImmune(IMMUNE_BLEED, foot)) {
+          ch->rawBleed(foot, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+          act("Blood begins to flow from the wound!", TRUE, ch, o, 0, TO_ROOM, ANSI_RED_BOLD);
+          act("Blood begins to flow from the wound!", TRUE, ch, o, 0, TO_CHAR, ANSI_RED_BOLD);
+        }
+        if (calt->isObjStat(ITEM_BURNING)) {
+          shard->addObjStat(ITEM_BURNING);
+        }
+        
+        if (calt->isPoisoned()) {
+          liqTypeT poisonType = calt->getPoison();
+          shard->setPoison(poisonType);
+          shard->applyPoison(ch);
+        }
+        
+        int rc = ch->reconcileDamage(ch, dam, DAMAGE_TRAP_PIERCE);
+        if (IS_SET_DELETE(rc, DELETE_VICT)) {
+          return DELETE_VICT;
+        }
+        return TRUE;
+      }
+      
+      int rc = ch->reconcileDamage(ch, dam, DAMAGE_TRAP_PIERCE);
+      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+        return DELETE_VICT;
+      }
+      return TRUE;
+    }
+    return TRUE;
+  }
+  return FALSE;
 }
 
 int skittishObject(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
@@ -7378,7 +7572,10 @@ extern int moltenWeapon(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
   TObj*);
 extern int glacialWeapon(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
   TObj*);
-
+extern int icyDeath(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* obj, TObj*);
+extern int poisonQuiver(TBeing* ch, cmdTypeT cmd, const char*, TObj* q, TObj* a);
+extern int bloodDrain(TBeing* vict, cmdTypeT cmd, const char*, TObj* weapon, TObj*);
+extern int flamingArrowBow(TBeing* ch, cmdTypeT cmd, const char*, TObj* bow, TObj* a);
 // assign special procedures to objects
 
 TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
@@ -7511,4 +7708,10 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
   {TRUE, "Shadow Weapon", shadowWeapon}, {TRUE, "Living Vines", livingVines},
   {TRUE, "Piety Regen", pietyRegen}, {TRUE, "DK Sword", dkSword},
   {TRUE, "Molten Weapon", moltenWeapon},
-  {TRUE, "Glacial Weapon", glacialWeapon}, {FALSE, "last proc", bogusObjProc}};
+  {TRUE, "Glacial Weapon", glacialWeapon}, //162
+  {FALSE, "Icy Death", icyDeath},
+  {TRUE, "poisonQuiver", poisonQuiver},
+  {TRUE, "flamingArrowBow", flamingArrowBow},
+  {TRUE, "caltrop", caltrop},
+  {FALSE, "acidBlob", acidBlob},  // 167
+  {FALSE, "last proc", bogusObjProc}};

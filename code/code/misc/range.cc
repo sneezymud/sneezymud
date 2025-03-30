@@ -14,6 +14,7 @@
 
 #include "handler.h"
 #include "extern.h"
+#include "obj.h"
 #include "room.h"
 #include "being.h"
 #include "low.h"
@@ -59,10 +60,10 @@ int TThing::throwMe(TBeing* ch, dirTypeT tdir, const char* vict) {
   char local_vict[256];
 
   // a little physics....
-  // let the force I can throw something with be a function of my brawn
+  // let the force I can throw something with be a function of my STRENGTH
   // F = f(brawn) = mass * accelleration
   // acc = f(brawn)/m
-  float acc = ch->plotStat(STAT_CURRENT, STAT_BRA, 500.0, 5000.0, 2500.0);
+  float acc = ch->plotStat(STAT_CURRENT, STAT_STR, 500.0, 5000.0, 2500.0);
   acc /= max((float)3.0, getWeight());
   // regard acc as a ft/sec^2
   // assume a throw has this constant acceleration for 0.2 secs
@@ -390,7 +391,7 @@ bool hitInnocent(const TBeing* ch, const TThing* thing, const TThing* vict) {
   num += 1 + thing->getVolume() / 1000;
 
   if (ch) {
-    num -= ch->plotStat(STAT_CURRENT, STAT_AGI, -10, 10, 0);
+    num -= ch->getAgiReaction() * 2; // Scale to match original -10 to 10 range
   }
 
   if (tbc) {
@@ -441,7 +442,7 @@ int TThing::catchSmack(TBeing* ch, TBeing** targ, TRoom* rp, int cdist,
         range++;
 
       if ((::number(1, 25) <
-            tbt->plotStat(STAT_CURRENT, STAT_SPE, 3, 18, 13)) &&
+            (10 + tbt->getSpeReaction() * 1.5)) && // Scale to match original 3-18 range
           tbt->hasHands() && !tbt->bothHandsHurt() && tbt->awake() &&
           tbt->canGet(this, SILENT_YES)) {
         resCode = TRUE;
@@ -519,6 +520,47 @@ int TThing::catchSmack(TBeing* ch, TBeing** targ, TRoom* rp, int cdist,
               if (!ch->sameRoom(*tbt))
                 act("In the distance, $p is destroyed.", TRUE, ch, tobj, 0,
                   TO_CHAR);
+              
+              // Check if the object is a TBaseCup and has liquid
+              TBaseCup* tbc = dynamic_cast<TBaseCup*>(tobj);
+              int drinkUnits = tbc->getDrinkUnits();
+              liqTypeT liq = tbc->getDrinkType();
+              if (tbc && tbc->getDrinkUnits() > 0) {
+                // Show message about liquid splashing
+                act("The contents of $p splash all over $N!", TRUE, ch, tobj, tbt, TO_NOTVICT);
+                if (ch->sameRoom(*tbt))
+                  act("The contents of $p splash all over $N!", TRUE, ch, tobj, tbt, TO_CHAR);
+                act("You are soaked as the contents of $p splash all over you!", FALSE, tbt, tobj, NULL, TO_CHAR);
+                
+                // Apply wetness to the victim using Weather::addWetness
+                if (drinkUnits > 0) {
+                  Weather::addWetness(tbt, drinkUnits);
+                  tbt->sendTo(format("You feel %s.\n\r") % Weather::describeWet(tbt));
+                }
+              }
+              
+              if (tbc->getMaterial() == 4) {
+                // Add caltrop proc to the broken glass
+                TObj* shd = read_object(33468, VIRTUAL);
+                if (!shd)
+                  return FALSE;
+
+                auto* shard = dynamic_cast<TGenWeapon*>(shd);
+                if (!shard) {
+                  delete shd;
+                  return FALSE;
+                }
+
+                act("$p shatters into dangerous glass shards!", TRUE, tbt, tobj, nullptr, TO_ROOM);
+                act("$p shatters into dangerous glass shards!", TRUE, tbt, tobj, nullptr, TO_CHAR);
+                --(*shard);
+                *tbt->roomp += *shard;
+                shard->spec = 166;  // SPEC_CALTROP
+                if (drinkUnits > 0) {
+                  shard->setPoison(liq);
+                }
+              }
+
               if (!tobj->makeScraps())
                 ADD_DELETE(resCode, DELETE_ITEM);
             }

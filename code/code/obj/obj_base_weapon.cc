@@ -1469,7 +1469,7 @@ int TBaseWeapon::catchSmack(TBeing* ch, TBeing** targ, TRoom* rp, int cdist,
               act("In the distance, $p embeds itself in $N.", TRUE, ch, this,
                 tb, TO_CHAR);
             if (spec)
-              checkSpec(ch, CMD_ARROW_EMBED, "", NULL);
+              checkSpec(tb, CMD_ARROW_EMBED, "", NULL);
           } else {
             if (!ch->sameRoom(*tb))
               act("In the distance, $N is hit by $p.", TRUE, ch, this, tb,
@@ -1497,14 +1497,26 @@ int TBaseWeapon::catchSmack(TBeing* ch, TBeing** targ, TRoom* rp, int cdist,
 
         int d = (int)damageLevel();
 
-        // d *= mdist - range + 1;  // modify for point blank range - bat
-        // worst idea ever - peel
-
         // cannonball
         if (damtype == TYPE_CANNON)
           d *= 10;
 
         d = get_range_actual_damage(ch, tb, this, d, damtype);
+
+        // Add fire damage for burning projectiles
+        if (isObjStat(ITEM_BURNING)) {
+          if (!ch->sameRoom(*tb)) {
+            // Shooter is not in room, send them a distant message
+            act("$p sets $N <r>ablaze!<1>", TRUE, ch, this, tb, TO_CHAR);
+          }
+          act("$p sets $N <r>ablaze!<1>", TRUE, tb, this, 0, TO_NOTVICT);  // Changed TO_ROOM to TO_NOTVICT
+          act("$p sets you <r>ablaze!<1>", TRUE, tb, this, 0, TO_VICT);
+          
+          int fire_damage = d / 4;  // 25% of base damage as fire damage
+          rc = ch->reconcileDamage(tb, fire_damage, DAMAGE_FIRE);
+          if (IS_SET_DELETE(rc, DELETE_VICT))
+            return DELETE_VICT;
+        }
 
         if (isPoisoned())
           applyPoison(tb);

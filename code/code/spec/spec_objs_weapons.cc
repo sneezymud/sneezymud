@@ -1179,6 +1179,15 @@ int frostSpear(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
         "full on!<1>",
         TRUE, ch, o, vict, TO_CHAR, NULL);
 
+      // Add frostEngulfed call here
+      rc = vict->frostEngulfed();
+      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+        vict->reformGroup();
+        delete vict;
+        vict = NULL;
+        return TRUE;
+      }
+
       int dam = ::number(10, 60);
       rc = ch->reconcileDamage(vict, dam, DAMAGE_FROST);
       if (IS_SET_DELETE(rc, DELETE_VICT)) {
@@ -3134,4 +3143,123 @@ int glacialWeapon(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
     }
   }
   return FALSE;
+}
+int bloodDrain(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*) {
+  if (!o) {
+    return false;
+  }
+
+  auto* ch = dynamic_cast<TBeing*>(o->equippedBy);
+
+  if (!ch) {
+    return false;
+  }
+
+  if (cmd == CMD_OBJ_HIT && vict && percentChance(20)) {
+    // TBeing::getRandomPart() looks for a valid limb that *doesn't* have the
+    // flag passed in as the first parameter. You can pass in some further,
+    // optional parameters to have it look for *only* parts that have the
+    // given flag, and to skip vital parts if desired. It returns WEAR_NOWHERE
+    // if no valid limbs were found, so make sure to check for that.
+    wearSlotT limb = vict->getRandomPart(PART_BLEEDING);
+
+    if (limb == WEAR_NOWHERE || vict->isImmune(IMMUNE_BLEED, limb) ||
+        vict->isUndead()) {
+      return false;
+    }
+
+    act(
+      "$p <1><r>pulses and oozes blood as it "
+      "draws <y>life essence <r> from<1> $n.",
+      false, vict, o, nullptr, TO_ROOM);
+
+    act(
+      "$p <1><r>pulses and oozes blood as it "
+      "draws your very <y>life essence <r> from you<1>.",
+      false, vict, o, nullptr, TO_CHAR);
+
+    int dam = ::number(4, 10);
+
+    if (dam > 8) {
+      // rawBleed already drops a pool of blood as a side-effect
+      vict->rawBleed(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+
+      act("$n <r> looks aghast as $s flesh parts and begins to leak blood.<1>", false,
+        vict, nullptr, nullptr, TO_ROOM);
+
+      act(
+        "<r>Your flesh opens unnaturally and blood begins to leak from the "
+        "wound.<1>",
+        false, vict, nullptr, nullptr, TO_CHAR);
+    }
+
+    if (ch->reconcileDamage(vict, dam, DAMAGE_DRAIN) == -1) {
+      return DELETE_VICT;
+    }
+
+    return true;
+  }
+
+  if (cmd == CMD_GENERIC_PULSE && ch->roomp && percentChance(10)) {
+    auto* bloodPool = ch->roomp->hasPool(LIQ_BLOOD);
+
+    if (bloodPool && bloodPool->getVolume() >= 2) {
+      // Pass o as both actor and object, so the messages are seen by `ch` as
+      // well, as TO_ROOM doesn't output to whatever gets passed as actor
+      act(
+        "$p briefly glows a <r>dark red<1>, like the eyes of a hungry "
+        "predator.",
+        false, o, o, nullptr, TO_ROOM);
+      act("Blood is pulled from the pool on the $g and drawn into $p.", false,
+        o, o, nullptr, TO_ROOM);
+      bloodPool->addToDrinkUnits(-2);
+      ch->addToHit(::number(1, 5));
+      return true;
+    }
+
+    // This part of the proc shouldn't affect undead/bleed immune characters
+    if (ch->isUndead() || ch->isImmune(IMMUNE_BLEED, WEAR_BODY)) {
+      return false;
+    }
+
+    act(
+      "$p briefly glows a <r>dark red<1>, like the eyes of a hungry "
+      "predator.",
+      false, ch, o, nullptr, TO_ROOM);
+    act("Your heart beats faster as you feel hungry eyes upon you.", false, ch,
+      nullptr, nullptr, TO_CHAR);
+
+    // Try to find a body part that's already bleeding by passing the
+    // skipvitalpart = false and lookforlimbflag = true optional parameters to
+    // getRandomPart
+    wearSlotT limb = ch->getRandomPart(PART_BLEEDING, false, true);
+
+    if (limb == WEAR_NOWHERE) {
+      // No existing bleeds found, so look for a bleeable limb
+      limb = ch->getRandomPart(PART_BLEEDING);
+
+      if (limb == WEAR_NOWHERE) {
+        // Somehow no bleedable limbs were found
+        act("You relax as the eyes pass on.", false, ch, nullptr, nullptr,
+          TO_CHAR);
+        return true;
+      }
+
+      // Let rawBleed handle the bleed starting message
+      vict->rawBleed(limb, 100, SILENT_NO, CHECK_IMMUNITY_NO);
+    }
+
+    // At this point we either found an already-bleeding limb or made one start
+    // bleeding, so finish the proc
+    act("$p glows a <r>dark red<1> as it feasts upon your blood.", false, ch, o,
+      nullptr, TO_ROOM);
+
+    if (ch->reconcileDamage(ch, ::number(1, 5), DAMAGE_DRAIN) == -1) {
+      return DELETE_THIS;
+    }
+
+    return true;
+  }
+
+  return false;
 }

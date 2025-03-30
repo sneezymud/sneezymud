@@ -9,6 +9,8 @@
 #include "disc_thief_looting.h"
 #include "obj_trap.h"
 #include "obj_portal.h"
+#include "trap.h"
+#include "low.h"
 
 int TBeing::doSearch(const char* argument) {
   int rc;
@@ -123,6 +125,178 @@ int detectSecret(TBeing* thief) {
   thief->setMove(max(0, (thief->getMove() - 30)));
   return TRUE;
 }
+bool reclaimTrapComps(TBeing* thief, sstring trap_type, TTrap* trap) {
+  std::vector<int> components;
+  size_t success_count = 0;  // Changed from int to size_t to match vector::size() type
+  bool isDoorTrap = (trap == nullptr);
+
+  // Convert trap_type to lowercase for comparison
+  sstring lower_trap_type = trap_type;
+  for(auto & c : lower_trap_type) c = tolower(c);
+
+  if (lower_trap_type == "fire") {
+    components = {
+      Obj::ST_FLINT,
+      Obj::ST_SULPHUR,
+      Obj::ST_BAG
+    };
+  } else if (lower_trap_type == "explosive") {
+    components = {
+      Obj::ST_FLINT,
+      Obj::ST_SULPHUR, 
+      Obj::ST_HYDROGEN
+    };
+  } else if (lower_trap_type == "poison") {
+    if (!isDoorTrap && (trap->isGrenade() || trap->isLandMine())) {
+      components = {
+        Obj::ST_CANISTER,
+        Obj::ST_SPRING,
+        Obj::ST_CON_POISON
+      };
+    } else {
+      components = {
+        Obj::ST_NEEDLE,
+        Obj::ST_SPRING,
+        Obj::ST_POISON
+      };
+    }
+  } else if (lower_trap_type == "sleep") {
+    components = {
+      Obj::ST_NOZZLE,
+      Obj::ST_GAS,
+      Obj::ST_HOSE
+    };
+  } else if (lower_trap_type == "acid") {     
+    if (!isDoorTrap && (trap->isGrenade() || trap->isLandMine())) {
+      components = {
+        Obj::ST_CANISTER,
+        Obj::ST_SPRING,
+        Obj::ST_ACID_VIAL
+      };
+    } else {
+      components = {
+        Obj::ST_NOZZLE,
+        Obj::ST_ACID_VIAL,
+        Obj::ST_BELLOWS
+      };
+    }
+  } else if (lower_trap_type == "spore") {     
+    if (!isDoorTrap && (trap->isGrenade() || trap->isLandMine())) {
+      components = {
+        Obj::ST_CANISTER,
+        Obj::ST_SPRING,
+        Obj::ST_FUNGUS
+      };
+    } else {
+      components = {
+        Obj::ST_FUNGUS,
+        Obj::ST_NOZZLE,
+        Obj::ST_BELLOWS
+      };
+    }
+  } else if (lower_trap_type == "spike") {
+    components = {
+      Obj::ST_SPIKE,
+      Obj::ST_SPRING,
+      Obj::ST_TRIPWIRE
+    };
+  } else if (lower_trap_type == "bolt") {
+    components = {
+      Obj::ST_TUBING,
+      Obj::ST_CGAS,
+      Obj::ST_BOLTS
+    };
+  } else if (lower_trap_type == "blade") {
+    components = {
+      Obj::ST_RAZOR_BLADE,
+      Obj::ST_SPRING,
+      Obj::ST_TRIPWIRE
+    };
+  } else if (lower_trap_type == "disk") {
+    components = {
+      Obj::ST_RAZOR_DISK,
+      Obj::ST_SPRING,
+      Obj::ST_CANISTER
+    };
+  } else if (lower_trap_type == "hammer") {
+    components = {
+      Obj::ST_CONCRETE,
+      Obj::ST_WEDGE,
+      Obj::ST_TRIPWIRE
+    };
+  } else if (lower_trap_type == "pebble") {
+    components = {
+      Obj::ST_TUBING,
+      Obj::ST_CGAS,
+      Obj::ST_PEBBLES
+    };
+  } else if (lower_trap_type == "frost") {
+    components = {
+      Obj::ST_NOZZLE,
+      Obj::ST_HOSE,
+      Obj::ST_FROST
+    };
+  } else if (lower_trap_type == "teleport") {     
+    if (!isDoorTrap && (trap->isGrenade() || trap->isLandMine())) {
+      components = {
+        Obj::ST_PENTAGRAM,
+        Obj::ST_CRYSTALINE,
+        Obj::ST_BLINK
+      };
+    } else {
+      components = {
+        Obj::ST_PENTAGRAM,
+        Obj::ST_TRIPWIRE,
+        Obj::ST_BLINK
+      };
+    }
+  } else if (lower_trap_type == "power") {     
+    if (!isDoorTrap && (trap->isGrenade() || trap->isLandMine())) {
+      components = {
+        Obj::ST_PENTAGRAM,
+        Obj::ST_CRYSTALINE,
+        Obj::ST_ATHANOR
+      };
+    } else {
+      components = {
+        Obj::ST_PENTAGRAM,
+        Obj::ST_TRIPWIRE,
+        Obj::ST_ATHANOR
+      };
+    }
+  } else {
+    return false;
+  } 
+
+  // Calculate chance of recovering each component
+  int recovery_chance = 50 + (thief->getSkillValue(SKILL_DISARM_TRAP) / 2);
+  
+  for (auto item_vnum : components) {
+    // Roll for each component
+    if (::number(1, 100) <= recovery_chance) {
+      TObj* comp = read_object(item_vnum, VIRTUAL);
+      if (comp) {
+        *thief += *comp;
+        success_count++;
+        
+        // Notify player of recovered component
+        thief->sendTo(format("You carefully recover %s from the trap.\n\r") % 
+                     comp->shortDescr);
+      }
+    }
+  }
+
+  if (success_count == 0) {
+    thief->sendTo("You were unable to salvage any components from the trap.\n\r");
+    return false;
+  } else if (success_count < components.size()) {
+    thief->sendTo("You managed to salvage some components from the trap.\n\r");
+  } else {
+    thief->sendTo("You successfully recovered all components from the trap!\n\r");
+  }
+
+  return true;
+}
 
 int TBeing::disarmTrap(const char* arg, TObj* tp) {
   int rc;
@@ -173,32 +347,39 @@ int TObj::disarmMe(TBeing* thief) {
   return FALSE;
 }
 
-int TTrap::disarmMe(TBeing* thief) {
-  int rc;
-  char trap_type[80];
-  int bKnown = thief->getSkillValue(SKILL_DISARM_TRAP);
-
+int TTrap::disarmMe(TBeing* thief) {  
   if (getTrapCharges() <= 0) {
     thief->sendTo("That trap is already disarmed.\n\r");
-    return FALSE;
+    return false;
   }
 
-  strcpy(trap_type, trap_types[getTrapDamType()].c_str());
+  sstring trap_type = trap_types[getTrapDamType()];
 
-  if (thief->bSuccess(bKnown, SKILL_DISARM_TRAP)) {
+  if (thief->bSuccess(SKILL_DISARM_TRAP)) {
     thief->sendTo(format("Click.  You disarm the %s trap.\n\r") % trap_type);
-    act("$n disarms $p.", FALSE, thief, this, 0, TO_ROOM);
-    setTrapCharges(0);
-    return TRUE;
-  } else {
-    thief->sendTo("Click. (whoops)\n\r");
-    act("$n tries to disarm $p.", FALSE, thief, this, 0, TO_ROOM);
-    rc = thief->triggerTrap(this);
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      return DELETE_VICT;
+    act("$n disarms $p.", false, thief, this, nullptr, TO_ROOM);
+
+    if ((isGrenade() && thief->doesKnowSkill(SKILL_SET_TRAP_GREN)) ||
+        (isLandMine() && thief->doesKnowSkill(SKILL_SET_TRAP_MINE)) || 
+        (!isGrenade() && !isLandMine() && thief->doesKnowSkill(SKILL_SET_TRAP_CONT))) {
+      reclaimTrapComps(thief, trap_type, this);
+    } else {
+      thief->sendTo("You lack the knowledge to salvage components from this type of trap.\n\r");
     }
-    return TRUE;
+
+    setTrapCharges(0);  // Move this after reclaim attempt
+    return true;
+  } 
+
+  thief->sendTo("Click. (whoops)\n\r");
+  act("$n tries to disarm $p.", false, thief, this, nullptr, TO_ROOM);
+
+  int rc = thief->triggerTrap(this);
+  if (IS_SET_DELETE(rc, DELETE_THIS)) {
+    return DELETE_VICT;
   }
+
+  return true; 
 }
 
 int disarmTrapObj(TBeing* thief, TObj* trap) {
@@ -239,6 +420,9 @@ int disarmTrapDoor(TBeing* thief, dirTypeT door) {
     if ((rp = real_roomp(exitp->to_room)) &&
         (back = rp->dir_option[rev_dir(door)])) {
       REMOVE_BIT(back->condition, EXIT_TRAPPED);
+    }
+    if (thief->doesKnowSkill(SKILL_SET_TRAP_DOOR)) {
+      reclaimTrapComps(thief, trap_type, nullptr);
     }
     return TRUE;
   } else {

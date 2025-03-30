@@ -1013,11 +1013,45 @@ float TBeing::getWisDamModifier() const {
 }
 
 int TBeing::getDexReaction() const {
-  return plotStat(STAT_CURRENT, STAT_DEX, -4, 6, 0);
+  int reaction = plotStat(STAT_CURRENT, STAT_DEX, -4, 6, 0);
+  
+  // If affected by frostbite, halve positive values and double negative values
+  if (hasDisease(DISEASE_FROSTBITE)) {
+    if (reaction > 0)
+      reaction /= 2;  // Halve positive values
+    else if (reaction < 0)
+      reaction *= 2;  // Double negative values
+  }
+  
+  return reaction;
 }
 
 int TBeing::getAgiReaction() const {
-  return plotStat(STAT_CURRENT, STAT_AGI, -4, 6, 0);
+  int reaction = plotStat(STAT_CURRENT, STAT_AGI, -4, 6, 0);
+  
+  // If affected by frostbite, halve positive values and double negative values
+  if (hasDisease(DISEASE_FROSTBITE)) {
+    if (reaction > 0)
+      reaction /= 2;  // Halve positive values
+    else if (reaction < 0)
+      reaction *= 2;  // Double negative values
+  }
+  
+  return reaction;
+}
+
+int TBeing::getSpeReaction() const {
+  int reaction = plotStat(STAT_CURRENT, STAT_SPE, -4, 6, 0);
+  
+  // If affected by frostbite, halve positive values and double negative values
+  if (hasDisease(DISEASE_FROSTBITE)) {
+    if (reaction > 0)
+      reaction /= 2;  // Halve positive values
+    else if (reaction < 0)
+      reaction *= 2;  // Double negative values
+  }
+  
+  return reaction;
 }
 
 int TBeing::getConShock() const {
@@ -1083,25 +1117,97 @@ bool TBeing::statSelfCheck(statTypeT stat, int num) const {
   return percentChance(plotStat(STAT_CURRENT, stat, 5, 95, 25) + num);
 }
 
-bool TBeing::isStrong() const { return statSelfCheck(STAT_STR); }
+bool TBeing::isStrong() const { 
+  // If poisoned, require two successful strength checks
+  if (affectedBySpell(SPELL_POISON)) {
+    return statSelfCheck(STAT_STR) && statSelfCheck(STAT_STR);
+  }
+  
+  // Normal case - just one check
+  return statSelfCheck(STAT_STR); 
+}
 
 bool TBeing::isPerceptive() const { return statSelfCheck(STAT_PER); }
 
-bool TBeing::isAgile(int num) const { return statSelfCheck(STAT_AGI, num); }
+bool TBeing::isAgile(int num) const { 
+  // If affected by frostbite, require two successful agility checks
+  if (hasDisease(DISEASE_FROSTBITE)) {
+    return statSelfCheck(STAT_AGI, num) && statSelfCheck(STAT_AGI, num);
+  }
+  
+  // Normal case - just one check
+  return statSelfCheck(STAT_AGI, num); 
+}
 
-bool TBeing::isDextrous() const { return statSelfCheck(STAT_DEX); }
+bool TBeing::isDextrous() const { 
+  // If affected by frostbite, require two successful dexterity checks
+  if (hasDisease(DISEASE_FROSTBITE)) {
+    return statSelfCheck(STAT_DEX) && statSelfCheck(STAT_DEX);
+  }
+  
+  // Normal case - just one check
+  return statSelfCheck(STAT_DEX); 
+}
 
-bool TBeing::isTough() const { return statSelfCheck(STAT_CON); }
+bool TBeing::isTough() const { 
+  // If affected by cold or flu, require two successful constitution checks
+  if (hasDisease(DISEASE_COLD) || hasDisease(DISEASE_FLU)) {
+    return statSelfCheck(STAT_CON) && statSelfCheck(STAT_CON);
+  }
+  
+  // Normal case - just one check
+  return statSelfCheck(STAT_CON); 
+}
 
-bool TBeing::isBrawny() const { return statSelfCheck(STAT_BRA); }
+bool TBeing::isBrawny() const { 
+  // If affected by cold or flu, require two successful brawn checks
+  if (hasDisease(DISEASE_COLD) || hasDisease(DISEASE_FLU)) {
+    return statSelfCheck(STAT_BRA) && statSelfCheck(STAT_BRA);
+  }
+  
+  // Normal case - just one check
+  return statSelfCheck(STAT_BRA); 
+}
 
-bool TBeing::isIntelligent() const { return statSelfCheck(STAT_INT); }
+bool TBeing::isIntelligent() const { 
+  // If affected by stupidity, require two successful intelligence checks
+  if (affectedBySpell(SPELL_STUPIDITY)) {
+    return statSelfCheck(STAT_INT) && statSelfCheck(STAT_INT);
+  }
+  
+  // Normal case - just one check
+  return statSelfCheck(STAT_INT); 
+}
 
-bool TBeing::isWise() const { return statSelfCheck(STAT_WIS); }
+bool TBeing::isWise() const { 
+  // If affected by stupidity, require two successful wisdom checks
+  if (affectedBySpell(SPELL_STUPIDITY)) {
+    return statSelfCheck(STAT_WIS) && statSelfCheck(STAT_WIS);
+  }
+  
+  // Normal case - just one check
+  return statSelfCheck(STAT_WIS); 
+}
 
-bool TBeing::isFast() const { return statSelfCheck(STAT_SPE); }
+bool TBeing::isFast() const { 
+  // If affected by frostbite, require two successful speed checks
+  if (hasDisease(DISEASE_FROSTBITE)) {
+    return statSelfCheck(STAT_SPE) && statSelfCheck(STAT_SPE);
+  }
+  
+  // Normal case - just one check
+  return statSelfCheck(STAT_SPE); 
+}
 
-bool TBeing::isFocused() const { return statSelfCheck(STAT_FOC); }
+bool TBeing::isFocused() const { 
+  // If poisoned, require two successful focus checks
+  if (affectedBySpell(SPELL_POISON)) {
+    return statSelfCheck(STAT_FOC) && statSelfCheck(STAT_FOC);
+  }
+  
+  // Normal case - just one check
+  return statSelfCheck(STAT_FOC); 
+}
 
 bool TBeing::isCharismatic() const { return statSelfCheck(STAT_CHA); }
 
@@ -1110,3 +1216,8 @@ bool TBeing::isLucky() const { return statSelfCheck(STAT_KAR); }
 bool TBeing::isUgly() const { return statSelfCheck(STAT_CHA); }
 
 bool TBeing::isRealUgly() const { return (isUgly() && isUgly()); }
+
+// High focus should yield 1.25 * more effect, low 0.80 less effect
+float TBeing::getFocusMod() const {
+  return plotStat(STAT_CURRENT, STAT_FOC, 0.8, 1.25, 1.0, 1.0);
+}

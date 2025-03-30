@@ -1150,6 +1150,15 @@ class TBeing : public TThing {
     virtual void trapPoison(int);
     virtual void trapDisease(int);
     virtual int trapTeleport(int);
+    virtual int trapFire(int amt, TTrap* trap);
+    virtual int trapFrost(int amt, TTrap* trap);
+    virtual int trapAcid(int amt, TTrap* trap);
+    virtual int trapExplosive(int amt, TTrap* trap);
+    virtual int trapPower(int amt, TTrap* trap);
+    virtual int trapDisc(int amt, TTrap* trap);
+    virtual int trapPebble(int amt, TTrap* trap);
+    virtual int trapBolt(int amt, TTrap* trap);
+    virtual int trapSpike(int amt, TTrap* trap);
     void informMess();
     int objDam(spellNumT, int, TThing*);
     int objDamage(spellNumT, int, TThing*);
@@ -1432,6 +1441,7 @@ class TBeing : public TThing {
     virtual float getWisDamModifier() const;
     int getDexReaction() const;
     int getAgiReaction() const;
+    int getSpeReaction() const;
     int getConShock() const;
     float getConHpModifier() const;
     double getStatMod(statTypeT statType, int multiplier = 1) const;
@@ -1971,7 +1981,12 @@ class TBeing : public TThing {
     int doDisguise(const char*);
     int doPoisonWeapon(sstring);
     int doGarrotte(const char*, TBeing*);
-    int doStab(const char*, TBeing*);
+    int doStab(const char* argument, TBeing* vict);
+    int stabSuccess(TBeing* victim);
+    int stabFailure(TBeing* victim);
+    int doSap(const char* argument, TBeing* vict);
+    int sapFail(TBeing* victim);
+    int sapSuccess(TBeing* victim);
     int doCudgel(const char*, TBeing*);
     virtual int moneyMeBeing(TThing* mon, TThing* sub);
     virtual unsigned int getTimer() const = 0;
@@ -1994,6 +2009,7 @@ class TBeing : public TThing {
     bool isRealUgly() const;
     bool isWary() const;
     void makeWary();
+    float getFocusMod() const;
     sstring displayExp() const;
     int hurtLimb(int, wearSlotT);
     void stunIfLimbsUseless();
@@ -2057,3 +2073,7 @@ class TBeing : public TThing {
         average, power);
     }
 };
+
+int spikesHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT limb);
+int spikesBreak(TBeing* victim, TBeing* ch, TObj* obj);
+

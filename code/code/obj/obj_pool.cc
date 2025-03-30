@@ -249,6 +249,8 @@ bool TPool::isPluralItem() const {
   return TBaseCup::isPluralItem();
 }
 
+
+
 int TRoom::dropPool(int amt, liqTypeT liq) {
   TPool* pool = NULL;
   TThing* t = NULL;
@@ -257,7 +259,7 @@ int TRoom::dropPool(int amt, liqTypeT liq) {
   if (amt == 0)
     return FALSE;
 
-  /* look for preexisting pool */
+  //// look for preexisting pool
   for (StuffIter it = stuff.begin(); it != stuff.end() && (t = *it); ++it) {
     TPool* tp = dynamic_cast<TPool*>(t);
     if (tp && (tp->getDrinkType() == liq)) {
@@ -265,7 +267,6 @@ int TRoom::dropPool(int amt, liqTypeT liq) {
       break;
     }
   }
-
   if (!pool) {
     // create new pool
 #if 1
