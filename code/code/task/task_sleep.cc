@@ -10,13 +10,22 @@
 
 int task_sleep(TBeing* ch, cmdTypeT cmd, const char* arg, int pulse, TRoom*,
   TObj*) {
+  int mod = 1;
   if (ch->isLinkdead() || (ch->getPosition() != POSITION_SLEEPING)) {
     ch->stopTask();
     return FALSE;
   }
   if (ch->utilityTaskCommand(cmd))
     return FALSE;
-
+  if (ch->inCamp()) {
+    mod *= 1.5;
+  }
+  if (ch->roomp->hasMobToCuddle()) {
+    mod *= 1.5;
+  }
+  if (ch->roomp->hasCampfire()) {
+    mod *= 1.5;
+  }
   int regentime = ch->regenTime();
   switch (cmd) {
     case CMD_TASK_CONTINUE:
@@ -35,13 +44,13 @@ int task_sleep(TBeing* ch, cmdTypeT cmd, const char* arg, int pulse, TRoom*,
                 ch->addToLifeforce(-1);
               }
             } else {
-              ch->addToHit(1);
+              ch->addToHit(1*mod);
             }
           } else {
-            ch->addToHit(1);
+            ch->addToHit(1*mod);
           }
           if (ch->getMove() < ch->moveLimit())
-            ch->addToMove(1);
+            ch->addToMove(1*mod);
 
           if (ch->ansi()) {
             ch->desc->updateScreenAnsi(CHANGED_HP);

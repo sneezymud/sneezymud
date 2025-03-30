@@ -10,7 +10,10 @@
 #include "extern.h"
 #include "being.h"
 #include "monster.h"
+#include "obj.h"
 #include "weather.h"
+#include "obj_organic.h"
+#include "obj_flame.h"
 
 bool TRoom::isCitySector() const {
   switch (getSectorType()) {
@@ -472,4 +475,43 @@ int TRoom::getLight() {
 TThing* TRoom::findInRoom(const std::function<bool(TThing*)>& predicate) {
   auto found = std::find_if(stuff.begin(), stuff.end(), predicate);
   return found != stuff.end() ? *found : nullptr;
+}
+
+
+bool TRoom::hasMobToCuddle() {
+  for (TThing* thing : stuff) {
+    auto* mob = dynamic_cast<TMonster*>(thing);
+    if (mob && (mob->getRace() == RACE_CANINE || mob->getRace() == RACE_FELINE)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+bool TRoom::hasCampfire() {
+  for (auto* obj : stuff) {
+    // Check for burning logs
+    auto* log = dynamic_cast<TOrganic*>(obj);
+    if (log && (log->itemType() == ITEM_RAW_ORGANIC) && (log->isObjStat(ITEM_BURNING))) {
+      return true;
+    }
+    
+    // Check for flame objects
+    auto* flame = dynamic_cast<TFFlame*>(obj);
+    if (flame) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+TPool* TRoom::hasPool(liqTypeT liq) {
+  for (TThing* thing : stuff) {
+    auto* pool = dynamic_cast<TPool*>(thing);
+    if (pool && pool->getDrinkType() == liq) {
+      return pool;
+    }
+  }
+  return nullptr;
 }

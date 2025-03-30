@@ -2815,8 +2815,43 @@ void TBeing::doRest(const sstring& argument) {
           0, 0, TO_CHAR);
         act("$n sits down, leans back and rests.", TRUE, this, 0, 0, TO_ROOM);
         setPosition(POSITION_RESTING);
-        if (isPc())
+        if (isPc()) {
+          bool hasBonuses = false;
+          sstring bonusMsg = "Your rest will be <c>enhanced<1> by...\n\r";
+          
+          if (inCamp()) {
+            bonusMsg += "   ...<o>being in a camp<1>...\n\r";
+            hasBonuses = true;
+          }
+          
+          bool isConcealed = false;
+          for (affectedData* aff = affected; aff; aff = aff->next) {
+            if (aff->type == SKILL_CONCEALMENT) {
+              isConcealed = true;
+              break;
+            }
+          }
+          
+          if (hasClass(CLASS_THIEF) && isConcealed) {
+            bonusMsg += "   ...<k>being concealed<1>...\n\r";
+            hasBonuses = true;
+          }
+          
+          if (roomp->hasMobToCuddle()) {
+            bonusMsg += "   ...<p>having a furry companion<1>...\n\r";
+            hasBonuses = true;
+          }
+          if (roomp->hasCampfire()) {
+            bonusMsg += "   ...<r>the warmth of a campfire<1>...\n\r";
+            hasBonuses = true;
+          }
+          
+          if (hasBonuses) {
+            sendTo(bonusMsg + "\n\r");
+          }
+          
           start_task(this, 0, 0, TASK_REST, "", 350, 0, 1, 0, 2 * regenTime());
+        }
         break;
       case POSITION_SITTING:
         if (removeAllCasinoGames())

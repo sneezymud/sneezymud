@@ -321,7 +321,8 @@ int backstab(TBeing* thief, TBeing* victim) {
     modifier += 5;
   if (thief->isAffected(AFF_HIDE))
     modifier += 5;
-
+  if (victim->fight() && !thief->fight())
+    modifier += 5;
   if (thief->makesNoise() && victim->awake()) {
     modifier -= 10;
 

@@ -11,8 +11,11 @@
 #include "room.h"
 #include "connect.h"
 
+
 int task_rest(TBeing* ch, cmdTypeT cmd, const char* arg, int pulse, TRoom*,
   TObj*) {
+  int mod = 1;
+ 
   if (ch->isLinkdead() || (ch->getPosition() != POSITION_RESTING)) {
     ch->stopTask();
     return FALSE;
@@ -37,14 +40,36 @@ int task_rest(TBeing* ch, cmdTypeT cmd, const char* arg, int pulse, TRoom*,
                 ch->sendTo(
                   "Your lack of activity drains your precious lifeforce.\n\r");
               }
-            } else {
-              ch->addToHit(1);
-            }
+            } 
           } else {
-            ch->addToHit(1);
+            if (ch->inCamp()) {
+              mod *= 1.3;
+              if (percentChance(20)) {
+                ch->sendTo("Being in a camp makes you feel better.\n\r");
+              }
+            }
+            if (ch->hasClass(CLASS_THIEF) && ch->isAffected(SKILL_CONCEALMENT)) {
+              mod *= 1.5;
+              if (percentChance(20)) {
+                ch->sendTo("You find comfort in being hidden from the world around you.\n\r");
+              }              
+            }
+            if (ch->roomp->hasMobToCuddle()) {
+              mod *= 1.3;
+              if (percentChance(20)) {              
+                ch->sendTo("Your furry companion brings you a feeling of security.\n\r");
+              }
+            }
+            if (ch->roomp->hasCampfire()) {
+              mod *= 1.3;
+              if (percentChance(20)) {
+                ch->sendTo("The warmth of the campfire makes you feel better.\n\r");
+              }
+            }
+            ch->addToHit(1*mod);          
           }
           if (ch->getMove() < ch->moveLimit())
-            ch->addToMove(1);
+            ch->addToMove(1*mod);
           if (ch->desc && ch->ansi()) {
             ch->desc->updateScreenAnsi(CHANGED_HP);
             ch->desc->updateScreenAnsi(CHANGED_MANA);
