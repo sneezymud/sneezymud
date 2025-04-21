@@ -3523,12 +3523,6 @@ void buildSpellArray() {
       SPELL_TASKED,
     0);
 
-  discArray[SKILL_TURN] =
-    new spellInfo(SKILL_SHAMAN, DISC_SHAMAN_SKUNK, DISC_SHAMAN_SKUNK, STAT_EXT,
-      "turn", TASK_NORMAL, LAG_3, POSITION_STANDING, MANA_0, LIFEFORCE_0,
-      PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_86, LEARN_8, START_DO_1,
-      LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
-
   // shaman armadillo
 
   discArray[SPELL_EARTHMAW] = new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_ARMADILLO,

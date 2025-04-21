@@ -5,7 +5,6 @@
 
 class CDShamanSkunk : public CDiscipline {
   public:
-    CSkill skTurnSkill;
     CSkill skDeathMist;
     CSkill skBloodBoil;
     CSkill skCardiacStress;

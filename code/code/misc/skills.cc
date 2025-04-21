@@ -1008,8 +1008,6 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
       return &((CDShamanSkunk*)cd)->skLichTouch;
     case SPELL_DEATH_MIST:  // 544
       return &((CDShamanSkunk*)cd)->skDeathMist;
-    case SKILL_TURN:
-      return &((CDShamanSkunk*)cd)->skTurnSkill;
     case SPELL_CARDIAC_STRESS:
       return &((CDShamanSkunk*)cd)->skCardiacStress;
     case SPELL_CLEANSE:
@@ -1262,6 +1260,7 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
     case SKILL_BAREHAND_PROF:
       return &((CDCombat*)cd)->skBarehand;
     case TYPE_UNDEFINED:
+    case SKILL_TURN:
     case MAX_SKILL:
     case DAMAGE_NORMAL:
     case DAMAGE_RIPPED_OUT_HEART:
