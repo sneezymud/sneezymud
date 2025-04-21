@@ -1041,8 +1041,13 @@ int spontaneousCombust(TBeing* caster, TBeing* victim, int level, short bKnown,
           TO_CHAR);
         act("$n suddenly erupts in a tower of flames!", FALSE, caster, NULL,
           NULL, TO_ROOM);
-        act("You are suddenly consumed in a tower of flames! <R>FIRE!!!<1>",
-          FALSE, caster, NULL, NULL, TO_CHAR);
+        act("You are suddenly consumed in a smaller tower of flames, as the Gods are merciful... for now! <R>FIRE!!!<1>", 
+              FALSE, caster, NULL, NULL, TO_CHAR);
+
+        // Reducing the damage to avoid one-shotting players at full health (as often)
+        dam /= 3;
+        dam *= 2 -
+		      1.0*((double) caster->getHit() / (double) caster->hitLimit());
 
         if (caster->reconcileDamage(caster, dam, SPELL_SPONTANEOUS_COMBUST) ==
             -1)
