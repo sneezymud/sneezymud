@@ -1045,9 +1045,7 @@ int spontaneousCombust(TBeing* caster, TBeing* victim, int level, short bKnown,
               FALSE, caster, NULL, NULL, TO_CHAR);
 
         // Reducing the damage to avoid one-shotting players at full health (as often)
-        dam /= 3;
-        dam *= 2 -
-		      1.0*((double) caster->getHit() / (double) caster->hitLimit());
+        dam /= 2;
 
         if (caster->reconcileDamage(caster, dam, SPELL_SPONTANEOUS_COMBUST) ==
             -1)
