@@ -102,10 +102,7 @@ int TBeing::doStab(const char* argument, TBeing* vict) {
     rc = stabFailure(victim);
   }
 
-  // Put it here to see ALL rc values
-  act(format("Debug: rc value is %d") % rc, FALSE, this, NULL, NULL, TO_CHAR);
-  if (rc)
-    addSkillLag(SKILL_STABBING, rc);
+  addSkillLag(SKILL_STABBING, rc);
 
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
@@ -155,13 +152,16 @@ int TBeing::stabSuccess(TBeing* victim) {
   if (dynamic_cast<TObj*>(weapon)->isObjStat(ITEM_SPIKED)) {
     limbdam = limbdam * 1.25;
   }
-
+  // Apply limb damage first
+  int rc = victim->hurtLimb(limbdam, limb);
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_VICT;
+  
   // Send description text to players in the room
   if (!victim->isLimbFlags(limb, PART_MISSING) && !victim->isUndead() &&
       !victim->isLimbFlags(limb, IMMUNE_BLEED)) {
     int duration = (this->GetMaxLevel() * 3 + 200);
     victim->rawBleed(limb, duration, SILENT_YES, CHECK_IMMUNITY_NO);
-    victim->hurtLimb(limbdam, limb);
     sstring buf = format("You puncture $N's %s with your $o, leaving a bloody gash!") % victim->describeBodySlot(limb);
     act(buf, false, this, weapon, victim, TO_CHAR);
     
@@ -191,10 +191,11 @@ int TBeing::stabSuccess(TBeing* victim) {
     buf = format("$n stabs your %s with their $o, leaving a big wound!!") % victim->describeBodySlot(limb);
     act(buf, false, this, weapon, victim, TO_VICT);
   }
+  ///Check if weapon is spiked
   if (weapon->isObjStat(ITEM_SPIKED)) {
-    weapon->addToCurSharp(-limbdam);
+    weapon->addToCurSharp(-limbdam/2);
     weapon->addToMaxStructPoints(-1);
-    weapon->addToStructPoints(-limbdam);
+    weapon->addToStructPoints(-limbdam/4);
     if (!victim->isLimbFlags(limb, IMMUNE_BLEED) && !victim->isUndead()) {
       victim->rawBleed(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
       act(
@@ -209,13 +210,16 @@ int TBeing::stabSuccess(TBeing* victim) {
     }
     victim->hurtLimb(1, limb);
   }
+  ///Check if limb is bleeding, bruised or infected
   if (!victim->isLimbFlags(limb, PART_MISSING) &&
       ((victim->isLimbFlags(limb, PART_BLEEDING) ||
         victim->isLimbFlags(limb, PART_INFECTED) ||
         victim->isLimbFlags(limb, PART_BRUISED)))) {
-    if (victim->getCurLimbHealth(limb) >= victim->getMaxLimbHealth(limb) / 2) {
+    ///Check to see if current limb health is less than half of max limb health
+    if (victim->getCurLimbHealth(limb) <= victim->getMaxLimbHealth(limb) / 2) {
+      ///If limb is head, neck, back, or body
       if (limb == WEAR_NECK || limb == WEAR_BODY || limb == WEAR_BACK ||
-          limb == WEAR_WAIST) {
+          limb == WEAR_WAIST || (limb == WEAR_HEAD && victim->hasDisease(DISEASE_EYEBALL))) {
         // Apply normal damage without special effects
         spellNumT damageType = weapon->isPierceWeapon() ? DAMAGE_IMPALE : DAMAGE_NORMAL;
         if (!victim->isLimbFlags(limb, IMMUNE_BLEED) && !victim->isUndead()) {
@@ -229,6 +233,8 @@ int TBeing::stabSuccess(TBeing* victim) {
         if (reconcileDamage(victim, dam, damageType) == -1)
           return DELETE_VICT;
         return true;
+      
+        // If limb is head and isn't missing eyeballs, slice 'em out
       } else if (limb == WEAR_HEAD && !victim->hasDisease(DISEASE_EYEBALL)) {
         affectedData tAff;
         act("You glance $N's eyes with your $o, slicing them wide open!", false,
@@ -246,8 +252,9 @@ int TBeing::stabSuccess(TBeing* victim) {
         tAff.bitvector = AFF_BLIND;
         victim->affectTo(&tAff);
         victim->rawBlind(this->GetMaxLevel(), tAff.duration, SAVE_NO);
+      
+      /// If limb is anything else, cut it off
       } else {
-        victim->makePartMissing(limb, false, this);
         sstring buf = format("You slice $N's %s right off!") % victim->describeBodySlot(limb);
         act(buf, false, this, weapon, victim, TO_CHAR);
         
@@ -256,6 +263,7 @@ int TBeing::stabSuccess(TBeing* victim) {
         
         buf = format("$n slices $N's %s right off!") % victim->describeBodySlot(limb);
         act(buf, false, this, 0, victim, TO_NOTVICT);
+        victim->makePartMissing(limb, false, this);
       }
 
       // Determine damage type
@@ -291,7 +299,8 @@ int TBeing::stabSuccess(TBeing* victim) {
   }
   spellNumT damageType = TYPE_PIERCE;
 
-  if (reconcileDamage(victim, dam, damageType) == -1)
+  rc = reconcileDamage(victim, dam, damageType);
+  if (rc == -1)
     return DELETE_VICT;
 
   return true;
