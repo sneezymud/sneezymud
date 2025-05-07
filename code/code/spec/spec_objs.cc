@@ -6179,6 +6179,26 @@ int stickerBush(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
   return TRUE;
 }
 
+int poisonQuiver(TBeing* ch, cmdTypeT cmd, const char*, TObj* q, TObj* a) {
+  if (cmd != CMD_OBJ_HAVING_SOMETHING_PUT_INTO || !a || !q || !ch ||
+      !q->equippedBy) {
+    return false;
+  }
+  auto* arrow = dynamic_cast<TArrow*>(a);
+
+  if (!arrow || arrow->isPoisoned()) {
+    return false;
+  }
+
+  arrow->setPoison(LIQ_POISON_STANDARD);
+  act("The arrow glows a <g>sickly green<1> as it enters the $p.", TRUE, ch, q,
+    0, TO_CHAR);
+  act("The arrow glows a <g>sickly green<1> as it enters the $p.", TRUE, ch, q,
+    0, TO_ROOM);
+
+  return true;
+}
+
 int flamingArrowBow(TBeing* ch, cmdTypeT cmd, const char*, TObj* bow,
   TObj* arrow) {
   // Only trigger on bow loading
@@ -7397,6 +7417,8 @@ extern int bloodDrain(TBeing* vict, cmdTypeT cmd, const char*, TObj* weapon,
   TObj*);
 extern int flamingArrowBow(TBeing* ch, cmdTypeT cmd, const char*, TObj* bow,
   TObj* a);
+extern int poisonQuiver(TBeing* ch, cmdTypeT cmd, const char*, TObj* q,
+  TObj* a);
 // assign special procedures to objects
 
 TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
@@ -7531,4 +7553,5 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
   {TRUE, "Molten Weapon", moltenWeapon},
   {TRUE, "Glacial Weapon", glacialWeapon},
   {TRUE, "flamingArrowBow", flamingArrowBow},
+  {TRUE, "poisonQuiver", poisonQuiver},
   {FALSE, "last proc", bogusObjProc}};
