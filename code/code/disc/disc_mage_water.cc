@@ -1190,12 +1190,26 @@ int gusher(TBeing* caster, TBeing* victim, int level, short bKnown,
   if (caster->bSuccess(bKnown, SPELL_GUSHER)) {
     caster->reconcileHurt(victim, discArray[SPELL_GUSHER]->alignMod);
 
+    // Calculate wetness based on caster level, reduced by victim's agility
+    // reaction
+    int wetAmount = min(50, level) - victim->getAgiReaction();
+
+    // Ensure minimum wetness of 10
+    wetAmount = max(10, wetAmount);
+
     if ((critSuccess(caster, SPELL_GUSHER) ||
           critSuccess(caster, SPELL_GUSHER) ||
           critSuccess(caster, SPELL_GUSHER)) &&
         !caster->isNotPowerful(victim, level, SPELL_GUSHER, SILENT_YES)) {
       CS(SPELL_GUSHER);
       dam *= 2;
+
+      // Apply extra wetness on critical success using the correct method
+      Weather::addWetness(victim, wetAmount * 2);
+
+      // Knock the victim down on critical success
+      victim->setPosition(POSITION_SITTING);
+
       act("A HUGE stream of water smacks into $N knocking $M over!", FALSE,
         caster, NULL, victim, TO_CHAR, ANSI_BLUE);
       act("$n directs a HUGE stream of water at you, knocking you down!", FALSE,
@@ -1206,11 +1220,14 @@ int gusher(TBeing* caster, TBeing* victim, int level, short bKnown,
         FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_BLUE);
       victim->dropPool(50, LIQ_WATER);
 
-      if (victim->riding)
-        victim->dismount(POSITION_STANDING);
-
+      if (victim->riding) {
+        rc = victim->fallOffMount(victim->riding, POSITION_SITTING);
+        if (IS_SET_DELETE(rc, DELETE_THIS))
+          return SPELL_SUCCESS + VICTIM_DEAD;
+      }
+      
       while ((t = victim->rider)) {
-        rc = t->fallOffMount(victim, POSITION_STANDING);
+        rc = t->fallOffMount(victim, POSITION_SITTING);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete t;
           t = NULL;
@@ -1243,23 +1260,16 @@ int gusher(TBeing* caster, TBeing* victim, int level, short bKnown,
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;
   } else {
-    caster->setCharFighting(victim);
-    caster->setVictFighting(victim);
-    act("$n just tried to attack you.", FALSE, caster, 0, victim, TO_VICT,
-      ANSI_BLUE);
-    if (critFail(caster, SPELL_GUSHER) == CRIT_F_HITSELF) {
-      CF(SPELL_GUSHER);
-      act("You call forth a stream of water, but it leaves you all wet!", FALSE,
-        caster, NULL, 0, TO_CHAR, ANSI_BLUE);
-      act("$n calls forth a stream of water, but it leaves $m all wet!", FALSE,
-        caster, NULL, 0, TO_ROOM, ANSI_BLUE);
-      caster->dropPool(10, LIQ_WATER);
-      if (caster->reconcileDamage(caster, dam, SPELL_GUSHER) == -1)
-        return SPELL_CRIT_FAIL + CASTER_DEAD;
-      return SPELL_CRIT_FAIL;
-    }
-    caster->nothingHappens();
-    return SPELL_FAIL;
+    act("You direct a stream of water, but miss $N.", FALSE, caster, NULL,
+      victim, TO_CHAR, ANSI_BLUE);
+    act("$n directs a stream of water, but misses you.", FALSE, caster, NULL,
+      victim, TO_VICT, ANSI_BLUE);
+    act("$n directs a stream of water, but misses $N.", FALSE, caster, NULL,
+      victim, TO_NOTVICT, ANSI_BLUE);
+    caster->dropPool(10, LIQ_WATER);
+    if (caster->reconcileDamage(caster, dam, SPELL_GUSHER) == -1)
+      return SPELL_CRIT_FAIL + CASTER_DEAD;
+    return SPELL_CRIT_FAIL;
   }
 }
 

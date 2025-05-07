@@ -184,7 +184,7 @@ static int disarm(TBeing* caster, TBeing* victim, spellNumT skill) {
   }
 
   // bonus attribute: agi
-  af.duration += caster->plotStat(STAT_CURRENT, STAT_AGI, 0, 2, 0);
+  af.duration += caster->getAgiReaction();
 
   // apply affect
   act("You attempt to disarm $N.", TRUE, caster, 0, victim, TO_CHAR);

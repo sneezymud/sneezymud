@@ -1432,6 +1432,7 @@ class TBeing : public TThing {
     virtual float getWisDamModifier() const;
     int getDexReaction() const;
     int getAgiReaction() const;
+    int getSpeReaction() const;
     int getConShock() const;
     float getConHpModifier() const;
     double getStatMod(statTypeT statType, int multiplier = 1) const;
@@ -1994,6 +1995,7 @@ class TBeing : public TThing {
     bool isRealUgly() const;
     bool isWary() const;
     void makeWary();
+    float getFocusMod() const;
     sstring displayExp() const;
     int hurtLimb(int, wearSlotT);
     void stunIfLimbsUseless();

@@ -59,10 +59,10 @@ int TThing::throwMe(TBeing* ch, dirTypeT tdir, const char* vict) {
   char local_vict[256];
 
   // a little physics....
-  // let the force I can throw something with be a function of my brawn
+  // let the force I can throw something with be a function of my STRENGTH
   // F = f(brawn) = mass * accelleration
   // acc = f(brawn)/m
-  float acc = ch->plotStat(STAT_CURRENT, STAT_BRA, 500.0, 5000.0, 2500.0);
+  float acc = ch->plotStat(STAT_CURRENT, STAT_STR, 500.0, 5000.0, 2500.0);
   acc /= max((float)3.0, getWeight());
   // regard acc as a ft/sec^2
   // assume a throw has this constant acceleration for 0.2 secs
@@ -390,7 +390,7 @@ bool hitInnocent(const TBeing* ch, const TThing* thing, const TThing* vict) {
   num += 1 + thing->getVolume() / 1000;
 
   if (ch) {
-    num -= ch->plotStat(STAT_CURRENT, STAT_AGI, -10, 10, 0);
+    num -= ch->getAgiReaction() * 2;  // Scale to match original -10 to 10 range
   }
 
   if (tbc) {
@@ -440,8 +440,8 @@ int TThing::catchSmack(TBeing* ch, TBeing** targ, TRoom* rp, int cdist,
       if (!true_targ && range != mdist)
         range++;
 
-      if ((::number(1, 25) <
-            tbt->plotStat(STAT_CURRENT, STAT_SPE, 3, 18, 13)) &&
+      // Scale to match original 3-18 range
+      if ((::number(1, 25) < (10 + tbt->getSpeReaction() * 1.5)) &&
           tbt->hasHands() && !tbt->bothHandsHurt() && tbt->awake() &&
           tbt->canGet(this, SILENT_YES)) {
         resCode = TRUE;

@@ -1456,7 +1456,7 @@ int TBeing::bumpHeadDoor(roomDirData* exitp, int* height) {
     return FALSE;
 
   doorbuf = exitp->getName();
-  if (::number(1, 300) > plotStat(STAT_CURRENT, STAT_AGI, 30, 180, 110)) {
+  if (::number(1, 300) > (110 + getAgiReaction() * 5)) {
     sendTo(format("You bump your head as you go through the %s.  OUCH!\n\r") %
            doorbuf.uncap());
     buf = format("$n bumps $s head on the %s.  That had to hurt.") %
