@@ -6205,21 +6205,32 @@ int stickerBush(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
 }
 
 int rechargingWand(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
-  TWand* tw;
+  if (cmd != CMD_GENERIC_PULSE || ::number(0, 49 || !o))
+    return false;
 
-  if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+  ch = dynamic_cast<TBeing*>(o->equippedBy);
 
-  if (!(tw = dynamic_cast<TWand*>(o)))
-    return FALSE;
+  // The proc should only work when a mage mob or PC has the object equipped
+  if (!ch || !ch->hasClass(CLASS_MAGE))
+    return false;
 
-  if (::number(0, 99))
-    return FALSE;
+  int manaCost = ::number(10, 50);
 
-  if (tw->getCurCharges() < tw->getMaxCharges())
-    tw->addToCurCharges(1);
+  // The PC/mob should have enough mana for the proc to work
+  if (ch->getMana() < manaCost)
+    return false;
 
-  return TRUE;
+  TWand* wand = dynamic_cast<TWand*>(o);
+
+  // The proc should only work on wands that aren't already at max charges
+  if (!wand || wand->getCurCharges() >= wand->getMaxCharges())
+    return false;
+
+  wand->addToCurCharges(1);
+  ch->addToMana(-manaCost);
+  act("You feel <P>energy<z> pulled from you and into $o.", false, ch, wand,
+    nullptr, TO_CHAR);
+  return true;
 }
 
 int skittishObject(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
