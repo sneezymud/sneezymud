@@ -647,29 +647,30 @@ int magicGills(TBeing*, cmdTypeT cmd, const char*, TObj* me, TObj*) {
   return TRUE;
 }
 
-int JewelJudgment(TBeing*, cmdTypeT cmd, const char*, TObj* me, TObj*) {
-  TBeing* tmp;
+int JewelJudgment(TBeing*, cmdTypeT cmd, const char*, TObj* jj, TObj*) {
+  TBeing* ch;
+  int rc;
+  if (cmd != CMD_GENERIC_PULSE || ::number(0, 24))
+    return false;
 
-  if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
-  if (!(tmp = dynamic_cast<TBeing*>(me->equippedBy)))
-    return FALSE;
-  if (number(0, 2)) {
-    return FALSE;
-  } else {
-    obj_act("pulses with a warm glow.", tmp, me, tmp, ANSI_ORANGE);
-    act("$n looks drained as energy seeps from $m into $p.", TRUE, tmp, me, 0,
-      TO_ROOM, ANSI_ORANGE);
-    act("You grunt softly as energy seeps from your body into $p.", TRUE, tmp,
-      me, 0, TO_CHAR, ANSI_ORANGE);
-    if (tmp->reconcileDamage(dynamic_cast<TBeing*>(me->equippedBy),
-          number(3, 8), DAMAGE_DRAIN) == -1) {
-      delete tmp;
-      tmp = NULL;
-    }
+  if (!(ch = dynamic_cast<TBeing*>(jj->equippedBy)))
+    return false;
 
-    return TRUE;
+  int mdDam = ::number(8, 16);
+  act("pulses with a warm glow.", false, ch, jj, 0, TO_ROOM, ANSI_ORANGE);
+  act("$n looks drained as energy seeps from $m into $p.", false, ch, jj, 0,
+    TO_ROOM, ANSI_ORANGE);
+  act("You grunt softly as energy seeps from your body into $p.", false, ch, jj,
+    0, TO_CHAR, ANSI_ORANGE);
+  rc = ch->reconcileDamage(ch, mdDam, DAMAGE_DRAIN);
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    return DELETE_VICT;
+  if (ch->getMana() < ch->manaLimit()) {
+    act("Your skill crackles as$p feeds you some of its power.", true, ch, jj,
+      0, TO_CHAR, ANSI_RED);
+    ch->addToMana(mdDam);
   }
+  return TRUE;
 }
 
 int bowl_of_blood(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* me, TObj*) {
