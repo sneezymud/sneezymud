@@ -35,6 +35,10 @@ class TGenWeapon : public TBaseWeapon {
     virtual bool canBackstab() const;
     virtual bool canStab() const;
     virtual bool hasSpikes() const;
+    virtual bool isSpear() const;
+    virtual bool isMaul() const;
+    virtual bool canHamstring() const;
+    virtual bool canSap() const;
 
     TGenWeapon();
     TGenWeapon(const TGenWeapon& a);

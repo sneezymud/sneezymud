@@ -310,6 +310,7 @@ immuneTypeT getTypeImmunity(spellNumT type) {
     case SKILL_BACKSTAB:
     case SKILL_THROATSLIT:
     case SKILL_STABBING:
+    case SKILL_SAP:
     case TYPE_PIERCE:
     case TYPE_STING:
     case TYPE_STAB:

@@ -105,7 +105,20 @@ bool willBreakHide(cmdTypeT tCmd, bool isPre) {
     case CMD_SLIT:
       return (isPre ? false : true);
 
+    /// rest is a special case. we don't want to break hide for it
+    /// this represents the PC's ability to remain alert
+    ///  CMD_STAND is included to prevent hide from breaking when the thief
+    ///  exits rest.
+    ///  CMD_SIGN is meant to represent a 'thieves cant' means of communication
+    ///  without revealing the thief's position, because it already requires
+    ///  that the PC be visible CMD_PTELL is also included because it's meant to
+    ///  be silent conceal, disguise, spy, sneak, and hide are also included as
+    ///  they are stealth-oriented thief abilities
+    case CMD_PTELL:
+    case CMD_REST:
+    case CMD_STAND:
     case CMD_LOOK:
+    case CMD_SIGN:
     case CMD_SCORE:
     case CMD_TROPHY:
     case CMD_INVENTORY:
@@ -119,6 +132,7 @@ bool willBreakHide(cmdTypeT tCmd, bool isPre) {
     case CMD_TIME:
     case CMD_HIDE:
     case CMD_SNEAK:
+    case CMD_CONCEAL:
     case CMD_QUEST:
     case CMD_LEVELS:
     case CMD_WIZLIST:
@@ -353,9 +367,10 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring& argument, TThing* vict,
       }
     }
 
-    if (IS_SET(specials.affectedBy, AFF_HIDE) && willBreakHide(cmd, true))
+    if (IS_SET(specials.affectedBy, AFF_HIDE) && willBreakHide(cmd, true)) {
+      ch->sendTo("You move from your hiding spot.\n\r");
       REMOVE_BIT(specials.affectedBy, AFF_HIDE);
-
+    }
     rc = triggerSpecial(NULL, cmd, newarg.c_str());
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
@@ -1610,6 +1625,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring& argument, TThing* vict,
         case CMD_STAB:
           rc = doStab(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
+        case CMD_SAP:
+          rc = doSap(newarg.c_str(), dynamic_cast<TBeing*>(vict));
+          break;
         case CMD_CUDGEL:
           rc = doCudgel(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
@@ -2058,11 +2076,6 @@ int TBeing::parseCommand(const sstring& orig_arg, bool typedIn, bool doAlias) {
     incorrectCommand();
     return FALSE;
   }
-
-  if (IS_SET(specials.affectedBy, AFF_HIDE) && cmd != CMD_BACKSTAB)
-    REMOVE_BIT(specials.affectedBy, AFF_HIDE);
-  if (IS_SET(specials.affectedBy, AFF_HIDE) && cmd != CMD_SLIT)
-    REMOVE_BIT(specials.affectedBy, AFF_HIDE);
 
   if (getCaptiveOf()) {
     if (!sameRoom(*getCaptiveOf())) {
@@ -2921,6 +2934,7 @@ void buildCommandArray(void) {
   commandArray[CMD_GARROTTE] =
     new commandInfo("garrotte", POSITION_STANDING, 0);
   commandArray[CMD_STAB] = new commandInfo("stab", POSITION_FIGHTING, 0);
+  commandArray[CMD_SAP] = new commandInfo("sap", POSITION_STANDING, 0);
   commandArray[CMD_CUDGEL] = new commandInfo("cudgel", POSITION_STANDING, 0);
   commandArray[CMD_PENANCE] = new commandInfo("penance", POSITION_RESTING, 0);
   commandArray[CMD_SMITE] = new commandInfo("smite", POSITION_SITTING, 0);

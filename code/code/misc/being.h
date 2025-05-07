@@ -1971,7 +1971,9 @@ class TBeing : public TThing {
     int doDisguise(const char*);
     int doPoisonWeapon(sstring);
     int doGarrotte(const char*, TBeing*);
-    int doStab(const char*, TBeing*);
+    int doSap(const char* argument, TBeing* vict);
+    int sapFail(TBeing* victim);
+    int sapSuccess(TBeing* victim);
     int doCudgel(const char*, TBeing*);
     virtual int moneyMeBeing(TThing* mon, TThing* sub);
     virtual unsigned int getTimer() const = 0;

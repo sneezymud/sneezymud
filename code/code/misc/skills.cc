@@ -878,6 +878,8 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
       return &((CDThief*)cd)->skRepairThief;
     case SKILL_TRACK:  //                      339
       return &((CDThief*)cd)->skTrack;
+    case SKILL_SAP:
+      return &((CDThief*)cd)->skSap;
 
       // disc_fighting_thief
 

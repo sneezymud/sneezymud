@@ -8,6 +8,7 @@ class CDThief : public CDiscipline {
     CSkill skSwindle;
     CSkill skSneak;
     CSkill skStabbing;
+    CSkill skSap;
     CSkill skRetreatThief;
     CSkill skKickThief;
     CSkill skPickLock;
