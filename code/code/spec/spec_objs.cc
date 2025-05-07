@@ -6150,15 +6150,22 @@ int pirateHatDispenser(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o,
 }
 
 int regeneration(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
-  if (!o)
-    return FALSE;
-  if (!(ch = dynamic_cast<TBeing*>(o->equippedBy)))
-    return FALSE;  // weapon not equipped (carried or on ground)
-
-  if (cmd == CMD_GENERIC_PULSE)
-    ch->addToHit(max(1, (int)(ch->hitGain() / 10.0)));
-
-  return FALSE;
+  int num = ::number(2, 8);
+  ch = dynamic_cast<TBeing*>(o->equippedBy);
+  if (!ch || (ch->getHit() < ch->hitLimit()))
+    return false;
+  if (cmd == CMD_GENERIC_PULSE && !::number(0, 24)) {
+    if (ch->getCond(FULL) > num) {
+      ch->addToHit(num);
+      ch->gainCondition(FULL, num);
+      act("You feel your wounds begin to knit together.", false, ch, nullptr,
+        nullptr, TO_CHAR);
+    } else {
+      act("The magic of your $o cannot repair your wounds. You must eat.",
+        false, ch, nullptr, nullptr, TO_CHAR);
+    }
+  }
+  return true;
 }
 
 int pietyRegen(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
