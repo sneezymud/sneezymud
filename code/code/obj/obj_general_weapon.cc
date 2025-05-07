@@ -165,3 +165,81 @@ bool TGenWeapon::canBackstab() const {
 bool TGenWeapon::canStab() const {
   return isPierceWeapon() && getVolume() <= 2000;
 }
+
+bool TGenWeapon::hasSpikes() const { return isObjStat(ITEM_SPIKED); }
+
+int spikesBreak(TBeing* victim, TBeing* ch, TObj* obj) {
+  int dam = ::number(1, 4);
+  if (!obj)
+    return false;
+
+  if ((obj->isObjStat(ITEM_SPIKED)) && percentChance(25) && victim->isTough()) {
+    obj->addToStructPoints(-dam);
+    obj->addToMaxStructPoints(-1);
+    act("Your $o catches on $N!", FALSE, ch, obj, victim, TO_CHAR);
+    act("$n's $o catches on $N!", FALSE, ch, obj, victim, TO_NOTVICT);
+    act("$n's $o catches as it makes impact with you!", FALSE, ch, obj, victim,
+      TO_VICT);
+    act("The spikes break off, damaging $n's $o!", FALSE, ch, obj, nullptr,
+      TO_ROOM, ANSI_GRAY);
+    act("The spikes break off, damaging your $o!", FALSE, ch, obj, nullptr,
+      TO_CHAR, ANSI_GRAY);
+
+    if (obj->getMaxStructPoints() <= 0) {
+      obj->makeScraps();
+      return true;
+    }
+
+    if (auto* weapon = dynamic_cast<TGenWeapon*>(obj)) {
+      weapon->addToCurSharp(-dam);
+      weapon->addToMaxSharp(-1);
+      act("The impact mars the edge of $n's $o!", FALSE, ch, obj, nullptr,
+        TO_ROOM);
+      act("The impact mars the edge of your $o!", FALSE, ch, obj, nullptr,
+        TO_CHAR);
+
+      if (weapon->getMaxSharp() <= 0) {
+        weapon->makeScraps();
+        return true;
+      }
+    }
+
+    if (percentChance(25)) {
+      obj->remObjStat(ITEM_SPIKED);
+      act("$n's $p looks less dangerous now.", FALSE, ch, obj, nullptr, TO_ROOM,
+        ANSI_GRAY);
+      act("Your $p looks less dangerous now.", FALSE, ch, obj, nullptr, TO_CHAR,
+        ANSI_GRAY);
+    }
+    return true;
+  }
+  return false;
+}
+
+int spikesHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT limb) {
+  if (!victim || limb == WEAR_NOWHERE) {
+    return false;
+  }
+
+  if (!obj->isObjStat(ITEM_SPIKED) && !obj->isSpiked()) {
+    return false;
+  }
+
+  if (victim->isLimbFlags(limb, PART_MISSING)) {
+    return false;
+  }
+
+  if (!victim->isUndead() && !victim->isImmune(IMMUNE_BLEED, limb)) {
+    victim->rawBleed(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+
+    act("The spikes on $p tear open a <R>bloody wound<1> in $N's flesh!", FALSE,
+      ch, obj, victim, TO_NOTVICT);
+    act("The spikes on $p tear open a <R>bloody wound<1> in your flesh!", FALSE,
+      ch, obj, victim, TO_VICT);
+    act("The spikes on $p tear open a <R>bloody wound<1> in $N's flesh!", FALSE,
+      ch, obj, victim, TO_CHAR);
+  }
+
+  spikesBreak(victim, ch, obj);
+  return true;
+}

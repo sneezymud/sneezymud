@@ -361,13 +361,37 @@ int TBeing::bashSuccess(TBeing* victim, spellNumT skill, bool isHoldingShield,
 
     if (itemInSecondaryHand->isSpiked() ||
         itemInSecondaryHand->isObjStat(ITEM_SPIKED)) {
-      act("The spikes on your $o sink into $N.", FALSE, this,
-        itemInSecondaryHand, victim, TO_CHAR);
-      act("The spikes on $n's $o sink into $N.", FALSE, this,
-        itemInSecondaryHand, victim, TO_NOTVICT);
-      act("The spikes on $n's $o sink into you.", FALSE, this,
-        itemInSecondaryHand, victim, TO_VICT);
-      shieldDam += 2;
+      int spikeDam = ::number(1, 4);
+      shieldDam += spikeDam;
+      wearSlotT limb = victim->getPartHit(this, false);
+      victim->addCurLimbHealth(limb, -spikeDam);
+      if (victim->isUndead() || victim->isImmune(IMMUNE_BLEED, limb) ||
+          victim->isLimbFlags(limb, PART_MISSING)) {
+        act("The spikes on your $o sink into $N's %s.", FALSE, this,
+          itemInSecondaryHand, victim, TO_CHAR);
+        act("The spikes on $n's $o sink into $N's %s.", FALSE, this,
+          itemInSecondaryHand, victim, TO_NOTVICT);
+        act("The spikes on $n's $o sink into your %s.", FALSE, this,
+          itemInSecondaryHand, victim, TO_VICT);
+      } else {
+        act(
+          "The spikes on your $o sink into $N's %s and open up a bloody wound!",
+          FALSE, this, itemInSecondaryHand, victim, TO_CHAR);
+        act(
+          "The spikes on $n's $o sink into $N's %s and open up a bloody wound! "
+          ".",
+          FALSE, this, itemInSecondaryHand, victim, TO_NOTVICT);
+        act(
+          "The spikes on $n's $o sink into your %s and open up a bloody wound!",
+          FALSE, this, itemInSecondaryHand, victim, TO_VICT);
+        victim->rawBleed(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+      }
+      if (!::number(0, 3)) {
+        itemInSecondaryHand->addToMaxStructPoints(-1);
+        itemInSecondaryHand->addToStructPoints(-spikeDam);
+        act("$o is damaged slightly as the spikes rip free.", false, this,
+          itemInSecondaryHand, victim, TO_CHAR);
+      }
     }
   }
 

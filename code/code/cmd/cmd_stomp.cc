@@ -8,6 +8,8 @@
 #include "being.h"
 #include "enum.h"
 #include "combat.h"
+#include "obj.h"
+#include "obj_general_weapon.h"
 
 bool TBeing::canStomp(TBeing* victim, silentTypeT silent) {
   if (checkBusy())
@@ -106,7 +108,7 @@ int TBeing::stompHit(TBeing* victim) {
   int h_dam;
   int height, targ_height;
   int rc;
-
+  wearSlotT limb;
   int dam = getSkillDam(victim, SKILL_STOMP, getSkillLevel(SKILL_STOMP),
     getAdvLearning(SKILL_STOMP));
 
@@ -127,8 +129,8 @@ int TBeing::stompHit(TBeing* victim) {
         "You look upward just in time to see the bottom of $n's foot "
         "descending toward you!",
         FALSE, this, 0, victim, TO_VICT, ANSI_RED);
-
-      TObj* item = dynamic_cast<TObj*>(victim->equipment[WEAR_HEAD]);
+      limb = WEAR_HEAD;
+      TObj* item = dynamic_cast<TObj*>(victim->equipment[limb]);
       if (!item) {
         h_dam = 1 + dam / 5;
         rc = damageLimb(victim, WEAR_HEAD, 0, &h_dam);
@@ -147,8 +149,12 @@ int TBeing::stompHit(TBeing* victim) {
         TO_VICT, ANSI_RED);
 
       dam /= 5;
+      limb = WEAR_FOOT_L;
+      if (percentChance(50)) {
+        limb = WEAR_FOOT_R;
+      }
+      TObj* item = dynamic_cast<TObj*>(victim->equipment[limb]);
 
-      TObj* item = dynamic_cast<TObj*>(victim->equipment[WEAR_FOOT_L]);
       if (!item) {
         h_dam = 1 + dam / 4;
         rc = damageLimb(victim, WEAR_FOOT_L, 0, &h_dam);
@@ -160,12 +166,34 @@ int TBeing::stompHit(TBeing* victim) {
       }
     }
   } else {
-    act("$n lifts $s leg high, stomping $N while $E is down.", FALSE, this, 0,
-      victim, TO_NOTVICT);
-    act("You lift your leg high and stomp $N hard while $E is down.", FALSE,
-      this, 0, victim, TO_CHAR);
-    act("$n stomps you hard while you are down!", FALSE, this, 0, victim,
-      TO_VICT, ANSI_RED);
+    limb = WEAR_BACK;
+    if (percentChance(50)) {
+      limb = WEAR_BODY;
+    }
+    TObj* item = dynamic_cast<TObj*>(victim->equipment[limb]);
+
+    if (!item) {
+      h_dam = 1 + dam / 4;
+      rc = damageLimb(victim, WEAR_FOOT_L, 0, &h_dam);
+      act("$n lifts $s leg high, stomping $N while $E is down.", FALSE, this, 0,
+        victim, TO_NOTVICT);
+      act("You lift your leg high and stomp $N hard while $E is down.", FALSE,
+        this, 0, victim, TO_CHAR);
+      act("$n stomps you hard while you are down!", FALSE, this, 0, victim,
+        TO_VICT, ANSI_RED);
+    }
+  }
+  TObj* hurtyboot = dynamic_cast<TObj*>(this->equipment[getPrimaryFoot()]);
+  if (hurtyboot->isObjStat(ITEM_SPIKED) || hurtyboot->isSpiked()) {
+    sstring buf =
+      format("The spikes on your $o sink into $N.") % hurtyboot->getName();
+    act(buf, false, this, hurtyboot, victim, TO_CHAR);
+    buf = format("The spikes on $n's $o sink into $N.") % hurtyboot->getName();
+    act(buf, false, this, hurtyboot, victim, TO_NOTVICT);
+    buf = format("The spikes on $n's $o sink into you.") % hurtyboot->getName();
+    act(buf, false, this, hurtyboot, victim, TO_VICT);
+    reconcileDamage(victim, dam, TYPE_STAB);
+    spikesHit(victim, this, hurtyboot, limb);
   }
   if (reconcileDamage(victim, dam, SKILL_STOMP) == -1)
     return DELETE_VICT;

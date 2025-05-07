@@ -137,16 +137,27 @@ static int chopHit(TBeing* c, TBeing* v, int score) {
   }
 
   item = dynamic_cast<TObj*>(c->equipment[c->getPrimaryHand()]);
-  if (item)
-    if (item->isSpiked() || item->isObjStat(ITEM_SPIKED)) {
-      act("The spikes on your $o sink into $N.", FALSE, c, item, v, TO_CHAR);
-      act("The spikes on $n's $o sink into $N.", FALSE, c, item, v, TO_NOTVICT);
-      act("The spikes on $n's $o sink into you.", FALSE, c, item, v, TO_VICT);
-
-      if (c->reconcileDamage(v, (int)(dam * 0.15), TYPE_STAB) == -1)
-        return DELETE_VICT;
+  if (!item)
+    return false;
+  if (item->isObjStat(ITEM_SPIKED)) {
+    act("The spikes on your $o sink into $N.", FALSE, c, item, v, TO_CHAR);
+    act("The spikes on $n's $o sink into $N.", FALSE, c, item, v, TO_NOTVICT);
+    act("The spikes on $n's $o sink into you.", FALSE, c, item, v, TO_VICT);
+    if (c->reconcileDamage(v, (int)(dam / 3), TYPE_STAB) == -1)
+      return DELETE_VICT;
+    if (!v->isUndead() && !v->isImmune(IMMUNE_BLEED, pos)) {
+      v->rawBleed(pos, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+      sstring buf =
+        format(
+          "A <r>bloody wound<1> opens as the spikes on $o shred $N's %s!") %
+        v->describeBodySlot(pos);
+      act(buf, false, v, nullptr, nullptr, TO_NOTVICT);
+      buf = format(
+              "A <r>bloody wound<1> opens as the spikes on $o shred your $s!") %
+            v->describeBodySlot(pos);
+      act(buf, false, v, nullptr, nullptr, TO_VICT);
     }
-
+  }
   if (c->reconcileDamage(v, dam, SKILL_CHOP) == -1)
     return DELETE_VICT;
 

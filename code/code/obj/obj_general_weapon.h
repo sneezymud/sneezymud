@@ -34,9 +34,13 @@ class TGenWeapon : public TBaseWeapon {
     virtual bool canCudgel() const;
     virtual bool canBackstab() const;
     virtual bool canStab() const;
+    virtual bool hasSpikes() const;
 
     TGenWeapon();
     TGenWeapon(const TGenWeapon& a);
     TGenWeapon& operator=(const TGenWeapon& a);
     virtual ~TGenWeapon();
 };
+
+int spikesHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT limb);
+int spikesBreak(TBeing* victim, TBeing* ch, TObj* obj);
