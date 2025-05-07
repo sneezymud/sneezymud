@@ -6296,6 +6296,102 @@ int acidBlob(TBeing*, cmdTypeT cmd, const char*, TObj* blob, TObj*) {
   return FALSE;  // Always return FALSE to allow normal command processing
 }
 
+int caltrop(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
+  if (!ch || !o) {
+    return FALSE;
+  }
+
+  int dam = ::number(5, 10);
+  auto* calt = dynamic_cast<TGenWeapon*>(o);
+  if (!calt) {
+    return FALSE;
+  }
+
+  if (cmd != CMD_OBJ_MOVEMENT &&
+      (!ch->isLevitating() || ch->isSwimming() || !ch->isFlying())) {
+    return FALSE;
+  }
+
+  wearSlotT foot = WEAR_FOOT_R;
+  if (percentChance(50)) {
+    foot = WEAR_FOOT_L;
+  }
+
+  if (ch->isImmune(IMMUNE_PIERCE, foot) || ch->equipment[foot] ||
+      ch->getRace() == RACE_HOBBIT) {
+    act("You step on $p, crunching it underfoot.", TRUE, ch, o, 0, TO_CHAR);
+    act("$n steps on $p, crunching it underfoot.", TRUE, ch, o, 0, TO_ROOM);
+    o->addToStructPoints(-dam);
+    auto eq = dynamic_cast<TObj*>(ch->equipment[foot]);
+    if (eq) {
+      eq->addToStructPoints(-dam);
+      act("Your $o is damaged by the $o.", TRUE, ch, eq, o, TO_CHAR,
+        ANSI_ORANGE);
+    }
+    return FALSE;
+  }
+
+  if (!o->parent && !o->equippedBy) {
+    act("Ouch! You step on $p.", TRUE, ch, o, 0, TO_CHAR, ANSI_WHITE_BOLD);
+    act("$n steps on $p. Ouch!", TRUE, ch, o, 0, TO_ROOM, ANSI_WHITE_BOLD);
+
+    if ((ch->canSee(o) && !ch->isAgile(0)) ||
+        (!ch->canSee(o) && !ch->isAgile(0) && !ch->isAgile(0))) {
+      ch->hurtLimb(dam, foot);
+
+      if (!ch->isTough()) {
+        TObj* shd = read_object(939, VIRTUAL);
+        if (!shd) {
+          return FALSE;
+        }
+        auto* shard = dynamic_cast<TGenWeapon*>(shd);
+
+        if (!shard) {
+          delete shd;
+          return FALSE;
+        }
+
+        // Transfer material type from caltrop to shard
+        shard->setMaterial(calt->getMaterial());
+        calt->addToStructPoints(-dam);
+        calt->addToMaxStructPoints(-dam);
+        ch->stickIn(shard, foot);
+        // stickIn has a message. no need to repeat with our own
+        if (!ch->isUndead() || !ch->isImmune(IMMUNE_BLEED, foot)) {
+          ch->rawBleed(foot, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+          act("Blood begins to flow from the wound!", TRUE, ch, o, 0, TO_ROOM,
+            ANSI_RED_BOLD);
+          act("Blood begins to flow from the wound!", TRUE, ch, o, 0, TO_CHAR,
+            ANSI_RED_BOLD);
+        }
+        if (calt->isObjStat(ITEM_BURNING)) {
+          shard->addObjStat(ITEM_BURNING);
+        }
+
+        if (calt->isPoisoned()) {
+          liqTypeT poisonType = calt->getPoison();
+          shard->setPoison(poisonType);
+          shard->applyPoison(ch);
+        }
+
+        int rc = ch->reconcileDamage(ch, dam, DAMAGE_TRAP_PIERCE);
+        if (IS_SET_DELETE(rc, DELETE_VICT)) {
+          return DELETE_VICT;
+        }
+        return TRUE;
+      }
+
+      int rc = ch->reconcileDamage(ch, dam, DAMAGE_TRAP_PIERCE);
+      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+        return DELETE_VICT;
+      }
+      return TRUE;
+    }
+    return TRUE;
+  }
+  return FALSE;
+}
+
 int rechargingWand(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
   if (cmd != CMD_GENERIC_PULSE || ::number(0, 49 || !o))
     return false;
@@ -7632,4 +7728,5 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
   {TRUE, "poisonQuiver", poisonQuiver},
   {TRUE, "spikeBag", spikeBag},
   {FALSE, "acidBlob", acidBlob},
+  {TRUE, "caltrop", caltrop},
   {FALSE, "last proc", bogusObjProc}};
