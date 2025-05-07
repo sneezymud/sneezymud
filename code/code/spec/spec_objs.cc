@@ -6220,6 +6220,43 @@ int flamingArrowBow(TBeing* ch, cmdTypeT cmd, const char*, TObj* bow,
   return false;  // Return false to allow normal loading to continue
 }
 
+int spikeBag(TBeing* ch, cmdTypeT cmd, const char*, TObj* obj, TObj* b) {
+  if (cmd != CMD_OBJ_HAVING_SOMETHING_PUT_INTO || !obj || !ch ||
+      !b->equippedBy) {
+    return false;
+  }
+
+  if (!ch->hasClass(CLASS_THIEF)) {
+    return false;
+  }
+
+  auto* bag = dynamic_cast<TBaseContainer*>(b);
+
+  if (obj->isObjStat(ITEM_SPIKED) || !bag) {
+    return false;
+  }
+  int strDam = ::number(5, 10);
+  if (!ch->doesKnowSkill(SKILL_SET_TRAP_CONT)) {
+    strDam *= 2;
+  }
+  act("You hear a jangling noise as $p is put into the $P.", TRUE, ch, obj, bag,
+    TO_ROOM);
+  act("You feel like the $p has been altered.", TRUE, ch, obj, bag, TO_CHAR);
+  if (percentChance(50 - ch->getFocusMod())) {
+    act("The new spikes on $p puncture the $P, damaging it from within!", TRUE,
+      ch, bag, 0, TO_ROOM);
+    bag->addToStructPoints(-strDam);
+    bag->addToMaxStructPoints(strDam / 2);
+  }
+  if (bag->getMaxStructPoints() <= 0) {
+    bag->makeScraps();
+    return true;
+  }
+  obj->addObjStat(ITEM_SPIKED);
+
+  return true;
+}
+
 int rechargingWand(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
   if (cmd != CMD_GENERIC_PULSE || ::number(0, 49 || !o))
     return false;
@@ -7554,4 +7591,5 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
   {TRUE, "Glacial Weapon", glacialWeapon},
   {TRUE, "flamingArrowBow", flamingArrowBow},
   {TRUE, "poisonQuiver", poisonQuiver},
+  {TRUE, "spikeBag", spikeBag},
   {FALSE, "last proc", bogusObjProc}};
