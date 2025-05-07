@@ -12,6 +12,7 @@
 #include "db.h"
 #include "thing.h"
 #include "obj.h"
+#include "obj_pool.h"
 
 class TRoom;
 
@@ -159,6 +160,7 @@ class TRoom : public TThing {
     const sstring& getDescr();
 
     int dropPool(int, liqTypeT);
+    bool hasPool(TPool* p, liqTypeT);
     void flameRoom();
     virtual int chiMe(TBeing*);
     int checkPointroll();
@@ -262,6 +264,7 @@ class TRoom : public TThing {
     int pitchBlackDark() { return getLight() <= 0; }
 
     TThing* findInRoom(const std::function<bool(TThing*)>&);
+    TPool* hasPool(liqTypeT liq);
 };
 
 const int ZONE_MAX_TIME = 50;

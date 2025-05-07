@@ -473,3 +473,13 @@ TThing* TRoom::findInRoom(const std::function<bool(TThing*)>& predicate) {
   auto found = std::find_if(stuff.begin(), stuff.end(), predicate);
   return found != stuff.end() ? *found : nullptr;
 }
+
+TPool* TRoom::hasPool(liqTypeT liq) {
+  for (TThing* thing : stuff) {
+    auto* pool = dynamic_cast<TPool*>(thing);
+    if (pool && pool->getDrinkType() == liq) {
+      return pool;
+    }
+  }
+  return nullptr;
+}
