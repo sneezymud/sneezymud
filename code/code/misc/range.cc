@@ -14,6 +14,8 @@
 
 #include "handler.h"
 #include "extern.h"
+#include "obj.h"
+#include "obj_base_cup.h"
 #include "room.h"
 #include "being.h"
 #include "low.h"
@@ -519,6 +521,53 @@ int TThing::catchSmack(TBeing* ch, TBeing** targ, TRoom* rp, int cdist,
               if (!ch->sameRoom(*tbt))
                 act("In the distance, $p is destroyed.", TRUE, ch, tobj, 0,
                   TO_CHAR);
+
+              // Check if the object is a TBaseCup and has liquid
+              TBaseCup* tbc = dynamic_cast<TBaseCup*>(tobj);
+              int drinkUnits = tbc->getDrinkUnits();
+              liqTypeT liq = tbc->getDrinkType();
+              if (tbc && tbc->getDrinkUnits() > 0) {
+                // Show message about liquid splashing
+                act("The contents of $p splash all over $N!", TRUE, ch, tobj,
+                  tbt, TO_NOTVICT);
+                if (ch->sameRoom(*tbt))
+                  act("The contents of $p splash all over $N!", TRUE, ch, tobj,
+                    tbt, TO_CHAR);
+                act("You are soaked as the contents of $p splash all over you!",
+                  FALSE, tbt, tobj, NULL, TO_CHAR);
+
+                // Apply wetness to the victim using Weather::addWetness
+                if (drinkUnits > 0) {
+                  Weather::addWetness(tbt, drinkUnits);
+                  tbt->sendTo(
+                    format("You feel %s.\n\r") % Weather::describeWet(tbt));
+                }
+              }
+
+              if (tbc->getMaterial() == 4) {
+                // Add caltrop proc to the broken glass
+                TObj* shd = read_object(33468, VIRTUAL);
+                if (!shd)
+                  return FALSE;
+
+                auto* shard = dynamic_cast<TGenWeapon*>(shd);
+                if (!shard) {
+                  delete shd;
+                  return FALSE;
+                }
+
+                act("$p shatters into dangerous glass shards!", TRUE, tbt, tobj,
+                  nullptr, TO_ROOM);
+                act("$p shatters into dangerous glass shards!", TRUE, tbt, tobj,
+                  nullptr, TO_CHAR);
+                --(*shard);
+                *tbt->roomp += *shard;
+                shard->spec = 166;  // SPEC_CALTROP
+                if (drinkUnits > 0) {
+                  shard->setPoison(liq);
+                }
+              }
+
               if (!tobj->makeScraps())
                 ADD_DELETE(resCode, DELETE_ITEM);
             }
