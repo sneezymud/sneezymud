@@ -64,6 +64,7 @@
 
 #include "handler.h"
 #include "extern.h"
+#include "obj_arrow.h"
 #include "room.h"
 #include "low.h"
 #include "monster.h"
@@ -6178,6 +6179,27 @@ int stickerBush(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
   return TRUE;
 }
 
+int flamingArrowBow(TBeing* ch, cmdTypeT cmd, const char*, TObj* bow,
+  TObj* arrow) {
+  // Only trigger on bow loading
+  if (cmd != CMD_SHOOT) {
+    return false;
+  }
+
+  // Basic validity checks
+  if (!ch || !arrow) {
+    return false;
+  }
+
+  // Set the arrow on fire
+  arrow->addObjStat(ITEM_BURNING);
+  act("The $p <r>bursts into flames<1> as it flies through the air!", TRUE, ch,
+    arrow, bow, TO_CHAR);
+  act("$n's $p <r>bursts into flames<1> as it flies through the air!", TRUE, ch,
+    arrow, bow, TO_ROOM);
+  return false;  // Return false to allow normal loading to continue
+}
+
 int rechargingWand(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
   if (cmd != CMD_GENERIC_PULSE || ::number(0, 49 || !o))
     return false;
@@ -7373,6 +7395,8 @@ extern int glacialWeapon(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
   TObj*);
 extern int bloodDrain(TBeing* vict, cmdTypeT cmd, const char*, TObj* weapon,
   TObj*);
+extern int flamingArrowBow(TBeing* ch, cmdTypeT cmd, const char*, TObj* bow,
+  TObj* a);
 // assign special procedures to objects
 
 TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
@@ -7503,6 +7527,8 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
   {FALSE, "liquid source", liquidSource},  // 155
   {FALSE, "of many potions", ofManyPotions},
   {TRUE, "Shadow Weapon", shadowWeapon}, {TRUE, "Living Vines", livingVines},
-  {TRUE, "Piety Regen", pietyRegen}, {TRUE, "DK Sword", dkSword},
+  {TRUE, "Piety Regen", pietyRegen}, {TRUE, "DK Sword", dkSword}, // 160
   {TRUE, "Molten Weapon", moltenWeapon},
-  {TRUE, "Glacial Weapon", glacialWeapon}, {FALSE, "last proc", bogusObjProc}};
+  {TRUE, "Glacial Weapon", glacialWeapon},
+  {TRUE, "flamingArrowBow", flamingArrowBow},
+  {FALSE, "last proc", bogusObjProc}};
