@@ -1971,6 +1971,9 @@ class TBeing : public TThing {
     int doDisguise(const char*);
     int doPoisonWeapon(sstring);
     int doGarrotte(const char*, TBeing*);
+    int doStab(const char* argument, TBeing* vict);
+    int stabSuccess(TBeing* victim);
+    int stabFailure(TBeing* victim);
     int doSap(const char* argument, TBeing* vict);
     int sapFail(TBeing* victim);
     int sapSuccess(TBeing* victim);
