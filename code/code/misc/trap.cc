@@ -757,7 +757,8 @@ int TBeing::triggerContTrap(TOpenContainer* obj) {
 int TBeing::triggerArrowTrap(TArrow* obj) {
   int rc = 0;
   TThing* t;
-  int amnt;
+  TTrap* trap = dynamic_cast<TTrap*>(obj);
+  int amnt = obj->getTrapDamAmount();  // Initialize amnt here
 
   act("You hear a strange noise...", TRUE, this, 0, 0, TO_ROOM);
   act("You hear a strange noise...", TRUE, this, 0, 0, TO_CHAR);
@@ -785,13 +786,17 @@ int TBeing::triggerArrowTrap(TArrow* obj) {
       act("A column of flame shoots from $p at $n.", TRUE, this, obj, 0,
         TO_ROOM);
 
-      rc = objDamage(DAMAGE_TRAP_FIRE, obj->getTrapDamAmount(), obj);
+      amnt = obj->getTrapDamAmount();
+
+      rc = objDamage(DAMAGE_TRAP_FIRE, amnt, obj);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
 
       rc = flameEngulfed();
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+
+      rc = trapFire(amnt, trap);
 
       return TRUE;
     case DOOR_TRAP_TELEPORT:
@@ -808,9 +813,14 @@ int TBeing::triggerArrowTrap(TArrow* obj) {
       act("Sharpened spikes leap from $p at you.", TRUE, this, obj, 0, TO_CHAR);
       act("Sharpened spikes leap from $p at $n.", TRUE, this, obj, 0, TO_ROOM);
 
-      rc = objDamage(DAMAGE_TRAP_PIERCE, obj->getTrapDamAmount(), obj);
+      amnt = obj->getTrapDamAmount();
+
+      rc = objDamage(DAMAGE_TRAP_PIERCE, amnt, obj);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+
+      rc = trapSpike(amnt, trap);
+
       return TRUE;
     case DOOR_TRAP_DISEASE:
       act("You are engulfed in a cloud of spores.", FALSE, this, 0, 0, TO_ROOM);
@@ -826,9 +836,14 @@ int TBeing::triggerArrowTrap(TArrow* obj) {
       act("Razor sharp blades slice from $p into $n.", TRUE, this, obj, 0,
         TO_ROOM);
 
-      rc = objDamage(DAMAGE_TRAP_SLASH, obj->getTrapDamAmount(), obj);
+      amnt = obj->getTrapDamAmount();
+
+      rc = objDamage(DAMAGE_TRAP_SLASH, amnt, obj);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+
+      rc = trapDisc(amnt, trap);
+
       return TRUE;
     case DOOR_TRAP_TNT:
       act("A massive explosion destroys $p, and spews shrapnel into the room!",
@@ -860,6 +875,8 @@ int TBeing::triggerArrowTrap(TArrow* obj) {
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS | DELETE_ITEM;
 
+      rc = trapExplosive(amnt, trap);
+
       return DELETE_ITEM;
     case DOOR_TRAP_FROST:
       act("A frosty blast jets from $p into you.", TRUE, this, obj, 0, TO_CHAR);
@@ -873,6 +890,8 @@ int TBeing::triggerArrowTrap(TArrow* obj) {
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
 
+      rc = trapFrost(amnt, trap);
+
       return TRUE;
     case DOOR_TRAP_ENERGY:
       act("Bolts of raw plasma stream from $p into you.", TRUE, this, obj, 0,
@@ -883,6 +902,8 @@ int TBeing::triggerArrowTrap(TArrow* obj) {
       rc = objDamage(DAMAGE_TRAP_ENERGY, obj->getTrapDamAmount(), obj);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+
+      rc = trapPower(amnt, trap);
 
       return TRUE;
     case DOOR_TRAP_ACID:
@@ -898,6 +919,8 @@ int TBeing::triggerArrowTrap(TArrow* obj) {
       rc = acidEngulfed();
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+
+      rc = trapAcid(amnt, trap);
 
       return TRUE;
     default:
@@ -1112,6 +1135,8 @@ int TBeing::triggerTrap(TTrap* o) {
   TThing* v;
   TBeing* tbt;
   int rc;
+  int amnt;
+  amnt = o->getTrapDamAmount();
 
   o->setTrapCharges(o->getTrapCharges() - 1);
 
@@ -1187,6 +1212,7 @@ int TBeing::triggerTrap(TTrap* o) {
               delete tbt;
               tbt = NULL;
             }
+            rc = trapFire(amnt / 2, o);
           }
         }
       }
@@ -1201,6 +1227,8 @@ int TBeing::triggerTrap(TTrap* o) {
       rc = flameEngulfed();
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+
+      rc = trapFire(amnt, o);
 
       return TRUE;
     case DOOR_TRAP_TELEPORT:
@@ -1281,6 +1309,7 @@ int TBeing::triggerTrap(TTrap* o) {
               delete tbt;
               tbt = NULL;
             }
+            rc = trapBolt(amnt / 2, o);
           }
         }
       }
@@ -1291,6 +1320,8 @@ int TBeing::triggerTrap(TTrap* o) {
       rc = objDamage(DAMAGE_TRAP_PIERCE, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+
+      rc = trapBolt(amnt, o);
 
       return TRUE;
     case DOOR_TRAP_PEBBLE:
@@ -1314,6 +1345,7 @@ int TBeing::triggerTrap(TTrap* o) {
               delete tbt;
               tbt = NULL;
             }
+            rc = trapPebble(amnt / 2, o);
           }
         }
       }
@@ -1324,6 +1356,8 @@ int TBeing::triggerTrap(TTrap* o) {
       rc = objDamage(DAMAGE_TRAP_BLUNT, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+
+      rc = trapPebble(amnt, o);
 
       return TRUE;
     case DOOR_TRAP_DISK:
@@ -1350,6 +1384,7 @@ int TBeing::triggerTrap(TTrap* o) {
               delete tbt;
               tbt = NULL;
             }
+            rc = trapDisc(amnt / 2, o);
           }
         }
       }
@@ -1360,6 +1395,9 @@ int TBeing::triggerTrap(TTrap* o) {
       rc = objDamage(DAMAGE_TRAP_SLASH, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+
+      rc = trapDisc(amnt, o);
+
       return TRUE;
     case DOOR_TRAP_TNT:
       act(
@@ -1384,6 +1422,7 @@ int TBeing::triggerTrap(TTrap* o) {
               delete tbt;
               tbt = NULL;
             }
+            rc = trapExplosive(amnt / 2, o);
           }
         }
       }
@@ -1394,6 +1433,7 @@ int TBeing::triggerTrap(TTrap* o) {
       rc = objDamage(DAMAGE_TRAP_TNT, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+      rc = trapExplosive(amnt, o);
       return TRUE;
     case DOOR_TRAP_FROST:
       act("An icy cloud pours out of $p.", FALSE, this, o, 0, TO_CHAR);
@@ -1414,6 +1454,7 @@ int TBeing::triggerTrap(TTrap* o) {
               delete tbt;
               tbt = NULL;
             }
+            rc = trapFrost(amnt / 2, o);
           }
         }
       }
@@ -1428,7 +1469,7 @@ int TBeing::triggerTrap(TTrap* o) {
       rc = frostEngulfed();
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
-
+      rc = trapFrost(amnt, o);
       return TRUE;
     case DOOR_TRAP_ENERGY:
       act("$p glows with magic, before streams of plasma streak out of it.",
@@ -1449,6 +1490,7 @@ int TBeing::triggerTrap(TTrap* o) {
               delete tbt;
               tbt = NULL;
             }
+            rc = trapPower(amnt / 2, o);
           }
         }
       }
@@ -1461,6 +1503,7 @@ int TBeing::triggerTrap(TTrap* o) {
       rc = objDamage(DAMAGE_TRAP_ENERGY, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+      rc = trapPower(amnt, o);
       return TRUE;
     case DOOR_TRAP_ACID:
       act("A yellow-green cloud billows out of $p.", FALSE, this, o, 0,
@@ -1481,6 +1524,7 @@ int TBeing::triggerTrap(TTrap* o) {
               delete tbt;
               tbt = NULL;
             }
+            rc = trapAcid(amnt / 2, o);
           }
         }
       }
@@ -1497,7 +1541,7 @@ int TBeing::triggerTrap(TTrap* o) {
       rc = acidEngulfed();
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
-
+      rc = trapAcid(amnt, o);
       return TRUE;
     default:
       vlogf(LOG_BUG, format("Unknown trap type %d in triggerTrap (%s:%d)") %
@@ -1898,6 +1942,540 @@ void TBeing::trapPoison(int amt) {
     act("$n doesn't look so hot.", TRUE, this, 0, 0, TO_ROOM);
     disease_start(this, &af2);
   }
+}
+
+//// spike trap
+int TBeing::trapSpike(int amt, TTrap* trap) {
+  // embed spikes
+  int limbDam = ::number(amt / 2, amt);
+  limbDam = limbDam * (getImmunity(IMMUNE_PIERCE) / 100);
+  TObj* spike = read_object(937, VIRTUAL);
+  wearSlotT limb = pickRandomLimb();
+
+  // Check if limb already has something stuck in it
+  if (getStuckIn(limb)) {
+    delete spike;  // Clean up the object we created
+    return false;
+  }
+
+  if (equipment[limb]) {
+    auto* eq = dynamic_cast<TObj*>(equipment[limb]);
+    eq->addToStructPoints(-limbDam);
+    sstring buf =
+      format("A spike tears through your %s, damaging it!") % equipment[limb];
+    act(buf, false, this, nullptr, nullptr, TO_CHAR, ANSI_YELLOW);
+    buf =
+      format("A spike tears through $n's %s, damaging it!") % equipment[limb];
+    act(buf, false, this, nullptr, nullptr, TO_ROOM, ANSI_YELLOW);
+  }
+
+  stickIn(spike, limb);
+  addCurLimbHealth(limb, -limbDam * 5);
+
+  sstring buf =
+    format("A spike embeds itself in your %s!") % describeBodySlot(limb);
+  act(buf, false, this, nullptr, nullptr, TO_CHAR, ANSI_ORANGE);
+  act(buf, false, this, nullptr, nullptr, TO_ROOM, ANSI_ORANGE);
+
+  if (!isTough() && !isImmune(IMMUNE_BLEED, limb)) {
+    rawBleed(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+    act("Blood begins to flow from the wound!", false, this, nullptr, nullptr,
+      TO_CHAR, ANSI_RED_BOLD);
+    act("Blood begins to flow from the wound!", false, this, nullptr, nullptr,
+      TO_ROOM, ANSI_RED_BOLD);
+  }
+
+  return true;
+}
+
+//// bolt trap
+int TBeing::trapBolt(int amt, TTrap* trap) {
+  std::vector<wearSlotT> validLimbs;
+  int maxNumLimbs = trap->getTrapLevel() / 3;
+  int numLimbs = ::number((maxNumLimbs / 3), maxNumLimbs);
+  int limbDam = ::number(amt / 2, amt);
+  limbDam = limbDam * (getImmunity(IMMUNE_PIERCE) / 100);
+
+  for (wearSlotT limb = MIN_WEAR; limb < MAX_WEAR; limb++) {
+    if (hasPart(limb) && !getStuckIn(limb)) {
+      validLimbs.push_back(limb);
+    }
+  }
+
+  while (numLimbs > 0 && !validLimbs.empty()) {
+    unsigned int index = ::number(0, validLimbs.size() - 1);
+    wearSlotT limb = validLimbs[index];
+    TObj* bolt = read_object(10008, VIRTUAL);
+
+    if (equipment[limb]) {
+      auto* eq = dynamic_cast<TObj*>(equipment[limb]);
+      eq->addToStructPoints(-limbDam);
+      sstring buf =
+        format("A bolt tears through your %s, damaging it!") % equipment[limb];
+      act(buf, false, this, nullptr, nullptr, TO_CHAR, ANSI_YELLOW);
+      buf =
+        format("A bolt tears through $n's %s, damaging it!") % equipment[limb];
+      act(buf, false, this, nullptr, nullptr, TO_ROOM, ANSI_YELLOW);
+    }
+
+    stickIn(bolt, limb);
+    addCurLimbHealth(limb, -limbDam);
+
+    sstring buf =
+      format("A bolt embeds itself in your %s!") % describeBodySlot(limb);
+    act(buf, false, this, nullptr, nullptr, TO_CHAR, ANSI_ORANGE);
+    buf = format("A bolt embeds itself in $n's %s!") % describeBodySlot(limb);
+    act(buf, false, this, nullptr, nullptr, TO_ROOM, ANSI_ORANGE);
+
+    if (!isTough() && !isImmune(IMMUNE_BLEED, limb)) {
+      rawBleed(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+      act("Blood begins to flow from the wound!", false, this, nullptr, nullptr,
+        TO_CHAR, ANSI_RED_BOLD);
+      act("Blood begins to flow from the wound!", false, this, nullptr, nullptr,
+        TO_ROOM, ANSI_RED_BOLD);
+    }
+
+    --numLimbs;
+    if (index != validLimbs.size() - 1) {
+      std::swap(validLimbs[index], validLimbs.back());
+    }
+    validLimbs.pop_back();
+  }
+
+  return true;
+}
+
+int TBeing::trapAcid(int amt, TTrap* trap) {
+  int maxNumLimbs = trap->getTrapLevel() / 3;
+  int numLimbs = ::number((maxNumLimbs / 3), maxNumLimbs);
+  int limbDam = ::number(amt / 3, amt / 1.5);
+  limbDam = limbDam * (getImmunity(IMMUNE_ACID) / 100);
+
+  std::vector<wearSlotT> validLimbs;
+  for (wearSlotT limb = MIN_WEAR; limb < MAX_WEAR; limb++) {
+    if (hasPart(limb) && !equipment[limb] && !getStuckIn(limb)) {
+      validLimbs.push_back(limb);
+    }
+  }
+
+  while (numLimbs > 0 && !validLimbs.empty()) {
+    unsigned int index = ::number(0, validLimbs.size() - 1);
+    wearSlotT limb = validLimbs[index];
+    TObj* glob = read_object(942, VIRTUAL);
+
+    // Set the special object number for acid effect
+    glob->spec = 167;  // acidBlob special procedure
+
+    // Set structure points based on trap level
+    glob->setStructPoints(trap->getTrapLevel());
+    glob->setMaxStructPoints(trap->getTrapLevel());
+
+    // Only set the specific wear location flag, making it unwearable/untakeable
+    glob->obj_flags.wear_flags = (1 << limb);
+    equipChar(glob, limb);
+    addCurLimbHealth(limb, -limbDam);
+
+    sstring buf = format("Acid burns into your %s!") % describeBodySlot(limb);
+    act(buf, false, this, nullptr, nullptr, TO_CHAR, ANSI_GREEN_BOLD);
+    buf = format("Acid burns into $n's %s!") % describeBodySlot(limb);
+    act(buf, false, this, nullptr, nullptr, TO_ROOM, ANSI_GREEN_BOLD);
+
+    --numLimbs;
+    if (index != validLimbs.size() - 1) {
+      std::swap(validLimbs[index], validLimbs.back());
+    }
+    validLimbs.pop_back();
+  }
+
+  return true;
+}
+int TBeing::trapExplosive(int amt, TTrap* trap) {
+  //// eat armor, equip glob of acid, does damage on pulse
+  int maxNumLimbs = trap->getTrapLevel() / 3;
+  int numLimbs = ::number((maxNumLimbs / 3), maxNumLimbs);
+  int limbDam = ::number(amt / 2, amt);
+  limbDam = limbDam * (getImmunity(IMMUNE_ACID) / 100);
+
+  std::vector<wearSlotT> validLimbs;
+
+  for (wearSlotT limb = MIN_WEAR; limb < MAX_WEAR; limb++) {
+    // Not sure of all the checks you'd need here
+    if (this->hasPart(limb) && !this->equipment[limb] &&
+        !this->getStuckIn(limb)) {
+      validLimbs.push_back(limb);
+    }
+  }
+
+  // Assuming you calculated the number of limbs to damage somehow previously
+  // and captured it in an int called `numLimbs` Do this until you've either
+  // damaged the max total number of limbs, or run out of valid target limbs
+  while (numLimbs > 0 && !validLimbs.empty()) {
+    unsigned int index = ::number(0, validLimbs.size() - 1);
+    wearSlotT limb = validLimbs[index];
+
+    addCurLimbHealth(limb, -limbDam);
+
+    sstring buf = format("Flaming chunks of shrapnel slam into $n's %s!") %
+                  describeBodySlot(limb);
+    act(buf, false, this, nullptr, nullptr, TO_ROOM, ANSI_WHITE_BOLD);
+    buf = format("Flaming chunks of shrapnel slam into your %s!") %
+          describeBodySlot(limb);
+    act(buf, false, this, nullptr, nullptr, TO_CHAR, ANSI_WHITE_BOLD);
+    if (!isAgile(0)) {
+      TObj* shrapnel = read_object(941, VIRTUAL);
+      shrapnel->addObjStat(ITEM_BURNING);
+      stickIn(shrapnel, limb);
+      act("$n is hit directly by a chunk of debris, which embeds in $n flesh!",
+        false, this, 0, 0, TO_NOTVICT);
+      act("You are hit by debris, which embeds into your flesh!", false, this,
+        0, 0, TO_CHAR);
+    }
+    // Reduce remaining limbs to damage before next loop
+    --numLimbs;
+
+    // Remove the limb damaged in this iteration from the vector so it can't be
+    // chosen again. It's way more efficient to just pop the last element off a
+    // vector, so if we didn't already randomly select the last element, swap
+    // the one we chose with the last one then pop it off the back.
+    if (index != validLimbs.size() - 1) {
+      std::swap(validLimbs[index], validLimbs.back());
+    }
+    validLimbs.pop_back();
+  }
+  return true;
+}
+
+int TBeing::trapFrost(int amt, TTrap* trap) {
+  //// limb damage, embed icicle
+  int maxNumLimbs = trap->getTrapLevel() / 3;
+  int numLimbs = ::number((maxNumLimbs / 3), maxNumLimbs);
+  int limbDam = ::number(amt / 2, amt);
+  limbDam = limbDam * (getImmunity(IMMUNE_COLD) / 100);
+
+  TObj* icicle = read_object(936, VIRTUAL);
+
+  std::vector<wearSlotT> validLimbs;
+
+  for (wearSlotT limb = MIN_WEAR; limb < MAX_WEAR; limb++) {
+    // Not sure of all the checks you'd need here
+    if (hasPart(limb) && !equipment[limb] && !getStuckIn(limb)) {
+      validLimbs.push_back(limb);
+    }
+  }
+
+  // Assuming you calculated the number of limbs to damage somehow previously
+  // and captured it in an int called `numLimbs` Do this until you've either
+  // damaged the max total number of limbs, or run out of valid target limbs
+  while (numLimbs > 0 && !validLimbs.empty()) {
+    unsigned int index = ::number(0, validLimbs.size() - 1);
+    wearSlotT limb = validLimbs[index];
+    if (this->equipment[limb]) {
+      auto* eq = dynamic_cast<TObj*>(this->equipment[limb]);
+      eq->addToStructPoints(-limbDam);
+      sstring buf =
+        format("A shard of ice tears through your %s, damaging it!") %
+        equipment[limb];
+      act(buf, false, this, nullptr, nullptr, TO_CHAR, ANSI_WHITE_BOLD);
+      buf = format("A shard of ice tears through your %s, damaging it!") %
+            equipment[limb];
+      act(buf, false, this, nullptr, nullptr, TO_ROOM, ANSI_WHITE_BOLD);
+    } else {
+      addCurLimbHealth(limb, -limbDam);
+      sstring buf =
+        format("A shard of ice tears through $N's %s, damaging it!") %
+        describeBodySlot(limb);
+      act(buf, false, this, nullptr, nullptr, TO_ROOM, ANSI_WHITE_BOLD);
+      buf = format("A shard of ice tears through your %s, damaging it!") %
+            describeBodySlot(limb);
+      act(buf, false, this, nullptr, nullptr, TO_CHAR, ANSI_WHITE_BOLD);
+      if (!isImmune(IMMUNE_COLD, WEAR_BODY)) {
+        stickIn(icicle, limb);
+        buf =
+          format("A icicle embeds itself in $N's %s!") % describeBodySlot(limb);
+        act(buf, false, this, nullptr, nullptr, TO_ROOM, ANSI_BLUE_BOLD);
+        buf = format("An icicle embeds itself in your %s!") %
+              describeBodySlot(limb);
+        act(buf, false, this, nullptr, nullptr, TO_CHAR, ANSI_BLUE_BOLD);
+      }
+    }
+
+    // Reduce remaining limbs to damage before next loop
+    --numLimbs;
+
+    // Remove the limb damaged in this iteration from the vector so it can't be
+    // chosen again. It's way more efficient to just pop the last element off a
+    // vector, so if we didn't already randomly select the last element, swap
+    // the one we chose with the last one then pop it off the back.
+    if (index != validLimbs.size() - 1) {
+      std::swap(validLimbs[index], validLimbs.back());
+    }
+    validLimbs.pop_back();
+  }
+  return true;
+}
+int TBeing::trapFire(int amt, TTrap* trap) {
+  std::vector<wearSlotT> validLimbs;
+  int level = trap->getTrapLevel();
+  int maxNumLimbs = trap->getTrapLevel() / 3;
+  int numLimbs = ::number((maxNumLimbs / 3), maxNumLimbs);
+  int limbDam = ::number(trap->getTrapLevel() / 5, trap->getTrapLevel() / 2.5);
+  limbDam = limbDam * (this->getImmunity(IMMUNE_PIERCE) / 100);
+
+  for (wearSlotT limb = MIN_WEAR; limb < MAX_WEAR;
+       limb++) {  // Fixed initialization
+    if (this->hasPart(limb) && !this->isImmune(IMMUNE_HEAT, limb)) {
+      validLimbs.push_back(limb);
+    }
+  }
+
+  while (numLimbs > 0 && !validLimbs.empty()) {
+    unsigned int index = ::number(0, validLimbs.size() - 1);
+    wearSlotT limb = validLimbs[index];
+    /// do things to the limb here
+    if (!this->equipment[limb]) {
+      addCurLimbHealth(limb, -limbDam);
+
+      sstring buf = format("Blazing tongues of fire burn $N's %s!") %
+                    this->describeBodySlot(limb);
+      act(buf, false, this, nullptr, nullptr, TO_ROOM, ANSI_ORANGE);
+      buf = format("Blazing tongues of fire burn your %s!") %
+            this->describeBodySlot(limb);
+      act(buf, false, this, nullptr, nullptr, TO_VICT, ANSI_ORANGE);
+      if (!this->isImmune(IMMUNE_HEAT, limb) && !this->isAgile(0)) {
+        int burnLev = ::number(1, level / 3);
+        affectedData af1;
+        af1.type = SPELL_FIRE_BREATH;
+        af1.level = level;
+        af1.duration = (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
+        af1.location = APPLY_IMMUNITY;
+        af1.modifier = IMMUNE_HEAT;
+        af1.modifier2 = burnLev;
+        af1.bitvector = 0;
+        buf = format("$N's %s begins to crack and char from the heat!") %
+              this->describeBodySlot(limb);
+        act(buf, false, this, nullptr, nullptr, TO_ROOM, ANSI_GRAY);
+        buf = format("Your %s begins to crack and char from the heat!") %
+              this->describeBodySlot(limb);
+        act(buf, false, this, nullptr, nullptr, TO_CHAR, ANSI_GRAY);
+      }
+      if (!this->isPerceptive() && limb == WEAR_HEAD &&
+          this->hasDisease(DISEASE_EYEBALL)) {
+        affectedData af;
+        af.type = AFFECT_DISEASE;
+        af.level = 0;  // has to be 0 for doctor to treat
+        af.duration = PERMANENT_DURATION;
+        af.modifier = DISEASE_EYEBALL;
+        af.location = APPLY_NONE;
+        af.bitvector = AFF_BLIND;
+        this->affectTo(&af);
+        this->rawBlind((level), af.duration, SAVE_NO);
+        act("$N is blinded by the heat!", false, this, nullptr, nullptr,
+          TO_ROOM, ANSI_YELLOW_BOLD);
+        act("The world goes black in a flash as you are blinded by the heat!",
+          false, this, nullptr, nullptr, TO_CHAR, ANSI_YELLOW_BOLD);
+      }
+      // back to vector stuff
+      --numLimbs;
+      if (index != validLimbs.size() - 1) {
+        std::swap(validLimbs[index], validLimbs.back());
+      }
+      validLimbs.pop_back();
+    }
+  }
+  return true;
+}
+int TBeing::trapPower(int amt, TTrap* trap) {
+  std::vector<wearSlotT> validLimbs;
+  int level = trap->getTrapLevel();
+  int maxNumLimbs = trap->getTrapLevel() / 3;
+  int numLimbs = ::number((maxNumLimbs / 3), maxNumLimbs);
+  int limbDam = ::number(trap->getTrapLevel() / 2, trap->getTrapLevel());
+  limbDam = limbDam * (this->getImmunity(IMMUNE_ENERGY) / 100);
+
+  for (wearSlotT limb = MIN_WEAR; limb < MAX_WEAR; limb++) {
+    // put particular checks here, pass through vict
+    if (this->hasPart(limb) && !this->isImmune(IMMUNE_ENERGY, limb)) {
+      validLimbs.push_back(limb);
+    }
+  }
+
+  while (numLimbs > 0 && !validLimbs.empty()) {
+    unsigned int index = ::number(0, validLimbs.size() - 1);
+    wearSlotT limb = validLimbs[index];
+    /// do things to the limb here
+    if (!this->equipment[limb]) {
+      limbDam += limbDam;
+
+      sstring buf = format("Bolts of arcane energy surge through $N's %s!") %
+                    this->describeBodySlot(limb);
+      act(buf, false, this, nullptr, nullptr, TO_ROOM, ANSI_PURPLE_BOLD);
+      buf = format("Bolts of arcane energy surge through your %s!") %
+            this->describeBodySlot(limb);
+      act(buf, false, this, nullptr, nullptr, TO_VICT, ANSI_PURPLE_BOLD);
+      if (!this->isImmune(IMMUNE_ENERGY, limb) &&
+          (!this->isWise() || !this->isIntelligent())) {
+        int zapLev = ::number(1, level / 3);
+        affectedData af1;
+        af1.type = SPELL_ATOMIZE;
+        af1.level = level;
+        af1.duration = (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
+        af1.location = APPLY_IMMUNITY;
+        af1.modifier = IMMUNE_ENERGY;
+        af1.modifier2 = zapLev;
+        af1.bitvector = 0;
+      }
+
+      // back to vector stuff
+      --numLimbs;
+      if (index != validLimbs.size() - 1) {
+        std::swap(validLimbs[index], validLimbs.back());
+      }
+      validLimbs.pop_back();
+    }
+  }
+  int headStr = this->getCurLimbHealth(WEAR_HEAD);
+  act("$N looks drained as the energy blasts $S!", false, this, nullptr,
+    nullptr, TO_ROOM);
+  act("You feel drained as the energy blasts you!", false, this, nullptr,
+    nullptr, TO_VICT);
+  genericCurse(nullptr, this, 50, SPELL_CURSE);
+  if (headStr <= (2 * limbDam)) {
+    affectedData aff;
+    aff.type = SPELL_PARALYZE;
+    aff.level = level;
+    aff.location = APPLY_NONE;
+    aff.bitvector = AFF_PARALYSIS;
+    aff.modifier = 0;
+
+    // balance notes, each "duration" is a complete round out of action
+    // to compare to other spell damages, we assume mob does 1.20 * lev
+    // dam per round
+    // clerics ought to be doing 1.60 * lev dam per round.
+    // theoretically, that means paralyze ought to be 4/3 * difficulty
+    // modifier of 100/60 = 20/9 = 2.25
+    // anyway, lets bump it up to 3 rounds
+    aff.duration = level / 3;
+  }
+  return true;
+}
+
+//// disc trap
+int TBeing::trapDisc(int amt, TTrap* trap) {
+  std::vector<wearSlotT> validLimbs;
+  int maxNumLimbs = trap->getTrapLevel() / 3;
+  int numLimbs = ::number((2 + (maxNumLimbs / 3)), 3 + maxNumLimbs);
+  int limbDam = ::number(trap->getTrapLevel() / 2, trap->getTrapLevel());
+  limbDam = limbDam * (this->getImmunity(IMMUNE_SLASH) / 100);
+
+  for (wearSlotT limb = MIN_WEAR; limb < MAX_WEAR; limb++) {
+    // put particular checks here, pass through vict
+    if (this->hasPart(limb) && !this->getStuckIn(limb)) {
+      validLimbs.push_back(limb);
+    }
+  }
+
+  while (numLimbs > 0 && !validLimbs.empty()) {
+    unsigned int index = ::number(0, validLimbs.size() - 1);
+    wearSlotT limb = validLimbs[index];
+    /// do things to the limb here
+    if (equipment[limb]) {
+      auto* eq = dynamic_cast<TObj*>(equipment[limb]);
+      eq->addToStructPoints(-limbDam);
+      sstring buf =
+        format("A disc tears through your %s, damaging it!") % equipment[limb];
+      act(buf, false, this, nullptr, nullptr, TO_CHAR, ANSI_YELLOW);
+      buf =
+        format("A disc tears through $N's %s, damaging it!") % equipment[limb];
+      act(buf, false, this, nullptr, nullptr, TO_ROOM, ANSI_YELLOW);
+    }
+    addCurLimbHealth(limb, -limbDam);
+
+    sstring buf =
+      format("A sharp disc rips into $N's %s!") % describeBodySlot(limb);
+    act(buf, false, this, nullptr, nullptr, TO_ROOM, ANSI_ORANGE);
+    buf = format("A sharp disc rips into your %s!") % describeBodySlot(limb);
+    act(buf, false, this, nullptr, nullptr, TO_CHAR, ANSI_ORANGE);
+
+    /// do second part here within if statement
+    if (!isTough() && !isImmune(IMMUNE_BLEED, limb)) {
+      rawBleed(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+      act("Blood begins to flow from the wound!", false, this, nullptr, nullptr,
+        TO_ROOM, ANSI_RED_BOLD);
+      act("Blood begins to flow from the wound!", false, this, nullptr, nullptr,
+        TO_CHAR, ANSI_RED_BOLD);
+    }
+    // back to vector stuff
+    --numLimbs;
+    if (index != validLimbs.size() - 1) {
+      std::swap(validLimbs[index], validLimbs.back());
+    }
+    validLimbs.pop_back();
+  }
+  return true;
+}
+
+//// pebble trap
+int TBeing::trapPebble(int amt, TTrap* trap) {
+  std::vector<wearSlotT> validLimbs;
+  int maxNumLimbs = trap->getTrapLevel() / 3;
+  int numLimbs = ::number((2 + (maxNumLimbs / 3)), 3 + maxNumLimbs);
+  int limbDam = ::number(trap->getTrapLevel() / 2, trap->getTrapLevel());
+  limbDam = limbDam * (this->getImmunity(IMMUNE_BLUNT) / 100);
+
+  for (wearSlotT limb = MIN_WEAR; limb < MAX_WEAR; limb++) {
+    // put particular checks here, pass through vict
+    if (this->hasPart(limb) && !this->getStuckIn(limb)) {
+      validLimbs.push_back(limb);
+    }
+  }
+
+  while (numLimbs > 0 && !validLimbs.empty()) {
+    unsigned int index = ::number(0, validLimbs.size() - 1);
+    wearSlotT limb = validLimbs[index];
+    /// do things to the limb here
+    if (this->equipment[limb]) {
+      auto* eq = dynamic_cast<TObj*>(this->equipment[limb]);
+      eq->addToStructPoints(-limbDam);
+      sstring buf =
+        format("A stone slams into $N's %s, damaging it!") % equipment[limb];
+      act(buf, false, this, nullptr, nullptr, TO_ROOM, ANSI_YELLOW);
+      buf =
+        format("A stone slams into your %s, damaging it!") % equipment[limb];
+      act(buf, false, this, nullptr, nullptr, TO_CHAR, ANSI_YELLOW);
+    }
+    addCurLimbHealth(limb, -limbDam * 2);
+
+    sstring buf =
+      format("A pebble slams into $N's %s!") % describeBodySlot(limb);
+    act(buf, false, this, nullptr, nullptr, TO_ROOM, ANSI_ORANGE);
+    buf = format("A pebble slams into your %s!") % describeBodySlot(limb);
+    act(buf, false, this, nullptr, nullptr, TO_CHAR, ANSI_ORANGE);
+
+    /// do second part here within if statement
+    if (isLimbFlags(limb, PART_BRUISED) && !isTough() &&
+        !isImmune(IMMUNE_BONE_COND, limb) &&
+        limbDam * 4 >= getCurLimbHealth(limb)) {
+      addToLimbFlags(limb, PART_BROKEN);
+      act("Your $s has been broken!", false, this, nullptr, nullptr, TO_CHAR,
+        ANSI_RED_BOLD);
+      act("$n's $s has been broken!", false, this, nullptr, nullptr, TO_ROOM,
+        ANSI_RED_BOLD);
+    } else if (!isImmune(IMMUNE_SKIN_COND, limb) && !isTough()) {
+      addToLimbFlags(limb, PART_BRUISED);
+      act("Your $s has been bruised!", false, this, nullptr, nullptr, TO_CHAR,
+        ANSI_RED_BOLD);
+      act("$n's $s has been bruised!", false, this, nullptr, nullptr, TO_ROOM,
+        ANSI_RED_BOLD);
+    }
+
+    // back to vector stuff
+    --numLimbs;
+    if (index != validLimbs.size() - 1) {
+      std::swap(validLimbs[index], validLimbs.back());
+    }
+    validLimbs.pop_back();
+  }
+  return true;
 }
 
 void TBeing::informMess() {
@@ -3524,6 +4102,8 @@ void TBeing::throwGrenade(TTrap* o, dirTypeT dir) {
 
 int TBeing::grenadeHit(TTrap* o) {
   int rc;
+  int amnt;
+  amnt = o->getTrapDamAmount();
 
   switch (o->getTrapDamType()) {
     case DOOR_TRAP_POISON:
@@ -3550,6 +4130,7 @@ int TBeing::grenadeHit(TTrap* o) {
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
 
+      rc = trapFire(amnt, o);
       return TRUE;
     case DOOR_TRAP_TELEPORT:
       act("You find yourself sucked into the vortex!", FALSE, this, o, 0,
@@ -3574,6 +4155,7 @@ int TBeing::grenadeHit(TTrap* o) {
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
 
+      rc = trapBolt(amnt, o);
       return TRUE;
     case DOOR_TRAP_PEBBLE:
       act("You are hit by the fusillade!", FALSE, this, o, 0, TO_CHAR);
@@ -3583,6 +4165,7 @@ int TBeing::grenadeHit(TTrap* o) {
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
 
+      rc = trapPebble(amnt, o);
       return TRUE;
     case DOOR_TRAP_DISK:
       act("You are slashed by the razor-disks!", FALSE, this, o, 0, TO_CHAR);
@@ -3591,6 +4174,8 @@ int TBeing::grenadeHit(TTrap* o) {
       rc = objDamage(DAMAGE_TRAP_SLASH, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+
+      rc = trapDisc(amnt, o);
       return TRUE;
     case DOOR_TRAP_TNT:
       act("You are blasted by $p!", FALSE, this, o, 0, TO_CHAR);
@@ -3599,6 +4184,8 @@ int TBeing::grenadeHit(TTrap* o) {
       rc = objDamage(DAMAGE_TRAP_TNT, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+
+      rc = trapExplosive(amnt, o);
       return TRUE;
     case DOOR_TRAP_FROST:
       act("You are frozen by the icy cloud!", FALSE, this, o, 0, TO_CHAR);
@@ -3612,6 +4199,7 @@ int TBeing::grenadeHit(TTrap* o) {
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
 
+      rc = trapFrost(amnt, o);
       return TRUE;
     case DOOR_TRAP_ENERGY:
       act("You are devastated by dozens of plasma bolts!", FALSE, this, o, 0,
@@ -3622,6 +4210,8 @@ int TBeing::grenadeHit(TTrap* o) {
       rc = objDamage(DAMAGE_TRAP_ENERGY, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+
+      rc = trapPower(amnt, o);
       return TRUE;
     case DOOR_TRAP_ACID:
       act("You are surrounded by the horrid acid cloud!", FALSE, this, o, 0,
@@ -3637,6 +4227,7 @@ int TBeing::grenadeHit(TTrap* o) {
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
 
+      rc = trapAcid(amnt, o);
       return TRUE;
     default:
       return TRUE;
@@ -3895,8 +4486,10 @@ int TBeing::getGrenadeTrapDam(doorTrapT trap_type) {
   // i kept the damage on them lower then other traps.
   // this is number of d8 to use when calculating damage
   // base range: 5 - 30
+  // getSkillLevel refers to PC level (1-50)
   int damage = 5 + getSkillLevel(SKILL_SET_TRAP_GREN) / 2;
 
+  // getGrenadeTrapLearn refers to skill learnedness (1-100)
   damage *= getGrenadeTrapLearn(trap_type);
   damage /= 100;
 

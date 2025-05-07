@@ -372,3 +372,6 @@ int TTrap::throwMe(TBeing* ch, dirTypeT dir, const char*) {
   }
   return FALSE;
 }
+
+bool TTrap::isGrenade() const { return getTrapEffectType() == 14; }
+bool TTrap::isLandMine() const { return getTrapEffectType() == 1; }

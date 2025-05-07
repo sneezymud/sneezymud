@@ -1150,6 +1150,15 @@ class TBeing : public TThing {
     virtual void trapPoison(int);
     virtual void trapDisease(int);
     virtual int trapTeleport(int);
+    virtual int trapFire(int amt, TTrap* trap);
+    virtual int trapFrost(int amt, TTrap* trap);
+    virtual int trapAcid(int amt, TTrap* trap);
+    virtual int trapExplosive(int amt, TTrap* trap);
+    virtual int trapPower(int amt, TTrap* trap);
+    virtual int trapDisc(int amt, TTrap* trap);
+    virtual int trapPebble(int amt, TTrap* trap);
+    virtual int trapBolt(int amt, TTrap* trap);
+    virtual int trapSpike(int amt, TTrap* trap);
     void informMess();
     int objDam(spellNumT, int, TThing*);
     int objDamage(spellNumT, int, TThing*);

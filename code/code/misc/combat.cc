@@ -5298,6 +5298,9 @@ int TBeing::objDamage(spellNumT damtype, int amnt, TThing* t) {
 
   amnt = max(amnt, 0);
 
+  if (!isPc()) {
+    amnt *= 10;
+  }
   points.hit -= amnt;
   updatePos();
   rc = objDam(damtype, amnt, t);
