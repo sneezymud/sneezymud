@@ -36,7 +36,7 @@ const int SPEC_FACTIONSCORE_BOARD = 97;
 const int SPEC_GRAFFITI = 135;
 const int SPEC_STOCK_BOARD = 138;
 const int SPEC_BRICKQUEST = 148;
-const int NUM_OBJ_SPECIALS = 166;
+const int NUM_OBJ_SPECIALS = 167;
 
 struct TObjSpecs {
     bool assignable;

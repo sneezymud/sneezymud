@@ -6257,6 +6257,45 @@ int spikeBag(TBeing* ch, cmdTypeT cmd, const char*, TObj* obj, TObj* b) {
   return true;
 }
 
+int acidBlob(TBeing*, cmdTypeT cmd, const char*, TObj* blob, TObj*) {
+  TBeing* ch;
+  int rc;
+  int dam = blob->getMaxStructPoints() / 3;
+
+  if (!(ch = dynamic_cast<TBeing*>(blob->equippedBy)))
+    return FALSE;  // Return FALSE to allow normal command processing
+
+  // Only process on pulse, ignore other commands
+  if (cmd != CMD_GENERIC_PULSE)
+    return FALSE;  // Return FALSE for non-pulse commands
+
+  if (percentChance(20)) {
+    for (wearSlotT limb = MIN_WEAR; limb < MAX_WEAR; limb++) {
+      if (ch->equipment[limb] == blob) {
+        ch->hurtLimb((dam + ::number(dam / 2, dam)), limb);
+        blob->addToStructPoints(-dam);
+        if (blob->getStructPoints() <= 0) {
+          blob->makeScraps();
+          return true;
+        }
+        rc = ch->reconcileDamage(ch, dam, DAMAGE_ACID);
+
+        sstring buf = format("The %s corrodes your %s!") % blob->getName() %
+                      ch->describeBodySlot(limb);
+        act(buf, false, ch, blob, nullptr, TO_CHAR);
+        buf = format("The %s corrodes $n's %s!") % blob->getName() %
+              ch->describeBodySlot(limb);
+        act(buf, false, ch, blob, nullptr, TO_ROOM);
+
+        if (IS_SET_DELETE(rc, DELETE_VICT))
+          return DELETE_VICT;
+      }
+    }
+  }
+
+  return FALSE;  // Always return FALSE to allow normal command processing
+}
+
 int rechargingWand(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
   if (cmd != CMD_GENERIC_PULSE || ::number(0, 49 || !o))
     return false;
@@ -7592,4 +7631,5 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
   {TRUE, "flamingArrowBow", flamingArrowBow},
   {TRUE, "poisonQuiver", poisonQuiver},
   {TRUE, "spikeBag", spikeBag},
+  {FALSE, "acidBlob", acidBlob},
   {FALSE, "last proc", bogusObjProc}};
