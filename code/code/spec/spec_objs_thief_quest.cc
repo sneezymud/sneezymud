@@ -41,8 +41,8 @@ int thiefQuestWeapon(TBeing* victim, cmdTypeT command, const char* arg,
       limb == MAX_WEAR)
     return false;
 
-  // 10% chance on stab, 50% on backstab/slit
-  if (command == CMD_STAB && ::number(0, 9))
+  // 12.5% chance on stab, 50% on backstab/slit
+  if (command == CMD_STAB && ::number(0, 7))
     return false;
 
   if (::number(0, 1))

@@ -7591,6 +7591,8 @@ extern int flamingArrowBow(TBeing* ch, cmdTypeT cmd, const char*, TObj* bow,
   TObj* a);
 extern int poisonQuiver(TBeing* ch, cmdTypeT cmd, const char*, TObj* q,
   TObj* a);
+extern int icyDeath(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* obj,
+  TObj*);
 // assign special procedures to objects
 
 TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
@@ -7726,7 +7728,8 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
   {TRUE, "Glacial Weapon", glacialWeapon},
   {TRUE, "flamingArrowBow", flamingArrowBow},
   {TRUE, "poisonQuiver", poisonQuiver},
-  {TRUE, "spikeBag", spikeBag},
+  {TRUE, "spikeBag", spikeBag}, // 165
   {FALSE, "acidBlob", acidBlob},
   {TRUE, "caltrop", caltrop},
+  {FALSE, "Icy Death", icyDeath},
   {FALSE, "last proc", bogusObjProc}};
