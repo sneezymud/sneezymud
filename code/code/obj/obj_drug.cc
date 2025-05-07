@@ -245,7 +245,7 @@ void applyDrugAffects(TBeing* ch, drugTypeT drug, bool istick) {
   switch (drug) {
     case DRUG_PIPEWEED:
       if (!istick) {
-        if (total_consumed == 1) {
+        if (total_consumed == 1 && ch->getRace() != RACE_HOBBIT) {
           // first smoke :)
           act(
             "Ugh, you're not used to smoking this stuff, it makes you "
@@ -255,7 +255,7 @@ void applyDrugAffects(TBeing* ch, drugTypeT drug, bool istick) {
           ch->dropPool(10, LIQ_VOMIT);
         }
 
-        if (current_consumed > (potency * 3)) {
+        if (current_consumed > (potency * 3) && ch->getRace() != RACE_HOBBIT) {
           act("You overdose on pipeweed and pass out.", TRUE, ch, 0, 0,
             TO_CHAR);
           if (ch->riding) {
@@ -283,10 +283,11 @@ void applyDrugAffects(TBeing* ch, drugTypeT drug, bool istick) {
             act("You feel pretty buzzed.", TRUE, ch, 0, 0, TO_CHAR);
             break;
           default:
-            act(
-              "You're really buzzed now.  Smoking any more might be a bad "
-              "idea.",
-              TRUE, ch, 0, 0, TO_CHAR);
+            if (ch->getRace() != RACE_HOBBIT)
+              act(
+                "You're really buzzed now.  Smoking any more might be a bad "
+                "idea.",
+                TRUE, ch, 0, 0, TO_CHAR);
             break;
           case 2:
           case 3:
@@ -303,7 +304,11 @@ void applyDrugAffects(TBeing* ch, drugTypeT drug, bool istick) {
 
       if (!(affptr = findDrugAffect(ch, DRUG_PIPEWEED, APPLY_SPE))) {
         aff.location = APPLY_SPE;
-        ch->affectTo(&aff, -1);
+        if (ch->getRace() != RACE_HOBBIT) {
+          ch->affectTo(&aff, -1);
+        } else {
+          ch->affectTo(&aff, 5);
+        }
       } else {
         reapplyDrugAffect(ch, affptr, aff.modifier,
           istick ? affptr->duration
@@ -311,7 +316,11 @@ void applyDrugAffects(TBeing* ch, drugTypeT drug, bool istick) {
       }
       if (!(affptr = findDrugAffect(ch, DRUG_PIPEWEED, APPLY_KAR))) {
         aff.location = APPLY_KAR;
-        ch->affectTo(&aff, -1);
+        if (ch->getRace() != RACE_HOBBIT) {
+          ch->affectTo(&aff, -1);
+        } else {
+          ch->affectTo(&aff, 5);
+        }
       } else {
         reapplyDrugAffect(ch, affptr, aff.modifier,
           istick ? affptr->duration
@@ -323,7 +332,11 @@ void applyDrugAffects(TBeing* ch, drugTypeT drug, bool istick) {
 
       if (!(affptr = findDrugAffect(ch, DRUG_PIPEWEED, APPLY_CHA))) {
         aff.location = APPLY_CHA;
-        ch->affectTo(&aff, -1);
+        if (ch->getRace() != RACE_HOBBIT) {
+          ch->affectTo(&aff, -1);
+        } else {
+          ch->affectTo(&aff, 5);
+        }
       } else {
         reapplyDrugAffect(ch, affptr, aff.modifier,
           istick ? affptr->duration
@@ -331,7 +344,11 @@ void applyDrugAffects(TBeing* ch, drugTypeT drug, bool istick) {
       }
       if (!(affptr = findDrugAffect(ch, DRUG_PIPEWEED, APPLY_FOC))) {
         aff.location = APPLY_FOC;
-        ch->affectTo(&aff, -1);
+        if (ch->getRace() != RACE_HOBBIT) {
+          ch->affectTo(&aff, -1);
+        } else {
+          ch->affectTo(&aff, 9);
+        }
       } else {
         reapplyDrugAffect(ch, affptr, aff.modifier,
           istick ? affptr->duration
@@ -598,10 +615,10 @@ void applyAddictionAffects(TBeing* ch, drugTypeT drug, int severity) {
       if (current_consumed > (unsigned)(severity / 2))
         break;
 
-      if (severity < 20) {
+      if (severity < 20 && ch->getRace() != RACE_HOBBIT) {
         ch->sendTo(format("You could use some %s right now.\n\r") %
                    drugTypes[drug].name);
-      } else if (severity < 40) {
+      } else if (severity < 40 && ch->getRace() != RACE_HOBBIT) {
         ch->sendTo(format("You feel queasy and your hands are trembling, you "
                           "really need some %s.\n\r") %
                    drugTypes[drug].name);
@@ -614,11 +631,15 @@ void applyAddictionAffects(TBeing* ch, drugTypeT drug, int severity) {
         aff.location = APPLY_FOC;
 
         if (!(affptr = findDrugAffect(ch, DRUG_PIPEWEED, APPLY_FOC))) {
-          ch->affectTo(&aff, -1);
+          if (ch->getRace() != RACE_HOBBIT) {
+            ch->affectTo(&aff, -1);
+          } else {
+            ch->affectTo(&aff, 9);
+          }
         } else {
           reapplyDrugAffect(ch, affptr, aff.modifier, aff.duration);
         }
-      } else {
+      } else if (ch->getRace() != RACE_HOBBIT) {
         ch->sendTo(
           format("You need to smoke some %s to feed your addiction.\n\r") %
           drugTypes[drug].name);
@@ -634,10 +655,12 @@ void applyAddictionAffects(TBeing* ch, drugTypeT drug, int severity) {
         aff.location = APPLY_FOC;
 
         if (!(affptr = findDrugAffect(ch, DRUG_PIPEWEED, APPLY_FOC))) {
-          ch->affectTo(&aff, -1);
+          if (ch->getRace() != RACE_HOBBIT)
+            ch->affectTo(&aff, -1);
         } else {
           reapplyDrugAffect(ch, affptr, aff.modifier, aff.duration);
         }
+      } else {
       }
       break;
     case DRUG_POT:
