@@ -1,3 +1,6 @@
+05-14-25: The 'extreme pain' affliction (becoming completely stunned when
+          both arms become unusable) should now only apply to NPCs.
+
 03-20-25: Pygmy village has been level adjusted and an assortment of new
           mobs have been added.
 
@@ -7,20 +10,20 @@
 
 03-17-25: New Toggle: "spelltask"
           - This toggle will show the spell you are casting in the prompt
-          along with the number of rounds remaining until the spell is 
+          along with the number of rounds remaining until the spell is
           complete. This toggle is off by default.
-          
+
 03-09-25: Restored the old Eyes of Fertuman spell
           - The spell now can be used to find mobs and objects by name
           - The spell has less restrictions on what it can find than it did
             before. Have fun!
-          
+
 02-25-25: Spell Parser Update
           Updated the spell parser for mage/shaman spellcasting. The parser
-          now requires a unique match for spells. You might notice you have 
+          now requires a unique match for spells. You might notice you have
           to give it a bit more.
           For instance: 'cast d i' used to match detect invisibility but now
-          requires you to type 'cast de i' to disambiguate it from 
+          requires you to type 'cast de i' to disambiguate it from
           dispel invisibility
 
 02-10-25: Summoning group members now ignores summon immunity

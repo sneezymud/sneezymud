@@ -1079,7 +1079,9 @@ wearSlotT pickRandomLimb(bool) {
 
 // if the mob loses all their fighting limbs, inflict extreme pain
 void TBeing::stunIfLimbsUseless() {
-  if (hasDisease(DISEASE_EXTREME_PAIN) || !bothArmsHurt())
+  // Don't apply to PCs, as it takes agency away from the player and just
+  // doesn't make any sense in general
+  if (isPc() || hasDisease(DISEASE_EXTREME_PAIN) || !bothArmsHurt())
     return;
 
   affectedData aff;
