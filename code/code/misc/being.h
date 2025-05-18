@@ -957,6 +957,9 @@ class TBeing : public TThing {
     void rawBlind(int, int, saveTypeT);
     int rawSleep(int, int, int, saveTypeT);
     int rawBleed(wearSlotT, int, silentTypeT, checkImmunityT);
+    int maxBleedVitalPart(wearSlotT limb, int duration);
+    int incrementBleedStack(wearSlotT limb, int newDuration);
+    int incrementBruiseStack(wearSlotT limb, int newDuration);
     int rawBruise(wearSlotT, int, silentTypeT, checkImmunityT);
     int dropPool(int, liqTypeT);
     int dropBloodLimb(wearSlotT);
@@ -1496,7 +1499,7 @@ class TBeing : public TThing {
     bool canCounterMove(int);
     bool canFocusedAvoidance(int);
     int trySpringleap(TBeing*);
-    bool maybeDestroyLimb(wearSlotT part_hit, TBeing* v,
+      bool maybeDestroyLimb(wearSlotT part_hit, TBeing* v,
       const TBaseWeapon* weapon, spellNumT attackType);
     int damageLimb(TBeing* v, wearSlotT part_hit, const TThing* maybeWeapon,
       int* dam);

@@ -357,10 +357,19 @@ int TBeing::kneestrikeHit(TBeing* victim) {
 
   // apply damage to caster if no leg eq
   caster_pos = (::number(0, 1) ? WEAR_LEG_L : WEAR_LEG_R);
-  if (!(item = dynamic_cast<TObj*>(equipment[caster_pos]))) {
-    rc = damageLimb(this, caster_pos, 0, &h_dam);
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_THIS;
+  item = dynamic_cast<TObj*>(equipment[caster_pos]);
+
+  if (!item) {
+    // No leg equipment
+    if (this->affectedBySpell(SPELL_THORNFLESH)) {
+      // Apply thornflesh damage
+      thornsHit(victim, this, caster_pos, pos);
+    } else {
+      // Apply damage to attacker's limb
+      rc = damageLimb(this, caster_pos, 0, &h_dam);
+      if (IS_SET_DELETE(rc, DELETE_VICT))
+        return DELETE_THIS;
+    }
   } else if (item->isSpiked() || item->isObjStat(ITEM_SPIKED)) {
     spikeddam = (int)(dam * 0.15);
 
@@ -372,7 +381,7 @@ int TBeing::kneestrikeHit(TBeing* victim) {
       TO_VICT);
     spikesHit(victim, this, item, pos);
   } else {
-    // apply damage to victim if no eq on targetted spot
+    // No spikes on leg equipment, check if victim has equipment
     if (!(item = dynamic_cast<TObj*>(victim->equipment[pos]))) {
       rc = damageLimb(victim, pos, 0, &h_dam);
       if (IS_SET_DELETE(rc, DELETE_VICT))

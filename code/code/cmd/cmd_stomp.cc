@@ -108,7 +108,7 @@ int TBeing::stompHit(TBeing* victim) {
   int h_dam;
   int height, targ_height;
   int rc;
-  wearSlotT limb;
+  wearSlotT targetLimb; // Renamed for clarity
   int dam = getSkillDam(victim, SKILL_STOMP, getSkillLevel(SKILL_STOMP),
     getAdvLearning(SKILL_STOMP));
 
@@ -129,11 +129,12 @@ int TBeing::stompHit(TBeing* victim) {
         "You look upward just in time to see the bottom of $n's foot "
         "descending toward you!",
         FALSE, this, 0, victim, TO_VICT, ANSI_RED);
-      limb = WEAR_HEAD;
-      TObj* item = dynamic_cast<TObj*>(victim->equipment[limb]);
+      
+      targetLimb = WEAR_HEAD;
+      TObj* item = dynamic_cast<TObj*>(victim->equipment[targetLimb]);
       if (!item) {
         h_dam = 1 + dam / 5;
-        rc = damageLimb(victim, WEAR_HEAD, 0, &h_dam);
+        rc = damageLimb(victim, targetLimb, 0, &h_dam);
         if (IS_SET_DELETE(rc, DELETE_VICT))
           return DELETE_VICT;
       } else if (dentItem(victim, item, 1, getPrimaryFoot()) == DELETE_ITEM) {
@@ -141,6 +142,7 @@ int TBeing::stompHit(TBeing* victim) {
         item = NULL;
       }
     } else {
+      // Stomping toes
       act("$n lifts $s leg high, stomping $N's toes hard!", FALSE, this, 0,
         victim, TO_NOTVICT);
       act("You lift your leg high and stomp $N's toes hard.", FALSE, this, 0,
@@ -149,15 +151,15 @@ int TBeing::stompHit(TBeing* victim) {
         TO_VICT, ANSI_RED);
 
       dam /= 5;
-      limb = WEAR_FOOT_L;
+      targetLimb = WEAR_FOOT_L;
       if (percentChance(50)) {
-        limb = WEAR_FOOT_R;
+        targetLimb = WEAR_FOOT_R;
       }
-      TObj* item = dynamic_cast<TObj*>(victim->equipment[limb]);
+      TObj* item = dynamic_cast<TObj*>(victim->equipment[targetLimb]);
 
       if (!item) {
         h_dam = 1 + dam / 4;
-        rc = damageLimb(victim, WEAR_FOOT_L, 0, &h_dam);
+        rc = damageLimb(victim, targetLimb, 0, &h_dam);
         if (IS_SET_DELETE(rc, DELETE_VICT))
           return DELETE_VICT;
       } else if (dentItem(victim, item, 1, getPrimaryFoot()) == DELETE_ITEM) {
@@ -166,15 +168,16 @@ int TBeing::stompHit(TBeing* victim) {
       }
     }
   } else {
-    limb = WEAR_BACK;
+    // Victim is not standing
+    targetLimb = WEAR_BACK;
     if (percentChance(50)) {
-      limb = WEAR_BODY;
+      targetLimb = WEAR_BODY;
     }
-    TObj* item = dynamic_cast<TObj*>(victim->equipment[limb]);
+    TObj* item = dynamic_cast<TObj*>(victim->equipment[targetLimb]);
 
     if (!item) {
       h_dam = 1 + dam / 4;
-      rc = damageLimb(victim, WEAR_FOOT_L, 0, &h_dam);
+      rc = damageLimb(victim, targetLimb, 0, &h_dam);
       act("$n lifts $s leg high, stomping $N while $E is down.", FALSE, this, 0,
         victim, TO_NOTVICT);
       act("You lift your leg high and stomp $N hard while $E is down.", FALSE,
@@ -183,8 +186,10 @@ int TBeing::stompHit(TBeing* victim) {
         TO_VICT, ANSI_RED);
     }
   }
+  
+  // Apply additional effects based on footwear
   TObj* hurtyboot = dynamic_cast<TObj*>(this->equipment[getPrimaryFoot()]);
-  if (hurtyboot->isObjStat(ITEM_SPIKED) || hurtyboot->isSpiked()) {
+  if (hurtyboot && (hurtyboot->isObjStat(ITEM_SPIKED) || hurtyboot->isSpiked())) {
     sstring buf =
       format("The spikes on your $o sink into $N.") % hurtyboot->getName();
     act(buf, false, this, hurtyboot, victim, TO_CHAR);
@@ -193,7 +198,10 @@ int TBeing::stompHit(TBeing* victim) {
     buf = format("The spikes on $n's $o sink into you.") % hurtyboot->getName();
     act(buf, false, this, hurtyboot, victim, TO_VICT);
     reconcileDamage(victim, dam, TYPE_STAB);
-    spikesHit(victim, this, hurtyboot, limb);
+    spikesHit(victim, this, hurtyboot, targetLimb);
+  } else if (!hurtyboot && this->affectedBySpell(SPELL_THORNFLESH)) {
+    // Pass the correctly selected target limb to thornsHit
+    thornsHit(victim, this, getPrimaryFoot(), targetLimb);
   }
   if (reconcileDamage(victim, dam, SKILL_STOMP) == -1)
     return DELETE_VICT;

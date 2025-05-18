@@ -44,3 +44,5 @@ class TGenWeapon : public TBaseWeapon {
 
 int spikesHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT limb);
 int spikesBreak(TBeing* victim, TBeing* ch, TObj* obj);
+int thornsHit(TBeing* victim, TBeing* ch, wearSlotT chLimb, wearSlotT vicLimb);
+int hardHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT vicLimb, wearSlotT chLimb);

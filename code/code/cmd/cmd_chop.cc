@@ -10,6 +10,8 @@
 #include "being.h"
 #include "combat.h"
 #include "disc_monk.h"
+#include "obj_general_weapon.h"
+
 
 static int chopMiss(TBeing* c, TBeing* v) {
   act("$n swings wildly as $e tries to chop $N.", FALSE, c, 0, v, TO_NOTVICT);
@@ -27,7 +29,9 @@ static int chopHit(TBeing* c, TBeing* v, int score) {
   int rc;
   int slot;
   int temp, limb_dam;
+  int spikeDam = ::number(1, 4);
   wearSlotT pos = WEAR_NOWHERE;
+  wearSlotT handSlot = WEAR_HAND_R;
   TObj* item;
 
   temp = ::number(1, score);
@@ -38,17 +42,24 @@ static int chopHit(TBeing* c, TBeing* v, int score) {
     } else if (!c->isRightHanded() && v->hasPart(WEAR_ARM_R)) {
       pos = WEAR_ARM_R;
       slot = 1;
-    } else
+    } else {
+      pos = WEAR_BODY; 
       slot = 2;
-  } else if (temp < 80)
+    }
+  } else if (temp < 80) {
+    pos = WEAR_BODY;
     slot = 2;  // body shot
-  else if (temp < 90)
+  } else if (temp < 90) {
+    pos = WEAR_NECK;
     slot = 3;  // neck shot
-  else
+  } else {
+    pos = WEAR_HEAD;
     slot = 4;  // head shot
-  if (!v->isHumanoid())
-    slot = 5;  // non-human side shot
-
+  }
+  if (!v->isHumanoid()) {
+   pos = WEAR_WAIST; 
+   slot = 5;  // non-human side shot
+  }
   // Set default damage
   int dam = c->getSkillDam(v, SKILL_CHOP, c->getSkillLevel(SKILL_CHOP),
     c->getAdvLearning(SKILL_CHOP));
@@ -135,29 +146,24 @@ static int chopHit(TBeing* c, TBeing* v, int score) {
       act("Your chop lands square on $N's side!", FALSE, c, 0, v, TO_CHAR);
       break;
   }
-
-  item = dynamic_cast<TObj*>(c->equipment[c->getPrimaryHand()]);
-  if (!item)
-    return false;
-  if (item->isObjStat(ITEM_SPIKED)) {
-    act("The spikes on your $o sink into $N.", FALSE, c, item, v, TO_CHAR);
-    act("The spikes on $n's $o sink into $N.", FALSE, c, item, v, TO_NOTVICT);
-    act("The spikes on $n's $o sink into you.", FALSE, c, item, v, TO_VICT);
-    if (c->reconcileDamage(v, (int)(dam / 3), TYPE_STAB) == -1)
-      return DELETE_VICT;
-    if (!v->isUndead() && !v->isImmune(IMMUNE_BLEED, pos)) {
-      v->rawBleed(pos, 250, SILENT_YES, CHECK_IMMUNITY_NO);
-      sstring buf =
-        format(
-          "A <r>bloody wound<1> opens as the spikes on $o shred $N's %s!") %
-        v->describeBodySlot(pos);
-      act(buf, false, v, nullptr, nullptr, TO_NOTVICT);
-      buf = format(
-              "A <r>bloody wound<1> opens as the spikes on $o shred your $s!") %
-            v->describeBodySlot(pos);
-      act(buf, false, v, nullptr, nullptr, TO_VICT);
-    }
+  if (!c->isRightHanded()){
+    handSlot = WEAR_HAND_L;
   }
+  item = dynamic_cast<TObj*>(c->equipment[handSlot]);
+  if (item && (item->isSpiked() || item->isObjStat(ITEM_SPIKED))) {
+    // Apply spike damage first
+    if (c->reconcileDamage(v, spikeDam, TYPE_STAB) == -1)
+      return DELETE_VICT;
+      
+    // Then use spikesHit to handle bleeding and potential spike breaking
+    spikesHit(v, c, item, pos);
+  }
+  if (c->affectedBySpell(SPELL_THORNFLESH)) {
+    thornsHit(v, c, handSlot, pos);
+    if (IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_VICT;
+  }
+
   if (c->reconcileDamage(v, dam, SKILL_CHOP) == -1)
     return DELETE_VICT;
 

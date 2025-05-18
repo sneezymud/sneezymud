@@ -5,6 +5,7 @@
 #include <cmath>
 #include <algorithm>
 
+#include "ansi.h"
 #include "extern.h"
 #include "handler.h"
 #include "room.h"
@@ -1596,6 +1597,124 @@ int TBeing::rawBleed(wearSlotT pos, int duration, silentTypeT silent,
     updateDuration, followupAction);
 }
 
+
+int TBeing::incrementBleedStack(wearSlotT limb, int newDuration) {
+  int maxStacks = 5;
+  // Check for an existing bleeding affect on this limb
+  affectedData* existingBleed = 
+    affected ? affected->find_if([limb](affectedData* aff) {
+      return aff->modifier == DISEASE_BLEEDING && aff->level == limb;
+    })
+             : nullptr;
+             
+  if (!existingBleed) {
+    // No existing bleed found. Not sure how this would happen, but just in case
+    return false;
+  }
+  
+  //increment stack count if not at max, and increase duration
+  if (existingBleed->modifier2 < maxStacks) {
+    existingBleed->modifier2++;
+    act(format("The flesh on your %s is torn open!") % describeBodySlot(limb), 
+        false, this, nullptr, nullptr, TO_CHAR, ANSI_RED);
+    act(format("The flesh on $n's %s is torn open!") % describeBodySlot(limb), 
+        false, this, nullptr, nullptr, TO_ROOM, ANSI_RED);
+    if (existingBleed->duration < newDuration) {
+      existingBleed->duration = newDuration;
+    }
+  }
+
+  if (existingBleed->modifier2 >= maxStacks) {
+    const sstring limbName = describeBodySlot(limb);
+    if (!isVitalPart(limb) && limb != WEAR_WAIST) {
+      // For non-vital parts, sever the limb
+      act(format("The wound on your %s gushes blood violently as the limb is severed!") % 
+         limbName, false, this, nullptr, nullptr, TO_CHAR, ANSI_RED_BOLD);
+
+      act(format("The wound on $n's %s gushes blood violently as the limb is severed!") % 
+         limbName, false, this, nullptr, nullptr, TO_ROOM, ANSI_RED_BOLD);
+         
+      makePartMissing(limb, isLimbFlags(limb, PART_LEPROSED | PART_GANGRENOUS), nullptr);
+         
+      const wearSlotT newBleedLocation = findNextAttachedBodyPart(limb);
+      const sstring bleedLocationDesc = describeBodySlot(newBleedLocation);
+     
+      // Check if the next attached body part is already bleeding
+      affectedData* existingBleed = 
+       affected ? affected->find_if([newBleedLocation](affectedData* aff) {
+         return aff && aff->modifier == DISEASE_BLEEDING && aff->level == newBleedLocation;
+       }) : nullptr;
+       
+      if (existingBleed) {
+        // If already bleeding, increment the stack
+        if (existingBleed->modifier2 < maxStacks) {
+          existingBleed->modifier2++;
+        }
+        // Ensure it's a permanent bleed
+        existingBleed->duration = PERMANENT_DURATION;
+      } else {
+        // If not already bleeding, start a new bleed
+        rawBleed(newBleedLocation, PERMANENT_DURATION, SILENT_YES, CHECK_IMMUNITY_YES);
+      }
+       
+      act(format("Blood gushes from your %s!") % bleedLocationDesc, 
+         false, this, nullptr, nullptr, TO_CHAR, ANSI_RED);
+      act(format("Blood gushes from $n's %s!") % bleedLocationDesc, 
+         false, this, nullptr, nullptr, TO_ROOM, ANSI_RED);
+    } else {
+      maxBleedVitalPart(limb, newDuration);
+    }
+  }
+  return true;
+}
+
+
+int TBeing::incrementBruiseStack(wearSlotT limb, int newDuration) {
+  int maxStacks = 5;
+  // Check for an existing bruise affect on this limb
+  affectedData* existingBruise = 
+    affected ? affected->find_if([limb](affectedData* aff) {
+      return aff->modifier == DISEASE_BRUISED && aff->level == limb;
+    })
+             : nullptr;
+             
+  if (!existingBruise) {
+    // No existing bruise found. Not sure how this would happen, but just in case
+    return false;
+  }
+  
+  // Increment stack count if not at max, and increase duration
+  if (existingBruise->modifier2 < maxStacks) {
+    existingBruise->modifier2++;
+    act(format("The bruising on your %s worsens.") % describeBodySlot(limb), 
+        false, this, nullptr, nullptr, TO_CHAR, ANSI_PURPLE);
+    act(format("The bruising on $n's %s worsens.") % describeBodySlot(limb), 
+        false, this, nullptr, nullptr, TO_ROOM, ANSI_PURPLE);
+    
+    if (existingBruise->duration < newDuration) {
+      existingBruise->duration = newDuration;
+    }
+  }
+
+  if (existingBruise->modifier2 >= maxStacks && !isVitalPart(limb)) {
+    const sstring limbName = describeBodySlot(limb);
+    
+    // No need to manually pulverize the limb - that happens automatically in
+    // the hurtLimb function once a limb is reduced to 0 HP. So for bruise
+    // stacks, simply apply enough damage to instantly bring the limb to 0 HP.
+    act(format("Your severely bruised %s is utterly ruined!") % limbName, 
+        false, this, nullptr, nullptr, TO_CHAR, ANSI_PURPLE_BOLD);
+    act(format("$n's severely bruised %s is utterly ruined!") % limbName, 
+        false, this, nullptr, nullptr, TO_ROOM, ANSI_PURPLE_BOLD);
+    
+    int rc = hurtLimb(getCurLimbHealth(limb), limb);
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
+  }
+  
+  return true;
+}
+
 int TBeing::rawInfect(wearSlotT pos, int duration, silentTypeT silent,
   checkImmunityT immcheck, int level) {
   const long modifier2 = level ? level : GetMaxLevel();
@@ -2212,4 +2331,41 @@ int lycanthropeTransform(TBeing* ch) {
     "You hear a chilling wolf howl in the distance.\n\r", mob->in_room);
 
   return TRUE;
+}
+
+// Handle the effects when a vital body part reaches maximum bleeding stacks
+int TBeing::maxBleedVitalPart(wearSlotT limb, int duration) {
+  // Show choking/aspiration messages
+  act(format("The blood from your %s makes it hard to draw breath!") % describeBodySlot(limb), 
+     false, this, nullptr, nullptr, TO_CHAR, ANSI_RED_BOLD);
+  act(format("$n looks panicked as blood from their %s fills $s mouth!") % describeBodySlot(limb), 
+     false, this, nullptr, nullptr, TO_ROOM, ANSI_RED_BOLD);
+     
+  // Check if they already have aspiration
+  affectedData* existingAspiration = 
+    affected ? affected->find_if([](affectedData* aff) {
+      return aff->modifier == DISEASE_ASPIRATION;
+    }) : nullptr;
+    
+  if (existingAspiration) {
+    // Update the duration if the new duration is longer
+    if (existingAspiration->duration < duration) {
+      existingAspiration->duration = duration;
+    }
+  } else {
+    // If they don't have aspiration, add it
+    affectedData aff;
+    aff.type = AFFECT_DISEASE;
+    aff.level = limb;  // Store the source of bleeding
+    aff.duration = duration;
+    aff.location = APPLY_NONE;
+    aff.modifier = DISEASE_ASPIRATION;
+    aff.modifier2 = 0;  // Severity will be calculated in disease_aspiration
+    aff.bitvector = 0;
+    
+    affectTo(&aff);
+    disease_start(this, &aff);
+  }
+  
+  return true;
 }

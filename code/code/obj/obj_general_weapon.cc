@@ -4,9 +4,11 @@
 #include "shop.h"
 #include "shopowned.h"
 #include "liquids.h"
+#include "spells.h"
 #include "toggle.h"
 #include "extern.h"
 #include "being.h"
+#include "materials.h"
 
 TGenWeapon::TGenWeapon() : TBaseWeapon() {
   for (int i = 0; i < 3; ++i) {
@@ -168,6 +170,164 @@ bool TGenWeapon::canStab() const {
 
 bool TGenWeapon::hasSpikes() const { return isObjStat(ITEM_SPIKED); }
 
+int thornsHit(TBeing* victim, TBeing* ch, wearSlotT chLimb, wearSlotT vicLimb) {
+  // Check for valid parameters
+  if (!victim || vicLimb == WEAR_NOWHERE || !ch->affectedBySpell(SPELL_THORNFLESH)) {
+    return false;
+  }
+
+  if (victim->isLimbFlags(vicLimb, PART_MISSING)) {
+    return false;
+  }
+
+  if (victim->isUndead() || victim->isImmune(IMMUNE_BLEED, vicLimb)) {
+    // No bleeding for undead or immune creatures
+    return false;
+  }
+  // Check for victim's limb hardness against attacker's limb hardness
+  int vicLimbHardness = material_nums[victim->getMaterial(vicLimb)].hardness;
+  
+  // Access wood hardness directly from the material_nums array
+  // This matches how describeMaterial accesses hardness
+  int chLimbHardness = material_nums[MAT_WOOD].hardness;
+  
+  // If character has Iron Flesh skill, it can enhance the thorns' effectiveness
+  if (ch->doesKnowSkill(SKILL_IRON_FLESH)) {
+    int ironFleshHardness = (ch->getSkillValue(SKILL_IRON_FLESH) * 85/100);
+    if (ironFleshHardness > chLimbHardness) {
+      chLimbHardness = ironFleshHardness;
+    }
+  }
+  
+  // Calculate chance based on hardness difference
+  int hardnessDiff = chLimbHardness - vicLimbHardness;
+  
+  // Only proceed if attacker's hardness is higher AND random check passes
+  if (hardnessDiff <= 0) {
+    return false;
+  }
+  
+  // Use hardness difference as percentage chance
+  if (!::percentChance(hardnessDiff)) {
+    return false;
+  }
+  
+  if (victim->isLimbFlags(vicLimb, PART_BLEEDING)) {
+    act(format("Blood spatters as the thorns on your %s sink into $N's bleeding %s!") % 
+        ch->describeBodySlot(chLimb) % victim->describeBodySlot(vicLimb), 
+        FALSE, ch, nullptr, victim, TO_CHAR);
+    act(format("Blood spatters as the thorns on $n's %s sink into $N's bleeding %s!") % 
+        ch->describeBodySlot(chLimb) % victim->describeBodySlot(vicLimb), 
+        FALSE, ch, nullptr, victim, TO_NOTVICT);
+    act(format("Blood spatters as the thorns on $n's %s sink into your bleeding %s!") % 
+        ch->describeBodySlot(chLimb) % victim->describeBodySlot(vicLimb), 
+        FALSE, ch, nullptr, victim, TO_VICT);
+    
+    // Increment the bleed stack
+    victim->incrementBleedStack(vicLimb, 250);
+  } else {   
+    act(format("The thorns on your %s tear open a <R>bloody wound<1> in $N's %s!") % 
+        ch->describeBodySlot(chLimb) % victim->describeBodySlot(vicLimb), 
+        FALSE, ch, nullptr, victim, TO_CHAR);
+    act(format("The thorns on $n's %s tear open a <R>bloody wound<1> in $N's %s!") % 
+        ch->describeBodySlot(chLimb) % victim->describeBodySlot(vicLimb), 
+        FALSE, ch, nullptr, victim, TO_NOTVICT);
+    act(format("The thorns on $n's %s tear open a <R>bloody wound<1> in your %s!") % 
+        ch->describeBodySlot(chLimb) % victim->describeBodySlot(vicLimb), 
+        FALSE, ch, nullptr, victim, TO_VICT);
+     
+    victim->rawBleed(vicLimb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+  }
+  
+  return true;
+}
+
+int hardHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT vicLimb, wearSlotT chLimb) {
+  TObj *weap = dynamic_cast<TObj*>(ch->equipment[chLimb]);
+  TObj *vicEq = dynamic_cast<TObj*>(victim->equipment[vicLimb]);
+  int vicHard = vicEq ? material_nums[vicEq->getMaterial()].hardness : 0;
+  int weapHard = weap ? material_nums[weap->getMaterial()].hardness : 0;
+  if (!weap) {
+    weapHard = material_nums[ch->getMaterial(chLimb)].hardness;
+      // Potentially match hardness equivalent to platinum
+      if (ch->doesKnowSkill(SKILL_IRON_FLESH) && ((ch->getSkillValue(SKILL_IRON_FLESH) * 85/100)>material_nums[ch->getMaterial(chLimb)].hardness)) {
+        weapHard = (ch->getSkillValue(SKILL_IRON_FLESH) * (85/100) );
+      }
+  }
+  
+  if (!vicEq) {
+    vicHard = material_nums[victim->getMaterial(vicLimb)].hardness;
+  }
+    
+  int hardChance = (weapHard - vicHard);
+  if ((percentChance(hardChance)) && !victim->isTough()) {
+      int eqDamage = weapHard-vicHard;
+      // Case 1: Weapon hits victim's equipment
+    if (weap && vicEq) {
+    
+
+      act("Your $p strikes $N's $P with a solid impact!", 
+          FALSE, ch, weap, vicEq, TO_CHAR);
+      act("$n's $p strikes your $P with a solid impact!", 
+          FALSE, ch, weap, vicEq, TO_VICT);
+      act("$n's $p strikes $N's $P with a solid impact!", 
+          FALSE, ch, weap, vicEq, TO_NOTVICT);
+      vicEq->damageItem(eqDamage);
+        if (vicEq->getStructPoints() <= 0) {
+         vicEq->makeScraps();
+        delete vicEq;
+      }  
+    }
+    // Case 2: Weapon hits victim's body part
+    else if (weap && !vicEq) {
+      sstring bodyPart = victim->describeBodySlot(vicLimb);
+      act(format("Your $p strikes $N's %s with a solid impact!") % bodyPart, 
+          FALSE, ch, weap, victim, TO_CHAR);
+      act(format("$n's $p strikes your %s with a solid impact!") % bodyPart, 
+          FALSE, ch, weap, victim, TO_VICT);
+      act(format("$n's $p strikes $N's %s with a solid impact!") % bodyPart, 
+          FALSE, ch, weap, victim, TO_NOTVICT);
+      if (victim->isLimbFlags(vicLimb, PART_BRUISED)) {
+        victim->incrementBruiseStack(vicLimb, 100);
+      } else {
+        victim->rawBruise(vicLimb, 100, SILENT_NO, CHECK_IMMUNITY_NO);
+      }
+    }
+    // Case 3: Body part hits victim's equipment
+    else if (!weap && vicEq) {
+      sstring bodyPart = ch->describeBodySlot(chLimb);
+      act(format("Your %s strikes $N's $p with a solid impact!") % bodyPart, 
+          FALSE, ch, vicEq, victim, TO_CHAR);
+      act(format("$n's %s strikes your $p with a solid impact!") % bodyPart, 
+          FALSE, ch, vicEq, victim, TO_VICT);
+      act(format("$n's %s strikes $N's $p with a solid impact!") % bodyPart, 
+          FALSE, ch, vicEq, victim, TO_NOTVICT);
+      vicEq->damageItem(eqDamage);
+      if (vicEq->getStructPoints() <= 0) {
+        vicEq->makeScraps();
+        delete vicEq;
+      }
+    }
+    // Case 4: Body part hits victim's body part
+    else {
+      sstring attackerPart = ch->describeBodySlot(chLimb);
+      sstring victimPart = victim->describeBodySlot(vicLimb);
+      act(format("Your %s strikes $N's %s with a solid impact!") % attackerPart % victimPart, 
+          FALSE, ch, nullptr, victim, TO_CHAR);
+      act(format("$n's %s strikes your %s with a solid impact!") % attackerPart % victimPart, 
+          FALSE, ch, nullptr, victim, TO_VICT);
+      act(format("$n's %s strikes $N's %s with a solid impact!") % attackerPart % victimPart, 
+          FALSE, ch, nullptr, victim, TO_NOTVICT);
+      if (victim->isLimbFlags(vicLimb, PART_BRUISED)) {
+        victim->incrementBruiseStack(vicLimb, 100);
+      } else {
+        victim->rawBruise(vicLimb, 100, SILENT_NO, CHECK_IMMUNITY_NO);
+      }
+    }
+    
+  }
+  return true;  
+}
 int spikesBreak(TBeing* victim, TBeing* ch, TObj* obj) {
   int dam = ::number(1, 4);
   if (!obj)
@@ -180,9 +340,9 @@ int spikesBreak(TBeing* victim, TBeing* ch, TObj* obj) {
     act("$n's $o catches on $N!", FALSE, ch, obj, victim, TO_NOTVICT);
     act("$n's $o catches as it makes impact with you!", FALSE, ch, obj, victim,
       TO_VICT);
-    act("The spikes break off, damaging $n's $o!", FALSE, ch, obj, nullptr,
+    act("Some spikes break off, damaging $n's $o!", FALSE, ch, obj, nullptr,
       TO_ROOM, ANSI_GRAY);
-    act("The spikes break off, damaging your $o!", FALSE, ch, obj, nullptr,
+    act("Some spikes break off, damaging your $o!", FALSE, ch, obj, nullptr,
       TO_CHAR, ANSI_GRAY);
 
     if (obj->getMaxStructPoints() <= 0) {
@@ -217,6 +377,7 @@ int spikesBreak(TBeing* victim, TBeing* ch, TObj* obj) {
 }
 
 int spikesHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT limb) {
+  // Check for valid parameters
   if (!victim || limb == WEAR_NOWHERE) {
     return false;
   }
@@ -229,17 +390,32 @@ int spikesHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT limb) {
     return false;
   }
 
-  if (!victim->isUndead() && !victim->isImmune(IMMUNE_BLEED, limb)) {
-    victim->rawBleed(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
-
-    act("The spikes on $p tear open a <R>bloody wound<1> in $N's flesh!", FALSE,
-      ch, obj, victim, TO_NOTVICT);
-    act("The spikes on $p tear open a <R>bloody wound<1> in your flesh!", FALSE,
-      ch, obj, victim, TO_VICT);
-    act("The spikes on $p tear open a <R>bloody wound<1> in $N's flesh!", FALSE,
-      ch, obj, victim, TO_CHAR);
+  if (victim->isUndead() || victim->isImmune(IMMUNE_BLEED, limb)) {
+    // No bleeding for undead or immune creatures
+    return false;
   }
 
+  if (victim->isLimbFlags(limb, PART_BLEEDING)) {
+    act(format("Blood spatters as the spikes on your $o sink into $N's bleeding %s!") % 
+        victim->describeBodySlot(limb), FALSE, ch, obj, victim, TO_CHAR);
+    act(format("Blood spatters as the spikes on $n's $o sink into $N's bleeding %s!") % 
+        victim->describeBodySlot(limb), FALSE, ch, obj, victim, TO_NOTVICT);
+    act(format("Blood spatters as the spikes on $n's $o sink into your bleeding %s!") % 
+        victim->describeBodySlot(limb), FALSE, ch, obj, victim, TO_VICT);
+    
+    // Increment the bleed stack
+    victim->incrementBleedStack(limb, 250);
+  } else {   
+    act(format("The spikes on $p tear open a <R>bloody wound<1> in $N's %s!") % 
+        victim->describeBodySlot(limb), FALSE, ch, obj, victim, TO_NOTVICT);
+    act(format("The spikes on $p tear open a <R>bloody wound<1> in your %s!") % 
+        victim->describeBodySlot(limb), FALSE, ch, obj, victim, TO_VICT);
+    act(format("The spikes on $p tear open a <R>bloody wound<1> in $N's %s!") % 
+        victim->describeBodySlot(limb), FALSE, ch, obj, victim, TO_CHAR);
+     
+    victim->rawBleed(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+  }
+  
   spikesBreak(victim, ch, obj);
   return true;
 }

@@ -834,6 +834,84 @@ int disease_lung(TBeing* victim, int message, affectedData*) {
   return FALSE;
 }
 
+
+int disease_aspiration(TBeing* victim, int message, affectedData* af) {
+  int dam;
+  
+  if (victim->isPc() && !victim->desc)
+    return FALSE;
+
+  // Calculate severity based on number of vital parts with high bleed stacks
+  int severity = 1;
+  if (message == DISEASE_PULSE) {
+    // Check all vital parts for bleeding stacks
+    int highBleedVitalParts = 0;
+    
+    // List of vital parts to check
+    static const wearSlotT vitalParts[] = {
+      WEAR_HEAD, WEAR_NECK, WEAR_BODY, WEAR_BACK, WEAR_WAIST
+    };
+    
+    // Count vital parts with high bleed stacks
+    for (auto part : vitalParts) {
+      // Find bleeding affect for this part
+      affectedData* bleedAff = 
+        victim->affected ? victim->affected->find_if([part](affectedData* a) {
+          return a->modifier == DISEASE_BLEEDING && a->level == part;
+        }) : nullptr;
+        
+      // If bleeding affect exists and has 3+ stacks, count it
+      if (bleedAff && bleedAff->modifier2 >= 3) {
+        highBleedVitalParts++;
+      }
+    }
+    
+    // Set severity based on number of vital parts with high bleeding
+    severity = std::min(5, highBleedVitalParts + 1);
+  }
+  
+  switch (message) {
+    case DISEASE_BEGUN:
+      victim->sendTo("<r>Blood begins to seep into your airways!<1>\n\r");
+      act("<r>Blood begins to seep into $n's airways!<1>", TRUE, victim, 0, 0, TO_ROOM);
+      break;
+      
+    case DISEASE_PULSE:
+      if (::number(0, 2))
+        return FALSE;
+      
+      // Different messages based on severity
+      if (severity >= 4) {
+        victim->sendTo("<R>You violently cough up gouts of blood as your airways fill!<1>\n\r");
+        act("<R>$n violently coughs up gouts of blood, struggling to breathe!<1>", TRUE, victim, 0, 0, TO_ROOM);
+      } else if (severity >= 2) {
+        victim->sendTo("<r>You cough and sputter as blood fills your throat!<1>\n\r");
+        act("<r>$n coughs and sputters as blood fills $s throat!<1>", TRUE, victim, 0, 0, TO_ROOM);
+      } else {
+        victim->sendTo("<r>You cough as blood trickles into your throat!<1>\n\r");
+        act("<r>$n coughs as blood trickles into $s throat!<1>", TRUE, victim, 0, 0, TO_ROOM);
+      }
+      
+      // Damage scales with severity
+      dam = ::number(severity, severity * 2);
+      if (victim->reconcileDamage(victim, dam, DAMAGE_SUFFOCATION) == -1)
+        return DELETE_THIS;
+      break;
+      
+    case DISEASE_DONE:
+      if (victim->getPosition() > POSITION_DEAD) {
+        victim->sendTo("Your airways clear as you cough up the last of the blood!\n\r");
+        act("$n coughs up the last of the blood from $s airways.", TRUE, victim, 0, 0, TO_ROOM);
+      }
+      break;
+      
+    default:
+      break;
+  }
+  
+  return FALSE;
+}
+
 int disease_suffocate(TBeing* victim, int message, affectedData* af) {
   int dam;
 
@@ -1961,4 +2039,5 @@ DISEASEINFO DiseaseInfo[MAX_DISEASE] = {
   {disease_pneumonia, "pneumonia", 650},
   {disease_gangrene, "gangrene", 1250},
   {disease_extreme_pain, "extreme_pain", 100},
+  {disease_aspiration, "aspiration", 100},
 };

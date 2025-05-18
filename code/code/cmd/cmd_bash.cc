@@ -6,12 +6,14 @@
 
 #include "being.h"
 #include "combat.h"
+#include "limbs.h"
 #include "obj_base_clothing.h"
 #include "obj_base_weapon.h"
 #include "being.h"
 #include "room.h"
 #include "extern.h"
 #include "handler.h"
+#include "obj_general_weapon.h"
 
 bool TBeing::canBash(TBeing* victim, silentTypeT silent) {
   if (checkBusy())
@@ -354,45 +356,63 @@ int TBeing::bashSuccess(TBeing* victim, spellNumT skill, bool isHoldingShield,
 
   int shieldDam =
     getSkillDam(victim, skill, getSkillLevel(skill), getAdvLearning(skill));
+  wearSlotT atkLimb = WEAR_ARM_R;
+  if (!isRightHanded())
+    atkLimb = WEAR_ARM_L;
+  TObj* atkGear = dynamic_cast<TObj*>(equipment[atkLimb]);
+  // Determine which limb gets hit - same logic for all damage types
+  wearSlotT limb = WEAR_BODY;
+  if (!this->isTanking()) {
+    limb = WEAR_BACK; 
+  }
+  if (victim->isAgile(0)){
+    limb = WEAR_ARM_R;
+    if (percentChance(50)){
+      limb = WEAR_ARM_L;
+    }
+    
+    if ((victim->getHeight()*2/3) > this->getHeight()) {
+      limb = WEAR_LEG_R;
+      if (percentChance(50)){
+        limb = WEAR_LEG_L;
+      }
+    }
+  }
+  if (this->getHeight() > (3*victim->getHeight()/2)){
+    limb = WEAR_HEAD;
+  }
 
-  // extra damage done by shield with spikes 10-20-00 -dash
+  // First handle shield damage
   if (isHoldingShield && itemInSecondaryHand) {
     shieldDam += (int)((itemInSecondaryHand->getWeight() / 4.0) + 1.0);
 
-    if (itemInSecondaryHand->isSpiked() ||
-        itemInSecondaryHand->isObjStat(ITEM_SPIKED)) {
-      int spikeDam = ::number(1, 4);
+    // Handle spiked shield
+    if (itemInSecondaryHand->isSpiked() || itemInSecondaryHand->isObjStat(ITEM_SPIKED)) {
+      int spikeDam = ::number(1, 5);
       shieldDam += spikeDam;
-      wearSlotT limb = victim->getPartHit(this, false);
-      victim->addCurLimbHealth(limb, -spikeDam);
-      if (victim->isUndead() || victim->isImmune(IMMUNE_BLEED, limb) ||
-          victim->isLimbFlags(limb, PART_MISSING)) {
-        act("The spikes on your $o sink into $N's %s.", FALSE, this,
-          itemInSecondaryHand, victim, TO_CHAR);
-        act("The spikes on $n's $o sink into $N's %s.", FALSE, this,
-          itemInSecondaryHand, victim, TO_NOTVICT);
-        act("The spikes on $n's $o sink into your %s.", FALSE, this,
-          itemInSecondaryHand, victim, TO_VICT);
-      } else {
-        act(
-          "The spikes on your $o sink into $N's %s and open up a bloody wound!",
-          FALSE, this, itemInSecondaryHand, victim, TO_CHAR);
-        act(
-          "The spikes on $n's $o sink into $N's %s and open up a bloody wound! "
-          ".",
-          FALSE, this, itemInSecondaryHand, victim, TO_NOTVICT);
-        act(
-          "The spikes on $n's $o sink into your %s and open up a bloody wound!",
-          FALSE, this, itemInSecondaryHand, victim, TO_VICT);
-        victim->rawBleed(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
-      }
-      if (!::number(0, 3)) {
-        itemInSecondaryHand->addToMaxStructPoints(-1);
-        itemInSecondaryHand->addToStructPoints(-spikeDam);
-        act("$o is damaged slightly as the spikes rip free.", false, this,
-          itemInSecondaryHand, victim, TO_CHAR);
-      }
+      victim->hurtLimb(spikeDam, limb);
+      
+      // Use spikesHit to handle bleeding and potential spike breaking
+      spikesHit(victim, this, itemInSecondaryHand, limb);
     }
+  }
+  // Now handle thornflesh separately
+  else if (this->affectedBySpell(SPELL_THORNFLESH) && !atkGear) {
+    int thornDam = ::number(1, 5);
+    shieldDam += thornDam;
+    victim->hurtLimb(thornDam, limb);
+    
+    // Call thornsHit to handle bleeding
+    thornsHit(victim, this, atkLimb, limb);
+  }
+  // Handle spiked arm gear if no shield and no thornflesh
+  else if (atkGear && (atkGear->isSpiked() || atkGear->isObjStat(ITEM_SPIKED))) {
+    int spikeDam = ::number(1, 5);
+    shieldDam += spikeDam;
+    victim->hurtLimb(spikeDam, limb);
+    
+    // Use spikesHit to handle bleeding and potential spike breaking
+    spikesHit(victim, this, atkGear, limb);
   }
 
   if (reconcileDamage(victim, shieldDam, SKILL_BASH) == -1)
