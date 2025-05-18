@@ -108,7 +108,7 @@ int TBeing::stompHit(TBeing* victim) {
   int h_dam;
   int height, targ_height;
   int rc;
-  wearSlotT targetLimb; // Renamed for clarity
+  wearSlotT targetLimb;
   int dam = getSkillDam(victim, SKILL_STOMP, getSkillLevel(SKILL_STOMP),
     getAdvLearning(SKILL_STOMP));
 
@@ -189,20 +189,18 @@ int TBeing::stompHit(TBeing* victim) {
   
   // Apply additional effects based on footwear
   TObj* hurtyboot = dynamic_cast<TObj*>(this->equipment[getPrimaryFoot()]);
+  
+  // Use a single if-else chain for all special hit effects
   if (hurtyboot && (hurtyboot->isObjStat(ITEM_SPIKED) || hurtyboot->isSpiked())) {
-    sstring buf =
-      format("The spikes on your $o sink into $N.") % hurtyboot->getName();
-    act(buf, false, this, hurtyboot, victim, TO_CHAR);
-    buf = format("The spikes on $n's $o sink into $N.") % hurtyboot->getName();
-    act(buf, false, this, hurtyboot, victim, TO_NOTVICT);
-    buf = format("The spikes on $n's $o sink into you.") % hurtyboot->getName();
-    act(buf, false, this, hurtyboot, victim, TO_VICT);
-    reconcileDamage(victim, dam, TYPE_STAB);
     spikesHit(victim, this, hurtyboot, targetLimb);
   } else if (!hurtyboot && this->affectedBySpell(SPELL_THORNFLESH)) {
     // Pass the correctly selected target limb to thornsHit
     thornsHit(victim, this, getPrimaryFoot(), targetLimb);
+  } else {
+    // Apply hardHit regardless of whether there's footwear or not
+    hardHit(victim, this, hurtyboot, targetLimb, getPrimaryFoot());
   }
+  
   if (reconcileDamage(victim, dam, SKILL_STOMP) == -1)
     return DELETE_VICT;
 

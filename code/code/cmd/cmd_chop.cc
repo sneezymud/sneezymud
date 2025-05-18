@@ -29,7 +29,6 @@ static int chopHit(TBeing* c, TBeing* v, int score) {
   int rc;
   int slot;
   int temp, limb_dam;
-  int spikeDam = ::number(1, 4);
   wearSlotT pos = WEAR_NOWHERE;
   wearSlotT handSlot = WEAR_HAND_R;
   TObj* item;
@@ -146,24 +145,30 @@ static int chopHit(TBeing* c, TBeing* v, int score) {
       act("Your chop lands square on $N's side!", FALSE, c, 0, v, TO_CHAR);
       break;
   }
+  
   if (!c->isRightHanded()){
     handSlot = WEAR_HAND_L;
   }
+  
+  // Get the item in the attacker's hand
   item = dynamic_cast<TObj*>(c->equipment[handSlot]);
+  
+  // Use a single if-else chain for all special hit effects
   if (item && (item->isSpiked() || item->isObjStat(ITEM_SPIKED))) {
-    // Apply spike damage first
+    // Apply spike damage and effects
+    int spikeDam = ::number(1, 4);
     if (c->reconcileDamage(v, spikeDam, TYPE_STAB) == -1)
       return DELETE_VICT;
       
-    // Then use spikesHit to handle bleeding and potential spike breaking
     spikesHit(v, c, item, pos);
-  }
-  if (c->affectedBySpell(SPELL_THORNFLESH)) {
+  } else if (c->affectedBySpell(SPELL_THORNFLESH) && !item) {
+    // Apply thorn damage and effects
     thornsHit(v, c, handSlot, pos);
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
+  } else if (item) {
+    // If no other special effect and we have an item, try hardHit
+    hardHit(v, c, item, pos, handSlot);
   }
-
+  
   if (c->reconcileDamage(v, dam, SKILL_CHOP) == -1)
     return DELETE_VICT;
 

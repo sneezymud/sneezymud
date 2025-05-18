@@ -394,9 +394,12 @@ int TBeing::bashSuccess(TBeing* victim, spellNumT skill, bool isHoldingShield,
       
       // Use spikesHit to handle bleeding and potential spike breaking
       spikesHit(victim, this, itemInSecondaryHand, limb);
+    } else {
+      // If no spikes, try hardHit
+      hardHit(victim, this, itemInSecondaryHand, limb, atkLimb);
     }
-  }
-  // Now handle thornflesh separately
+  } 
+  // Now handle thornflesh if no shield
   else if (this->affectedBySpell(SPELL_THORNFLESH) && !atkGear) {
     int thornDam = ::number(1, 5);
     shieldDam += thornDam;
@@ -413,6 +416,10 @@ int TBeing::bashSuccess(TBeing* victim, spellNumT skill, bool isHoldingShield,
     
     // Use spikesHit to handle bleeding and potential spike breaking
     spikesHit(victim, this, atkGear, limb);
+  }
+  // If no other special effect and we have arm gear, try hardHit
+  else if (atkGear) {
+    hardHit(victim, this, atkGear, limb, atkLimb);
   }
 
   if (reconcileDamage(victim, shieldDam, SKILL_BASH) == -1)

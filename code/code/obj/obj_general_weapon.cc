@@ -243,29 +243,47 @@ int thornsHit(TBeing* victim, TBeing* ch, wearSlotT chLimb, wearSlotT vicLimb) {
 }
 
 int hardHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT vicLimb, wearSlotT chLimb) {
-  TObj *weap = dynamic_cast<TObj*>(ch->equipment[chLimb]);
+  // Get the attacker's weapon/limb and victim's equipment/limb
+  TObj *weap = obj;
   TObj *vicEq = dynamic_cast<TObj*>(victim->equipment[vicLimb]);
-  int vicHard = vicEq ? material_nums[vicEq->getMaterial()].hardness : 0;
-  int weapHard = weap ? material_nums[weap->getMaterial()].hardness : 0;
-  if (!weap) {
-    weapHard = material_nums[ch->getMaterial(chLimb)].hardness;
-      // Potentially match hardness equivalent to platinum
-      if (ch->doesKnowSkill(SKILL_IRON_FLESH) && ((ch->getSkillValue(SKILL_IRON_FLESH) * 85/100)>material_nums[ch->getMaterial(chLimb)].hardness)) {
-        weapHard = (ch->getSkillValue(SKILL_IRON_FLESH) * (85/100) );
-      }
-  }
   
-  if (!vicEq) {
+  // Initialize hardness values
+  int vicHard = 0;
+  int weapHard = 0;
+  
+  // Calculate victim's hardness
+  if (vicEq) {
+    vicHard = material_nums[vicEq->getMaterial()].hardness;
+  } else {
     vicHard = material_nums[victim->getMaterial(vicLimb)].hardness;
   }
+  
+  // Calculate attacker's hardness
+  if (weap) {
+    weapHard = material_nums[weap->getMaterial()].hardness;
+  } else {
+    // No weapon - use body part hardness
+    weapHard = material_nums[ch->getMaterial(chLimb)].hardness;
     
+    // Apply Iron Flesh skill if character has it
+    if (ch->doesKnowSkill(SKILL_IRON_FLESH)) {
+      int ironFleshHardness = (ch->getSkillValue(SKILL_IRON_FLESH) * 85/100);
+      if (ironFleshHardness > weapHard) {
+        weapHard = ironFleshHardness;
+      }
+    }
+  }
+  
+  // Calculate chance based on hardness difference
   int hardChance = (weapHard - vicHard);
+  
+  // Only proceed if attacker's hardness is higher AND random check passes
+  // Also skip if victim is tough
   if ((percentChance(hardChance)) && !victim->isTough()) {
-      int eqDamage = weapHard-vicHard;
-      // Case 1: Weapon hits victim's equipment
-    if (weap && vicEq) {
+    int eqDamage = weapHard - vicHard;
     
-
+    // Case 1: Weapon hits victim's equipment
+    if (weap && vicEq) {
       act("Your $p strikes $N's $P with a solid impact!", 
           FALSE, ch, weap, vicEq, TO_CHAR);
       act("$n's $p strikes your $P with a solid impact!", 
@@ -273,20 +291,22 @@ int hardHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT vicLimb, wearSlotT 
       act("$n's $p strikes $N's $P with a solid impact!", 
           FALSE, ch, weap, vicEq, TO_NOTVICT);
       vicEq->damageItem(eqDamage);
-        if (vicEq->getStructPoints() <= 0) {
-         vicEq->makeScraps();
+      if (vicEq->getStructPoints() <= 0) {
+        vicEq->makeScraps();
         delete vicEq;
       }  
     }
     // Case 2: Weapon hits victim's body part
     else if (weap && !vicEq) {
       sstring bodyPart = victim->describeBodySlot(vicLimb);
+      
       act(format("Your $p strikes $N's %s with a solid impact!") % bodyPart, 
           FALSE, ch, weap, victim, TO_CHAR);
       act(format("$n's $p strikes your %s with a solid impact!") % bodyPart, 
           FALSE, ch, weap, victim, TO_VICT);
       act(format("$n's $p strikes $N's %s with a solid impact!") % bodyPart, 
           FALSE, ch, weap, victim, TO_NOTVICT);
+      
       if (victim->isLimbFlags(vicLimb, PART_BRUISED)) {
         victim->incrementBruiseStack(vicLimb, 100);
       } else {
@@ -295,13 +315,13 @@ int hardHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT vicLimb, wearSlotT 
     }
     // Case 3: Body part hits victim's equipment
     else if (!weap && vicEq) {
-      sstring bodyPart = ch->describeBodySlot(chLimb);
-      act(format("Your %s strikes $N's $p with a solid impact!") % bodyPart, 
+      act("Your blow strikes $N's $p with a solid impact!", 
           FALSE, ch, vicEq, victim, TO_CHAR);
-      act(format("$n's %s strikes your $p with a solid impact!") % bodyPart, 
+      act("$n's blow strikes your $p with a solid impact!", 
           FALSE, ch, vicEq, victim, TO_VICT);
-      act(format("$n's %s strikes $N's $p with a solid impact!") % bodyPart, 
+      act("$n's blow strikes $N's $p with a solid impact!", 
           FALSE, ch, vicEq, victim, TO_NOTVICT);
+      
       vicEq->damageItem(eqDamage);
       if (vicEq->getStructPoints() <= 0) {
         vicEq->makeScraps();
@@ -309,24 +329,25 @@ int hardHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT vicLimb, wearSlotT 
       }
     }
     // Case 4: Body part hits victim's body part
-    else {
-      sstring attackerPart = ch->describeBodySlot(chLimb);
+    else if (!weap && !vicEq) {
       sstring victimPart = victim->describeBodySlot(vicLimb);
-      act(format("Your %s strikes $N's %s with a solid impact!") % attackerPart % victimPart, 
+      
+      act(format("Your blow strikes $N's %s with a solid impact!") % victimPart, 
           FALSE, ch, nullptr, victim, TO_CHAR);
-      act(format("$n's %s strikes your %s with a solid impact!") % attackerPart % victimPart, 
+      act(format("$n's blow strikes your %s with a solid impact!") % victimPart, 
           FALSE, ch, nullptr, victim, TO_VICT);
-      act(format("$n's %s strikes $N's %s with a solid impact!") % attackerPart % victimPart, 
+      act(format("$n's blow strikes $N's %s with a solid impact!") % victimPart, 
           FALSE, ch, nullptr, victim, TO_NOTVICT);
+      
       if (victim->isLimbFlags(vicLimb, PART_BRUISED)) {
         victim->incrementBruiseStack(vicLimb, 100);
       } else {
         victim->rawBruise(vicLimb, 100, SILENT_NO, CHECK_IMMUNITY_NO);
       }
     }
-    
+    return true;
   }
-  return true;  
+  return false;  // Return false if no impact occurred
 }
 int spikesBreak(TBeing* victim, TBeing* ch, TObj* obj) {
   int dam = ::number(1, 4);
