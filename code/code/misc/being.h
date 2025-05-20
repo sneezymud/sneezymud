@@ -1425,6 +1425,10 @@ class TBeing : public TThing {
     void doPrompt(const char*);
     virtual void doPurge(const char*);
     virtual void doSet(const char*);
+    int biteStab(TBeing*, TBeing*);
+    int biteStabHit(TBeing*, int);
+    int clawStab(TBeing*, TBeing*);
+    int clawStabHit(TBeing*, int);
     int backstabHit(TBeing*, TThing*, int);
     int throatSlitHit(TBeing*, TThing*, int);
     int critFailureChance(TBeing*, TThing*, spellNumT);
@@ -1787,6 +1791,9 @@ class TBeing : public TThing {
     void doDrag(const sstring&);
     void doCommand(const char*);
     int doAssist(const char*, TBeing*, bool flags = FALSE);
+    bool hasClaws() const;
+    bool canBite() const;
+    bool hasPoisonBite() const;
     void doRoll(TBeing*, dirTypeT);
     void doRoll(TObj*, dirTypeT);
     void doRoll(const sstring&);

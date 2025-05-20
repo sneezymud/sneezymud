@@ -18,5 +18,8 @@ int throatSlit(TBeing*, TBeing*);
 int poisonWeapon(TBeing*, TThing*, TThing*);
 int garrotte(TBeing*, TBeing*);
 int cudgel(TBeing*, TBeing*);
+int biteStab(TBeing*, TBeing*);
+int clawStab(TBeing*, TBeing*);
+
 
 bool addPoison(affectedData aff[5], liqTypeT liq, int level, int duration);

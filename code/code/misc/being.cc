@@ -1654,3 +1654,153 @@ void TBeing::removeAllProtection() {
   affectFrom(SPELL_PROTECTION_FROM_ENERGY);
 
 }
+
+bool TBeing::hasClaws() const {
+  race_t race = getMyRace()->getRace();
+  
+  // Check race type for races that have claws
+  switch (race) {
+    case RACE_DEMON:
+    case RACE_DEVIL:
+    case RACE_TROLL:
+    case RACE_LYCANTH:
+    case RACE_DRAGON:
+    case RACE_DINOSAUR:
+    case RACE_REPTILE:
+    case RACE_BANSHEE:
+    case RACE_FELINE:
+    case RACE_TURTLE:
+    case RACE_LION:
+    case RACE_TIGER:
+    case RACE_LEOPARD:
+    case RACE_COUGAR:
+    case RACE_KUOTOA:
+    case RACE_BAANTA:
+    case RACE_RATMEN:
+    case RACE_WYVELIN:
+    case RACE_BIRDMAN:
+    case RACE_BIRD:
+    case RACE_PHOENIX:
+    case RACE_WYVERN:
+    case RACE_MANTICORE:
+    case RACE_SHEDU:
+    case RACE_SPHINX:
+    case RACE_LAMMASU:
+    case RACE_GRIFFON:
+    case RACE_MEDUSA:
+    case RACE_CRUSTACEAN:
+    case RACE_BEAR:
+    case RACE_INSECT:
+    case RACE_FLYINSECT:
+    case RACE_ANT:
+    case RACE_ARACHNID:
+      return true;
+    default:
+      return false;
+  }
+}
+
+bool TBeing::canBite() const {
+  race_t race = getMyRace()->getRace();
+  
+  // Check race type for races that can bite
+  switch (race) {
+    case RACE_LYCANTH:
+    case RACE_DRAGON:
+    case RACE_DINOSAUR:
+    case RACE_RODENT:
+    case RACE_REPTILE:
+    case RACE_BANSHEE:
+    case RACE_FELINE:
+    case RACE_TURTLE:
+    case RACE_LION:
+    case RACE_TIGER:
+    case RACE_LEOPARD:
+    case RACE_COUGAR:
+    case RACE_BAT:
+    case RACE_VAMPIREBAT:
+    case RACE_KUOTOA:
+    case RACE_BAANTA:
+    case RACE_RATMEN:
+    case RACE_WYVELIN:
+    case RACE_INSECT:
+    case RACE_FLYINSECT:
+    case RACE_ANT:
+    case RACE_ARACHNID:
+    case RACE_FISH:
+    case RACE_SNAKE:
+    case RACE_COATL:
+    case RACE_NAGA:
+    case RACE_CANINE:
+    case RACE_FROG:
+    case RACE_MFLAYER:
+    case RACE_WYVERN:
+    case RACE_PRIMATE:
+    case RACE_AMPHIB:
+    case RACE_BEAR:
+    case RACE_DRAGONNE:
+    case RACE_HIPPOGRIFF:
+    case RACE_RUST_MON:
+    case RACE_MOUND:
+    case RACE_OTYUGH:
+    case RACE_CHIMERA:
+    case RACE_BASILISK:
+    case RACE_MANTICORE:
+    case RACE_SHEDU:
+    case RACE_SPHINX:
+    case RACE_LAMMASU:
+    case RACE_GRIFFON:
+    case RACE_MEDUSA:
+    case RACE_SQUIRREL:
+    case RACE_DEER:
+    case RACE_WEASEL:
+    case RACE_GOAT:
+    case RACE_SHEEP:
+    case RACE_GIRAFFE:
+    case RACE_PIG:
+    case RACE_BOAR:
+    case RACE_RABBIT:
+    case RACE_BADGER:
+    case RACE_OTTER:
+    case RACE_BEAVER:
+    case RACE_GOPHER:
+    case RACE_SAHUAGIN:
+    case RACE_UNDEAD:
+    case RACE_OWLBEAR:
+    case RACE_HIPPOPOTAMUS:
+    case RACE_PANTATH:
+    case RACE_HORSE:
+    case RACE_PEGASUS:
+    case RACE_BOVINE:
+    case RACE_OX:
+    case RACE_OCTOPUS:
+    case RACE_DJINN:
+    case RACE_VAMPIRE:
+      return true;
+    default:
+      return false;
+  }
+}
+
+bool TBeing::hasPoisonBite() const {
+  race_t race = getMyRace()->getRace();
+  
+  // Check race type for races that have poison
+  switch (race) {
+    case RACE_SNAKE:      // Most snakes are venomous
+    case RACE_NAGA:       // Snake-like humanoids
+    case RACE_WYVERN:     // Dragon-like creatures often have venom
+    case RACE_COATL:      // Feathered serpents
+    case RACE_ARACHNID:   // Spiders, scorpions
+    case RACE_AMPHIB:     // Some frogs
+    case RACE_INSECT:     // Some insects
+    case RACE_FLYINSECT:  // Some flying insects
+    case RACE_DEMON:      // Demonic poison
+    case RACE_DEVIL:      // Infernal poison
+    case RACE_PARASITE:   // Parasites often have toxins
+    case RACE_KUOTOA:     // Aquatic humanoids with poison
+      return true;
+    default:
+      return false;
+  }
+}

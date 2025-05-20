@@ -5,6 +5,8 @@
 #include "obj_base_weapon.h"
 #include "obj_general_weapon.h"
 #include "monster.h"
+#include "materials.h"
+#include "spells.h"
 
 int TBeing::doSap(const char* argument, TBeing* vict) {
   int rc;
@@ -74,15 +76,21 @@ int TBeing::doSap(const char* argument, TBeing* vict) {
     return false;
   }
 
-  // Ensure the player has a weapon equipped
   if (!weapon) {
+    if (this->getSkillLevel(SKILL_SAP) < 50) {
     sendTo(
-      "You need to hold a weapon in your primary hand to make this a "
-      "success.\n\r");
+      "You are not skilled enough to sap barehanded. You'll need a weapon.\n\r");
     return false;
-  }
+    }
+    if (this->hasClaws()) {
+    sendTo(
+      "Your claws make it impossible to sap barehanded. You'll need a weapon.\n\r");
+    return false;
+    }
+  } 
 
-  if (!weapon->canSap()) {
+
+  if (weapon && !weapon->canSap()) {
     act("You can't use a $o to sap.", false, this, weapon, NULL, TO_CHAR);
     return FALSE;
   }
@@ -177,27 +185,48 @@ int TBeing::sapSuccess(TBeing* victim) {
     limb = upperLimbs[::number(0, 8)];  // 9 slots (0-8)
   } while (!victim->hasPart(limb));
 
-  sstring buf = format("$n whaps $N with $s $o, rattling $S %s!") %
+  if (!weapon) {
+
+   sstring buf = format("$n whaps $N with $s hand, rattling $S %s!") %
+   victim->describeBodySlot(limb);
+   act(buf, FALSE, this, weapon, victim, TO_NOTVICT);
+
+   buf = format("You whap $N with your hand, rattling $S %s!") %
+   victim->describeBodySlot(limb);
+   act(buf, FALSE, this, weapon, victim, TO_CHAR);
+
+   buf = format("$n whaps you with $s hand, rattling your %s!") %
+   victim->describeBodySlot(limb);
+   act(buf, FALSE, this, weapon, victim, TO_VICT);
+
+  } else {
+
+   sstring buf = format("$n whaps $N with $s $o, rattling $S %s!") %
                 victim->describeBodySlot(limb);
-  act(buf, FALSE, this, weapon, victim, TO_NOTVICT);
+   act(buf, FALSE, this, weapon, victim, TO_NOTVICT);
 
-  buf = format("You whap $N with your $o, rattling $S %s!") %
+   buf = format("You whap $N with your $o, rattling $S %s!") %
         victim->describeBodySlot(limb);
-  act(buf, FALSE, this, weapon, victim, TO_CHAR);
+   act(buf, FALSE, this, weapon, victim, TO_CHAR);
 
-  buf = format("$n whaps you with $s $o, rattling your %s!") %
+   buf = format("$n whaps you with $s $o, rattling your %s!") %
         victim->describeBodySlot(limb);
-  act(buf, FALSE, this, weapon, victim, TO_VICT);
+   act(buf, FALSE, this, weapon, victim, TO_VICT);
+  }
 
   int limbDam = dam / 2;
   if (victim->isBruised(limb)) {
     limbDam = limbDam * 1.5;
   }
-
-  if (weapon->isObjStat(ITEM_SPIKED)) {
+  wearSlotT hand = this->getPrimaryHand();
+  TObj *handGear = dynamic_cast<TObj*>(this->equipment[hand]);
+  int weaponHardness = material_nums[weapon->getMaterial()].hardness;
+  if (weapon && weapon->isObjStat(ITEM_SPIKED) || (!weapon && handGear->isObjStat(ITEM_SPIKED))) {
     // Spiked weapons do 25% more damage to limb
     limbDam = limbDam * 1.25;
     spikesHit(victim, this, weapon, limb);
+  } else {
+  hardHit(victim, this, weapon, limb, hand);
   }
 
   if (this->getPosition() >= POSITION_STANDING || this->isFlying()) {
@@ -215,7 +244,7 @@ int TBeing::sapSuccess(TBeing* victim) {
     }
   }
 
-  if (weapon->isMaul()) {
+  if (weapon && weapon->isMaul()) {
     // Mauls do 50% more damage to limb
     limbDam = limbDam * 1.5;
   }
@@ -244,6 +273,22 @@ int TBeing::sapSuccess(TBeing* victim) {
     aff.bitvector = 0;
     victim->affectTo(&aff);
     victim->dropWeapon(limb);
+
+    if (!weapon) {
+        buf = format("Your hand smashes into $s %s, making it go numb!") %
+     victim->describeBodySlot(limb);
+     act(buf, false, this, weapon, victim, TO_CHAR);
+
+     buf = format("$n's hand smashes into $s %s, making it go numb!") %
+       victim->describeBodySlot(limb);
+     act(buf, false, this, weapon, victim, TO_NOTVICT);
+
+     buf = format("$n's hand smashes into your %s, making it go numb!") %
+       victim->describeBodySlot(limb);
+      act(buf, false, this, weapon, victim, TO_VICT);
+    } 
+    } else {
+
     buf = format("Your $p smashes into $s %s, making it go numb!") %
           victim->describeBodySlot(limb);
     act(buf, false, this, weapon, victim, TO_CHAR);

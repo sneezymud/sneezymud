@@ -1,5 +1,6 @@
 #include "handler.h"
 #include "being.h"
+#include "limbs.h"
 #include "monster.h"
 #include "disease.h"
 #include "combat.h"
@@ -160,10 +161,18 @@ int TBeing::backstabHit(TBeing* victim, TThing* obj, int modifier) {
           victim = NULL;
           return DELETE_VICT;
         }
-
+        
+        if (weapon && weapon->getCurSharp() > victim->getMaterial(WEAR_BACK) && percentChance(weapon->getCurSharp()-victim->getMaterial(WEAR_BACK))){
+          rawBleed(WEAR_BACK, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+        }
+        
         // poison
-        if (victim && weapon && weapon->isPoisoned())
+        if (victim && weapon && weapon->isPoisoned()) {
           weapon->applyPoison(victim);
+          if (victim->isBleeding(WEAR_BACK)){
+            rawInfect(WEAR_BACK, 250, SILENT_YES, CHECK_IMMUNITY_YES);
+          }
+        }
       }
     }
   } else {
@@ -276,10 +285,35 @@ int backstab(TBeing* thief, TBeing* victim) {
     return FALSE;
   }
   TGenWeapon* obj = dynamic_cast<TGenWeapon*>(thief->heldInPrimHand());
+  
+  // Check if thief has a weapon, or can use natural weapons
   if (!obj) {
-    thief->sendTo("You need to wield a weapon, to make it a success.\n\r");
-    return FALSE;
+    if (thief->getSkillValue(SKILL_BACKSTAB) > 50) {
+      if (thief->canBite() && thief->hasClaws()) {
+        // If both are available, randomly choose one
+        if (percentChance(50)) {
+          return biteStab(thief, victim);
+        } else {
+          return clawStab(thief, victim);
+        }
+      } else if (thief->hasClaws()) {
+        // Only claws available
+        return clawStab(thief, victim);
+      } else if (thief->canBite()) {
+        // Only bite available
+        return biteStab(thief, victim);
+      } else {
+        // No natural weapons available, require a weapon
+        thief->sendTo("You need to wield a weapon, to make it a success.\n\r");
+        return FALSE;
+      }
+    } else {
+      // Otherwise, require a weapon
+      thief->sendTo("You need to wield a weapon, to make it a success.\n\r");
+      return FALSE;
+    }
   }
+  
   if (thief->riding) {
     thief->sendTo("You cannot backstab while mounted!\n\r");
     return FALSE;
@@ -306,8 +340,8 @@ int backstab(TBeing* thief, TBeing* victim) {
     return FALSE;
   }
 
-  if (thief->fight()) {
-    thief->sendTo("You're too busy to backstab!\n\r");
+  if (thief->isTanking()) {
+    thief->sendTo("You're too busy warding off your opponent!\n\r");
     return FALSE;
   }
   thief->reconcileHurt(victim, 0.04);
@@ -317,16 +351,25 @@ int backstab(TBeing* thief, TBeing* victim) {
   modifier -= noise(thief) / 20;
   modifier += thief->visibility() / 15;
 
-  if (thief->isAffected(AFF_SNEAK))
+  if (thief->isAffected(AFF_SNEAK)){
     modifier += 5;
-  if (thief->isAffected(AFF_HIDE))
+  }
+  
+  if (thief->isAffected(AFF_HIDE)){
     modifier += 5;
-  if (victim->fight() && !thief->fight())
-    modifier += 5;
+  }
+  
+  if (victim->fight() && !thief->fight()){
+  modifier += 5;
+  }
+  
+  if (thief->fight() && victim->fight()){
+  modifier -= 5;
+  }
+  
   if (thief->makesNoise() && victim->awake()) {
     modifier -= 10;
-
-    act(
+      act(
       "$n's armor makes too much noise, and $N is alerted to $n's backstab "
       "attempt.",
       FALSE, thief, 0, victim, TO_NOTVICT);
@@ -364,6 +407,320 @@ int backstab(TBeing* thief, TBeing* victim) {
   }
   victim->addHated(thief);
   return TRUE;
+}
+
+int biteStab(TBeing* thief, TBeing* victim) {
+  int rc = 0;
+
+  if (thief->checkPeaceful("You cannot backstab in a peaceful room!\n\t"))
+    return FALSE;
+
+  if (victim == thief) {
+    thief->sendTo("How can you sneak up on yourself?\n\r");
+    return FALSE;
+  }
+  
+  if (thief->riding) {
+    thief->sendTo("You cannot backstab while mounted!\n\r");
+    return FALSE;
+  }
+  
+  if (dynamic_cast<TBeing*>(victim->riding)) {
+    thief->sendTo("You cannot backstab while that person is mounted!\n\r");
+    return FALSE;
+  }
+  
+  if (dynamic_cast<TBeing*>(victim->rider)) {
+    act("Unfortunately, $N's back is covered by $p riding upon $M.", false,
+      thief, victim->rider, victim, TO_CHAR);
+    return FALSE;
+  }
+  
+  if (thief->noHarmCheck(victim))
+    return FALSE;
+
+  if (thief->attackers) {
+    thief->sendTo(
+      "There's no way to reach that back while you're fighting!\n\r");
+    return FALSE;
+  }
+
+  if (thief->isTanking()) {
+    thief->sendTo("You're too busy warding off your opponent!\n\r");
+    return FALSE;
+  }
+  
+  thief->reconcileHurt(victim, 0.04);
+
+  int modifier = 0;
+  
+  modifier -= noise(thief) / 20;
+  modifier += thief->visibility() / 15;
+
+  if (thief->isAffected(AFF_SNEAK)) {
+    modifier += 5;
+  }
+  
+  if (thief->isAffected(AFF_HIDE)) {
+    modifier += 5;
+  }
+  
+  if (victim->fight() && !thief->fight()) {
+    modifier += 5;
+  }
+  
+  if (thief->fight() && victim->fight()) {
+    modifier -= 5;
+  }
+  
+  if (thief->makesNoise() && victim->awake()) {
+    modifier -= 10;
+    act("$n's movements make too much noise, and $N is alerted to $n's approach.",
+      FALSE, thief, 0, victim, TO_NOTVICT);
+    act("You make too much noise, and $N hears you coming.", FALSE, thief, 0,
+      victim, TO_CHAR);
+    act("You hear $n's movements, and quickly attempt to dodge $s approach.",
+      FALSE, thief, 0, victim, TO_VICT);
+  }
+  
+  if (victim->awake() && victim->canSee(thief) && !victim->isPc() &&
+      dynamic_cast<TMonster*>(victim)->isSusp()) {
+    modifier -= 10;
+
+    act("$E is able to see you and notices you coming at the last moment.",
+      FALSE, thief, 0, victim, TO_CHAR);
+    act("You sense $m coming as $n attempts to murder you.", FALSE, thief, 0,
+      victim, TO_VICT);
+  }
+  
+  int bKnown = thief->getSkillValue(SKILL_BACKSTAB);
+
+  if ((thief->bSuccess(bKnown, SKILL_BACKSTAB) || !victim->awake())) {
+    rc = thief->biteStabHit(victim, modifier);
+    if (IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_VICT;
+  } else {
+    act("$n makes a pathetic attempt at biting $N's back.", FALSE, thief, 0,
+      victim, TO_NOTVICT);
+    act("You nearly bite your tongue as you try to bite $N.", FALSE, thief, 0,
+      victim, TO_CHAR);
+    act("You quickly dodge $n's pathetic attempt to bite you.", FALSE,
+      thief, 0, victim, TO_VICT);
+    if (thief->reconcileDamage(victim, 0, SKILL_BACKSTAB) == -1)
+      return DELETE_VICT;
+  }
+  
+  victim->addHated(thief);
+  return TRUE;
+}
+
+int TBeing::biteStabHit(TBeing* victim, int modifier) {
+  int d;
+  
+  d = getSkillDam(victim, SKILL_BACKSTAB, getSkillLevel(SKILL_BACKSTAB),
+    getAdvLearning(SKILL_BACKSTAB));
+
+  int specialAttackValue =
+    specialAttack(victim, SKILL_BACKSTAB, modifier, true);
+  if (!victim->awake() || specialAttackValue == GUARANTEED_SUCCESS ||
+      specialAttackValue == COMPLETE_SUCCESS ||
+      (specialAttackValue == PARTIAL_SUCCESS &&
+        (::number(0, 99) + modifier > 50))) {
+    if (victim->getPosition() > POSITION_DEAD) {
+      // For bite attacks, we don't need getActualDamage since there's no weapon
+      
+      if (willKill(victim, d, SKILL_BACKSTAB, FALSE)) {
+        // Death messages
+        act("You sink your teeth into $N's spine, killing $M instantly!", FALSE, this, 0,
+          victim, TO_CHAR);
+        act("$n sinks $s teeth into $N's spine, killing $M instantly!", FALSE, this, 0,
+          victim, TO_NOTVICT);
+        act("$n sinks $s teeth into your spine! You are dead!", FALSE, this, 0,
+          victim, TO_VICT);
+      } else {
+        // Non-death messages
+        act("You lunge at $N's back and sink your teeth into $S spine!", FALSE, this, 0,
+          victim, TO_CHAR);
+        act("$n lunges at $N's back and sinks $s teeth into $N's spine!", FALSE, this, 0,
+          victim, TO_NOTVICT);
+        act("Suddenly, $n lunges at you and sinks $s teeth into your spine!", FALSE, this, 0,
+          victim, TO_VICT);
+        
+        // Apply bleeding effect
+        if (percentChance(50)) {
+          victim->rawBleed(WEAR_BACK, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+        }
+      }
+    }
+  } else {
+    // Miss messages
+    act("$N quickly avoids your bite attack.", FALSE, this, 0, victim, TO_CHAR);
+    act("$n tried to bite $N, but $N was too quick.", FALSE, this, 0, victim, TO_NOTVICT);
+    act("You quickly dodge $n's attempt to bite you.", FALSE, this, 0, victim, TO_VICT);
+    d = 0;
+  }
+
+  if (reconcileDamage(victim, d, SKILL_BACKSTAB) == -1)
+    return DELETE_VICT;
+
+  return 0;
+}
+
+int clawStab(TBeing* thief, TBeing* victim) {
+  int rc = 0;
+
+  if (thief->checkPeaceful("You cannot backstab in a peaceful room!\n\t"))
+    return FALSE;
+
+  if (victim == thief) {
+    thief->sendTo("How can you sneak up on yourself?\n\r");
+    return FALSE;
+  }
+  
+  if (thief->riding) {
+    thief->sendTo("You cannot backstab while mounted!\n\r");
+    return FALSE;
+  }
+  
+  if (dynamic_cast<TBeing*>(victim->riding)) {
+    thief->sendTo("You cannot backstab while that person is mounted!\n\r");
+    return FALSE;
+  }
+  
+  if (dynamic_cast<TBeing*>(victim->rider)) {
+    act("Unfortunately, $N's back is covered by $p riding upon $M.", false,
+      thief, victim->rider, victim, TO_CHAR);
+    return FALSE;
+  }
+  
+  if (thief->noHarmCheck(victim))
+    return FALSE;
+
+  if (thief->attackers) {
+    thief->sendTo(
+      "There's no way to reach that back while you're fighting!\n\r");
+    return FALSE;
+  }
+
+  if (thief->isTanking()) {
+    thief->sendTo("You're too busy warding off your opponent!\n\r");
+    return FALSE;
+  }
+  
+  thief->reconcileHurt(victim, 0.04);
+
+  int modifier = 0;
+  
+  modifier -= noise(thief) / 20;
+  modifier += thief->visibility() / 15;
+
+  if (thief->isAffected(AFF_SNEAK)) {
+    modifier += 5;
+  }
+  
+  if (thief->isAffected(AFF_HIDE)) {
+    modifier += 5;
+  }
+  
+  if (victim->fight() && !thief->fight()) {
+    modifier += 5;
+  }
+  
+  if (thief->fight() && victim->fight()) {
+    modifier -= 5;
+  }
+  
+  if (thief->makesNoise() && victim->awake()) {
+    modifier -= 10;
+    act("$n's movements make too much noise, and $N is alerted to $n's approach.",
+      FALSE, thief, 0, victim, TO_NOTVICT);
+    act("You make too much noise, and $N hears you coming.", FALSE, thief, 0,
+      victim, TO_CHAR);
+    act("You hear $n's movements, and quickly attempt to dodge $s approach.",
+      FALSE, thief, 0, victim, TO_VICT);
+  }
+  
+  if (victim->awake() && victim->canSee(thief) && !victim->isPc() &&
+      dynamic_cast<TMonster*>(victim)->isSusp()) {
+    modifier -= 10;
+
+    act("$E is able to see you and notices you coming at the last moment.",
+      FALSE, thief, 0, victim, TO_CHAR);
+    act("You sense $m coming as $n attempts to murder you.", FALSE, thief, 0,
+      victim, TO_VICT);
+  }
+  
+  int bKnown = thief->getSkillValue(SKILL_BACKSTAB);
+
+  if ((thief->bSuccess(bKnown, SKILL_BACKSTAB) || !victim->awake())) {
+    rc = thief->clawStabHit(victim, modifier);
+    if (IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_VICT;
+  } else {
+    act("$n makes a pathetic attempt at clawing $N's back.", FALSE, thief, 0,
+      victim, TO_NOTVICT);
+    act("You nearly scratch yourself as you try to claw $N.", FALSE, thief, 0,
+      victim, TO_CHAR);
+    act("You quickly dodge $n's pathetic attempt to claw you.", FALSE,
+      thief, 0, victim, TO_VICT);
+    if (thief->reconcileDamage(victim, 0, SKILL_BACKSTAB) == -1)
+      return DELETE_VICT;
+  }
+  
+  victim->addHated(thief);
+  return TRUE;
+}
+
+int TBeing::clawStabHit(TBeing* victim, int modifier) {
+  int d;
+  
+  d = getSkillDam(victim, SKILL_BACKSTAB, getSkillLevel(SKILL_BACKSTAB),
+    getAdvLearning(SKILL_BACKSTAB));
+
+  int specialAttackValue =
+    specialAttack(victim, SKILL_BACKSTAB, modifier, true);
+  if (!victim->awake() || specialAttackValue == GUARANTEED_SUCCESS ||
+      specialAttackValue == COMPLETE_SUCCESS ||
+      (specialAttackValue == PARTIAL_SUCCESS &&
+        (::number(0, 99) + modifier > 50))) {
+    if (victim->getPosition() > POSITION_DEAD) {
+      // For claw attacks, we don't need getActualDamage since there's no weapon
+      
+      if (willKill(victim, d, SKILL_BACKSTAB, FALSE)) {
+        // Death messages
+        act("Your claws tear through $N's back, killing $M instantly!", FALSE, this, 0,
+          victim, TO_CHAR);
+        act("$n's claws tear through $N's back, killing $M instantly!", FALSE, this, 0,
+          victim, TO_NOTVICT);
+        act("$n's claws tear through your back! You are dead!", FALSE, this, 0,
+          victim, TO_VICT);
+      } else {
+        // Non-death messages
+        act("You rake your claws across $N's back, leaving deep gashes!", FALSE, this, 0,
+          victim, TO_CHAR);
+        act("$n rakes $s claws across $N's back, leaving deep gashes!", FALSE, this, 0,
+          victim, TO_NOTVICT);
+        act("Suddenly, $n rakes $s claws across your back, leaving deep gashes!", FALSE, this, 0,
+          victim, TO_VICT);
+        
+        // Apply bleeding effect
+        if (percentChance(70)) {
+          victim->rawBleed(WEAR_BACK, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+        }
+      }
+    }
+  } else {
+    // Miss messages
+    act("$N quickly avoids your claw attack.", FALSE, this, 0, victim, TO_CHAR);
+    act("$n tried to claw $N, but $N was too quick.", FALSE, this, 0, victim, TO_NOTVICT);
+    act("You quickly dodge $n's attempt to claw you.", FALSE, this, 0, victim, TO_VICT);
+    d = 0;
+  }
+
+  if (reconcileDamage(victim, d, SKILL_BACKSTAB) == -1)
+    return DELETE_VICT;
+
+  return 0;
 }
 
 //////////////////////////////////////////////////////////////////
