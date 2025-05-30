@@ -254,7 +254,7 @@ namespace {
 
     being->doShout(taunt_buf);
     discord_taunt_msg =
-      format(":skull: %s shouts, \"%s\"") % v->getName().cap() % taunt_buf;
+      format(":skull: %s shouts, \"%s\"") % being->getName().cap() % taunt_buf;
     Discord::sendMessageAsync(Discord::CHANNEL_DEATHS, discord_taunt_msg);
   }
 }  // namespace
