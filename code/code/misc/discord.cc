@@ -75,6 +75,8 @@ bool Discord::doConfig() {
   // worker thread setup
   messenger_thread = std::thread(Discord::messenger);
 
+  vlogf(LOG_MISC, "Discord webhooks: messenger thread started");
+  
   return true;
 }
 
@@ -87,6 +89,7 @@ bool Discord::sendMessage(sstring channel, sstring msg) {
     return false;
   }
 
+  // vlogf(LOG_MISC, "Discord webhooks: Discord message sent");
   // sanitize and format the message
   msg = format("{\"content\": \"%s\"}") % stripColorCodes(msg).escapeJson();
 
@@ -99,13 +102,26 @@ bool Discord::sendMessage(sstring channel, sstring msg) {
   curl_easy_setopt(curl, CURLOPT_URL, webhookURL);
   curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
   curl_easy_setopt(curl, CURLOPT_POSTFIELDS, content);
+  
+  // TIMEOUT SETTINGS
+  curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10);        
+  curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 5);  
+  curl_easy_setopt(curl, CURLOPT_LOW_SPEED_LIMIT, 1); 
+  curl_easy_setopt(curl, CURLOPT_LOW_SPEED_TIME, 5);  
 
   CURLcode res = curl_easy_perform(curl);
   if (res != CURLE_OK) {
-    vlogf(LOG_MISC,
-      format("Discord webhooks: curl_easy_perform() failed: '%s'") %
-        curl_easy_strerror(res));
-  }
+    if (res == CURLE_OPERATION_TIMEDOUT) {
+      vlogf(LOG_MISC, "Discord webhooks: Request timed out");
+    } else {
+      vlogf(LOG_MISC,
+        format("Discord webhooks: curl_easy_perform() failed: '%s'") %
+          curl_easy_strerror(res));
+    }
+  } 
+
+  // this here is for simulating really bad latency
+  // std::this_thread::sleep_for(std::chrono::seconds(60));
 
   curl_slist_free_all(headers);
   curl_easy_cleanup(curl);
@@ -118,20 +134,44 @@ void Discord::sendMessageAsync(sstring channel, sstring msg) {
     return;
   }
 
-  vlogf(LOG_MISC, format("Discord webhooks add to thread: '%s'") % msg);
+  vlogf(LOG_MISC, format("Discord webhooks: add to queue: '%s'") % msg);
 
   std::lock_guard<std::mutex> lock(queue_mutex);
   message_queue.push({channel, msg});
+  // vlogf(LOG_MISC, "Discord webhooks: added to queue");
   cv.notify_one();
 }
 
 void Discord::messenger() {
+  vlogf(LOG_MISC, "Discord webhooks: messenger thread STARTED");
+  
   std::unique_lock<std::mutex> lock(queue_mutex);
-
+  vlogf(LOG_MISC, "Discord webhooks: messenger acquired lock");
+  
+  pid_t parent_pid = getppid();
+  
   do {
-    cv.wait(lock, [] { return !message_queue.empty() || stop_thread; });
+    
+    auto timeout = std::chrono::seconds(5);
+    
+    bool has_messages = cv.wait_for(lock, timeout, [] { 
+      return !message_queue.empty() || stop_thread; 
+    });
+    
+
+    // Check if parent process still exists
+    if (!has_messages && !stop_thread) {
+      pid_t current_ppid = getppid();
+
+      
+      if (current_ppid != parent_pid) {
+        break;
+      }
+      // vlogf(LOG_MISC, "Discord webhooks: Parent process check OK");
+    }
 
     while (!message_queue.empty()) {
+      vlogf(LOG_MISC, "Discord webhooks: processing message from queue");
       std::pair<sstring, sstring> message = message_queue.front();
       message_queue.pop();
 
@@ -139,18 +179,44 @@ void Discord::messenger() {
       sendMessage(message.first, message.second);
       lock.lock();
     }
+    
   } while (!stop_thread);
-}
+  }
 
 bool Discord::doCleanup() {
+  vlogf(LOG_MISC, "Discord webhooks: cleanup starting");
+  
   // Signal the worker thread to stop
   {
     std::lock_guard<std::mutex> lock(queue_mutex);
     stop_thread = true;
   }
   cv.notify_one();
-  // let the thread finish
-  messenger_thread.join();
-
+  
+  if (messenger_thread.joinable()) {
+    // Try joining with a reasonable timeout
+    auto join_start = std::chrono::steady_clock::now();
+    bool joined = false;
+    
+    // Poll for thread completion
+    while (!joined && std::chrono::steady_clock::now() - join_start < std::chrono::seconds(12)) {
+      if (messenger_thread.joinable()) {
+        // Try a non-blocking check by using join_for if available, or short sleep
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      } else {
+        joined = true;
+      }
+    }
+    
+    if (messenger_thread.joinable()) {
+      vlogf(LOG_MISC, "Discord webhooks: Thread join timed out - leaving thread to finish");
+      // Don't call detach() - just let it finish on its own
+      // Set a flag so the thread knows to clean up and exit quickly
+    } else {
+      vlogf(LOG_MISC, "Discord webhooks: Thread joined successfully");
+    }
+  }
+  vlogf(LOG_MISC, "Discord webhooks: cleanup finished.");
+  
   return true;
 }

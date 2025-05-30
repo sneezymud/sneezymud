@@ -2,6 +2,7 @@
 #include "gametime.h"
 #include "weather.h"
 #include "person.h"
+#include "discord.h"
 
 // static defs
 time_info_data GameTime::time_info;
@@ -72,11 +73,15 @@ void GameTime::anotherHour() {
 
         // check for new year
         if (time_info.month >= 12) {
+          // send an achievement message to the discord webhook
+          sstring achievement_msg;
           time_info.month = 0;
           time_info.year++;
           buf = format("Happy New Year! It is now the Year %d P.S\n\r") %
                 time_info.year;
           Descriptor::worldSend(buf, NULL);
+          achievement_msg = format(":confetti_ball: Happy New Year! It is now the Year %d P.S") % time_info.year;
+          Discord::sendMessageAsync(Discord::CHANNEL_ACHIEVEMENT, achievement_msg);
         }
       }
 
