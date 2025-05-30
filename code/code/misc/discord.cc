@@ -7,6 +7,7 @@
 #include <condition_variable>
 #include <utility>
 #include <chrono>
+#include <future>
 
 #include "discord.h"
 
@@ -15,6 +16,7 @@
 #include "sstring.h"
 #include <curl/curl.h>
 #include <curl/easy.h>
+#include <unistd.h> 
 
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
@@ -108,9 +110,11 @@ bool Discord::sendMessage(sstring channel, sstring msg) {
   curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 5);  
   curl_easy_setopt(curl, CURLOPT_LOW_SPEED_LIMIT, 1); 
   curl_easy_setopt(curl, CURLOPT_LOW_SPEED_TIME, 5);  
+  curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L); 
 
   CURLcode res = curl_easy_perform(curl);
-  if (res != CURLE_OK) {
+  bool ok = (res == CURLE_OK);
+  if (!ok) {
     if (res == CURLE_OPERATION_TIMEDOUT) {
       vlogf(LOG_MISC, "Discord webhooks: Request timed out");
     } else {
@@ -121,15 +125,15 @@ bool Discord::sendMessage(sstring channel, sstring msg) {
   } 
 
   // this here is for simulating really bad latency
-  // std::this_thread::sleep_for(std::chrono::seconds(60));
+  std::this_thread::sleep_for(std::chrono::seconds(15));
 
   curl_slist_free_all(headers);
   curl_easy_cleanup(curl);
-  return true;
+  return ok;
 }
 
 void Discord::sendMessageAsync(sstring channel, sstring msg) {
-  if (channel == "") {
+  if (channel.empty()) {
     // no channel configuration, so bail
     return;
   }
@@ -193,29 +197,7 @@ bool Discord::doCleanup() {
   }
   cv.notify_one();
   
-  if (messenger_thread.joinable()) {
-    // Try joining with a reasonable timeout
-    auto join_start = std::chrono::steady_clock::now();
-    bool joined = false;
-    
-    // Poll for thread completion
-    while (!joined && std::chrono::steady_clock::now() - join_start < std::chrono::seconds(12)) {
-      if (messenger_thread.joinable()) {
-        // Try a non-blocking check by using join_for if available, or short sleep
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-      } else {
-        joined = true;
-      }
-    }
-    
-    if (messenger_thread.joinable()) {
-      vlogf(LOG_MISC, "Discord webhooks: Thread join timed out - leaving thread to finish");
-      // Don't call detach() - just let it finish on its own
-      // Set a flag so the thread knows to clean up and exit quickly
-    } else {
-      vlogf(LOG_MISC, "Discord webhooks: Thread joined successfully");
-    }
-  }
+  // Don't call detach() or join() - just leave it to die
   vlogf(LOG_MISC, "Discord webhooks: cleanup finished.");
   
   return true;
