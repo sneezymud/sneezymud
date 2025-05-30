@@ -125,7 +125,7 @@ bool Discord::sendMessage(sstring channel, sstring msg) {
   } 
 
   // this here is for simulating really bad latency
-  std::this_thread::sleep_for(std::chrono::seconds(15));
+  // std::this_thread::sleep_for(std::chrono::seconds(15));
 
   curl_slist_free_all(headers);
   curl_easy_cleanup(curl);
