@@ -218,15 +218,20 @@ int TBeing::sapSuccess(TBeing* victim) {
   if (victim->isBruised(limb)) {
     limbDam = limbDam * 1.5;
   }
-  wearSlotT hand = this->getPrimaryHand();
+  wearSlotT hand = getPrimaryHand();
   TObj *handGear = dynamic_cast<TObj*>(this->equipment[hand]);
   int weaponHardness = material_nums[weapon->getMaterial()].hardness;
-  if (weapon && weapon->isObjStat(ITEM_SPIKED) || (!weapon && handGear->isObjStat(ITEM_SPIKED))) {
+  int victimHardness = material_nums[victim->getMaterial(limb)].hardness;
+  int attackerHandHardness = material_nums[getMaterial(hand)].hardness;
+  if (doesKnowSkill(SKILL_IRON_SKIN)) {
+    attackerHandHardness = (getSkillValue(SKILL_IRON_SKIN) * 85 / 100.0);
+  }
+  if ((weapon && weapon->isObjStat(ITEM_SPIKED)) || (!weapon && handGear->isObjStat(ITEM_SPIKED))) {
     // Spiked weapons do 25% more damage to limb
     limbDam = limbDam * 1.25;
     spikesHit(victim, this, weapon, limb);
-  } else {
-  hardHit(victim, this, weapon, limb, hand);
+  } else if ((weapon && weaponHardness > victimHardness) || (!weapon && attackerHandHardness > victimHardness)) {
+   rawBruise(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
   }
 
   if (this->getPosition() >= POSITION_STANDING || this->isFlying()) {
@@ -275,7 +280,7 @@ int TBeing::sapSuccess(TBeing* victim) {
     victim->dropWeapon(limb);
 
     if (!weapon) {
-        buf = format("Your hand smashes into $s %s, making it go numb!") %
+        sstring buf = format("Your hand smashes into $s %s, making it go numb!") %
      victim->describeBodySlot(limb);
      act(buf, false, this, weapon, victim, TO_CHAR);
 
@@ -289,7 +294,7 @@ int TBeing::sapSuccess(TBeing* victim) {
     } 
     } else {
 
-    buf = format("Your $p smashes into $s %s, making it go numb!") %
+    sstring buf = format("Your $p smashes into $s %s, making it go numb!") %
           victim->describeBodySlot(limb);
     act(buf, false, this, weapon, victim, TO_CHAR);
 
