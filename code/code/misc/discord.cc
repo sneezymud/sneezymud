@@ -125,7 +125,7 @@ bool Discord::sendMessage(sstring channel, sstring msg) {
   } 
 
   // this here is for simulating really bad latency
-  std::this_thread::sleep_for(std::chrono::seconds(15));
+  // std::this_thread::sleep_for(std::chrono::seconds(15));
 
   curl_slist_free_all(headers);
   curl_easy_cleanup(curl);
@@ -193,10 +193,16 @@ bool Discord::doCleanup() {
   // Signal the worker thread to stop
   {
     std::lock_guard<std::mutex> lock(queue_mutex);
+    cv.notify_one();
     stop_thread = true;
   }
-  cv.notify_one();
   
+  if (messenger_thread.joinable()) {
+    // Give the thread a reasonable time to finish naturally
+    // (the shutdown message will never get a chance to send if we don't do this)
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+  }
+
   // Don't call detach() or join() - just leave it to die
   vlogf(LOG_MISC, "Discord webhooks: cleanup finished.");
   
