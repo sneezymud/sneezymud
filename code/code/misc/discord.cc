@@ -7,7 +7,6 @@
 #include <condition_variable>
 #include <utility>
 #include <chrono>
-#include <future>
 
 #include "discord.h"
 
