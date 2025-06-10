@@ -86,11 +86,10 @@ bool Discord::doConfig() {
 bool Discord::sendMessage(sstring channel, sstring msg) {
   CURL* curl = curl_easy_init();
   if (!curl) {
-    // vlogf(LOG_MISC, "Discord webhooks: curl_easy_init() failed");
+    std::cerr << "curl_easy_init() failed" << std::endl;
     return false;
   }
 
-  // vlogf(LOG_MISC, "Discord webhooks: Discord message sent");
   // sanitize and format the message
   msg = format("{\"content\": \"%s\"}") % stripColorCodes(msg).escapeJson();
 
@@ -113,15 +112,12 @@ bool Discord::sendMessage(sstring channel, sstring msg) {
 
   CURLcode res = curl_easy_perform(curl);
   bool ok = (res == CURLE_OK);
-  // if (!ok) {
-  //   if (res == CURLE_OPERATION_TIMEDOUT) {
-  //     vlogf(LOG_MISC, "Discord webhooks: Request timed out");
-  //   } else {
-  //     vlogf(LOG_MISC,
-  //       format("Discord webhooks: curl_easy_perform() failed: '%s'") %
-  //         curl_easy_strerror(res));
-  //   }
-  // } 
+  #ifdef DEBUG
+  if (!ok) {
+    // thread safety: use cerr instead of vlogf
+    std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
+  } 
+  #endif
 
   // this here is for simulating really bad latency
   // std::this_thread::sleep_for(std::chrono::seconds(15));
@@ -146,10 +142,8 @@ void Discord::sendMessageAsync(sstring channel, sstring msg) {
 }
 
 void Discord::messenger() {
-  //vlogf(LOG_MISC, "Discord webhooks: messenger thread STARTED");
   
   std::unique_lock<std::mutex> lock(queue_mutex);
-  //vlogf(LOG_MISC, "Discord webhooks: messenger acquired lock");
   
   pid_t parent_pid = getppid();
   
@@ -170,11 +164,9 @@ void Discord::messenger() {
       if (current_ppid != parent_pid) {
         break;
       }
-      // vlogf(LOG_MISC, "Discord webhooks: Parent process check OK");
     }
 
     while (!message_queue.empty()) {
-      //vlogf(LOG_MISC, "Discord webhooks: processing message from queue");
       std::pair<sstring, sstring> message = message_queue.front();
       message_queue.pop();
 
@@ -184,7 +176,7 @@ void Discord::messenger() {
     }
     
   } while (!stop_thread);
-  }
+}
 
 bool Discord::doCleanup() {
   vlogf(LOG_MISC, "Discord webhooks: cleanup starting");
