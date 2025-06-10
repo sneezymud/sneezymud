@@ -86,7 +86,7 @@ bool Discord::doConfig() {
 bool Discord::sendMessage(sstring channel, sstring msg) {
   CURL* curl = curl_easy_init();
   if (!curl) {
-    vlogf(LOG_MISC, "Discord webhooks: curl_easy_init() failed");
+    // vlogf(LOG_MISC, "Discord webhooks: curl_easy_init() failed");
     return false;
   }
 
@@ -113,15 +113,15 @@ bool Discord::sendMessage(sstring channel, sstring msg) {
 
   CURLcode res = curl_easy_perform(curl);
   bool ok = (res == CURLE_OK);
-  if (!ok) {
-    if (res == CURLE_OPERATION_TIMEDOUT) {
-      vlogf(LOG_MISC, "Discord webhooks: Request timed out");
-    } else {
-      vlogf(LOG_MISC,
-        format("Discord webhooks: curl_easy_perform() failed: '%s'") %
-          curl_easy_strerror(res));
-    }
-  } 
+  // if (!ok) {
+  //   if (res == CURLE_OPERATION_TIMEDOUT) {
+  //     vlogf(LOG_MISC, "Discord webhooks: Request timed out");
+  //   } else {
+  //     vlogf(LOG_MISC,
+  //       format("Discord webhooks: curl_easy_perform() failed: '%s'") %
+  //         curl_easy_strerror(res));
+  //   }
+  // } 
 
   // this here is for simulating really bad latency
   // std::this_thread::sleep_for(std::chrono::seconds(15));
@@ -146,10 +146,10 @@ void Discord::sendMessageAsync(sstring channel, sstring msg) {
 }
 
 void Discord::messenger() {
-  vlogf(LOG_MISC, "Discord webhooks: messenger thread STARTED");
+  //vlogf(LOG_MISC, "Discord webhooks: messenger thread STARTED");
   
   std::unique_lock<std::mutex> lock(queue_mutex);
-  vlogf(LOG_MISC, "Discord webhooks: messenger acquired lock");
+  //vlogf(LOG_MISC, "Discord webhooks: messenger acquired lock");
   
   pid_t parent_pid = getppid();
   
@@ -174,7 +174,7 @@ void Discord::messenger() {
     }
 
     while (!message_queue.empty()) {
-      vlogf(LOG_MISC, "Discord webhooks: processing message from queue");
+      //vlogf(LOG_MISC, "Discord webhooks: processing message from queue");
       std::pair<sstring, sstring> message = message_queue.front();
       message_queue.pop();
 
