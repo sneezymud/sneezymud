@@ -7593,6 +7593,8 @@ extern int poisonQuiver(TBeing* ch, cmdTypeT cmd, const char*, TObj* q,
   TObj* a);
 extern int icyDeath(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* obj,
   TObj*);
+extern int starMetal(TBeing* vict, cmdTypeT cmd, const char*, TObj* o,
+  TObj*);
 // assign special procedures to objects
 
 TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
@@ -7732,4 +7734,5 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
   {FALSE, "acidBlob", acidBlob},
   {TRUE, "caltrop", caltrop},
   {FALSE, "Icy Death", icyDeath},
+  {TRUE, "Star Metal", starMetal},
   {FALSE, "last proc", bogusObjProc}};
