@@ -235,9 +235,9 @@ int lichTouch(TBeing* caster, TBeing* victim, int level, short bKnown,
 
   int dam = caster->getSkillDam(victim, SPELL_LICH_TOUCH, level, adv_learn);
 
-  int hpGain = ::number(70, 105) * (caster->getSkillValue(SPELL_LICH_TOUCH) / 100);
-  int lfGain = ::number(140, 200) * (caster->getSkillValue(SPELL_LICH_TOUCH) / 100);
-  int vit = ::number(50, 100) * (caster->getSkillValue(SPELL_LICH_TOUCH) / 100);
+  int hpGain = ::number(70, 105) * (caster->getSkillValue(SPELL_LICH_TOUCH) / 100.0);
+  int lfGain = ::number(140, 200) * (caster->getSkillValue(SPELL_LICH_TOUCH) / 100.0);
+  int vit = ::number(50, 100) * (caster->getSkillValue(SPELL_LICH_TOUCH) / 100.0);
 
   caster->reconcileHurt(victim, discArray[SPELL_LICH_TOUCH]->alignMod);
   bool save = victim->isLucky(caster->spellLuckModifier(SPELL_LICH_TOUCH));
@@ -631,8 +631,8 @@ int vampiricTouch(TBeing* caster, TBeing* victim, int level, short bKnown,
     return SPELL_FAIL;
   }
   int damage = caster->getSkillDam(victim, SPELL_VAMPIRIC_TOUCH, level, adv_learn);
-  int hpGain = ::number(30, 75) * (caster->getSkillValue(SPELL_VAMPIRIC_TOUCH) / 100);
-  int lfGain = ::number(60, 150) * (caster->getSkillValue(SPELL_VAMPIRIC_TOUCH) / 100);
+  int hpGain = ::number(30, 75) * (caster->getSkillValue(SPELL_VAMPIRIC_TOUCH) / 100.0);
+  int lfGain = ::number(60, 150) * (caster->getSkillValue(SPELL_VAMPIRIC_TOUCH) / 100.0);
   bool save = victim->isLucky(caster->spellLuckModifier(SPELL_VAMPIRIC_TOUCH));
 
   if (caster->bSuccess(bKnown, SPELL_VAMPIRIC_TOUCH)) {
@@ -754,8 +754,8 @@ int lifeLeech(TBeing* caster, TBeing* victim, int level, short bKnown,
     return SPELL_FAIL;
   }
   int damage = caster->getSkillDam(victim, SPELL_LIFE_LEECH, level, adv_learn);
-  int hpGain = ::number(10, 35) * (caster->getSkillValue(SPELL_LIFE_LEECH) / 100);
-  int lfGain = ::number(20, 70) * (caster->getSkillValue(SPELL_LIFE_LEECH) / 100);
+  int hpGain = ::number(10, 35) * (caster->getSkillValue(SPELL_LIFE_LEECH) / 100.0);
+  int lfGain = ::number(20, 70) * (caster->getSkillValue(SPELL_LIFE_LEECH) / 100.0);
 
   if (victim->getImmunity(IMMUNE_DRAIN) >= 100) {
     act("$N is immune to draining!", FALSE, caster, NULL, victim, TO_CHAR);
