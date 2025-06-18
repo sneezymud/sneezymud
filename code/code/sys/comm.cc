@@ -78,7 +78,7 @@ int run_the_game() {
   bootDb();
 
   vlogf(LOG_MISC, "Entering game loop.");
-  Discord::sendMessageAsync(Discord::CHANNEL_SYS,
+  Discord::sendMessageAsync(Discord::channels.system,
     ":arrow_up: Boot process completed, game is up!");
 
   systask = new SystemTask();
@@ -86,7 +86,7 @@ int run_the_game() {
   gSocket->closeAllSockets();
 
   vlogf(LOG_MISC, "Normal termination of game.");
-  Discord::sendMessageAsync(Discord::CHANNEL_SYS,
+  Discord::sendMessageAsync(Discord::channels.system,
     ":arrow_down: Game has shut down normally.");
 
   Discord::doCleanup();

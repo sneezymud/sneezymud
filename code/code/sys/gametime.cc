@@ -80,8 +80,12 @@ void GameTime::anotherHour() {
           buf = format("Happy New Year! It is now the Year %d P.S\n\r") %
                 time_info.year;
           Descriptor::worldSend(buf, NULL);
-          achievement_msg = format(":confetti_ball: Happy New Year! It is now the Year %d P.S") % time_info.year;
-          Discord::sendMessageAsync(Discord::CHANNEL_ACHIEVEMENT, achievement_msg);
+          achievement_msg =
+            format(
+              ":confetti_ball: Happy New Year! It is now the Year %d P.S") %
+            time_info.year;
+          Discord::sendMessageAsync(Discord::channels.achievements,
+            achievement_msg);
         }
       }
 

@@ -255,7 +255,7 @@ namespace {
     being->doShout(taunt_buf);
     discord_taunt_msg =
       format(":skull: %s shouts, \"%s\"") % being->getName().cap() % taunt_buf;
-    Discord::sendMessageAsync(Discord::CHANNEL_DEATHS, discord_taunt_msg);
+    Discord::sendMessageAsync(Discord::channels.deaths, discord_taunt_msg);
   }
 }  // namespace
 
@@ -1267,7 +1267,8 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
     sstring achievement_msg;
     if ((isPc() || (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) &&
                      (master && master->isPc()))) &&
-        !v->isPc() && v->GetMaxLevel() >= Discord::ACHIEVEMENT_THRESHOLD) {
+        !v->isPc() &&
+        v->GetMaxLevel() >= Discord::settings.achievement_threshold) {
       // player killed an notable mob, send message to our discord webhook
       if (group_members == 0) {
         // killer is solo
@@ -1288,7 +1289,8 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
                           getName() % v->getName() % grouplist.str() % lastname;
       }
 
-      Discord::sendMessageAsync(Discord::CHANNEL_ACHIEVEMENT, achievement_msg);
+      Discord::sendMessageAsync(Discord::channels.achievements,
+        achievement_msg);
     }
 
     strcpy(buf2, v->name.c_str());

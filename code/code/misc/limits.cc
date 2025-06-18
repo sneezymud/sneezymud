@@ -32,7 +32,7 @@ static const sstring ClassTitles(const TBeing *ch)
   for (i = MIN_CLASS_IND; i < MAX_CLASSES; i++) {
     if (ch->getLevel(i)) {
       if ((++count) > 1)
-        sprintf(buf + strlen(buf), "/Level %d %s", 
+        sprintf(buf + strlen(buf), "/Level %d %s",
             ch->getLevel(i), classInfo[i].name.cap().c_str());
       else
         sprintf(buf, "Level %d %s",
@@ -669,7 +669,7 @@ void TPerson::advanceLevel(classIndT Class) {
         discord_msg =
           format(":tada: **%s** has achieved level 50 as a **%s**!") %
           getName() % getProfName();
-        Discord::sendMessageAsync(Discord::CHANNEL_ACHIEVEMENT, discord_msg);
+        Discord::sendMessageAsync(Discord::channels.achievements, discord_msg);
       }
     }
     if (isSingleClass()) {
@@ -1490,7 +1490,7 @@ int TBeing::checkIdling() {
       desc = NULL;
       return DELETE_THIS;
     }
-#if 0 
+#if 0
   }
 #else
   } else if (desc && desc->original && (desc->original->getTimer() >= 20)) {
