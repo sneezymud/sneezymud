@@ -1326,6 +1326,9 @@ int TBeing::chiSelf() {
       else
         sendTo(format("The heat dries you a bit.  You feel %s.\n\r") %
                Weather::describeWet(this));
+
+      // Dry objects carried/worn by the being
+      Weather::dryObjectsOnBeing(this, -15);
     }
 
     affectedData aff;

@@ -640,6 +640,9 @@ int TBeing::pourWaterOnMe(TBeing* ch, TObj* sObj) {
     return true;
   }
 
+  // Get the liquid type from the container
+  type = dContainer->getDrinkType();
+
   if (getPosition() <= POSITION_STUNNED) {
     // unconscious person, let's pour it in their mouth instead
     sprintf(Buf, "You carefully pour %s into $N's mouth!",
@@ -663,6 +666,85 @@ int TBeing::pourWaterOnMe(TBeing* ch, TObj* sObj) {
   act(Buf, TRUE, ch, 0, this, TO_VICT);
   sprintf(Buf, "$n just poured %s all over $N!", liquidInfo[type]->name);
   act(Buf, TRUE, ch, 0, this, TO_NOTVICT);
+  
+  // Get total liquid units to distribute
+  int remainingLiquid = dContainer->getDrinkUnits();
+  const int MAX_WETNESS_PER_ITEM = 30;
+  
+  // Define the flow path with wear slots and their split factors
+  struct FlowPath {
+    wearSlotT slot;
+    float splitFactor;  // 1.0 means all liquid goes here, 0.5 means half goes here
+  };
+  
+  // Create the flow path array - order matters!
+  FlowPath flowPath[] = {
+    {WEAR_HEAD, 1.0},
+    {WEAR_NECK, 1.0},
+    {WEAR_BODY, 0.5},  // Split between body and back
+    {WEAR_BACK, 0.5},
+    {WEAR_ARM_R, 0.5},  // Split between right and left arm
+    {WEAR_ARM_L, 0.5},
+    {WEAR_WRIST_R, 0.5},  // Split between right and left wrist
+    {WEAR_WRIST_L, 0.5},
+    {WEAR_WAIST, 1.0},
+    {WEAR_HAND_R, 0.5},  // Split between right and left hand
+    {WEAR_HAND_L, 0.5},
+    {WEAR_LEG_R, 0.5},  // Split between right and left leg
+    {WEAR_LEG_L, 0.5},
+    {WEAR_FOOT_R, 0.5},  // Split between right and left foot
+    {WEAR_FOOT_L, 0.5}
+  };
+  
+  // Apply wetness following the flow path
+  for (size_t i = 0; i < sizeof(flowPath) / sizeof(FlowPath); i++) {
+    if (remainingLiquid <= 0)
+      break;
+      
+    // Calculate how much liquid flows to this item
+    int liquidToThisItem = min(static_cast<int>(remainingLiquid * flowPath[i].splitFactor), MAX_WETNESS_PER_ITEM);
+    remainingLiquid -= liquidToThisItem;
+    
+    // Apply wetness to the item in this slot if it exists
+    TObj* obj = dynamic_cast<TObj*>(equipment[flowPath[i].slot]);
+    if (obj) {
+      obj->addToWetness(liquidToThisItem);
+      
+      // Optional: Add a message about the item getting wet
+      if (liquidToThisItem > 20) {
+        act(("Your $p gets soaked!"), FALSE, this, obj, NULL, TO_CHAR);
+      } else if (liquidToThisItem > 10) {
+        act(("Your $p gets quite wet."), FALSE, this, obj, NULL, TO_CHAR);
+      } else if (liquidToThisItem > 0) {
+        act(("Your $p gets a bit damp."), FALSE, this, obj, NULL, TO_CHAR);
+      }
+      
+      if (obj->isObjStat(ITEM_BURNING)) {
+       obj->remBurning(NULL);
+       act("The flames on $p are doused.", TRUE, 0, obj, 0, TO_ROOM);
+      }
+    } else {
+      // If no item in this slot, the liquid continues to the next item
+      // (we don't reduce remainingLiquid in this case)
+      remainingLiquid += liquidToThisItem;
+    }
+  }
+  
+  // Apply overall wetness to the character based on how much liquid was poured
+  int totalWetness = min(100, dContainer->getDrinkUnits());
+  Weather::addWetness(this, totalWetness);
+  
+  // If there's remaining liquid, create a pool on the ground
+  if (remainingLiquid > 0 && roomp) {
+    dropPool(remainingLiquid, type);
+    act("Some of the liquid pools on the ground.", FALSE, this, NULL, NULL, TO_CHAR);
+    act("Some of the liquid pools on the ground.", TRUE, this, NULL, NULL, TO_ROOM);
+  }
+  
+  // Empty the container
+  if (!dContainer->isDrinkConFlag(DRINK_PERM)) {
+    dContainer->genericEmpty();
+  }
 
   // prevent people from using this at real low level to gain xp then suicide or
   // something.

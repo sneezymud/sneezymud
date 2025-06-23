@@ -528,6 +528,7 @@ class TObj : public TThing {
     bool isTasked;
     bool isLocked;  // set if the object should be protected from damage
                     // temporarily
+    int wetness;    // How wet the object is (0-100)
 
   protected:
     TObj();
@@ -760,4 +761,16 @@ class TObj : public TThing {
     virtual int taskChargeMe(TBeing*, spellNumT, int&);
     virtual int getValue() const;
     virtual sstring wear_flags_to_sentence() const;
+
+    // Wetness methods
+    int getWetness() const { return wetness; }
+    void setWetness(int val) { wetness = std::max(0, std::min(100, val)); }
+    void addToWetness(int val) { setWetness(wetness + val); }
+    bool isWet() const { return wetness > 0; }
+    
+    // Get a descriptive string for the wetness level
+    sstring getWetnessDesc() const;
+    
+    // Apply wetness effects to the object
+    void applyWetnessEffects();
 };

@@ -598,8 +598,56 @@ void TObj::pourMeIntoDrink1(TBeing* ch, TObj*) {
   act("You can't pour from $p!", FALSE, ch, this, 0, TO_CHAR);
 }
 
-void TObj::pourMeIntoDrink2(TBeing* ch, TBaseCup*) {
-  act("You can't pour anything into $p!", FALSE, ch, this, 0, TO_CHAR);
+void TObj::pourMeIntoDrink2(TBeing* ch, TBaseCup* from_obj) {
+  // Check if the source container has liquid
+  if (from_obj->getDrinkUnits() <= 0) {
+    act("$p is empty.", FALSE, ch, from_obj, 0, TO_CHAR);
+    return;
+  }
+  
+  // Get the liquid type and amount
+  liqTypeT liquidType = from_obj->getDrinkType();
+  int liquidAmount = from_obj->getDrinkUnits();
+  
+  // Pour the liquid onto this object
+  act(format("You pour %s onto $p.") % liquidInfo[liquidType]->name, 
+      FALSE, ch, this, 0, TO_CHAR);
+  act(format("$n pours %s onto $p.") % liquidInfo[liquidType]->name, 
+      TRUE, ch, this, 0, TO_ROOM);
+  
+  // Get current wetness before adding more
+  int oldWetness = getWetness();
+  
+  // Add wetness to the object based on amount poured
+  int wetnessAmount = std::min(30, liquidAmount);
+  addToWetness(wetnessAmount);
+  
+  // Show a message about how wet the object becomes
+  if (oldWetness <= 0 && wetnessAmount > 0) {
+    // Object was dry and is now wet
+    if (wetnessAmount > 20) {
+      act("$p becomes soaking wet.", FALSE, ch, this, 0, TO_CHAR);
+    } else if (wetnessAmount > 10) {
+      act("$p becomes quite wet.", FALSE, ch, this, 0, TO_CHAR);
+    } else {
+      act("$p becomes slightly damp.", FALSE, ch, this, 0, TO_CHAR);
+    }
+  } else if (wetnessAmount > 0) {
+    // Object was already wet and gets wetter
+    act("$p gets even wetter.", FALSE, ch, this, 0, TO_CHAR);
+  }
+  
+  // If the object is burning, put it out
+  if (isObjStat(ITEM_BURNING)) {
+    remBurning(ch);
+    act("The flames on $p are doused.", TRUE, ch, this, 0, TO_CHAR);
+    act("The flames on $p are doused.", TRUE, ch, this, 0, TO_ROOM);
+  }
+  
+  // Empty the container
+  if (!from_obj->isDrinkConFlag(DRINK_PERM)) {
+    from_obj->setDrinkUnits(0);
+  }
 }
 
 void TBaseCup::pourMeIntoDrink2(TBeing* ch, TBaseCup* from_obj) {

@@ -706,3 +706,18 @@ std::pair<int64_t, int64_t> TObj::sumAffectedByApplyType(
 
   return {mod1, mod2};
 };
+
+sstring TObj::getWetnessDesc() const {
+  if (wetness <= 0)
+    return "";
+  else if (wetness < 20)
+    return "slightly damp";
+  else if (wetness < 40)
+    return "damp";
+  else if (wetness < 60)
+    return "wet";
+  else if (wetness < 80)
+    return "very wet";
+  else
+    return "soaking wet";
+}

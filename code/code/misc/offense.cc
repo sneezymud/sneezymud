@@ -1446,12 +1446,30 @@ int TBeing::flameEngulfed() {
   TObj* obj = NULL;
   int i;
   int res = 0;
+ 
+  if (isAgile(0)){
+    act("You dodge the flames!", TRUE, this, 0, 0, TO_CHAR);
+    act("$n dodges the flames!", TRUE, this, 0, 0, TO_ROOM);
+    return false;
 
+  }
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
     if (!(t = equipment[i]) || !(obj = dynamic_cast<TObj*>(t)))
       continue;
-
-    res = obj->burnObject(this, getImmunity(IMMUNE_HEAT) ? 1 : 50);
+    int burnChance = 50;
+    int objWet = obj->getWetness();
+    if (objWet > 25) {
+      obj->addToWetness(-25);
+      sendTo(format("Your %s dries out a bit from the flames!\n\r") %
+             obj->getName());
+    } else if (obj->getWetness() > 0) {
+      obj->addToWetness(-25);
+      burnChance = 25-objWet;
+      sendTo(format("Your %s dries out completely from the flames!\n\r") %
+             obj->getName());
+    }
+    
+    res = obj->burnObject(this, getImmunity(IMMUNE_HEAT) ? 1 : burnChance);
     if (IS_SET_DELETE(res, DELETE_THIS)) {
       delete obj;
       obj = NULL;
@@ -1464,12 +1482,28 @@ int TBeing::flameEngulfed() {
     obj = dynamic_cast<TObj*>(t);
     if (!obj)
       continue;
-
-    res = obj->burnObject(this, getImmunity(IMMUNE_HEAT) ? 1 : 50);
-    if (IS_SET_DELETE(res, DELETE_THIS)) {
-      delete obj;
-      obj = NULL;
+    
+      int burnChance = 50;
+    int objWet = obj->getWetness();
+    
+    if (objWet > 25) {
+      obj->addToWetness(-25);
+      sendTo(format("Your %s dries out a bit from the flames!\n\r") %
+             obj->getName());
+    } else if (obj->getWetness() > 0) {
+      obj->addToWetness(-25);
+      burnChance = 25-objWet;
+      sendTo(format("Your %s dries out completely from the flames!\n\r") %
+             obj->getName());
     }
+    
+    res = obj->burnObject(this, getImmunity(IMMUNE_HEAT) ? 1 : burnChance);
+      if (IS_SET_DELETE(res, DELETE_THIS)) {
+       delete obj;
+       obj = NULL;
+      }
+    
+
     if (IS_SET_DELETE(res, DELETE_VICT))
       return DELETE_THIS;
   }
@@ -1480,6 +1514,9 @@ int TBeing::flameEngulfed() {
     else
       sendTo(format("You dry out a bit from the flames!  You feel %s.\n\r") %
              Weather::describeWet(this));
+
+    // Dry objects carried/worn by the being
+    Weather::dryObjectsOnBeing(this, -50);
   }
 
   if (hasQuestBit(TOG_HAS_PYROPHOBIA)) {
@@ -1834,6 +1871,9 @@ int TBeing::frostEngulfed() {
         sendTo(
           format("Some of the water on your body freezes!  You feel %s.\n\r") %
           Weather::describeWet(this));
+
+      // Dry objects carried/worn by the being as water freezes
+      Weather::dryObjectsOnBeing(this, -25);
 
       // Apply additional damage due to being wet in freezing conditions
       return reconcileDamage(this, ::number(10, 20), DAMAGE_FROST);

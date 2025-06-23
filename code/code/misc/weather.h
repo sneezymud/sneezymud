@@ -115,6 +115,15 @@ class Weather {
     static void setMoon(int m) { moontype = m; }
     static void addToMoon(int m) { moontype += m; }
 
+    // Apply wetness to objects in a room based on weather conditions
+    static void applyWetnessToObjects(TRoom* room);
+
+    // Apply drying to objects in a room based on favorable drying conditions
+    static void applyDryingToObjects(TRoom* room);
+
+    // Dry objects carried/worn by a being when the being dries off
+    static void dryObjectsOnBeing(TBeing* ch, int dryingAmount);
+
   private:
     Weather();
 

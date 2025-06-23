@@ -360,7 +360,8 @@ TObj::TObj() :
   action_description(NULL),
   owners(NULL),
   isTasked(false),
-  isLocked(false) {
+  isLocked(false),
+  wetness(0) {
   // change the default value here
   number = -1;
 
@@ -1381,7 +1382,8 @@ TObj::TObj(const TObj& a) :
   TThing(a),
   obj_flags(a.obj_flags),
   isTasked(a.isTasked),
-  isLocked(a.isLocked) {
+  isLocked(a.isLocked),
+  wetness(a.wetness) {
   int i;
 
   for (i = 0; i < MAX_OBJ_AFFECT; i++)
@@ -1442,6 +1444,7 @@ TObj& TObj::operator=(const TObj& a) {
   owners = mud_str_dup(a.owners);
   isTasked = a.isTasked;
   isLocked = a.isLocked;
+  wetness = a.wetness;
 
   return *this;
 }

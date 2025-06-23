@@ -1,3 +1,4 @@
+
 //////////////////////////////////////////////////////////////////////////
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
@@ -17,6 +18,11 @@
 #include "monster.h"
 #include "obj_trash_pile.h"
 #include "process.h"
+#include "obj_base_clothing.h"
+#include "obj.h"
+#include "obj_base_container.h"
+
+
 
 // static data defs
 int Weather::pressure;
@@ -924,7 +930,7 @@ int getRoomWetness(TBeing* ch, TRoom* room, sstring& better, sstring& worse) {
     wetness -= 10;
     if (!better.empty())
       better += " and ";
-    better = format("your fire magic dries you");
+    better = format("the heat from your fire magic dries you");
   }
 
   // weather
@@ -1021,6 +1027,73 @@ void Weather::getWet(TBeing* ch, TRoom* room) {
     }
     wetShow += ".\n\r";
     act(wetShow, false, ch, NULL, NULL, TO_CHAR);
+    
+    // Apply wetness changes to character's objects
+    // Objects get wet when character gets wet, and dry when character dries
+    if (wetness != 0) {
+      // Determine wetness amount for objects based on the character's wetness change
+      int objWetnessAmount = wetness / 2;  // Objects change wetness at half the rate of the character
+
+      // Check inventory
+      for (StuffIter invIt = ch->stuff.begin(); invIt != ch->stuff.end(); ++invIt) {
+        TObj* obj = dynamic_cast<TObj*>(*invIt);
+        if (obj) {
+          // Items in containers are protected from getting wet, but can still dry
+          if (dynamic_cast<TBaseContainer*>(obj->parent) && wetness > 0)
+            continue;
+
+          int oldObjWetness = obj->getWetness();
+          obj->addToWetness(objWetnessAmount);
+
+          // Handle burning objects being doused
+          if (obj->isObjStat(ITEM_BURNING) && wetness > 0) {
+            obj->remBurning(NULL);
+            act("The flames on $p are doused.", TRUE, 0, obj, 0, TO_ROOM);
+          }
+
+          // Show drying messages for objects
+          if (wetness < 0 && oldObjWetness > 0 && obj->getWetness() == 0) {
+            act("$p dries off completely.", FALSE, ch, obj, 0, TO_CHAR);
+          }
+        }
+      }
+
+      // Check equipment
+      for (int i = MIN_WEAR; i < MAX_WEAR; i++) {
+        TObj* obj = dynamic_cast<TObj*>(ch->equipment[i]);
+        if (obj) {
+          int oldObjWetness = obj->getWetness();
+          obj->addToWetness(objWetnessAmount);
+
+          // Handle burning objects being doused
+          if (obj->isObjStat(ITEM_BURNING) && wetness > 0) {
+            obj->remBurning(NULL);
+            act("The flames on $p are doused.", TRUE, 0, obj, 0, TO_ROOM);
+          }
+
+          // Show drying messages for equipment
+          if (wetness < 0 && oldObjWetness > 0 && obj->getWetness() == 0) {
+            act("Your $p dries off completely.", FALSE, ch, obj, 0, TO_CHAR);
+          }
+        }
+      }
+    }
+  }
+  
+  // Apply wetness/drying to objects in the room
+  if (!room->isRoomFlag(ROOM_INDOORS)) {
+    // Only do this occasionally to avoid too frequent updates
+    if (!::number(0, 9)) {
+      if (Weather::getWeather(*room) == Weather::RAINY ||
+          Weather::getWeather(*room) == Weather::LIGHTNING ||
+          room->isWaterSector()) {
+        // Apply wetness in wet conditions
+        applyWetnessToObjects(room);
+      } else {
+        // Apply drying in dry conditions
+        applyDryingToObjects(room);
+      }
+    }
   }
 }
 
@@ -1076,4 +1149,199 @@ int Weather::addWetness(TBeing* ch, int diffWet) {
   }
 
   return 0;
+}
+
+// Apply wetness to objects in a room based on weather conditions
+void Weather::applyWetnessToObjects(TRoom* room) {
+  if (!room)
+    return;
+    
+  // Only apply wetness if the room is outdoors and has rain/water
+  if (room->isRoomFlag(ROOM_INDOORS))
+    return;
+    
+  // Determine wetness amount based on weather
+  int wetnessAmount = 0;
+  
+  if (getWeather(*room) == LIGHTNING) {
+    wetnessAmount = 20;
+  } else if (getWeather(*room) == RAINY) {
+    wetnessAmount = 30;
+  } else if (room->isWaterSector()) {
+    wetnessAmount = 40;  // Water sectors make things very wet
+  } else {
+    return;  // No wetness to apply
+  }
+  
+  // Apply wetness to objects in the room
+  for (StuffIter it = room->stuff.begin(); it != room->stuff.end(); ++it) {
+    TObj* obj = dynamic_cast<TObj*>(*it);
+    if (obj) {
+      obj->addToWetness(wetnessAmount);
+      if (obj->isObjStat(ITEM_BURNING)) {
+        obj->remBurning(NULL);
+        act("$p is put out by the rain.", TRUE, 0, obj, 0, TO_ROOM);
+      }
+    }
+  }
+  
+  // Apply wetness to objects carried/worn by beings in the room
+  for (StuffIter it = room->stuff.begin(); it != room->stuff.end(); ++it) {
+    TBeing* being = dynamic_cast<TBeing*>(*it);
+    if (!being)
+      continue;
+      
+    // Check inventory
+    for (StuffIter invIt = being->stuff.begin(); invIt != being->stuff.end(); ++invIt) {
+      TObj* obj = dynamic_cast<TObj*>(*invIt);
+      if (obj) {
+        // Items in containers are protected
+        if (dynamic_cast<TBaseContainer*>(obj->parent))
+          continue;
+          
+        obj->addToWetness(wetnessAmount / 2);  // Less wetness for carried items
+        if (obj->isObjStat(ITEM_BURNING)) {
+          obj->remBurning(NULL);
+          act("The flames on $p are doused.", TRUE, 0, obj, 0, TO_ROOM);
+        }
+      }
+    }
+    
+    // Check equipment
+    for (int i = MIN_WEAR; i < MAX_WEAR; i++) {
+      TObj* obj = dynamic_cast<TObj*>(being->equipment[i]);
+      if (obj) {
+        obj->addToWetness(wetnessAmount / 2);  // Less wetness for worn items
+        if (obj->isObjStat(ITEM_BURNING)) {
+          obj->remBurning(NULL);
+          act("The flames on $p are doused.", TRUE, 0, obj, 0, TO_ROOM);
+        }
+      }
+    }
+  }
+}
+
+// Apply drying to objects in a room based on favorable drying conditions
+void Weather::applyDryingToObjects(TRoom* room) {
+  if (!room)
+    return;
+
+  // Only apply drying if the room is outdoors and has favorable conditions
+  if (room->isRoomFlag(ROOM_INDOORS))
+    return;
+
+  // Determine drying amount based on weather and room conditions
+  int dryingAmount = 0;
+
+  // Sunny weather provides good drying
+  if (Weather::getSunlight() == Weather::SUN_LIGHT && Weather::getWeather(*room) == Weather::CLOUDLESS) {
+    dryingAmount = -15;  // Strong drying in sunny, cloudless conditions
+  } else if (Weather::getSunlight() == Weather::SUN_LIGHT) {
+    dryingAmount = -10;  // Moderate drying in sunny conditions
+  } else if (Weather::getWeather(*room) == Weather::CLOUDLESS) {
+    dryingAmount = -5;   // Light drying in clear but not sunny conditions
+  } else {
+    return;  // No drying to apply
+  }
+
+  // Check for burning objects in room that enhance drying
+  for (StuffIter it = room->stuff.begin(); it != room->stuff.end(); ++it) {
+    TObj* o = dynamic_cast<TObj*>(*it);
+    if (o && o->isObjStat(ITEM_BURNING)) {
+      // Large fires provide significant drying boost
+      dryingAmount -= int(50 * (o->getVolume() / (ROOM_FIRE_THRESHOLD * 3)));
+      break;  // Only count the first burning object to avoid excessive drying
+    }
+  }
+
+  // Apply drying to objects in the room
+  for (StuffIter it = room->stuff.begin(); it != room->stuff.end(); ++it) {
+    TObj* obj = dynamic_cast<TObj*>(*it);
+    if (obj && obj->isWet()) {
+      int oldWetness = obj->getWetness();
+      obj->addToWetness(dryingAmount);
+
+      // Show drying message if object becomes completely dry
+      if (oldWetness > 0 && obj->getWetness() == 0) {
+        act("$p dries off completely.", TRUE, 0, obj, 0, TO_ROOM);
+      }
+    }
+  }
+
+  // Apply drying to objects carried/worn by beings in the room
+  for (StuffIter it = room->stuff.begin(); it != room->stuff.end(); ++it) {
+    TBeing* being = dynamic_cast<TBeing*>(*it);
+    if (!being)
+      continue;
+
+    // Check inventory
+    for (StuffIter invIt = being->stuff.begin(); invIt != being->stuff.end(); ++invIt) {
+      TObj* obj = dynamic_cast<TObj*>(*invIt);
+      if (obj && obj->isWet()) {
+        // Items in containers dry more slowly
+        int objDryingAmount = dynamic_cast<TBaseContainer*>(obj->parent) ?
+                              dryingAmount / 3 : dryingAmount / 2;
+
+        int oldWetness = obj->getWetness();
+        obj->addToWetness(objDryingAmount);
+
+        // Show drying message if object becomes completely dry
+        if (oldWetness > 0 && obj->getWetness() == 0) {
+          act("$p in your inventory dries off completely.", FALSE, being, obj, 0, TO_CHAR);
+        }
+      }
+    }
+
+    // Check equipment
+    for (int i = MIN_WEAR; i < MAX_WEAR; i++) {
+      TObj* obj = dynamic_cast<TObj*>(being->equipment[i]);
+      if (obj && obj->isWet()) {
+        int oldWetness = obj->getWetness();
+        obj->addToWetness(dryingAmount / 2);  // Equipment dries at half rate
+
+        // Show drying message if equipment becomes completely dry
+        if (oldWetness > 0 && obj->getWetness() == 0) {
+          act("Your $p dries off completely.", FALSE, being, obj, 0, TO_CHAR);
+        }
+      }
+    }
+  }
+}
+
+// Dry objects carried/worn by a being when the being dries off
+void Weather::dryObjectsOnBeing(TBeing* ch, int dryingAmount) {
+  if (!ch || dryingAmount >= 0)
+    return;
+
+  // Check inventory
+  for (StuffIter invIt = ch->stuff.begin(); invIt != ch->stuff.end(); ++invIt) {
+    TObj* obj = dynamic_cast<TObj*>(*invIt);
+    if (obj && obj->isWet()) {
+      // Items in containers dry more slowly
+      int objDryingAmount = dynamic_cast<TBaseContainer*>(obj->parent) ?
+                            dryingAmount / 3 : dryingAmount / 2;
+
+      int oldWetness = obj->getWetness();
+      obj->addToWetness(objDryingAmount);
+
+      // Show drying message if object becomes completely dry
+      if (oldWetness > 0 && obj->getWetness() == 0) {
+        act("$p in your inventory dries off completely.", FALSE, ch, obj, 0, TO_CHAR);
+      }
+    }
+  }
+
+  // Check equipment
+  for (int i = MIN_WEAR; i < MAX_WEAR; i++) {
+    TObj* obj = dynamic_cast<TObj*>(ch->equipment[i]);
+    if (obj && obj->isWet()) {
+      int oldWetness = obj->getWetness();
+      obj->addToWetness(dryingAmount / 2);  // Equipment dries at half rate
+
+      // Show drying message if equipment becomes completely dry
+      if (oldWetness > 0 && obj->getWetness() == 0) {
+        act("Your $p dries off completely.", FALSE, ch, obj, 0, TO_CHAR);
+      }
+    }
+  }
 }

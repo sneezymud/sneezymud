@@ -1121,7 +1121,6 @@ int protectionFromWater(TBeing* caster, int level, short bKnown) {
 
   int immunityPerc = 5 + (level / 2) + (caster->getAdvLearning(SPELL_PROTECTION_FROM_WATER) / 10);
 
-
   aff.type = SPELL_PROTECTION_FROM_WATER;
   aff.level = level;
   aff.duration = caster->durationModify(SPELL_PROTECTION_FROM_WATER, 
@@ -1184,6 +1183,7 @@ int gusher(TBeing* caster, TBeing* victim, int level, short bKnown,
   int adv_learn) {
   int rc;
   TThing* t;
+  bool anyObjectsWet = false;
 
   int dam = caster->getSkillDam(victim, SPELL_GUSHER, level, adv_learn);
 
@@ -1192,10 +1192,10 @@ int gusher(TBeing* caster, TBeing* victim, int level, short bKnown,
 
     // Calculate wetness based on caster level, reduced by victim's agility
     // reaction
-    int wetAmount = min(50, level) - victim->getAgiReaction();
+    int wetAmount = std::min(50, level) - victim->getAgiReaction();
 
     // Ensure minimum wetness of 10
-    wetAmount = max(10, wetAmount);
+    wetAmount = std::max(10, wetAmount);
 
     if ((critSuccess(caster, SPELL_GUSHER) ||
           critSuccess(caster, SPELL_GUSHER) ||
@@ -1206,6 +1206,39 @@ int gusher(TBeing* caster, TBeing* victim, int level, short bKnown,
 
       // Apply extra wetness on critical success using the correct method
       Weather::addWetness(victim, wetAmount * 2);
+      
+      // Apply wetness to victim's worn equipment
+      anyObjectsWet = false;
+      for (int i = MIN_WEAR; i < MAX_WEAR; i++) {
+        TObj* obj = dynamic_cast<TObj*>(victim->equipment[i]);
+        if (obj) {
+          int oldWetness = obj->getWetness();
+          obj->addToWetness(wetAmount * 2);
+          
+          // Show message about object getting wet
+          if (oldWetness <= 0) {
+            anyObjectsWet = true;
+            if (wetAmount * 2 > 40) {
+              act("Your $p becomes soaking wet!", FALSE, victim, obj, 0, TO_CHAR);
+            } else if (wetAmount * 2 > 20) {
+              act("Your $p becomes very wet!", FALSE, victim, obj, 0, TO_CHAR);
+            } else {
+              act("Your $p becomes damp!", FALSE, victim, obj, 0, TO_CHAR);
+            }
+          }
+          
+          if (obj->isObjStat(ITEM_BURNING)) {
+            obj->remBurning(NULL);
+            act("The flames on $p are doused.", TRUE, victim, obj, 0, TO_CHAR);
+            act("The flames on $p are doused.", TRUE, victim, obj, 0, TO_ROOM);
+          }
+        }
+      }
+      
+      // Summary message if multiple objects got wet
+      if (anyObjectsWet) {
+        act("Your equipment is drenched by the water!", FALSE, victim, 0, 0, TO_CHAR);
+      }
 
       // Knock the victim down on critical success
       victim->setPosition(POSITION_SITTING);
@@ -1219,6 +1252,7 @@ int gusher(TBeing* caster, TBeing* victim, int level, short bKnown,
         "over!",
         FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_BLUE);
       victim->dropPool(50, LIQ_WATER);
+      
 
       if (victim->riding) {
         rc = victim->fallOffMount(victim->riding, POSITION_SITTING);
@@ -1244,6 +1278,40 @@ int gusher(TBeing* caster, TBeing* victim, int level, short bKnown,
       act("$n directs a tiny stream of water in $N's direction!", FALSE, caster,
         NULL, victim, TO_NOTVICT, ANSI_BLUE);
       victim->dropPool(10, LIQ_WATER);
+      
+      // Apply reduced wetness to victim
+      Weather::addWetness(victim, wetAmount / 2);
+      
+      // Apply reduced wetness to victim's worn equipment
+      anyObjectsWet = false;
+      for (int i = MIN_WEAR; i < MAX_WEAR; i++) {
+        TObj* obj = dynamic_cast<TObj*>(victim->equipment[i]);
+        if (obj) {
+          int oldWetness = obj->getWetness();
+          obj->addToWetness(wetAmount / 2);
+          
+          // Show message about object getting wet
+          if (oldWetness <= 0) {
+            anyObjectsWet = true;
+            if (wetAmount / 2 > 20) {
+              act("Your $p gets wet!", FALSE, victim, obj, 0, TO_CHAR);
+            } else {
+              act("Your $p gets slightly damp!", FALSE, victim, obj, 0, TO_CHAR);
+            }
+          }
+          
+          if (obj->isObjStat(ITEM_BURNING)) {
+            obj->remBurning(NULL);
+            act("The flames on $p are doused.", TRUE, victim, obj, 0, TO_CHAR);
+            act("The flames on $p are doused.", TRUE, victim, obj, 0, TO_ROOM);
+          }
+        }
+      }
+      
+      // Summary message if multiple objects got wet
+      if (anyObjectsWet) {
+        act("Some of your equipment gets a bit wet.", FALSE, victim, 0, 0, TO_CHAR);
+      }
 
       SV(SPELL_GUSHER);
       dam /= 2;
@@ -1255,6 +1323,42 @@ int gusher(TBeing* caster, TBeing* victim, int level, short bKnown,
       act("$n directs a stream of water in $N's direction!", FALSE, caster,
         NULL, victim, TO_NOTVICT, ANSI_BLUE);
       victim->dropPool(25, LIQ_WATER);
+      
+      // Apply normal wetness to victim
+      Weather::addWetness(victim, wetAmount);
+      
+      // Apply normal wetness to victim's worn equipment
+      anyObjectsWet = false;
+      for (int i = MIN_WEAR; i < MAX_WEAR; i++) {
+        TObj* obj = dynamic_cast<TObj*>(victim->equipment[i]);
+        if (obj) {
+          int oldWetness = obj->getWetness();
+          obj->addToWetness(wetAmount);
+          
+          // Show message about object getting wet
+          if (oldWetness <= 0) {
+            anyObjectsWet = true;
+            if (wetAmount > 30) {
+              act("Your $p becomes quite wet!", FALSE, victim, obj, 0, TO_CHAR);
+            } else if (wetAmount > 15) {
+              act("Your $p becomes wet!", FALSE, victim, obj, 0, TO_CHAR);
+            } else {
+              act("Your $p becomes damp!", FALSE, victim, obj, 0, TO_CHAR);
+            }
+          }
+          
+          if (obj->isObjStat(ITEM_BURNING)) {
+            obj->remBurning(NULL);
+            act("The flames on $p are doused.", TRUE, victim, obj, 0, TO_CHAR);
+            act("The flames on $p are doused.", TRUE, victim, obj, 0, TO_ROOM);
+          }
+        }
+      }
+      
+      // Summary message if multiple objects got wet
+      if (anyObjectsWet) {
+        act("Your equipment gets wet from the water!", FALSE, victim, 0, 0, TO_CHAR);
+      }
     }
     if (caster->reconcileDamage(victim, dam, SPELL_GUSHER) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
