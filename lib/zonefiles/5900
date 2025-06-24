@@ -1,5 +1,223 @@
 #5900
-Finch's Area (200 rooms)~
-6099 25 2 0
+Sidartha/Vasco – Petrified Forest~
+6099 60 1 1
+
+D	0	5970	9	1	thozgich area enter rubble destroyed unpassable
+D	0	6970	6	1	thozgich area exit rubble destroyed unpassable
+O	0	5903	1	5987	ancient apple tree
+O	0	5904	1	6006	ancient cherry tree
+O	0	5905	1	5966	ancient pear tree
+O	0	5901	1	6049	ancient hickory tree
+O	0	5900	1	6067	ancient oak tree
+O	0	5902	1	6028	ancient chestnut tree
+O	0	5906	1	5924	ancient maple tree
+O	0	5913	1	5970	enormous pyre with room proc
+O	0	5913	1	5967
+O	0	5913	1	5961
+O	0	5913	1	5911
+O	0	5913	1	5915
+O	0	5913	1	5926
+O	0	5913	1	5927
+O	0	5913	1	6023
+O	0	5913	1	6029
+O	0	5913	1	6032
+M	0	5928	1	5938	Undead chaos demon guard with prop weapon
+I	1	28812	1	18	black steel greatsword
+M	0	5912	1	5987	Diapatri, apple dryad
+I	1	5935	6	19	petrified wood hammer
+M	0	5913	1	6006	Azolla, cherry dryad
+I	1	5935	6	19	petrified wood hammer
+M	0	5914	1	5966	Fenneltis, pear dryad
+I	1	5935	6	19	petrified wood hammer
+M	0	5915	1	6049	Biloba, hickory dryad
+I	1	5935	6	19	petrified wood hammer
+M	0	5916	1	6067	Brier, oak dryad
+I	1	5935	6	19	petrified wood hammer
+M	0	5917	1	6028	Crenata, chestnut dryad
+I	1	5935	6	19	petrified wood hammer
+M	0	5920	1	5910	starving messenger response
+M	0	5921	1	5939	spirit messenger response
+M	0	5903	1	6051	petrified dryad
+M	0	5903	1	5960
+M	0	5903	1	6022
+M	0	5903	1	6050
+M	0	5903	1	5914	
+M	0	5903	1	6058
+M	0	5900	1	6022	undead walker
+M	0	5900	1	6021	
+M	0	5900	1	6020	
+M	0	5900	1	5913
+M	0	5900	1	5960
+M	0	5900	1	6017
+M	0	5900	1	6016
+M	0	5900	1	6052
+M	0	5900	1	6053
+M	0	5901	1	5985	hedonistic satyr
+M	0	5901	1	6047
+M	0	5901	1	5982
+M	0	5901	1	6044
+M	0	5901	1	5979
+M	0	5901	1	6041
+M	0	5901	1	5975
+M	0	5901	1	6037
+M	0	5902	1	6034	undead forest bandit
+M	0	5902	1	5972
+M	0	5902	1	6031
+M	0	5902	1	5969
+M	0	5902	1	6030
+M	0	5902	1	5968
+M	0	5902	1	6024
+M	0	5902	1	5962
+M	0	5904	1	5965	dryad horned guardian
+M	0	5904	1	6027
+M	0	5911	1	5963	pugnacious monk
+M	0	5911	1	6025
+M	0	5911	1	5913
+M	0	5911	1	6021
+M	0	5905	1	5924	dryad petrified queen
+? 0 5 0 E
+E 1 25597 1 18				spear of darkness  
+M	0	5906	1	5931	dryad assassin
+I	1	5937	4	8	petrified wood dagger
+M	0	5906	1	5922
+I	1	5937	4	8
+M	0	5906	1	5933
+I	1	5937	4	8
+M	0	5906	1	5920
+I	1	5937	4	8
+M	0	5906	1	5935
+I	1	5937	4	8
+M	0	5906	1	5918
+I	1	5937	4	8
+M	0	5906	1	5937
+I	1	5937	4	8
+M	0	5906	1	5916
+I	1	5937	4	8
+M	0	5907	1	5943	spirit dryad apple
+M	0	5908	1	5947	spirit dryad cherry
+M	0	5909	1	5944	spirit dryad pear
+M	0	5910	1	5948	spirit dryad hickory
+M	0	5918	1	5946	spirit dryad oak
+M	0	5919	1	5945	spirit dryad chestnut
+M	0	5923	1	6093	mountain demon
+M	0	5923	1	6090
+M	0	5923	1	6087
+M	0	5923	1	6084
+M	0	5923	1	6081
+M	0	5923	1	6076
+M	0	5923	1	6073
+M	0	5923	1	6071
+M	0	5922	1	6099	Thozgich
+Y	0	165	5		loads opulent set
+M	0	5924	1	6095	demon golem
+I	1	5938	4	10	petrified wood club
+M	0	5924	1	6092
+I	1	5938	4	10
+M	0	5924	1	6089
+I	1	5938	4	10
+M	0	5924	1	6082
+I	1	5938	4	10
+M	0	5924	1	6079
+I	1	5938	4	10
+M	0	5924	1	6077
+I	1	5938	4	10
+M	0	5924	1	6073
+I	1	5938	4	10
+M	0	5924	1	6071
+I	1	5938	4	10
+M	0	5924	1	6099
+I	1	5938	4	10
+M	0	5924	1	6086
+I	1	5938	4	10
+M	0	5925	1	6096	withered angry  demon
+M	0	5925	1	6091
+M	0	5925	1	6085
+M	0	5925	1	6080
+M	0	5925	1	6075
+M	0	5926	1	6071	rotting demon guardian
+I	1	5936	4	19	petrified wood hatchet
+M	0	5926	1	6077
+I	1	5936	4	19
+M	0	5926	1	6082
+I	1	5936	4	19
+M	0	5926	1	6088
+I	1	5936	4	19
+M	0	5929	1	5987	dryad assassin stealthy
+I	1	5934	14	19	satyr femur dagger
+M	0	5929	1	6006
+I	1	5934	14	19	
+M	0	5929	1	5966
+I	1	5934	14	19	
+M	0	5929	1	6049
+I	1	5934	14	19	
+M	0	5929	1	6067
+I	1	5934	14	19
+M	0	5929	1	5986
+I	1	5934	14	19	
+M	0	5929	1	6003
+I	1	5934	14	19	
+M	0	5929	1	5965
+I	1	5934	14	19	
+M	0	5929	1	6048
+I	1	5934	14	19	
+M	0	5929	1	6066
+I	1	5934	14	19	
+M	0	5929	1	6020
+I	1	5934	14	19	
+M	0	5929	1	6016
+I	1	5934	14	19	
+M	0	5930	1	5987	dryad banshee stealthy
+M	0	5930	1	6006	
+M	0	5930	1	5966	
+M	0	5930	1	6049	
+M	0	5930	1	6067
+M	0	5930	1	5986	
+M	0	5930	1	6003	
+M	0	5930	1	5965	
+M	0	5930	1	6048	
+M	0	5930	1	6066	
+M	0	5930	1	6020	
+M	0	5930	1	6016	
+M	0	5931	1	5987	shambling undead forest spirit
+M	0	5931	1	6006	
+M	0	5931	1	5966	
+M	0	5931	1	6049	
+M	0	5931	1	6067
+M	0	5931	1	5986	
+M	0	5931	1	6003	
+M	0	5931	1	5965	
+M	0	5931	1	6048	
+M	0	5931	1	6066	
+M	0	5931	1	6020	
+M	0	5931	1	6016
+M	0	5932	1	5987	forest demon
+M	0	5932	1	6006	
+M	0	5932	1	5966	
+M	0	5932	1	6049	
+M	0	5932	1	6067
+M	0	5932	1	5986	
+M	0	5932	1	6003	
+M	0	5932	1	5965	
+M	0	5932	1	6048	
+M	0	5932	1	6066	
+M	0	5932	1	6020	
+M	0	5932	1	6016
+M	0	5933	1	5987	undead cleric spirit
+M	0	5933	1	6006	
+M	0	5933	1	5966	
+M	0	5933	1	6049	
+M	0	5933	1	6067
+M	0	5933	1	5986	
+M	0	5933	1	6003	
+M	0	5933	1	5965	
+M	0	5933	1	6048	
+M	0	5933	1	6066	
+M	0	5933	1	6020	
+M	0	5933	1	6016
 S
+	
+
+
+
+
 
