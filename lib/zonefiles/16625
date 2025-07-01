@@ -1,5 +1,41 @@
 #16625
-Therias' Area - Sandword Trough (25 rooms)~
-16649 30 2 0
+Therias/Sidartha - Sandworm Trough (25 rooms)~
+16649 40 2 1
+                
+O 1 16636 1 16625	blue cactus
+O 1 16636 1 16630
+O 1 16636 1 16635
+O 1 16636 1 16640
+O 1 16636 1 16645
+M 0 16625 1 16625	sandworm
+M 0 16625 1 16648
+M 0 16625 1 16646
+M 0 16625 1 16644
+M 0 16633 1 16647	serious sandworm hunter
+Y 0 117 5		      sandworm hide set
+M 0 16626 1 16626 camel
+M 0 16626 1 16629
+M 0 16626 1 16634
+M 0 16626 1 16638
+M 0 16626 1 16641
+M 0 16626 1 16646
+M 0 16627 1	16631 sand stalker
+M 0 16627 1 16635
+M 0 16627 1 16641
+M 0 16627 1 16649
+M 0 16628 1	16649	exiled Jalahd hunter
+? 0 5 0 E
+E 1 16637 9999 18	The red mace of Gul'Hradan 
+M 0 16629 1 16625 baby sandworm
+M 0 16629 1 16648
+M 0 16629 1 16646
+M 0 16629 1 16644
+M 0 16630 1 16643 mini Atakaji toad
+M 0 16631 1 16626 a gnome archaeologist
+M 0 16632 1 16629	an ogre grunt
+M 0 16632 1 16632
+M 0 16632 1 16634
+M 0 16632 1 16635
+M 0 16632 1 16643
 S
 
