@@ -297,6 +297,8 @@ void TFFlame::decayMe() {
   if (obj_flags.decay_time > 0) {
     addFlameMessages();
     // dropSmoke(max(1, obj_flags.decay_time/25));
+
+    // Fire-based drying is now handled by the weather system in Weather::applyDryingToObjects()
   } else
     obj_flags.decay_time = 0;
   updateFlameInfo();
@@ -590,6 +592,13 @@ void TBeing::igniteObject(const char* argument, TThing* fObj) {
     sendTo("I'm afraid it doesn't work to ignite a fire in the rain.\n\r");
     return;
   }
+
+  if (fObj && dynamic_cast<TObj*>(fObj)->isWet()) {
+      act("$O is too wet to ignite.\n\r", FALSE, this, NULL, fObj, TO_CHAR);
+      return;
+    }
+  
+
   // See if were doing a new flame or adding to an existing one.
   for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end(); ++it) {
     if ((newFlame = dynamic_cast<TFFlame*>(*it)))
@@ -712,16 +721,17 @@ int TBeing::pourWaterOnMe(TBeing* ch, TObj* sObj) {
       
       // Optional: Add a message about the item getting wet
       if (liquidToThisItem > 20) {
-        act(("Your $p gets soaked!"), FALSE, this, obj, NULL, TO_CHAR);
+        act(("Your $o gets soaked!"), FALSE, this, obj, NULL, TO_CHAR);
       } else if (liquidToThisItem > 10) {
-        act(("Your $p gets quite wet."), FALSE, this, obj, NULL, TO_CHAR);
+        act(("Your $o gets quite wet."), FALSE, this, obj, NULL, TO_CHAR);
       } else if (liquidToThisItem > 0) {
-        act(("Your $p gets a bit damp."), FALSE, this, obj, NULL, TO_CHAR);
+        act(("Your $o gets a bit damp."), FALSE, this, obj, NULL, TO_CHAR);
       }
       
       if (obj->isObjStat(ITEM_BURNING)) {
        obj->remBurning(NULL);
-       act("The flames on $p are doused.", TRUE, 0, obj, 0, TO_ROOM);
+       act("The flames on $p are doused.", TRUE, this, obj, 0, TO_CHAR);
+       act("The flames on $N's $p are doused.", TRUE, this, obj, 0, TO_ROOM);
       }
     } else {
       // If no item in this slot, the liquid continues to the next item

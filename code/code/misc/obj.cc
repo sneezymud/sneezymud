@@ -707,17 +707,52 @@ std::pair<int64_t, int64_t> TObj::sumAffectedByApplyType(
   return {mod1, mod2};
 };
 
+void TObj::addToWetness(int val) {
+  // Apply material-based modifiers to wetness changes
+  if (val < 0) {
+    // Drying (negative values)
+    if (isMetal()) {
+      // Metals dry twice as fast
+      val *= 2;
+    }
+    // Organics use baseline drying (no modifier)
+    // Minerals use baseline drying (no modifier)
+  } else if (val > 0) {
+    // Getting wet (positive values)
+    if (isMineral()) {
+      // Minerals resist getting wet (half absorption)
+      val /= 2;
+    }
+    // Organics use baseline absorption (no modifier)
+    // Metals use baseline absorption (no modifier)
+  }
+
+  setWetness(wetness + val);
+}
+
 sstring TObj::getWetnessDesc() const {
   if (wetness <= 0)
     return "";
+  else if (wetness < 10)
+    return "barely damp";
   else if (wetness < 20)
     return "slightly damp";
-  else if (wetness < 40)
+  else if (wetness < 30)
     return "damp";
-  else if (wetness < 60)
+  else if (wetness < 40)
     return "wet";
-  else if (wetness < 80)
+  else if (wetness < 50)
     return "very wet";
+  else if (wetness < 60)
+    return "sopping wet";
+  else if (wetness < 70)
+    return "soggy";
+  else if (wetness < 80)
+    return "drenched";
+  else if (wetness < 90)
+    return "completely soaked";
+  else if (wetness < 100)
+    return "waterlogged";
   else
     return "soaking wet";
 }

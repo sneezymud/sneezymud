@@ -4376,6 +4376,14 @@ void TObj::describeCondition(const TBeing* ch) const {
     format("It is in %s condition.\n\r") % equip_condition(-1));
 }
 
+void TObj::describeWetness(const TBeing* ch) const {
+  if (!isWet())
+    return;
+
+  ch->sendTo(COLOR_OBJECTS,
+    format("It is %s.\n\r") % getWetnessDesc());
+}
+
 void TThing::describeContains(const TBeing* ch) const {
   if (!stuff.empty())
     ch->sendTo(COLOR_OBJECTS,
@@ -4558,6 +4566,7 @@ void TObj::describeMe(TBeing* ch) const {
         format("A monogram on it indicates it belongs to %s.\n\r") % name_buf);
   }
   describeObjectSpecifics(ch);
+  describeWetness(ch);  // Add this line to describe wetness
   evaluateMe(ch);
 }
 

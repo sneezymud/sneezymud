@@ -9,6 +9,11 @@
 
 #include "obj_base_light.h"
 
+// Forward declarations
+class TBeing;
+
+
+
 const unsigned int TFFLAME_INVHEAT = (1 << 0);   //  1
 const unsigned int TFFLAME_INVLIGHT = (1 << 1);  //  2
 const unsigned int TFFLAME_MAGHEAT = (1 << 2);   //  4

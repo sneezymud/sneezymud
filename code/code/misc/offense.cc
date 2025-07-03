@@ -1483,7 +1483,7 @@ int TBeing::flameEngulfed() {
     if (!obj)
       continue;
     
-      int burnChance = 50;
+    int burnChance = 50;
     int objWet = obj->getWetness();
     
     if (objWet > 25) {

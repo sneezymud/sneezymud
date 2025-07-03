@@ -765,7 +765,7 @@ class TObj : public TThing {
     // Wetness methods
     int getWetness() const { return wetness; }
     void setWetness(int val) { wetness = std::max(0, std::min(100, val)); }
-    void addToWetness(int val) { setWetness(wetness + val); }
+    void addToWetness(int val);
     bool isWet() const { return wetness > 0; }
     
     // Get a descriptive string for the wetness level
@@ -773,4 +773,7 @@ class TObj : public TThing {
     
     // Apply wetness effects to the object
     void applyWetnessEffects();
+    
+    // Add only this one new method declaration:
+    virtual void describeWetness(const TBeing* ch) const;
 };

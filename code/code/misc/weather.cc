@@ -21,6 +21,8 @@
 #include "obj_base_clothing.h"
 #include "obj.h"
 #include "obj_base_container.h"
+#include "obj_flame.h"
+#include "obj_light.h"
 
 
 
@@ -1027,7 +1029,12 @@ void Weather::getWet(TBeing* ch, TRoom* room) {
     }
     wetShow += ".\n\r";
     act(wetShow, false, ch, NULL, NULL, TO_CHAR);
-    
+
+    // Apply fire-based drying to objects in the room when character is drying
+    if (wetness < 0) {
+      applyDryingToObjects(room);
+    }
+
     // Apply wetness changes to character's objects
     // Objects get wet when character gets wet, and dry when character dries
     if (wetness != 0) {
@@ -1073,25 +1080,9 @@ void Weather::getWet(TBeing* ch, TRoom* room) {
 
           // Show drying messages for equipment
           if (wetness < 0 && oldObjWetness > 0 && obj->getWetness() == 0) {
-            act("Your $p dries off completely.", FALSE, ch, obj, 0, TO_CHAR);
+            act("$p dries off completely.", FALSE, ch, obj, 0, TO_CHAR);
           }
         }
-      }
-    }
-  }
-  
-  // Apply wetness/drying to objects in the room
-  if (!room->isRoomFlag(ROOM_INDOORS)) {
-    // Only do this occasionally to avoid too frequent updates
-    if (!::number(0, 9)) {
-      if (Weather::getWeather(*room) == Weather::RAINY ||
-          Weather::getWeather(*room) == Weather::LIGHTNING ||
-          room->isWaterSector()) {
-        // Apply wetness in wet conditions
-        applyWetnessToObjects(room);
-      } else {
-        // Apply drying in dry conditions
-        applyDryingToObjects(room);
       }
     }
   }
@@ -1226,31 +1217,58 @@ void Weather::applyDryingToObjects(TRoom* room) {
   if (!room)
     return;
 
-  // Only apply drying if the room is outdoors and has favorable conditions
-  if (room->isRoomFlag(ROOM_INDOORS))
-    return;
-
   // Determine drying amount based on weather and room conditions
   int dryingAmount = 0;
 
-  // Sunny weather provides good drying
-  if (Weather::getSunlight() == Weather::SUN_LIGHT && Weather::getWeather(*room) == Weather::CLOUDLESS) {
-    dryingAmount = -15;  // Strong drying in sunny, cloudless conditions
-  } else if (Weather::getSunlight() == Weather::SUN_LIGHT) {
-    dryingAmount = -10;  // Moderate drying in sunny conditions
-  } else if (Weather::getWeather(*room) == Weather::CLOUDLESS) {
-    dryingAmount = -5;   // Light drying in clear but not sunny conditions
-  } else {
-    return;  // No drying to apply
+  // Weather-based drying (only for outdoor rooms)
+  if (!room->isRoomFlag(ROOM_INDOORS)) {
+    if (Weather::getSunlight() == Weather::SUN_LIGHT && Weather::getWeather(*room) == Weather::CLOUDLESS) {
+      dryingAmount = -15;  // Strong drying in sunny, cloudless conditions
+    } else if (Weather::getSunlight() == Weather::SUN_LIGHT) {
+      dryingAmount = -10;  // Moderate drying in sunny conditions
+    } else if (Weather::getWeather(*room) == Weather::CLOUDLESS) {
+      dryingAmount = -5;   // Light drying in clear but not sunny conditions
+    }
   }
 
-  // Check for burning objects in room that enhance drying
+  // Check for fire objects in room that enhance drying
+  bool roomFireDetected = false;
+  TObj* roomFireSource = nullptr;
+
   for (StuffIter it = room->stuff.begin(); it != room->stuff.end(); ++it) {
     TObj* o = dynamic_cast<TObj*>(*it);
-    if (o && o->isObjStat(ITEM_BURNING)) {
-      // Large fires provide significant drying boost
-      dryingAmount -= int(50 * (o->getVolume() / (ROOM_FIRE_THRESHOLD * 3)));
-      break;  // Only count the first burning object to avoid excessive drying
+    if (!o) continue;
+
+    // Check for flame objects (campfires, braziers)
+    TFFlame* flame = dynamic_cast<TFFlame*>(o);
+    if (flame) {
+      int fireDrying = ::number(5, 5 + (flame->getVolume() / 1000));
+      dryingAmount -= fireDrying;
+      roomFireDetected = true;
+      roomFireSource = o;
+      break;  // Only count the first fire source to avoid excessive drying
+    }
+
+    // Check for lit lights (torches, lanterns)
+    TLight* light = dynamic_cast<TLight*>(o);
+    if (light && light->isLit()) {
+      int lightDrying = ::number(1, 1 + light->getLightAmt());
+      if (isname("torch", light->name)) {
+        lightDrying = (int)(lightDrying * 1.5);
+      }
+      dryingAmount -= lightDrying;
+      roomFireDetected = true;
+      roomFireSource = o;
+      break;  // Only count the first fire source to avoid excessive drying
+    }
+
+    // Check for other burning objects
+    if (o->isObjStat(ITEM_BURNING)) {
+      int burnDrying = ::number(1, 1 + (o->getVolume() / 1000));
+      dryingAmount -= burnDrying;
+      roomFireDetected = true;
+      roomFireSource = o;
+      break;  // Only count the first fire source to avoid excessive drying
     }
   }
 
@@ -1263,7 +1281,12 @@ void Weather::applyDryingToObjects(TRoom* room) {
 
       // Show drying message if object becomes completely dry
       if (oldWetness > 0 && obj->getWetness() == 0) {
-        act("$p dries off completely.", TRUE, 0, obj, 0, TO_ROOM);
+        if (roomFireDetected && roomFireSource) {
+          sstring buffer = format("$o dries off completely from the heat of %s.") % roomFireSource->getName();
+          act(buffer, TRUE, 0, obj, 0, TO_ROOM);
+        } else {
+          act("$o dries off completely.", TRUE, 0, obj, 0, TO_ROOM);
+        }
       }
     }
   }
@@ -1274,6 +1297,66 @@ void Weather::applyDryingToObjects(TRoom* room) {
     if (!being)
       continue;
 
+    // Check for held fire objects that provide additional drying
+    int personalFireDrying = 0;
+    TObj* rightFireSource = nullptr;
+    TObj* leftFireSource = nullptr;
+
+    // Check held items (HOLD_RIGHT and HOLD_LEFT)
+    TObj* rightHeld = dynamic_cast<TObj*>(being->equipment[HOLD_RIGHT]);
+    TObj* leftHeld = dynamic_cast<TObj*>(being->equipment[HOLD_LEFT]);
+
+    // Check right hand
+    if (rightHeld) {
+      TFFlame* flame = dynamic_cast<TFFlame*>(rightHeld);
+      TLight* light = dynamic_cast<TLight*>(rightHeld);
+
+      if (flame) {
+        personalFireDrying += ::number(5, 5 + (flame->getVolume() / 1000));
+        if (isname("torch", flame->name)) {
+          personalFireDrying = (int)(personalFireDrying * 1.5);
+        }
+        rightFireSource = rightHeld;
+      } else if (light && light->isLit()) {
+        personalFireDrying += ::number(1, 1 + light->getLightAmt());
+        if (isname("torch", light->name)) {
+          personalFireDrying = (int)(personalFireDrying * 1.5);
+        }
+        rightFireSource = rightHeld;
+      } else if (rightHeld->isObjStat(ITEM_BURNING)) {
+        personalFireDrying += ::number(1, 1 + (rightHeld->getVolume() / 1000));
+        rightFireSource = rightHeld;
+      }
+    }
+
+    // Check left hand (always check, don't skip if right hand has fire)
+    if (leftHeld) {
+      TFFlame* flame = dynamic_cast<TFFlame*>(leftHeld);
+      TLight* light = dynamic_cast<TLight*>(leftHeld);
+
+      if (flame) {
+        personalFireDrying += ::number(5, 5 + (flame->getVolume() / 1000));
+        if (isname("torch", flame->name)) {
+          personalFireDrying = (int)(personalFireDrying * 1.5);
+        }
+        leftFireSource = leftHeld;
+      } else if (light && light->isLit()) {
+        personalFireDrying += ::number(1, 1 + light->getLightAmt());
+        if (isname("torch", light->name)) {
+          personalFireDrying = (int)(personalFireDrying * 1.5);
+        }
+        leftFireSource = leftHeld;
+      } else if (leftHeld->isObjStat(ITEM_BURNING)) {
+        personalFireDrying += ::number(1, 1 + (leftHeld->getVolume() / 1000));
+        leftFireSource = leftHeld;
+      }
+    }
+
+    // Track if any items dried for consolidated messaging
+    bool anyItemsDriedFromRoomFire = false;
+    bool anyItemsDriedFromRightHand = false;
+    bool anyItemsDriedFromLeftHand = false;
+
     // Check inventory
     for (StuffIter invIt = being->stuff.begin(); invIt != being->stuff.end(); ++invIt) {
       TObj* obj = dynamic_cast<TObj*>(*invIt);
@@ -1282,12 +1365,40 @@ void Weather::applyDryingToObjects(TRoom* room) {
         int objDryingAmount = dynamic_cast<TBaseContainer*>(obj->parent) ?
                               dryingAmount / 3 : dryingAmount / 2;
 
+        // Add personal fire drying bonus
+        objDryingAmount -= personalFireDrying / 2;
+
         int oldWetness = obj->getWetness();
         obj->addToWetness(objDryingAmount);
 
-        // Show drying message if object becomes completely dry
+        // Show individual messages for complete drying, track partial drying
         if (oldWetness > 0 && obj->getWetness() == 0) {
-          act("$p in your inventory dries off completely.", FALSE, being, obj, 0, TO_CHAR);
+          // Individual message for complete drying
+          if (personalFireDrying > 0) {
+            if (rightFireSource) {
+              sstring buffer = format("$o in your inventory dries off completely from the heat of your %s.") % fname(rightFireSource->name).c_str();
+              act(buffer, FALSE, being, obj, 0, TO_CHAR);
+            } else if (leftFireSource) {
+              sstring buffer = format("$o in your inventory dries off completely from the heat of your %s.") % fname(leftFireSource->name).c_str();
+              act(buffer, FALSE, being, obj, 0, TO_CHAR);
+            }
+          } else if (roomFireDetected && roomFireSource) {
+            sstring buffer = format("$o in your inventory dries off completely from the heat of %s.") % roomFireSource->getName();
+            act(buffer, FALSE, being, obj, 0, TO_CHAR);
+          } else {
+            act("$o in your inventory dries off completely.", FALSE, being, obj, 0, TO_CHAR);
+          }
+        } else if (oldWetness > obj->getWetness()) {
+          // Track partial drying for consolidated messages
+          if (personalFireDrying > 0) {
+            if (rightFireSource) {
+              anyItemsDriedFromRightHand = true;
+            } else if (leftFireSource) {
+              anyItemsDriedFromLeftHand = true;
+            }
+          } else if (roomFireDetected) {
+            anyItemsDriedFromRoomFire = true;
+          }
         }
       }
     }
@@ -1296,14 +1407,58 @@ void Weather::applyDryingToObjects(TRoom* room) {
     for (int i = MIN_WEAR; i < MAX_WEAR; i++) {
       TObj* obj = dynamic_cast<TObj*>(being->equipment[i]);
       if (obj && obj->isWet()) {
-        int oldWetness = obj->getWetness();
-        obj->addToWetness(dryingAmount / 2);  // Equipment dries at half rate
+        int objDryingAmount = dryingAmount / 2;  // Equipment dries at half rate
 
-        // Show drying message if equipment becomes completely dry
+        // Add personal fire drying bonus
+        objDryingAmount -= personalFireDrying / 2;
+
+        int oldWetness = obj->getWetness();
+        obj->addToWetness(objDryingAmount);
+
+        // Show individual messages for complete drying, track partial drying
         if (oldWetness > 0 && obj->getWetness() == 0) {
-          act("Your $p dries off completely.", FALSE, being, obj, 0, TO_CHAR);
+          // Individual message for complete drying
+          if (personalFireDrying > 0) {
+            if (rightFireSource) {
+              sstring buffer = format("Your $o dries off completely from the heat of your %s.") % fname(rightFireSource->name).c_str();
+              act(buffer, FALSE, being, obj, 0, TO_CHAR);
+            } else if (leftFireSource) {
+              sstring buffer = format("Your $o dries off completely from the heat of your %s.") % fname(leftFireSource->name).c_str();
+              act(buffer, FALSE, being, obj, 0, TO_CHAR);
+            }
+          } else if (roomFireDetected && roomFireSource) {
+            sstring buffer = format("Your $o dries off completely from the heat of %s.") % roomFireSource->getName();
+            act(buffer, FALSE, being, obj, 0, TO_CHAR);
+          } else {
+            act("Your $o dries off completely.", FALSE, being, obj, 0, TO_CHAR);
+          }
+        } else if (oldWetness > obj->getWetness()) {
+          // Track partial drying for consolidated messages
+          if (personalFireDrying > 0) {
+            if (rightFireSource) {
+              anyItemsDriedFromRightHand = true;
+            } else if (leftFireSource) {
+              anyItemsDriedFromLeftHand = true;
+            }
+          } else if (roomFireDetected) {
+            anyItemsDriedFromRoomFire = true;
+          }
         }
       }
+    }
+
+    // Send consolidated messages
+    if (anyItemsDriedFromRoomFire && roomFireSource) {
+      act(format("The warmth of %s dries out your gear.") % roomFireSource->getName(),
+          FALSE, being, 0, 0, TO_CHAR);
+    }
+    if (anyItemsDriedFromRightHand && rightFireSource) {
+      act(format("The heat coming from your %s dries you out.") % fname(rightFireSource->name),
+          FALSE, being, 0, 0, TO_CHAR);
+    }
+    if (anyItemsDriedFromLeftHand && leftFireSource) {
+      act(format("Your %s aids in drying you out some.") % fname(leftFireSource->name),
+          FALSE, being, 0, 0, TO_CHAR);
     }
   }
 }
@@ -1340,7 +1495,7 @@ void Weather::dryObjectsOnBeing(TBeing* ch, int dryingAmount) {
 
       // Show drying message if equipment becomes completely dry
       if (oldWetness > 0 && obj->getWetness() == 0) {
-        act("Your $p dries off completely.", FALSE, ch, obj, 0, TO_CHAR);
+        act("$p dries off completely.", FALSE, ch, obj, 0, TO_CHAR);
       }
     }
   }

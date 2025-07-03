@@ -128,6 +128,10 @@ void TObj::show_me_to_char(TBeing* ch, showModeT mode) const {
     buf = format(" %s(burning)%s") % ch->red() % ch->norm();
     buffer += buf;
   }
+  if (isWet()) {
+    buf = format(" %s(%s)%s") % ch->cyan() % getWetnessDesc() % ch->norm();
+    buffer += buf;
+  }
   if (isObjStat(ITEM_CHARRED)) {
     buf = format(" %s(charred)%s") % ch->blackBold() % ch->norm();
     buffer += buf;
