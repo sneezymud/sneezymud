@@ -32,6 +32,51 @@
 :shield   =
 // Paste below this line.
 // ----------------------
+:Set #167
+#satyr hide
+$elf
+head     = 5914
+neck     = 5915
+body     = 5916
+back     = 5923
+arm      = 5917
+wrist    = 5920
+hand     = 5918
+finger   = 5924
+waist    = 5919
+leg      = 5921
+foot     = 5922
+shield   = -1
+:Set #166
+#aarakocra
+$ogre
+head     = 4939
+neck     = 4940
+body     = 4941
+back     = 4938
+arm      = 4949
+wrist    = 4944
+hand     = 4942
+finger   = 4948
+waist    = 4933
+leg      = 4945
+foot     = 4946
+shield   = 4947
+:Set #165
+#wargskin
+$ogre
+head     = 4928
+neck     = 4935
+body     = 4934
+back     = 4925
+arm      = 4933
+wrist    = 4930
+hand     = 4932
+finger   = 4936
+waist    = 4931
+leg      = 4929
+foot     = 4926
+shield   = 4927
 :Set #164
 #finegnomemail
 $gnome
