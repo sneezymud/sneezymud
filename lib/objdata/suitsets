@@ -33,7 +33,7 @@
 // Paste below this line.
 // ----------------------
 :Set #167
-#satyr-hide
+#satyr hide
 $elf
 head     = 5914
 neck     = 5915
