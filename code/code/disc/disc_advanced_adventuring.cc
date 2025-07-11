@@ -53,10 +53,7 @@ int forage(TBeing* caster, short bKnown) {
       !(caster->roomp->isForestSector() || caster->roomp->isBeachSector() ||
         caster->roomp->isHillSector() || caster->roomp->isMountainSector() ||
         caster->roomp->isNatureSector() || caster->roomp->isRoadSector() ||
-        caster->roomp->isSwampSector() || caster->roomp->isArcticSector() ||
-        caster->roomp->getSectorType() == SECT_TEMPERATE_CAVE ||
-        caster->roomp->getSectorType() == SECT_TROPICAL_CAVE ||
-        caster->roomp->getSectorType() == SECT_ARCTIC_CAVE)) {
+        caster->roomp->isSwampSector() || caster->roomp->isArcticSector())) {
     caster->sendTo("You need to be in nature to forage.\n\r");
     return SPELL_FAIL;
   } else if (caster->roomp->isFlyingSector() || caster->roomp->isVertSector() ||
@@ -67,13 +64,7 @@ int forage(TBeing* caster, short bKnown) {
     // types
     caster->sendTo("You cannot forage here.\n\r");
     return SPELL_FAIL;
-  } else if (caster->roomp->isRoomFlag(ROOM_INDOORS) &&
-             !(caster->roomp->getSectorType() == SECT_TEMPERATE_CAVE ||
-               caster->roomp->getSectorType() == SECT_TROPICAL_CAVE ||
-               caster->roomp->getSectorType() == SECT_ARCTIC_CAVE)) {
-    caster->sendTo("You need to be outside to forage.\n\r");
-    return SPELL_FAIL;
-  } else if (caster->roomp->isRoomFlag(ROOM_FLOODED)) {
+   } else if (caster->roomp->isRoomFlag(ROOM_FLOODED)) {
     caster->sendTo(
       "The flood in here needs to subside before you can forage.\n\r");
     return SPELL_FAIL;
@@ -127,6 +118,9 @@ int forage(TBeing* caster, short bKnown) {
       act("$n rustles up $p.", TRUE, caster, obj, NULL, TO_ROOM);
       *caster->roomp += *obj;
       foodpile /= 3;
+
+      caster->gainTaskExp(0, 50.0);
+      caster->doSave(SILENT_YES);
     }
     aff.type = SKILL_FORAGE;
     aff.location = APPLY_NONE;

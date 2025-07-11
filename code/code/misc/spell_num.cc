@@ -1023,6 +1023,8 @@ int mapSpellnumToFile(spellNumT stt) {
       return 718;
     case SKILL_COMMON:
       return 719;
+    case SKILL_COOK:
+      return 720;
     case SKILL_ADVANCED_OFFENSE:
       return 730;
     case SKILL_TOUGHNESS:
@@ -2172,6 +2174,8 @@ spellNumT mapFileToSpellnum(int stt) {
       return SKILL_COMMON;
     case 720:
       return SKILL_SAP;
+    case 724:
+      return SKILL_COOK;
     case 730:
       return SKILL_ADVANCED_OFFENSE;
     case 731:
