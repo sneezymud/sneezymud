@@ -1,5 +1,47 @@
 #4925
-Light Maze - Connovar~
-4949 25 2 0
+Snow Trolls- Sidartha~
+4949 30 2 1
+
+M 0 4925 1 4925 snow troll hunter
+M 0 4925 1 4927
+M 0 4925 1 4929
+M 0 4925 1 4931
+M 0 4925 1 4936
+M 0 4925 1 4934
+M 0 4925 1 4940
+M 0 4925 1 4945
+M 0 4926 1 4933 snow troll wife
+M 0 4926 1 4934
+M 0 4926 1 4947
+M 0 4926 1 4948
+M 0 4926 1 4943
+M 0 4926 1 4944
+M 0 4926 1 4942
+M 0 4927 1 4936 snow troll shaman
+M 0 4927 1 4935
+M 0 4927 1 4940
+M 0 4927 1 4945
+M 0 4928 1 4938 snow troll king
+Y 0 165 5	      wargskin set
+M 0 4929 1 4938 snow troll queen
+M 0 4930 1 4936 snow troll healer
+M 0 4930 1 4935
+M 0 4930 1 4940
+M 0 4930 1 4945
+M 0 4931 1 4936 snow troll thief
+Y 0 166 3	       aarakocra set
+M 0 4931 1 4935
+Y 0 166 3
+M 0 4931 1 4940
+Y 0 166 3
+M 0 4931 1 4945
+Y 0 166 3
+M 0 4932 1 4933 snow troll husband
+M 0 4932 1 4934
+M 0 4932 1 4947
+M 0 4932 1 4948
+M 0 4932 1 4943
+M 0 4932 1 4944
+M 0 4932 1 4942
 
 S
