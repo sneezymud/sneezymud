@@ -108,7 +108,7 @@ M	0	5923	1	6076
 M	0	5923	1	6073
 M	0	5923	1	6071
 M	0	5922	1	6099	Thozgich
-Y	0	165	5		loads opulent set
+Y	0	168 	5		loads opulent set
 M	0	5924	1	6095	demon golem
 I	1	5938	4	10	petrified wood club
 M	0	5924	1	6092
@@ -130,10 +130,15 @@ I	1	5938	4	10
 M	0	5924	1	6086
 I	1	5938	4	10
 M	0	5925	1	6096	withered angry  demon
+Y   0   167     3           loads satyr hide set
 M	0	5925	1	6091
+Y   0   167     3  
 M	0	5925	1	6085
+Y   0   167     3  
 M	0	5925	1	6080
+Y   0   167     3  
 M	0	5925	1	6075
+Y   0   167     3  
 M	0	5926	1	6071	rotting demon guardian
 I	1	5936	4	19	petrified wood hatchet
 M	0	5926	1	6077
