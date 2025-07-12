@@ -32,6 +32,21 @@
 :shield   =
 // Paste below this line.
 // ----------------------
+:Set #168
+#opulent
+$elf
+head     = 25587
+neck     = 25585
+body     = 25592
+back     = 25586
+arm      = 25591
+wrist    = 25594
+hand     = 25590
+finger   = 25584
+waist    = 25593
+leg      = 25588
+foot     = 25589
+shield   = -1
 :Set #167
 #satyr-hide
 $elf
