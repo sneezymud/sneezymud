@@ -1729,6 +1729,10 @@ void TBeing::checkForQuestTog(TBeing* vict) {
           !hasQuestBit(TOG_FAILED_CLERIC_A) && !hasQuestBit(TOG_PENANCE_R21_2))
         found = TRUE;
       break;
+    case Mob::ENSLAVED_PALADIN:
+      if (hasQuestBit(bitnum = TOG_HERO_OF_GH))
+        found = TRUE;
+      break;
     default:
       found = FALSE;
       break;
