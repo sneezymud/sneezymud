@@ -449,7 +449,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] = {
   {"Thief L20 Quest: Find Clues", Mob::PANICKED_THIEF}, // 420
   {"Thief L20 Quest: Met Westley", Mob::DREAD_PIRATE}, // 421
   {"Thief L20 Quest: Find Nephew", Mob::FRIGHTENED_PRISONER}, // 422
-  {"Thief L20 Quest: Find Contact", Mob::FOPPISH_RAKE}, // 423
+  {"Thief L20 Quest: Find Contact", Mob::TYE_TULIPS}, // 423
   {"Thief L20 Quest: Find Oona", Mob::OONA},  // 425
   {"Thief L20 Quest: Give Sawdust", Mob::OONA}, // 426
   {"Thief L20 Quest: Give Clippings", Mob::ABANOS}, // 427
