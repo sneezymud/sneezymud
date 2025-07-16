@@ -455,7 +455,7 @@ class Mob {
     static const int DEE = 7600;
     static constexpr int FIRST_WARRIOR_GM = 202;
     static constexpr int FIRST_THIEF_GM = 203;
-    static const int FOPPISH_RAKE = 44855;
+    static const int TYE_TULIPS = 1372;
     static const int OONA = 44856;
     static const int PANICKED_THIEF = 44857;
     static const int LUMTARB = 44858;

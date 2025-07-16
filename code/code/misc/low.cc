@@ -419,7 +419,7 @@ const int Mob::GNOME_BAKER;
 const int Mob::SMALL_HOBBIT;
 const int Mob::CATRINA;
 const int Mob::BUSH_COOK;
-const int Mob::FOPPISH_RAKE;
+const int Mob::TYE_TULIPS;
 const int Mob::OONA;
 const int Mob::PANICKED_THIEF;
 const int Mob::LUMTARB;
