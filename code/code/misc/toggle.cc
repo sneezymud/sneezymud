@@ -450,35 +450,36 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] = {
   {"Thief L20 Quest: Met Westley", Mob::DREAD_PIRATE}, // 421
   {"Thief L20 Quest: Find Nephew", Mob::FRIGHTENED_PRISONER}, // 422
   {"Thief L20 Quest: Find Contact", Mob::TYE_TULIPS}, // 423
-  {"Thief L20 Quest: Find Oona", Mob::OONA},  // 425
-  {"Thief L20 Quest: Give Sawdust", Mob::OONA}, // 426
-  {"Thief L20 Quest: Give Clippings", Mob::ABANOS}, // 427
-  {"Thief L20 Quest: Give Manure", Mob::ABANOS}, // 428
-  {"Thief L20 Quest: Give Fertilizer", Mob::OONA}, // 429
-  {"Thief L20 Quest: Deliver Fat", Mob::BUSH_COOK}, // 430
-  {"Thief L20 Quest: Give Tallow", Mob::OONA}, // 431
-  {"Thief L20 Quest: Give Explosive", Mob::FRIGHTENED_PRISONER}, // 432
+  {"Thief L20 Quest: Find Oona", Mob::OONA},  // 424
+  {"Thief L20 Quest: Give Sawdust", Mob::OONA}, // 425
+  {"Thief L20 Quest: Give Clippings", Mob::ABANOS}, // 426
+  {"Thief L20 Quest: Give Manure", Mob::ABANOS}, // 427
+  {"Thief L20 Quest: Give Fertilizer", Mob::OONA}, // 428
+  {"Thief L20 Quest: Deliver Fat", Mob::BUSH_COOK}, // 429
+  {"Thief L20 Quest: Give Tallow", Mob::OONA}, // 430
+  {"Thief L20 Quest: Give Explosive", Mob::FRIGHTENED_PRISONER}, // 431
+  {"Thief L20 Quest: Take Nephew", Mob::FRIGHTENED_PRISONER}, // 432
   {"Thief L45 Quest: Eligible For Gnife", Mob::NONE}, // 433
-  {"Thief L45 Quest: Tattoo to Malovhor", Mob::MALOVHOR},
-  {"Thief L45 Quest: Dagger to Malovhor", Mob::MALOVHOR},
-  {"Thief L45 Quest: Drawing to Khelfenn", Mob::KHELFENN_SMITH},
+  {"Thief L45 Quest: Tattoo to Malovhor", Mob::MALOVHOR}, //434
+  {"Thief L45 Quest: Dagger to Malovhor", Mob::MALOVHOR}, //435
+  {"Thief L45 Quest: Drawing to Khelfenn", Mob::KHELFENN_SMITH}, //436
   {"Thief L45 Quest: Pendant to Mishrak", Mob::MISHRAK},  // 437
-  {"Thief L45 Quest: Suit to Khelfenn", Mob::KHELFENN_SMITH},
-  {"Thief L45 Quest: Blood to Khelfenn", Mob::KHELFENN_SMITH},
-  {"Thief L45 Quest: Need big hammer", Mob::KHELFENN_SMITH},
-  {"Thief L45 Quest: Has Gnice Gnife", Mob::KHELFENN_SMITH},
+  {"Thief L45 Quest: Suit to Khelfenn", Mob::KHELFENN_SMITH}, //438
+  {"Thief L45 Quest: Blood to Khelfenn", Mob::KHELFENN_SMITH}, //439
+  {"Thief L45 Quest: Need big hammer", Mob::KHELFENN_SMITH}, //440
+  {"Thief L45 Quest: Has Gnice Gnife", Mob::KHELFENN_SMITH}, //441
   {"Deikhan Holy Hammer: Given Shroud", Mob::ALISAARD},  // 442
-  {"Deikhan Holy Hammer: Traded", Mob::ALISAARD},
-  {"Deikhan Holy Mace: Dagger", Mob::GHOST_WPN_MASTER},
-  {"Deikhan Holy Mace: Traded", Mob::GHOST_WPN_MASTER},
-  {"Deikhan Holy Maul: Crown", Mob::ROTHWAR},
-  {"Deikhan Holy Maul: Traded", Mob::ROTHWAR},
-  {"Deikhan Holy Shiv: Given Blanket", Mob::ILLUSION_SHROUD},
-  {"Deikhan Holy Shiv: Traded", Mob::ILLUSION_SHROUD},
+  {"Deikhan Holy Hammer: Traded", Mob::ALISAARD}, // 443
+  {"Deikhan Holy Mace: Dagger", Mob::GHOST_WPN_MASTER}, // 444
+  {"Deikhan Holy Mace: Traded", Mob::GHOST_WPN_MASTER}, // 445
+  {"Deikhan Holy Maul: Crown", Mob::ROTHWAR}, // 446
+  {"Deikhan Holy Maul: Traded", Mob::ROTHWAR}, // 447
+  {"Deikhan Holy Shiv: Given Blanket", Mob::ILLUSION_SHROUD}, // 448
+  {"Deikhan Holy Shiv: Traded", Mob::ILLUSION_SHROUD}, // 449
   {"Deikhan Holy Dirk: Given Cuff", Mob::GNELIX},  // 450
-  {"Deikhan Holy Dirk: Traded", Mob::GNELIX},
-  {"Deikhan Holy Sickle: Given Candle", Mob::GILTHANTHIL},
-  {"Deikhan Holy Sickle, Traded", Mob::GILTHANTHIL},
+  {"Deikhan Holy Dirk: Traded", Mob::GNELIX}, // 451
+  {"Deikhan Holy Sickle: Given Candle", Mob::GILTHANTHIL}, // 452
+  {"Deikhan Holy Sickle, Traded", Mob::GILTHANTHIL},  // 453
 
   {"", Mob::NONE},
 };
