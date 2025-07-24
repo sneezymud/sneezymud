@@ -32,6 +32,21 @@
 :shield   =
 // Paste below this line.
 // ----------------------
+:Set #169
+:#reddragonbone
+:$ogre
+:head     = 25614
+:neck     = 25613
+:body     = 25612
+:back     = 25603
+:arm      = 25611
+:wrist    = 25608
+:hand     = 25610
+:finger   = 25605
+:waist    = 25609
+:leg      = 25607
+:foot     = 25606
+:shield   = 25604
 :Set #168
 #opulent
 $elf
