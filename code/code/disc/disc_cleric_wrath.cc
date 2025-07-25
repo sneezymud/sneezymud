@@ -25,7 +25,7 @@ int plagueOfLocusts(TBeing* caster, TBeing* victim, int level, short bKnown) {
 
   if ((caster->followers) && (level < GOD_LEVEL1)) {
     for (auto currentFollower = caster->followers; currentFollower;
-         currentFollower = currentFollower->next) {
+      currentFollower = currentFollower->next) {
       if (isname("locust", currentFollower->follower->name)) {
         act("Nothing seems to happen.", false, caster, nullptr, nullptr,
           TO_ROOM);
@@ -403,25 +403,10 @@ int pillarOfSalt(TBeing* caster, TBeing* victim) {
   return rc;
 }
 
-int scorchedEarth(TBeing* caster, TBeing* victim, int level, short bKnown,
-  spellNumT spell, int adv_learn) {
-    int dam = caster->getSkillDam(victim, spell, level, adv_learn);
-      for (TThing* thing : caster->roomp->stuff) {
-     TBeing* target = dynamic_cast<TBeing*>(thing);
-      if (!target || target == caster || caster->inGroup(*target))
-       continue;
-      dam *= 2;
-      dam /= 3;
-      if (caster->reconcileDamage(target, dam, spell) == -1)
-       return SPELL_SUCCESS | VICTIM_DEAD;
-      brimstoneAsh(caster, target);
-    }
-    return SPELL_SUCCESS;
-  }
 int brimstoneAsh(TBeing* caster, TBeing* victim) {
   if (!victim || !caster)
     return 0;
-  TObj* brimstone = read_object(Obj::BRIMSTONE_ASH , VIRTUAL);
+  TObj* brimstone = read_object(Obj::BRIMSTONE_ASH, VIRTUAL);
   wearSlotT slot = victim->getRandomPart(0, false, false);
   if (slot == WEAR_NOWHERE) {
     // No valid slots available, clean up and return
@@ -429,34 +414,31 @@ int brimstoneAsh(TBeing* caster, TBeing* victim) {
     return 0;
   }
   if (!victim->equipment[slot] && !victim->getStuckIn(slot)) {
-  victim->stickIn(brimstone, slot);
-  act(
-    format("A shard of $p embeds itself in $N's %s!") %
-      victim->describeBodySlot(slot),
-    FALSE, caster, brimstone, victim, TO_NOTVICT);
-    act(
-      format("A shard of $p embeds itself in your %s!") %
-        victim->describeBodySlot(slot),
+    victim->stickIn(brimstone, slot);
+    act(format("A shard of $p embeds itself in $N's %s!") %
+          victim->describeBodySlot(slot),
+      FALSE, caster, brimstone, victim, TO_NOTVICT);
+    act(format("A shard of $p embeds itself in your %s!") %
+          victim->describeBodySlot(slot),
       FALSE, caster, NULL, victim, TO_VICT);
 
-  if (percentChance(caster->getStatMod(STAT_WIS))){
+    if (percentChance(caster->getStatMod(STAT_WIS))) {
+      brimstone->setObjStat(ITEM_BURNING);
+      act(format("The $p burns your %s!") % victim->describeBodySlot(slot),
+        FALSE, caster, NULL, victim, TO_VICT);
+      act(format("The $p burns $N's %s!") % victim->describeBodySlot(slot),
+        FALSE, caster, NULL, victim, TO_NOTVICT);
+      act(format("The $p burns $N's %s!") % victim->describeBodySlot(slot),
+        FALSE, caster, NULL, victim, TO_CHAR);
+    }
+  } else {
     brimstone->setObjStat(ITEM_BURNING);
-  act(
-    format("The $p burns your %s!") % victim->describeBodySlot(slot),
-    FALSE, caster, NULL, victim, TO_VICT);
-  act(format("The $p burns $N's %s!") % victim->describeBodySlot(slot),
-    FALSE, caster, NULL, victim, TO_NOTVICT);
-  act(format("The $p burns $N's %s!") % victim->describeBodySlot(slot),
-    FALSE, caster, NULL, victim, TO_CHAR);
+    *caster->roomp += *brimstone;
+    act("A shard of $p falls to the ground and ignites!", FALSE, caster,
+      brimstone, NULL, TO_ROOM);
+    act("A shard of $p falls to the ground and ignites!", FALSE, caster,
+      brimstone, NULL, TO_CHAR);
   }
-} else {
-  brimstone->setObjStat(ITEM_BURNING);
-  *caster->roomp += *brimstone;
-  act("A shard of $p falls to the ground and ignites!", FALSE, caster,
-    brimstone, NULL, TO_ROOM);
-  act("A shard of $p falls to the ground and ignites!", FALSE, caster,
-    brimstone, NULL, TO_CHAR);
-}
   return 0;
 }
 
@@ -465,110 +447,110 @@ int rainBrimstone(TBeing* caster, TBeing* victim, int level, short bKnown,
   caster->reconcileHurt(victim, discArray[spell]->alignMod);
 
   int dam = caster->getSkillDam(victim, spell, level, adv_learn);
-  
-  if (!victim->outside())
-   caster->sendTo("You need to be under the open heavens to call down such aid!\n\r"); 
-  
+
+  if (!victim->outside()) {
+    caster->sendTo(
+      "You need to be under the open heavens to call down such aid!\n\r");
+    return SPELL_FAIL;
+  }
+
   if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
-    bool hellBreaksLoose = false;
     switch (critSuccess(caster, spell)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
         CS(spell);
         dam *= 3;
-        act(
-          "The heavens <y>crack<1> and <r>HOT BRIMSTONE<1> rains down on $N!",
+        act("The heavens <y>crack<1> and <r>HOT BRIMSTONE<1> rains down on $N!",
           FALSE, caster, NULL, victim, TO_NOTVICT);
         act(
           "The heavens <y>crack<1> as you call <r>HOT BRIMSTONE<1> down on $N!",
           FALSE, caster, NULL, victim, TO_CHAR);
-        act(
-          "The heavens <y>crack<1> and <r>HOT BRIMSTONE<1> rains down on $N!",
+        act("The heavens <y>crack<1> and <r>HOT BRIMSTONE<1> rains down on $N!",
           FALSE, caster, NULL, victim, TO_VICT);
-          brimstoneAsh(caster, victim);
-          hellBreaksLoose = true;
+        brimstoneAsh(caster, victim);
         break;
       case CRIT_S_DOUBLE:
         CS(spell);
         dam *= 2;
         act(
-          "Thunder <W>CRACKS<z> as <r>flaming hot<1> <y>brimstone<1> rain down on $N!",
+          "Thunder <W>CRACKS<z> as <r>flaming hot<1> <y>brimstone<1> rain down "
+          "on $N!",
           FALSE, caster, NULL, victim, TO_NOTVICT);
         act(
-          "Thunder <W>CRACKS<z> as <r>flaming hot<1> <y>brimstone<1> rain down on $N!",
+          "Thunder <W>CRACKS<z> as <r>flaming hot<1> <y>brimstone<1> rain down "
+          "on $N!",
           FALSE, caster, NULL, victim, TO_CHAR);
         act(
-          "Thunder <W>CRACKS<z> and <r>flaming hot<1> <y>brimstone<1> rains down on $N!",
+          "Thunder <W>CRACKS<z> and <r>flaming hot<1> <y>brimstone<1> rains "
+          "down on $N!",
           FALSE, caster, NULL, victim, TO_VICT);
         break;
       case CRIT_S_NONE:
-        act("You hear <y>thunder<1> and <r>red hot brimstone<1> rains down on $N!",
+        act(
+          "You hear <y>thunder<1> and <r>red hot brimstone<1> rains down on "
+          "$N!",
           FALSE, caster, NULL, victim, TO_NOTVICT);
-        act("You hear <y>thunder<1> and <r>red hot brimstone<1> rains down on $N!",
+        act(
+          "You hear <y>thunder<1> and <r>red hot brimstone<1> rains down on "
+          "$N!",
           FALSE, caster, NULL, victim, TO_CHAR);
         act(
-          "You hear <y>thunder<1> and <r>red hot brimstone<1> rains down on you!",
+          "You hear <y>thunder<1> and <r>red hot brimstone<1> rains down on "
+          "you!",
           FALSE, caster, NULL, victim, TO_VICT);
 
-         if (victim->isAgile(-(caster->getStatMod(STAT_WIS)))) {
-           SV(spell);
-           act(
-             "$N manages to avoid some of the sulfur particles!", FALSE, caster,
-             NULL, victim, TO_NOTVICT);
-           act(
-              "$N manages to avoid some of the sulfur particles!", FALSE, caster,
-              NULL, victim, TO_CHAR);
-           act(
-              "Luckily, you manage to avoid some of the sulfur particles!", FALSE,
-              caster, NULL, victim, TO_VICT);
-           dam *= 2;
-           dam /= 3;
-         } else {
-           brimstoneAsh(caster, victim);
-         }
+        if (victim->isAgile(-(caster->getStatMod(STAT_WIS)))) {
+          SV(spell);
+          act("$N manages to avoid some of the sulfur particles!", FALSE,
+            caster, NULL, victim, TO_NOTVICT);
+          act("$N manages to avoid some of the sulfur particles!", FALSE,
+            caster, NULL, victim, TO_CHAR);
+          act("Luckily, you manage to avoid some of the sulfur particles!",
+            FALSE, caster, NULL, victim, TO_VICT);
+          dam *= 2;
+          dam /= 3;
+        } else {
+          brimstoneAsh(caster, victim);
+        }
         break;
     }
 
+    victim->roomp->playsound(SOUND_SPELL_RAIN_BRIMSTONE, SOUND_TYPE_MAGIC);
 
+    if (caster->reconcileDamage(victim, dam, spell) == -1)
+      return SPELL_SUCCESS | VICTIM_DEAD;
 
-  victim->roomp->playsound(SOUND_SPELL_RAIN_BRIMSTONE, SOUND_TYPE_MAGIC);
-
-  if (caster->reconcileDamage(victim, dam, spell) == -1)
-    return SPELL_SUCCESS | VICTIM_DEAD;
-  return SPELL_SUCCESS;
-  if (hellBreaksLoose) {
-    scorchedEarth(caster, victim, level, bKnown, spell, adv_learn);
+    return SPELL_SUCCESS;
+  } else {
+    switch (critFail(caster, spell)) {
+      case CRIT_F_HITOTHER:
+      case CRIT_F_HITSELF:
+        CF(spell);
+        act(
+          "A whining sound issues from above you as $n is burned by the very "
+          "brimstone $e has called forth to help $m!",
+          FALSE, caster, NULL, victim, TO_NOTVICT);
+        act(
+          "A whining sound issues from above you.  Your skin starts to burn "
+          "from "
+          "the hot brimstone you intended for $N!",
+          FALSE, caster, NULL, victim, TO_CHAR);
+        act(
+          "A whining sound issues from above you as hot brimstone misses your "
+          "head and descends on $n!",
+          FALSE, caster, NULL, victim, TO_VICT);
+        if (caster->reconcileDamage(caster, dam, spell) == -1)
+          return SPELL_CRIT_FAIL | CASTER_DEAD;
+        return SPELL_CRIT_FAIL;
+      case CRIT_F_NONE:
+        break;
+    }
+    act("You hear a slight rending sound but nothing seems to happen!", FALSE,
+      caster, NULL, NULL, TO_CHAR);
+    act("You hear a slight rending sound but nothing seems to happen!", FALSE,
+      caster, NULL, NULL, TO_ROOM);
+    return SPELL_FAIL;
   }
-}
-else {
-  switch (critFail(caster, spell)) {
-    case CRIT_F_HITOTHER:
-    case CRIT_F_HITSELF:
-      CF(spell);
-      act(
-        "A whining sound issues from above you as $n is burned by the very "
-        "brimstone $e has called forth to help $m!",
-        FALSE, caster, NULL, victim, TO_NOTVICT);
-      act(
-        "A whining sound issues from above you.  Your skin starts to burn from "
-        "the hot brimstone you intended for $N!",
-        FALSE, caster, NULL, victim, TO_CHAR);
-      act(
-        "A whining sound issues from above you as hot brimstone misses your "
-        "head and descends on $n!",
-        FALSE, caster, NULL, victim, TO_VICT);
-      if (caster->reconcileDamage(caster, dam, spell) == -1)
-        return SPELL_CRIT_FAIL | CASTER_DEAD;
-      return SPELL_CRIT_FAIL;
-    case CRIT_F_NONE:
-      break;
-  }
-  act("You hear a slight rending sound but nothing seems to happen!", FALSE,
-    caster, NULL, NULL, TO_CHAR);
-  act("You hear a slight rending sound but nothing seems to happen!", FALSE,
-    caster, NULL, NULL, TO_ROOM);
-  return SPELL_FAIL;
-}
 }
 
 int rainBrimstone(TBeing* caster, TBeing* victim, TMagicItem* obj,
@@ -1117,10 +1099,13 @@ int spontaneousCombust(TBeing* caster, TBeing* victim, int level, short bKnown,
           TO_CHAR);
         act("$n suddenly erupts in a tower of flames!", FALSE, caster, NULL,
           NULL, TO_ROOM);
-        act("You are suddenly consumed in a smaller tower of flames, as the Gods are merciful... for now! <R>FIRE!!!<1>", 
-              FALSE, caster, NULL, NULL, TO_CHAR);
+        act(
+          "You are suddenly consumed in a smaller tower of flames, as the Gods "
+          "are merciful... for now! <R>FIRE!!!<1>",
+          FALSE, caster, NULL, NULL, TO_CHAR);
 
-        // Reducing the damage to avoid one-shotting players at full health (as often)
+        // Reducing the damage to avoid one-shotting players at full health (as
+        // often)
         dam /= 2;
 
         if (caster->reconcileDamage(caster, dam, SPELL_SPONTANEOUS_COMBUST) ==
