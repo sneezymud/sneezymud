@@ -126,6 +126,7 @@ const int Obj::ITEM_DAYGATE;
 const int Obj::ITEM_MOONGATE;
 const int Obj::MINELIFT_UP;
 const int Obj::MINELIFT_DOWN;
+const int Obj::BRIMSTONE_ASH;
 const int Obj::TALISMAN;
 const int Obj::PILE_OFFAL;
 const int Obj::ITEM_RAINBOW_BRIDGE1;

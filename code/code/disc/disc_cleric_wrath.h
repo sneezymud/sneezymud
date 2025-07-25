@@ -41,6 +41,9 @@ int flamestrike(TBeing*, TBeing*);
 int flamestrike(TBeing*, TBeing*, TMagicItem* obj);
 int flamestrike(TBeing*, TBeing*, int, short, spellNumT);
 
+int scorchedEarth(TBeing*, TBeing*, int, short, spellNumT, int);
+int brimstoneAsh(TBeing*, TBeing*);
+
 int rainBrimstone(TBeing*, TBeing*);
 int rainBrimstone(TBeing*, TBeing*, TMagicItem* obj, spellNumT);
 int rainBrimstone(TBeing*, TBeing*, int, short, spellNumT, int);

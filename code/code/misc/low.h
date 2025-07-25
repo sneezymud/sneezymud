@@ -147,6 +147,7 @@ class Obj {
     static const int ITEM_MOONGATE = 5891;
     static const int MINELIFT_UP = 7085;
     static const int MINELIFT_DOWN = 7086;
+    static const int BRIMSTONE_ASH = 7813;
     static const int TALISMAN = 9700;
     static const int PILE_OFFAL = 10030;  // horse poop, etc...
     static const int ITEM_RAINBOW_BRIDGE1 = 10041;
