@@ -404,8 +404,10 @@ int pillarOfSalt(TBeing* caster, TBeing* victim) {
 }
 
 int brimstoneAsh(TBeing* caster, TBeing* victim) {
-  if (!victim || !caster)
+  if (!victim || !caster){
     return 0;
+  }
+
   TObj* brimstone = read_object(Obj::BRIMSTONE_ASH, VIRTUAL);
   wearSlotT slot = victim->getRandomPart(0, false, false);
   if (slot == WEAR_NOWHERE) {
@@ -413,6 +415,7 @@ int brimstoneAsh(TBeing* caster, TBeing* victim) {
     delete brimstone;
     return 0;
   }
+  
   if (!victim->equipment[slot] && !victim->getStuckIn(slot)) {
     victim->stickIn(brimstone, slot);
     act(format("A shard of $p embeds itself in $N's %s!") %
@@ -517,8 +520,9 @@ int rainBrimstone(TBeing* caster, TBeing* victim, int level, short bKnown,
 
     victim->roomp->playsound(SOUND_SPELL_RAIN_BRIMSTONE, SOUND_TYPE_MAGIC);
 
-    if (caster->reconcileDamage(victim, dam, spell) == -1)
+    if (caster->reconcileDamage(victim, dam, spell) == -1){
       return SPELL_SUCCESS | VICTIM_DEAD;
+    }
 
     return SPELL_SUCCESS;
   } else {
