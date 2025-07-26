@@ -78,21 +78,21 @@ M	0	5905	1	5924	dryad petrified queen
 ? 0 5 0 E
 E 1 25597 1 18				spear of darkness  
 M	0	5906	1	5931	dryad assassin
-I	1	5937	4	8	petrified wood dagger
+I	1	5937	4	19	petrified wood dagger
 M	0	5906	1	5922
-I	1	5937	4	8
+I	1	5937	4	19
 M	0	5906	1	5933
-I	1	5937	4	8
+I	1	5937	4	19
 M	0	5906	1	5920
-I	1	5937	4	8
+I	1	5937	4	19
 M	0	5906	1	5935
-I	1	5937	4	8
+I	1	5937	4	19
 M	0	5906	1	5918
-I	1	5937	4	8
+I	1	5937	4	19
 M	0	5906	1	5937
-I	1	5937	4	8
+I	1	5937	4	19
 M	0	5906	1	5916
-I	1	5937	4	8
+I	1	5937	4	19
 M	0	5907	1	5943	spirit dryad apple
 M	0	5908	1	5947	spirit dryad cherry
 M	0	5909	1	5944	spirit dryad pear
@@ -110,25 +110,25 @@ M	0	5923	1	6071
 M	0	5922	1	6099	Thozgich
 Y	0	168 	5		loads opulent set
 M	0	5924	1	6095	demon golem
-I	1	5938	4	10	petrified wood club
+I	1	5938	4	19	petrified wood club
 M	0	5924	1	6092
-I	1	5938	4	10
+I	1	5938	4	19
 M	0	5924	1	6089
-I	1	5938	4	10
+I	1	5938	4	19
 M	0	5924	1	6082
-I	1	5938	4	10
+I	1	5938	4	19
 M	0	5924	1	6079
-I	1	5938	4	10
+I	1	5938	4	19
 M	0	5924	1	6077
-I	1	5938	4	10
+I	1	5938	4	19
 M	0	5924	1	6073
-I	1	5938	4	10
+I	1	5938	4	19
 M	0	5924	1	6071
-I	1	5938	4	10
+I	1	5938	4	19
 M	0	5924	1	6099
-I	1	5938	4	10
+I	1	5938	4	19
 M	0	5924	1	6086
-I	1	5938	4	10
+I	1	5938	4	19
 M	0	5925	1	6096	withered angry  demon
 Y   0   167     3           loads satyr hide set
 M	0	5925	1	6091
