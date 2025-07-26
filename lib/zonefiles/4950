@@ -1,5 +1,38 @@
 #4950
-Ravakahn - Caster's battlefield~
-4974 25 2 0
+Sidartha - Troll Hunting Outpost~
+4974 30 2 1
+
+D 0 4953 3 2		Jungle vine drawbridge entrance
+D 0 4954 1 2
+M 0 4950 1 4953	troll guard huge
+G 1 4953 1		bloody key
+M 0 4951 1 4961	troll butcher
+I 1 4950 3 19 	prop butcher knife
+M 0 4951 1 4962
+I 1 4950 3 19 	
+M 0 4951 1 4963	
+I 1 4950 3 19 
+M 0 4952 1 4955	troll thief
+I 1 4952 1 19		bone knife
+M 0 4952 1 4957
+I 1 4952 1 19	
+M 0 4952 1 4960
+I 1 4952 1 19	
+M 0 4952 1 4962
+I 1 4952 1 19	
+M 0 4953 1 4973	troll security agent
+M 0 4954 1 4958	troll shaman
+M 0 4954 1 4959
+M 0 4954 1 4961
+M 0 4954 1 4963
+M 0 4955 1 4974	troll king
+Y 0 169 5		red dragon bone set
+M 0 4956 1 4966	troll guardian
+M 0 4956 1 4967
+M 0 4956 1 4968
+M 0 4956 1 4969
+M 0 4957 1 4970	troll hunter
+M 0 4957 1 4971
+M 0 4957 1 4972
 S
 
