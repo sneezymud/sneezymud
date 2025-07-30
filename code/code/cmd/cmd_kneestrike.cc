@@ -6,6 +6,7 @@
 
 #include "handler.h"
 #include "extern.h"
+#include "obj_general_weapon.h"
 #include "room.h"
 #include "being.h"
 #include "enum.h"
@@ -132,20 +133,10 @@ int TBeing::kneestrikeMiss(TBeing* v, int type) {
       sendTo("Ooof! That knocked some wind out of you.\n\r");
       cantHit += v->loseRound(0.25);
       addToWait(combatRound(0.25));
-      TObj* item;
-      if ((item = dynamic_cast<TObj*>(v->equipment[v->getPrimaryFoot()]))) {
-        if (item->isSpiked() || item->isObjStat(ITEM_SPIKED)) {
-          act("The spikes on your $o sink into $N's side.", FALSE, v, item,
-            this, TO_CHAR);
-          act("The spikes on $n's $o sink into $N's side.", FALSE, v, item,
-            this, TO_NOTVICT);
-          act("The spikes on $n's $o sink into your side, OW!", FALSE, v, item,
-            this, TO_VICT);
 
-          if (v->reconcileDamage(this, (int)(dam * 0.15), TYPE_STAB) == -1)
-            return DELETE_THIS;
-        }
-      }
+      // Use impactSpec to handle all impact effects (spikes, thornflesh, hardness)
+      impactSpec(v, this, v->getPrimaryFoot(), WEAR_BODY);
+
       if (v->reconcileDamage(this, dam, DAMAGE_KICK_HEAD) == -1)
         return DELETE_THIS;
     } break;
@@ -158,15 +149,12 @@ int TBeing::kneestrikeMiss(TBeing* v, int type) {
 
 int TBeing::kneestrikeHit(TBeing* victim) {
   int rc = 0;
-  TObj* item;
-  int h_dam = 1;
   int caster_hgt, victim_hgt;
   int i;
   wearSlotT pos = WEAR_NOWHERE;
   wearSlotT caster_pos = WEAR_NOWHERE;
   int crit;
   //  int lev = c->getSkillLevel(SKILL_KNEESTRIKE);
-  int spikeddam = 0;
   int dam = getSkillDam(victim, SKILL_KNEESTRIKE,
     getSkillLevel(SKILL_KNEESTRIKE), getAdvLearning(SKILL_KNEESTRIKE));
 
@@ -354,34 +342,10 @@ int TBeing::kneestrikeHit(TBeing* victim) {
   // advance learning gave increased success, this seems bad idea
   //  dam += c->getAdvLearning(SKILL_KNEESTRIKE)/10;
 
-  // apply damage to caster if no leg eq
+  // Use impactSpec to handle all impact effects (spikes, thornflesh, hardness)
+  // This includes automatic hardness-based damage to equipment/limbs
   caster_pos = (::number(0, 1) ? WEAR_LEG_L : WEAR_LEG_R);
-  if (!(item = dynamic_cast<TObj*>(equipment[caster_pos]))) {
-    rc = damageLimb(this, caster_pos, 0, &h_dam);
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_THIS;
-  } else if (item->isSpiked() || item->isObjStat(ITEM_SPIKED)) {
-    spikeddam = (int)(dam * 0.15);
-
-    act("The spikes on your $o sink into $N.", FALSE, this, item, victim,
-      TO_CHAR);
-    act("The spikes on $n's $o sink into $N.", FALSE, this, item, victim,
-      TO_NOTVICT);
-    act("The spikes on $n's $o sink into you.", FALSE, this, item, victim,
-      TO_VICT);
-
-  } else {
-    // apply damage to victim if no eq on targetted spot
-    if (!(item = dynamic_cast<TObj*>(victim->equipment[pos]))) {
-      rc = damageLimb(victim, pos, 0, &h_dam);
-      if (IS_SET_DELETE(rc, DELETE_VICT))
-        return DELETE_VICT;
-    }
-  }
-
-  if (spikeddam)
-    if ((rc = reconcileDamage(victim, spikeddam, TYPE_STAB)) == -1)
-      return DELETE_VICT;
+  impactSpec(this, victim, caster_pos, pos);
   if ((rc = reconcileDamage(victim, dam, dam_type)) == -1)
     return DELETE_VICT;
 

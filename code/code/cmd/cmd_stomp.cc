@@ -8,6 +8,8 @@
 #include "being.h"
 #include "enum.h"
 #include "combat.h"
+#include "obj.h"
+#include "obj_general_weapon.h"
 
 bool TBeing::canStomp(TBeing* victim, silentTypeT silent) {
   if (checkBusy())
@@ -103,10 +105,8 @@ int TBeing::stompMiss(TBeing* victim) {
 }
 
 int TBeing::stompHit(TBeing* victim) {
-  int h_dam;
   int height, targ_height;
-  int rc;
-
+  wearSlotT targetLimb;
   int dam = getSkillDam(victim, SKILL_STOMP, getSkillLevel(SKILL_STOMP),
     getAdvLearning(SKILL_STOMP));
 
@@ -128,17 +128,9 @@ int TBeing::stompHit(TBeing* victim) {
         "descending toward you!",
         FALSE, this, 0, victim, TO_VICT, ANSI_RED);
 
-      TObj* item = dynamic_cast<TObj*>(victim->equipment[WEAR_HEAD]);
-      if (!item) {
-        h_dam = 1 + dam / 5;
-        rc = damageLimb(victim, WEAR_HEAD, 0, &h_dam);
-        if (IS_SET_DELETE(rc, DELETE_VICT))
-          return DELETE_VICT;
-      } else if (dentItem(victim, item, 1, getPrimaryFoot()) == DELETE_ITEM) {
-        delete item;
-        item = NULL;
-      }
+      targetLimb = WEAR_HEAD;
     } else {
+      // Stomping toes
       act("$n lifts $s leg high, stomping $N's toes hard!", FALSE, this, 0,
         victim, TO_NOTVICT);
       act("You lift your leg high and stomp $N's toes hard.", FALSE, this, 0,
@@ -147,19 +139,18 @@ int TBeing::stompHit(TBeing* victim) {
         TO_VICT, ANSI_RED);
 
       dam /= 5;
-
-      TObj* item = dynamic_cast<TObj*>(victim->equipment[WEAR_FOOT_L]);
-      if (!item) {
-        h_dam = 1 + dam / 4;
-        rc = damageLimb(victim, WEAR_FOOT_L, 0, &h_dam);
-        if (IS_SET_DELETE(rc, DELETE_VICT))
-          return DELETE_VICT;
-      } else if (dentItem(victim, item, 1, getPrimaryFoot()) == DELETE_ITEM) {
-        delete item;
-        item = NULL;
+      targetLimb = WEAR_FOOT_L;
+      if (percentChance(50)) {
+        targetLimb = WEAR_FOOT_R;
       }
     }
   } else {
+    // Victim is not standing
+    targetLimb = WEAR_BACK;
+    if (percentChance(50)) {
+      targetLimb = WEAR_BODY;
+    }
+
     act("$n lifts $s leg high, stomping $N while $E is down.", FALSE, this, 0,
       victim, TO_NOTVICT);
     act("You lift your leg high and stomp $N hard while $E is down.", FALSE,
@@ -167,6 +158,10 @@ int TBeing::stompHit(TBeing* victim) {
     act("$n stomps you hard while you are down!", FALSE, this, 0, victim,
       TO_VICT, ANSI_RED);
   }
+
+  // Use impactSpec to handle all impact effects (spikes, thornflesh, hardness)
+  impactSpec(this, victim, getPrimaryFoot(), targetLimb);
+
   if (reconcileDamage(victim, dam, SKILL_STOMP) == -1)
     return DELETE_VICT;
 

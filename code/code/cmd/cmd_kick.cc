@@ -10,6 +10,7 @@
 #include "being.h"
 #include "enum.h"
 #include "combat.h"
+#include "obj_general_weapon.h"
 
 bool TBeing::canKick(TBeing* victim, silentTypeT silent) {
   if (checkBusy())
@@ -210,9 +211,11 @@ static int kickHit(TBeing* caster, TBeing* victim, int score, int level,
   dam =
     caster->getSkillDam(victim, skill, level, caster->getAdvLearning(skill));
 
+  // Map kick location to target limb
   TObj* item;
   switch (slot_i) {
-    case KICK_WAIST:
+    case KICK_WAIST: {
+      slot = WEAR_WAIST;
       limb_dam = (level / 5) + 1;
       act("$n kicks $N in the crotch, yowch!.", FALSE, caster, 0, victim,
         TO_NOTVICT);
@@ -242,7 +245,9 @@ static int kickHit(TBeing* caster, TBeing* victim, int score, int level,
         item = NULL;
       }
       break;
-    case KICK_BODY:
+    }
+    case KICK_BODY: {
+      slot = WEAR_BODY;
       act("$n kicks $N in the solar plexus.", FALSE, caster, 0, victim,
         TO_NOTVICT);
       act(
@@ -253,7 +258,9 @@ static int kickHit(TBeing* caster, TBeing* victim, int score, int level,
       dam += 1;
       dam_type = DAMAGE_KICK_SOLAR;
       break;
-    case KICK_HEAD:
+    }
+    case KICK_HEAD: {
+      slot = WEAR_HEAD;
       act("$n gives $N a boot to the head!", FALSE, caster, 0, victim,
         TO_NOTVICT);
       act("You're kicked in the head by $n!", FALSE, caster, 0, victim,
@@ -265,13 +272,14 @@ static int kickHit(TBeing* caster, TBeing* victim, int score, int level,
       victim->addToWait(combatRound(0.5));
       dam_type = DAMAGE_KICK_HEAD;
       break;
-    case KICK_LEG:
+    }
+    case KICK_LEG: {
+      slot = wearSlotT(::number(WEAR_LEG_R, WEAR_LEG_L));
       limb_dam = (level / 5) + 1;
       act("$n kicks $N in the shin.", FALSE, caster, 0, victim, TO_NOTVICT);
       act("You're kicked in the shin by $n.   Ouch!", FALSE, caster, 0, victim,
         TO_VICT);
       act("Your kick hits $N in the shin.", FALSE, caster, 0, victim, TO_CHAR);
-      slot = wearSlotT(::number(WEAR_LEG_R, WEAR_LEG_L));
       item = dynamic_cast<TObj*>(victim->equipment[slot]);
       if (!item) {
         rc = caster->damageLimb(victim, slot, NULL, &limb_dam);
@@ -284,28 +292,20 @@ static int kickHit(TBeing* caster, TBeing* victim, int score, int level,
       }
       dam_type = DAMAGE_KICK_SHIN;
       break;
-    case KICK_NONE:
+    }
+    case KICK_NONE: {
+      slot = WEAR_BODY; // Default to body for non-humanoids
       act("$n kicks $N in the side.", FALSE, caster, 0, victim, TO_NOTVICT);
       act("You're kicked in the side by $n.   Ouch!", FALSE, caster, 0, victim,
         TO_VICT);
       act("Your kick hits $N in the side.", FALSE, caster, 0, victim, TO_CHAR);
       dam_type = DAMAGE_KICK_SIDE;
       break;
+    }
   }
 
-  item = dynamic_cast<TObj*>(caster->equipment[caster->getPrimaryFoot()]);
-  if (item)
-    if (item->isSpiked() || item->isObjStat(ITEM_SPIKED)) {
-      act("The spikes on your $o sink into $N.", FALSE, caster, item, victim,
-        TO_CHAR);
-      act("The spikes on $n's $o sink into $N.", FALSE, caster, item, victim,
-        TO_NOTVICT);
-      act("The spikes on $n's $o sink into you.", FALSE, caster, item, victim,
-        TO_VICT);
-
-      if (caster->reconcileDamage(victim, (int)(dam * 0.15), TYPE_STAB) == -1)
-        return DELETE_VICT;
-    }
+  // Use impactSpec to handle all impact effects (spikes, thornflesh, hardness)
+  impactSpec(caster, victim, caster->getPrimaryFoot(), slot);
 
   if (caster->reconcileDamage(victim, dam, dam_type) == -1)
     return DELETE_VICT;

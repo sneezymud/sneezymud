@@ -1265,11 +1265,12 @@ int TBeing::damageHand(TBeing* v, wearSlotT part_hit) {
     else
       hardness = 0;
   } else {
-    if (v->getMaxLimbHealth(part_hit))
-      hardness = material_nums[v->getMaterial(part_hit)].hardness *
-                 v->getCurLimbHealth(part_hit) / v->getMaxLimbHealth(part_hit);
-    else
+    if (v->getMaxLimbHealth(part_hit)) {
+      int baseHardness = getHardnessSpec(v, part_hit);
+      hardness = baseHardness * v->getCurLimbHealth(part_hit) / v->getMaxLimbHealth(part_hit);
+    } else {
       hardness = 0;
+    }
   }
   if (::number(1, 100) < hardness) {
     if (!::number(0, getCurLimbHealth(getPrimaryHold()))) {

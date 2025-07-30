@@ -2,6 +2,7 @@
 #include "being.h"
 #include "combat.h"
 #include "obj_base_weapon.h"
+#include "obj_general_weapon.h"
 
 int TBeing::doSlam(const char* argument, TBeing* vict) {
   int rc;
@@ -173,6 +174,10 @@ int TBeing::slamSuccess(TBeing* victim) {
   // Reconcile damage
   if (reconcileDamage(victim, dam, damageType) == -1)
     return DELETE_VICT;
+
+  // Apply impact effects from weapon contact
+  wearSlotT targetLimb = victim->getPartHit(this, TRUE);
+  impactSpec(this, victim, getPrimaryHand(), targetLimb);
 
   return true;
 }
