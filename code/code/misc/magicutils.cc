@@ -2340,32 +2340,6 @@ int TBeing::maxBleedVitalPart(wearSlotT limb, int duration) {
      false, this, nullptr, nullptr, TO_CHAR, ANSI_RED_BOLD);
   act(format("$n looks panicked as blood from their %s fills $s mouth!") % describeBodySlot(limb), 
      false, this, nullptr, nullptr, TO_ROOM, ANSI_RED_BOLD);
-     
-  // Check if they already have aspiration
-  affectedData* existingAspiration = 
-    affected ? affected->find_if([](affectedData* aff) {
-      return aff->modifier == DISEASE_ASPIRATION;
-    }) : nullptr;
-    
-  if (existingAspiration) {
-    // Update the duration if the new duration is longer
-    if (existingAspiration->duration < duration) {
-      existingAspiration->duration = duration;
-    }
-  } else {
-    // If they don't have aspiration, add it
-    affectedData aff;
-    aff.type = AFFECT_DISEASE;
-    aff.level = limb;  // Store the source of bleeding
-    aff.duration = duration;
-    aff.location = APPLY_NONE;
-    aff.modifier = DISEASE_ASPIRATION;
-    aff.modifier2 = 0;  // Severity will be calculated in disease_aspiration
-    aff.bitvector = 0;
-    
-    affectTo(&aff);
-    disease_start(this, &aff);
-  }
-  
+
   return true;
 }
