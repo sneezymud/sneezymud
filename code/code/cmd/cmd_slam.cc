@@ -177,7 +177,7 @@ int TBeing::slamSuccess(TBeing* victim) {
 
   // Apply impact effects from weapon contact
   wearSlotT targetLimb = victim->getPartHit(this, TRUE);
-  impactSpec(this, victim, getPrimaryHand(), targetLimb);
+  impactSpec(this, victim, getPrimaryHold(), targetLimb);
 
   return true;
 }

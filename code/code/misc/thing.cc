@@ -80,7 +80,7 @@ bool TThing::inLethargica() const {
 
 bool TThing::isSpiked() const {
   const TObj* obj = dynamic_cast<const TObj*>(this);
-  if (isname("spiked", name) || (isname("studded", name) && percentChance(30))|| (isname("barbed", name) && percentChance(30)) || (obj && obj->isObjStat(ITEM_SPIKED)))
+  if (isname("spiked", name) || (obj && obj->isObjStat(ITEM_SPIKED)))
     return TRUE;
   return FALSE;
 }
