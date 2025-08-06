@@ -547,6 +547,11 @@ void TBeing::affectTotal() {
     affectModify(af->location, af->modifier, af->modifier2, af->bitvector,
       FALSE, SILENT_YES);
   }
+
+  // Remove tattoo bonuses (only for PCs)
+  if (isPc()) {
+    applyTattooStatBonuses(FALSE);
+  }
   //  convertAbilities();
   // if I set myself, don't fix me...
   if (!isImmortal()) {
@@ -738,6 +743,11 @@ void TBeing::affectTotal() {
       continue;
     affectModify(af->location, af->modifier, af->modifier2, af->bitvector, TRUE,
       SILENT_YES);
+  }
+
+  // Apply tattoo bonuses (only for PCs)
+  if (isPc()) {
+    applyTattooStatBonuses(TRUE);
   }
 
   /* Make certain values are between 5..250, not < 5 and not > 30! */

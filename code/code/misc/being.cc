@@ -1561,6 +1561,308 @@ sstring TBeing::thirdPerson(const int pos) {
   return "???";
 }
 
+// Extract color from color codes in tattoo text
+sstring TBeing::extractColorFromCodes(const sstring& tattoo_text) {
+  // Color code to color name mapping (includes both normal and bold variants)
+  const sstring COLOR_CODES[] = {
+    "<r>", "<R>",  // red
+    "<g>", "<G>",  // green
+    "<b>", "<B>",  // blue
+    "<p>", "<P>",  // purple
+    "<y>", "<Y>",  // yellow
+    "<k>", "<K>",  // grey/black
+    "<w>", "<W>",  // white
+    "<c>", "<C>",  // cyan
+    "<o>", "<O>"   // orange
+  };
+  const sstring COLOR_NAMES[] = {
+    "red", "red",
+    "green", "green",
+    "blue", "blue",
+    "purple", "purple",
+    "yellow", "yellow",
+    "grey", "grey",
+    "white", "white",
+    "cyan", "cyan",
+    "orange", "orange"
+  };
+  const int MAX_COLORS = sizeof(COLOR_CODES) / sizeof(COLOR_CODES[0]);
+
+  for (int i = 0; i < MAX_COLORS; i++) {
+    if (tattoo_text.find(COLOR_CODES[i]) != sstring::npos) {
+      return COLOR_NAMES[i];
+    }
+  }
+  return ""; // No color code found
+}
+
+// Parse tattoo description for stat bonuses based on animal and color keywords
+void TBeing::parseTattooStatBonuses(const sstring& tattoo_text,
+  int* str_bonus, int* bra_bonus, int* con_bonus, int* dex_bonus,
+  int* agi_bonus, int* spe_bonus, int* int_bonus, int* foc_bonus,
+  int* wis_bonus, int* kar_bonus, int* cha_bonus, int* per_bonus,
+  int* hp_bonus, int* mana_bonus, int* move_bonus, int* vision_bonus, int* cbs_bonus, int* light_bonus) {
+
+  sstring lower_text = tattoo_text.lower();
+
+  // Calculate level-based bonus: +1 per 10 levels
+  int level_bonus = GetMaxLevel() / 10;
+  if (level_bonus < 1) level_bonus = 1; // Minimum bonus of 1
+
+  // Initialize all bonuses to 0
+  *str_bonus = *bra_bonus = *con_bonus = *dex_bonus = *agi_bonus = *spe_bonus = 0;
+  *int_bonus = *foc_bonus = *wis_bonus = *kar_bonus = *cha_bonus = *per_bonus = 0;
+  *hp_bonus = *mana_bonus = *move_bonus = *vision_bonus = *cbs_bonus = *light_bonus = 0;
+
+  // Single stat animals (full level bonus) - matches tattoo artist single_animals array
+  if (lower_text.find("lion") != sstring::npos) *str_bonus = level_bonus;
+  else if (lower_text.find("elephant") != sstring::npos) *bra_bonus = level_bonus;
+  else if (lower_text.find("bear") != sstring::npos) *con_bonus = level_bonus;
+  else if (lower_text.find("snake") != sstring::npos) *dex_bonus = level_bonus;
+  else if (lower_text.find("mongoose") != sstring::npos) *spe_bonus = level_bonus;
+  else if (lower_text.find("crow") != sstring::npos) *int_bonus = level_bonus;
+  else if (lower_text.find("rat") != sstring::npos) *foc_bonus = level_bonus;
+  else if (lower_text.find("owl") != sstring::npos) *wis_bonus = level_bonus;
+  else if (lower_text.find("ladybug") != sstring::npos) *kar_bonus = level_bonus;
+  else if (lower_text.find("eagle") != sstring::npos) *per_bonus = level_bonus;
+  else if (lower_text.find("capybara") != sstring::npos) *cha_bonus = level_bonus;
+
+  // Dual stat animals - STR combinations (split level bonus) - matches tattoo artist mappings
+  else if (lower_text.find("rhinoceros") != sstring::npos) {
+    *str_bonus = (level_bonus + 1) / 2; *bra_bonus = level_bonus / 2; }
+  else if (lower_text.find("owlbear") != sstring::npos) {
+    *str_bonus = (level_bonus + 1) / 2; *con_bonus = level_bonus / 2; }
+  else if (lower_text.find("tiger") != sstring::npos) {
+    *str_bonus = (level_bonus + 1) / 2; *dex_bonus = level_bonus / 2; }
+  else if (lower_text.find("horse") != sstring::npos) {
+    *str_bonus = (level_bonus + 1) / 2; *agi_bonus = level_bonus / 2; }
+  else if (lower_text.find("gorilla") != sstring::npos) {
+    *str_bonus = (level_bonus + 1) / 2; *int_bonus = level_bonus / 2; }
+  else if (lower_text.find("alligator") != sstring::npos) {
+    *str_bonus = (level_bonus + 1) / 2; *wis_bonus = level_bonus / 2; }
+  else if (lower_text.find("beaver") != sstring::npos) {
+    *str_bonus = (level_bonus + 1) / 2; *foc_bonus = level_bonus / 2; }
+  else if (lower_text.find("shark") != sstring::npos) {
+    *str_bonus = (level_bonus + 1) / 2; *per_bonus = level_bonus / 2; }
+  else if (lower_text.find("panda") != sstring::npos) {
+    *str_bonus = (level_bonus + 1) / 2; *cha_bonus = level_bonus / 2; }
+  else if (lower_text.find("donkey") != sstring::npos) {
+    *str_bonus = (level_bonus + 1) / 2; *kar_bonus = level_bonus / 2; }
+  else if (lower_text.find("dragon") != sstring::npos) {
+    *str_bonus = (level_bonus + 1) / 2; *spe_bonus = level_bonus / 2; }
+
+  // BRA combinations (split level bonus)
+  else if (lower_text.find("boar") != sstring::npos) {
+    *bra_bonus = (level_bonus + 1) / 2; *con_bonus = level_bonus / 2; }
+  else if (lower_text.find("orca") != sstring::npos) {
+    *bra_bonus = (level_bonus + 1) / 2; *dex_bonus = level_bonus / 2; }
+  else if (lower_text.find("lynx") != sstring::npos) {
+    *bra_bonus = (level_bonus + 1) / 2; *agi_bonus = level_bonus / 2; }
+  else if (lower_text.find("caterpillar") != sstring::npos) {
+    *bra_bonus = (level_bonus + 1) / 2; *int_bonus = level_bonus / 2; }
+  else if (lower_text.find("turtle") != sstring::npos) {
+    *bra_bonus = (level_bonus + 1) / 2; *wis_bonus = level_bonus / 2; }
+  else if (lower_text.find("bull") != sstring::npos) {
+    *bra_bonus = (level_bonus + 1) / 2; *foc_bonus = level_bonus / 2; }
+  else if (lower_text.find("hound") != sstring::npos) {
+    *bra_bonus = (level_bonus + 1) / 2; *per_bonus = level_bonus / 2; }
+  else if (lower_text.find("bison") != sstring::npos) {
+    *bra_bonus = (level_bonus + 1) / 2; *cha_bonus = level_bonus / 2; }
+  else if (lower_text.find("cow") != sstring::npos) {
+    *bra_bonus = (level_bonus + 1) / 2; *kar_bonus = level_bonus / 2; }
+  else if (lower_text.find("moose") != sstring::npos) {
+    *bra_bonus = (level_bonus + 1) / 2; *spe_bonus = level_bonus / 2; }
+
+  // CON combinations (split level bonus)
+  else if (lower_text.find("coyote") != sstring::npos) {
+    *con_bonus = (level_bonus + 1) / 2; *dex_bonus = level_bonus / 2; }
+  else if (lower_text.find("armadillo") != sstring::npos) {
+    *con_bonus = (level_bonus + 1) / 2; *agi_bonus = level_bonus / 2; }
+  else if (lower_text.find("porcupine") != sstring::npos) {
+    *con_bonus = (level_bonus + 1) / 2; *wis_bonus = level_bonus / 2; }
+  else if (lower_text.find("giraffe") != sstring::npos) {
+    *con_bonus = (level_bonus + 1) / 2; *per_bonus = level_bonus / 2; }
+  else if (lower_text.find("hippopotamus") != sstring::npos) {
+    *con_bonus = (level_bonus + 1) / 2; *cha_bonus = level_bonus / 2; }
+  else if (lower_text.find("tortoise") != sstring::npos) {
+    *con_bonus = (level_bonus + 1) / 2; *kar_bonus = level_bonus / 2; }
+  else if (lower_text.find("elk") != sstring::npos) {
+    *con_bonus = (level_bonus + 1) / 2; *spe_bonus = level_bonus / 2; }
+  else if (lower_text.find("crocodile") != sstring::npos) {
+    *con_bonus = (level_bonus + 1) / 2; *int_bonus = level_bonus / 2; }
+  else if (lower_text.find("panther") != sstring::npos) {
+    *con_bonus = (level_bonus + 1) / 2; *foc_bonus = level_bonus / 2; }
+
+  // DEX combinations (split level bonus)
+  else if (lower_text.find("monkey") != sstring::npos) {
+    *dex_bonus = (level_bonus + 1) / 2; *agi_bonus = level_bonus / 2; }
+  else if (lower_text.find("dolphin") != sstring::npos) {
+    *dex_bonus = (level_bonus + 1) / 2; *int_bonus = level_bonus / 2; }
+  else if (lower_text.find("raccoon") != sstring::npos) {
+    *dex_bonus = (level_bonus + 1) / 2; *foc_bonus = level_bonus / 2; }
+  else if (lower_text.find("hawk") != sstring::npos) {
+    *dex_bonus = (level_bonus + 1) / 2; *per_bonus = level_bonus / 2; }
+  else if (lower_text.find("rabbit") != sstring::npos) {
+    *dex_bonus = (level_bonus + 1) / 2; *cha_bonus = level_bonus / 2; }
+  else if (lower_text.find("badger") != sstring::npos) {
+    *dex_bonus = (level_bonus + 1) / 2; *kar_bonus = level_bonus / 2; }
+  else if (lower_text.find("wyvern") != sstring::npos) {
+    *dex_bonus = (level_bonus + 1) / 2; *spe_bonus = level_bonus / 2; }
+  else if (lower_text.find("ocelot") != sstring::npos) {
+    *dex_bonus = (level_bonus + 1) / 2; *wis_bonus = level_bonus / 2; }
+
+  // AGI combinations (split level bonus)
+  else if (lower_text.find("magpie") != sstring::npos) {
+    *agi_bonus = (level_bonus + 1) / 2; *int_bonus = level_bonus / 2; }
+  else if (lower_text.find("fox") != sstring::npos) {
+    *agi_bonus = (level_bonus + 1) / 2; *wis_bonus = level_bonus / 2; }
+  else if (lower_text.find("sparrow") != sstring::npos) {
+    *agi_bonus = (level_bonus + 1) / 2; *foc_bonus = level_bonus / 2; }
+  else if (lower_text.find("antelope") != sstring::npos) {
+    *agi_bonus = (level_bonus + 1) / 2; *per_bonus = level_bonus / 2; }
+  else if (lower_text.find("mouse") != sstring::npos) {
+    *agi_bonus = (level_bonus + 1) / 2; *cha_bonus = level_bonus / 2; }
+  else if (lower_text.find("cricket") != sstring::npos) {
+    *agi_bonus = (level_bonus + 1) / 2; *kar_bonus = level_bonus / 2; }
+  else if (lower_text.find("ferret") != sstring::npos) {
+    *agi_bonus = (level_bonus + 1) / 2; *spe_bonus = level_bonus / 2; }
+
+  // INT combinations (split level bonus)
+  else if (lower_text.find("raven") != sstring::npos) {
+    *int_bonus = (level_bonus + 1) / 2; *wis_bonus = level_bonus / 2; }
+  else if (lower_text.find("spider") != sstring::npos) {
+    *int_bonus = (level_bonus + 1) / 2; *foc_bonus = level_bonus / 2; }
+  else if (lower_text.find("heron") != sstring::npos) {
+    *int_bonus = (level_bonus + 1) / 2; *per_bonus = level_bonus / 2; }
+  else if (lower_text.find("orangutan") != sstring::npos) {
+    *int_bonus = (level_bonus + 1) / 2; *cha_bonus = level_bonus / 2; }
+  else if (lower_text.find("crane") != sstring::npos) {
+    *int_bonus = (level_bonus + 1) / 2; *kar_bonus = level_bonus / 2; }
+  else if (lower_text.find("cheetah") != sstring::npos) {
+    *int_bonus = (level_bonus + 1) / 2; *spe_bonus = level_bonus / 2; }
+
+  // WIS combinations (split level bonus)
+  else if (lower_text.find("rooster") != sstring::npos) {
+    *wis_bonus = (level_bonus + 1) / 2; *foc_bonus = level_bonus / 2; }
+  else if (lower_text.find("wolf") != sstring::npos) {
+    *wis_bonus = (level_bonus + 1) / 2; *per_bonus = level_bonus / 2; }
+  else if (lower_text.find("pigeon") != sstring::npos) {
+    *wis_bonus = (level_bonus + 1) / 2; *cha_bonus = level_bonus / 2; }
+  else if (lower_text.find("toad") != sstring::npos) {
+    *wis_bonus = (level_bonus + 1) / 2; *kar_bonus = level_bonus / 2; }
+  else if (lower_text.find("squirrel") != sstring::npos) {
+    *wis_bonus = (level_bonus + 1) / 2; *spe_bonus = level_bonus / 2; }
+
+  // FOC combinations (split level bonus)
+  else if (lower_text.find("octopus") != sstring::npos) {
+    *foc_bonus = (level_bonus + 1) / 2; *per_bonus = level_bonus / 2; }
+  else if (lower_text.find("eel") != sstring::npos) {
+    *foc_bonus = (level_bonus + 1) / 2; *cha_bonus = level_bonus / 2; }
+  else if (lower_text.find("goldfish") != sstring::npos) {
+    *foc_bonus = (level_bonus + 1) / 2; *kar_bonus = level_bonus / 2; }
+  else if (lower_text.find("barracuda") != sstring::npos) {
+    *foc_bonus = (level_bonus + 1) / 2; *spe_bonus = level_bonus / 2; }
+
+  // PER combinations (split level bonus)
+  else if (lower_text.find("meerkat") != sstring::npos) {
+    *per_bonus = (level_bonus + 1) / 2; *cha_bonus = level_bonus / 2; }
+  else if (lower_text.find("frog") != sstring::npos) {
+    *per_bonus = (level_bonus + 1) / 2; *kar_bonus = level_bonus / 2; }
+  else if (lower_text.find("falcon") != sstring::npos) {
+    *per_bonus = (level_bonus + 1) / 2; *spe_bonus = level_bonus / 2; }
+
+  // CHA combinations (split level bonus)
+  else if (lower_text.find("peacock") != sstring::npos) {
+    *cha_bonus = (level_bonus + 1) / 2; *kar_bonus = level_bonus / 2; }
+  else if (lower_text.find("kangaroo") != sstring::npos) {
+    *cha_bonus = (level_bonus + 1) / 2; *spe_bonus = level_bonus / 2; }
+
+
+
+  // Secondary stat bonuses based on color (scale with level)
+  // Check both color words and color codes
+  sstring color_from_codes = extractColorFromCodes(tattoo_text);
+  sstring effective_color = "";
+
+  // First check for color words in the text
+  if (lower_text.find("red") != sstring::npos) effective_color = "red";
+  else if (lower_text.find("green") != sstring::npos) effective_color = "green";
+  else if (lower_text.find("blue") != sstring::npos) effective_color = "blue";
+  else if (lower_text.find("purple") != sstring::npos) effective_color = "purple";
+  else if (lower_text.find("yellow") != sstring::npos) effective_color = "yellow";
+  else if (lower_text.find("grey") != sstring::npos || lower_text.find("gray") != sstring::npos) effective_color = "grey";
+  else if (lower_text.find("white") != sstring::npos) effective_color = "white";
+  else if (lower_text.find("black") != sstring::npos) effective_color = "black";
+  // If no color words found, use color from codes
+  else if (!color_from_codes.empty()) effective_color = color_from_codes;
+
+  // Apply bonuses based on effective color
+  if (effective_color == "red") *hp_bonus = level_bonus;
+  else if (effective_color == "green") *move_bonus = level_bonus;
+  else if (effective_color == "blue") *mana_bonus = level_bonus;
+  else if (effective_color == "purple") {
+    *hp_bonus = level_bonus / 2;
+    *mana_bonus = level_bonus / 2;
+  }
+  else if (effective_color == "yellow") *vision_bonus = level_bonus;
+  else if (effective_color == "grey") *cbs_bonus = level_bonus;
+  else if (effective_color == "white") {
+    *light_bonus = 1;  // White always gives +1 light
+  }
+  else if (effective_color == "black") {
+    *cbs_bonus = 1;    // Black gives +1 CBS
+    *light_bonus = -1; // Black gives -1 light
+  }
+}
+
+// Apply or remove tattoo stat bonuses for unequipped slots
+void TBeing::applyTattooStatBonuses(bool add) {
+  TDatabase db(DB_SNEEZY);
+
+  db.query("select location, tattoo from tattoos where name='%s'",
+           getName().c_str());
+
+  while (db.fetchRow()) {
+    wearSlotT slot = (wearSlotT)convertTo<int>(db["location"]);
+
+    // Only apply bonuses if slot is empty (no equipment worn)
+    if (!equipment[slot]) {
+      sstring tattoo_text = db["tattoo"];
+
+      // Parse the tattoo for stat bonuses
+      int str_bonus, bra_bonus, con_bonus, dex_bonus, agi_bonus, spe_bonus;
+      int int_bonus, foc_bonus, wis_bonus, kar_bonus, cha_bonus, per_bonus;
+      int hp_bonus, mana_bonus, move_bonus, vision_bonus, cbs_bonus, light_bonus;
+
+      parseTattooStatBonuses(tattoo_text, &str_bonus, &bra_bonus, &con_bonus,
+                            &dex_bonus, &agi_bonus, &spe_bonus, &int_bonus,
+                            &foc_bonus, &wis_bonus, &kar_bonus, &cha_bonus,
+                            &per_bonus, &hp_bonus, &mana_bonus, &move_bonus,
+                            &vision_bonus, &cbs_bonus, &light_bonus);
+
+      // Apply the bonuses using affectModify
+      if (str_bonus) affectModify(APPLY_STR, str_bonus, 0, 0, add, SILENT_YES);
+      if (bra_bonus) affectModify(APPLY_BRA, bra_bonus, 0, 0, add, SILENT_YES);
+      if (con_bonus) affectModify(APPLY_CON, con_bonus, 0, 0, add, SILENT_YES);
+      if (dex_bonus) affectModify(APPLY_DEX, dex_bonus, 0, 0, add, SILENT_YES);
+      if (agi_bonus) affectModify(APPLY_AGI, agi_bonus, 0, 0, add, SILENT_YES);
+      if (spe_bonus) affectModify(APPLY_SPE, spe_bonus, 0, 0, add, SILENT_YES);
+      if (int_bonus) affectModify(APPLY_INT, int_bonus, 0, 0, add, SILENT_YES);
+      if (foc_bonus) affectModify(APPLY_FOC, foc_bonus, 0, 0, add, SILENT_YES);
+      if (wis_bonus) affectModify(APPLY_WIS, wis_bonus, 0, 0, add, SILENT_YES);
+      if (kar_bonus) affectModify(APPLY_KAR, kar_bonus, 0, 0, add, SILENT_YES);
+      if (cha_bonus) affectModify(APPLY_CHA, cha_bonus, 0, 0, add, SILENT_YES);
+      if (per_bonus) affectModify(APPLY_PER, per_bonus, 0, 0, add, SILENT_YES);
+      if (hp_bonus) affectModify(APPLY_HIT, hp_bonus, 0, 0, add, SILENT_YES);
+      if (mana_bonus) affectModify(APPLY_MANA, mana_bonus, 0, 0, add, SILENT_YES);
+      if (move_bonus) affectModify(APPLY_MOVE, move_bonus, 0, 0, add, SILENT_YES);
+      if (vision_bonus) affectModify(APPLY_VISION, vision_bonus, 0, 0, add, SILENT_YES);
+      if (cbs_bonus) affectModify(APPLY_CAN_BE_SEEN, cbs_bonus, 0, 0, add, SILENT_YES);
+      if (light_bonus) affectModify(APPLY_LIGHT, light_bonus, 0, 0, add, SILENT_YES);
+    }
+  }
+}
+
 bool TBeing::applyTattoo(wearSlotT slot, const sstring& tat,
   silentTypeT silent) {
   /* add or remove a tattoo to a being */

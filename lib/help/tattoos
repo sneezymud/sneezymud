@@ -1,0 +1,37 @@
+TATTOOS
+
+Tattoos are permanent body art that can be applied to various body slots.
+They serve both cosmetic and mechanical purposes in SneezyMUD.
+
+<g>GETTING TATTOOS<1>
+Visit a tattoo artist to create custom tattoos for 100000 talens.
+Immortals can also bestow custom tattoos using the BESTOW command.
+
+<g>TATTOO LOCATIONS<1>
+Tattoos can be placed on most body slots:
+  Head, Neck, Body, Arms, Hands, Legs, Feet, etc.
+
+
+<g>VIEWING TATTOOS<1>
+- Use LOOK <person> to see someone's tattoos on unequipped slots
+- Tattoos are displayed where equipment would normally appear
+- They show as "<Tattooed on X>" instead of "<Worn on X>"
+
+<g>STAT BONUSES<1>
+Tattoos provide stat bonuses when placed on unequipped body slots!
+Bonuses are based on animal and color keywords in the tattoo description.
+
+For complete details on tattoo stat bonuses, see: HELP TATTOO STATS
+
+<g>IMPORTANT NOTES<1>
+- Tattoos are permanent once applied
+- They only show when no equipment is worn on that slot  
+- Stat bonuses only apply when the slot is unequipped
+- Bonuses scale with your character level
+
+<g>EXAMPLES<1>
+A "blue dragon" tattoo on an unequipped arm provides STR, SPE, and HP bonuses.
+A "green lion" tattoo on an unequipped head provides STR and Movement bonuses.
+
+See Also: TATTOO STATS, TATTOO ARTIST, BESTOW, EQUIPMENT
+Related Topics: GENERAL INFO

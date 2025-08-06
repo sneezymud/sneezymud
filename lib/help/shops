@@ -21,6 +21,11 @@ Prices will fluctuate over time and will be influenced by the general
 economy.  Items that don't sell well maybe put on sale which is designated
 by a (*) next to their price.
 
+<g>SPECIAL SERVICES<1>
+Some NPCs provide specialized services beyond normal buying and selling:
+- <Y>Tattoo Artists<1>: Permanent body art with stat bonuses (see HELP TATTOOS)
+- <Y>Repair Shops<1>: Fix damaged equipment
+- <Y>Banks<1>: Store money and valuables safely
 
-See also: BUY, SELL, LIST, VALUE, LOOK
+See also: BUY, SELL, LIST, VALUE, LOOK, TATTOOS
 Related Topics: GENERAL INFO

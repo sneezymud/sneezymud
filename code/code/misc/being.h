@@ -714,6 +714,13 @@ class TBeing : public TThing {
     int getStat(statSetT fromSet, statTypeT whichStat) const;
 
     bool applyTattoo(wearSlotT, const sstring&, silentTypeT);
+    sstring extractColorFromCodes(const sstring& tattoo_text);
+    void parseTattooStatBonuses(const sstring& tattoo_text,
+      int* str_bonus, int* bra_bonus, int* con_bonus, int* dex_bonus,
+      int* agi_bonus, int* spe_bonus, int* int_bonus, int* foc_bonus,
+      int* wis_bonus, int* kar_bonus, int* cha_bonus, int* per_bonus,
+      int* hp_bonus, int* mana_bonus, int* move_bonus, int* vision_bonus, int* cbs_bonus, int* light_bonus);
+    void applyTattooStatBonuses(bool add);
 
     Stats getCurStats() const;
 

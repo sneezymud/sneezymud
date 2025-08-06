@@ -1,0 +1,110 @@
+TATTOO STAT BONUSES
+
+Tattoos in SneezyMUD can provide stat bonuses when worn on unequipped body slots.
+These bonuses are based on animal and color keywords found in the tattoo description.
+
+<g>HOW IT WORKS<1>
+- Tattoos only provide bonuses when the body slot has NO equipment worn
+- Bonuses scale with your level: +1 per 10 levels (minimum +1 at level 1-9)
+- Only the FIRST animal and FIRST color found in each tattoo apply
+- Multiple tattoos on different unequipped slots will stack their bonuses
+
+<g>ANIMAL KEYWORDS - SINGLE STATS<1>
+These animals provide full bonus to one stat:
+  <Y>LION<1> (STR)        <Y>ELEPHANT<1> (BRA)      <Y>BEAR<1> (CON)
+  <Y>SNAKE<1> (DEX)       <Y>MONGOOSE<1> (SPE)      <Y>CROW<1> (INT)
+  <Y>RAT<1> (FOC)         <Y>OWL<1> (WIS)           <Y>LADYBUG<1> (KAR)
+  <Y>EAGLE<1> (PER)       <Y>CAPYBARA<1> (CHA)
+
+<g>ANIMAL KEYWORDS - DUAL STATS<1>
+These animals split the bonus between two stats:
+
+<g>STR combinations:<1>
+  <Y>RHINOCEROS<1> (STR/BRA)  <Y>OWLBEAR<1> (STR/CON)    <Y>TIGER<1> (STR/DEX)
+  <Y>HORSE<1> (STR/AGI)       <Y>GORILLA<1> (STR/INT)    <Y>ALLIGATOR<1> (STR/WIS)
+  <Y>BEAVER<1> (STR/FOC)      <Y>SHARK<1> (STR/PER)      <Y>PANDA<1> (STR/CHA)
+  <Y>DONKEY<1> (STR/KAR)      <Y>DRAGON<1> (STR/SPE)
+
+<g>BRA combinations:<1>
+  <Y>BOAR<1> (BRA/CON)        <Y>ORCA<1> (BRA/DEX)       <Y>LYNX<1> (BRA/AGI)
+  <Y>CATERPILLAR<1> (BRA/INT) <Y>TURTLE<1> (BRA/WIS)     <Y>BULL<1> (BRA/FOC)
+  <Y>HOUND<1> (BRA/PER)       <Y>BISON<1> (BRA/CHA)      <Y>COW<1> (BRA/KAR)
+  <Y>MOOSE<1> (BRA/SPE)
+
+<g>CON combinations:<1>
+  <Y>COYOTE<1> (CON/DEX)      <Y>ARMADILLO<1> (CON/AGI)  <Y>CROCODILE<1> (CON/INT)
+  <Y>PORCUPINE<1> (CON/WIS)   <Y>PANTHER<1> (CON/FOC)    <Y>GIRAFFE<1> (CON/PER)
+  <Y>HIPPOPOTAMUS<1> (CON/CHA) <Y>TORTOISE<1> (CON/KAR)  <Y>ELK<1> (CON/SPE)
+
+<g>DEX combinations:<1>
+  <Y>MONKEY<1> (DEX/AGI)      <Y>DOLPHIN<1> (DEX/INT)    <Y>OCELOT<1> (DEX/WIS)
+  <Y>RACCOON<1> (DEX/FOC)     <Y>HAWK<1> (DEX/PER)       <Y>RABBIT<1> (DEX/CHA)
+  <Y>BADGER<1> (DEX/KAR)      <Y>WYVERN<1> (DEX/SPE)
+
+<g>AGI combinations:<1>
+  <Y>MAGPIE<1> (AGI/INT)      <Y>FOX<1> (AGI/WIS)        <Y>SPARROW<1> (AGI/FOC)
+  <Y>ANTELOPE<1> (AGI/PER)    <Y>MOUSE<1> (AGI/CHA)      <Y>CRICKET<1> (AGI/KAR)
+  <Y>FERRET<1> (AGI/SPE)
+
+<g>INT combinations:<1>
+  <Y>RAVEN<1> (INT/WIS)       <Y>SPIDER<1> (INT/FOC)     <Y>HERON<1> (INT/PER)
+  <Y>ORANGUTAN<1> (INT/CHA)   <Y>CRANE<1> (INT/KAR)      <Y>CHEETAH<1> (INT/SPE)
+
+<g>WIS combinations:<1>
+  <Y>ROOSTER<1> (WIS/FOC)     <Y>WOLF<1> (WIS/PER)       <Y>PIGEON<1> (WIS/CHA)
+  <Y>TOAD<1> (WIS/KAR)        <Y>SQUIRREL<1> (WIS/SPE)
+
+<g>FOC combinations:<1>
+  <Y>OCTOPUS<1> (FOC/PER)     <Y>EEL<1> (FOC/CHA)        <Y>GOLDFISH<1> (FOC/KAR)
+  <Y>BARRACUDA<1> (FOC/SPE)
+
+<g>PER combinations:<1>
+  <Y>MEERKAT<1> (PER/CHA)     <Y>FROG<1> (PER/KAR)       <Y>FALCON<1> (PER/SPE)
+
+<g>CHA combinations:<1>
+  <Y>PEACOCK<1> (CHA/KAR)     <Y>KANGAROO<1> (CHA/SPE)
+
+<g>COLOR KEYWORDS - SECONDARY STATS<1>
+Colors provide bonuses to secondary stats:
+  <r>RED<1> - Hit Points (+level bonus)
+  <g>GREEN<1> - Movement Points (+level bonus)
+  <b>BLUE<1> - Mana Points (+level bonus)
+  <p>PURPLE<1> - Hit Points/Mana (half value of each)
+  <Y>YELLOW<1> - Vision (+level bonus)
+  <k>GREY/GRAY<1> - Can Be Seen (+level bonus)
+  <w>WHITE<1> - Light (+1 only)
+  <k>BLACK<1> - Can Be Seen (+1), Light (-1), displays as gray
+
+<g>COLOR CODES<1>
+Both color words and MUD color codes work:
+  <r>Red<1>, <g>Green<1>, <b>Blue<1>, <p>Purple<1>, <Y>Yellow<1>, <k>Grey<1>, etc.
+  Bold versions also work: <R>RED<1>, <G>GREEN<1>, <B>BLUE<1>, etc.
+
+<g>EXAMPLES<1>
+"A <r>red<1> lion" on unequipped head at level 20:
+  +2 STR, +2 Hit Points
+
+"A <g>green<1> dragon" on unequipped body at level 30:
+  +2 STR, +1 SPE, +3 Movement Points
+
+"A <p>purple<1> tiger" on unequipped arm at level 20:
+  +2 STR, +2 DEX, +1 Hit Points, +1 Mana Points
+
+"A <k>gray<1> eagle" on unequipped neck at level 30:
+  +3 PER, +3 Can Be Seen
+
+"A <w>white<1> mongoose" on unequipped hand at any level:
+  +3 SPE, +1 Light
+
+"A <k>black<1> bear" on unequipped foot at any level:
+  +3 CON, +1 Can Be Seen, -1 Light
+
+<g>TIPS<1>
+- Remove equipment to activate tattoo bonuses
+- Higher level = stronger bonuses
+- Plan tattoo placement for maximum benefit
+- Color words take priority over color codes
+- Only first animal and color in each tattoo count
+
+See Also: TATTOO ARTIST, EQUIPMENT, STATS
+Related Topics: GENERAL INFO

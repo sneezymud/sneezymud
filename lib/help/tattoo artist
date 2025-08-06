@@ -1,0 +1,55 @@
+TATTOO ARTIST
+
+Tattoo artists are special NPCs who can permanently ink tattoos onto your body
+for a fee. They offer a selection of pre-designed tattoos with various animals
+and colors that provide stat bonuses.
+
+<g>FINDING TATTOO ARTISTS<1>
+Tattoo artists can be found in various cities throughout the world.
+Look for NPCs with "tattoo artist" in their description or name.
+
+<g>PURCHASING TATTOOS<1>
+Syntax: list
+        buy <animal> <color> <body location>
+
+- LIST shows available animals and colors you can choose from
+- BUY creates a custom tattoo with your chosen animal and color
+- Cost: 100000 talens per tattoo
+- You must have enough money before purchasing
+
+<g>BODY LOCATIONS<1>
+Valid locations include:
+  head, neck, body, arm, hand, foot, etc.
+
+Note: Most tattoo artists refuse to tattoo legs due to policy.
+
+<g>RESTRICTIONS<1>
+- You cannot have multiple tattoos on the same body slot
+- You must have the required body part (no tattooing missing limbs)
+- You need 100000 talens for each tattoo
+- Tattoos are permanent once applied
+
+<g>AVAILABLE OPTIONS<1>
+Tattoo artists can create custom tattoos featuring:
+- Single stat animals: lion, bear, snake, eagle, etc.
+- Dual stat animals: dragon, tiger, monkey, wolf, etc.
+- Various colors: blue, purple, green, yellow, grey, red, white, black
+
+Each combination provides different stat bonuses based on the animal and color.
+See HELP TATTOO STATS for complete bonus information.
+
+<g>EXAMPLES<1>
+buy dragon blue arm      - "A tattoo of a raging blue dragon zooming about"
+                         - "A tattoo of a swift blue dragon flexing wildly"
+buy kangaroo yellow foot - "A tattoo of a charming yellow kangaroo looking fast"
+                         - "A tattoo of a sprightly yellow kangaroo winking coyishly"
+
+Note: Adjectives and action phrases are independently and randomly selected
+from the animal's available stats, creating unique combinations!
+
+<g>CUSTOM TATTOOS<1>
+Immortals can create custom tattoos using the BESTOW command.
+Players cannot design their own tattoos through normal gameplay.
+
+See Also: TATTOOS, TATTOO STATS, BESTOW
+Related Topics: SHOPS
