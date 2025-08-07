@@ -2401,11 +2401,9 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
     case SPELL_STORMY_SKIES:
       rc = stormySkies(this, ch);
       break;
-#if 0
-      case SKILL_TRANSFORM_LIMB:
-          transformLimb(this, n);
-        break;
-#endif
+    case SKILL_TRANSFORM_LIMB:
+      rc = transformLimb(this, n);
+      break;
     case SPELL_TREE_WALK:
       rc = treeWalk(this, n);
       break;

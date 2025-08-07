@@ -75,16 +75,16 @@ int vampireTransform(TBeing* ch) {
 
 struct TransformLimbType TransformLimbList[LAST_TRANSFORM_LIMB] = {
   {"hands", 6, 20, "bear claws", WEAR_HAND_R, AFFECT_TRANSFORMED_HANDS,
-    DISC_RANGER},
+    DISC_SHAMAN_FROG},
   {"arms", 30, 75, "falcon wings", WEAR_ARM_R, AFFECT_TRANSFORMED_ARMS,
-    DISC_ANIMAL},
+    DISC_SHAMAN_FROG},
   {"legs", 20, 15, "a dolphin's tail", WEAR_LEG_R, AFFECT_TRANSFORMED_LEGS,
-    DISC_ANIMAL},
+    DISC_SHAMAN_FROG},
   {"neck", 15, 40, "some fish gills", WEAR_NECK, AFFECT_TRANSFORMED_NECK,
-    DISC_ANIMAL},
+    DISC_SHAMAN_FROG},
   {"head", 12, 60, "an eagle's head", WEAR_HEAD, AFFECT_TRANSFORMED_HEAD,
-    DISC_RANGER},
-  {"all", 1, 1, "all your limbs", MAX_WEAR, TYPE_UNDEFINED, DISC_RANGER}};
+    DISC_SHAMAN_FROG},
+  {"all", 1, 1, "all your limbs", MAX_WEAR, TYPE_UNDEFINED, DISC_SHAMAN_FROG}};
 
 int transformLimb(TBeing* caster, const char* buffer, int level, short bKnown) {
   int ret;
@@ -588,15 +588,15 @@ int aquaticBlast(TBeing* caster, TBeing* victim, TMagicItem* obj) {
 static const int LAST_SHAPED_MOB = 10;
 struct PolyType ShapeShiftList[LAST_SHAPED_MOB] =
   //   name,    level, learning, vnum, discipline, race
-  {{"chicken", 25, 1, 1213, DISC_SHAMAN_FROG, RACE_NORACE},      // L 19
-    {"horsefly", 25, 50, 15420, DISC_SHAMAN_FROG, RACE_NORACE},  // L 6
-    {"slug", 30, 20, 5126, DISC_SHAMAN_FROG, RACE_NORACE},       // L 7
-    {"snake", 35, 20, 3412, DISC_SHAMAN_FROG, RACE_NORACE},      // L 40
-    {"dolphin", 40, 70, 12432, DISC_SHAMAN_FROG, RACE_NORACE},   // L 14
-    {"bear", 45, 75, 3403, DISC_SHAMAN_FROG, RACE_NORACE},       // L 43
-    {"crow", 40, 50, 14350, DISC_SHAMAN_FROG, RACE_NORACE},      // L 7
-    {"hawk", 45, 80, 14440, DISC_SHAMAN_FROG, RACE_NORACE},      // L 27
-    {"spider", 49, 100, 7717, DISC_SHAMAN_FROG, RACE_NORACE},    // L 55
+  {{"chicken", 10, 1, 1213, DISC_SHAMAN_FROG, RACE_NORACE},      // L 10
+    {"horsefly", 10, 15, 15420, DISC_SHAMAN_FROG, RACE_NORACE},  // L 25
+    {"slug", 15, 20, 5126, DISC_SHAMAN_FROG, RACE_NORACE},       // L 15
+    {"snake", 15, 20, 3412, DISC_SHAMAN_FROG, RACE_NORACE},      // L 15
+    {"dolphin", 25, 40, 12432, DISC_SHAMAN_FROG, RACE_NORACE},   // L 25
+    {"bear", 30, 60, 3403, DISC_SHAMAN_FROG, RACE_NORACE},       // L 30
+    {"crow", 20, 50, 14350, DISC_SHAMAN_FROG, RACE_NORACE},      // L 20
+    {"hawk", 30, 70, 14440, DISC_SHAMAN_FROG, RACE_NORACE},      // L 30
+    {"spider", 30, 80, 7717, DISC_SHAMAN_FROG, RACE_NORACE},     // L 30
     {"\n", -1, -1, -1, DISC_SHAMAN_FROG, RACE_NORACE}};
 
 int shapeShift(TBeing* caster, int level, short bKnown) {
@@ -802,87 +802,13 @@ int castShapeShift(TBeing* caster) {
 }
 
 int TBeing::doTransform(const char* argument) {
-  int i = 0, bKnown = 0;
-  wearSlotT limb = WEAR_NOWHERE;
-  int level, ret = 0;
-  int rc = 0;
-  char buffer[256];
+  // Handle vampire transformation
+  if (isVampire())
+    return vampireTransform(this);
 
-  //  sendTo("This is disabled due to a bug right now.\n\r");
-  //  return FALSE;
-
-  if (!doesKnowSkill(SKILL_TRANSFORM_LIMB)) {
-    if (isVampire())
-      return vampireTransform(this);
-
-    sendTo("You know nothing about transforming your limbs.\n\r");
-    return FALSE;
-  }
-
-  strcpy(buffer, argument);
-
-  for (i = 0; i < LAST_TRANSFORM_LIMB; i++) {
-    if (is_abbrev(buffer, TransformLimbList[i].name)) {
-      limb = TransformLimbList[i].limb;
-      if (TransformLimbList[i].level > getSkillLevel(SKILL_TRANSFORM_LIMB)) {
-        sendTo("You can not transform that limb yet.");
-        return FALSE;
-      }
-      // NOTE: this is DISC learning, not skill (intentional)
-      if (TransformLimbList[i].learning >
-          getDiscipline((TransformLimbList[i].discipline))->getLearnedness()) {
-        sendTo("You can not transform that limb yet.");
-        return FALSE;
-      }
-      break;
-    }
-  }
-  if (i >= LAST_TRANSFORM_LIMB) {
-    if (isVampire())
-      return vampireTransform(this);
-
-    sendTo("Couldn't find any such limb to transform.\n\r");
-    return FALSE;
-  }
-
-  if (limb == MAX_WEAR) {
-    sendTo("You can't transform all of your limbs.\n\r");
-    return FALSE;
-  }
-
-  if (!isTransformableLimb(limb, TRUE)) {
-    act("Something prevents your limb from being transformed.", FALSE, this,
-      NULL, NULL, TO_CHAR);
-    return FALSE;
-  }
-
-  level = getSkillLevel(SKILL_TRANSFORM_LIMB);
-  bKnown = getSkillValue(SKILL_TRANSFORM_LIMB);
-
-  ret = transformLimb(this, buffer, level, bKnown);
-  if (ret == SPELL_SUCCESS) {
-  } else if (ret == SPELL_CRIT_SUCCESS) {
-  } else if (ret == SPELL_CRIT_FAIL) {
-    act("Something went wrong with the magic.", FALSE, this, 0, NULL, TO_CHAR);
-    act("You feel your own limb open and your blood start to drain!", FALSE,
-      this, 0, NULL, TO_CHAR);
-    act("Something went wrong with $n's magic.", FALSE, this, 0, NULL, TO_ROOM);
-    act("$n seems to have caused $s limbs to start bleeding!", FALSE, this, 0,
-      NULL, TO_ROOM);
-  } else if (ret == SPELL_SAVE) {
-    act("You are not powerful enough to transform that limb.", FALSE, this,
-      NULL, NULL, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, this, NULL, NULL, TO_ROOM);
-  } else if (ret == SPELL_FAIL) {
-    act("You fail to transform your limbs.", FALSE, this, NULL, NULL, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, this, NULL, NULL, TO_ROOM);
-  } else {
-    act("Nothing seems to happen.", FALSE, this, NULL, NULL, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, this, NULL, NULL, TO_ROOM);
-  }
-  if (IS_SET(ret, CASTER_DEAD))
-    ADD_DELETE(rc, DELETE_THIS);
-  return rc;
+  // No other transform functionality available through this command
+  sendTo("You don't know how to transform.\n\r");
+  return FALSE;
 }
 
 int transformLimb(TBeing* caster, const char* buffer) {

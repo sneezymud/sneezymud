@@ -1,15 +1,22 @@
-08-02-25  Scouts from the Southern Jungle Road report a clan of trolls has
-          set up their camp and is planning on staying until they are stocked 
-          up.  Use caution.  Rumor has it they are angry and not kind to
-          visitors.   
+08-06-25: Re-enabled transform limb ritual in the shaman frog discipline. It
+          currently has identical functionality to the old ranger version,
+          but is now cast like any other ritual.
 
-07-11-25  A clan of snow trolls has established residency near the frontier.
+          Also disabled usage of the ranger version by mobs that still have
+          the ranger class.
+
+08-02-25: Scouts from the Southern Jungle Road report a clan of trolls has
+          set up their camp and is planning on staying until they are stocked
+          up.  Use caution.  Rumor has it they are angry and not kind to
+          visitors.
+
+07-11-25: A clan of snow trolls has established residency near the frontier.
           Troll cleric thiefs and troll mage shamans rejoice!
-          
-07-01-25  A new trough of sandworms has been discovered. Using creative from
-          Therias, created years ago, this new zone adds on the the Atakaji 
+
+07-01-25: A new trough of sandworms has been discovered. Using creative from
+          Therias, created years ago, this new zone adds on the the Atakaji
           desert.  Sandworms no longer have the swallow proc.
-          
+
 06-25-25: A new path has emerged in the North Valley.  Filled with a variety
           of monsters for your leveling enjoyment, take care when entering,
           as the mobs are as prickly as their creator.
