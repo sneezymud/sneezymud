@@ -19,6 +19,7 @@
 #include "mail.h"
 #include "spec_mobs.h"
 #include "obj_component.h"
+#include "obj_trap_component.h"
 #include "extern.h"
 #include "loadset.h"
 #include "sys_loot.h"
@@ -3935,6 +3936,8 @@ TObj* makeNewObj(itemTypeT tmp) {
       return new TKeyring();
     case ITEM_COMPONENT:
       return new TComponent();
+    case ITEM_TRAP_COMPONENT:
+      return new TTrapComponent();
     case ITEM_BOOK:
       return new TBook();
     case ITEM_PORTAL:

@@ -63,6 +63,7 @@ class TThing {
       TRoom,
       TObj,  // there are many object types. Add overloads as needed.
       TComponent,
+      TTrapComponent,
       TBaseContainer,
     };
     virtual TThingKind getKind() const;

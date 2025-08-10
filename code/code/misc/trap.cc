@@ -16,6 +16,7 @@
 #include "disc_thief_looting.h"
 #include "disease.h"
 #include "obj_trap.h"
+#include "obj_trap_component.h"
 #include "obj_portal.h"
 #include "obj_open_container.h"
 #include "obj_arrow.h"
@@ -145,7 +146,7 @@ namespace {
   constexpr const char* POUR_ROOM_MSG = "$n pours the %s into the %s.";
   constexpr const char* ARM_CHAR_MSG = "You arm the %s mechanism.";
   constexpr const char* ARM_ROOM_MSG = "$n arms the %s mechanism.";
-  constexpr const char* CONCEAL_CHAR_MSG = "You conceal the %s inside the %s.";
+  constexpr const char* CONCEAL_CHAR_MSG = "You conceal the %s inside the %s.\n\r";
   constexpr const char* CONCEAL_ROOM_MSG = "$n conceals the %s inside the %s.";
 
   // Component name mapping for clean messages
@@ -2720,20 +2721,58 @@ bool TBeing::hasTrapComps(const char* type, trap_targ_t targ, int amt,
   }
 
   if (amt == -1) {
-    // trap is finished, delete the items
+    // trap is finished, consume components
     if (!com1 || !com2 || !com3) {
       vlogf(LOG_BUG, "Serious error in hasTrapComps");
       return FALSE;
     }
-    delete com1;
-    delete com2;
-    delete com3;
+
+    // Try to consume charges from trap components, fall back to deleting regular objects
+    TTrapComponent* trapComp1 = dynamic_cast<TTrapComponent*>(com1);
+    TTrapComponent* trapComp2 = dynamic_cast<TTrapComponent*>(com2);
+    TTrapComponent* trapComp3 = dynamic_cast<TTrapComponent*>(com3);
+
+    if (trapComp1) {
+      trapComp1->addToTrapComponentCharges(-1);
+      if (trapComp1->getTrapComponentCharges() <= 0) {
+        delete trapComp1;
+      }
+    } else {
+      delete com1;
+    }
+
+    if (trapComp2) {
+      trapComp2->addToTrapComponentCharges(-1);
+      if (trapComp2->getTrapComponentCharges() <= 0) {
+        delete trapComp2;
+      }
+    } else {
+      delete com2;
+    }
+
+    if (trapComp3) {
+      trapComp3->addToTrapComponentCharges(-1);
+      if (trapComp3->getTrapComponentCharges() <= 0) {
+        delete trapComp3;
+      }
+    } else {
+      delete com3;
+    }
+
     if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
       if (!com4) {
         vlogf(LOG_BUG, "Serious error in hasTrapComps (2)");
         return FALSE;
       }
-      delete com4;
+      TTrapComponent* trapComp4 = dynamic_cast<TTrapComponent*>(com4);
+      if (trapComp4) {
+        trapComp4->addToTrapComponentCharges(-1);
+        if (trapComp4->getTrapComponentCharges() <= 0) {
+          delete trapComp4;
+        }
+      } else {
+        delete com4;
+      }
     }
     return FALSE;
   }
