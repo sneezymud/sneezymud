@@ -24,86 +24,291 @@
 extern const char* const GRENADE_EX_DESC = "__grenade_puller";
 extern const char* const TRAP_EX_DESC = "__trap_setter";
 
-doorTrapT mapFileToDoorTrap(int dt) {
-  switch (dt) {
-    case 0:
-      return DOOR_TRAP_NONE;
-    case 1:
-      return DOOR_TRAP_POISON;
-    case 2:
-      return DOOR_TRAP_SPIKE;
-    case 3:
-      return DOOR_TRAP_SLEEP;
-    case 4:
-      return DOOR_TRAP_TNT;
-    case 5:
-      return DOOR_TRAP_BLADE;
-    case 6:
-      return DOOR_TRAP_FIRE;
-    case 7:
-      return DOOR_TRAP_ACID;
-    case 8:
-      return DOOR_TRAP_DISEASE;
-    case 9:
-      return DOOR_TRAP_HAMMER;
-    case 10:
-      return DOOR_TRAP_FROST;
-    case 11:
-      return DOOR_TRAP_TELEPORT;
-    case 12:
-      return DOOR_TRAP_ENERGY;
-    case 13:
-      return DOOR_TRAP_BOLT;
-    case 14:
-      return DOOR_TRAP_DISK;
-    case 15:
-      return DOOR_TRAP_PEBBLE;
+// Constants for trap mechanics
+namespace {
+  constexpr int TRAP_DICE_SIZE = 8;
+  constexpr int TRAP_GOOF_DAMAGE_DIVISOR = 3;
+
+  // Base values for level 1 traps - these scale with trap level
+  constexpr int BASE_SLEEP_DURATION_HOURS = 1;      // Level 1: 1 hour, scales up
+  constexpr int BASE_DISEASE_DURATION_HOURS = 2;    // Level 1: 2 hours, scales up
+  constexpr int BASE_POISON_DURATION_HOURS = 6;     // Level 1: 6 hours, scales up
+  constexpr int BASE_POISON_STR_MODIFIER = -10;     // Level 1: -10 str, scales down
+
+  // Disease duration multipliers
+  constexpr int SEVERE_DISEASE_MULTIPLIER = 4;
+  constexpr int MODERATE_DISEASE_MULTIPLIER = 2;
+
+  // Level scaling functions for trap effects
+  inline int getSleepDuration(int trap_level) {
+    return BASE_SLEEP_DURATION_HOURS + (trap_level - 1) / 2;  // +0.5 hours per level
   }
 
-  vlogf(LOG_BUG, format("Bad value (%d) in mapFileToDoorTrap") % dt);
-  return MAX_TRAP_TYPES;
+  inline int getDiseaseDuration(int trap_level) {
+    return BASE_DISEASE_DURATION_HOURS + (trap_level - 1);    // +1 hour per level
+  }
+
+  inline int getPoisonDuration(int trap_level) {
+    return BASE_POISON_DURATION_HOURS + (trap_level - 1) * 2; // +2 hours per level
+  }
+
+  inline int getPoisonStrModifier(int trap_level) {
+    return BASE_POISON_STR_MODIFIER - (trap_level - 1) * 2;   // -2 str per level (more negative)
+  }
+
+  // Room effect modifiers - different for status vs damage effects
+  constexpr double STATUS_ROOM_MOD = 2.0/3.0;  // 66.7% strength for status effects (poison, sleep, disease, teleport)
+  constexpr double DAMAGE_ROOM_MOD = 0.5;       // 50% strength for damage effects (fire, frost, energy, acid, TNT, etc.)
+
+  // Context-based damage multipliers - same modifier for all damage types in each context
+  constexpr double GOOF_MOD = 0.5;        // When traps backfire on the setter
+  constexpr double ROOM_MOD = DAMAGE_ROOM_MOD;  // Legacy alias for damage room effects
+  constexpr double OTHER_SIDE_MOD = 1.0/3.0;     // When effects reach through doors/walls
+
+  constexpr double TWO_THIRDS_DAMAGE = 2.0/3.0;  // Available for future use
+
+  // Common trap messages
+  constexpr const char* STRANGE_NOISE_MSG = "You hear a strange noise...";
+  constexpr const char* NOTHING_HAPPENS_CHAR_MSG = "...But nothing happens.";
+  constexpr const char* NOTHING_HAPPENS_ROOM_MSG = "...But nothing happens.";
+  constexpr const char* SHRAPNEL_CHAR_MSG = "You are hit by shrapnel!";
+  constexpr const char* SHRAPNEL_ROOM_MSG = "$n is hit by shrapnel.";
+
+  // Standardized trap source messages - WHERE the trap comes from
+  constexpr const char* DOOR_TRAP_CHAR_MSG = "A mechanism in the %s triggers!";
+  constexpr const char* DOOR_TRAP_ROOM_MSG = "A mechanism in the %s triggers!";
+  constexpr const char* PORTAL_TRAP_CHAR_MSG = "A mechanism in the %s triggers!";
+  constexpr const char* PORTAL_TRAP_ROOM_MSG = "A mechanism in the %s triggers!";
+  constexpr const char* CONTAINER_TRAP_CHAR_MSG = "The %s springs a trap!";
+  constexpr const char* CONTAINER_TRAP_ROOM_MSG = "The %s springs a trap!";
+  constexpr const char* MINE_TRAP_CHAR_MSG = "The %s detonates!";
+  constexpr const char* MINE_TRAP_ROOM_MSG = "The %s detonates!";
+  constexpr const char* ARROW_TRAP_CHAR_MSG = "The %s releases its trapped payload!";
+  constexpr const char* ARROW_TRAP_ROOM_MSG = "The %s releases its trapped payload!";
+  constexpr const char* GRENADE_TRAP_CHAR_MSG = "The %s explodes!";
+  constexpr const char* GRENADE_TRAP_ROOM_MSG = "The %s explodes!";
+
+  // Standardized trap effect messages - used across ALL contexts
+  constexpr const char* POISON_EFFECT_CHAR_MSG = "You are sprayed with contact poison!";
+  constexpr const char* POISON_EFFECT_ROOM_MSG = "$n is sprayed with contact poison!";
+  constexpr const char* SLEEP_EFFECT_CHAR_MSG = "You are surrounded by a noxious mist!";
+  constexpr const char* SLEEP_EFFECT_ROOM_MSG = "$n is surrounded by a noxious mist!";
+  constexpr const char* FIRE_EFFECT_CHAR_MSG = "You are burned by the flames!";
+  constexpr const char* FIRE_EFFECT_ROOM_MSG = "$n is burned by the flames.";
+  constexpr const char* FROST_EFFECT_CHAR_MSG = "You are chilled by the arctic blast!";
+  constexpr const char* FROST_EFFECT_ROOM_MSG = "$n is chilled by the arctic blast.";
+  constexpr const char* ACID_EFFECT_CHAR_MSG = "You are surrounded by the acid cloud!";
+  constexpr const char* ACID_EFFECT_ROOM_MSG = "$n is surrounded by the acid cloud.";
+  constexpr const char* ENERGY_EFFECT_CHAR_MSG = "You are hit by the energy bolts!";
+  constexpr const char* ENERGY_EFFECT_ROOM_MSG = "$n is hit by the energy bolts.";
+  constexpr const char* SPIKE_EFFECT_CHAR_MSG = "You are impaled by the spikes!";
+  constexpr const char* SPIKE_EFFECT_ROOM_MSG = "$n is impaled by the spikes.";
+  constexpr const char* BLADE_EFFECT_CHAR_MSG = "You are sliced by the razor blades!";
+  constexpr const char* BLADE_EFFECT_ROOM_MSG = "$n is sliced by the razor blades.";
+  constexpr const char* BLUNT_EFFECT_CHAR_MSG = "You are pummeled by the heavy weights!";
+  constexpr const char* BLUNT_EFFECT_ROOM_MSG = "$n is pummeled by the heavy weights.";
+  constexpr const char* TELEPORT_EFFECT_CHAR_MSG = "You find yourself sucked into the vortex!";
+  constexpr const char* TELEPORT_EFFECT_ROOM_MSG = "$n flails wildly, but falls into the vortex.";
+  constexpr const char* DISEASE_EFFECT_CHAR_MSG = "You are surrounded by a cloud of spores!";
+  constexpr const char* DISEASE_EFFECT_ROOM_MSG = "$n is surrounded by a cloud of spores.";
+  constexpr const char* TNT_EFFECT_CHAR_MSG = "You are hit by the explosive shrapnel!";
+  constexpr const char* TNT_EFFECT_ROOM_MSG = "$n is hit by the explosive shrapnel.";
+  // Consolidated trap goof messages
+  constexpr const char* GOOF_CHAR_MSG = "Your hand slips and you fall victim to your own device!";
+  constexpr const char* GOOF_ROOM_MSG = "$n's hand slips and $e falls victim to $s own device!";
+
+  // Standardized trap creation messages
+  constexpr const char* TRAP_START_CHAR_MSG = "You start working on your trap.";
+  constexpr const char* TRAP_START_DOOR_ROOM_MSG = "$n starts setting a trap.";
+  constexpr const char* TRAP_START_CONTAINER_ROOM_MSG = "$n starts fiddling with $p.";
+  constexpr const char* TRAP_START_MINE_ROOM_MSG = "$n starts constructing a land-mine.";
+  constexpr const char* TRAP_START_ARROW_ROOM_MSG = "$n starts trapping an arrow.";
+  constexpr const char* TRAP_START_GRENADE_ROOM_MSG = "$n starts constructing a grenade.";
+
+  // Standardized trap completion messages
+  constexpr const char* TRAP_COMPLETE_DOOR_CHAR_MSG = "The trap has been successfully set!";
+  constexpr const char* TRAP_COMPLETE_CONTAINER_CHAR_MSG = "The trap has been successfully set!";
+  constexpr const char* TRAP_COMPLETE_MINE_CHAR_MSG = "You have successfully constructed a land mine!";
+  constexpr const char* TRAP_COMPLETE_ARROW_CHAR_MSG = "You have successfully constructed an arrow trap!";
+  constexpr const char* TRAP_COMPLETE_GRENADE_CHAR_MSG = "You have successfully constructed a grenade!";
+
+  // Standardized component assembly messages
+  constexpr const char* ATTACH_CHAR_MSG = "You attach the %s to the %s.";
+  constexpr const char* ATTACH_ROOM_MSG = "$n attaches the %s to the %s.";
+  constexpr const char* SCREW_CHAR_MSG = "You screw the %s into the %s.";
+  constexpr const char* SCREW_ROOM_MSG = "$n screws the %s into the %s.";
+  constexpr const char* PLACE_CHAR_MSG = "You place the %s into the %s.";
+  constexpr const char* PLACE_ROOM_MSG = "$n places the %s into the %s.";
+  constexpr const char* CONNECT_CHAR_MSG = "You connect the %s to the %s.";
+  constexpr const char* CONNECT_ROOM_MSG = "$n connects the %s to the %s.";
+  constexpr const char* POUR_CHAR_MSG = "You pour the %s into the %s.";
+  constexpr const char* POUR_ROOM_MSG = "$n pours the %s into the %s.";
+  constexpr const char* ARM_CHAR_MSG = "You arm the %s mechanism.";
+  constexpr const char* ARM_ROOM_MSG = "$n arms the %s mechanism.";
+  constexpr const char* CONCEAL_CHAR_MSG = "You conceal the %s inside the %s.";
+  constexpr const char* CONCEAL_ROOM_MSG = "$n conceals the %s inside the %s.";
+
+  // Component name mapping for clean messages
+  const char* getComponentName(int vnum) {
+    switch (vnum) {
+      case Obj::ST_FLINT: return "flint";
+      case Obj::ST_SULPHUR: return "sulphur";
+      case Obj::ST_BAG: return "bellows";
+      case Obj::ST_BELLOWS: return "bellows";
+      case Obj::ST_HYDROGEN: return "compressed gas";
+      case Obj::ST_NEEDLE: return "needle";
+      case Obj::ST_SPRING: return "spring";
+      case Obj::ST_POISON: return "poison";
+      case Obj::ST_CANISTER: return "canister";
+      case Obj::ST_CON_POISON: return "concentrated poison";
+      case Obj::ST_TRIPWIRE: return "tripwire";
+      case Obj::ST_PENTAGRAM: return "pentagram";
+      case Obj::ST_ATHANOR: return "athanor";
+      case Obj::ST_CRYSTALINE: return "crystal";
+      case Obj::ST_BOLTS: return "bolts";
+      case Obj::ST_TUBING: return "tubing";
+      case Obj::ST_PEBBLES: return "pebbles";
+      case Obj::ST_RAZOR_DISK: return "razor discs";
+      case Obj::ST_FUNGUS: return "spores";
+      case Obj::ST_ACID_VIAL: return "acid vial";
+      case Obj::ST_FROST: return "frost compound";
+      case Obj::ST_CONCRETE: return "concrete weight";
+      case Obj::ST_RAZOR_BLADE: return "razor blade";
+      case Obj::ST_NOZZLE: return "nozzle";
+      case Obj::ST_HOSE: return "hose";
+      case Obj::ST_GAS: return "gas";
+      case Obj::ST_CGAS: return "compressed gas";
+      case Obj::ST_SPIKE: return "spike";
+      case Obj::ST_WEDGE: return "wedge";
+      case Obj::ST_BLINK: return "blink powder";
+      default: return "component";
+    }
+  }
+}
+
+namespace {
+  // Mapping tables for trap type conversion
+  constexpr doorTrapT FILE_TO_TRAP_MAP[] = {
+    DOOR_TRAP_NONE,     // 0
+    DOOR_TRAP_POISON,   // 1
+    DOOR_TRAP_SPIKE,    // 2
+    DOOR_TRAP_SLEEP,    // 3
+    DOOR_TRAP_TNT,      // 4
+    DOOR_TRAP_BLADE,    // 5
+    DOOR_TRAP_FIRE,     // 6
+    DOOR_TRAP_ACID,     // 7
+    DOOR_TRAP_DISEASE,  // 8
+    DOOR_TRAP_HAMMER,   // 9
+    DOOR_TRAP_FROST,    // 10
+    DOOR_TRAP_TELEPORT, // 11
+    DOOR_TRAP_ENERGY,   // 12
+    DOOR_TRAP_BOLT,     // 13
+    DOOR_TRAP_DISK,     // 14
+    DOOR_TRAP_PEBBLE    // 15
+  };
+
+  constexpr int TRAP_TO_FILE_MAP[] = {
+    0,  // DOOR_TRAP_NONE
+    1,  // DOOR_TRAP_POISON
+    2,  // DOOR_TRAP_SPIKE
+    3,  // DOOR_TRAP_SLEEP
+    4,  // DOOR_TRAP_TNT
+    5,  // DOOR_TRAP_BLADE
+    6,  // DOOR_TRAP_FIRE
+    7,  // DOOR_TRAP_ACID
+    8,  // DOOR_TRAP_DISEASE
+    9,  // DOOR_TRAP_HAMMER
+    10, // DOOR_TRAP_FROST
+    11, // DOOR_TRAP_TELEPORT
+    12, // DOOR_TRAP_ENERGY
+    13, // DOOR_TRAP_BOLT
+    14, // DOOR_TRAP_DISK
+    15  // DOOR_TRAP_PEBBLE
+  };
+
+  constexpr size_t MAX_FILE_TRAP_VALUE = sizeof(FILE_TO_TRAP_MAP) / sizeof(FILE_TO_TRAP_MAP[0]) - 1;
+}
+
+doorTrapT mapFileToDoorTrap(int dt) {
+  if (dt < 0 || dt > static_cast<int>(MAX_FILE_TRAP_VALUE)) {
+    vlogf(LOG_BUG, format("Bad value (%d) in mapFileToDoorTrap") % dt);
+    return MAX_TRAP_TYPES;
+  }
+  return FILE_TO_TRAP_MAP[dt];
 }
 
 int mapDoorTrapToFile(doorTrapT dt) {
-  switch (dt) {
-    case DOOR_TRAP_NONE:
-      return 0;
-    case DOOR_TRAP_POISON:
-      return 1;
-    case DOOR_TRAP_SPIKE:
-      return 2;
-    case DOOR_TRAP_SLEEP:
-      return 3;
-    case DOOR_TRAP_TNT:
-      return 4;
-    case DOOR_TRAP_BLADE:
-      return 5;
-    case DOOR_TRAP_FIRE:
-      return 6;
-    case DOOR_TRAP_ACID:
-      return 7;
-    case DOOR_TRAP_DISEASE:
-      return 8;
-    case DOOR_TRAP_HAMMER:
-      return 9;
-    case DOOR_TRAP_FROST:
-      return 10;
-    case DOOR_TRAP_TELEPORT:
-      return 11;
-    case DOOR_TRAP_ENERGY:
-      return 12;
-    case DOOR_TRAP_BOLT:
-      return 13;
-    case DOOR_TRAP_DISK:
-      return 14;
-    case DOOR_TRAP_PEBBLE:
-      return 15;
-    case MAX_TRAP_TYPES:
-      break;
+  if (dt < 0 || dt >= MAX_TRAP_TYPES) {
+    vlogf(LOG_BUG, format("Bad value (%d) in mapDoorTrapToFile") % dt);
+    return -1;
+  }
+  return TRAP_TO_FILE_MAP[dt];
+}
+
+// Standardized trap assembly message function
+void sendTrapMessage(TBeing* ch, const char* trap_type, trap_targ_t targ, int step) {
+  // Get the components for this trap type and target
+  int item1 = 0, item2 = 0, item3 = 0;
+
+  if (is_abbrev(trap_type, "fire")) {
+    item1 = Obj::ST_FLINT; item2 = Obj::ST_SULPHUR; item3 = Obj::ST_BAG;
+  } else if (is_abbrev(trap_type, "explosive")) {
+    item1 = Obj::ST_FLINT; item2 = Obj::ST_SULPHUR; item3 = Obj::ST_HYDROGEN;
+  } else if (is_abbrev(trap_type, "poison")) {
+    if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
+      item1 = Obj::ST_NEEDLE; item2 = Obj::ST_SPRING; item3 = Obj::ST_POISON;
+    } else {
+      item1 = Obj::ST_CANISTER; item2 = Obj::ST_SPRING; item3 = Obj::ST_CON_POISON;
+    }
+  } else if (is_abbrev(trap_type, "sleep")) {
+    item1 = Obj::ST_NOZZLE; item2 = Obj::ST_GAS; item3 = Obj::ST_HOSE;
+  } else if (is_abbrev(trap_type, "acid")) {
+    if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
+      item1 = Obj::ST_NOZZLE; item2 = Obj::ST_ACID_VIAL; item3 = Obj::ST_BELLOWS;
+    } else {
+      item1 = Obj::ST_CANISTER; item2 = Obj::ST_SPRING; item3 = Obj::ST_ACID_VIAL;
+    }
+  } else if (is_abbrev(trap_type, "spike")) {
+    item1 = Obj::ST_SPIKE; item2 = Obj::ST_SPRING; item3 = Obj::ST_TRIPWIRE;
+  } else if (is_abbrev(trap_type, "blade")) {
+    item1 = Obj::ST_RAZOR_BLADE; item2 = Obj::ST_SPRING; item3 = Obj::ST_TRIPWIRE;
+  } else if (is_abbrev(trap_type, "hammer")) {
+    item1 = Obj::ST_CONCRETE; item2 = Obj::ST_WEDGE; item3 = Obj::ST_TRIPWIRE;
+  } else if (is_abbrev(trap_type, "frost")) {
+    item1 = Obj::ST_NOZZLE; item2 = Obj::ST_HOSE; item3 = Obj::ST_FROST;
+  } else {
+    // Default fallback
+    item1 = Obj::ST_SPRING; item2 = Obj::ST_TRIPWIRE; item3 = Obj::ST_CANISTER;
   }
 
-  vlogf(LOG_BUG, format("Bad value (%d) in mapDoorTrapToFile") % dt);
-  return -1;
+  // Send standardized messages based on step
+  switch (step) {
+    case 1:
+      ch->sendTo(format(ATTACH_CHAR_MSG) % getComponentName(item1) % getComponentName(item2));
+      act(format(ATTACH_ROOM_MSG) % getComponentName(item1) % getComponentName(item2), TRUE, ch, NULL, NULL, TO_ROOM);
+      break;
+    case 2:
+      ch->sendTo(format(CONNECT_CHAR_MSG) % getComponentName(item2) % getComponentName(item3));
+      act(format(CONNECT_ROOM_MSG) % getComponentName(item2) % getComponentName(item3), TRUE, ch, NULL, NULL, TO_ROOM);
+      break;
+    case 3:
+      ch->sendTo(format(ARM_CHAR_MSG) % "trigger");
+      act(format(ARM_ROOM_MSG) % "trigger", TRUE, ch, NULL, NULL, TO_ROOM);
+      break;
+    case 4:
+      if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
+        ch->sendTo(format(CONCEAL_CHAR_MSG) % "mechanism" % "casing");
+        act(format(CONCEAL_ROOM_MSG) % "mechanism" % "casing", TRUE, ch, NULL, NULL, TO_ROOM);
+      } else {
+        ch->sendTo(format(PLACE_CHAR_MSG) % "assembly" % "position");
+        act(format(PLACE_ROOM_MSG) % "assembly" % "position", TRUE, ch, NULL, NULL, TO_ROOM);
+      }
+      break;
+    default:
+      ch->sendTo("You continue working on the trap.");
+      act("$n continues working on the trap.", TRUE, ch, NULL, NULL, TO_ROOM);
+      break;
+  }
 }
 
 const sstring trap_types[] = {"None", "Poison", "Spike", "Sleep", "Explosive",
@@ -113,18 +318,47 @@ const sstring trap_types[] = {"None", "Poison", "Spike", "Sleep", "Explosive",
 const char* user_trap_types[] = {"exit", "container", "mine", "grenade",
   "arrow", "\n"};
 
+namespace {
+  // Helper function to parse trap type from string
+  doorTrapT parseTrapType(const char* trap_type, trap_targ_t target) {
+    if (is_abbrev(trap_type, "fire")) return DOOR_TRAP_FIRE;
+    if (is_abbrev(trap_type, "explosive")) return DOOR_TRAP_TNT;
+    if (is_abbrev(trap_type, "poison")) return DOOR_TRAP_POISON;
+    if (is_abbrev(trap_type, "sleep")) return DOOR_TRAP_SLEEP;
+    if (is_abbrev(trap_type, "acid")) return DOOR_TRAP_ACID;
+    if (is_abbrev(trap_type, "spore")) return DOOR_TRAP_DISEASE;
+    if (is_abbrev(trap_type, "frost")) return DOOR_TRAP_FROST;
+    if (is_abbrev(trap_type, "teleport")) return DOOR_TRAP_TELEPORT;
+    if (is_abbrev(trap_type, "power")) return DOOR_TRAP_ENERGY;
+
+    // Target-specific trap types
+    if (target == TRAP_TARG_DOOR || target == TRAP_TARG_CONT || target == TRAP_TARG_ARROW) {
+      if (is_abbrev(trap_type, "spike")) return DOOR_TRAP_SPIKE;
+      if (is_abbrev(trap_type, "blade")) return DOOR_TRAP_BLADE;
+      if (is_abbrev(trap_type, "pebble")) return DOOR_TRAP_PEBBLE;
+    }
+
+    if (target == TRAP_TARG_DOOR) {
+      if (is_abbrev(trap_type, "hammer")) return DOOR_TRAP_HAMMER;
+    }
+
+    if (target == TRAP_TARG_MINE || target == TRAP_TARG_GRENADE) {
+      if (is_abbrev(trap_type, "bolt")) return DOOR_TRAP_BOLT;
+      if (is_abbrev(trap_type, "disk")) return DOOR_TRAP_DISK;
+      if (is_abbrev(trap_type, "pebble")) return DOOR_TRAP_PEBBLE;
+    }
+
+    return MAX_TRAP_TYPES; // Invalid trap type
+  }
+}
+
 int TBeing::springTrap(TTrap* obj) {
-  int adj, fireperc, roll;
+  const int level_adjustment = obj->getTrapLevel() - GetMaxLevel();
+  const int dex_adjustment = getDexReaction() * 5;
+  const int fire_percentage = 95 + level_adjustment - dex_adjustment;
+  const int roll = ::number(1, 100);
 
-  adj = obj->getTrapLevel() - GetMaxLevel();
-  adj -= getDexReaction() * 5;
-  fireperc = 95 + adj;
-  roll = ::number(1, 100);
-
-  if (roll < fireperc)
-    return TRUE;  // trap is sprung
-
-  return FALSE;
+  return (roll < fire_percentage);
 }
 
 int TBeing::doSetTraps(const char* arg) {
@@ -137,9 +371,6 @@ int TBeing::doSetTraps(const char* arg) {
   int rc;
   TObj* obj;
 
-  // prevent people from making traps in peace rooms:
-  // policeman may attack if they see you trapping
-  // goofup may cause damage
   if (checkPeaceful("You are not permitted to construct traps here.\n\r"))
     return FALSE;
 
@@ -179,35 +410,14 @@ int TBeing::doSetTraps(const char* arg) {
           return DELETE_THIS;
         return FALSE;
       }
-      if (is_abbrev(trap_type, "fire")) {
-        type = DOOR_TRAP_FIRE;
-      } else if (is_abbrev(trap_type, "explosive")) {
-        type = DOOR_TRAP_TNT;
-      } else if (is_abbrev(trap_type, "poison")) {
-        type = DOOR_TRAP_POISON;
-      } else if (is_abbrev(trap_type, "sleep")) {
-        type = DOOR_TRAP_SLEEP;
-      } else if (is_abbrev(trap_type, "acid")) {
-        type = DOOR_TRAP_ACID;
-      } else if (is_abbrev(trap_type, "spore")) {
-        type = DOOR_TRAP_DISEASE;
-      } else if (is_abbrev(trap_type, "spike")) {
-        type = DOOR_TRAP_SPIKE;
-      } else if (is_abbrev(trap_type, "blade")) {
-        type = DOOR_TRAP_BLADE;
-      } else if (is_abbrev(trap_type, "hammer")) {
-        type = DOOR_TRAP_HAMMER;
-      } else if (is_abbrev(trap_type, "frost")) {
-        type = DOOR_TRAP_FROST;
-      } else if (is_abbrev(trap_type, "teleport")) {
-        type = DOOR_TRAP_TELEPORT;
-      } else if (is_abbrev(trap_type, "power")) {
-        type = DOOR_TRAP_ENERGY;
-      } else {
+
+      type = parseTrapType(trap_type, TRAP_TARG_DOOR);
+      if (type == MAX_TRAP_TYPES) {
         sendTo("No such exit trap-type.\n\r");
         sendTo("Syntax: trap exit <direction> <trap-type>\n\r");
         return FALSE;
       }
+
       if (!hasTrapComps(trap_type, TRAP_TARG_DOOR, 0)) {
         sendTo("You need more items to make that trap.\n\r");
         return FALSE;
@@ -254,35 +464,13 @@ int TBeing::doSetTraps(const char* arg) {
 
       sscanf(sstring, "%s", trap_type);
 
-      if (is_abbrev(trap_type, "fire")) {
-        type = DOOR_TRAP_FIRE;
-      } else if (is_abbrev(trap_type, "explosive")) {
-        type = DOOR_TRAP_TNT;
-      } else if (is_abbrev(trap_type, "poison")) {
-        type = DOOR_TRAP_POISON;
-      } else if (is_abbrev(trap_type, "sleep")) {
-        type = DOOR_TRAP_SLEEP;
-      } else if (is_abbrev(trap_type, "acid")) {
-        type = DOOR_TRAP_ACID;
-      } else if (is_abbrev(trap_type, "spore")) {
-        type = DOOR_TRAP_DISEASE;
-      } else if (is_abbrev(trap_type, "bolt")) {
-        type = DOOR_TRAP_BOLT;
-      } else if (is_abbrev(trap_type, "disk")) {
-        type = DOOR_TRAP_DISK;
-      } else if (is_abbrev(trap_type, "pebble")) {
-        type = DOOR_TRAP_PEBBLE;
-      } else if (is_abbrev(trap_type, "frost")) {
-        type = DOOR_TRAP_FROST;
-      } else if (is_abbrev(trap_type, "teleport")) {
-        type = DOOR_TRAP_TELEPORT;
-      } else if (is_abbrev(trap_type, "power")) {
-        type = DOOR_TRAP_ENERGY;
-      } else {
+      type = parseTrapType(trap_type, TRAP_TARG_MINE);
+      if (type == MAX_TRAP_TYPES) {
         sendTo("No such mine trap-type.\n\r");
         sendTo("Syntax: trap mine <trap-type>\n\r");
         return FALSE;
       }
+
       if (getMineTrapLearn(type) <= 0) {
         sendTo("You need more training before setting a mine trap.\n\r");
         return FALSE;
@@ -293,8 +481,8 @@ int TBeing::doSetTraps(const char* arg) {
         return FALSE;
       }
 
-      sendTo("You start working on your trap.\n\r");
-      act("$n starts constructing a land-mine.", TRUE, this, 0, 0, TO_ROOM);
+      sendTo(TRAP_START_CHAR_MSG);
+      act(TRAP_START_MINE_ROOM_MSG, TRUE, this, 0, 0, TO_ROOM);
       start_task(this, NULL, NULL, TASK_TRAP_MINE, trap_type, 3, inRoom(), type,
         0, 5);
       return FALSE;
@@ -310,29 +498,8 @@ int TBeing::doSetTraps(const char* arg) {
         return FALSE;
       }
 
-      if (is_abbrev(trap_type, "fire")) {
-        type = DOOR_TRAP_FIRE;
-      } else if (is_abbrev(trap_type, "explosive")) {
-        type = DOOR_TRAP_TNT;
-      } else if (is_abbrev(trap_type, "sleep")) {
-        type = DOOR_TRAP_SLEEP;
-      } else if (is_abbrev(trap_type, "acid")) {
-        type = DOOR_TRAP_ACID;
-      } else if (is_abbrev(trap_type, "spore")) {
-        type = DOOR_TRAP_DISEASE;
-      } else if (is_abbrev(trap_type, "spike")) {
-        type = DOOR_TRAP_SPIKE;
-      } else if (is_abbrev(trap_type, "blade")) {
-        type = DOOR_TRAP_BLADE;
-      } else if (is_abbrev(trap_type, "pebble")) {
-        type = DOOR_TRAP_PEBBLE;
-      } else if (is_abbrev(trap_type, "frost")) {
-        type = DOOR_TRAP_FROST;
-      } else if (is_abbrev(trap_type, "teleport")) {
-        type = DOOR_TRAP_TELEPORT;
-      } else if (is_abbrev(trap_type, "power")) {
-        type = DOOR_TRAP_ENERGY;
-      } else {
+      type = parseTrapType(trap_type, TRAP_TARG_ARROW);
+      if (type == MAX_TRAP_TYPES) {
         sendTo("No such arrow trap type.\n\r");
         sendTo("Syntax: trap arrow <trap-type>\n\r");
         return FALSE;
@@ -349,8 +516,8 @@ int TBeing::doSetTraps(const char* arg) {
         return FALSE;
       }
 
-      sendTo("You start working on your arrow.\n\r");
-      act("$n starts trapping an arrow.", TRUE, this, 0, 0, TO_ROOM);
+      sendTo(TRAP_START_CHAR_MSG);
+      act(TRAP_START_ARROW_ROOM_MSG, TRUE, this, 0, 0, TO_ROOM);
       start_task(this, obj, NULL, TASK_TRAP_ARROW, trap_type, 3, inRoom(), type,
         0, 5);
       break;
@@ -362,31 +529,8 @@ int TBeing::doSetTraps(const char* arg) {
 
       sscanf(sstring, "%s", trap_type);
 
-      if (is_abbrev(trap_type, "fire")) {
-        type = DOOR_TRAP_FIRE;
-      } else if (is_abbrev(trap_type, "explosive")) {
-        type = DOOR_TRAP_TNT;
-      } else if (is_abbrev(trap_type, "poison")) {
-        type = DOOR_TRAP_POISON;
-      } else if (is_abbrev(trap_type, "sleep")) {
-        type = DOOR_TRAP_SLEEP;
-      } else if (is_abbrev(trap_type, "acid")) {
-        type = DOOR_TRAP_ACID;
-      } else if (is_abbrev(trap_type, "spore")) {
-        type = DOOR_TRAP_DISEASE;
-      } else if (is_abbrev(trap_type, "bolt")) {
-        type = DOOR_TRAP_BOLT;
-      } else if (is_abbrev(trap_type, "disk")) {
-        type = DOOR_TRAP_DISK;
-      } else if (is_abbrev(trap_type, "pebble")) {
-        type = DOOR_TRAP_PEBBLE;
-      } else if (is_abbrev(trap_type, "frost")) {
-        type = DOOR_TRAP_FROST;
-      } else if (is_abbrev(trap_type, "teleport")) {
-        type = DOOR_TRAP_TELEPORT;
-      } else if (is_abbrev(trap_type, "power")) {
-        type = DOOR_TRAP_ENERGY;
-      } else {
+      type = parseTrapType(trap_type, TRAP_TARG_GRENADE);
+      if (type == MAX_TRAP_TYPES) {
         sendTo("No such grenade trap-type.\n\r");
         sendTo("Syntax: trap grenade <trap-type>\n\r");
         return FALSE;
@@ -401,8 +545,8 @@ int TBeing::doSetTraps(const char* arg) {
         return FALSE;
       }
 
-      sendTo("You start working on your grenade.\n\r");
-      act("$n starts constructing a grenade.", TRUE, this, 0, 0, TO_ROOM);
+      sendTo(TRAP_START_CHAR_MSG);
+      act(TRAP_START_GRENADE_ROOM_MSG, TRUE, this, 0, 0, TO_ROOM);
       start_task(this, NULL, NULL, TASK_TRAP_GRENADE, trap_type, 3, inRoom(),
         type, 0, 5);
       return FALSE;
@@ -427,26 +571,26 @@ int TBeing::triggerPortalTrap(TPortal* o) {
 
   switch (o->getPortalTrapType()) {
     case DOOR_TRAP_POISON:
-      act("A tiny needle in $p jams into your hand.", FALSE, this, o, 0,
-        TO_CHAR);
-      act("A tiny needle in $p jams into $n's hand.", FALSE, this, o, 0,
-        TO_ROOM);
+      sendTo(format(PORTAL_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(PORTAL_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(POISON_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(POISON_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
       trapPoison(o->getPortalTrapDam());
       break;
     case DOOR_TRAP_SLEEP:
-      act("A puff of smoke seeps from $p, enveloping you.", FALSE, this, o, 0,
-        TO_CHAR);
-      act("A puff of smoke seeps from $p, enveloping $n.", FALSE, this, o, 0,
-        TO_ROOM);
+      sendTo(format(PORTAL_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(PORTAL_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(SLEEP_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(SLEEP_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
       rc = trapSleep(o->getPortalTrapDam());
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       break;
     case DOOR_TRAP_FIRE:
-      act("A column of flame shoots from a concealed jet in $p at you.", TRUE,
-        this, o, 0, TO_CHAR);
-      act("A column of flame shoots from a concealed jet in $p at $n.", TRUE,
-        this, o, 0, TO_ROOM);
+      sendTo(format(PORTAL_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(PORTAL_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(FIRE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(FIRE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_FIRE, o->getPortalTrapDam(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -458,59 +602,58 @@ int TBeing::triggerPortalTrap(TPortal* o) {
 
       return TRUE;
     case DOOR_TRAP_TELEPORT:
-      act("A chaotic, swirling vortex surrounds you.", TRUE, this, o, 0,
-        TO_CHAR);
-      act("A chaotic, swirling vortex surrounds $n.", TRUE, this, o, 0,
-        TO_ROOM);
+      sendTo(format(PORTAL_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(PORTAL_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(TELEPORT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(TELEPORT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = trapTeleport(o->getPortalTrapDam());
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return rc;
     case DOOR_TRAP_SPIKE:
-      act("Sharpened spikes leap from a place of concealment in $p at you.",
-        TRUE, this, o, 0, TO_CHAR);
-      act("Sharpened spikes leap from a place of concealment in $p at $n.",
-        TRUE, this, o, 0, TO_ROOM);
+      sendTo(format(PORTAL_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(PORTAL_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(SPIKE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(SPIKE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_PIERCE, o->getPortalTrapDam(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
     case DOOR_TRAP_DISEASE:
-      act("You are engulfed in a cloud of spores.", FALSE, this, 0, 0, TO_ROOM);
-      act("$n is engulfed in a cloud of spores.", FALSE, this, 0, 0, TO_ROOM);
+      sendTo(format(PORTAL_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(PORTAL_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(DISEASE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(DISEASE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_DISEASE, o->getPortalTrapDam(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
     case DOOR_TRAP_HAMMER:
-      act("Giant weights concealed in $p crash down on you.", TRUE, this, o, 0,
-        TO_CHAR);
-      act("Giant weights concealed in $p crash down on $n.", TRUE, this, o, 0,
-        TO_ROOM);
+      sendTo(format(PORTAL_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(PORTAL_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(BLUNT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(BLUNT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_BLUNT, o->getPortalTrapDam(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
     case DOOR_TRAP_BLADE:
-      act(
-        "Razor sharp blades slice from a place of concealment in $p into you.",
-        TRUE, this, o, 0, TO_CHAR);
-      act("Razor sharp blades slice from a place of concealment in $p into $n.",
-        TRUE, this, o, 0, TO_ROOM);
+      sendTo(format(PORTAL_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(PORTAL_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(BLADE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(BLADE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_SLASH, o->getPortalTrapDam(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
     case DOOR_TRAP_TNT:
-      act("A massive explosion destroys $p, and spews shrapnel into the room!",
-        TRUE, this, o, 0, TO_CHAR);
-      act("A massive explosion destroys $p, and spews shrapnel into the room!",
-        TRUE, this, o, 0, TO_ROOM);
+      sendTo(format(PORTAL_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(PORTAL_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
       amnt = o->getPortalTrapDam();
 
       // fry people in room
@@ -519,9 +662,9 @@ int TBeing::triggerPortalTrap(TPortal* o) {
         t = *(it++);
         TBeing* tbt = dynamic_cast<TBeing*>(t);
         if (tbt && this != tbt && !tbt->isImmortal()) {
-          act("You are hit by shrapnel!", TRUE, tbt, 0, 0, TO_CHAR);
-          act("$n is hit by shrapnel.", TRUE, tbt, 0, 0, TO_ROOM);
-          rc = tbt->objDamage(DAMAGE_TRAP_TNT, amnt / 2, o);
+          act(TNT_EFFECT_CHAR_MSG, FALSE, tbt, 0, 0, TO_CHAR);
+          act(TNT_EFFECT_ROOM_MSG, FALSE, tbt, 0, 0, TO_ROOM);
+          rc = tbt->objDamage(DAMAGE_TRAP_TNT, amnt * ROOM_MOD, o);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete tbt;
             tbt = NULL;
@@ -529,6 +672,8 @@ int TBeing::triggerPortalTrap(TPortal* o) {
         }
       }
 
+      act(TNT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(TNT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
       rc = objDamage(DAMAGE_TRAP_TNT, amnt, o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS | DELETE_ITEM;
@@ -539,10 +684,10 @@ int TBeing::triggerPortalTrap(TPortal* o) {
 
       return DELETE_ITEM;
     case DOOR_TRAP_FROST:
-      act("A frosty blast jets from a place of concealment in $p into you.",
-        TRUE, this, o, 0, TO_CHAR);
-      act("A frosty blast jets from a place of concealment in $p into $n.",
-        TRUE, this, o, 0, TO_ROOM);
+      sendTo(format(PORTAL_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(PORTAL_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(FROST_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(FROST_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_FROST, o->getPortalTrapDam(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -554,13 +699,10 @@ int TBeing::triggerPortalTrap(TPortal* o) {
 
       return TRUE;
     case DOOR_TRAP_ENERGY:
-      act(
-        "Bolts of raw plasma stream from a place of concealment in $p into "
-        "you.",
-        TRUE, this, o, 0, TO_CHAR);
-      act(
-        "Jets of raw plasma stream from a place of concealment in $p into $n.",
-        TRUE, this, o, 0, TO_ROOM);
+      sendTo(format(PORTAL_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(PORTAL_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(ENERGY_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(ENERGY_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_ENERGY, o->getPortalTrapDam(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -568,14 +710,10 @@ int TBeing::triggerPortalTrap(TPortal* o) {
 
       return TRUE;
     case DOOR_TRAP_ACID:
-      act(
-        "A steaming liquid splashes from a place of concealment in $p covering "
-        "you.",
-        TRUE, this, o, 0, TO_CHAR);
-      act(
-        "A steaming liquid splashes from a place of concealment in $p covering "
-        "$n.",
-        TRUE, this, o, 0, TO_ROOM);
+      sendTo(format(PORTAL_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(PORTAL_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(ACID_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(ACID_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_ACID, o->getPortalTrapDam(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -600,23 +738,24 @@ int TBeing::triggerContTrap(TOpenContainer* obj) {
   TThing* t;
   int amnt;
 
-  act("You hear a strange noise...", TRUE, this, 0, 0, TO_ROOM);
-  act("You hear a strange noise...", TRUE, this, 0, 0, TO_CHAR);
+  act(STRANGE_NOISE_MSG, TRUE, this, 0, 0, TO_ROOM);
+  act(STRANGE_NOISE_MSG, TRUE, this, 0, 0, TO_CHAR);
   obj->remContainerFlag(CONT_TRAPPED);
   obj->remContainerFlag(CONT_CLOSED);
   obj->addContainerFlag(CONT_EMPTYTRAP);
 
-  if (!::number(0, 100)) {
-    act("...But nothing happens.", TRUE, this, 0, 0, TO_CHAR);
-    act("...But nothing happens.", TRUE, this, 0, 0, TO_ROOM);
-
+  if (!percentChance(1)){
+    act(NOTHING_HAPPENS_CHAR_MSG, TRUE, this, 0, 0, TO_CHAR);
+    act(NOTHING_HAPPENS_ROOM_MSG, TRUE, this, 0, 0, TO_ROOM);
     return FALSE;
   }
 
   switch (obj->getContainerTrapType()) {
     case DOOR_TRAP_FIRE:
-      act("$p bursts into flame.", TRUE, this, obj, 0, TO_ROOM);
-      act("$p bursts into flame.", TRUE, this, obj, 0, TO_CHAR);
+      sendTo(format(CONTAINER_TRAP_CHAR_MSG) % fname(obj->getName()));
+      act(format(CONTAINER_TRAP_ROOM_MSG) % fname(obj->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(FIRE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(FIRE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       // bag explodes, contents go boom
       for (StuffIter it = obj->stuff.begin(); it != obj->stuff.end();) {
@@ -629,10 +768,8 @@ int TBeing::triggerContTrap(TOpenContainer* obj) {
       ADD_DELETE(rc, DELETE_ITEM);
       return rc;
     case DOOR_TRAP_TNT:
-      act("$p explodes violently, spewing shrapnel into the room!", TRUE, this,
-        obj, 0, TO_ROOM);
-      act("$p explodes violently, spewing shrapnel into the room!", TRUE, this,
-        obj, 0, TO_CHAR);
+      sendTo(format(CONTAINER_TRAP_CHAR_MSG) % fname(obj->getName()));
+      act(format(CONTAINER_TRAP_ROOM_MSG) % fname(obj->getName()), FALSE, this, 0, 0, TO_ROOM);
       amnt = obj->getContainerTrapDam();
 
       // bag explodes, contents go boom
@@ -646,102 +783,100 @@ int TBeing::triggerContTrap(TOpenContainer* obj) {
         t = *(it++);
         TBeing* tbt = dynamic_cast<TBeing*>(t);
         if (tbt && this != tbt) {
-          act("You are hit by shrapnel!", TRUE, tbt, 0, 0, TO_CHAR);
-          act("$n is hit by shrapnel.", TRUE, tbt, 0, 0, TO_ROOM);
-          rc = tbt->objDamage(DAMAGE_TRAP_TNT, amnt / 2, obj);
+          act(TNT_EFFECT_CHAR_MSG, FALSE, tbt, 0, 0, TO_CHAR);
+          act(TNT_EFFECT_ROOM_MSG, FALSE, tbt, 0, 0, TO_ROOM);
+          rc = tbt->objDamage(DAMAGE_TRAP_TNT, amnt * ROOM_MOD, obj);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete tbt;
             tbt = NULL;
           }
         }
       }
+      act(TNT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(TNT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
       rc = objDamage(DAMAGE_TRAP_TNT, amnt, obj);
 
       ADD_DELETE(rc, DELETE_ITEM);
       return rc;
     case DOOR_TRAP_POISON:
-      act("A tiny needle in $p jams into your hand.", FALSE, this, obj, 0,
-        TO_CHAR);
+      sendTo(format(CONTAINER_TRAP_CHAR_MSG) % fname(obj->getName()));
+      act(format(CONTAINER_TRAP_ROOM_MSG) % fname(obj->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(POISON_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(POISON_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
       trapPoison(obj->getContainerTrapDam());
       break;
     case DOOR_TRAP_SLEEP:
-      act("A puff of smoke seeps from $p, enveloping you.", FALSE, this, obj, 0,
-        TO_CHAR);
-      act("A puff of smoke seeps from $p, enveloping $n.", FALSE, this, obj, 0,
-        TO_ROOM);
+      sendTo(format(CONTAINER_TRAP_CHAR_MSG) % fname(obj->getName()));
+      act(format(CONTAINER_TRAP_ROOM_MSG) % fname(obj->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(SLEEP_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(SLEEP_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
       rc = trapSleep(obj->getContainerTrapDam());
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       break;
     case DOOR_TRAP_SPIKE:
-      act("Sharpened spikes leap from a place of concealment in $p at you.",
-        TRUE, this, obj, 0, TO_CHAR);
-      act("Sharpened spikes leap from a place of concealment in $p at $n.",
-        TRUE, this, obj, 0, TO_ROOM);
+      sendTo(format(CONTAINER_TRAP_CHAR_MSG) % fname(obj->getName()));
+      act(format(CONTAINER_TRAP_ROOM_MSG) % fname(obj->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(SPIKE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(SPIKE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_PIERCE, obj->getContainerTrapDam(), obj);
       return rc;
     case DOOR_TRAP_DISEASE:
-      act("A cloud of spores pours from $p, engulfing you.", FALSE, this, obj,
-        0, TO_ROOM);
-      act("A cloud of spores pours from $p, engulfing $n.", FALSE, this, obj, 0,
-        TO_ROOM);
+      sendTo(format(CONTAINER_TRAP_CHAR_MSG) % fname(obj->getName()));
+      act(format(CONTAINER_TRAP_ROOM_MSG) % fname(obj->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(DISEASE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(DISEASE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       trapDisease(obj->getContainerTrapDam());
       break;
     case DOOR_TRAP_TELEPORT:
-      act("As you touch $p, a chaotic, swirling vortex surrounds you.", TRUE,
-        this, obj, 0, TO_CHAR);
-      act("As $n touches $p, a chaotic, swirling vortex surrounds $m.", TRUE,
-        this, obj, 0, TO_ROOM);
+      sendTo(format(CONTAINER_TRAP_CHAR_MSG) % fname(obj->getName()));
+      act(format(CONTAINER_TRAP_ROOM_MSG) % fname(obj->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(TELEPORT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(TELEPORT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = trapTeleport(obj->getContainerTrapDam());
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return rc;
     case DOOR_TRAP_PEBBLE:
-      act("Dozens of tiny pebbles shoot from $p, pelting you!", TRUE, this, obj,
-        0, TO_CHAR);
-      act("Dozens of tiny pebbles shoot from $p, pelting $n.", TRUE, this, obj,
-        0, TO_ROOM);
+      sendTo(format(CONTAINER_TRAP_CHAR_MSG) % fname(obj->getName()));
+      act(format(CONTAINER_TRAP_ROOM_MSG) % fname(obj->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(BLUNT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(BLUNT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_BLUNT, obj->getContainerTrapDam(), obj);
       return rc;
     case DOOR_TRAP_BLADE:
-      act(
-        "Razor sharp blades slide forth from a place of concealment in $p into "
-        "you.",
-        TRUE, this, obj, 0, TO_CHAR);
-      act(
-        "Razor sharp blades slide forth from a place of concealment in $p into "
-        "$n.",
-        TRUE, this, obj, 0, TO_ROOM);
+      sendTo(format(CONTAINER_TRAP_CHAR_MSG) % fname(obj->getName()));
+      act(format(CONTAINER_TRAP_ROOM_MSG) % fname(obj->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(BLADE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(BLADE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_SLASH, obj->getContainerTrapDam(), obj);
       return rc;
     case DOOR_TRAP_FROST:
-      act("A frosty blast jets from a place of concealment in $p into you.",
-        TRUE, this, obj, 0, TO_CHAR);
-      act("A frosty blast jets from a place of concealment in $p into $n.",
-        TRUE, this, obj, 0, TO_ROOM);
+      sendTo(format(CONTAINER_TRAP_CHAR_MSG) % fname(obj->getName()));
+      act(format(CONTAINER_TRAP_ROOM_MSG) % fname(obj->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(FROST_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(FROST_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_FROST, obj->getContainerTrapDam(), obj);
       return rc;
     case DOOR_TRAP_ENERGY:
-      act("Bolts of plasma stream from a place of concealment in $p into you.",
-        TRUE, this, obj, 0, TO_CHAR);
-      act(
-        "Bolts of plasma stream forth from a place of concealment in $p into "
-        "$n.",
-        TRUE, this, obj, 0, TO_ROOM);
+      sendTo(format(CONTAINER_TRAP_CHAR_MSG) % fname(obj->getName()));
+      act(format(CONTAINER_TRAP_ROOM_MSG) % fname(obj->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(ENERGY_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(ENERGY_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_ENERGY, obj->getContainerTrapDam(), obj);
       return rc;
     case DOOR_TRAP_ACID:
-      act("A strange liquid pours from a place of concealment in $p onto you.",
-        TRUE, this, obj, 0, TO_CHAR);
-      act("A strange liquid pours from a place of concealment in $p onto $n.",
-        TRUE, this, obj, 0, TO_ROOM);
+      sendTo(format(CONTAINER_TRAP_CHAR_MSG) % fname(obj->getName()));
+      act(format(CONTAINER_TRAP_ROOM_MSG) % fname(obj->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(ACID_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(ACID_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_ACID, obj->getContainerTrapDam(), obj);
       return rc;
@@ -759,31 +894,30 @@ int TBeing::triggerArrowTrap(TArrow* obj) {
   TThing* t;
   int amnt;
 
-  act("You hear a strange noise...", TRUE, this, 0, 0, TO_ROOM);
-  act("You hear a strange noise...", TRUE, this, 0, 0, TO_CHAR);
+  act(STRANGE_NOISE_MSG, TRUE, this, 0, 0, TO_ROOM);
+  act(STRANGE_NOISE_MSG, TRUE, this, 0, 0, TO_CHAR);
 
-  if (!::number(0, 100)) {
-    act("...But nothing happens.", TRUE, this, 0, 0, TO_CHAR);
-    act("...But nothing happens.", TRUE, this, 0, 0, TO_ROOM);
-
+  if (!percentChance(1)) {
+    act(NOTHING_HAPPENS_CHAR_MSG, TRUE, this, 0, 0, TO_CHAR);
+    act(NOTHING_HAPPENS_ROOM_MSG, TRUE, this, 0, 0, TO_ROOM);
     return FALSE;
   }
 
+  // Single arrow source message for ALL arrow trap cases
+  sendTo(format(ARROW_TRAP_CHAR_MSG) % fname(obj->getName()));
+  act(format(ARROW_TRAP_ROOM_MSG) % fname(obj->getName()), FALSE, this, 0, 0, TO_ROOM);
+
   switch (obj->getTrapDamType()) {
     case DOOR_TRAP_SLEEP:
-      act("A puff of smoke seeps from $p, enveloping you.", FALSE, this, obj, 0,
-        TO_CHAR);
-      act("A puff of smoke seeps from $p, enveloping $n.", FALSE, this, obj, 0,
-        TO_ROOM);
+      act(SLEEP_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(SLEEP_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
       rc = trapSleep(obj->getTrapDamAmount());
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       break;
     case DOOR_TRAP_FIRE:
-      act("A column of flame shoots from $p at you.", TRUE, this, obj, 0,
-        TO_CHAR);
-      act("A column of flame shoots from $p at $n.", TRUE, this, obj, 0,
-        TO_ROOM);
+      act(FIRE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(FIRE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_FIRE, obj->getTrapDamAmount(), obj);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -795,46 +929,38 @@ int TBeing::triggerArrowTrap(TArrow* obj) {
 
       return TRUE;
     case DOOR_TRAP_TELEPORT:
-      act("A chaotic, swirling vortex surrounds you.", TRUE, this, obj, 0,
-        TO_CHAR);
-      act("A chaotic, swirling vortex surrounds $n.", TRUE, this, obj, 0,
-        TO_ROOM);
+      act(TELEPORT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(TELEPORT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = trapTeleport(obj->getTrapDamAmount());
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return rc;
     case DOOR_TRAP_SPIKE:
-      act("Sharpened spikes leap from $p at you.", TRUE, this, obj, 0, TO_CHAR);
-      act("Sharpened spikes leap from $p at $n.", TRUE, this, obj, 0, TO_ROOM);
+      act(SPIKE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(SPIKE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_PIERCE, obj->getTrapDamAmount(), obj);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
     case DOOR_TRAP_DISEASE:
-      act("You are engulfed in a cloud of spores.", FALSE, this, 0, 0, TO_ROOM);
-      act("$n is engulfed in a cloud of spores.", FALSE, this, 0, 0, TO_ROOM);
+      act(DISEASE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(DISEASE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_DISEASE, obj->getTrapDamAmount(), obj);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
     case DOOR_TRAP_BLADE:
-      act("Razor sharp blades slice from $p into you.", TRUE, this, obj, 0,
-        TO_CHAR);
-      act("Razor sharp blades slice from $p into $n.", TRUE, this, obj, 0,
-        TO_ROOM);
+      act(BLADE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(BLADE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_SLASH, obj->getTrapDamAmount(), obj);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
     case DOOR_TRAP_TNT:
-      act("A massive explosion destroys $p, and spews shrapnel into the room!",
-        TRUE, this, obj, 0, TO_CHAR);
-      act("A massive explosion destroys $p, and spews shrapnel into the room!",
-        TRUE, this, obj, 0, TO_ROOM);
       amnt = obj->getTrapDamAmount();
 
       // fry people in room
@@ -842,9 +968,9 @@ int TBeing::triggerArrowTrap(TArrow* obj) {
         t = *(it++);
         TBeing* tbt = dynamic_cast<TBeing*>(t);
         if (tbt && this != tbt && !tbt->isImmortal()) {
-          act("You are hit by shrapnel!", TRUE, tbt, 0, 0, TO_CHAR);
-          act("$n is hit by shrapnel.", TRUE, tbt, 0, 0, TO_ROOM);
-          rc = tbt->objDamage(DAMAGE_TRAP_TNT, amnt / 2, obj);
+          act(TNT_EFFECT_CHAR_MSG, FALSE, tbt, 0, 0, TO_CHAR);
+          act(TNT_EFFECT_ROOM_MSG, FALSE, tbt, 0, 0, TO_ROOM);
+          rc = tbt->objDamage(DAMAGE_TRAP_TNT, amnt * ROOM_MOD, obj);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete tbt;
             tbt = NULL;
@@ -852,6 +978,8 @@ int TBeing::triggerArrowTrap(TArrow* obj) {
         }
       }
 
+      act(TNT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(TNT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
       rc = objDamage(DAMAGE_TRAP_TNT, amnt, obj);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS | DELETE_ITEM;
@@ -862,8 +990,8 @@ int TBeing::triggerArrowTrap(TArrow* obj) {
 
       return DELETE_ITEM;
     case DOOR_TRAP_FROST:
-      act("A frosty blast jets from $p into you.", TRUE, this, obj, 0, TO_CHAR);
-      act("A frosty blast jets from $p into $n.", TRUE, this, obj, 0, TO_ROOM);
+      act(FROST_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(FROST_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_FROST, obj->getTrapDamAmount(), obj);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -875,10 +1003,8 @@ int TBeing::triggerArrowTrap(TArrow* obj) {
 
       return TRUE;
     case DOOR_TRAP_ENERGY:
-      act("Bolts of raw plasma stream from $p into you.", TRUE, this, obj, 0,
-        TO_CHAR);
-      act("Jets of raw plasma stream from $p into $n.", TRUE, this, obj, 0,
-        TO_ROOM);
+      act(ENERGY_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(ENERGY_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_ENERGY, obj->getTrapDamAmount(), obj);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -886,10 +1012,8 @@ int TBeing::triggerArrowTrap(TArrow* obj) {
 
       return TRUE;
     case DOOR_TRAP_ACID:
-      act("A steaming liquid splashes from $p covering you.", TRUE, this, obj,
-        0, TO_CHAR);
-      act("A steaming liquid splashes from $p covering $n.", TRUE, this, obj, 0,
-        TO_ROOM);
+      act(ACID_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(ACID_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_ACID, obj->getTrapDamAmount(), obj);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -932,51 +1056,136 @@ int TBeing::triggerDoorTrap(dirTypeT door) {
 
   switch (exitp->trap_info) {
     case DOOR_TRAP_POISON:
-      sendTo(
-        format(
-          "A small needle lunges out of the %s and punctures your hand.\n\r") %
-        fname(exitp->keyword));
+      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
+      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
+      act(POISON_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(POISON_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
       trapPoison(dam);
       break;
     case DOOR_TRAP_SPIKE:
-      return trapDoorPierceDamage(dam, door);
+      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
+      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
+      act(SPIKE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(SPIKE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
+      rc = objDamage(DAMAGE_TRAP_PIERCE, dam, NULL);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      break;
     case DOOR_TRAP_SLEEP:
-      sendTo("You are engulfed in a cloud of gas.\n\r");
-      act("$n is engulfed in a cloud of gas.", FALSE, this, 0, 0, TO_ROOM);
+      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
+      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
+      act(SLEEP_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(SLEEP_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
       rc = trapSleep(dam);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       break;
     case DOOR_TRAP_TNT:
+      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
+      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
       exitp->destroyDoor(door, in_room);
-      return trapDoorTntDamage(dam, door);
+
+      // Room-wide TNT effects
+      for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
+        TThing* t = *(it++);
+        TBeing* tbt = dynamic_cast<TBeing*>(t);
+        if (tbt && this != tbt) {
+          act(TNT_EFFECT_CHAR_MSG, FALSE, tbt, 0, 0, TO_CHAR);
+          act(TNT_EFFECT_ROOM_MSG, FALSE, tbt, 0, 0, TO_ROOM);
+          rc = tbt->objDamage(DAMAGE_TRAP_TNT, dam * ROOM_MOD, NULL);
+          if (IS_SET_DELETE(rc, DELETE_THIS)) {
+            delete tbt;
+            tbt = NULL;
+          }
+        }
+      }
+
+      act(TNT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(TNT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
+      rc = objDamage(DAMAGE_TRAP_TNT, dam, NULL);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      break;
     case DOOR_TRAP_FIRE:
-      return trapDoorFireDamage(dam, door);
+      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
+      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
+      act(FIRE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(FIRE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
+      rc = objDamage(DAMAGE_TRAP_FIRE, dam, NULL);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      rc = flameEngulfed();
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      break;
     case DOOR_TRAP_ACID:
-      return trapDoorAcidDamage(dam, door);
+      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
+      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
+      act(ACID_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(ACID_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
+      rc = objDamage(DAMAGE_TRAP_ACID, dam, NULL);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      rc = acidEngulfed();
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      break;
     case DOOR_TRAP_DISEASE:
-      sendTo("You are engulfed in a cloud of spores.\n\r");
-      act("$n is engulfed in a cloud of spores.", FALSE, this, 0, 0, TO_ROOM);
+      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
+      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
+      act(DISEASE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(DISEASE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
       trapDisease(dam);
       break;
     case DOOR_TRAP_TELEPORT:
-      act("A chaotic, swirling vortex surrounds you.", TRUE, this, 0, 0,
-        TO_CHAR);
-      act("A chaotic, swirling vortex surrounds $n.", TRUE, this, 0, 0,
-        TO_ROOM);
+      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
+      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
+      act(TELEPORT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(TELEPORT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
       rc = trapTeleport(dam);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return rc;
     case DOOR_TRAP_HAMMER:
-      return trapDoorHammerDamage(dam, door);
+      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
+      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
+      act(BLUNT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(BLUNT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
+      rc = objDamage(DAMAGE_TRAP_BLUNT, dam, NULL);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      break;
     case DOOR_TRAP_BLADE:
-      return trapDoorSlashDamage(dam, door);
+      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
+      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
+      act(BLADE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(BLADE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
+      rc = objDamage(DAMAGE_TRAP_SLASH, dam, NULL);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      break;
     case DOOR_TRAP_ENERGY:
-      return trapDoorEnergyDamage(dam, door);
+      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
+      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
+      act(ENERGY_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(ENERGY_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
+      rc = objDamage(DAMAGE_TRAP_ENERGY, dam, NULL);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      break;
     case DOOR_TRAP_FROST:
-      return trapDoorFrostDamage(dam, door);
+      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
+      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
+      act(FROST_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+      act(FROST_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
+      rc = objDamage(DAMAGE_TRAP_FROST, dam, NULL);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      rc = frostEngulfed();
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      break;
     default:
       break;
   }
@@ -1117,43 +1326,37 @@ int TBeing::triggerTrap(TTrap* o) {
 
   switch (o->getTrapDamType()) {
     case DOOR_TRAP_POISON:
-      act("A small canister pops out of $p and detonates.", FALSE, this, o, 0,
-        TO_CHAR);
-      act("A small canister pops out of $p and detonates.", FALSE, this, o, 0,
-        TO_ROOM);
+      sendTo(format(MINE_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
         for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
           v = *(it++);
           tbt = dynamic_cast<TBeing*>(v);
           if (tbt && tbt->desc && tbt != this) {
-            act("You are sprayed with contact poison!", FALSE, tbt, o, 0,
-              TO_CHAR);
-            act("$n is sprayed with contact poison!", FALSE, tbt, o, 0,
-              TO_ROOM);
-            tbt->trapPoison(2 * o->getTrapDamAmount() / 3);
+            act(POISON_EFFECT_CHAR_MSG, FALSE, tbt, o, 0, TO_CHAR);
+            act(POISON_EFFECT_ROOM_MSG, FALSE, tbt, o, 0, TO_ROOM);
+            tbt->trapPoison(o->getTrapDamAmount() * STATUS_ROOM_MOD);
           }
         }
       }
 
-      act("You are sprayed with contact poison!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is sprayed with contact poison!", FALSE, this, o, 0, TO_ROOM);
+      act(POISON_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(POISON_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
       trapPoison(o->getTrapDamAmount());
       return TRUE;
     case DOOR_TRAP_SLEEP:
-      act("A vaporous fog steams from $p.", FALSE, this, o, 0, TO_CHAR);
-      act("A vaporous fog steams from $p.", FALSE, this, o, 0, TO_ROOM);
+      sendTo(format(MINE_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
         for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
           v = *(it++);
           tbt = dynamic_cast<TBeing*>(v);
           if (tbt && tbt->desc && tbt != this) {
-            act("You are surrounded by a noxious mist!", FALSE, tbt, o, 0,
-              TO_CHAR);
-            act("$n is surrounded by a noxious mist!", FALSE, tbt, o, 0,
-              TO_ROOM);
-            rc = tbt->trapSleep(2 * o->getTrapDamAmount() / 3);
+            act(SLEEP_EFFECT_CHAR_MSG, FALSE, tbt, o, 0, TO_CHAR);
+            act(SLEEP_EFFECT_ROOM_MSG, FALSE, tbt, o, 0, TO_ROOM);
+            rc = tbt->trapSleep(o->getTrapDamAmount() * STATUS_ROOM_MOD);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               delete tbt;
               tbt = NULL;
@@ -1162,27 +1365,24 @@ int TBeing::triggerTrap(TTrap* o) {
         }
       }
 
-      act("You are surrounded by a noxious mist!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is surrounded by a noxious mist!", FALSE, this, o, 0, TO_ROOM);
+      act(SLEEP_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(SLEEP_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
       rc = trapSleep(o->getTrapDamAmount());
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
     case DOOR_TRAP_FIRE:
-      act("A tiny spark comes out of $p, just before it erupts in flame.",
-        FALSE, this, o, 0, TO_CHAR);
-      act("A tiny spark comes out of $p, just before it erupts in flame.",
-        FALSE, this, o, 0, TO_ROOM);
+      sendTo(format(MINE_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
         for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
           v = *(it++);
           tbt = dynamic_cast<TBeing*>(v);
           if (tbt && tbt->desc && tbt != this) {
-            act("You are burned by the flames!", FALSE, tbt, o, 0, TO_CHAR);
-            act("$n is burned by the flames.", FALSE, tbt, o, 0, TO_ROOM);
-            rc = tbt->objDamage(DAMAGE_TRAP_FIRE, 1 * o->getTrapDamAmount() / 2,
-              o);
+            act(FIRE_EFFECT_CHAR_MSG, FALSE, tbt, o, 0, TO_CHAR);
+            act(FIRE_EFFECT_ROOM_MSG, FALSE, tbt, o, 0, TO_ROOM);
+            rc = tbt->objDamage(DAMAGE_TRAP_FIRE, o->getTrapDamAmount() * ROOM_MOD, o);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               delete tbt;
               tbt = NULL;
@@ -1191,8 +1391,8 @@ int TBeing::triggerTrap(TTrap* o) {
         }
       }
 
-      act("You are burned by the flames!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is burned by the flames.", FALSE, this, o, 0, TO_ROOM);
+      act(FIRE_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(FIRE_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_FIRE, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -1204,21 +1404,17 @@ int TBeing::triggerTrap(TTrap* o) {
 
       return TRUE;
     case DOOR_TRAP_TELEPORT:
-      act("A whirling vortex suddenly surrounds $p.", FALSE, this, o, 0,
-        TO_CHAR);
-      act("A whirling vortex suddenly surrounds $p.", FALSE, this, o, 0,
-        TO_ROOM);
+      sendTo(format(MINE_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
         for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
           v = *(it++);
           tbt = dynamic_cast<TBeing*>(v);
           if (tbt && tbt->desc && tbt != this) {
-            act("You find yourself sucked into the vortex!", FALSE, tbt, o, 0,
-              TO_CHAR);
-            act("$n flails wildly, but falls into the vortex.", FALSE, tbt, o,
-              0, TO_ROOM);
-            rc = tbt->trapTeleport(2 * o->getTrapDamAmount() / 3);
+            act(TELEPORT_EFFECT_CHAR_MSG, FALSE, tbt, o, 0, TO_CHAR);
+            act(TELEPORT_EFFECT_ROOM_MSG, FALSE, tbt, o, 0, TO_ROOM);
+            rc = tbt->trapTeleport(o->getTrapDamAmount() * STATUS_ROOM_MOD);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               delete tbt;
               tbt = NULL;
@@ -1227,56 +1423,46 @@ int TBeing::triggerTrap(TTrap* o) {
         }
       }
 
-      act("You find yourself sucked into the vortex!", FALSE, this, o, 0,
-        TO_CHAR);
-      act("$n flails wildly, but falls into the vortex.", FALSE, this, o, 0,
-        TO_ROOM);
+      act(TELEPORT_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(TELEPORT_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
 
       rc = trapTeleport(o->getTrapDamAmount());
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
     case DOOR_TRAP_DISEASE:
-      act("A cloud of spores puffs from $p.", FALSE, this, o, 0, TO_CHAR);
-      act("A cloud of spores puffs from $p.", FALSE, this, o, 0, TO_ROOM);
+      sendTo(format(MINE_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
         for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
           v = *(it++);
           tbt = dynamic_cast<TBeing*>(v);
           if (tbt && tbt->desc && tbt != this) {
-            act("You are surrounded by the thick cloud!", FALSE, tbt, o, 0,
-              TO_CHAR);
-            act("$n is surrounded by the thick cloud!", FALSE, tbt, o, 0,
-              TO_ROOM);
-            tbt->trapDisease(2 * o->getTrapDamAmount() / 3);
+            act(DISEASE_EFFECT_CHAR_MSG, FALSE, tbt, o, 0, TO_CHAR);
+            act(DISEASE_EFFECT_ROOM_MSG, FALSE, tbt, o, 0, TO_ROOM);
+            tbt->trapDisease(o->getTrapDamAmount() * STATUS_ROOM_MOD);
           }
         }
       }
 
-      act("You are surrounded by the thick cloud!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is surrounded by the thick cloud!", FALSE, this, o, 0, TO_ROOM);
+      act(DISEASE_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(DISEASE_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
       trapDisease(o->getTrapDamAmount());
       return TRUE;
     case DOOR_TRAP_BOLT:
-      act(
-        "A canister pops out of $p and detonates, scattering hundreds of "
-        "sharp, tiny bolts.",
-        FALSE, this, o, 0, TO_CHAR);
-      act(
-        "A canister pops out of $p and detonates, scattering hundreds of "
-        "sharp, tiny bolts.",
-        FALSE, this, o, 0, TO_ROOM);
+      sendTo(format(MINE_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
         for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
           v = *(it++);
           tbt = dynamic_cast<TBeing*>(v);
           if (tbt && tbt->desc && tbt != this) {
-            act("You are hit by the deadly bolts!", FALSE, tbt, o, 0, TO_CHAR);
-            act("$n is hit by the bolts.", FALSE, tbt, o, 0, TO_ROOM);
+            act(SPIKE_EFFECT_CHAR_MSG, FALSE, tbt, o, 0, TO_CHAR);
+            act(SPIKE_EFFECT_ROOM_MSG, FALSE, tbt, o, 0, TO_ROOM);
             rc = tbt->objDamage(DAMAGE_TRAP_PIERCE,
-              1 * o->getTrapDamAmount() / 2, o);
+              o->getTrapDamAmount() * ROOM_MOD, o);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               delete tbt;
               tbt = NULL;
@@ -1285,8 +1471,8 @@ int TBeing::triggerTrap(TTrap* o) {
         }
       }
 
-      act("You are perforated by the bolts!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is perforated by the bolts.", FALSE, this, o, 0, TO_ROOM);
+      act(SPIKE_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(SPIKE_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_PIERCE, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -1294,22 +1480,18 @@ int TBeing::triggerTrap(TTrap* o) {
 
       return TRUE;
     case DOOR_TRAP_PEBBLE:
-      act(
-        "A canister pops out of $p and detonates, spraying pebbles everywhere.",
-        FALSE, this, o, 0, TO_CHAR);
-      act(
-        "A canister pops out of $p and detonates, spraying pebbles everywhere.",
-        FALSE, this, o, 0, TO_ROOM);
+      sendTo(format(MINE_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
         for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
           v = *(it++);
           tbt = dynamic_cast<TBeing*>(v);
           if (tbt && tbt->desc && tbt != this) {
-            act("You are hit by the fusillade!", FALSE, tbt, o, 0, TO_CHAR);
-            act("$n is hit by the pebbles.", FALSE, tbt, o, 0, TO_ROOM);
+            act(BLUNT_EFFECT_CHAR_MSG, FALSE, tbt, o, 0, TO_CHAR);
+            act(BLUNT_EFFECT_ROOM_MSG, FALSE, tbt, o, 0, TO_ROOM);
             rc = tbt->objDamage(DAMAGE_TRAP_BLUNT,
-              1 * o->getTrapDamAmount() / 2, o);
+              o->getTrapDamAmount() * ROOM_MOD, o);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               delete tbt;
               tbt = NULL;
@@ -1318,8 +1500,8 @@ int TBeing::triggerTrap(TTrap* o) {
         }
       }
 
-      act("You are hit by the fusillade!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is hit by the pebbles.", FALSE, this, o, 0, TO_ROOM);
+      act(BLUNT_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(BLUNT_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_BLUNT, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -1327,25 +1509,18 @@ int TBeing::triggerTrap(TTrap* o) {
 
       return TRUE;
     case DOOR_TRAP_DISK:
-      act(
-        "A canister pops out of $p and detonates, throwing razor-disks in all "
-        "directions.",
-        FALSE, this, o, 0, TO_CHAR);
-      act(
-        "A canister pops out of $p and detonates, throwing razor-disks in all "
-        "directions.",
-        FALSE, this, o, 0, TO_ROOM);
+      sendTo(format(MINE_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
         for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
           v = *(it++);
           tbt = dynamic_cast<TBeing*>(v);
           if (tbt && tbt->desc && tbt != this) {
-            act("You are hit by the slashing disks!", FALSE, tbt, o, 0,
-              TO_CHAR);
-            act("$n is hit by the razors.", FALSE, tbt, o, 0, TO_ROOM);
+            act(BLADE_EFFECT_CHAR_MSG, FALSE, tbt, o, 0, TO_CHAR);
+            act(BLADE_EFFECT_ROOM_MSG, FALSE, tbt, o, 0, TO_ROOM);
             rc = tbt->objDamage(DAMAGE_TRAP_SLASH,
-              1 * o->getTrapDamAmount() / 2, o);
+              o->getTrapDamAmount() * ROOM_MOD, o);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               delete tbt;
               tbt = NULL;
@@ -1354,32 +1529,26 @@ int TBeing::triggerTrap(TTrap* o) {
         }
       }
 
-      act("You are slashed by the razor-disks!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is slashed by the razor-disks.", FALSE, this, o, 0, TO_ROOM);
+      act(BLADE_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(BLADE_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_SLASH, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
     case DOOR_TRAP_TNT:
-      act(
-        "A canister pops out of $p and detonates spraying white hot shrapnel "
-        "and bomb fragments everywhere.",
-        FALSE, this, o, 0, TO_CHAR);
-      act(
-        "A canister pops out of $p and detonates spraying white hot shrapnel "
-        "and bomb fragments everywhere.",
-        FALSE, this, o, 0, TO_ROOM);
+      sendTo(format(MINE_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
         for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
           v = *(it++);
           tbt = dynamic_cast<TBeing*>(v);
           if (tbt && tbt->desc && tbt != this) {
-            act("You are hit by the flak!", FALSE, tbt, o, 0, TO_CHAR);
-            act("$n is hit by the flak.", FALSE, tbt, o, 0, TO_ROOM);
+            act(TNT_EFFECT_CHAR_MSG, FALSE, tbt, o, 0, TO_CHAR);
+            act(TNT_EFFECT_ROOM_MSG, FALSE, tbt, o, 0, TO_ROOM);
             rc =
-              tbt->objDamage(DAMAGE_TRAP_TNT, 1 * o->getTrapDamAmount() / 2, o);
+              tbt->objDamage(DAMAGE_TRAP_TNT, o->getTrapDamAmount() * ROOM_MOD, o);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               delete tbt;
               tbt = NULL;
@@ -1388,8 +1557,8 @@ int TBeing::triggerTrap(TTrap* o) {
         }
       }
 
-      act("You are blasted by $p!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is blasted by fragments from $p.", FALSE, this, o, 0, TO_ROOM);
+      act(TNT_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(TNT_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_TNT, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -1404,12 +1573,10 @@ int TBeing::triggerTrap(TTrap* o) {
           v = *(it++);
           tbt = dynamic_cast<TBeing*>(v);
           if (tbt && tbt->desc && tbt != this) {
-            act("You are surrounded by the frosty cloud!", FALSE, tbt, o, 0,
-              TO_CHAR);
-            act("$n is surrounded by the frozen cloud.", FALSE, tbt, o, 0,
-              TO_ROOM);
+            act(FROST_EFFECT_CHAR_MSG, FALSE, tbt, o, 0, TO_CHAR);
+            act(FROST_EFFECT_ROOM_MSG, FALSE, tbt, o, 0, TO_ROOM);
             rc = tbt->objDamage(DAMAGE_TRAP_FROST,
-              1 * o->getTrapDamAmount() / 2, o);
+              o->getTrapDamAmount() * ROOM_MOD, o);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               delete tbt;
               tbt = NULL;
@@ -1418,8 +1585,8 @@ int TBeing::triggerTrap(TTrap* o) {
         }
       }
 
-      act("You are frozen by the icy cloud!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is frozen by the icy cloud.", FALSE, this, o, 0, TO_ROOM);
+      act(FROST_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(FROST_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_FROST, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -1431,20 +1598,18 @@ int TBeing::triggerTrap(TTrap* o) {
 
       return TRUE;
     case DOOR_TRAP_ENERGY:
-      act("$p glows with magic, before streams of plasma streak out of it.",
-        FALSE, this, o, 0, TO_CHAR);
-      act("$p glows with magic, before streams of plasma streak out of it.",
-        FALSE, this, o, 0, TO_ROOM);
+      sendTo(format(MINE_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
         for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
           v = *(it++);
           tbt = dynamic_cast<TBeing*>(v);
           if (tbt && tbt->desc && tbt != this) {
-            act("You are blasted by the plasma!", FALSE, tbt, o, 0, TO_CHAR);
-            act("$n is blasted by the plasma.", FALSE, tbt, o, 0, TO_ROOM);
+            act(ENERGY_EFFECT_CHAR_MSG, FALSE, tbt, o, 0, TO_CHAR);
+            act(ENERGY_EFFECT_ROOM_MSG, FALSE, tbt, o, 0, TO_ROOM);
             rc = tbt->objDamage(DAMAGE_TRAP_ENERGY,
-              1 * o->getTrapDamAmount() / 2, o);
+              o->getTrapDamAmount() * ROOM_MOD, o);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               delete tbt;
               tbt = NULL;
@@ -1453,29 +1618,25 @@ int TBeing::triggerTrap(TTrap* o) {
         }
       }
 
-      act("You are devastated by dozens of plasma bolts!", FALSE, this, o, 0,
-        TO_CHAR);
-      act("$n is devastated by dozens of plasma bolts.", FALSE, this, o, 0,
-        TO_ROOM);
+      act(ENERGY_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(ENERGY_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_ENERGY, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
     case DOOR_TRAP_ACID:
-      act("A yellow-green cloud billows out of $p.", FALSE, this, o, 0,
-        TO_CHAR);
-      act("A yellow-green cloud billows out of $p.", FALSE, this, o, 0,
-        TO_ROOM);
+      sendTo(format(MINE_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
         for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
           v = *(it++);
           tbt = dynamic_cast<TBeing*>(v);
           if (tbt && tbt->desc && tbt != this) {
-            act("The acid cloud surrounds you!", FALSE, tbt, o, 0, TO_CHAR);
-            act("The acid cloud surrounds $n.", FALSE, tbt, o, 0, TO_ROOM);
-            rc = tbt->objDamage(DAMAGE_TRAP_ACID, 1 * o->getTrapDamAmount() / 2,
+            act(ACID_EFFECT_CHAR_MSG, FALSE, tbt, o, 0, TO_CHAR);
+            act(ACID_EFFECT_ROOM_MSG, FALSE, tbt, o, 0, TO_ROOM);
+            rc = tbt->objDamage(DAMAGE_TRAP_ACID, o->getTrapDamAmount() * ROOM_MOD,
               o);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               delete tbt;
@@ -1485,10 +1646,8 @@ int TBeing::triggerTrap(TTrap* o) {
         }
       }
 
-      act("You are surrounded by the horrid acid cloud!", FALSE, this, o, 0,
-        TO_CHAR);
-      act("$n is surrounded by the horrid acid cloud.", FALSE, this, o, 0,
-        TO_ROOM);
+      act(ACID_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(ACID_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_ACID, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -1521,7 +1680,7 @@ int TBeing::trapDoorTntDamage(int amnt, dirTypeT door) {
     t = *(it++);
     TBeing* tbt = dynamic_cast<TBeing*>(t);
     if (tbt && this != tbt) {
-      rc = tbt->objDamage(DAMAGE_TRAP_TNT, amnt / 2, NULL);
+      rc = tbt->objDamage(DAMAGE_TRAP_TNT, amnt * ROOM_MOD, NULL);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete tbt;
         tbt = NULL;
@@ -1540,7 +1699,7 @@ int TBeing::trapDoorTntDamage(int amnt, dirTypeT door) {
       t = *(it++);
       TBeing* tbt = dynamic_cast<TBeing*>(t);
       if (tbt && this != tbt) {
-        rc = tbt->objDamage(DAMAGE_TRAP_TNT, amnt / 4, NULL);
+        rc = tbt->objDamage(DAMAGE_TRAP_TNT, amnt * OTHER_SIDE_MOD, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete tbt;
           tbt = NULL;
@@ -1631,7 +1790,7 @@ int TBeing::trapDoorFrostDamage(int amnt, dirTypeT door) {
     if (tbt && this != tbt && !tbt->isImmortal()) {
       act("$n is chilled by the arctic blast.", TRUE, tbt, 0, 0, TO_ROOM);
       act("You are chilled by the arctic blast.", TRUE, tbt, 0, 0, TO_CHAR);
-      rc = tbt->objDamage(DAMAGE_TRAP_FROST, amnt / 2, NULL);
+      rc = tbt->objDamage(DAMAGE_TRAP_FROST, amnt * ROOM_MOD, NULL);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete tbt;
         tbt = NULL;
@@ -1650,7 +1809,7 @@ int TBeing::trapDoorFrostDamage(int amnt, dirTypeT door) {
       if (tbt && this != tbt) {
         act("$n is chilled by the arctic blast.", TRUE, tbt, 0, 0, TO_ROOM);
         act("You are chilled by the arctic blast.", TRUE, tbt, 0, 0, TO_CHAR);
-        rc = tbt->objDamage(DAMAGE_TRAP_FROST, amnt / 3, NULL);
+        rc = tbt->objDamage(DAMAGE_TRAP_FROST, amnt * OTHER_SIDE_MOD, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete tbt;
           tbt = NULL;
@@ -1686,7 +1845,7 @@ int TBeing::trapDoorEnergyDamage(int amnt, dirTypeT door) {
     if (tbt && this != tbt && !tbt->isImmortal()) {
       act("$n is hit by the plasma bolts.", TRUE, tbt, 0, 0, TO_ROOM);
       act("You are hit by the plasma bolts.", TRUE, tbt, 0, 0, TO_CHAR);
-      rc = tbt->objDamage(DAMAGE_TRAP_ENERGY, amnt / 2, NULL);
+      rc = tbt->objDamage(DAMAGE_TRAP_ENERGY, amnt * ROOM_MOD, NULL);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete tbt;
         tbt = NULL;
@@ -1705,7 +1864,7 @@ int TBeing::trapDoorEnergyDamage(int amnt, dirTypeT door) {
       if (tbt && this != tbt) {
         act("$n is hit by the plasma bolts.", TRUE, tbt, 0, 0, TO_ROOM);
         act("You are hit by the plasma bolts.", TRUE, tbt, 0, 0, TO_CHAR);
-        rc = tbt->objDamage(DAMAGE_TRAP_ENERGY, amnt / 3, NULL);
+        rc = tbt->objDamage(DAMAGE_TRAP_ENERGY, amnt * OTHER_SIDE_MOD, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete tbt;
           tbt = NULL;
@@ -1755,7 +1914,7 @@ int TBeing::trapDoorAcidDamage(int amnt, dirTypeT door) {
     t = *(it++);
     TBeing* tbt = dynamic_cast<TBeing*>(t);
     if (tbt && this != tbt) {
-      rc = tbt->objDamage(DAMAGE_TRAP_ACID, amnt / 2, NULL);
+      rc = tbt->objDamage(DAMAGE_TRAP_ACID, amnt * ROOM_MOD, NULL);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete tbt;
         tbt = NULL;
@@ -1772,7 +1931,7 @@ int TBeing::trapDoorAcidDamage(int amnt, dirTypeT door) {
       t = *(it++);
       TBeing* tbt = dynamic_cast<TBeing*>(t);
       if (tbt && this != tbt) {
-        rc = tbt->objDamage(DAMAGE_TRAP_ACID, amnt / 3, NULL);
+        rc = tbt->objDamage(DAMAGE_TRAP_ACID, amnt * OTHER_SIDE_MOD, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete tbt;
           tbt = NULL;
@@ -1812,8 +1971,11 @@ int TBeing::trapSleep(int amt) {
   }
 
   if (!isLucky(levelLuckModifier(GetMaxLevel()))) {
-    // at 2 minutes per mudhour, let's not make this too painful
-    rc = rawSleep(0, (2 * Pulse::UPDATES_PER_MUDHOUR), 1, SAVE_NO);
+    // Estimate trap level from damage amount: getTrapDamAmount() = dice(level, 8)
+    // Average damage per level is 4.5, so amt/4 gives rough level estimate
+    int estimated_level = max(1, amt / 4);
+    int duration_hours = getSleepDuration(estimated_level);
+    rc = rawSleep(0, (duration_hours * Pulse::UPDATES_PER_MUDHOUR), 1, SAVE_NO);
   } else
     sendTo("You feel sleepy, but you recover.\n\r");
 
@@ -1828,7 +1990,11 @@ void TBeing::trapDisease(int amt) {
   aff.level = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
-  aff.duration = 4 * Pulse::UPDATES_PER_MUDHOUR;
+
+  // Estimate trap level from damage amount: getTrapDamAmount() = dice(level, 8)
+  // Average damage per level is 4.5, so amt/4 gives rough level estimate
+  int estimated_level = max(1, amt / 4);
+  aff.duration = getDiseaseDuration(estimated_level) * Pulse::UPDATES_PER_MUDHOUR;
 
   if (isImmortal() || isImmune(IMMUNE_DISEASE, WEAR_BODY)) {
     act("Hmmm, lucky you, it doesn't seem to have had any effect.", FALSE, this,
@@ -1841,11 +2007,11 @@ void TBeing::trapDisease(int amt) {
       FALSE, this, 0, 0, TO_CHAR);
     act("$n doesn't look so hot.", TRUE, this, 0, 0, TO_ROOM);
   } else if (!isLucky(amt) && !isTough()) {
-    aff.duration *= 4;
+    aff.duration *= SEVERE_DISEASE_MULTIPLIER;
     act("You feel VERY sick.", FALSE, this, 0, 0, TO_CHAR);
     act("$n doesn't look so hot.", TRUE, this, 0, 0, TO_ROOM);
   } else {
-    aff.duration *= 2;
+    aff.duration *= MODERATE_DISEASE_MULTIPLIER;
     act("$n doesn't look so hot.", TRUE, this, 0, 0, TO_ROOM);
     act("You feel sick.", TRUE, this, 0, 0, TO_CHAR);
   }
@@ -1857,8 +2023,12 @@ void TBeing::trapPoison(int amt) {
   affectedData af, af2;
 
   af.type = SPELL_POISON;
-  af.duration = 12 * Pulse::UPDATES_PER_MUDHOUR;
-  af.modifier = -20;
+
+  // Estimate trap level from damage amount: getTrapDamAmount() = dice(level, 8)
+  // Average damage per level is 4.5, so amt/4 gives rough level estimate
+  int estimated_level = max(1, amt / 4);
+  af.duration = getPoisonDuration(estimated_level) * Pulse::UPDATES_PER_MUDHOUR;
+  af.modifier = getPoisonStrModifier(estimated_level);
   af.location = APPLY_STR;
   af.bitvector = AFF_POISON;
 
@@ -1941,78 +2111,62 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
     half_chop(task->orig_arg, buf1, buf2);
 
     trapdamage = getDoorTrapDam(trap_type);
-    trapdamage = dice(trapdamage, 8) / 3;
+    trapdamage = dice(trapdamage, TRAP_DICE_SIZE) / TRAP_GOOF_DAMAGE_DIVISOR;
 
     hasTrapComps(buf2, TRAP_TARG_DOOR, -1);  // delete comps
 
+    // Single goof message for ALL door trap cases
+    act(GOOF_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+    act(GOOF_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
+
     switch (trap_type) {
       case DOOR_TRAP_POISON:
-        act("You knick yourself and got some of the poison in the wound.",
-          FALSE, this, 0, 0, TO_CHAR);
-        act("$n knicks $mself and gets some of the poison in the wound.", FALSE,
-          this, 0, 0, TO_ROOM);
+        act(POISON_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(POISON_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
         trapPoison(trapdamage);
         break;
       case DOOR_TRAP_SPIKE:
-        act("You jostle the frame, and your trap goes off in your face!", FALSE,
-          this, 0, 0, TO_CHAR);
-        act("$n jostles the frame, and $s trap goes off in $s face!", FALSE,
-          this, 0, 0, TO_ROOM);
-        act("You are impaled by the spikes!", FALSE, this, 0, 0, TO_CHAR);
-        act("$n is pierced by $s trap.", FALSE, this, 0, 0, TO_ROOM);
+        act(SPIKE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(SPIKE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
-        rc = objDamage(DAMAGE_TRAP_PIERCE, trapdamage / 2, NULL);
+        rc = objDamage(DAMAGE_TRAP_PIERCE, trapdamage * GOOF_MOD, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
         }
         break;
       case DOOR_TRAP_BLADE:
-        act("You jostle the frame, and your trap goes off in your face!", FALSE,
-          this, 0, 0, TO_CHAR);
-        act("$n jostles the frame, and $s trap goes off in $s face!", FALSE,
-          this, 0, 0, TO_ROOM);
-        act("Swinging blades slice into your body!", FALSE, this, 0, 0,
-          TO_CHAR);
-        act("$n is sliced by $s razor trap.", FALSE, this, 0, 0, TO_ROOM);
+        act(BLADE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(BLADE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
-        rc = objDamage(DAMAGE_TRAP_SLASH, trapdamage / 2, NULL);
+        rc = objDamage(DAMAGE_TRAP_SLASH, trapdamage * GOOF_MOD, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
         }
         break;
       case DOOR_TRAP_HAMMER:
-        act("You jostle the frame, and your trap goes off in your face!", FALSE,
-          this, 0, 0, TO_CHAR);
-        act("$n jostles the frame, and $s trap goes off in $s face!", FALSE,
-          this, 0, 0, TO_ROOM);
-        act("Heavy weights fall on you!", FALSE, this, 0, 0, TO_CHAR);
-        act("$n is crushed by $s hammer trap.", FALSE, this, 0, 0, TO_ROOM);
+        act(BLUNT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(BLUNT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
-        rc = objDamage(DAMAGE_TRAP_BLUNT, trapdamage / 2, NULL);
+        rc = objDamage(DAMAGE_TRAP_BLUNT, trapdamage * GOOF_MOD, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
         }
         break;
       case DOOR_TRAP_SLEEP:
-        act("You slip up and are caught in your own trap!", FALSE, this, 0, 0,
-          TO_CHAR);
-        act("$n slips up and is caught in $s own trap.", FALSE, this, 0, 0,
-          TO_ROOM);
+        act(SLEEP_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(SLEEP_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
         rc = trapSleep(trapdamage);
         if (IS_SET_DELETE(rc, DELETE_THIS))
           return DELETE_THIS;
         break;
       case DOOR_TRAP_DISEASE:
-        act("You slip up, and drop the spores.", FALSE, this, 0, 0, TO_CHAR);
-        act("$n slips up and is caught in $s own spore trap.", FALSE, this, 0,
-          0, TO_ROOM);
+        act(DISEASE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(DISEASE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
         trapDisease(trapdamage);
         break;
       case DOOR_TRAP_TELEPORT:
-        act("You slip up, and lose control of the magical forces.", FALSE, this,
-          0, 0, TO_CHAR);
-        act("$n slips up and is caught in $s own teleport trap.", FALSE, this,
-          0, 0, TO_ROOM);
+        act(TELEPORT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(TELEPORT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
         rc = trapTeleport(trapdamage);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
@@ -2020,48 +2174,36 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
         break;
       case DOOR_TRAP_TNT:
       case DOOR_TRAP_FIRE:
-        act("You jostle the frame, and your trap goes off in your face!", FALSE,
-          this, 0, 0, TO_CHAR);
-        act("$n jostles the frame, and $s trap goes off in $s face!", FALSE,
-          this, 0, 0, TO_ROOM);
-        act("Your fiery trap engulfs you.", FALSE, this, 0, 0, TO_CHAR);
-        act("$n's fiery trap engulfs $m.", FALSE, this, 0, 0, TO_ROOM);
+        act(TNT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(TNT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
-        rc = objDamage(DAMAGE_TRAP_TNT, trapdamage / 2, NULL);
+        rc = objDamage(DAMAGE_TRAP_TNT, trapdamage * GOOF_MOD, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
         }
         break;
       case DOOR_TRAP_ACID:
-        act("You slip up and spill the acid on yourself!", FALSE, this, 0, 0,
-          TO_CHAR);
-        act("$n slips and spills caustic acid upon $mself.", FALSE, this, 0, 0,
-          TO_ROOM);
+        act(ACID_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(ACID_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
-        rc = objDamage(DAMAGE_TRAP_ACID, trapdamage / 2, NULL);
+        rc = objDamage(DAMAGE_TRAP_ACID, trapdamage * GOOF_MOD, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
         }
         break;
       case DOOR_TRAP_ENERGY:
-        act("You slip up, and lose control of the magical forces.", FALSE, this,
-          0, 0, TO_CHAR);
-        act("$n slips up and is caught in $s own energy trap.", FALSE, this, 0,
-          0, TO_ROOM);
-        rc = objDamage(DAMAGE_TRAP_ENERGY, trapdamage / 2, NULL);
+        act(ENERGY_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(ENERGY_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
+        rc = objDamage(DAMAGE_TRAP_ENERGY, trapdamage * GOOF_MOD, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
         }
         break;
       case DOOR_TRAP_FROST:
-        act("You jostle the frame, and your trap goes off in your face!", FALSE,
-          this, 0, 0, TO_CHAR);
-        act("$n jostles the frame, and $s trap goes off in $s face!", FALSE,
-          this, 0, 0, TO_ROOM);
-        act("Your frost trap engulfs you.", FALSE, this, 0, 0, TO_CHAR);
-        act("$n's frost trap engulfs $m.", FALSE, this, 0, 0, TO_ROOM);
+        act(FROST_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(FROST_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
-        rc = objDamage(DAMAGE_TRAP_FROST, trapdamage / 2, NULL);
+        rc = objDamage(DAMAGE_TRAP_FROST, trapdamage * GOOF_MOD, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
         }
@@ -2071,85 +2213,70 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
         sendTo(
           "You slip up, and the trap you were setting goes off in your "
           "face.\n\r");
-        act("$n's trap explodes in $s face.", FALSE, this, 0, 0, TO_ROOM);
+        act(GOOF_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
         break;
     }
     // door traps
   } else if (goof_type == TRAP_TARG_CONT) {
-    trapdamage = getContainerTrapDam(trap_type);
-    trapdamage = dice(trapdamage, 8) / 3;
     obj = task->obj;
+
+    trapdamage = getContainerTrapDam(trap_type);
+    trapdamage = dice(trapdamage, TRAP_DICE_SIZE) / TRAP_GOOF_DAMAGE_DIVISOR;
 
     hasTrapComps(task->orig_arg, TRAP_TARG_CONT, -1);  // delete comps
 
+    // Single goof message for ALL container trap cases
+    act(GOOF_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+    act(GOOF_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
+
     switch (trap_type) {
       case DOOR_TRAP_POISON:
-        act("You knick yourself and got some of the poison in the wound.",
-          FALSE, this, 0, 0, TO_CHAR);
-        act("$n knicks $mself and gets some of the poison in the wound.", FALSE,
-          this, 0, 0, TO_ROOM);
+        act(POISON_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(POISON_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
         trapPoison(trapdamage);
         break;
       case DOOR_TRAP_SPIKE:
-        act("You jostle $p, and your trap goes off in your face!", FALSE, this,
-          obj, 0, TO_CHAR);
-        act("$n jostles $p, and $s trap goes off in $s face!", FALSE, this, obj,
-          0, TO_ROOM);
-        act("You are impaled by the spikes!", FALSE, this, 0, 0, TO_CHAR);
-        act("$n is pierced by $s trap.", FALSE, this, 0, 0, TO_ROOM);
+        act(SPIKE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(SPIKE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
-        rc = objDamage(DAMAGE_TRAP_PIERCE, trapdamage / 2, obj);
+        rc = objDamage(DAMAGE_TRAP_PIERCE, trapdamage * GOOF_MOD, obj);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
         }
         break;
       case DOOR_TRAP_BLADE:
-        act("You jostle $p, and your trap goes off in your face!", FALSE, this,
-          obj, 0, TO_CHAR);
-        act("$n jostles $p, and $s trap goes off in $s face!", FALSE, this, obj,
-          0, TO_ROOM);
-        act("Swinging blades slice into your body!", FALSE, this, 0, 0,
-          TO_CHAR);
-        act("$n is sliced by $s razor trap.", FALSE, this, 0, 0, TO_ROOM);
+        act(BLADE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(BLADE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
-        rc = objDamage(DAMAGE_TRAP_SLASH, trapdamage / 2, obj);
+        rc = objDamage(DAMAGE_TRAP_SLASH, trapdamage * GOOF_MOD, obj);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
         }
         break;
       case DOOR_TRAP_PEBBLE:
-        act("You jostle $p, and your trap goes off in your face!", FALSE, this,
-          obj, 0, TO_CHAR);
-        act("$n jostles $p, and $s trap goes off in $s face!", FALSE, this, obj,
-          0, TO_ROOM);
-        act("Dozens of pebbles pelt you!", FALSE, this, 0, 0, TO_CHAR);
-        act("$n is pelted by $s pebble trap.", FALSE, this, 0, 0, TO_ROOM);
+        act(BLUNT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(BLUNT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
-        rc = objDamage(DAMAGE_TRAP_BLUNT, trapdamage / 2, obj);
+        rc = objDamage(DAMAGE_TRAP_BLUNT, trapdamage * GOOF_MOD, obj);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
         }
         break;
       case DOOR_TRAP_SLEEP:
-        act("You slip up and are caught in your own trap!", FALSE, this, 0, 0,
-          TO_CHAR);
-        act("$n slips up and is caught in $s own trap.", FALSE, this, 0, 0,
-          TO_ROOM);
+        act(SLEEP_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(SLEEP_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
         rc = trapSleep(trapdamage);
         if (IS_SET_DELETE(rc, DELETE_THIS))
           return DELETE_THIS;
         break;
       case DOOR_TRAP_DISEASE:
-        act("You slip up, and drop the spores.", FALSE, this, 0, 0, TO_CHAR);
-        act("$n slips up and is caught in $s own spore trap.", FALSE, this, 0,
-          0, TO_ROOM);
+        act(DISEASE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(DISEASE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
         trapDisease(trapdamage);
         break;
       case DOOR_TRAP_TELEPORT:
-        act("You slip up, and lose control of the magical forces.", FALSE, this,
-          0, 0, TO_CHAR);
-        act("$n slips up and is caught in $s own teleport trap.", FALSE, this,
-          0, 0, TO_ROOM);
+        act(TELEPORT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(TELEPORT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
         rc = trapTeleport(trapdamage);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
@@ -2157,48 +2284,36 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
         break;
       case DOOR_TRAP_TNT:
       case DOOR_TRAP_FIRE:
-        act("You jostle $p, and your trap goes off in your face!", FALSE, this,
-          obj, 0, TO_CHAR);
-        act("$n jostles $p, and $s trap goes off in $s face!", FALSE, this, obj,
-          0, TO_ROOM);
-        act("Your fiery trap engulfs you.", FALSE, this, 0, 0, TO_CHAR);
-        act("$n's fiery trap engulfs $m.", FALSE, this, 0, 0, TO_ROOM);
+        act(TNT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(TNT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
-        rc = objDamage(DAMAGE_TRAP_TNT, trapdamage / 2, obj);
+        rc = objDamage(DAMAGE_TRAP_TNT, trapdamage * GOOF_MOD, obj);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
         }
         break;
       case DOOR_TRAP_ACID:
-        act("You slip up and spill the acid on yourself!", FALSE, this, 0, 0,
-          TO_CHAR);
-        act("$n slips and spills caustic acid upon $mself.", FALSE, this, 0, 0,
-          TO_ROOM);
+        act(ACID_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(ACID_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
-        rc = objDamage(DAMAGE_TRAP_ACID, trapdamage / 2, obj);
+        rc = objDamage(DAMAGE_TRAP_ACID, trapdamage * GOOF_MOD, obj);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
         }
         break;
       case DOOR_TRAP_ENERGY:
-        act("You slip up, and lose control of the magical forces.", FALSE, this,
-          0, 0, TO_CHAR);
-        act("$n slips up and is caught in $s own energy trap.", FALSE, this, 0,
-          0, TO_ROOM);
-        rc = objDamage(DAMAGE_TRAP_ENERGY, trapdamage / 2, obj);
+        act(ENERGY_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(ENERGY_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
+        rc = objDamage(DAMAGE_TRAP_ENERGY, trapdamage * GOOF_MOD, obj);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
         }
         break;
       case DOOR_TRAP_FROST:
-        act("You jostle $p, and your trap goes off in your face!", FALSE, this,
-          obj, 0, TO_CHAR);
-        act("$n jostles $p, and $s trap goes off in $s face!", FALSE, this, obj,
-          0, TO_ROOM);
-        act("Your frost trap engulfs you.", FALSE, this, 0, 0, TO_CHAR);
-        act("$n's frost trap engulfs $m.", FALSE, this, 0, 0, TO_ROOM);
+        act(FROST_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(FROST_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
-        rc = objDamage(DAMAGE_TRAP_FROST, trapdamage / 2, obj);
+        rc = objDamage(DAMAGE_TRAP_FROST, trapdamage * GOOF_MOD, obj);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
         }
@@ -2208,33 +2323,29 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
         sendTo(
           "You slip up, and the trap you were setting goes off in your "
           "face.\n\r");
-        act("$n's trap explodes in $s face.", FALSE, this, 0, 0, TO_ROOM);
+        act(GOOF_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
         break;
     }
     // cont traps
   } else if (goof_type == TRAP_TARG_MINE) {
     trapdamage = getMineTrapDam(trap_type);
-    trapdamage = dice(trapdamage, 8) / 3;
+    trapdamage = dice(trapdamage, TRAP_DICE_SIZE) / TRAP_GOOF_DAMAGE_DIVISOR;
 
     hasTrapComps(task->orig_arg, TRAP_TARG_MINE, -1);  // delete comps
 
+    // Single goof message for ALL mine trap cases
+    act(GOOF_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+    act(GOOF_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
+
     switch (trap_type) {
       case DOOR_TRAP_POISON:
-        act("You knick yourself and got some of the poison in the wound.",
-          FALSE, this, 0, 0, TO_CHAR);
-        act("$n knicks $mself and gets some of the poison in the wound.", FALSE,
-          this, 0, 0, TO_ROOM);
+        act(POISON_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(POISON_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
         trapPoison(trapdamage);
         break;
       case DOOR_TRAP_BOLT:
-        act("You slip up, and your trap goes off in your face!", FALSE, this, 0,
-          0, TO_CHAR);
-        act("$n slips up, and $s trap goes off in $s face!", FALSE, this, 0, 0,
-          TO_ROOM);
-        act(
-          "You are perforated by the tiny bolts, as they go flying everywhere!",
-          FALSE, this, 0, 0, TO_CHAR);
-        act("$n is pierced by $s trap.", FALSE, this, 0, 0, TO_ROOM);
+        act(SPIKE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(SPIKE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
         rc = objDamage(DAMAGE_TRAP_PIERCE, trapdamage, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -2242,13 +2353,8 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
         }
         break;
       case DOOR_TRAP_DISK:
-        act("You slip up, and your trap goes off in your face!", FALSE, this, 0,
-          0, TO_CHAR);
-        act("$n slips up, and $s trap goes off in $s face!", FALSE, this, 0, 0,
-          TO_ROOM);
-        act("Razor disks scatter everywhere and slice into your body!", FALSE,
-          this, 0, 0, TO_CHAR);
-        act("$n is sliced by $s disk trap.", FALSE, this, 0, 0, TO_ROOM);
+        act(BLADE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(BLADE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
         rc = objDamage(DAMAGE_TRAP_SLASH, trapdamage, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -2256,12 +2362,8 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
         }
         break;
       case DOOR_TRAP_PEBBLE:
-        act("You slip up, and your trap goes off in your face!", FALSE, this, 0,
-          0, TO_CHAR);
-        act("$n slips up, and $s trap goes off in $s face!", FALSE, this, 0, 0,
-          TO_ROOM);
-        act("Dozens of pebbles pelt you!", FALSE, this, 0, 0, TO_CHAR);
-        act("$n is pelted by $s pebble trap.", FALSE, this, 0, 0, TO_ROOM);
+        act(BLUNT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(BLUNT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
         rc = objDamage(DAMAGE_TRAP_BLUNT, trapdamage, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -2269,37 +2371,28 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
         }
         break;
       case DOOR_TRAP_SLEEP:
-        act("You slip up and are caught in your own trap!", FALSE, this, 0, 0,
-          TO_CHAR);
-        act("$n slips up and is caught in $s own trap.", FALSE, this, 0, 0,
-          TO_ROOM);
+        act(SLEEP_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(SLEEP_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
         rc = trapSleep(trapdamage);
         if (IS_SET_DELETE(rc, DELETE_THIS))
           return DELETE_THIS;
         break;
       case DOOR_TRAP_DISEASE:
-        act("You slip up, and drop the spores.", FALSE, this, 0, 0, TO_CHAR);
-        act("$n slips up and is caught in $s own spore trap.", FALSE, this, 0,
-          0, TO_ROOM);
+        act(DISEASE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(DISEASE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
         trapDisease(trapdamage);
         break;
       case DOOR_TRAP_TELEPORT:
-        act("You slip up, and lose control of the magical forces.", FALSE, this,
-          0, 0, TO_CHAR);
-        act("$n slips up and is caught in $s own teleport trap.", FALSE, this,
-          0, 0, TO_ROOM);
+        act(TELEPORT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(TELEPORT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
         rc = trapTeleport(trapdamage);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
         }
         break;
       case DOOR_TRAP_TNT:
-        act("You slip up, and your trap goes off in your face!", FALSE, this, 0,
-          0, TO_CHAR);
-        act("$n slips up, and $s trap goes off in $s face!", FALSE, this, 0, 0,
-          TO_ROOM);
-        act("Your explosive trap engulfs you.", FALSE, this, 0, 0, TO_CHAR);
-        act("$n's explosive trap engulfs $m.", FALSE, this, 0, 0, TO_ROOM);
+        act(TNT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(TNT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
         rc = objDamage(DAMAGE_TRAP_TNT, trapdamage, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -2307,12 +2400,8 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
         }
         break;
       case DOOR_TRAP_FIRE:
-        act("You slip up, and your trap goes off in your face!", FALSE, this, 0,
-          0, TO_CHAR);
-        act("$n slips up, and $s trap goes off in $s face!", FALSE, this, 0, 0,
-          TO_ROOM);
-        act("Your fiery trap engulfs you.", FALSE, this, 0, 0, TO_CHAR);
-        act("$n's fiery trap engulfs $m.", FALSE, this, 0, 0, TO_ROOM);
+        act(FIRE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(FIRE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
         rc = objDamage(DAMAGE_TRAP_FIRE, trapdamage, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -2320,10 +2409,8 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
         }
         break;
       case DOOR_TRAP_ACID:
-        act("You slip up and spill the acid on yourself!", FALSE, this, 0, 0,
-          TO_CHAR);
-        act("$n slips and spills caustic acid upon $mself.", FALSE, this, 0, 0,
-          TO_ROOM);
+        act(ACID_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(ACID_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
         rc = objDamage(DAMAGE_TRAP_ACID, trapdamage, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -2331,22 +2418,16 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
         }
         break;
       case DOOR_TRAP_ENERGY:
-        act("You slip up, and lose control of the magical forces.", FALSE, this,
-          0, 0, TO_CHAR);
-        act("$n slips up and is caught in $s own energy trap.", FALSE, this, 0,
-          0, TO_ROOM);
+        act(ENERGY_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(ENERGY_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
         rc = objDamage(DAMAGE_TRAP_ENERGY, trapdamage, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
         }
         break;
       case DOOR_TRAP_FROST:
-        act("You slip up, and your trap goes off in your face!", FALSE, this, 0,
-          0, TO_CHAR);
-        act("$n slips up, and $s trap goes off in $s face!", FALSE, this, 0, 0,
-          TO_ROOM);
-        act("Your frost trap engulfs you.", FALSE, this, 0, 0, TO_CHAR);
-        act("$n's frost trap engulfs $m.", FALSE, this, 0, 0, TO_ROOM);
+        act(FROST_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(FROST_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
         rc = objDamage(DAMAGE_TRAP_FROST, trapdamage, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -2363,27 +2444,23 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
     }
   } else if (goof_type == TRAP_TARG_GRENADE) {
     trapdamage = getGrenadeTrapDam(trap_type);
-    trapdamage = dice(trapdamage, 8) / 3;
+    trapdamage = dice(trapdamage, TRAP_DICE_SIZE) / TRAP_GOOF_DAMAGE_DIVISOR;
 
     hasTrapComps(task->orig_arg, TRAP_TARG_GRENADE, -1);  // delete comps
 
+    // Single goof message for ALL grenade trap cases
+    act(GOOF_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+    act(GOOF_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
+
     switch (trap_type) {
       case DOOR_TRAP_POISON:
-        act("You knick yourself and got some of the poison in the wound.",
-          FALSE, this, 0, 0, TO_CHAR);
-        act("$n knicks $mself and gets some of the poison in the wound.", FALSE,
-          this, 0, 0, TO_ROOM);
+        act(POISON_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(POISON_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
         trapPoison(trapdamage);
         break;
       case DOOR_TRAP_BOLT:
-        act("You slip up, and your trap goes off in your face!", FALSE, this, 0,
-          0, TO_CHAR);
-        act("$n slips up, and $s trap goes off in $s face!", FALSE, this, 0, 0,
-          TO_ROOM);
-        act(
-          "You are perforated by the tiny bolts, as they go flying everywhere!",
-          FALSE, this, 0, 0, TO_CHAR);
-        act("$n is pierced by $s trap.", FALSE, this, 0, 0, TO_ROOM);
+        act(SPIKE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(SPIKE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
         rc = objDamage(DAMAGE_TRAP_PIERCE, trapdamage, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -2391,13 +2468,8 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
         }
         break;
       case DOOR_TRAP_DISK:
-        act("You slip up, and your trap goes off in your face!", FALSE, this, 0,
-          0, TO_CHAR);
-        act("$n slips up, and $s trap goes off in $s face!", FALSE, this, 0, 0,
-          TO_ROOM);
-        act("Razor disks scatter everywhere and slice into your body!", FALSE,
-          this, 0, 0, TO_CHAR);
-        act("$n is sliced by $s disk trap.", FALSE, this, 0, 0, TO_ROOM);
+        act(BLADE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(BLADE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
         rc = objDamage(DAMAGE_TRAP_SLASH, trapdamage, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -2405,12 +2477,8 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
         }
         break;
       case DOOR_TRAP_PEBBLE:
-        act("You slip up, and your trap goes off in your face!", FALSE, this, 0,
-          0, TO_CHAR);
-        act("$n slips up, and $s trap goes off in $s face!", FALSE, this, 0, 0,
-          TO_ROOM);
-        act("Dozens of pebbles pelt you!", FALSE, this, 0, 0, TO_CHAR);
-        act("$n is pelted by $s pebble trap.", FALSE, this, 0, 0, TO_ROOM);
+        act(BLUNT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(BLUNT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
         rc = objDamage(DAMAGE_TRAP_BLUNT, trapdamage, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -2418,37 +2486,28 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
         }
         break;
       case DOOR_TRAP_SLEEP:
-        act("You slip up and are caught in your own trap!", FALSE, this, 0, 0,
-          TO_CHAR);
-        act("$n slips up and is caught in $s own trap.", FALSE, this, 0, 0,
-          TO_ROOM);
+        act(SLEEP_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(SLEEP_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
         rc = trapSleep(trapdamage);
         if (IS_SET_DELETE(rc, DELETE_THIS))
           return DELETE_THIS;
         break;
       case DOOR_TRAP_DISEASE:
-        act("You slip up, and drop the spores.", FALSE, this, 0, 0, TO_CHAR);
-        act("$n slips up and is caught in $s own spore trap.", FALSE, this, 0,
-          0, TO_ROOM);
+        act(DISEASE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(DISEASE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
         trapDisease(trapdamage);
         break;
       case DOOR_TRAP_TELEPORT:
-        act("You slip up, and lose control of the magical forces.", FALSE, this,
-          0, 0, TO_CHAR);
-        act("$n slips up and is caught in $s own teleport trap.", FALSE, this,
-          0, 0, TO_ROOM);
+        act(TELEPORT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(TELEPORT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
         rc = trapTeleport(trapdamage);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
         }
         break;
       case DOOR_TRAP_TNT:
-        act("You slip up, and your trap goes off in your face!", FALSE, this, 0,
-          0, TO_CHAR);
-        act("$n slips up, and $s trap goes off in $s face!", FALSE, this, 0, 0,
-          TO_ROOM);
-        act("Your explosive trap engulfs you.", FALSE, this, 0, 0, TO_CHAR);
-        act("$n's explosive trap engulfs $m.", FALSE, this, 0, 0, TO_ROOM);
+        act(TNT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(TNT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
         rc = objDamage(DAMAGE_TRAP_TNT, trapdamage, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -2456,12 +2515,8 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
         }
         break;
       case DOOR_TRAP_FIRE:
-        act("You slip up, and your trap goes off in your face!", FALSE, this, 0,
-          0, TO_CHAR);
-        act("$n slips up, and $s trap goes off in $s face!", FALSE, this, 0, 0,
-          TO_ROOM);
-        act("Your fiery trap engulfs you.", FALSE, this, 0, 0, TO_CHAR);
-        act("$n's fiery trap engulfs $m.", FALSE, this, 0, 0, TO_ROOM);
+        act(FIRE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(FIRE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
         rc = objDamage(DAMAGE_TRAP_FIRE, trapdamage, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -2469,10 +2524,8 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
         }
         break;
       case DOOR_TRAP_ACID:
-        act("You slip up and spill the acid on yourself!", FALSE, this, 0, 0,
-          TO_CHAR);
-        act("$n slips and spills caustic acid upon $mself.", FALSE, this, 0, 0,
-          TO_ROOM);
+        act(ACID_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(ACID_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
         rc = objDamage(DAMAGE_TRAP_ACID, trapdamage, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -2480,22 +2533,16 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
         }
         break;
       case DOOR_TRAP_ENERGY:
-        act("You slip up, and lose control of the magical forces.", FALSE, this,
-          0, 0, TO_CHAR);
-        act("$n slips up and is caught in $s own energy trap.", FALSE, this, 0,
-          0, TO_ROOM);
+        act(ENERGY_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(ENERGY_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
         rc = objDamage(DAMAGE_TRAP_ENERGY, trapdamage, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
         }
         break;
       case DOOR_TRAP_FROST:
-        act("You slip up, and your trap goes off in your face!", FALSE, this, 0,
-          0, TO_CHAR);
-        act("$n slips up, and $s trap goes off in $s face!", FALSE, this, 0, 0,
-          TO_ROOM);
-        act("Your frost trap engulfs you.", FALSE, this, 0, 0, TO_CHAR);
-        act("$n's frost trap engulfs $m.", FALSE, this, 0, 0, TO_ROOM);
+        act(FROST_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+        act(FROST_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
 
         rc = objDamage(DAMAGE_TRAP_FROST, trapdamage, NULL);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -2696,788 +2743,8 @@ bool TBeing::hasTrapComps(const char* type, trap_targ_t targ, int amt,
     return (com1 && com2 && com3);
 }
 
-void TBeing::sendTrapMessage(const char* type, trap_targ_t targ, int num) {
-  sstring buf;
+// Old sendTrapMessage function removed - replaced with sendStandardizedTrapMessage
 
-  if (is_abbrev(type, "fire")) {
-    if (num == 1) {
-      sendTo("You pour your sulphur into a small bag.\n\r");
-      act("$n pours some sulphur into a small bag.", TRUE, this, NULL, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 2) {
-      sendTo("You stick a flint halfway down into the bag of sulphur.\n\r");
-      act("$n puts a small flint down into a small bag.", TRUE, this, NULL,
-        NULL, TO_ROOM);
-      return;
-    } else if (num == 3) {
-      sendTo("You close the top of the bag around the flint.\n\r");
-      act("$n wraps the top of $s bag around a small flint.", TRUE, this, NULL,
-        NULL, TO_ROOM);
-      return;
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You trap the %s with your bag.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n jimmys the %s with $s bag.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You trap $p with your bag.", FALSE, this, task->obj, 0, TO_CHAR);
-        act("$n jimmys $p with $s bag.", TRUE, this, task->obj, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        act("You situate the bag inside the mine casing.", FALSE, this, 0, 0,
-          TO_CHAR);
-        act("$n situates $s bag inside a mine casing.", TRUE, this, NULL, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        act("You situate the bag inside the grenade casing.", FALSE, this, 0, 0,
-          TO_CHAR);
-        act("$n situates $s bag inside a grenade casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "explosive")) {
-    if (num == 1) {
-      sendTo("You attach your sulphur to the hydrogen bottle's neck.\n\r");
-      act("$n attaches some sulphur to a bottle of hydrogen.", TRUE, this, NULL,
-        NULL, TO_ROOM);
-      return;
-    } else if (num == 2) {
-      sendTo("You wedge a piece of flint into the bottle's neck.\n\r");
-      act("$n wedges a piece of flint into $s bottle.", TRUE, this, NULL, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 3) {
-      sendTo("You pour some more sulphur around the piece of flint.\n\r");
-      act("$n pours some more sulphur around the flint.", TRUE, this, NULL,
-        NULL, TO_ROOM);
-      return;
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You afix the bottle to the %s.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n jimmys the %s with $s bottle.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You afix the bottle to $p.", FALSE, this, task->obj, 0, TO_CHAR);
-        act("$n jimmys $p with $s bottle.", TRUE, this, task->obj, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        act("You situate the bottle inside the mine casing.", FALSE, this, 0, 0,
-          TO_CHAR);
-        act("$n situates the bottle inside a mine casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        act("You situate the bottle inside the grenade casing.", FALSE, this, 0,
-          0, TO_CHAR);
-        act("$n situates the bottle inside a grenade casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "poison")) {
-    if (num == 1) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo("You attach a needle to the tiny spring.\n\r");
-        act("$n attaches a thin needle to $s tiny spring.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-        sendTo("You pour the contact poison into the canister.\n\r");
-        act("$n pours a murky liquid into a canister.", TRUE, this, NULL, NULL,
-          TO_ROOM);
-        return;
-      }
-    } else if (num == 2) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo("You screw the needle apparatus into the vial of poison.\n\r");
-        act("$n screws the needle apparatus into the vial of poison.", TRUE,
-          this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-        sendTo("You afix the spring to the canister.\n\r");
-        act("$n fiddles with a canister.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 3) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo("You release the poison into the needle.\n\r");
-        act("$n releases the poison into the needle.", TRUE, this, NULL, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        sendTo(
-          "You gently place the canister apparatus inside the mine "
-          "casing.\n\r");
-        act("$n puts the canister inside a mine casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        sendTo(
-          "You gently place the canister apparatus inside a grenade "
-          "casing.\n\r");
-        act("$n puts the canister inside a grenade casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      }
-
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(
-          format("You conceal the poisoned needle inside the %s's lock.\n\r") %
-          fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n conceals the poisoned needle inside the %s's lock.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You conceal the poisoned needle inside $p's lock.", FALSE, this,
-          task->obj, 0, TO_CHAR);
-        act("$n conceals the poisoned needle inside $p's lock.", TRUE, this,
-          task->obj, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        sendTo("You springload the canister and arm the land mine.\n\r");
-        act("$n fiddles with a land mine.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        sendTo(
-          "You take the safeties off the canister and prepare the grenade for "
-          "use.\n\r");
-        act("$n fiddles with a grenade.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "sleep")) {
-    if (num == 1) {
-      sendTo("You screw a small nozzle into a hose.\n\r");
-      act("$n screw a small nozzle into a hose.", TRUE, this, NULL, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 2) {
-      sendTo("You clamp the hose snuggly around the nozzle.\n\r");
-      act("$n clamps the hose snuggly around the nozzle.", TRUE, this, NULL,
-        NULL, TO_ROOM);
-      return;
-    } else if (num == 3) {
-      sendTo("You afix the hose to the vial of gas.\n\r");
-      act("$n afixes the hose to $s vial of gas.", TRUE, this, NULL, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You conceal the gas apparatus within the %s.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n conceals the apparatus inside the %s.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You conceal the gas apparatus inside $p's lock.", FALSE, this,
-          task->obj, 0, TO_CHAR);
-        act("$n conceals the gas apparatus inside $p's lock.", TRUE, this,
-          task->obj, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        act("You conceal the gas apparatus inside a mine casing.", FALSE, this,
-          0, 0, TO_CHAR);
-        act("$n conceals the gas apparatus inside a mine casing.", TRUE, this,
-          NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        act("You conceal the gas apparatus inside a grenade casing.", FALSE,
-          this, 0, 0, TO_CHAR);
-        act("$n conceals the gas apparatus inside a grenade casing.", TRUE,
-          this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "frost")) {
-    if (num == 1) {
-      sendTo("You screw a small nozzle into a hose.\n\r");
-      act("$n screw a small nozzle into a hose.", TRUE, this, NULL, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 2) {
-      sendTo("You clamp the hose snuggly around the nozzle.\n\r");
-      act("$n clamps the hose snuggly around the nozzle.", TRUE, this, NULL,
-        NULL, TO_ROOM);
-      return;
-    } else if (num == 3) {
-      sendTo("You afix the hose to the cylinder of liquid frost.\n\r");
-      act("$n afixes the hose to $s cylinder of liquid frost.", TRUE, this,
-        NULL, NULL, TO_ROOM);
-      return;
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You conceal the frost apparatus into the %s.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n conceals the apparatus into the %s.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You conceal the frost apparatus inside $p's lock.", FALSE, this,
-          task->obj, 0, TO_CHAR);
-        act("$n conceals the frost apparatus inside $p's lock.", TRUE, this,
-          task->obj, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        act("You conceal the frost apparatus inside a mine casing.", FALSE,
-          this, 0, 0, TO_CHAR);
-        act("$n conceals the frost apparatus inside a mine casing.", TRUE, this,
-          NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        act("You conceal the frost apparatus inside a grenade casing.", FALSE,
-          this, 0, 0, TO_CHAR);
-        act("$n conceals the frost apparatus inside a grenade casing.", TRUE,
-          this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "acid")) {
-    if (num == 1) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo("You attach the vial of acid to the bellows.\n\r");
-        act("$n attach the vial of acid to your bellows.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-        sendTo("You pour the acid into the canister.\n\r");
-        act("$n pours a bubbly liquid into a canister.", TRUE, this, NULL, NULL,
-          TO_ROOM);
-        return;
-      }
-    } else if (num == 2) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo("You attach the nozzle to the end of the bellows.\n\r");
-        act("$n attaches the nozzle to $s bellows.", TRUE, this, NULL, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-        sendTo("You afix the spring to the canister.\n\r");
-        act("$n fiddles with a canister.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 3) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo("You release the acid into the bellows.\n\r");
-        act("$n releases the acid into the bellows.", TRUE, this, NULL, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        sendTo(
-          "You gently place the canister apparatus inside the mine "
-          "casing.\n\r");
-        act("$n puts the canister inside a mine casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        sendTo(
-          "You gently place the canister apparatus inside a grenade "
-          "casing.\n\r");
-        act("$n puts the canister inside a grenade casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You conceal the trap inside the %s.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n conceals the trap inside the %s.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You conceal the trap inside $p.", FALSE, this, task->obj, 0,
-          TO_CHAR);
-        act("$n conceals the trap inside $p.", TRUE, this, task->obj, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        sendTo("You springload the canister and arm the land mine.\n\r");
-        act("$n fiddles with a land mine.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        sendTo(
-          "You take the safeties off the canister and prepare the grenade for "
-          "use.\n\r");
-        act("$n fiddles with a grenade.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "spore")) {
-    if (num == 1) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo("You carefully stuff the fungus into the bellows.\n\r");
-        act("$n stuffs some fungus into $s bellows.", TRUE, this, NULL, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-        sendTo("You pour the fungus spores into the canister.\n\r");
-        act("$n pours some fungus spores into a canister.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 2) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo("You cap the end of the bellows with a nozzle.\n\r");
-        act("$n caps the bellows with a nozzle.", TRUE, this, NULL, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-        sendTo("You afix the spring to the canister.\n\r");
-        act("$n fiddles with a canister.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 3) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo(
-          "You shake the bellows, causing the fungus within to release its "
-          "spores.\n\r");
-        act("$n shakes the bellows vigorously.", TRUE, this, NULL, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        sendTo(
-          "You gently place the canister apparatus inside the mine "
-          "casing.\n\r");
-        act("$n puts the canister inside a mine casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        sendTo(
-          "You gently place the canister apparatus inside a grenade "
-          "casing.\n\r");
-        act("$n puts the canister inside a grenade casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You conceal the trap inside the %s.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n conceals the trap inside the %s.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You conceal the trap inside $p.", FALSE, this, task->obj, 0,
-          TO_CHAR);
-        act("$n conceals the trap inside $p.", TRUE, this, task->obj, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        sendTo("You springload the canister and arm the land mine.\n\r");
-        act("$n fiddles with a land mine.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        sendTo(
-          "You take the safeties off the canister and prepare the grenade for "
-          "use.\n\r");
-        act("$n fiddles with a grenade.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "spike")) {
-    if (num == 1) {
-      sendTo("You afix the spring to your sharpened spike.\n\r");
-      act("$n afixes a spring to a sharpened spike.", TRUE, this, NULL, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 2) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You conceal the spike inside the %s.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n conceals the spike inside the %s.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You conceal the spike inside $p.", FALSE, this, task->obj, 0,
-          TO_CHAR);
-        act("$n conceals the spike inside $p.", TRUE, this, task->obj, NULL,
-          TO_ROOM);
-        return;
-      }
-    } else if (num == 3) {
-      sendTo(
-        "You tie the tripwire to the spike apparatus and springload it.\n\r");
-      act("$n ties a tripwire to the spike and fiddles with it some more.",
-        TRUE, this, NULL, NULL, TO_ROOM);
-      return;
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(
-          format("You stretch the tripwire across the %s and tie it off.\n\r") %
-          fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n stretches a tripwire across the %s and ties it off.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You stretch the tripwire across $p's lock and tie it off.", FALSE,
-          this, task->obj, 0, TO_CHAR);
-        act("$n stretches $s tripwire across $p's lock and ties it off.", TRUE,
-          this, task->obj, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "bolt")) {
-    if (num == 1) {
-      act("You attach some tubing to the outlet valve of the compressed gas.",
-        FALSE, this, 0, 0, TO_CHAR);
-      act("$n fiddles with some tubing and a vial.", TRUE, this, 0, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 2) {
-      act("You pour the bolts into the tubing.", FALSE, this, 0, 0, TO_CHAR);
-      act("$n pours some bolts into the tubing.", TRUE, this, 0, NULL, TO_ROOM);
-      return;
-    } else if (num == 3) {
-      act("You arm the trigger mechanism on the compressed gas.", FALSE, this,
-        0, 0, TO_CHAR);
-      act("$n arm the trigger mechanism on the compressed gas.", TRUE, this, 0,
-        NULL, TO_ROOM);
-      return;
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_MINE) {
-        act("You conceal the tubing inside the mine casing.", FALSE, this, 0, 0,
-          TO_CHAR);
-        act("$n fiddles with a mine casing.", TRUE, this, 0, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        act("You conceal the tubing inside the grenade casing.", FALSE, this, 0,
-          0, TO_CHAR);
-        act("$n fiddles with a grenade casing.", TRUE, this, 0, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "blade")) {
-    if (num == 1) {
-      sendTo("You afix the spring to your razor sharp blade.\n\r");
-      act("$n afixes a spring to $s razor blade.", TRUE, this, NULL, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 2) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You conceal the razor blade inside the %s.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n conceals the razor blade inside the %s.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You conceal the razor blade inside $p.", FALSE, this, task->obj, 0,
-          TO_CHAR);
-        act("$n conceals the razor blade inside $p.", TRUE, this, task->obj,
-          NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 3) {
-      sendTo(
-        "You tie the tripwire to the razor apparatus and springload it.\n\r");
-      act("$n ties a tripwire to the razor and fiddles with it some more.",
-        TRUE, this, NULL, NULL, TO_ROOM);
-      return;
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(
-          format("You stretch the tripwire across the %s and tie it off.\n\r") %
-          fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n stretches a tripwire across the %s and ties it off.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You stretch the tripwire across $p's lock and tie it off.", FALSE,
-          this, task->obj, 0, TO_CHAR);
-        act("$n stretches $s tripwire across $p's lock and ties it off.", TRUE,
-          this, task->obj, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "disk")) {
-    if (num == 1) {
-      sendTo("You pour the razor sharp disks into the canister.\n\r");
-      act("$n pours some razor sharp disks into a canister.", TRUE, this, NULL,
-        NULL, TO_ROOM);
-      return;
-    } else if (num == 2) {
-      sendTo("You afix the spring to the canister.\n\r");
-      act("$n fiddles with a canister.", TRUE, this, NULL, NULL, TO_ROOM);
-      return;
-    } else if (num == 3) {
-      if (targ == TRAP_TARG_MINE) {
-        sendTo(
-          "You gently place the canister apparatus inside the mine "
-          "casing.\n\r");
-        act("$n puts the canister inside a mine casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        sendTo(
-          "You gently place the canister apparatus inside a grenade "
-          "casing.\n\r");
-        act("$n puts the canister inside a grenade casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_MINE) {
-        sendTo("You springload the canister and arm the land mine.\n\r");
-        act("$n fiddles with a land mine.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        sendTo(
-          "You take the safeties off the canister and prepare the grenade for "
-          "use.\n\r");
-        act("$n fiddles with a grenade.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "hammer")) {
-    if (num == 1) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You pry open the frame of a %s with your wedge.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n pries at a %s's frame.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 2) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You shove the concrete up above the %s's frame.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n stuffs something bulky above the %s.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 3) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo("You tie the tripwire to the frame wedge.\n\r");
-        act("$n ties a tripwire to $s booby trap.", TRUE, this, NULL, NULL,
-          TO_ROOM);
-        return;
-      }
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(
-          format("You stretch the tripwire across the %s and tie it off.\n\r") %
-          fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n stretches a tripwire across the %s and ties it off.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "pebble")) {
-    if (num == 1) {
-      act("You attach some tubing to the outlet valve of the compressed gas.",
-        FALSE, this, 0, 0, TO_CHAR);
-      act("$n fiddles with some tubing and a vial.", TRUE, this, 0, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 2) {
-      act("You pour the pebbles into the tubing.", FALSE, this, 0, 0, TO_CHAR);
-      act("$n pours some stones into the tubing.", TRUE, this, 0, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 3) {
-      act("You arm the trigger mechanism on the compressed gas.", FALSE, this,
-        0, 0, TO_CHAR);
-      act("$n arm the trigger mechanism on the compressed gas.", TRUE, this, 0,
-        NULL, TO_ROOM);
-      return;
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_CONT) {
-        act("You conceal the tubing on $p.", FALSE, this, task->obj, 0,
-          TO_CHAR);
-        act("$n fiddles with $p.", TRUE, this, task->obj, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        act("You conceal the tubing inside the mine casing.", FALSE, this, 0, 0,
-          TO_CHAR);
-        act("$n fiddles with a mine casing.", TRUE, this, 0, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        act("You conceal the tubing inside the grenade casing.", FALSE, this, 0,
-          0, TO_CHAR);
-        act("$n fiddles with a grenade casing.", TRUE, this, 0, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "teleport")) {
-    if (num == 1) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You plaster a pentagram to the %s to focus the magical "
-                      "forces.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n plasters a pentagram to the %s.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You plaster a pentagram to $p to focus the magical forces.", FALSE,
-          this, task->obj, 0, TO_CHAR);
-        act("$n plasters a pentagram to $p.", TRUE, this, task->obj, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        act(
-          "You plaster a pentagram to a mine casing to focus the magical "
-          "forces.",
-          FALSE, this, 0, 0, TO_CHAR);
-        act("$n plasters a pentagram to a mine casing.", TRUE, this, 0, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        act(
-          "You plaster a pentagram to a grenade casing to focus the magical "
-          "forces.",
-          FALSE, this, 0, 0, TO_CHAR);
-        act("$n plasters a pentagram to a grenade casing.", TRUE, this, 0, NULL,
-          TO_ROOM);
-        return;
-      }
-    } else if (num == 2) {
-      sendTo(
-        "You sprinkle the blink powder around the edges of the pentagram.\n\r");
-      act("$n sprinkles some dust on the pentagram.", TRUE, this, NULL, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 3) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo("You bond the tripwire to one side of the pentagram.\n\r");
-        act("$n fiddles with a bit of wire and $s pentagram.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-        sendTo("You trace along the pentagram with the crystalline.\n\r");
-        act("$n fiddles with a crystal and $s pentagram.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(
-          format("You stretch the tripwire across the %s and tie it off.\n\r") %
-          fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n stretches a tripwire across the %s and ties it off.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You stretch the tripwire across $p's lock and tie it off.", FALSE,
-          this, task->obj, 0, TO_CHAR);
-        act("$n stretches $s tripwire across $p's lock and ties it off.", TRUE,
-          this, task->obj, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-        act(
-          "You snap the crystalline, activating the magical forces in the "
-          "pentagram.",
-          FALSE, this, 0, 0, TO_CHAR);
-        act(
-          "As $n snaps $s crystalline in half, the pentagram glows with magic.",
-          TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "power")) {
-    if (num == 1) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You plaster a pentagram to the %s to focus the magical "
-                      "forces.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n plasters a pentagram to the %s.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You plaster a pentagram to $p to focus the magical forces.", FALSE,
-          this, task->obj, 0, TO_CHAR);
-        act("$n plasters a pentagram to $p.", TRUE, this, task->obj, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        act(
-          "You plaster a pentagram to a mine casing to focus the magical "
-          "forces.",
-          FALSE, this, 0, 0, TO_CHAR);
-        act("$n plasters a pentagram to a mine casing.", TRUE, this, 0, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        act(
-          "You plaster a pentagram to a grenade casing to focus the magical "
-          "forces.",
-          FALSE, this, 0, 0, TO_CHAR);
-        act("$n plasters a pentagram to a grenade casing.", TRUE, this, 0, NULL,
-          TO_ROOM);
-        return;
-      }
-    } else if (num == 2) {
-      sendTo(
-        "You position the refined athanor in the center of the pentagram.\n\r");
-      act("$n puts something inside the pentagram.", TRUE, this, NULL, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 3) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo("You bond the tripwire to one side of the pentagram.\n\r");
-        act("$n fiddles with a bit of wire and $s pentagram.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-        sendTo("You trace along the pentagram with the crystalline.\n\r");
-        act("$n fiddles with a crystal and $s pentagram.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(
-          format("You stretch the tripwire across the %s and tie it off.\n\r") %
-          fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n stretches a tripwire across the %s and ties it off.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You stretch the tripwire across $p's lock and tie it off.", FALSE,
-          this, task->obj, 0, TO_CHAR);
-        act("$n stretches $s tripwire across $p's lock and ties it off.", TRUE,
-          this, task->obj, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-        act(
-          "You snap the crystalline, activating the magical forces in the "
-          "pentagram.",
-          FALSE, this, 0, 0, TO_CHAR);
-        act(
-          "As $n snaps $s crystalline in half, the pentagram glows with magic.",
-          TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    }
-  }
-
-  vlogf(LOG_BUG, format("Bad trap type (%s, %d, %d) with character %s") % type %
-                   targ % num % getName());
-}
 
 void TBeing::throwGrenade(TTrap* o, dirTypeT dir) {
   char buf[256];
@@ -3527,20 +2794,20 @@ int TBeing::grenadeHit(TTrap* o) {
 
   switch (o->getTrapDamType()) {
     case DOOR_TRAP_POISON:
-      act("You are sprayed with contact poison!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is sprayed with contact poison!", FALSE, this, o, 0, TO_ROOM);
+      act(POISON_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(POISON_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
       trapPoison(o->getTrapDamAmount());
       return TRUE;
     case DOOR_TRAP_SLEEP:
-      act("You are surrounded by a noxious mist!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is surrounded by a noxious mist!", FALSE, this, o, 0, TO_ROOM);
+      act(SLEEP_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(SLEEP_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
       rc = trapSleep(o->getTrapDamAmount());
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
     case DOOR_TRAP_FIRE:
-      act("You are burned by the flames!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is burned by the flames.", FALSE, this, o, 0, TO_ROOM);
+      act(FIRE_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(FIRE_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_FIRE, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -3552,23 +2819,21 @@ int TBeing::grenadeHit(TTrap* o) {
 
       return TRUE;
     case DOOR_TRAP_TELEPORT:
-      act("You find yourself sucked into the vortex!", FALSE, this, o, 0,
-        TO_CHAR);
-      act("$n flails wildly, but falls into the vortex.", FALSE, this, o, 0,
-        TO_ROOM);
+      act(TELEPORT_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(TELEPORT_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
 
       rc = trapTeleport(o->getTrapDamAmount());
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
     case DOOR_TRAP_DISEASE:
-      act("You are surrounded by the thick cloud!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is surrounded by the thick cloud!", FALSE, this, o, 0, TO_ROOM);
+      act(DISEASE_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(DISEASE_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
       trapDisease(o->getTrapDamAmount());
       return TRUE;
     case DOOR_TRAP_BOLT:
-      act("You are perforated by the bolts!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is perforated by the bolts.", FALSE, this, o, 0, TO_ROOM);
+      act(SPIKE_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(SPIKE_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_PIERCE, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -3576,8 +2841,8 @@ int TBeing::grenadeHit(TTrap* o) {
 
       return TRUE;
     case DOOR_TRAP_PEBBLE:
-      act("You are hit by the fusillade!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is hit by the pebbles.", FALSE, this, o, 0, TO_ROOM);
+      act(BLUNT_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(BLUNT_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_BLUNT, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -3585,24 +2850,24 @@ int TBeing::grenadeHit(TTrap* o) {
 
       return TRUE;
     case DOOR_TRAP_DISK:
-      act("You are slashed by the razor-disks!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is slashed by the razor-disks.", FALSE, this, o, 0, TO_ROOM);
+      act(BLADE_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(BLADE_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_SLASH, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
     case DOOR_TRAP_TNT:
-      act("You are blasted by $p!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is blasted by fragments from $p.", FALSE, this, o, 0, TO_ROOM);
+      act(TNT_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(TNT_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_TNT, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
     case DOOR_TRAP_FROST:
-      act("You are frozen by the icy cloud!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is frozen by the icy cloud.", FALSE, this, o, 0, TO_ROOM);
+      act(FROST_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(FROST_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_FROST, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -3614,20 +2879,16 @@ int TBeing::grenadeHit(TTrap* o) {
 
       return TRUE;
     case DOOR_TRAP_ENERGY:
-      act("You are devastated by dozens of plasma bolts!", FALSE, this, o, 0,
-        TO_CHAR);
-      act("$n is devastated by dozens of plasma bolts.", FALSE, this, o, 0,
-        TO_ROOM);
+      act(ENERGY_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(ENERGY_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_ENERGY, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
     case DOOR_TRAP_ACID:
-      act("You are surrounded by the horrid acid cloud!", FALSE, this, o, 0,
-        TO_CHAR);
-      act("$n is surrounded by the horrid acid cloud.", FALSE, this, o, 0,
-        TO_ROOM);
+      act(ACID_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
+      act(ACID_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_ACID, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -3716,178 +2977,90 @@ int TObj::grenadeHit(TTrap* o) {
   return FALSE;
 }
 
+namespace {
+  // Door trap damage modifiers
+  constexpr int getDoorTrapDamageModifier(doorTrapT trap_type) {
+    switch (trap_type) {
+      case DOOR_TRAP_TNT: return 3;
+      case DOOR_TRAP_POISON: return -1;
+      case DOOR_TRAP_SLEEP: return 1;
+      case DOOR_TRAP_ACID: return 1;
+      case DOOR_TRAP_DISEASE: return 3;
+      case DOOR_TRAP_FROST: return 3;
+      case DOOR_TRAP_SPIKE: return -5;
+      case DOOR_TRAP_BOLT: return 1;
+      case DOOR_TRAP_BLADE: return -3;
+      case DOOR_TRAP_DISK: return 3;
+      case DOOR_TRAP_HAMMER: return -10;
+      case DOOR_TRAP_PEBBLE: return -5;
+      case DOOR_TRAP_ENERGY: return 5;
+      case DOOR_TRAP_TELEPORT: return 5;
+      default: return 0;
+    }
+  }
+
+  // Helper function for room-wide trap effects with simple effects (no return value)
+  template<typename SimpleEffect>
+  void applySimpleRoomEffect(TBeing* caster, TRoom* room, TTrap* trap_obj,
+                            const char* char_msg, const char* room_msg,
+                            SimpleEffect effect_func) {
+    for (StuffIter it = room->stuff.begin(); it != room->stuff.end();) {
+      TThing* v = *(it++);
+      TBeing* tbt = dynamic_cast<TBeing*>(v);
+      if (tbt && tbt->desc && tbt != caster) {
+        act(char_msg, FALSE, tbt, trap_obj, 0, TO_CHAR);
+        act(room_msg, FALSE, tbt, trap_obj, 0, TO_ROOM);
+        effect_func(tbt, trap_obj->getTrapDamAmount() * STATUS_ROOM_MOD);
+      }
+    }
+  }
+
+  // Helper function for room-wide trap effects with complex effects (return DELETE_THIS)
+  template<typename ComplexEffect>
+  void applyComplexRoomEffect(TBeing* caster, TRoom* room, TTrap* trap_obj,
+                             const char* char_msg, const char* room_msg,
+                             ComplexEffect effect_func) {
+    for (StuffIter it = room->stuff.begin(); it != room->stuff.end();) {
+      TThing* v = *(it++);
+      TBeing* tbt = dynamic_cast<TBeing*>(v);
+      if (tbt && tbt->desc && tbt != caster) {
+        act(char_msg, FALSE, tbt, trap_obj, 0, TO_CHAR);
+        act(room_msg, FALSE, tbt, trap_obj, 0, TO_ROOM);
+        const int rc = effect_func(tbt, trap_obj->getTrapDamAmount() * STATUS_ROOM_MOD);
+        if (IS_SET_DELETE(rc, DELETE_THIS)) {
+          delete tbt;
+          tbt = nullptr;
+        }
+      }
+    }
+  }
+}
+
 int TBeing::getDoorTrapDam(doorTrapT trap_type) {
-  // this is number of d8 to use when calculating damage
   // base range: 10 - 35
   int damage = 10 + getSkillLevel(SKILL_SET_TRAP_DOOR) / 2;
-
   damage *= getDoorTrapLearn(trap_type);
   damage /= 100;
-
-  switch (trap_type) {
-    case DOOR_TRAP_TNT:
-      damage += 3;
-      break;
-    case DOOR_TRAP_POISON:
-      damage -= 1;
-      break;
-    case DOOR_TRAP_SLEEP:
-      damage += 1;
-      break;
-    case DOOR_TRAP_ACID:
-      damage += 1;
-      break;
-    case DOOR_TRAP_DISEASE:
-      damage += 3;
-      break;
-    case DOOR_TRAP_FROST:
-      damage += 3;
-      break;
-    case DOOR_TRAP_SPIKE:
-      damage -= 5;
-      break;
-    case DOOR_TRAP_BOLT:
-      damage += 1;
-      break;
-    case DOOR_TRAP_BLADE:
-      damage -= 3;
-      break;
-    case DOOR_TRAP_DISK:
-      damage += 3;
-      break;
-    case DOOR_TRAP_HAMMER:
-      damage -= 10;
-      break;
-    case DOOR_TRAP_PEBBLE:
-      damage -= 5;
-      break;
-    case DOOR_TRAP_ENERGY:
-      damage += 5;
-      break;
-    case DOOR_TRAP_TELEPORT:
-      damage += 5;
-      break;
-    default:
-      break;
-  }
-  damage = min(max(damage, 1), 50);
-  return damage;
+  damage += getDoorTrapDamageModifier(trap_type);
+  return min(max(damage, 1), 50);
 }
 
 int TBeing::getContainerTrapDam(doorTrapT trap_type) {
-  // this is number of d8 to use when calculating damage
   // base range: 20 - 36
   int damage = 20 + getSkillLevel(SKILL_SET_TRAP_CONT) / 3;
-
   damage *= getContainerTrapLearn(trap_type);
   damage /= 100;
-
-  switch (trap_type) {
-    case DOOR_TRAP_TNT:
-      damage += 3;
-      break;
-    case DOOR_TRAP_POISON:
-      damage -= 1;
-      break;
-    case DOOR_TRAP_SLEEP:
-      damage += 1;
-      break;
-    case DOOR_TRAP_ACID:
-      damage += 1;
-      break;
-    case DOOR_TRAP_DISEASE:
-      damage += 3;
-      break;
-    case DOOR_TRAP_FROST:
-      damage += 3;
-      break;
-    case DOOR_TRAP_SPIKE:
-      damage -= 5;
-      break;
-    case DOOR_TRAP_BOLT:
-      damage += 1;
-      break;
-    case DOOR_TRAP_BLADE:
-      damage -= 3;
-      break;
-    case DOOR_TRAP_DISK:
-      damage += 3;
-      break;
-    case DOOR_TRAP_HAMMER:
-      damage -= 10;
-      break;
-    case DOOR_TRAP_PEBBLE:
-      damage -= 5;
-      break;
-    case DOOR_TRAP_ENERGY:
-      damage += 5;
-      break;
-    case DOOR_TRAP_TELEPORT:
-      damage += 5;
-      break;
-    default:
-      break;
-  }
-  damage = min(max(damage, 1), 50);
-  return damage;
+  damage += getDoorTrapDamageModifier(trap_type);  // Same modifiers as door traps
+  return min(max(damage, 1), 50);
 }
 
 int TBeing::getMineTrapDam(doorTrapT trap_type) {
-  // this is number of d8 to use when calculating damage
   // base range: 20 - 45
   int damage = 20 + getSkillLevel(SKILL_SET_TRAP_MINE) / 2;
-
   damage *= getMineTrapLearn(trap_type);
   damage /= 100;
-
-  switch (trap_type) {
-    case DOOR_TRAP_TNT:
-      damage += 3;
-      break;
-    case DOOR_TRAP_POISON:
-      damage -= 1;
-      break;
-    case DOOR_TRAP_SLEEP:
-      damage += 1;
-      break;
-    case DOOR_TRAP_ACID:
-      damage += 1;
-      break;
-    case DOOR_TRAP_DISEASE:
-      damage += 3;
-      break;
-    case DOOR_TRAP_FROST:
-      damage += 3;
-      break;
-    case DOOR_TRAP_SPIKE:
-      damage -= 5;
-      break;
-    case DOOR_TRAP_BOLT:
-      damage += 1;
-      break;
-    case DOOR_TRAP_BLADE:
-      damage -= 3;
-      break;
-    case DOOR_TRAP_DISK:
-      damage += 3;
-      break;
-    case DOOR_TRAP_HAMMER:
-      damage -= 10;
-      break;
-    case DOOR_TRAP_PEBBLE:
-      damage -= 5;
-      break;
-    case DOOR_TRAP_ENERGY:
-      damage += 5;
-      break;
-    case DOOR_TRAP_TELEPORT:
-      damage += 5;
-      break;
-    default:
-      break;
-  }
-  damage = min(max(damage, 1), 50);
-  return damage;
+  damage += getDoorTrapDamageModifier(trap_type);  // Same modifiers as door traps
+  return min(max(damage, 1), 50);
 }
 
 int TBeing::getGrenadeTrapDam(doorTrapT trap_type) {

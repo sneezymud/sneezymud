@@ -478,7 +478,7 @@ int TOpenContainer::trapMe(TBeing* ch, const char* trap_type) {
     return FALSE;
   }
 
-  ch->sendTo("You start working on your trap.\n\r");
+  ch->sendTo("You start working on your trap.");
   act("$n starts fiddling with $p.", TRUE, ch, this, 0, TO_ROOM);
   start_task(ch, this, NULL, TASK_TRAP_CONT, trap_type, 3, ch->inRoom(), type,
     0, 5);

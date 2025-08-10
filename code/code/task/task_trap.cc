@@ -98,7 +98,7 @@ int task_trap_door(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       back->trap_info = ch->task->status;
       back->trap_dam = trapdamage;
     }
-    ch->sendTo("The trap has been successfully set!\n\r");
+    ch->sendTo("The trap has been successfully set!");
     ch->hasTrapComps(buf2, TRAP_TARG_DOOR, -1);  // delete the components
     ch->stopTask();
     return FALSE;
@@ -111,19 +111,19 @@ int task_trap_door(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
 
       switch (ch->task->timeLeft) {
         case 3:
-          ch->sendTrapMessage(buf2, TRAP_TARG_DOOR, 1);
+          sendTrapMessage(ch, buf2, TRAP_TARG_DOOR, 1);
           ch->task->timeLeft--;
           break;
         case 2:
-          ch->sendTrapMessage(buf2, TRAP_TARG_DOOR, 2);
+          sendTrapMessage(ch, buf2, TRAP_TARG_DOOR, 2);
           ch->task->timeLeft--;
           break;
         case 1:
-          ch->sendTrapMessage(buf2, TRAP_TARG_DOOR, 3);
+          sendTrapMessage(ch, buf2, TRAP_TARG_DOOR, 3);
           ch->task->timeLeft--;
           break;
         case 0:
-          ch->sendTrapMessage(buf2, TRAP_TARG_DOOR, 4);
+          sendTrapMessage(ch, buf2, TRAP_TARG_DOOR, 4);
           ch->task->timeLeft--;
           break;
       }
@@ -202,7 +202,7 @@ int task_trap_container(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
     int trapdamage = ch->getContainerTrapDam(doorTrapT(ch->task->status));
     cont->setContainerTrapDam(trapdamage);
 
-    ch->sendTo("The trap has been successfully set!\n\r");
+    ch->sendTo("The trap has been successfully set!");
     ch->hasTrapComps(ch->task->orig_arg, TRAP_TARG_CONT, -1);
     ch->stopTask();
     return FALSE;
@@ -215,19 +215,19 @@ int task_trap_container(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
 
       switch (ch->task->timeLeft) {
         case 3:
-          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_CONT, 1);
+          sendTrapMessage(ch, ch->task->orig_arg, TRAP_TARG_CONT, 1);
           ch->task->timeLeft--;
           break;
         case 2:
-          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_CONT, 2);
+          sendTrapMessage(ch, ch->task->orig_arg, TRAP_TARG_CONT, 2);
           ch->task->timeLeft--;
           break;
         case 1:
-          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_CONT, 3);
+          sendTrapMessage(ch, ch->task->orig_arg, TRAP_TARG_CONT, 3);
           ch->task->timeLeft--;
           break;
         case 0:
-          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_CONT, 4);
+          sendTrapMessage(ch, ch->task->orig_arg, TRAP_TARG_CONT, 4);
           ch->task->timeLeft--;
           break;
       }
@@ -287,7 +287,7 @@ void TTrap::makeTrapLand(TBeing* ch, doorTrapT status, const char* args) {
   setTrapDamType(status);
   setTrapEffectType(stdflags);
 
-  ch->sendTo("You have successfully constructed a land mine!\n\r");
+  ch->sendTo("You have successfully constructed a land mine!");
 
   int price;
   ch->hasTrapComps(args, TRAP_TARG_MINE, -1, &price);
@@ -349,19 +349,19 @@ int task_trap_mine(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
 
       switch (ch->task->timeLeft) {
         case 3:
-          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_MINE, 1);
+          sendTrapMessage(ch, ch->task->orig_arg, TRAP_TARG_MINE, 1);
           ch->task->timeLeft--;
           break;
         case 2:
-          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_MINE, 2);
+          sendTrapMessage(ch, ch->task->orig_arg, TRAP_TARG_MINE, 2);
           ch->task->timeLeft--;
           break;
         case 1:
-          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_MINE, 3);
+          sendTrapMessage(ch, ch->task->orig_arg, TRAP_TARG_MINE, 3);
           ch->task->timeLeft--;
           break;
         case 0:
-          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_MINE, 4);
+          sendTrapMessage(ch, ch->task->orig_arg, TRAP_TARG_MINE, 4);
           ch->task->timeLeft--;
           break;
       }
@@ -437,7 +437,7 @@ int task_trap_arrow(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
     arrow->setTrapLevel(ch->getArrowTrapDam(doorTrapT(ch->task->status)));
     arrow->setTrapDamType(doorTrapT(ch->task->status));
 
-    ch->sendTo("You have successfully constructed an arrow trap!\n\r");
+    ch->sendTo("You have successfully constructed an arrow trap!");
     int price;
     ch->hasTrapComps(ch->task->orig_arg, TRAP_TARG_CONT, -1, &price);
 
@@ -457,19 +457,19 @@ int task_trap_arrow(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
 
       switch (ch->task->timeLeft) {
         case 3:
-          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_CONT, 1);
+          sendTrapMessage(ch, ch->task->orig_arg, TRAP_TARG_CONT, 1);
           ch->task->timeLeft--;
           break;
         case 2:
-          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_CONT, 2);
+          sendTrapMessage(ch, ch->task->orig_arg, TRAP_TARG_CONT, 2);
           ch->task->timeLeft--;
           break;
         case 1:
-          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_CONT, 3);
+          sendTrapMessage(ch, ch->task->orig_arg, TRAP_TARG_CONT, 3);
           ch->task->timeLeft--;
           break;
         case 0:
-          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_CONT, 4);
+          sendTrapMessage(ch, ch->task->orig_arg, TRAP_TARG_CONT, 4);
           ch->task->timeLeft--;
           break;
       }
@@ -519,7 +519,7 @@ void TTrap::makeTrapGrenade(TBeing* ch, doorTrapT status, const char* args) {
   setTrapDamType(status);
   setTrapEffectType(TRAP_EFF_THROW);
 
-  ch->sendTo("You have successfully constructed a grenade!\n\r");
+  ch->sendTo("You have successfully constructed a grenade!");
   int price;
   ch->hasTrapComps(args, TRAP_TARG_GRENADE, -1, &price);
 
@@ -582,19 +582,19 @@ int task_trap_grenade(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
 
       switch (ch->task->timeLeft) {
         case 3:
-          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_GRENADE, 1);
+          sendTrapMessage(ch, ch->task->orig_arg, TRAP_TARG_GRENADE, 1);
           ch->task->timeLeft--;
           break;
         case 2:
-          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_GRENADE, 2);
+          sendTrapMessage(ch, ch->task->orig_arg, TRAP_TARG_GRENADE, 2);
           ch->task->timeLeft--;
           break;
         case 1:
-          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_GRENADE, 3);
+          sendTrapMessage(ch, ch->task->orig_arg, TRAP_TARG_GRENADE, 3);
           ch->task->timeLeft--;
           break;
         case 0:
-          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_GRENADE, 4);
+          sendTrapMessage(ch, ch->task->orig_arg, TRAP_TARG_GRENADE, 4);
           ch->task->timeLeft--;
           break;
       }
