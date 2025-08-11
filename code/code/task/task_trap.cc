@@ -439,7 +439,7 @@ int task_trap_arrow(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
 
     ch->sendTo("You have successfully constructed an arrow trap!");
     int price;
-    ch->hasTrapComps(ch->task->orig_arg, TRAP_TARG_CONT, -1, &price);
+    ch->hasTrapComps(ch->task->orig_arg, TRAP_TARG_ARROW, -1, &price);
 
     // set price on the trap to that of the components
     arrow->obj_flags.cost = price;

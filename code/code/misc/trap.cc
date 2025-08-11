@@ -511,8 +511,7 @@ int TBeing::doSetTraps(const char* arg) {
         return FALSE;
       }
 
-      // TODO:: modify hasTrapComps for arrows
-      if (!hasTrapComps(trap_type, TRAP_TARG_CONT, 0)) {
+      if (!hasTrapComps(trap_type, TRAP_TARG_ARROW, 0)) {
         sendTo("You need more items to make that trap.\n\r");
         return FALSE;
       }
@@ -2558,6 +2557,20 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
         act("$n's trap explodes in $s face.", FALSE, this, 0, 0, TO_ROOM);
         break;
     }
+  } else if (goof_type == TRAP_TARG_ARROW) {
+    trapdamage = getArrowTrapDam(trap_type);
+    trapdamage = dice(trapdamage, TRAP_DICE_SIZE) / TRAP_GOOF_DAMAGE_DIVISOR;
+
+    hasTrapComps(task->orig_arg, TRAP_TARG_ARROW, -1);  // delete comps
+
+    // Single goof message for ALL arrow trap cases
+    act(GOOF_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
+    act(GOOF_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
+
+    // Apply the goof damage and trap effect
+    rc = objDamage(DAMAGE_TRAP_PIERCE, trapdamage, NULL);
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
   }
   return FALSE;
 }
@@ -2567,32 +2580,58 @@ bool TBeing::hasTrapComps(const char* type, trap_targ_t targ, int amt,
   int item1 = 0, item2 = 0, item3 = 0, item4 = 0;
 
   if (is_abbrev(type, "fire")) {
-    item1 = Obj::ST_FLINT;
-    item2 = Obj::ST_SULPHUR;
-    item3 = Obj::ST_BAG;
+    if (targ == TRAP_TARG_ARROW) {
+      item1 = Obj::ST_FLINT;
+      item2 = Obj::ST_SULPHUR;
+      item3 = Obj::ST_TRIPWIRE;
+    } else {
+      item1 = Obj::ST_FLINT;
+      item2 = Obj::ST_SULPHUR;
+      item3 = Obj::ST_BAG;
+    }
   } else if (is_abbrev(type, "explosive")) {
-    item1 = Obj::ST_FLINT;
-    item2 = Obj::ST_SULPHUR;
-    item3 = Obj::ST_HYDROGEN;
+    if (targ == TRAP_TARG_ARROW) {
+      item1 = Obj::ST_FLINT;
+      item2 = Obj::ST_SULPHUR;
+      item3 = Obj::ST_TRIPWIRE;
+    } else {
+      item1 = Obj::ST_FLINT;
+      item2 = Obj::ST_SULPHUR;
+      item3 = Obj::ST_HYDROGEN;
+    }
   } else if (is_abbrev(type, "poison")) {
     if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
       item1 = Obj::ST_NEEDLE;
       item2 = Obj::ST_SPRING;
       item3 = Obj::ST_POISON;
+    } else if (targ == TRAP_TARG_ARROW) {
+      item1 = Obj::ST_NEEDLE;
+      item2 = Obj::ST_POISON;
+      item3 = Obj::ST_TRIPWIRE;
     } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
       item1 = Obj::ST_CANISTER;
       item2 = Obj::ST_SPRING;
       item3 = Obj::ST_CON_POISON;
     }
   } else if (is_abbrev(type, "sleep")) {
-    item1 = Obj::ST_NOZZLE;
-    item2 = Obj::ST_GAS;
-    item3 = Obj::ST_HOSE;
+    if (targ == TRAP_TARG_ARROW) {
+      item1 = Obj::ST_FUNGUS;
+      item2 = Obj::ST_BELLOWS;
+      item3 = Obj::ST_TRIPWIRE;
+    } else {
+      item1 = Obj::ST_NOZZLE;
+      item2 = Obj::ST_GAS;
+      item3 = Obj::ST_HOSE;
+    }
   } else if (is_abbrev(type, "acid")) {
     if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
       item1 = Obj::ST_NOZZLE;
       item2 = Obj::ST_ACID_VIAL;
       item3 = Obj::ST_BELLOWS;
+    } else if (targ == TRAP_TARG_ARROW) {
+      item1 = Obj::ST_ACID_VIAL;
+      item2 = Obj::ST_NOZZLE;
+      item3 = Obj::ST_TRIPWIRE;
     } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
       item1 = Obj::ST_CANISTER;
       item2 = Obj::ST_SPRING;
@@ -2603,6 +2642,10 @@ bool TBeing::hasTrapComps(const char* type, trap_targ_t targ, int amt,
       item1 = Obj::ST_FUNGUS;
       item2 = Obj::ST_NOZZLE;
       item3 = Obj::ST_BELLOWS;
+    } else if (targ == TRAP_TARG_ARROW) {
+      item1 = Obj::ST_FUNGUS;
+      item2 = Obj::ST_NOZZLE;
+      item3 = Obj::ST_TRIPWIRE;
     } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
       item1 = Obj::ST_CANISTER;
       item2 = Obj::ST_SPRING;
@@ -2656,14 +2699,24 @@ bool TBeing::hasTrapComps(const char* type, trap_targ_t targ, int amt,
     item2 = Obj::ST_CGAS;
     item3 = Obj::ST_PEBBLES;
   } else if (is_abbrev(type, "frost")) {
-    item1 = Obj::ST_NOZZLE;
-    item2 = Obj::ST_HOSE;
-    item3 = Obj::ST_FROST;
+    if (targ == TRAP_TARG_ARROW) {
+      item1 = Obj::ST_FROST;
+      item2 = Obj::ST_BELLOWS;
+      item3 = Obj::ST_TRIPWIRE;
+    } else {
+      item1 = Obj::ST_NOZZLE;
+      item2 = Obj::ST_HOSE;
+      item3 = Obj::ST_FROST;
+    }
   } else if (is_abbrev(type, "teleport")) {
     if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
       item1 = Obj::ST_PENTAGRAM;
       item2 = Obj::ST_TRIPWIRE;
       item3 = Obj::ST_BLINK;
+    } else if (targ == TRAP_TARG_ARROW) {
+      item1 = Obj::ST_PENTAGRAM;
+      item2 = Obj::ST_BLINK;
+      item3 = Obj::ST_TRIPWIRE;
     } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
       item1 = Obj::ST_PENTAGRAM;
       item2 = Obj::ST_CRYSTALINE;
@@ -2674,6 +2727,10 @@ bool TBeing::hasTrapComps(const char* type, trap_targ_t targ, int amt,
       item1 = Obj::ST_PENTAGRAM;
       item2 = Obj::ST_TRIPWIRE;
       item3 = Obj::ST_ATHANOR;
+    } else if (targ == TRAP_TARG_ARROW) {
+      item1 = Obj::ST_PENTAGRAM;
+      item2 = Obj::ST_ATHANOR;
+      item3 = Obj::ST_TRIPWIRE;
     } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
       item1 = Obj::ST_PENTAGRAM;
       item2 = Obj::ST_CRYSTALINE;
