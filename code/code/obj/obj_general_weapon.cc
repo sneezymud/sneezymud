@@ -9,6 +9,7 @@
 #include "extern.h"
 #include "being.h"
 #include "materials.h"
+#include "obj.h"
 
 
 TGenWeapon::TGenWeapon() : TBaseWeapon() {
@@ -378,6 +379,9 @@ int spikesBreak(TBeing* victim, TBeing* ch, TObj* obj) {
 
 int impactSpec(TBeing* ch, TBeing* victim, wearSlotT damSource, wearSlotT pos) {
   // Get the object at the damage source (if any)
+  if (!ch || !victim || pos == WEAR_NOWHERE) {
+    return false;
+  }
   TObj* obj = dynamic_cast<TObj*>(ch->equipment[damSource]);
 
   if (obj) {

@@ -165,7 +165,7 @@ static int kickHit(TBeing* caster, TBeing* victim, int score, int level,
   spellNumT dam_type = skill;
   int hgt = caster->getHeight();
   kickSlotT slot_i;
-  wearSlotT slot;
+  wearSlotT slot = WEAR_BODY;
   int rc;
 
   // determine how high they can kick
