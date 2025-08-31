@@ -11,6 +11,7 @@
 #include <cmath>
 
 #include "discipline.h"
+#include "enum.h"
 #include "handler.h"
 #include "extern.h"
 #include "immunity.h"
@@ -2648,14 +2649,19 @@ int TBeing::attackRound(const TBeing* target) const {
   // to scale things by.
   int my_lev = max(10, (int)(16.67 * get_doubling_level(GetMaxLevel())));
 
-  // Combat mode modifiers.
   if (desc) {
     // offensive penalty for defense should be greater than defensive reward
-    if (isCombatMode(ATTACK_DEFENSE))
+    // the cost/benefit of baseline defensive is offset by the advanced skill
+    if (isCombatMode(ATTACK_DEFENSE)) {
       bonus -= my_lev / 2;
+      if (doesKnowSkill(SKILL_ADVANCED_DEFENSE)) {
+        bonus += max(1, getSkillValue(SKILL_ADVANCED_DEFENSE) / 3);
+      }
+    }
 
-    if (isCombatMode(ATTACK_OFFENSE) || isCombatMode(ATTACK_BERSERK))
+    if (isCombatMode(ATTACK_OFFENSE) || isCombatMode(ATTACK_BERSERK)) {
       bonus += my_lev / 4;
+    }
 
     // we intentionally DO NOT give an extra offense benefit for berserk
     // they get other benefits (more hits, etc) so not needed
@@ -2860,13 +2866,16 @@ int TBeing::defendRound(const TBeing* attacker) const {
 
   // Combat mode modifiers.
   if (desc) {
-    if (isCombatMode(ATTACK_DEFENSE))
+    if (isCombatMode(ATTACK_DEFENSE)) {
       bonus += my_lev / 4;
-
+      if (doesKnowSkill(SKILL_ADVANCED_DEFENSE)) {
+        bonus += (max(1, getSkillValue(SKILL_ADVANCED_DEFENSE) / 10));
+      }
+    }
     // defensive penalty for offense-mode should be > offensive reward
-    if (isCombatMode(ATTACK_OFFENSE) || isCombatMode(ATTACK_BERSERK))
+    if (isCombatMode(ATTACK_OFFENSE) || isCombatMode(ATTACK_BERSERK)) {
       bonus -= my_lev / 4;
-
+    }
     // Berserk gets a significant penalty to defense
     if (isCombatMode(ATTACK_BERSERK)) {
       int amt = my_lev * 8;
@@ -3773,6 +3782,7 @@ int TBeing::checkShield(TBeing* v, TThing* weapon, wearSlotT part_hit,
   }
 
   v->checkGuardiansLight();
+  v->checkAdvDefense();
 
   if (shield->spec) {
     rc = shield->checkSpec(this, CMD_OBJ_BEEN_HIT, NULL, weapon);
@@ -4270,6 +4280,9 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
           // easier than trying to create a seperate attack here.
           SET_BIT(vict->specials.affectedBy, AFF_RIPOSTE);
         }
+        mess_sent |= ONEHIT_MESS_DODGE;
+      } else if (vict->affectedBySpell(SKILL_ADVANCED_DEFENSE)) {
+        vict->doAdvDefense(this, weapon, &dam, w_type, part_hit);
         mess_sent |= ONEHIT_MESS_DODGE;
       }
     }
@@ -6381,4 +6394,111 @@ void TBeing::doGuardiansLight(int mod, int duration = 10) {
   aff.bitvector = 0;
 
   affectTo(&aff, -1);
+}
+
+int TBeing::checkAdvDefense() {
+  TObj* shield = dynamic_cast<TObj*>(this->heldInSecHand());
+
+  if (!shield || !shield->isShield()) {
+    return 0;
+  }
+  if (!this->isCombatMode(ATTACK_DEFENSE)) {
+    return 0;
+  }
+  if (affectedBySpell(SKILL_ADVANCED_DEFENSE)) {
+    return 0;
+  }
+
+  if (!doesKnowSkill(SKILL_ADVANCED_DEFENSE)) {
+    return 0;
+  }
+
+  if (!bSuccess(SKILL_ADVANCED_DEFENSE)) {
+    return 0;
+  }
+
+  int amt = this->getSkillValue(SKILL_ADVANCED_DEFENSE)/2;
+  double agiMod = getStatMod(STAT_AGI);
+  double braMod = (1 + getStatMod(STAT_BRA))/2;
+  amt = (int)(amt * agiMod * braMod);
+  
+  if (!percentChance(amt)) {
+    return 0;
+  }
+
+  act("<B>You raise your $o high,<1> full of skilled <y>determination!<1>", 0,
+    this, 0, shield, TO_CHAR);
+  act("<B>$n raises $s $o high,<1> full of skilled <y>determination!<1>", 0,
+    this, 0, shield, TO_ROOM);
+
+  affectedData aff;
+  aff.type = SKILL_ADVANCED_DEFENSE;
+  aff.duration = 2 * Pulse::UPDATES_PER_MUDHOUR;
+  aff.location = APPLY_ARMOR;
+  aff.modifier = -amt/2;
+  aff.bitvector = 0;
+  affectTo(&aff, -1);
+  return 1;
+}
+
+int TBeing::doAdvDefense(TBeing* v, TThing* weapon, int* dam, int w_type, wearSlotT part_hit) {
+  char buf[256], type[16];
+
+
+  if (this->getPosition() <= POSITION_CRAWLING) {
+    return 0;
+  }
+
+  if (!this->doesKnowSkill(SKILL_ADVANCED_DEFENSE)) {
+    return FALSE;
+  }
+
+  w_type -= TYPE_HIT;
+
+  // the higher amt is, the more things get dodged
+  int amt = this->getSkillValue(SKILL_ADVANCED_DEFENSE);
+  double agiMod = getStatMod(STAT_AGI);
+  double braMod = (1 + getStatMod(STAT_BRA))/2;
+  amt = (int)(amt * agiMod * braMod);
+
+
+  if (this->bSuccess(amt, SKILL_ADVANCED_DEFENSE)) {
+    *dam = 0;
+
+    strcpy(type, "deflect");
+    if (toggleInfo[TOG_TWINK]->toggle) {
+      sprintf(buf, "<B>You %s $n's %s at your %s.<1>", type,
+        attack_hit_text_twink[w_type].singular,
+        v->describeBodySlot(part_hit).c_str());
+    } else {
+      sprintf(buf, "<B>You %s $n's %s at your %s.<1>", type,
+        attack_hit_text[w_type].singular,
+        v->describeBodySlot(part_hit).c_str());
+    }
+    act(buf, FALSE, v, 0, this, TO_VICT, ANSI_CYAN);
+    if (toggleInfo[TOG_TWINK]->toggle) {
+      sprintf(buf, "<B>$N %ss your %s at $S %s.<1>", type,
+        attack_hit_text_twink[w_type].singular,
+        v->describeBodySlot(part_hit).c_str());
+    } else {
+      sprintf(buf, "<B>$N %ss your %s at $S %s.<1>", type,
+        attack_hit_text[w_type].singular,
+        v->describeBodySlot(part_hit).c_str());
+    }
+    act(buf, FALSE, v, 0, this, TO_CHAR, ANSI_CYAN);
+    if (toggleInfo[TOG_TWINK]->toggle) {
+      sprintf(buf, "<B>$N %ss $n's %s at $S %s.<1>", type,
+        attack_hit_text_twink[w_type].singular,
+        v->describeBodySlot(part_hit).c_str());
+    } else {
+      sprintf(buf, "<B>$N %ss $n's %s at $S %s.<1>", type,
+        attack_hit_text[w_type].singular,
+        v->describeBodySlot(part_hit).c_str());
+    }
+    act(buf, TRUE, v, 0, this, TO_NOTVICT);
+    this->affectFrom(SKILL_ADVANCED_DEFENSE);
+    return TRUE;
+  }
+    return FALSE;
+  
 }
