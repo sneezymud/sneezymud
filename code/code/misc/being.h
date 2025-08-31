@@ -597,6 +597,9 @@ class TBeing : public TThing {
     void doBloodlust();
     void doGuardiansLight(int, int);
     void checkGuardiansLight();
+    int checkAdvDefense();
+    int doAdvDefense(TBeing*, TThing*, int*, int, wearSlotT);
+    
 
     // Postmaster
     void postmasterSendMail(const char*, TMonster*);
