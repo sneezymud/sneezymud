@@ -698,6 +698,10 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
       return &((CDMounted*)cd)->skRideWinged;
     case SKILL_RIDE_EXOTIC:
       return &((CDMounted*)cd)->skRideExotic;
+    case SKILL_SADDLE_POSTURE:
+      return &((CDMounted*)cd)->skSaddlePosture;
+    case SKILL_VAULTING:
+      return &((CDMounted*)cd)->skVaulting;
 
       // disc_deikhan_guardian
 

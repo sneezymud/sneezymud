@@ -130,7 +130,7 @@ class TThing {
     virtual float carryWeightLimit() const { return 0.0; }
     virtual int carryVolumeLimit() const { return 0; }
     virtual roomDirData* exitDir(dirTypeT) const = 0;
-    virtual int fallOffMount(TThing*, positionTypeT, bool death = FALSE);
+    virtual int fallOffMount(TThing*, bool force = FALSE);
     virtual void addToCarriedVolume(int num);
     virtual int getReducedVolume(const TThing*) const;
     virtual float getTotalWeight(bool) const;

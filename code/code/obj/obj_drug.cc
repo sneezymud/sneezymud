@@ -261,11 +261,11 @@ void applyDrugAffects(TBeing* ch, drugTypeT drug, bool istick) {
           if (ch->riding) {
             act("$n sways then crumples as $e passes out.", TRUE, ch, 0, 0,
               TO_ROOM);
-            ch->fallOffMount(ch->riding, POSITION_RESTING);
-          } else
+          } else {
             act("$n stumbles then crumples as $e passes out.", TRUE, ch, 0, 0,
               TO_ROOM);
-          ch->setPosition(POSITION_SLEEPING);
+          }
+          ch->rawSleep(1, 60, 1, SAVE_NO);
           ch->setMove(0);
           break;
         }
@@ -372,11 +372,11 @@ void applyDrugAffects(TBeing* ch, drugTypeT drug, bool istick) {
           if (ch->riding) {
             act("$n coughs and the momentum knmocks $m off $s mount.", TRUE, ch,
               0, 0, TO_ROOM);
-            ch->fallOffMount(ch->riding, POSITION_RESTING);
-          } else
+          } else {
             act("$n ignores you and decides to crash.", TRUE, ch, 0, 0,
               TO_ROOM);
-          ch->setPosition(POSITION_SLEEPING);
+          }
+          ch->rawSleep(1, 60, 1, SAVE_NO);
           ch->setMove(0);
           break;
         }

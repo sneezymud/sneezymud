@@ -1004,17 +1004,10 @@ int TBeing::rawSummon(TBeing* v) {
     addToWait(combatRound(2));
 
   if (v->riding) {
-    rc = v->fallOffMount(v->riding, POSITION_STANDING);
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      return DELETE_VICT;
-    }
+    v->dismount(POSITION_STANDING);
   }
   while ((t = v->rider)) {
-    rc = t->fallOffMount(v, POSITION_STANDING);
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      delete t;
-      t = NULL;
-    }
+    t->dismount(POSITION_STANDING);
   }
 
 #if 0
@@ -1133,17 +1126,11 @@ int TThing::genericTeleport(silentTypeT silent, bool keepZone, bool unsafe) {
   }
 
   while ((t = rider)) {
-    rc = t->fallOffMount(this, POSITION_STANDING);
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      delete t;
-      t = NULL;
-    }
+    t->dismount(POSITION_STANDING);
   }
 
   if (riding) {
-    rc = fallOffMount(riding, POSITION_STANDING);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
+    dismount(POSITION_STANDING);
   }
 
   --(*this);
@@ -1380,8 +1367,6 @@ void TBeing::rawBlind(int level, int duration, saveTypeT save) {
 }
 
 int TBeing::rawSleep(int level, int duration, int crit, saveTypeT save) {
-  int rc = FALSE;
-
   affectedData aff;
 
   aff.type = SPELL_SLUMBER;
@@ -1409,9 +1394,14 @@ int TBeing::rawSleep(int level, int duration, int crit, saveTypeT save) {
     act("$n falls asleep!", TRUE, this, NULL, NULL, TO_ROOM);
   }
   if (riding) {
-    rc = fallOffMount(riding, POSITION_SITTING);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
+    int crashDam = fallOffMount(riding, false);
+    if (crashDam == -1)
       return DELETE_THIS;
+    // Apply fall damage from falling asleep while mounted
+    if (crashDam > 0) {
+      if (reconcileDamage(this, crashDam, DAMAGE_FALL) == -1)
+        return DELETE_THIS;
+    }
   }
   if (fight()) {
     stopFighting();

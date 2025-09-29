@@ -50,18 +50,13 @@ int TBeing::doHurl(const char* argument, TBeing* vict) {
 }
 
 int hurlMiss(TBeing* caster, TBeing* victim) {
-  int rc;
-
   act("$n misses $s attempt at hurling $N and falls on $s butt!", FALSE, caster,
     0, victim, TO_NOTVICT);
   act("You fall as you attempt to hurl $N!", FALSE, caster, 0, victim, TO_CHAR);
   act("You manage to avoid $n as $e tries to hurl you!", FALSE, caster, 0,
     victim, TO_VICT);
 
-  rc = caster->crashLanding(POSITION_SITTING);
-  if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_THIS;
-
+  caster->stumble();
   caster->reconcileDamage(victim, 0, SKILL_SHOULDER_THROW);
   return TRUE;
 }
@@ -125,7 +120,7 @@ static int hurlHit(TBeing* caster, TBeing* victim, dirTypeT dr) {
 
     act("$N is hurled into the room!", TRUE, victim, 0, victim, TO_ROOM);
 
-    rc = victim->crashLanding(POSITION_SITTING);
+    rc = victim->crashLanding(0, true);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_VICT;
 
@@ -365,8 +360,6 @@ int TBeing::doShoulderThrow(const char* argument, TBeing* vict) {
 }
 
 int shoulderThrowMiss(TBeing* caster, TBeing* victim) {
-  int rc;
-
   act("$n misses $s attempt at shoulder throwing $N and falls on $s butt!",
     FALSE, caster, 0, victim, TO_NOTVICT);
   act("You fall as you attempt to shoulder throw $N!", FALSE, caster, 0, victim,
@@ -374,9 +367,11 @@ int shoulderThrowMiss(TBeing* caster, TBeing* victim) {
   act("You manage to avoid $n as $e tries to shoulder throw you!", FALSE,
     caster, 0, victim, TO_VICT);
 
-  rc = caster->crashLanding(POSITION_SITTING);
-  if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_THIS;
+  int stumbleDam = caster->stumble();
+  if (stumbleDam > 0) {
+    if (caster->reconcileDamage(caster, stumbleDam, DAMAGE_FALL) == -1)
+      return DELETE_THIS;
+  }
 
   caster->reconcileDamage(victim, 0, SKILL_CHOP);
   return TRUE;
@@ -413,7 +408,7 @@ int shoulderThrowHit(TBeing* caster, TBeing* victim, int) {
   act("$N lands flat on $S back!", FALSE, caster, 0, victim, TO_CHAR);
   act("You land flat on your back!", FALSE, caster, 0, victim, TO_VICT);
 
-  rc = victim->crashLanding(POSITION_SITTING);
+  rc = victim->crashLanding(0, true);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_VICT;
 
@@ -573,8 +568,6 @@ int TBeing::doDefenestrate(const char* argument, TBeing* vict) {
 }
 
 int defenestrateMiss(TBeing* caster, TBeing* victim) {
-  int rc;
-
   act("$n misses $s attempt at defenestrating $N and falls on $s butt!", FALSE,
     caster, 0, victim, TO_NOTVICT);
   act("You fall as you attempt to defenestrate $N!", FALSE, caster, 0, victim,
@@ -582,9 +575,11 @@ int defenestrateMiss(TBeing* caster, TBeing* victim) {
   act("You manage to avoid $n as $e tries to defenestrate you!", FALSE, caster,
     0, victim, TO_VICT);
 
-  rc = caster->crashLanding(POSITION_SITTING);
-  if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_THIS;
+  int stumbleDam = caster->stumble();
+  if (stumbleDam > 0) {
+    if (caster->reconcileDamage(caster, stumbleDam, DAMAGE_FALL) == -1)
+      return DELETE_THIS;
+  }
 
   caster->reconcileDamage(victim, 0, SKILL_SHOULDER_THROW);
   return TRUE;
@@ -644,7 +639,7 @@ static int defenestrateHit(TBeing* caster, TBeing* victim, int to_room,
 
     act("$N is defenestrated into the room!", TRUE, victim, 0, victim, TO_ROOM);
 
-    rc = victim->crashLanding(POSITION_SITTING);
+    rc = victim->crashLanding(0, true);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_VICT;
 

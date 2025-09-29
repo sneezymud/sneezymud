@@ -73,17 +73,11 @@ int knot(TBeing* caster, TBeing* victim, int, short bKnown) {
       NULL, NULL, TO_CHAR);
 
     while ((t = caster->rider)) {
-      rc = t->fallOffMount(caster, POSITION_STANDING);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        delete t;
-        t = NULL;
-      }
+      t->dismount(POSITION_STANDING);
     }
 
     if (caster->riding) {
-      rc = caster->fallOffMount(caster->riding, POSITION_STANDING);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return SPELL_SUCCESS + CASTER_DEAD;
+      caster->dismount(POSITION_STANDING);
     }
 
     TRoom* room = real_roomp(2387);

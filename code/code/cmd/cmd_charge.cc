@@ -10,7 +10,6 @@ extern void startChargeTask(TBeing*, const char*);
 static int charge(TBeing* ch, TBeing* vict) {
   TThing* c = NULL;
   TBeing* tb;
-  int rc;
 
   TMonster* mount = dynamic_cast<TMonster*>(ch->riding);
   if (!mount || (ch->getPosition() != POSITION_MOUNTED)) {
@@ -221,13 +220,14 @@ static int charge(TBeing* ch, TBeing* vict) {
     }
   }
 
+  int mountCrashDam = 0;
   if (vict->riding && dynamic_cast<TBeing*>(vict->riding)) {
     act("$n is heaved from $s mount and falls to the $g.", TRUE, vict, 0, 0,
       TO_ROOM);
     act("You are knocked from your mount and dashed to the $g!", TRUE, vict, 0,
       0, TO_CHAR);
-    rc = vict->fallOffMount(vict->riding, POSITION_SITTING);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
+    mountCrashDam = vict->fallOffMount(vict->riding, true);
+    if (mountCrashDam == -1)
       return DELETE_VICT;
 
     vict->addToWait(combatRound(1));
@@ -236,8 +236,8 @@ static int charge(TBeing* ch, TBeing* vict) {
       0, TO_ROOM);
     act("You are knocked from $p and dashed to the $g!", TRUE, vict,
       vict->riding, 0, TO_CHAR);
-    rc = vict->fallOffMount(vict->riding, POSITION_SITTING);
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+    mountCrashDam = vict->fallOffMount(vict->riding, true);
+    if (mountCrashDam == -1) {
       return DELETE_VICT;
     }
   } else if ((c = vict->rider)) {
@@ -247,23 +247,31 @@ static int charge(TBeing* ch, TBeing* vict) {
       TO_CHAR);
     act("$n is stricken by the blow and $N falls off $m!", TRUE, vict, 0, c,
       TO_NOTVICT);
-    rc = c->fallOffMount(vict, POSITION_SITTING);
+    int riderCrashDam = c->fallOffMount(vict, true);
     vict->addToWait(combatRound(1));
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+    if (riderCrashDam == -1) {
       delete c;
       c = NULL;
     }
+    // Note: rider crash damage doesn't add to victim's damage
   } else {
     act("You are battered by the blow and trampled to the $g!", TRUE, vict, 0,
       0, TO_CHAR);
     act("$n is battered by the blow and trampled to the $g!", TRUE, vict, 0, 0,
       TO_ROOM);
-    vict->setPosition(POSITION_SITTING);
+    // Ground-based charge crash
+    mountCrashDam = vict->crashLanding(0, true);
+    if (mountCrashDam == -1)
+      return DELETE_VICT;
     vict->addToWait(combatRound(1));
   }
 
   vict->cantHit += vict->loseRound(2);
-  if (ch->reconcileDamage(vict, dam, SKILL_CHARGE) == -1)
+
+  // Total damage = skill damage + crash damage
+  int totalDam = dam + mountCrashDam;
+
+  if (ch->reconcileDamage(vict, totalDam, SKILL_CHARGE) == -1)
     return DELETE_VICT;
 
   return TRUE;

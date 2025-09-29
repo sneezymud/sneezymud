@@ -1435,6 +1435,8 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme) const {
       case SKILL_RIDE_WINGED:
       case SPELL_CREATE_WATER_DEIKHAN:
       case SKILL_RIDE_EXOTIC:
+      case SKILL_SADDLE_POSTURE:
+      case SKILL_VAULTING:
       case SPELL_HEROES_FEAST_DEIKHAN:
       case SPELL_REFRESH_DEIKHAN:
       case SPELL_SALVE_DEIKHAN:

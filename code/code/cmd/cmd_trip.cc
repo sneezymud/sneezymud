@@ -209,17 +209,13 @@ int TBeing::tripFail(TBeing* victim, spellNumT skill) {
     victim, TO_VICT);
 
   if (hasLegs()) {
-    rc = crashLanding(POSITION_SITTING);
+    rc = crashLanding(0, false);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
 
     sendTo(
       format("%sYou lose your balance and fall over.%s\n\r") % red() % norm());
     act("<r>$n loses $s balance and falls over.<1>", TRUE, this, 0, 0, TO_ROOM);
-
-    rc = trySpringleap(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
-      return rc;
   }
   reconcileDamage(victim, 0, skill);
   return FALSE;
@@ -241,17 +237,9 @@ int TBeing::tripSuccess(TBeing* victim, spellNumT skill) {
   distNum = 1;
   if (isLucky(levelLuckModifier(victim->GetMaxLevel())))
     distNum++;
-  rc = victim->crashLanding(POSITION_SITTING);
+  rc = victim->crashLanding(0, false);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_VICT;
-
-  rc = victim->trySpringleap(this);
-  if (IS_SET_DELETE(rc, DELETE_THIS) && IS_SET_DELETE(rc, DELETE_VICT))
-    return rc;
-  else if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_VICT;
-  else if (IS_SET_DELETE(rc, DELETE_VICT))
-    return DELETE_THIS;
 
   float wait = combatRound(discArray[SKILL_TRIP]->lag);
   addToMove(-5);

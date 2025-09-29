@@ -231,21 +231,37 @@ int treeWalk(TBeing* caster, const char* arg, int, short bKnown) {
         while ((t3 = tbt->rider)) {
           TBeing* tb = dynamic_cast<TBeing*>(t3);
           if (tb) {
-            rc = tb->fallOffMount(t, POSITION_STANDING);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
+            int crashDam = tb->fallOffMount(tbt, false);
+            if (crashDam == -1) {
               delete tb;
               tb = NULL;
+            } else {
+              // Apply fall damage from teleportation dismount
+              if (crashDam > 0) {
+                if (tb->reconcileDamage(tb, crashDam, DAMAGE_FALL) == -1) {
+                  delete tb;
+                  tb = NULL;
+                }
+              }
             }
           } else {
-            t3->dismount(POSITION_DEAD);
+            t3->dismount(POSITION_STANDING);
           }
         }
 
         if (tbt->riding) {
-          rc = tbt->fallOffMount(tbt->riding, POSITION_STANDING);
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
+          int crashDam = tbt->fallOffMount(tbt->riding, false);
+          if (crashDam == -1) {
             delete tbt;
             tbt = NULL;
+          } else {
+            // Apply fall damage from teleportation dismount
+            if (crashDam > 0) {
+              if (tbt->reconcileDamage(tbt, crashDam, DAMAGE_FALL) == -1) {
+                delete tbt;
+                tbt = NULL;
+              }
+            }
           }
         }
 

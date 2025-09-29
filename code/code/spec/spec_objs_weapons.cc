@@ -2194,6 +2194,7 @@ int weaponFumbler(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*) {
     return DELETE_VICT;
   }
 
+  // check for disarm
   if ((obj = vict->heldInPrimHand())) {
     act("The blow knocks $n backwards and $e drops $s $o!", TRUE, vict, obj, 0,
       TO_ROOM, ANSI_ORANGE);
@@ -2201,18 +2202,32 @@ int weaponFumbler(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*) {
       TO_CHAR, ANSI_ORANGE);
     *vict->roomp += *vict->unequip(vict->getPrimaryHold());
   } else {
-    act("The blow knocks $n backwards!", TRUE, vict, 0, 0, TO_ROOM,
-      ANSI_ORANGE);
-    act("The blow knocks you backwards!", TRUE, vict, 0, 0, TO_CHAR,
-      ANSI_ORANGE);
+    act("The blow knocks $n backwards!", TRUE, vict, 0, 0, TO_ROOM, ANSI_ORANGE);
+    act("The blow knocks you backwards!", TRUE, vict, 0, 0, TO_CHAR, ANSI_ORANGE);
   }
 
+  // Handle knockback/fall
+  int crashDam = 0;
   if (vict->riding) {
-    int rc = vict->fallOffMount(vict->riding, POSITION_SITTING);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
+    crashDam = vict->fallOffMount(vict->riding, true);
+    if (crashDam == -1) {
       return DELETE_VICT;
+    }
+  } else {
+    crashDam = vict->crashLanding(0, true);
+    if (crashDam == -1) {
+      return DELETE_VICT;
+    }
   }
-  vict->setPosition(POSITION_SITTING);
+
+  // Apply crash damage
+  if (crashDam > 0) {
+    if (vict->reconcileDamage(vict, crashDam, DAMAGE_FALL) == -1) {
+      return DELETE_VICT;
+    }
+  }
+
+
 
   vict->cantHit += vict->loseRound(0.5);
   return TRUE;

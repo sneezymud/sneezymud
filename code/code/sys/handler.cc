@@ -136,7 +136,6 @@ bool is_exact_name(const sstring& str, const sstring& namelist) {
 
 void TBeing::affectChange(uint64_t original, silentTypeT silent) {
   uint64_t current = specials.affectedBy;
-  int rc;
 
   if (silent)
     return;
@@ -195,11 +194,16 @@ void TBeing::affectChange(uint64_t original, silentTypeT silent) {
       sendTo("You lose your ability to fly.\n\r");
       if (roomp && isFlying()) {
         // roomp is needed since this is sometimes called by dead critters
-        rc = crashLanding(POSITION_SITTING);
-        if (IS_SET_DELETE(rc, DELETE_THIS))
-          // I don't think this can happen, so won't bother to do work to pass
-          // the return if it does
-          vlogf(LOG_BUG, "fix problem in affectChange and crashLanding");
+        int crashDam = crashLanding(0, false); // No height bonus, not violent
+        if (crashDam == -1) {
+          // Character died from losing flight
+          vlogf(LOG_BUG, "Character died from losing flight in affectChange");
+        } else if (crashDam > 0) {
+          // Apply crash damage from losing flight
+          if (reconcileDamage(this, crashDam, DAMAGE_FALL) == -1) {
+            vlogf(LOG_BUG, "Character died from fall damage in affectChange");
+          }
+        }
       }
     }
   }

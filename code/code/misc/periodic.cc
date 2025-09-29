@@ -955,9 +955,16 @@ int TBeing::updateTickStuff() {
 
       if (getPosition() > POSITION_SLEEPING) {
         if (riding) {
-          rc = fallOffMount(riding, POSITION_STANDING);
-          if (IS_SET_DELETE(rc, DELETE_THIS))
+          int crashDam = fallOffMount(riding, false);
+          if (crashDam == -1) {
             return DELETE_THIS;
+        }
+
+        if (crashDam > 0) {
+          if (reconcileDamage(this, crashDam, DAMAGE_FALL) == -1) {
+            return DELETE_THIS;
+          }
+        }
         }
         doSleep("");
       }
@@ -2339,7 +2346,6 @@ int TBeing::terrainSpecial() {
 
 int TBeing::passOut() {
   affectedData af;
-  int rc;
 
   // Coded by : Glint
   // Coded on : 04/10/2001
@@ -2374,9 +2380,16 @@ int TBeing::passOut() {
 
   if (getPosition() > POSITION_SLEEPING) {
     if (riding) {
-      rc = fallOffMount(riding, POSITION_STANDING);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
+      int crashDam = fallOffMount(riding, false);
+          if (crashDam == -1) {
+            return DELETE_THIS;
+        }
+
+        if (crashDam > 0) {
+          if (reconcileDamage(this, crashDam, DAMAGE_FALL) == -1) {
+            return DELETE_THIS;
+          }
+        }
     }
     if (awake()) {
       act("$n passes out!", TRUE, this, NULL, NULL, TO_ROOM);

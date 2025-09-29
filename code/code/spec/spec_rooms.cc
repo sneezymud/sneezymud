@@ -180,7 +180,6 @@ int Whirlpool(TBeing* ch, cmdTypeT cmd, const char*, TRoom* rp) {
   TThing* t;
   TRoom* rp2;
   int new_room;
-  int rc;
 
   if (cmd == CMD_GENERIC_PULSE) {
     if (rp->stuff.empty())
@@ -236,16 +235,35 @@ int Whirlpool(TBeing* ch, cmdTypeT cmd, const char*, TRoom* rp) {
   }
 
   if (ch->riding) {
-    rc = ch->fallOffMount(ch->riding, POSITION_STANDING);
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+    int crashDam = ch->fallOffMount(ch->riding, true);
+    if (crashDam == -1) {
       return DELETE_THIS;
+    }
+    // Apply crash damage from whirlpool dismount
+    if (crashDam > 0) {
+      if (ch->reconcileDamage(ch, crashDam, DAMAGE_FALL) == -1) {
+        return DELETE_THIS;
+      }
     }
   }
   while ((t = ch->rider)) {
-    rc = t->fallOffMount(ch, POSITION_STANDING);
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      delete t;
-      t = NULL;
+    TBeing* tb = dynamic_cast<TBeing*>(t);
+    if (tb) {
+      int riderCrashDam = tb->fallOffMount(ch, true);
+      if (riderCrashDam == -1) {
+        delete tb;
+        tb = NULL;
+      } else {
+        // Apply crash damage to riders from whirlpool
+        if (riderCrashDam > 0) {
+          if (tb->reconcileDamage(tb, riderCrashDam, DAMAGE_FALL) == -1) {
+            delete tb;
+            tb = NULL;
+          }
+        }
+      }
+    } else {
+      t->dismount(POSITION_STANDING);
     }
   }
 
@@ -1929,7 +1947,7 @@ knocking the unwary off-guard.<1>\n\r");
     act("$n lands flat on $s back!",
   FALSE, player, 0, 0, TO_ROOM);
 
-    rc = player->crashLanding(POSITION_SITTING);
+    rc = player->crashLanding(0, true);
     if (IS_SET_DELETE(rc, DELETE_THIS)){
       delete player;
       player = NULL;

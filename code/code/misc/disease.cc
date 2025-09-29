@@ -191,9 +191,15 @@ int TBeing::dummyFlu() {
         TRUE, this, 0, 0, TO_CHAR);
       if (riding) {
         act("$n sways then crumples as $e faints.", FALSE, this, 0, 0, TO_ROOM);
-        rc = fallOffMount(riding, POSITION_RESTING);
-        if (IS_SET_DELETE(rc, DELETE_THIS)) {
+        int crashDam = fallOffMount(riding, false);
+        if (crashDam == -1) {
           return DELETE_THIS;
+        }
+        // Apply fall damage from fainting while mounted
+        if (crashDam > 0) {
+          if (reconcileDamage(this, crashDam, DAMAGE_FALL) == -1) {
+            return DELETE_THIS;
+          }
         }
       } else
         act("$n stumbles then crumples as $e faints.", FALSE, this, 0, 0,
@@ -1871,10 +1877,16 @@ int disease_extreme_pain(TBeing* vict, int stage, affectedData* aff) {
         vict->stopTask();
       if (vict->spelltask)
         vict->stopCast(STOP_CAST_NONE);
-      if (vict->riding &&
-          IS_SET_DELETE(vict->fallOffMount(vict->riding, POSITION_STUNNED),
-            DELETE_THIS))
-        return DELETE_THIS;
+      if (vict->riding) {
+        int crashDam = vict->fallOffMount(vict->riding, false);
+        if (crashDam == -1)
+          return DELETE_THIS;
+        // Apply fall damage from extreme pain causing fall
+        if (crashDam > 0) {
+          if (vict->reconcileDamage(vict, crashDam, DAMAGE_FALL) == -1)
+            return DELETE_THIS;
+        }
+      }
       act("$n screams horribly and falls to the $g!", false, vict, nullptr,
         nullptr, TO_ROOM);
       act("Agony overcomes you and you scream and fall to the $g!", false, vict,

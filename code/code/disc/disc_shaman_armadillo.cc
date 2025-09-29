@@ -97,7 +97,12 @@ int TBeing::doEarthmaw(const char* argument) {
         horsie, TO_ROOM);
       act("$N collapses beneath you as the $g gives way!", TRUE, victim, 0,
         horsie, TO_CHAR);
-      victim->fallOffMount(victim->riding, POSITION_SITTING);
+
+      int crashDam = victim->fallOffMount(victim->riding, true);
+      if (crashDam == -1) {
+        delete victim;
+        return SPELL_SUCCESS + VICTIM_DEAD + DELETE_VICT;
+      }
 
       act("<o>$N<1><o> tumbles into the fissure!<1>", FALSE, this, NULL, horsie,
         TO_CHAR);
@@ -105,6 +110,14 @@ int TBeing::doEarthmaw(const char* argument) {
         TO_NOTVICT);
       act("<o>You tumble into the fissure!<1>", FALSE, this, NULL, horsie,
         TO_VICT);
+
+      // Apply crash damage to victim from falling off collapsing mount
+      if (crashDam > 0) {
+        if (this->reconcileDamage(victim, crashDam, DAMAGE_FALL) == -1) {
+          delete victim;
+          return SPELL_SUCCESS + VICTIM_DEAD + DELETE_VICT;
+        }
+      }
     }
 
     act(
@@ -116,9 +129,11 @@ int TBeing::doEarthmaw(const char* argument) {
     act("<o>You tumble into the fissure, which collapses on top of you!<1>",
       FALSE, this, NULL, victim, TO_VICT);
 
+    // Apply spell damage to mount (fissure damage)
     if (horsie && this->reconcileDamage(horsie, dam, SPELL_EARTHMAW) == -1) {
       delete horsie;
     }
+    // Apply spell damage to victim (fissure damage)
     if (this->reconcileDamage(victim, dam, SPELL_EARTHMAW) == -1) {
       delete victim;
       return SPELL_SUCCESS + VICTIM_DEAD + DELETE_VICT;

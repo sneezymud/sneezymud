@@ -444,7 +444,6 @@ int stormySkies(TBeing* caster, TBeing* victim, TMagicItem* obj) {
 
 int aquaticBlast(TBeing* caster, TBeing* victim, int level, short bKnown,
   int adv_learn) {
-  int rc;
   TThing* t;
 
   int dam = caster->getSkillDam(victim, SPELL_AQUATIC_BLAST, level, adv_learn);
@@ -477,19 +476,46 @@ int aquaticBlast(TBeing* caster, TBeing* victim, int level, short bKnown,
         FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_BLUE);
       victim->dropPool(50, LIQ_WATER);
 
-      if (victim->riding)
-        victim->dismount(POSITION_STANDING);
+      int crashDam = 0;
+      if (victim->riding) {
+        crashDam = victim->fallOffMount(victim->riding, true);
+        if (crashDam == -1) {
+          return SPELL_SUCCESS + VICTIM_DEAD;
+        }
+      } else if (victim->isFlying()) {
+        // Huge water blast knocks flying beings to the ground
+        crashDam = victim->crashLanding(0, true);
+        if (crashDam == -1) {
+          return SPELL_SUCCESS + VICTIM_DEAD;
+        }
+      }
 
       while ((t = victim->rider)) {
-        rc = t->fallOffMount(victim, POSITION_STANDING);
-        if (IS_SET_DELETE(rc, DELETE_THIS)) {
-          delete t;
-          t = NULL;
+        TBeing* riderBeing = dynamic_cast<TBeing*>(t);
+        if (riderBeing) {
+          int riderCrashDam = riderBeing->fallOffMount(victim, true);
+          if (riderCrashDam == -1) {
+            delete riderBeing;
+            riderBeing = NULL;
+          } else {
+            // Apply crash damage to riders
+            if (riderCrashDam > 0) {
+              if (riderBeing->reconcileDamage(riderBeing, riderCrashDam, DAMAGE_FALL) == -1) {
+                delete riderBeing;
+                riderBeing = NULL;
+              }
+            }
+          }
+        } else {
+          t->dismount(POSITION_SITTING);
         }
       }
 
       victim->setPosition(POSITION_SITTING);
       victim->addToWait(combatRound(1));
+
+      // Add crash damage to spell damage for critical success
+      dam += crashDam;
     } else if (victim->isLucky(
                  caster->spellLuckModifier(SPELL_AQUATIC_BLAST))) {
       act("A stream of water smacks into $N. Must have been a dud.", FALSE,

@@ -1362,7 +1362,21 @@ void TBeing::throwChar(TBeing* v, dirTypeT dir, bool also, silentTypeT silent,
       act("You knock $N off $S mount.", false, this, 0, v, TO_CHAR);
       act("$n knocks you off your mount.", false, this, 0, v, TO_VICT);
       act("$n knock $N off $S mount.", false, this, 0, v, TO_NOTVICT);
-      v->fallOffMount(v->riding, POSITION_SITTING);
+
+      int crashDam = v->fallOffMount(v->riding, true);
+      if (crashDam == -1) {
+        delete v;
+        v = NULL;
+        return;
+      }
+      // Apply fall damage from being knocked off mount before being thrown
+      if (crashDam > 0) {
+        if (v->reconcileDamage(v, crashDam, DAMAGE_FALL) == -1) {
+          delete v;
+          v = NULL;
+          return;
+        }
+      }
     }
 
     if (forceStand && v->getPosition() < POSITION_STANDING) {
@@ -1431,7 +1445,21 @@ void TBeing::throwChar(TBeing* v, int to_room, bool also, silentTypeT silent,
       act("You knock $N off $S mount.", false, this, 0, v, TO_CHAR);
       act("$n knocks you off your mount.", false, this, 0, v, TO_VICT);
       act("$n knock $N off $S mount.", false, this, 0, v, TO_NOTVICT);
-      v->fallOffMount(v->riding, POSITION_SITTING);
+
+      int crashDam = v->fallOffMount(v->riding, true);
+      if (crashDam == -1) {
+        delete v;
+        v = NULL;
+        return;
+      }
+      // Apply fall damage from being knocked off mount before being thrown
+      if (crashDam > 0) {
+        if (v->reconcileDamage(v, crashDam, DAMAGE_FALL) == -1) {
+          delete v;
+          v = NULL;
+          return;
+        }
+      }
     }
 
     if (forceStand && v->getPosition() < POSITION_STANDING) {

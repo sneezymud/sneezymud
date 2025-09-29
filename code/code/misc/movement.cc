@@ -656,128 +656,48 @@ int TBeing::rawMove(dirTypeT dir) {
       return FALSE;
     }
   } else if (riding) {
+    // Perform all riding stability checks
+    if (!rideCheck(0)) {
+      // rideCheck already handled falling off and messages
+      act("You fail to urge your mount forward.", FALSE, this, riding, 0,
+          TO_CHAR);
+      act("$n fails to urge $N forward.", FALSE, this, riding, 0, TO_ROOM);
+      return FALSE;
+    }
+
+    // Apply movement penalties for riding conditions
     if (bothLegsHurt()) {
-      sendTo(COLOR_MOBS,
-        format("Riding %s without working legs is painful!\n\r") %
-          riding->getName());
       addToMove(-5);
-      if (!::number(0, 2)) {
-        rc = fallOffMount(riding, POSITION_SITTING);
-        if (IS_SET_DELETE(rc, DELETE_THIS))
-          return DELETE_THIS;
-        return FALSE;
-      }
-      if (reconcileDamage(this, ::number(0, 2), DAMAGE_NORMAL) == -1)
-        return DELETE_THIS;
-    }
-    if (!riding) {
-      // probably the reconcileDamage roll made me fall off
-      return FALSE;
-    }
-    tbt = dynamic_cast<TBeing*>(riding);
-    if (tbt && tbt->bothLegsHurt()) {
-      act("$N has no working legs to transport you.", FALSE, this, 0, tbt,
-        TO_CHAR);
-      return FALSE;
     }
     if (eitherLegHurt()) {
-      sendTo("A damaged leg or foot makes it tough to ride!\n\r");
       addToMove(-2);
-      if (reconcileDamage(this, ::number(0, 1), DAMAGE_NORMAL) == -1)
-        return DELETE_THIS;
-      if (!riding) {
-        // probably the reconcileDamage roll made me fall off
-        return FALSE;
-      }
-      if (!::number(0, 5)) {
-        rc = fallOffMount(riding, POSITION_SITTING);
-        if (IS_SET_DELETE(rc, DELETE_THIS))
-          return DELETE_THIS;
-        return FALSE;
-      }
     }
-    if (!riding) {
-      // probably the reconcileDamage roll made me fall off
-      return FALSE;
-    }
-    tbt = dynamic_cast<TBeing*>(riding);
-    if (tbt && tbt->eitherLegHurt() && !::number(0, 3)) {
-      act("$N stumbles due to $S injuries and throws you.", FALSE, this, 0, tbt,
-        TO_CHAR);
-      if (reconcileDamage(this, ::number(0, 3), DAMAGE_NORMAL) == -1)
-        return DELETE_THIS;
-      if (!riding) {
-        // probably the reconcileDamage roll made me fall off
-        return FALSE;
-      }
-      rc = fallOffMount(tbt, POSITION_SITTING);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      return FALSE;
-    }
-    // old forula was > (riding->weight/2)) changed for practical - Cos
-    // riding-weight < total weight
-    if (riding &&
-        (compareWeights(riding->getWeight(), getTotalWeight(TRUE)) == 1)) {
-      act("$N collapses beneath your weight.", FALSE, this, 0, riding, TO_CHAR);
-      act("$N collapses beneath $n's weight.", FALSE, this, 0, riding,
-        TO_NOTVICT);
-      act("You collapse beneath $n's weight.", FALSE, this, 0, riding, TO_VICT);
-      TBeing* tbr = dynamic_cast<TBeing*>(riding);
-      if (tbr) {
-        tbr->setMove(0);
-      }
+    if (compareWeights(riding->getWeight(), getTotalWeight(TRUE)) == 1) {
       addToMove(-2);
-      rc = fallOffMount(riding, POSITION_SITTING);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      if (reconcileDamage(this, ::number(0, 1), DAMAGE_NORMAL) == -1)
-        return DELETE_THIS;
-      return FALSE;
     }
-    if (riding && getCond(DRUNK) > 9) {
-      sendTo("You wobble drunkenly as your mount moves along.\n\r");
-      if (!::number(0, 4)) {
-        sendTo(
-          "Ooops, one of those purple elephants you keep seeing must have "
-          "pushed you off.\n\r");
-        rc = fallOffMount(riding, POSITION_SITTING);
-        if (IS_SET_DELETE(rc, DELETE_THIS))
-          return DELETE_THIS;
+
+    // Calculate movement costs for riding
+    if (riding->isLevitating())
+      need_movement /= 4;
+    if (riding->isFlying())
+      need_movement = 1;
+    TBeing* tbr = dynamic_cast<TBeing*>(riding);
+    if (tbr) {
+      if (tbr->getMove() < need_movement) {
+        sendTo("Your mount is too exhausted.\n\r");
         return FALSE;
       }
-    }
-    if (riding) {
-      if (riding->isLevitating())
-        need_movement /= 4;
-      if (riding->isFlying())
-        need_movement = 1;
-      TBeing* tbr = dynamic_cast<TBeing*>(riding);
-      if (tbr) {
-        if (tbr->getMove() < need_movement) {
-          sendTo("Your mount is too exhausted.\n\r");
-          return FALSE;
-        }
-      }
-    }
-    if (riding && getMove() < 1) {
-      act("You're too tired to stay on your $o.", false, this, riding, 0,
-        TO_CHAR);
-      rc = fallOffMount(riding, POSITION_SITTING);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      return FALSE;
     }
   } else {
     // this is basically the case where they are flying
     if (getCond(DRUNK) > 9) {
       sendTo("Your drunken flight pattern is fairly erratic.\n\r");
       need_movement++;
-      if (!::number(0, 4)) {
+      if (!bSuccess(SKILL_ALCOHOLISM)) {
         sendTo(
           "Oops, you must have crashed into one of those purple elephants you "
           "keep seeing.\n\r");
-        rc = crashLanding(POSITION_SITTING);
+        rc = crashLanding(0, false);
         if (IS_SET_DELETE(rc, DELETE_THIS))
           return DELETE_THIS;
         return FALSE;
@@ -1354,11 +1274,16 @@ int TBeing::doMove(dirTypeT cmd) {
       }
       return 1;
     } else {
-      rc = tb->fallOffMount(this, POSITION_SITTING);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        delete tb;
-        tb = NULL;
-      }
+      int crashDam = fallOffMount(riding, false);
+          if (crashDam == -1) {
+            return DELETE_THIS;
+        }
+
+        if (crashDam > 0) {
+          if (reconcileDamage(this, crashDam, DAMAGE_FALL) == -1) {
+            return DELETE_THIS;
+          }
+        }
       return 1;
     }
   }
@@ -3421,68 +3346,174 @@ void TBeing::doLand() {
   setPosition(POSITION_STANDING);
 }
 
-int TBeing::crashLanding(positionTypeT pos, bool force, bool dam,
-  bool falling) {
-  if (force) {
-    // option to force this
-    setPosition(pos);
-    sendTo(COLOR_ROOMS,
-      format("You smash into the %s hard!\n\r") % roomp->describeGround());
-    act("$n tumbles end over end as $e crash lands!", TRUE, this, 0, 0,
-      TO_ROOM);
-  } else if (!isFlying()) {
-    setPosition(pos);
-    if ((getPosition() >= POSITION_RESTING) &&
-        ((pos == POSITION_FLYING) || roomp->isFlyingSector())) {
-      sendTo("You start flying around.\n\r");
-      act("$n starts to fly up in the air.", TRUE, this, 0, 0, TO_ROOM);
+int TBeing::crashLanding(int heightMod, bool force) {
+  // Early safety checks
+  if (!roomp || getHit() <= 0) {
+    return 0; // Dead or invalid state
+  }
+
+  if (isImmortal()) {
+    return 0; // Immortals don't take fall damage
+  }
+
+  // Check for feathery descent spell
+  if (isAffected(SPELL_FEATHERY_DESCENT)) {
+    return 0; // Feathery descent negates fall damage
+  }
+
+  // Check if character is incapacitated (can't use skills)
+  bool outCold = isAffected(AFF_SLEEP) || isAffected(AFF_PARALYSIS);
+
+  // Check if we're in a flying sector
+  if (roomp && roomp->isFlyingSector()) {
+    if (!outCold && isFlying() && isAgile(0)) {
       setPosition(POSITION_FLYING);
-      return FALSE;
-    } else if (roomp->isFallSector()) {
-      if (falling || IS_SET_DELETE(checkFalling(), DELETE_THIS))
-        return DELETE_THIS;
-      return TRUE;
-    }
-    return FALSE;
-  } else if (roomp->isFlyingSector()) {
-    if (pos == POSITION_FLYING) {
-      return FALSE;
-    } else if (getPosition() >= POSITION_RESTING) {
-      sendTo("You start flying around.\n\r");
-      act("$n starts to fly up in the air.", TRUE, this, 0, 0, TO_ROOM);
-      setPosition(POSITION_FLYING);
-      return FALSE;
+      sendTo("You recover your flight just in time!\n\r");
+      act("$n recovers $s flight just in time!", TRUE, this, 0, 0, TO_ROOM);
+      return 0;
     } else {
-      setPosition(pos);
-      return FALSE;
+      checkFalling();
+      return 0;
     }
-  } else if (roomp->isFallSector()) {
-    setPosition(pos);
-    if (falling || IS_SET_DELETE(checkFalling(), DELETE_THIS))
-      return DELETE_THIS;
-    return TRUE;
-  } else if (doesKnowSkill(SKILL_CATFALL) && bSuccess(SKILL_CATFALL)) {
+  }
+
+  // If not forced (accidental fall), try catfall first
+  if (!outCold && !force && doesKnowSkill(SKILL_CATFALL) && bSuccess(SKILL_CATFALL)) {
     setPosition(POSITION_STANDING);
-    act("$n drops gracefully onto the $g.", FALSE, this, 0, 0, TO_ROOM);
-    sendTo(COLOR_ROOMS,
-      format("You drop gracefully to the %s.\n\r") % roomp->describeGround());
-    dam = false;
+    sendTo("You land gracefully on your feet!\n\r");
+    act("$n lands gracefully on $s feet!", TRUE, this, 0, 0, TO_ROOM);
+    return 0; // Catfall completely negates damage
+  }
+
+  // Calculate fall height based on heightMod, character size, and flying status
+  int fallHeight = heightMod + (getHeight()/2);
+  if (isFlying()) {
+    fallHeight += 100;
+  }
+
+  // Calculate fall difficulty ratio (prevent division by zero)
+  if (fallHeight <= 0) {
+    fallHeight = 1;
+  }
+
+  // Determine final position based on condition and agility
+  positionTypeT finalPos;
+  bool agileLanding = false;
+
+  if (outCold) {
+    // Set appropriate position for incapacitated characters
+    if (isAffected(AFF_SLEEP)) {
+      finalPos = POSITION_SLEEPING;
+    } else { // AFF_PARALYSIS
+      finalPos = POSITION_STUNNED;
+    }
   } else {
-    // Flying person
-    setPosition(pos);
-    sendTo(COLOR_ROOMS,
-      format("You smash into the %s hard!\n\r") % roomp->describeGround());
-    act("$n tumbles end over end as $e crash lands!", TRUE, this, 0, 0,
-      TO_ROOM);
+    // Awake and mobile - can attempt agile landing
+    agileLanding = isAgile(fallHeight/10);
+    if (!agileLanding) {
+      finalPos = POSITION_RESTING;
+    } else {
+      finalPos = POSITION_SITTING;
+    }
   }
 
-  if (dam) {
-    // some things skip damage.  (e.g. already dead when crashed)
-    if (reconcileDamage(this, ::number(2, 8), DAMAGE_FALL) == -1)
-      return DELETE_THIS;
+  // Calculate all damage modifiers as percentages, then apply once
+  int damagePercent = 100; // Start at 100%
+
+  if (force) {
+    damagePercent *= 2; // 200% for forced crashes
   }
 
-  return TRUE;
+  if (agileLanding) {
+    damagePercent /= 2; // 50% for agile landing
+  }
+
+  if (isFlying()) {
+    damagePercent /= 2; // 50% for flying
+  }
+
+  if (isTough()) {
+    damagePercent /= 2; // 50% for toughness
+  }
+
+  // Calculate final damage with single formula
+  int crashRaw = (fallHeight * damagePercent) / 1000; // /1000 because we used percentages
+  int crashDam = dice(crashRaw, 6);
+  
+  // Apply the crash effects (position, messages)
+  setPosition(finalPos);
+  
+    sendTo(COLOR_ROOMS, format("You smash into the %s hard!\n\r") % roomp->describeGround());
+    act("$n tumbles end over end as $e crash lands!", TRUE, this, 0, 0, TO_ROOM);
+
+  // Underwater damage reduction (separate from springleap)
+  
+  if (roomp && roomp->isUnderwaterSector()) {
+    crashDam /= 4;
+    sendTo("The water surrounding you softens the fall.\n\r");
+  }
+  
+  // Try springleap after damage calculation (for forced crashes only)
+  if (force && fight()) {
+    int rc = trySpringleap(fight());
+    if (IS_SET_DELETE(rc, DELETE_VICT)) {
+      // Victim (the attacker) was killed by springleap
+      // This means the character doing crashLanding killed their attacker
+      // No crash damage needed since the fight is over
+      return 0;
+    }
+    if (rc) {
+      crashDam /= 2; // Springleap succeeded, reduce damage by half
+    }
+  }
+
+
+
+
+  return crashDam;
+}
+
+int TBeing::stumble() {
+  if (!isAgile(0)) {
+    // Clumsy stumble - trip yourself
+    setPosition(POSITION_SITTING);
+    sendTo("You stumble and fall on your butt!\n\r");
+    act("$n stumbles and falls on $s butt!", TRUE, this, 0, 0, TO_ROOM);
+    // Add lockout/lag
+    addToWait(combatRound(1));
+
+    int stumbleDam = dice(1, 4); // Minor damage 1-4
+
+    // Try springleap if in combat (similar to crashLanding)
+    if (fight()) {
+      int rc = trySpringleap(fight());
+      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+        // Victim (the attacker) was killed by springleap
+        // No stumble damage needed since the fight is over
+        return 0;
+      }
+      if (rc) {
+        stumbleDam /= 2; // Springleap succeeded, reduce damage by half
+      }
+    }
+
+    return stumbleDam;
+
+  } else {
+    // Agile recovery
+    if (isFlying()) {
+      setPosition(POSITION_STANDING);
+      sendTo("You stumble but quickly recover your footing!\n\r");
+      act("$n stumbles but quickly recovers!", TRUE, this, 0, 0, TO_ROOM);
+    } else {
+      setPosition(POSITION_STANDING);
+      sendTo("You stumble but catch yourself!\n\r");
+      act("$n stumbles but catches $mself!", TRUE, this, 0, 0, TO_ROOM);
+    }
+    // Still add some lockout for the stumble attempt
+    addToWait(combatRound(1) / 2);
+    return 0; // No damage for agile recovery
+  }
 }
 
 int TBeing::doMortalGoto(const sstring& argument) {

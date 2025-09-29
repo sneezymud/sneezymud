@@ -632,19 +632,13 @@ int summon(TBeing* caster, TBeing* victim, int level, short bKnown) {
   } else {
     caster->spellMessUp(SPELL_SUMMON);
     if (caster->riding) {
-      rc = caster->fallOffMount(caster->riding, POSITION_STANDING);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        return SPELL_FAIL | CASTER_DEAD;
+      caster->dismount(POSITION_STANDING);
       }
     }
     while ((t = caster->rider)) {
       TBeing* tb = dynamic_cast<TBeing*>(t);
       if (tb) {
-        rc = tb->fallOffMount(caster, POSITION_STANDING);
-        if (IS_SET_DELETE(rc, DELETE_THIS)) {
-          delete tb;
-          tb = NULL;
-        }
+        tb->dismount(POSITION_STANDING);
       } else {
         t->dismount(POSITION_DEAD);
       }
@@ -709,7 +703,7 @@ int summon(TBeing* caster, TBeing* victim, int level, short bKnown) {
     }
     return SPELL_FAIL;
   }
-}
+
 
 int summon(TBeing* caster, TBeing* victim) {
   int ret, level;

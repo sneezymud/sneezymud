@@ -27,374 +27,77 @@ int TThing::ChargePulse(TBeing* ch) {
   return TRUE;
 }
 
-// This rather nasty function handles moving the charger to the next room,
-// and making a ton of checks in the process:
-// if (moveHorse)
-//   FALSE = Move Failed, Stop Task
-//   TRUE  = Clean Move, Continue
-// else
-//      -2 = Clean fly, Continue
-//   FALSE = In the Same Room
-//    TRUE = In the Next room but we already did messages.
+// Streamlined charge movement function
+// Returns: TRUE = successful move, FALSE = move failed, DELETE_THIS = character died
 int taskChargeMoveInto(int to_room, TBeing* ch, bool moveHorse) {
   TRoom *from_here, *to_here;
-  int iHeight = 0, nRc, nMoveCost;
-  char tString[256];
   TBeing* tHorse;
+  dirTypeT dir;
 
   from_here = ch->roomp;
   to_here = real_roomp(to_room);
   tHorse = dynamic_cast<TBeing*>(ch->riding);
-  sprintf(tString, "%i", ch->task->flags);
+  dir = (dirTypeT)ch->task->flags;
 
-  // Handle 'flying out of the room' check first.
+  // Handle dismounted/flying case (character was thrown from mount)
   if (!moveHorse) {
-    if (from_here->isFlyingSector()) {
-      ch->sendTo("Luckily you can fly freely here.\n\r");
-      act("$n begins to fly after taking to the air.", TRUE, ch, 0, 0, TO_ROOM);
-      ch->setPosition(POSITION_FLYING);
-
-      return FALSE;
-    }
-
-    if (from_here->isUnderwaterSector()) {
-      ch->sendTo("You are plunged into the water and stop shortly after.\n\r");
-      act(
-        "$n flies through the water like a torpedo and stops shortly "
-        "afterwards.",
-        TRUE, ch, 0, 0, TO_ROOM);
-
-      return FALSE;
-    }
-
-    if (ch->willBumpHeadDoor(from_here->dir_option[ch->task->flags],
-          &iHeight) &&
-        ((ch->getPosHeight() * 4 / 5) > iHeight)) {
-      ch->sendTo("Your head suddenly impacts above the exit, OUCH!!!\n\r");
-      act(
-        "$n slams into the area above the exit which stops them ever so "
-        "gently...",
-        TRUE, ch, 0, 0, TO_ROOM);
-
-      if (ch->reconcileDamage(ch, ::number(20, 40), DAMAGE_NORMAL) == -1)
-        return DELETE_THIS;
-
-      return FALSE;
-    }
-
-    nRc = from_here->checkSpec(ch, CMD_ROOM_ATTEMPTED_EXIT, tString, from_here);
-
-    if (IS_SET_DELETE(nRc, DELETE_THIS))
+    // Use normal movement system for dismounted character
+    int moveResult = ch->rawMove(dir);
+    if (IS_SET_DELETE(moveResult, DELETE_THIS))
       return DELETE_THIS;
 
-    if (nRc == TRUE || !to_here || to_here->isRoomFlag(ROOM_PEACEFUL)) {
-      ch->sendTo("You slam into something which suddenly stops you.\n\r");
-      act("$n suddenly slams into something which stops there flight plan.",
-        TRUE, ch, 0, 0, TO_ROOM);
-
+    if (moveResult == FALSE) {
+      ch->sendTo("You slam into something which stops your flight.\n\r");
       if (ch->reconcileDamage(ch, ::number(10, 20), DAMAGE_NORMAL) == -1)
         return DELETE_THIS;
-
       return FALSE;
     }
 
-    ch->foodNDrink(from_here->getSectorType(), 1);
-
-    if (ch->isPc())
-      ch->specials.last_direction = getDirFromChar(tString);
-
-    --(*ch);
-    thing_to_room(ch, to_room);
-
-    if (to_here->isAirSector() || to_here->isVertSector()) {
-      ch->sendTo(
-        "As you fly into the room you land on a cushion of....AIR!!!!\n\r");
-      act("$n looks downwards in horror.", TRUE, ch, 0, 0, TO_ROOM);
-
-      nRc = ch->checkFalling();
-      if (IS_SET_DELETE(nRc, DELETE_THIS))
-        return DELETE_THIS;
-
-      return TRUE;
-    }
-
-    if (to_here->isFlyingSector()) {
-      ch->sendTo(
-        "As you fly into the room you realize you can now fly freely.\n\r");
-      act("$n beings to fly after taking to the air.", TRUE, ch, 0, 0, TO_ROOM);
-      ch->setPosition(POSITION_FLYING);
-
-      return TRUE;
-    }
-
-    if (to_here->isWaterSector()) {
-      ch->sendTo("You Slam into the water as you come down full force!\n\r");
-      act(
-        "$n slams into the water making a huge splash and killing there swan "
-        "dive.",
-        TRUE, ch, 0, 0, TO_ROOM);
-
-      if (ch->reconcileDamage(ch, ::number(20, 30), DAMAGE_NORMAL) == -1)
-        return DELETE_THIS;
-
-      return TRUE;
-    }
-
-    return -2;
-  } else {
-    if (from_here->isFlyingSector()) {
-      ch->sendTo("Your mount doesn't want to just charge out of the room.\n\r");
-      stop_charge(ch);
-
-      return FALSE;
-    }
-
-    if (ch->willBumpHeadDoor(from_here->dir_option[ch->task->flags],
-          &iHeight) &&
-        ((ch->getPosHeight() * 4 / 5) > iHeight)) {
-      ch->sendTo(
-        "You notice that the exit is not tall enough for you and your "
-        "mount.\n\r");
-      stop_charge(ch);
-
-      return FALSE;
-    }
-
-    sprintf(tString, "%i", ch->task->flags);
-    nRc = from_here->checkSpec(ch, CMD_ROOM_ATTEMPTED_EXIT, tString, from_here);
-
-    if (IS_SET_DELETE(nRc, DELETE_THIS))
-      return DELETE_THIS;
-
-    if (nRc == TRUE || !to_room || to_here->isRoomFlag(ROOM_PEACEFUL) ||
-        (to_here->getMoblim() &&
-          (MobCountInRoom(to_here->stuff) >= to_here->getMoblim()))) {
-      ch->sendTo(
-        "Your mount refuses to continue in your charge so you decide to "
-        "stop.\n\r");
-      stop_charge(ch);
-
-      return FALSE;
-    }
-
-    nMoveCost = (TerrainInfo[from_here->getSectorType()]->movement +
-                  TerrainInfo[to_here->getSectorType()]->movement) /
-                2;
-
-    if ((TerrainInfo[from_here->getSectorType()]->movement % 2) &&
-        !(TerrainInfo[to_here->getSectorType()]->movement % 2))
-      nMoveCost++;
-
-    if (to_here->isWaterSector()) {
-      ch->sendTo(
-        "Your mount refuses to charge into the water, you're forced to "
-        "stop.\n\r");
-      stop_charge(ch);
-
-      return FALSE;
-    }
-
-    if (from_here->isWaterSector()) {
-      ch->sendTo(
-        "Your mount refuses to charge out of the water, you're forced to "
-        "stop.\n\r");
-      stop_charge(ch);
-
-      return FALSE;
-    }
-
-    if (ch->bothLegsHurt()) {
-      ch->sendTo(COLOR_MOBS,
-        format("Riding %s without working legs is painful!\n\r") %
-          tHorse->getName());
-      ch->addToMove(-5);
-      if (!::number(0, 1)) {
-        nRc = ch->fallOffMount(tHorse, POSITION_SITTING);
-        if (IS_SET_DELETE(nRc, DELETE_THIS))
-          return DELETE_THIS;
-
-        ch->sendTo("Guess that stops your charging for now.\n\r");
-        ch->stopTask();
-
-        return FALSE;
-      }
-
-      if (ch->reconcileDamage(ch, ::number(0, 2), DAMAGE_NORMAL) == -1)
-        return DELETE_THIS;
-    }
-
-    if (!ch->riding) {
-      ch->sendTo("You have to be able to stay on your mount to charge.\n\r");
-      ch->stopTask();
-
-      return FALSE;
-    }
-
-    if (tHorse->bothLegsHurt()) {
-      act("$N has no working legs for you to charge with.", FALSE, ch, 0,
-        tHorse, TO_CHAR);
-      stop_charge(ch);
-
-      return FALSE;
-    }
-
-    if (ch->eitherLegHurt()) {
-      ch->sendTo("A damaged leg or foot makes it tough to ride!\n\r");
-      ch->addToMove(-2);
-
-      if (ch->reconcileDamage(ch, ::number(0, 1), DAMAGE_NORMAL) == -1)
-        return DELETE_THIS;
-
-      if (!ch->riding) {
-        ch->sendTo("Have to be able to stay on your mount to charge.\n\r");
-        ch->stopTask();
-
-        return FALSE;
-      }
-
-      if (!::number(0, 5)) {
-        nRc = ch->fallOffMount(tHorse, POSITION_SITTING);
-        if (IS_SET_DELETE(nRc, DELETE_THIS))
-          return DELETE_THIS;
-
-        ch->sendTo("Guess that stops your charging for now.\n\r");
-        ch->stopTask();
-
-        return FALSE;
-      }
-
-      if (!ch->riding) {
-        ch->sendTo("Have to be able to stay on your mount to charge.\n\r");
-        ch->stopTask();
-
-        return FALSE;
-      }
-
-      if (!::number(0, 3)) {
-        act("$N stumbles due to $S injuries and throws you.", FALSE, ch, 0,
-          tHorse, TO_CHAR);
-
-        if (ch->reconcileDamage(ch, ::number(0, 3), DAMAGE_NORMAL) == -1)
-          return DELETE_THIS;
-
-        ch->stopTask();
-
-        if (!ch->riding)
-          return FALSE;
-
-        nRc = ch->fallOffMount(tHorse, POSITION_SITTING);
-        if (IS_SET_DELETE(nRc, DELETE_THIS))
-          return DELETE_THIS;
-
-        return FALSE;
-      }
-    }
-
-    if (compareWeights(ch->riding->getWeight(), ch->getTotalWeight(TRUE)) ==
-        1) {
-      act("$N collapses beneath your weight.", FALSE, ch, 0, ch->riding,
-        TO_CHAR);
-      act("$N collapses beneath $n's weight.", FALSE, ch, 0, ch->riding,
-        TO_NOTVICT);
-      act("You collapse beneath $n's weight.", FALSE, ch, 0, ch->riding,
-        TO_VICT);
-
-      if (tHorse)
-        tHorse->setMove(0);
-
-      ch->addToMove(-2);
-      nRc = ch->fallOffMount(ch->riding, POSITION_SITTING);
-
-      if (IS_SET_DELETE(nRc, DELETE_THIS))
-        return DELETE_THIS;
-
-      if (ch->reconcileDamage(ch, ::number(0, 1), DAMAGE_NORMAL) == -1)
-        return DELETE_THIS;
-
-      return FALSE;
-    }
-
-    if (ch->getCond(DRUNK) > 9) {
-      ch->sendTo(
-        "You are just a wee bit too drunk to charge, sober up a little "
-        "first.\n\r");
-      act("$n drives $s mount a bit odd and decides to stop.", FALSE, ch, 0,
-        tHorse, TO_ROOM);
-      ch->stopTask();
-
-      return FALSE;
-    }
-
-    if (tHorse->isLevitating())
-      nMoveCost /= 4;
-
-    if (tHorse->isFlying())
-      nMoveCost = 1;
-
-    if (tHorse->getMove() < nMoveCost) {
-      ch->sendTo("Your mount is too exhausted to continue charging.\n\r");
-      stop_charge(ch);
-
-      return FALSE;
-    }
-
-    if (ch->getMove() < 1) {
-      ch->sendTo("You are too tired to continue.\n\r");
-      stop_charge(ch);
-
-      return FALSE;
-    }
-
-    if ((to_here->isFlyingSector() || to_here->isAirSector()) &&
-        !tHorse->isFlying()) {
-      ch->sendTo(
-        "Your mount doesn't seem to want to charge into there, so you "
-        "stop.\n\r");
-      stop_charge(ch);
-
-      return FALSE;
-    }
-
-    if (to_here->isUnderwaterSector()) {
-      ch->sendTo("Your mount refuses to charge under water.\n\r");
-      stop_charge(ch);
-
-      return FALSE;
-    }
-
-    if (from_here->isUnderwaterSector()) {
-      ch->sendTo("Your mount refuses to charge through the water.\n\r");
-      stop_charge(ch);
-
-      return FALSE;
-    }
-
-    if (to_here->isVertSector()) {
-      ch->sendTo(
-        "Your mount refuses to charge in that direction, you're forced to "
-        "stop.\n\r");
-      stop_charge(ch);
-
-      return FALSE;
-    }
-
-    ch->foodNDrink(from_here->getSectorType(), 1);
-
-    nRc = tHorse->checkForMoveTrap(getDirFromChar(tString));
-    if (IS_SET_DELETE(nRc, DELETE_THIS))
-      return DELETE_THIS;
-    else if (nRc)
-      return FALSE;
-
-    --(*tHorse);
-    thing_to_room(tHorse, to_room);
+    return TRUE;
   }
 
-  if (ch->isPc())
-    ch->specials.last_direction = getDirFromChar(tString);
+  // Handle mounted case - use riding system for movement
+  if (!tHorse) {
+    ch->sendTo("You need to be mounted to charge!\n\r");
+    stop_charge(ch);
+    return FALSE;
+  }
 
-  --(*ch);
-  thing_to_room(ch, to_room);
+  // Charge-specific mount restrictions
+  if (to_here->isWaterSector() || from_here->isWaterSector()) {
+    ch->sendTo("Your mount refuses to charge through water.\n\r");
+    stop_charge(ch);
+    return FALSE;
+  }
+
+  if (to_here->isUnderwaterSector() || from_here->isUnderwaterSector()) {
+    ch->sendTo("Your mount refuses to charge underwater.\n\r");
+    stop_charge(ch);
+    return FALSE;
+  }
+
+  if ((to_here->isFlyingSector() || to_here->isAirSector()) && !tHorse->isFlying()) {
+    ch->sendTo("Your mount refuses to charge into the air.\n\r");
+    stop_charge(ch);
+    return FALSE;
+  }
+
+  if (to_here->isVertSector()) {
+    ch->sendTo("Your mount refuses to charge in that direction.\n\r");
+    stop_charge(ch);
+    return FALSE;
+  }
+
+  // Use normal mounted movement system
+  int moveResult = ch->rawMove(dir);
+  if (IS_SET_DELETE(moveResult, DELETE_THIS))
+    return DELETE_THIS;
+
+  if (moveResult == FALSE) {
+    ch->sendTo("Your mount refuses to continue the charge.\n\r");
+    stop_charge(ch);
+    return FALSE;
+  }
 
   return TRUE;
 }

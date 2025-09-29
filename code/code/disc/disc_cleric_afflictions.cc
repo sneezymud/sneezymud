@@ -1017,8 +1017,34 @@ int paralyze(TBeing* caster, TBeing* victim, int level, short bKnown) {
 
     victim->affectTo(&aff, 0, SILENT_YES);
 
-    if (victim->riding && dynamic_cast<TBeing*>(victim->riding))
-      victim->fallOffMount(victim->riding, POSITION_STUNNED);
+    if (victim->riding && dynamic_cast<TBeing*>(victim->riding)) {
+      int crashDam = victim->fallOffMount(victim->riding, false);
+      if (crashDam == -1) {
+        ADD_DELETE(ret, DELETE_VICT);
+        return ret;
+      }
+      // Apply fall damage from being paralyzed while mounted
+      if (crashDam > 0) {
+        if (victim->reconcileDamage(victim, crashDam, DAMAGE_FALL) == -1) {
+          ADD_DELETE(ret, DELETE_VICT);
+          return ret;
+        }
+      }
+    } else if (victim->isFlying()) {
+      // Paralyzed while flying - crash to the ground
+      int crashDam = victim->crashLanding(0, false);
+      if (crashDam == -1) {
+        ADD_DELETE(ret, DELETE_VICT);
+        return ret;
+      }
+      // Apply fall damage from being paralyzed while flying
+      if (crashDam > 0) {
+        if (victim->reconcileDamage(victim, crashDam, DAMAGE_FALL) == -1) {
+          ADD_DELETE(ret, DELETE_VICT);
+          return ret;
+        }
+      }
+    }
 
     victim->setPosition(POSITION_STUNNED);
     return ret;

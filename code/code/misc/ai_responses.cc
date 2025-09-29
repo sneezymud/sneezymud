@@ -100,7 +100,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
         act("$n just set your solo quest flag.", FALSE, this, 0, mob, TO_VICT);
         mob->dieFollower();
         if (dynamic_cast<TBeing*>(mob->riding)) {
-          rc = mob->fallOffMount(mob->riding, POSITION_STANDING);
+          rc = mob->fallOffMount(mob->riding, false);
           if (IS_SET_DELETE(rc, DELETE_THIS))
             return DELETE_VICT;
         }

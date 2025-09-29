@@ -325,7 +325,6 @@ spellNumT doStabMsg(TBeing* tThief, TBeing* tSucker, TGenWeapon* tWeapon,
 
 static int stab(TBeing* thief, TBeing* victim) {
   const int STAB_MOVE = 2;
-  int rc;
   int level;
 
   if (thief == victim) {
@@ -437,11 +436,7 @@ static int stab(TBeing* thief, TBeing* victim) {
           thief, obj, victim, TO_NOTVICT);
         act("$n misses $s thrust into you and falls flat on their face!", FALSE,
           thief, obj, victim, TO_VICT);
-        rc = thief->crashLanding(POSITION_SITTING);
-
-        if (IS_SET_DELETE(rc, DELETE_THIS))
-          return DELETE_THIS;
-
+        thief->stumble();
         break;
       case CRIT_F_NONE:
       default:

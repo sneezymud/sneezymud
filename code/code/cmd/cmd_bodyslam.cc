@@ -82,7 +82,6 @@ bool TBeing::canBodyslam(TBeing* victim, silentTypeT silent) {
 }
 
 int TBeing::bodyslamMiss(TBeing* victim, skillMissT type) {
-  int rc;
 
   if (type == TYPE_DEX) {
     act("$N deftly avoids your bodyslam attempt.", FALSE, this, 0, victim,
@@ -99,13 +98,13 @@ int TBeing::bodyslamMiss(TBeing* victim, skillMissT type) {
     act("$N deftly counters $n's bodyslam attempt, and heaves $m to the $g.",
       FALSE, this, 0, victim, TO_NOTVICT);
 
-    rc = crashLanding(POSITION_SITTING);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return rc;
+    int stumbleDam = stumble();
 
-    rc = trySpringleap(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
-      return rc;
+    // Apply stumble damage
+    if (stumbleDam > 0) {
+      if (reconcileDamage(this, stumbleDam, DAMAGE_FALL) == -1)
+        return DELETE_THIS;
+    }
   } else if (type == TYPE_STR) {
     act("$n collapses as $e fails to pick $N up.", FALSE, this, 0, victim,
       TO_NOTVICT);
@@ -114,16 +113,16 @@ int TBeing::bodyslamMiss(TBeing* victim, skillMissT type) {
     act("$n's strength gives out as $e tries to pick you up for bodyslamming.",
       FALSE, this, 0, victim, TO_VICT);
 
-    rc = crashLanding(POSITION_SITTING);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return rc;
+    int stumbleDam = stumble();
 
     sendTo(format("%sYou fall to the %s.%s\n\r") % blue() %
            roomp->describeGround() % norm());
 
-    rc = trySpringleap(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
-      return rc;
+    // Apply stumble damage
+    if (stumbleDam > 0) {
+      if (reconcileDamage(this, stumbleDam, DAMAGE_FALL) == -1)
+        return DELETE_THIS;
+    }
   } else {
     act("$n tries to bodyslam $N, but ends up falling down.", FALSE, this, 0,
       victim, TO_NOTVICT);
@@ -132,13 +131,13 @@ int TBeing::bodyslamMiss(TBeing* victim, skillMissT type) {
     act("$n fails to bodyslam you, and tumbles to the $g.", FALSE, this, 0,
       victim, TO_VICT);
 
-    rc = crashLanding(POSITION_SITTING);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return rc;
+    int stumbleDam = stumble();
 
-    rc = trySpringleap(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
-      return rc;
+    // Apply stumble damage
+    if (stumbleDam > 0) {
+      if (reconcileDamage(this, stumbleDam, DAMAGE_FALL) == -1)
+        return DELETE_THIS;
+    }
   }
 
   if (reconcileDamage(victim, 0, SKILL_BODYSLAM) == -1)
@@ -148,8 +147,9 @@ int TBeing::bodyslamMiss(TBeing* victim, skillMissT type) {
 }
 
 int TBeing::bodyslamHit(TBeing* victim) {
-  int rc;
 
+  // Handle crash damage based on whether victim was mounted
+  int crashDam = 0;
   if (!victim->riding) {
     act("$n lifts $N over $s head and slams $M to the $g.", FALSE, this, 0,
       victim, TO_NOTVICT);
@@ -159,29 +159,26 @@ int TBeing::bodyslamHit(TBeing* victim) {
       victim, TO_VICT);
     act("Suddenly, the $g rushes upward and knocks the wind out of you!", FALSE,
       this, 0, victim, TO_VICT, ANSI_RED);
+
+    // Ground-based bodyslam crash
+    crashDam = victim->crashLanding(0, true);
+    if (crashDam == -1) // Signal for deletion
+      return DELETE_VICT;
   } else {
-    act("$n lifts $N off $S $o and slams $M to the $g.", FALSE, this,
+    act("$n wrestles $N and tries to throw $S from $S $o!", FALSE, this,
       victim->riding, victim, TO_NOTVICT);
-    act("You lift $N off $S $o and slam $M to the $g.", FALSE, this,
+    act("You wrestle $N and try to throw $M from $S $o!", FALSE, this,
       victim->riding, victim, TO_CHAR);
-    act("You get a great view as $n lifts you off your $o over $s head.", FALSE,
+    act("$n wrestles you and tries to throw you from your $o!", FALSE,
       this, victim->riding, victim, TO_VICT);
-    act("Suddenly, the $g rushes upward and knocks the wind out of you!", FALSE,
+    act("Suddenly, things seem like they are about to go poorly!", FALSE,
       this, victim->riding, victim, TO_VICT, ANSI_RED);
-    victim->dismount(POSITION_RESTING);
+
+    // Mount crash damage
+    crashDam = victim->fallOffMount(victim->riding, true);
+    if (crashDam == -1) // Signal for deletion
+      return DELETE_VICT;
   }
-
-  rc = victim->crashLanding(POSITION_SITTING);
-  if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_VICT;
-
-  rc = victim->trySpringleap(this);
-  if (IS_SET_DELETE(rc, DELETE_THIS) && IS_SET_DELETE(rc, DELETE_VICT))
-    return rc;
-  else if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_VICT;
-  else if (IS_SET_DELETE(rc, DELETE_VICT))
-    return DELETE_THIS;
 
   // see the balance notes for details on what's going on here.
   float wt = combatRound(discArray[SKILL_BODYSLAM]->lag);
@@ -202,10 +199,13 @@ int TBeing::bodyslamHit(TBeing* victim) {
   // dex to lift person up, doing this damage will counter-balance
   // those penalties.  Warrior-skill damage isn't all that high
   // to begin with...
-  int dam = getSkillDam(victim, SKILL_BODYSLAM, getSkillLevel(SKILL_BODYSLAM),
+  int skillDam = getSkillDam(victim, SKILL_BODYSLAM, getSkillLevel(SKILL_BODYSLAM),
     getAdvLearning(SKILL_BODYSLAM));
 
-  if (reconcileDamage(victim, dam, SKILL_BODYSLAM) == -1)
+  // Total damage = skill damage + crash damage
+  int totalDam = skillDam + crashDam;
+
+  if (reconcileDamage(victim, totalDam, SKILL_BODYSLAM) == -1)
     return DELETE_VICT;
 
   return TRUE;

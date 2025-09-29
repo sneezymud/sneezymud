@@ -12,6 +12,8 @@ class CDMounted : public CDiscipline {
     CSkill skRideNonDomestic;
     CSkill skRideWinged;
     CSkill skRideExotic;
+    CSkill skSaddlePosture;
+    CSkill skVaulting;
 
     virtual CDMounted* cloneMe() { return new CDMounted(*this); }
 

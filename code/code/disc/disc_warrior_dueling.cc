@@ -47,9 +47,7 @@ int TBeing::doShove(const char* argument, TBeing* vict) {
   }
   if (victim->riding) {
     // compare pusher's str to rider's dex
-    if ((!victim->rideCheck(
-          victim->plotStat(STAT_CURRENT, STAT_AGI, 3, 18, 12) -
-          plotStat(STAT_CURRENT, STAT_STR, 3, 18, 10))) &&
+    if ((!victim->rideCheck(0)) && victim->isAgile(0) &&
         !isImmortal()) {
       act("You leap at $N, attempting to topple $M from $S $o, but fail.", TRUE,
         this, victim->riding, victim, TO_CHAR);
@@ -58,13 +56,13 @@ int TBeing::doShove(const char* argument, TBeing* vict) {
       act("$n leaps at $N, attempting to topple $M off $S $o, but fails.", TRUE,
         this, victim->riding, victim, TO_NOTVICT);
 
-      rc = crashLanding(POSITION_RESTING);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
+      int stumbleDam = stumble();
+      if (stumbleDam == -1)
         return DELETE_THIS;
 
       act("You land face-down on the $g.", FALSE, this, 0, 0, TO_CHAR,
         ANSI_RED);
-      addSkillLag(skill, rc);
+      addSkillLag(skill, stumbleDam);
       reconcileDamage(victim, 0, skill);
 
       if (!victim->isPc()) {
@@ -87,13 +85,24 @@ int TBeing::doShove(const char* argument, TBeing* vict) {
         victim->riding, victim, TO_VICT);
       act("$n leaps at $N, toppling $M off $S $o.", TRUE, this, victim->riding,
         victim, TO_NOTVICT);
-      rc = victim->fallOffMount(victim->riding, POSITION_SITTING);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+
+      int crashDam = victim->fallOffMount(victim->riding, true);
+      if (crashDam == -1) {
         delete victim;
         victim = NULL;
         return TRUE;
       }
-      addSkillLag(skill, rc);
+
+      // Apply crash damage from being shoved off mount
+      if (crashDam > 0) {
+        if (reconcileDamage(victim, crashDam, DAMAGE_FALL) == -1) {
+          delete victim;
+          victim = NULL;
+          return TRUE;
+        }
+      }
+
+      addSkillLag(skill, crashDam);
       reconcileDamage(victim, 0, skill);
       return TRUE;
     }

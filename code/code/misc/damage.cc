@@ -666,12 +666,11 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
   if (isAffected(AFF_INVISIBLE) && this != v)
     appear();
 
+  // Check if victim stays mounted when taking damage
   if (v->riding && dynamic_cast<TBeing*>(v->riding)) {
-    if (!v->rideCheck(-3)) {
-      rc = v->fallOffMount(v->riding, POSITION_SITTING);
+    if (!v->rideCheck(0)) {
+      // rideCheck already handled fallOffMount, just add combat wait
       v->addToWait(combatRound(2));
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_VICT;
     }
   } else if (v->riding && dynamic_cast<TMonster*>(v) && !v->desc) {
     if (::number(0, 1)) {
@@ -679,17 +678,14 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
     }
   }
 
+  // Check if riders fall off the victim when victim takes damage
   for (t = v->rider; t; t = t2) {
     t2 = t->nextRider;
     TBeing* tb = dynamic_cast<TBeing*>(t);
-    // force a doubly failed rideCheck for riders of victim
-    if (tb && !tb->rideCheck(-3) && !tb->rideCheck(-3)) {
-      rc = tb->fallOffMount(v, POSITION_SITTING);
+    // Force a failed rideCheck for riders of victim
+    if (tb && !tb->rideCheck(0)) {
+      // rideCheck already handled fallOffMount, just add combat wait
       tb->addToWait(combatRound(2));
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        delete tb;
-        tb = NULL;
-      }
     }
   }
 

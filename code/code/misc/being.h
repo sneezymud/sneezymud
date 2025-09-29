@@ -459,7 +459,7 @@ class TBeing : public TThing {
     virtual int getWimpy();
     virtual void setWimpy(int);
     virtual short int hitLimit() const;
-    virtual int fallOffMount(TThing*, positionTypeT, bool death = FALSE);
+    virtual int fallOffMount(TThing*, bool force);
     virtual bool hasQuestBit(int) const;
     virtual void setQuestBit(int);
     virtual void remQuestBit(int);
@@ -617,9 +617,13 @@ class TBeing : public TThing {
     void gainExpPerHit(TBeing*, double, int);
 
     int rideCheck(int);
+    int getRideMod(TBeing* rider, TBeing* mount);
     spellNumT mountSkillType() const;
     void calmMount(TBeing*);
     int advancedRidingBonus(TMonster*);
+    int doSaddlePosture(TBeing* deikhan, TBeing* mount);
+    int doVault(TBeing* deikhan, TBeing* victim, TBeing* mount);
+    int tryVault(TBeing* deikhan, TBeing* victim, TBeing* mount);
 
     void wipeChar(int);
     void resetEffectsChar();
@@ -1317,8 +1321,8 @@ class TBeing : public TThing {
     void doScribe(const char*);
     void doFly();
     void doLand();
-    int crashLanding(positionTypeT, bool force = FALSE, bool dam = TRUE,
-      bool falling = false);
+    int crashLanding(int heightMod, bool force);
+    int stumble();
     int doTurn(const char*, TBeing*);
     virtual void doMedit(const char*);
     void doPreen(sstring& argument);
@@ -1432,6 +1436,7 @@ class TBeing : public TThing {
     virtual float getWisDamModifier() const;
     int getDexReaction() const;
     int getAgiReaction() const;
+    int getBraReaction() const;
     int getConShock() const;
     float getConHpModifier() const;
     double getStatMod(statTypeT statType, int multiplier = 1) const;

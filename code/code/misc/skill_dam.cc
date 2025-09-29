@@ -450,6 +450,10 @@ int TBeing::getSkillDam(const TBeing* victim, spellNumT skill, int level,
       dam = genericDam(victim, this, skill, DISC_DEIKHAN, level, adv_learn,
         0.639 / 5.0, REDUCE_YES, !isPc(), TRIM_NO);
       break;
+    case SKILL_VAULTING:
+        dam = genericDam(victim, this, skill, DISC_DEIKHAN, level, adv_learn,
+          0.639, REDUCE_NO, !isPc(), TRIM_NO);
+      break;
     case SPELL_HEAL_LIGHT_DEIKHAN:
     case SPELL_HEAL_SERIOUS_DEIKHAN:
     case SPELL_HEAL_CRITICAL_DEIKHAN:

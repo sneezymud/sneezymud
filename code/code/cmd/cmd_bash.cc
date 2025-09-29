@@ -321,16 +321,9 @@ int TBeing::bashFail(TBeing* victim, spellNumT skill,
   }
 
   if (hasLegs()) {
-    int rc = crashLanding(POSITION_SITTING);
+    int rc = stumble();
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-
-    sendTo(format("%sYou fall over.%s\n\r") % red() % norm());
-    act("$n falls over.", TRUE, this, 0, 0, TO_ROOM);
-
-    rc = trySpringleap(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
-      return rc;
   }
 
   reconcileDamage(victim, 0, skill);
@@ -340,11 +333,10 @@ int TBeing::bashFail(TBeing* victim, spellNumT skill,
 int TBeing::bashSuccess(TBeing* victim, spellNumT skill, bool isHoldingShield,
   TObj* itemInSecondaryHand) {
   if (victim->riding) {
-    act("You knock $N off $p.", FALSE, this, victim->riding, victim, TO_CHAR);
-    act("$n knocks $N off $p.", FALSE, this, victim->riding, victim,
+    act("You attempt to knock $N off of $p.", FALSE, this, victim->riding, victim, TO_CHAR);
+    act("$n attempts to knock $N off of $p.", FALSE, this, victim->riding, victim,
       TO_NOTVICT);
-    act("$n knocks you off $p.", FALSE, this, victim->riding, victim, TO_VICT);
-    victim->dismount(POSITION_SITTING);
+    act("$n attempts to knock you off of $p.", FALSE, this, victim->riding, victim, TO_VICT);
   } else {
     act("$n knocks $N on $S butt!", FALSE, this, 0, victim, TO_NOTVICT);
     act("You send $N sprawling.", FALSE, this, 0, victim, TO_CHAR);
@@ -371,7 +363,27 @@ int TBeing::bashSuccess(TBeing* victim, spellNumT skill, bool isHoldingShield,
     }
   }
 
-  if (reconcileDamage(victim, shieldDam, SKILL_BASH) == -1)
+  // Handle crash damage based on whether victim was mounted
+  int crashDam = 0;
+  if (victim->riding) {
+    // Mount crash damage
+    crashDam = victim->fallOffMount(victim->riding, true);
+    if (crashDam == -1) // Signal for deletion
+      return DELETE_VICT;
+  } else {
+    // Ground-based crash landing
+    crashDam = victim->crashLanding(0, true);
+    if (crashDam == -1) // Signal for deletion
+      return DELETE_VICT;
+  }
+
+  // Only apply crash damage if basher isn't skilled enough for a "clean" bash
+  int totalDam = shieldDam;
+  if (getAdvLearning(skill) < 75) {
+    totalDam += crashDam; // Add fall damage for unskilled bashers
+  }
+
+  if (reconcileDamage(victim, totalDam, SKILL_BASH) == -1)
     return DELETE_VICT;
 
   int distractionBonus = 1;
@@ -382,18 +394,6 @@ int TBeing::bashSuccess(TBeing* victim, spellNumT skill, bool isHoldingShield,
   */
   if (isLucky(levelLuckModifier(victim->GetMaxLevel())))
     distractionBonus++;
-
-  int rc = victim->crashLanding(POSITION_SITTING);
-  if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_VICT;
-
-  rc = victim->trySpringleap(this);
-  if (IS_SET_DELETE(rc, DELETE_THIS) && IS_SET_DELETE(rc, DELETE_VICT))
-    return rc;
-  else if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_VICT;
-  else if (IS_SET_DELETE(rc, DELETE_VICT))
-    return DELETE_THIS;
 
   // see balance notes for bash:
   // the effect here should be strictly to prevent skill-use

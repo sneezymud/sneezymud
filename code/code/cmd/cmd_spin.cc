@@ -85,7 +85,6 @@ bool TBeing::canSpin(TBeing* victim, silentTypeT silent) {
 }
 
 int TBeing::spinMiss(TBeing* victim, skillMissT type) {
-  int rc;
 
   if (type == TYPE_DEX) {
     act("$N deftly avoids your attempt at spinning $M.", FALSE, this, 0, victim,
@@ -116,13 +115,13 @@ int TBeing::spinMiss(TBeing* victim, skillMissT type) {
     act("$N sticks out $S foot tripping $n to the $g.", FALSE, this, 0, victim,
       TO_NOTVICT);
 
-    rc = crashLanding(POSITION_SITTING);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return rc;
+    int stumbleDam = stumble();
 
-    rc = trySpringleap(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
-      return rc;
+    // Apply stumble damage
+    if (stumbleDam > 0) {
+      if (reconcileDamage(this, stumbleDam, DAMAGE_FALL) == -1)
+        return DELETE_THIS;
+    }
   } else {
     act("$n tries to spin $N, but ends up falling down.", FALSE, this, 0,
       victim, TO_NOTVICT);
@@ -131,13 +130,13 @@ int TBeing::spinMiss(TBeing* victim, skillMissT type) {
     act("$n fails to spin you, and tumbles to the $g.", FALSE, this, 0, victim,
       TO_VICT);
 
-    rc = crashLanding(POSITION_SITTING);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return rc;
+    int stumbleDam = stumble();
 
-    rc = trySpringleap(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
-      return rc;
+    // Apply stumble damage
+    if (stumbleDam > 0) {
+      if (reconcileDamage(this, stumbleDam, DAMAGE_FALL) == -1)
+        return DELETE_THIS;
+    }
   }
 
   if (reconcileDamage(victim, 0, SKILL_SPIN) == -1)
@@ -147,8 +146,9 @@ int TBeing::spinMiss(TBeing* victim, skillMissT type) {
 }
 
 int TBeing::spinHit(TBeing* victim) {
-  int rc;
 
+  // Handle crash damage based on whether victim was mounted
+  int crashDam = 0;
   if (!victim->riding) {
     act("$n grabs $N's arm and spins $M!", FALSE, this, 0, victim, TO_NOTVICT);
     act("Now dizzy, $N trips and falls to the $g.", FALSE, this, 0, victim,
@@ -162,35 +162,24 @@ int TBeing::spinHit(TBeing* victim) {
       "As the world spins into a blur before your eyes you become "
       "dazed,\n\rand fall face first to the $g.",
       FALSE, this, 0, victim, TO_VICT, ANSI_RED);
+
+    // Ground-based spin crash
+    crashDam = victim->crashLanding(0, true);
+    if (crashDam == -1) // Signal for deletion
+      return DELETE_VICT;
   } else {
-    act("$n grabs $N's arm and rips $M off of $S $o!", FALSE, this,
+    act("$n grabs $N's arm to rip $M off of $S $o!", FALSE, this,
       victim->riding, victim, TO_NOTVICT);
-    act("$N slams head first into the $g.", FALSE, this, victim->riding, victim,
-      TO_NOTVICT);
-    act("You grab $N's arm and pull $M off of $S $o!", FALSE, this,
+    act("You grab $N's arm to pull $M off of $S $o!", FALSE, this,
       victim->riding, victim, TO_CHAR);
-    act("$N slams head first into the $g.", FALSE, this, victim->riding, victim,
-      TO_CHAR);
     act("$n suddenly grabs your arm and gives a hard yank!", FALSE, this,
       victim->riding, victim, TO_VICT);
-    act("Suddenly, the $g rushes upward as you fall off of your $o.", FALSE,
-      this, victim->riding, victim, TO_VICT, ANSI_RED);
-    act("OOFFF!! Yuck, dirt tastes AWFUL!", FALSE, this, victim->riding, victim,
-      TO_VICT, ANSI_RED);
-    victim->dismount(POSITION_RESTING);
+
+    // Mount crash damage
+    crashDam = victim->fallOffMount(victim->riding, true);
+    if (crashDam == -1) // Signal for deletion
+      return DELETE_VICT;
   }
-
-  rc = victim->crashLanding(POSITION_SITTING);
-  if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_VICT;
-
-  rc = victim->trySpringleap(this);
-  if (IS_SET_DELETE(rc, DELETE_THIS) && IS_SET_DELETE(rc, DELETE_VICT))
-    return rc;
-  else if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_VICT;
-  else if (IS_SET_DELETE(rc, DELETE_VICT))
-    return DELETE_THIS;
 
   // see the balance notes for details on what's going on here.
   float wt = (combatRound(discArray[SKILL_SPIN]->lag) / 3);
@@ -203,10 +192,13 @@ int TBeing::spinHit(TBeing* victim) {
 
   victim->addToWait((int)wt);
 
-  int dam = getSkillDam(victim, SKILL_SPIN, getSkillLevel(SKILL_SPIN),
+  int skillDam = getSkillDam(victim, SKILL_SPIN, getSkillLevel(SKILL_SPIN),
     getAdvLearning(SKILL_SPIN));
 
-  if (reconcileDamage(victim, dam, SKILL_SPIN) == -1)
+  // Total damage = skill damage + crash damage
+  int totalDam = skillDam + crashDam;
+
+  if (reconcileDamage(victim, totalDam, SKILL_SPIN) == -1)
     return DELETE_VICT;
 
   return TRUE;

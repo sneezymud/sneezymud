@@ -7,6 +7,7 @@
 #include "disc_mage_air.h"
 #include "disease.h"
 #include "combat.h"
+#include "spells.h"
 #include "spelltask.h"
 #include "obj_magic_item.h"
 #include "combat.h"
@@ -14,7 +15,7 @@
 int gust(TBeing* caster, TBeing* victim, int level, short bKnown,
   int adv_learn) {
   int rc;
-  TThing* ch;
+  TThing* chair;
 
   if (caster->roomp->isUnderwaterSector()) {
     caster->sendTo(COLOR_SPELLS,
@@ -50,16 +51,16 @@ int gust(TBeing* caster, TBeing* victim, int level, short bKnown,
 
       if (victim->riding)
         victim->dismount(POSITION_STANDING);
-      while ((ch = victim->rider)) {
-        TBeing* tb = dynamic_cast<TBeing*>(ch);
+      while ((chair = victim->rider)) {
+        TBeing* tb = dynamic_cast<TBeing*>(chair);
         if (tb) {
-          rc = tb->fallOffMount(victim, POSITION_STANDING);
+          rc = tb->fallOffMount(victim, true);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete tb;
             tb = NULL;
           }
         } else {
-          ch->dismount(POSITION_DEAD);
+          chair->dismount(POSITION_DEAD);
         }
       }
 
@@ -99,16 +100,16 @@ int gust(TBeing* caster, TBeing* victim, int level, short bKnown,
         FALSE, caster, NULL, victim, TO_NOTVICT);
       if (caster->riding)
         caster->dismount(POSITION_STANDING);
-      while ((ch = caster->rider)) {
-        TBeing* tb = dynamic_cast<TBeing*>(ch);
+      while ((chair = caster->rider)) {
+        TBeing* tb = dynamic_cast<TBeing*>(chair);
         if (tb) {
-          rc = tb->fallOffMount(caster, POSITION_STANDING);
+          rc = tb->fallOffMount(caster, false);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete tb;
             tb = NULL;
           }
         } else {
-          ch->dismount(POSITION_DEAD);
+          chair->dismount(POSITION_DEAD);
         }
       }
       caster->setPosition(POSITION_SITTING);
@@ -180,7 +181,7 @@ int gust(TBeing* caster, TBeing* victim, TMagicItem* obj) {
 
 int immobilize(TBeing* caster, TBeing* victim, int level, short bKnown) {
   int rc;
-  TThing* ch;
+  TThing* chair;
   int retCode = 0;
 
   if (victim->affectedBySpell(SPELL_IMMOBILIZE)) {
@@ -203,7 +204,7 @@ int immobilize(TBeing* caster, TBeing* victim, int level, short bKnown) {
   if (caster->bSuccess(bKnown, SPELL_IMMOBILIZE)) {
     retCode |= SPELL_SUCCESS;
 
-    switch (critSuccess(caster, SPELL_FEATHERY_DESCENT)) {
+    switch (critSuccess(caster, SPELL_IMMOBILIZE)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
         rounds *= 3.0;
@@ -231,16 +232,47 @@ int immobilize(TBeing* caster, TBeing* victim, int level, short bKnown) {
     victim->addToWait(cr);
 
     if (victim->riding) {
-      rc = victim->fallOffMount(victim->riding, POSITION_STANDING);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      int crashDam = victim->fallOffMount(victim->riding, false);
+      if (crashDam == -1) {
         return retCode | VICTIM_DEAD;
       }
+      // Apply fall damage from being immobilized while mounted
+      if (crashDam > 0) {
+        if (victim->reconcileDamage(victim, crashDam, DAMAGE_FALL) == -1) {
+          return retCode | VICTIM_DEAD;
+        }
+      }
+    } else if (victim->isFlying()) {
+      // Immobilized while flying - crash to the ground
+      int crashDam = victim->crashLanding(0, false);
+      if (crashDam == -1) {
+        return retCode | VICTIM_DEAD;
+      }
+      // Apply fall damage from being immobilized while flying
+      if (crashDam > 0) {
+        if (victim->reconcileDamage(victim, crashDam, DAMAGE_FALL) == -1) {
+          return retCode | VICTIM_DEAD;
+        }
+      }
     }
-    while ((ch = victim->rider)) {
-      rc = ch->fallOffMount(victim, POSITION_STANDING);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        delete ch;
-        ch = NULL;
+    while ((chair = victim->rider)) {
+      TBeing* tb = dynamic_cast<TBeing*>(chair);
+      if (tb) {
+        int riderCrashDam = tb->fallOffMount(victim, false);
+        if (riderCrashDam == -1) {
+          delete tb;
+          tb = NULL;
+        } else {
+          // Apply fall damage to riders
+          if (riderCrashDam > 0) {
+            if (tb->reconcileDamage(tb, riderCrashDam, DAMAGE_FALL) == -1) {
+              delete tb;
+              tb = NULL;
+            }
+          }
+        }
+      } else {
+        chair->dismount(POSITION_SITTING);
       }
     }
     if (victim->fight())
@@ -266,21 +298,21 @@ int immobilize(TBeing* caster, TBeing* victim, int level, short bKnown) {
       caster->addToWait(cr);
 
       if (caster->riding) {
-        rc = caster->fallOffMount(caster->riding, POSITION_STANDING);
+        rc = caster->fallOffMount(caster->riding, true);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
         }
       }
-      while ((ch = caster->rider)) {
-        TBeing* tb = dynamic_cast<TBeing*>(ch);
+      while ((chair = caster->rider)) {
+        TBeing* tb = dynamic_cast<TBeing*>(chair);
         if (tb) {
-          rc = tb->fallOffMount(caster, POSITION_STANDING);
+          rc = tb->fallOffMount(caster, true);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete tb;
             tb = NULL;
           }
         } else {
-          ch->dismount(POSITION_DEAD);
+          chair->dismount(POSITION_DEAD);
         }
       }
       if (caster->fight())
@@ -640,7 +672,7 @@ int castDustStorm(TBeing* caster) {
 }
 
 int tornado(TBeing* caster, int level, short bKnown, int adv_learn) {
-  TThing *t, *ch;
+  TThing *t, *chair;
   TBeing* tb;
   int rc;
 
@@ -665,23 +697,51 @@ int tornado(TBeing* caster, int level, short bKnown, int adv_learn) {
           TO_ROOM);
         act("You are blasted by the force of the wind!", FALSE, tb, NULL, NULL,
           TO_CHAR);
+
+        int crashDam = 0;
         if (tb->riding) {
-          rc = tb->fallOffMount(t->riding, POSITION_STANDING);
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
+          crashDam = tb->fallOffMount(tb->riding, true);
+          if (crashDam == -1) {
+            delete tb;
+            tb = NULL;
+            continue;
+          }
+        } else if (tb->isFlying()) {
+          // Tornado blasts flying beings to the ground
+          crashDam = tb->crashLanding(0, true);
+          if (crashDam == -1) {
             delete tb;
             tb = NULL;
             continue;
           }
         }
-        while ((ch = tb->rider)) {
-          rc = ch->fallOffMount(tb, POSITION_STANDING);
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            delete ch;
-            ch = NULL;
+
+        while ((chair = tb->rider)) {
+          TBeing* riderBeing = dynamic_cast<TBeing*>(chair);
+          if (riderBeing) {
+            int riderCrashDam = riderBeing->fallOffMount(tb, true);
+            if (riderCrashDam == -1) {
+              delete riderBeing;
+              riderBeing = NULL;
+            } else {
+              // Apply crash damage to riders
+              if (riderCrashDam > 0) {
+                if (riderBeing->reconcileDamage(riderBeing, riderCrashDam, DAMAGE_FALL) == -1) {
+                  delete riderBeing;
+                  riderBeing = NULL;
+                }
+              }
+            }
+          } else {
+            chair->dismount(POSITION_SITTING);
           }
         }
+
         tb->setPosition(POSITION_SITTING);
-        if (caster->reconcileDamage(tb, dam, SPELL_TORNADO) == -1) {
+
+        // Total damage = spell damage + crash damage
+        int totalDam = dam + crashDam;
+        if (caster->reconcileDamage(tb, totalDam, SPELL_TORNADO) == -1) {
           delete tb;
           tb = NULL;
           continue;
@@ -738,18 +798,18 @@ int tornado(TBeing* caster, int level, short bKnown, int adv_learn) {
           act("$n chokes on the dust!", FALSE, tb, NULL, 0, TO_ROOM);
           act("You choke on the dust!", FALSE, tb, NULL, NULL, TO_CHAR);
           if (tb->riding) {
-            rc = tb->fallOffMount(tb->riding, POSITION_STANDING);
+            tb->dismount(POSITION_STANDING);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               delete tb;
               tb = NULL;
               continue;
             }
           }
-          while ((ch = tb->rider)) {
-            rc = ch->fallOffMount(tb, POSITION_STANDING);
+          while ((chair = tb->rider)) {
+            chair->dismount(POSITION_DEAD);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              delete ch;
-              ch = NULL;
+              delete chair;
+              chair = NULL;
             }
           }
           tb->setPosition(POSITION_SITTING);

@@ -839,11 +839,15 @@ bool TBeing::canFly() const {
 // force to fly, then crash land.
 int TBeing::flightCheck() {
   if (isFlying() && !canFly() && !roomp->isFlyingSector()) {
-    // last argument is true: force landing, don't recheck.
-    // avoids infinite recursion.
-    int rc = crashLanding(POSITION_SITTING, false, true, true);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
+    // Force landing when they lose ability to fly
+    int crashDam = crashLanding(0, false); // No height bonus, not violent
+    if (crashDam == -1)
       return DELETE_THIS;
+    // Apply crash damage from losing flight ability
+    if (crashDam > 0) {
+      if (reconcileDamage(this, crashDam, DAMAGE_FALL) == -1)
+        return DELETE_THIS;
+    }
   }
   return FALSE;
 }

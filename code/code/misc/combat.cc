@@ -387,9 +387,9 @@ void TBeing::updatePos() {
     newPos = POSITION_STUNNED;
 
   if (riding && dynamic_cast<TBeing*>(riding))
-    fallOffMount(riding, newPos);
+    this->dismount(newPos);
   else if (riding)
-    fallOffMount(riding, newPos, TRUE);
+    this->dismount(newPos);
 
 #if 1
   if ((newPos == POSITION_DEAD) || (newPos == POSITION_STUNNED))
@@ -4626,7 +4626,6 @@ int TBeing::acForPos(wearSlotT pos) const {
 
 // called once per round to verify conditions
 bool TBeing::canFight(TBeing* target) {
-  int rc;
   TThing* t;
 
   if (roomp && roomp->isRoomFlag(ROOM_PEACEFUL)) {
@@ -4673,16 +4672,10 @@ bool TBeing::canFight(TBeing* target) {
     return FALSE;
   }
 
+  // Check if this being stays mounted during combat
   if (riding) {
-    // make these checks trivial in nature by forcing them to fail
-    // twice before falling off
     if (dynamic_cast<TBeing*>(riding)) {
-      if (!rideCheck(-5) && !rideCheck(-5)) {
-        rc = fallOffMount(riding, POSITION_SITTING);
-        if (IS_SET_DELETE(rc, DELETE_THIS))
-          return DELETE_THIS;
-        return FALSE;
-      }
+      rideCheck(0);  // rideCheck handles all fall consequences internally
     } else if (dynamic_cast<TMonster*>(this) && !desc) {
       if (fight() && !isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) &&
           ::number(0, 1)) {
@@ -4690,15 +4683,12 @@ bool TBeing::canFight(TBeing* target) {
       }
     }
   }
+
+  // Check if any riders fall off this mount during combat
   for (t = rider; t; t = t->nextRider) {
     TBeing* tb = dynamic_cast<TBeing*>(t);
-    if (tb && !tb->rideCheck(-10) && !tb->rideCheck(-10)) {
-      rc = tb->fallOffMount(this, POSITION_SITTING);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        delete tb;
-        tb = NULL;
-      }
-      return FALSE;
+    if (tb) {
+      tb->rideCheck(0);  // rideCheck handles all fall consequences internally
     }
   }
   // make um fly if appropriate
@@ -4832,7 +4822,6 @@ static int fleeCheck(TBeing* ch) {
 // returns DELETE_THIS
 int TBeing::tellStatus(int dam, bool same, bool flying) {
   int new_dam, max_hit;
-  int rc;
   TThing *ch, *i = NULL;
 
   new_dam = points.hit;
@@ -4936,31 +4925,46 @@ int TBeing::tellStatus(int dam, bool same, bool flying) {
     while ((ch = rider)) {
       TBeing* tb = dynamic_cast<TBeing*>(ch);
       if (tb) {
-        rc = tb->fallOffMount(this, POSITION_SITTING);
-        if (IS_SET_DELETE(rc, DELETE_THIS)) {
+        int crashDam = tb->fallOffMount(this, false);
+        if (crashDam == -1) {
           delete tb;
           tb = NULL;
+        } else {
+          // Apply fall damage to riders falling off incapacitated mount
+          if (crashDam > 0) {
+            if (tb->reconcileDamage(tb, crashDam, DAMAGE_FALL) == -1) {
+              delete tb;
+              tb = NULL;
+            }
+          }
         }
       } else {
         ch->dismount(POSITION_DEAD);
       }
     }
-    if (riding && dynamic_cast<TBeing*>(riding)) {
-      rc = fallOffMount(riding, getPosition());
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+    if (riding) {
+      int crashDam = fallOffMount(riding, false);
+      if (crashDam == -1) {
         return DELETE_THIS;
       }
-    } else if (riding) {
-      rc = fallOffMount(riding, getPosition(), TRUE);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        return DELETE_THIS;
+      // Apply fall damage from falling off mount when incapacitated
+      if (crashDam > 0) {
+        if (reconcileDamage(this, crashDam, DAMAGE_FALL) == -1) {
+          return DELETE_THIS;
+        }
       }
     }
   }
   if (flying) {
-    rc = crashLanding(getPosition(), FALSE, 0);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
+    int crashDam = crashLanding(0, false);
+    if (crashDam == -1)
       return DELETE_THIS;
+    // Apply fall damage from crashing when incapacitated
+    if (crashDam > 0) {
+      if (reconcileDamage(this, crashDam, DAMAGE_FALL) == -1) {
+        return DELETE_THIS;
+      }
+    }
   }
 
   return TRUE;

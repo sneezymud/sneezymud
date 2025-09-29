@@ -616,6 +616,10 @@ int mapSpellnumToFile(spellNumT stt) {
       return 388;
     case SKILL_FOCUSED_AVOIDANCE:
       return 390;
+    case SKILL_SADDLE_POSTURE:
+      return 391;
+    case SKILL_VAULTING:
+      return 392;
     case SKILL_YOGINSA:
       return 397;
     case SKILL_CINTAI:
@@ -1775,6 +1779,10 @@ spellNumT mapFileToSpellnum(int stt) {
       return SPELL_AURA_GUARDIAN;
     case 390:
       return SKILL_FOCUSED_AVOIDANCE;
+    case 391:
+      return SKILL_SADDLE_POSTURE;
+    case 392:
+      return SKILL_VAULTING;
     case 397:
       return SKILL_YOGINSA;
     case 398:

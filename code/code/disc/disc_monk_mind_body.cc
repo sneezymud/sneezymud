@@ -52,7 +52,7 @@ int TBeing::doLeap(const sstring& arg) {
   if (!bSuccess(SKILL_CATLEAP)) {
     act("You don't make it very far.", FALSE, this, 0, 0, TO_CHAR);
     act("$n doesn't make it very far.", FALSE, this, 0, 0, TO_ROOM);
-    rc = crashLanding(POSITION_SITTING);
+    rc = crashLanding(0, false);
   } else {
     rc = doMove(getDirFromChar(arg));
   }

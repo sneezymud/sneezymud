@@ -719,13 +719,16 @@ int earthquake(TBeing* caster, int level, short bKnown, spellNumT spell,
           caster->reconcileHurt(tmp_victim, discArray[spell]->alignMod);
 
           if (tmp_victim->riding) {
-            rc =
-              tmp_victim->fallOffMount(tmp_victim->riding, POSITION_STANDING);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              delete tmp_victim;
-              tmp_victim = NULL;
-              continue;
+            TBeing* mount = dynamic_cast<TBeing*>(tmp_victim->riding);
+            if (mount && (!mount->isFlying() || !mount->isLevitating())) {
+              rc = tmp_victim->fallOffMount(mount, true);
+              if (IS_SET_DELETE(rc, DELETE_THIS)) {
+                delete tmp_victim;
+                tmp_victim = NULL;
+                continue;
+              }
             }
+            tmp_victim->dismount(POSITION_SITTING);
           }
 
           if (critSuccess(caster, spell)) {
@@ -781,18 +784,13 @@ int earthquake(TBeing* caster, int level, short bKnown, spellNumT spell,
                caster->spellLuckModifier(spell)) &&  // two chances to save
               !tmp_victim->isLucky(caster->spellLuckModifier(spell)))) {
           if (tmp_victim->riding) {
-            rc =
-              tmp_victim->fallOffMount(tmp_victim->riding, POSITION_STANDING);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              delete tmp_victim;
-              tmp_victim = NULL;
-              continue;
-            }
-          }
+            tmp_victim->rideCheck(0);
+          } else {
           act("You lose your balance and tumble to the $g!", FALSE, tmp_victim,
             NULL, NULL, TO_CHAR);
           act("$n tumbles to the $g!", FALSE, tmp_victim, NULL, NULL, TO_ROOM);
           tmp_victim->setPosition(POSITION_SITTING);
+          }
         }
       }
     }

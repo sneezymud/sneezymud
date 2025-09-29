@@ -51,7 +51,6 @@ bool TBeing::canHeadbutt(TBeing* victim, const silentTypeT silent) const {
 }
 
 int TBeing::headbuttMiss(TBeing* v) {
-  int rc;
 
   if (v->doesKnowSkill(SKILL_COUNTER_MOVE) || isCombatMode(ATTACK_BERSERK)) {
     // I don't understand this logic
@@ -65,13 +64,11 @@ int TBeing::headbuttMiss(TBeing* v) {
     act("$n tries to headbutt you, but you dodge it.", FALSE, this, 0, v,
       TO_VICT);
 
-    rc = crashLanding(POSITION_SITTING);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-
-    rc = trySpringleap(v);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
-      return rc;
+    int stumbleDam = stumble();
+    if (stumbleDam > 0) {
+      if (reconcileDamage(this, stumbleDam, DAMAGE_FALL) == -1)
+        return DELETE_THIS;
+    }
   }
   reconcileDamage(v, 0, SKILL_HEADBUTT);
 

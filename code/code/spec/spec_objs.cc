@@ -2382,10 +2382,7 @@ int teleportVial(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
     ch->addToWait(combatRound(2));
     ch->cantHit += ch->loseRound(1);
     if (ch->riding) {
-      int rc = ch->fallOffMount(ch->riding, POSITION_STANDING);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        return DELETE_THIS;
-      }
+      ch->dismount(POSITION_STANDING);
     }
     return TRUE;
   }
@@ -2696,13 +2693,25 @@ int telekinesisGlove(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o,
       "incredible force!<1>",
       TRUE, ch, o, vict, TO_VICT, NULL);
 
-    if (vict->riding) {
-      int rc = vict->fallOffMount(vict->riding, POSITION_SITTING);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_VICT;
+     int crashDam = 0;
+  if (vict->riding) {
+    crashDam = vict->fallOffMount(vict->riding, true);
+    if (crashDam == -1) {
+      return DELETE_VICT;
     }
-    vict->setPosition(POSITION_SITTING);
+  } else {
+    crashDam = vict->crashLanding(0, true);
+    if (crashDam == -1) {
+      return DELETE_VICT;
+    }
+  }
 
+  // Apply crash damage
+  if (crashDam > 0) {
+    if (vict->reconcileDamage(vict, crashDam, DAMAGE_FALL) == -1) {
+      return DELETE_VICT;
+    }
+  }
     ch->addToWait(combatRound(6));
     ch->cantHit += ch->loseRound(3);
     vict->addToWait(combatRound(2));
@@ -2752,13 +2761,25 @@ int telekinesisGlove(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o,
       "incredible force!<1>",
       TRUE, ch, vict2, vict, TO_VICT, NULL);
 
-    if (vict2->riding) {
-      int rc = vict2->fallOffMount(vict2->riding, POSITION_SITTING);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_VICT;
+      int crashDam = 0;
+  if (vict->riding) {
+    crashDam = vict->fallOffMount(vict->riding, true);
+    if (crashDam == -1) {
+      return DELETE_VICT;
     }
-    vict2->setPosition(POSITION_SITTING);
+  } else {
+    crashDam = vict->crashLanding(0, true);
+    if (crashDam == -1) {
+      return DELETE_VICT;
+    }
+  }
 
+  // Apply crash damage
+  if (crashDam > 0) {
+    if (vict->reconcileDamage(vict, crashDam, DAMAGE_FALL) == -1) {
+      return DELETE_VICT;
+    }
+  }
     ch->addToWait(combatRound(6));
     ch->cantHit += ch->loseRound(2);
     vict->addToWait(combatRound(2));
@@ -6628,8 +6649,8 @@ int dwarfPower(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
         vict->cantHit += vict->loseRound(0.6);
       }
       if (vict->riding) {
-        rc = vict->fallOffMount(vict->riding, POSITION_SITTING, FALSE);
-        if (IS_SET_DELETE(rc, DELETE_THIS)) {
+        int crashDam = vict->fallOffMount(vict->riding, true);
+        if (crashDam == -1) {
           // spirit killed the vict
           act(
             "<o>The<1> <k>wrathful spirit<1> <o>high-fives you and bursts into "
@@ -6641,6 +6662,22 @@ int dwarfPower(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
             FALSE, ch, o, 0, TO_ROOM, NULL);
           ch->dropGas(6, GAS_SMOKE);
           return DELETE_VICT;
+        }
+        // Apply crash damage from dwarven spirit knockdown
+        if (crashDam > 0) {
+          if (vict->reconcileDamage(vict, crashDam, DAMAGE_FALL) == -1) {
+            // spirit killed the vict with fall damage
+            act(
+              "<o>The<1> <k>wrathful spirit<1> <o>high-fives you and bursts into "
+              "a swirl of<1> <Y>fiery<1> <r>cinders<1><o>.<1>",
+              FALSE, ch, o, 0, TO_CHAR, NULL);
+            act(
+              "<o>The<1> <k>wrathful spirit<1> <o>high-fives $n<1><o> and bursts "
+              "into a swirl of<1> <Y>fiery<1> <r>cinders<1><o>.<1>",
+              FALSE, ch, o, 0, TO_ROOM, NULL);
+            ch->dropGas(6, GAS_SMOKE);
+            return DELETE_VICT;
+          }
         }
       }
       vict->addToDistracted(1, FALSE);

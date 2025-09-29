@@ -834,7 +834,6 @@ int TBeing::doFlee(const char* arg) {
   bool wasRetreatSuccessful = bSuccess(getSkillNum(SKILL_RETREAT));
 
   bool panic = false;
-  int rc = 0;
   auto* riderAsTBeing = dynamic_cast<TBeing*>(rider);
 
   // Could be either riding an actual mount, or be on a chair/bed of some sort.
@@ -876,9 +875,14 @@ int TBeing::doFlee(const char* arg) {
       act(toRoom, true, this, nullptr, riding, TO_ROOM);
 
     if (shouldFallOffMount) {
-      rc = fallOffMount(riding, POSITION_SITTING);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
+      int crashDam = fallOffMount(riding, false);
+      if (crashDam == -1)
         return DELETE_THIS;
+      // Apply fall damage from failed flee attempt
+      if (crashDam > 0) {
+        if (reconcileDamage(this, crashDam, DAMAGE_FALL) == -1)
+          return DELETE_THIS;
+      }
       addToWait(combatRound(1));
       return true;
     }
@@ -906,10 +910,18 @@ int TBeing::doFlee(const char* arg) {
       return true;
     }
 
-    rc = riderAsTBeing->fallOffMount(this, POSITION_SITTING);
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+    int crashDam = riderAsTBeing->fallOffMount(this, false);
+    if (crashDam == -1) {
       riderAsTBeing->reformGroup();
       delete riderAsTBeing;
+    } else {
+      // Apply fall damage from being bucked off panicking mount
+      if (crashDam > 0) {
+        if (riderAsTBeing->reconcileDamage(riderAsTBeing, crashDam, DAMAGE_FALL) == -1) {
+          riderAsTBeing->reformGroup();
+          delete riderAsTBeing;
+        }
+      }
     }
     // Don't want reference to rider anymore if they fell off
     riderAsTBeing = nullptr;
@@ -1485,13 +1497,20 @@ int TBeing::flameEngulfed() {
   if (hasQuestBit(TOG_HAS_PYROPHOBIA)) {
     act("<R>FIRE!  There is FIRE everywhere!  Oh, the HORROR!!<1>", TRUE, this,
       0, 0, TO_CHAR);
-    if (::number(0, 1)) {
+    if (!isWise()) {
       act("You faint from the shock!", TRUE, this, 0, 0, TO_CHAR);
       if (riding) {
         act("$n sways then crumples as $e faints.", FALSE, this, 0, 0, TO_ROOM);
-        res = fallOffMount(riding, POSITION_RESTING);
-        if (IS_SET_DELETE(res, DELETE_THIS))
+        int crashDam = fallOffMount(riding, false);
+        if (crashDam == -1) {
           return DELETE_THIS;
+        }
+        // Apply fall damage from fainting while mounted
+        if (crashDam > 0) {
+          if (reconcileDamage(this, crashDam, DAMAGE_FALL) == -1) {
+            return DELETE_THIS;
+          }
+        }
       } else
         act("$n stumbles then crumples as $e faints.", FALSE, this, 0, 0,
           TO_ROOM);
