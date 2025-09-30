@@ -6427,9 +6427,9 @@ int TBeing::checkAdvDefense() {
   }
 
   act("<B>You raise your $o high,<1> full of skilled <y>determination!<1>", 0,
-    this, 0, shield, TO_CHAR);
+    this, shield, 0, TO_CHAR);
   act("<B>$n raises $s $o high,<1> full of skilled <y>determination!<1>", 0,
-    this, 0, shield, TO_ROOM);
+    this, shield, 0, TO_ROOM);
 
   affectedData aff;
   aff.type = SKILL_ADVANCED_DEFENSE;
@@ -6453,7 +6453,9 @@ int TBeing::doAdvDefense(TBeing* v, TThing* weapon, int* dam, int w_type, wearSl
     return FALSE;
   }
 
-  w_type -= TYPE_HIT;
+  // Normalize to attack_hit_text/attack_hit_text_twink index
+  w_type -= TYPE_MIN_HIT;
+  w_type = max(0, min(w_type, (int)(TYPE_MAX_HIT - TYPE_MIN_HIT - 1)));
 
   // the higher amt is, the more things get dodged
   int amt = this->getSkillValue(SKILL_ADVANCED_DEFENSE);
