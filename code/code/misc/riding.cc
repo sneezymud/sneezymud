@@ -123,13 +123,15 @@ bool TBeing::canRide(const TBeing *horse) const {
   // this is checked for in doMount
   if (horse->mobVnum() == Mob::ELEPHANT && hasQuestBit(TOG_MONK_GREEN_STARTED))
     return TRUE;
-  if (horse->getHeight() <= (MIN_MOUNT_HEIGHT_PERCENT * getHeight() / 100))
+  if (horse->getHeight() <= (MIN_MOUNT_HEIGHT_PERCENT * getHeight() / 100)){
     act("$N is too small for you to ride.", FALSE, this, 0, horse, TO_CHAR);
     return FALSE;
-
-  if (horse->getHeight() >= (MAX_MOUNT_HEIGHT_PERCENT * getHeight() / 100))
+  }
+  
+  if (horse->getHeight() >= (MAX_MOUNT_HEIGHT_PERCENT * getHeight() / 100)){
     act("$N is too large for you to ride.", FALSE, this, 0, horse, TO_CHAR);
     return FALSE;
+  }
 
   return TRUE;
 }
