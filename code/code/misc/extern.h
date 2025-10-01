@@ -261,7 +261,7 @@ extern void mud_assert(int, const char*, ...);
 extern int determineDissectionItem(TBaseCorpse*, int*, char*, char*, TBeing*);
 extern int determineSkinningItem(TBaseCorpse*, int*, char*, char*);
 extern struct attack_hit_type attack_hit_text[];
-extern struct attack_hit_type attack_hit_text_twink[];
+
 extern void processAllInput();
 extern void setPrompts(fd_set);
 extern void afterPromptProcessing(fd_set);
