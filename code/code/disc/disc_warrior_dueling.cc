@@ -260,64 +260,31 @@ int TBeing::parryWarrior(TBeing* v, TThing* weapon, int* dam, int w_type,
       // base 30% chance combined with the base 50% chance gives us a 15%-50%
       // block rate not sure if this is the proper way to do this, but it works.
       // - dash
-      if (toggleInfo[TOG_TWINK]->toggle) {
-        sprintf(buf, "You %s $n's %s with your $o.", type,
-          attack_hit_text_twink[w_type].singular);
-      } else {
-        sprintf(buf, "You %s $n's %s with your $o.", type,
-          attack_hit_text[w_type].singular);
-      }
+      sprintf(buf, "You %s $n's %s with your $o.", type,
+        attack_hit_text[w_type].singular);
       act(buf, FALSE, this, vweap, v, TO_VICT, ANSI_CYAN);
-      if (toggleInfo[TOG_TWINK]->toggle) {
-        sprintf(buf, "$N %s your %s with $S $o.", type2,
-          attack_hit_text_twink[w_type].singular);
-      } else {
-        sprintf(buf, "$N %s your %s with $S $o.", type2,
-          attack_hit_text[w_type].singular);
-      }
+      sprintf(buf, "$N %s your %s with $S $o.", type2,
+        attack_hit_text[w_type].singular);
       act(buf, FALSE, this, vweap, v, TO_CHAR, ANSI_CYAN);
-      if (toggleInfo[TOG_TWINK]->toggle) {
-        sprintf(buf, "$N %s $n's %s with $S $o.", type2,
-          attack_hit_text_twink[w_type].singular);
-      } else {
-        sprintf(buf, "$N %s $n's %s with $S $o.", type2,
-          attack_hit_text[w_type].singular);
-      }
+      sprintf(buf, "$N %s $n's %s with $S $o.", type2,
+        attack_hit_text[w_type].singular);
       act(buf, TRUE, this, vweap, v, TO_NOTVICT);
       return TRUE;
     }
   } else {
     if (v->bSuccess(SKILL_PARRY_WARRIOR)) {
       *dam = 0;
-      if (toggleInfo[TOG_TWINK]->toggle) {
-        sprintf(buf, "You %s $n's %s at your %s.", type,
-          attack_hit_text_twink[w_type].singular,
-          v->describeBodySlot(part_hit).c_str());
-      } else {
-        sprintf(buf, "You %s $n's %s at your %s.", type,
-          attack_hit_text[w_type].singular,
-          v->describeBodySlot(part_hit).c_str());
-      }
+      sprintf(buf, "You %s $n's %s at your %s.", type,
+        attack_hit_text[w_type].singular,
+        v->describeBodySlot(part_hit).c_str());
       act(buf, FALSE, this, 0, v, TO_VICT, ANSI_CYAN);
-      if (toggleInfo[TOG_TWINK]->toggle) {
-        sprintf(buf, "$N %s your %s at $S %s.", type2,
-          attack_hit_text_twink[w_type].singular,
-          v->describeBodySlot(part_hit).c_str());
-      } else {
-        sprintf(buf, "$N %s your %s at $S %s.", type2,
-          attack_hit_text[w_type].singular,
-          v->describeBodySlot(part_hit).c_str());
-      }
+      sprintf(buf, "$N %s your %s at $S %s.", type2,
+        attack_hit_text[w_type].singular,
+        v->describeBodySlot(part_hit).c_str());
       act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_CYAN);
-      if (toggleInfo[TOG_TWINK]->toggle) {
-        sprintf(buf, "$N %s $n's %s at $S %s.", type2,
-          attack_hit_text_twink[w_type].singular,
-          v->describeBodySlot(part_hit).c_str());
-      } else {
-        sprintf(buf, "$N %s $n's %s at $S %s.", type2,
-          attack_hit_text[w_type].singular,
-          v->describeBodySlot(part_hit).c_str());
-      }
+      sprintf(buf, "$N %s $n's %s at $S %s.", type2,
+        attack_hit_text[w_type].singular,
+        v->describeBodySlot(part_hit).c_str());
       act(buf, TRUE, this, 0, v, TO_NOTVICT);
       return TRUE;
     }
@@ -351,35 +318,17 @@ int TBeing::parryWarrior(TBeing* v, TThing* weapon, int* dam, int w_type,
     *dam = 0;
 
     strcpy(type, "parry");
-    if (toggleInfo[TOG_TWINK]->toggle) {
-      sprintf(buf, "You %s $n's %s at your %s.", type,
-        attack_hit_text_twink[w_type].singular,
-        v->describeBodySlot(part_hit).c_str());
-    } else {
-      sprintf(buf, "You %s $n's %s at your %s.", type,
-        attack_hit_text[w_type].singular,
-        v->describeBodySlot(part_hit).c_str());
-    }
+    sprintf(buf, "You %s $n's %s at your %s.", type,
+      attack_hit_text[w_type].singular,
+      v->describeBodySlot(part_hit).c_str());
     act(buf, FALSE, this, 0, v, TO_VICT, ANSI_CYAN);
-    if (toggleInfo[TOG_TWINK]->toggle) {
-      sprintf(buf, "$N %ss your %s at $S %s.", type,
-        attack_hit_text_twink[w_type].singular,
-        v->describeBodySlot(part_hit).c_str());
-    } else {
-      sprintf(buf, "$N %ss your %s at $S %s.", type,
-        attack_hit_text[w_type].singular,
-        v->describeBodySlot(part_hit).c_str());
-    }
+    sprintf(buf, "$N %ss your %s at $S %s.", type,
+      attack_hit_text[w_type].singular,
+      v->describeBodySlot(part_hit).c_str());
     act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_CYAN);
-    if (toggleInfo[TOG_TWINK]->toggle) {
-      sprintf(buf, "$N %ss $n's %s at $S %s.", type,
-        attack_hit_text_twink[w_type].singular,
-        v->describeBodySlot(part_hit).c_str());
-    } else {
-      sprintf(buf, "$N %ss $n's %s at $S %s.", type,
-        attack_hit_text[w_type].singular,
-        v->describeBodySlot(part_hit).c_str());
-    }
+    sprintf(buf, "$N %ss $n's %s at $S %s.", type,
+      attack_hit_text[w_type].singular,
+      v->describeBodySlot(part_hit).c_str());
     act(buf, TRUE, this, 0, v, TO_NOTVICT);
 
     return TRUE;

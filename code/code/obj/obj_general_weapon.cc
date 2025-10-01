@@ -111,13 +111,8 @@ sstring TGenWeapon::statObjInfo() const {
   for (int wt = 0; wt < 3; ++wt) {
     if (!getWeaponType(wt))
       continue;
-    if (toggleInfo[TOG_TWINK]->toggle) {
-      a += format("Attack Type:        %-8s") %
-           attack_hit_text_twink[getWtype(wt) - TYPE_MIN_HIT].singular;
-    } else {
-      a += format("Attack Type:        %-8s") %
-           attack_hit_text[getWtype(wt) - TYPE_MIN_HIT].singular;
-    }
+    a += format("Attack Type:        %-8s") %
+         attack_hit_text[getWtype(wt) - TYPE_MIN_HIT].singular;
     if (getWeaponFreq(wt))
       a += format(" Attack Frequency:  %d%%") % getWeaponFreq(wt);
     a += "\n\r";
