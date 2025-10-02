@@ -96,6 +96,7 @@ enum togTypeT {
   TOG_CLIENTS,
   TOG_WIZBUILD,
   TOG_MOBNAMES,
+  TOG_OBSOLETE_TWINK,  // was TOG_TWINK, removed but keeping enum position
   TOG_DBTIMING,
   TOG_OBSOLETE1,  // TOG_GAMELOOP,
   TOG_DOUBLEEXP,
