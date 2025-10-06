@@ -5,6 +5,9 @@
 #include "obj_pool.h"
 #include "obj_corpse.h"
 #include "obj_food.h"
+#include "obj.h"
+#include "materials.h"
+
 
 bool check_ingredients(TCookware* pot, int recipe) {
   int nfound = 0;
@@ -106,10 +109,6 @@ void TBeing::doCook(sstring arg) {
     return;
   }
 
-  // Store recipe number for later use
-  start_task(this, pot, NULL, TASK_COOK, "", recipes[recipe].difficulty, 
-             inRoom(), recipe, 0, 5);  // Use recipe difficulty for initial timeLeft
-
   // check ingredients
   if (!check_ingredients(pot, recipe)) {
     sendTo("You seem to be missing an ingredient.\n\r");
@@ -132,7 +131,7 @@ void TBeing::doCook(sstring arg) {
 
   sendTo(COLOR_BASIC,
     format("You begin to cook %s.\n\r") % recipes[recipe].name);
-  start_task(this, pot, NULL, TASK_COOK, "", 2, inRoom(), 0, 0, 5);
+  start_task(this, pot, NULL, TASK_COOK, "", recipes[recipe].difficulty, inRoom(), recipe, 0, 5);
 }
 
 double getCookingDifficultyScale(taskDiffT diff) {
@@ -206,7 +205,8 @@ int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj* po
           return DELETE_THIS;
       }
       delete food;
-      TObj* burnt = read_object(BOGUS_PLACEHOLDER, VIRTUAL);
+      TObj* burnt = read_object(Obj::GENERIC_COMMODITY, VIRTUAL);
+      burnt->setMaterial(MAT_POWDER);  // Ash
       if (burnt)
         *pot += *burnt;
     }
@@ -260,7 +260,8 @@ int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj* po
           ch->sendTo("You've completely ruined this cooking attempt.\n\r");
           ch->stopTask();
           delete pot->stuff.front();
-          TObj* burnt = read_object(BOGUS_PLACEHOLDER, VIRTUAL);
+          TObj* burnt = read_object(Obj::GENERIC_COMMODITY, VIRTUAL);
+          burnt->setMaterial(MAT_POWDER);  // Ash
           if (burnt)
             *pot += *burnt;
           return FALSE;

@@ -155,7 +155,8 @@ int TBeing::doSeedPlant(sstring arg) {
           case 31030:  // sweet pea
           case 31031:  // acacia
             if (!isImmune(IMMUNE_POISON, WEAR_BODY)) {
-              affectedData aff, aff2;
+              affectedData aff{};
+              affectedData aff2{};
               aff.type = SPELL_POISON;
               aff.level = 30;
               aff.duration = 3 * Pulse::UPDATES_PER_MUDHOUR;
@@ -262,7 +263,8 @@ int task_plant(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
         case 31031:  // acacia
           if (!ch->isImmune(IMMUNE_POISON, WEAR_BODY) && !ch->isAffected(AFF_POISON)) {
             ch->sendTo("Your hands tingle uncomfortably as you handle the poisonous seeds...\n\r");
-            affectedData aff, aff2;
+            affectedData aff{};
+            affectedData aff2{};
             aff.type = SPELL_POISON;
             aff.level = 30;
             aff.duration = 3 * Pulse::UPDATES_PER_MUDHOUR;

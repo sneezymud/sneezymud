@@ -118,10 +118,11 @@ int forage(TBeing* caster, short bKnown) {
       act("$n rustles up $p.", TRUE, caster, obj, NULL, TO_ROOM);
       *caster->roomp += *obj;
       foodpile /= 3;
-
-      caster->gainTaskExp(0, 50.0);
-      caster->doSave(SILENT_YES);
     }
+    
+    caster->gainTaskExp(0, 50.0);
+    caster->doSave(SILENT_YES);
+    
     aff.type = SKILL_FORAGE;
     aff.location = APPLY_NONE;
     aff.duration = 4 * Pulse::UPDATES_PER_MUDHOUR;

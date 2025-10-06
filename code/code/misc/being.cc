@@ -1655,18 +1655,24 @@ void TBeing::removeAllProtection() {
 
 }
 
-double TBeing::gainTaskExp(int baseLevel, double scaleFactor) {
-  if (roomp && roomp->isRoomFlag(ROOM_ARENA))
-    return -1;
-    
-  if (isPking() || isImmortal())
-    return -1;
-
-  int lvl = baseLevel ? baseLevel : GetMaxLevel();
-  if (lvl > 15)
-    lvl -= 15;
-  else
-    lvl = 1;
+ double TBeing::gainTaskExp(int baseLevel, double scaleFactor) {
+   if (roomp && roomp->isRoomFlag(ROOM_ARENA))
+     return -1;
+     
+   if (isPking() || isImmortal())
+     return -1;
+ 
+   if (scaleFactor <= 0.0) {
+     vlogf(LOG_BUG,
+       format("gainTaskExp called with non-positive scaleFactor: %f") % scaleFactor);
+     return -1;
+   }
+   
+   int lvl = baseLevel ? baseLevel : GetMaxLevel();
+   if (lvl > 15)
+     lvl -= 15;
+   else
+     lvl = 1;
 
   // 10% exp variance
   double exp = mob_exp(lvl);
