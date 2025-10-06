@@ -1,0 +1,29 @@
+Syntax: cook <cookware> <recipe>
+
+The cook skill allows you to prepare food items from raw ingredients. Cooking 
+transforms basic food items into more complex dishes that often provide 
+additional benefits when consumed.
+
+To cook successfully:
+- You must have the necessary ingredients in your inventory
+- You need appropriate cookware (pot, pan, etc.)
+- You must place the necessary ingredients in the cookware
+- You need sufficient skill level for the recipe's difficulty
+
+Recipes are categorized by difficulty:
+
+TASK_TRIVIAL - Simple preparations like rat on a stick or mashed potatoes
+TASK_EASY - Basic dishes like fried catfish or marinated steak
+TASK_NORMAL - Complete meals like steak dinner
+TASK_HARD - Complex dishes requiring greater skill
+
+Some recipes may require special ingredients that can be obtained through 
+hunting, foraging, or purchasing from shops. Thieves with the toxicity skill 
+can also use cooking to prepare poisons from harvested reagents.
+
+Failed cooking attempts may result in ruined ingredients or inedible food.
+As your cooking skill improves, you'll gain access to more complex recipes
+and have a higher success rate.
+
+See Also: EAT, TASTE, BUTCHER, HARVEST REAGENT
+Related Topics: CRAFTING, SURVIVAL SKILLS

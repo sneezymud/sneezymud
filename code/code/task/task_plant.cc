@@ -1,4 +1,5 @@
 #include "handler.h"
+#include "limbs.h"
 #include "room.h"
 #include "being.h"
 #include "low.h"
@@ -144,9 +145,42 @@ int TBeing::doSeedPlant(sstring arg) {
     if ((seeds = dynamic_cast<TTool*>(t))) {
       if (seeds->getToolType() == TOOL_SEED) {
         found = 1;
+        
+        // Check for poisonous seeds
+        switch(seeds->objVnum()) {
+          case 31026:  // death camas
+          case 31027:  // jimson weed
+          case 31028:  // hemlock
+          case 31029:  // monkshood
+          case 31030:  // sweet pea
+          case 31031:  // acacia
+            if (!isImmune(IMMUNE_POISON, WEAR_BODY)) {
+              affectedData aff, aff2;
+              aff.type = SPELL_POISON;
+              aff.level = 30;
+              aff.duration = 3 * Pulse::UPDATES_PER_MUDHOUR;
+              aff.modifier = -25;
+              aff.location = APPLY_STR;
+              aff.bitvector = AFF_POISON;
+              
+              aff2.type = AFFECT_DISEASE;
+              aff2.level = 0;
+              aff2.duration = aff.duration;
+              aff2.modifier = DISEASE_POISON;
+              aff2.location = APPLY_NONE;
+              aff2.bitvector = AFF_POISON;
+              
+              sendTo("The seeds contain a dangerous toxin that seeps into your skin!\n\r");
+              affectTo(&aff);
+              affectTo(&aff2);
+              disease_start(this, &aff2);
+            }
+            break;
+        }
       }
     }
   }
+
   if (!found) {
     sendTo("You need to specify some seeds to plant.\n\r");
     return FALSE;
@@ -194,6 +228,8 @@ int task_plant(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   if (ch->task->timeLeft < 0) {
     act("You finish planting $p.", FALSE, ch, obj, 0, TO_CHAR);
     act("$n finishes planting $p.", TRUE, ch, obj, 0, TO_ROOM);
+    ch->gainTaskExp(0, 50);
+    ch->doSave(SILENT_YES);
     ch->stopTask();
 
     TObj* tp;
@@ -216,6 +252,38 @@ int task_plant(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
 
   switch (cmd) {
     case CMD_TASK_CONTINUE:
+      // Check for ongoing poison exposure
+      switch(tt->objVnum()) {
+        case 31026:  // death camas
+        case 31027:  // jimson weed
+        case 31028:  // hemlock
+        case 31029:  // monkshood
+        case 31030:  // sweet pea
+        case 31031:  // acacia
+          if (!ch->isImmune(IMMUNE_POISON, WEAR_BODY) && !ch->isAffected(AFF_POISON)) {
+            ch->sendTo("Your hands tingle uncomfortably as you handle the poisonous seeds...\n\r");
+            affectedData aff, aff2;
+            aff.type = SPELL_POISON;
+            aff.level = 30;
+            aff.duration = 3 * Pulse::UPDATES_PER_MUDHOUR;
+            aff.modifier = -25;
+            aff.location = APPLY_STR;
+            aff.bitvector = AFF_POISON;
+            
+            aff2.type = AFFECT_DISEASE;
+            aff2.level = 0;
+            aff2.duration = aff.duration;
+            aff2.modifier = DISEASE_POISON;
+            aff2.location = APPLY_NONE;
+            aff2.bitvector = AFF_POISON;
+            
+            ch->affectTo(&aff);
+            ch->affectTo(&aff2);
+            disease_start(ch, &aff2);
+          }
+          break;
+      }
+
       ch->task->calcNextUpdate(pulse, Pulse::MOBACT * 3);
 
       switch (ch->task->timeLeft) {
