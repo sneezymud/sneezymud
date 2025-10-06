@@ -4,14 +4,15 @@
 #include "obj.h"
 #include "task.h"
 #include "spell2.h"
+#include "materials.h"
+#include "race.h"
+
 
 const int TYPE_VNUM = 0;
 const int TYPE_LIQUID = 1;
 const int TYPE_MATERIAL = 2;
 const int TYPE_CORPSE = 3;
 const int TYPE_ITEM = 4;
-
-const int BOGUS_PLACEHOLDER = 10913;
 
 class ingredientTypeT {
   public:
@@ -193,7 +194,7 @@ ingredientTypeT ingredients[] = {
   // violet fungus
   {20, 1, 1, TYPE_VNUM, 31037},  // violet fungus
   {20, 2, 1, TYPE_VNUM, 27237}, // moldy book
-  {20, 3, 5, TYPE_LIQUID, LIQ_MILK}, //milk
+  {20, 3, 5, TYPE_LIQUID, LIQ_MILK}, // milk
   {20, 4, 1, TYPE_VNUM, 7510},  // ancient wine
   {20, 4, 1, TYPE_VNUM, 7511},  // ancient wine
 
@@ -201,31 +202,31 @@ ingredientTypeT ingredients[] = {
   {21, 1, 1, TYPE_VNUM, 31038},  // devil ice
   {21, 2, 1, TYPE_VNUM, 10030}, // offal
   {21, 3, 1, TYPE_VNUM, 37143}, // snow locust
-  {21, 4, 5, TYPE_LIQUID, LIQ_URINE},  // water
+  {21, 4, 5, TYPE_LIQUID, LIQ_URINE},  // urine
 
   // firedrake
   {22, 1, 1, TYPE_VNUM, 31039},  // firedrake
   {22, 2, 1, TYPE_VNUM, 10030}, // offal
   {22, 3, 1, TYPE_VNUM, 37144}, // fireweed
-  {22, 4, 5, TYPE_LIQUID, LIQ_URINE},  // water
+  {22, 4, 5, TYPE_LIQUID, LIQ_URINE},  // urine
 
   // infant
   {23, 1, 1, TYPE_VNUM, 31040},  // infant
   {23, 2, 1, TYPE_VNUM, 10030}, // offal
   {23, 3, 1, TYPE_VNUM, 37145}, // ginseng
-  {23, 4, 5, TYPE_LIQUID, LIQ_URINE},  // water
+  {23, 4, 5, TYPE_LIQUID, LIQ_URINE},  // urine
 
   // pea seed 
   {24, 1, 1, TYPE_VNUM, 31041},  // pea seed
   {24, 2, 1, TYPE_VNUM, 27237}, // moldy book
-  {24, 3, 5, TYPE_LIQUID, LIQ_MILK}, //milk
+  {24, 3, 5, TYPE_LIQUID, LIQ_MILK}, // milk
   {24, 4, 1, TYPE_VNUM, 7510},  // ancient wine
   {24, 4, 1, TYPE_VNUM, 7511},  // ancient wine
 
   // acacia
   {25, 1, 1, TYPE_VNUM, 31044},  // acacia
   {25, 2, 1, TYPE_VNUM, 27237}, // moldy book
-  {25, 3, 5, TYPE_LIQUID, LIQ_MILK}, //milk
+  {25, 3, 5, TYPE_LIQUID, LIQ_MILK}, // milk
   {25, 4, 1, TYPE_VNUM, 7510},  // ancient wine
   {25, 4, 1, TYPE_VNUM, 7511},  // ancient wine
 
