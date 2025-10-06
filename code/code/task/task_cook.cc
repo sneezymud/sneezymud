@@ -80,19 +80,18 @@ TCookware* find_pot(TBeing* ch, const sstring& cookware) {
 }
 
 int find_recipe(sstring recipearg) {
-  int recipe = -1;
-
-  // find which recipe
+  // find which recipe - returns array index, not recipe code
   for (int i = 0; recipes[i].recipe >= 0; ++i) {
-    if (isname(recipearg, recipes[i].keywords))
-      recipe = recipes[i].recipe;
+    if (isname(recipearg, recipes[i].keywords)) {
+      return i;  // return the index, not the recipe code
+    }
   }
 
-  return recipe;
+  return -1;  // not found
 }
 
 void TBeing::doCook(sstring arg) {
-  int recipe = -1;
+  int recipe_index = -1;
   TCookware* pot = NULL;
   sstring cookware, recipearg, tmparg = arg;
 
@@ -104,13 +103,13 @@ void TBeing::doCook(sstring arg) {
     return;
   }
 
-  if ((recipe = find_recipe(recipearg)) == -1) {
+  if ((recipe_index = find_recipe(recipearg)) == -1) {
     sendTo("You need to specify a recipe.\n\r");
     return;
   }
 
-  // check ingredients
-  if (!check_ingredients(pot, recipe)) {
+  // check ingredients - pass recipe code, not index
+  if (!check_ingredients(pot, recipes[recipe_index].recipe)) {
     sendTo("You seem to be missing an ingredient.\n\r");
     return;
   }
@@ -122,7 +121,7 @@ void TBeing::doCook(sstring arg) {
     delete t;
   }
   TObj* o;
-  if ((o = read_object(recipes[recipe].vnum, VIRTUAL)))
+  if ((o = read_object(recipes[recipe_index].vnum, VIRTUAL)))
     *pot += *o;
   else {
     sendTo("Error loading food, alert an admin.\n\r");
@@ -130,8 +129,8 @@ void TBeing::doCook(sstring arg) {
   }
 
   sendTo(COLOR_BASIC,
-    format("You begin to cook %s.\n\r") % recipes[recipe].name);
-  start_task(this, pot, NULL, TASK_COOK, "", recipes[recipe].difficulty, inRoom(), recipe, 0, 5);
+    format("You begin to cook %s.\n\r") % recipes[recipe_index].name);
+  start_task(this, pot, NULL, TASK_COOK, "", recipes[recipe_index].difficulty, inRoom(), recipe_index, 0, 5);
 }
 
 double getCookingDifficultyScale(taskDiffT diff) {

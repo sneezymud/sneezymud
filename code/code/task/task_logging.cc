@@ -224,9 +224,6 @@ int task_logging(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
 
             ch->gainTaskExp(0, 50.0);
             ch->doSave(SILENT_YES);
-
-            ch->doSave(SILENT_YES);
-
             act("You harvest $p.", FALSE, ch, log, 0, TO_CHAR);
             act("$n harvests $p.", TRUE, ch, log, 0, TO_ROOM);
           } else {
