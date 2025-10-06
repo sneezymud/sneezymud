@@ -450,19 +450,7 @@ int task_fishing(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
               (::number(5, 10) > rp->getFished())) {
             *ch += *fish;
 
-            //	    gain_exp(ch, fish->getWeight() * 10, -1);
-            int lvl = ch->GetMaxLevel();
-            if (lvl > 15)
-              lvl -= 15;
-            else
-              lvl = 1;
-
-            // 10% exp variance
-            double exp = mob_exp(lvl);
-            exp *= (1.0 + ((::number(0, 20) - 10) / 100.0));
-
-            gain_exp(ch, exp / 50, -1);
-
+            ch->gainTaskExp(0, 50.0);
             ch->doSave(SILENT_YES);
 
             if (awesomeFisher) {

@@ -1162,6 +1162,8 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
       return &((CDAdventuring*)cd)->skGnollJargon;
     case SKILL_TROGLODYTE_PIDGIN:
       return &((CDAdventuring*)cd)->skTroglodytePidgin;
+    case SKILL_COOK:
+      return &((CDAdventuring*)cd)->skCook;
 
       // disc_wizardry
     case SKILL_WIZARDRY:  // 960

@@ -232,6 +232,9 @@ int TThing::skinPulse(TBeing* ch, TBaseCorpse* corpse) {
   } else
     *ch += *item;
 
+  ch->gainTaskExp(corpse->getCorpseLevel(), 30.0);
+  ch->doSave(SILENT_YES);
+
   return FALSE;
 }
 
@@ -298,6 +301,8 @@ int TTool::skinPulse(TBeing* ch, TBaseCorpse* corpse) {
     act(gl_msg, FALSE, ch, item, corpse, TO_ROOM);
 
     *ch += *item;
+    ch->gainTaskExp(corpse->getCorpseLevel(), 30.0);
+    ch->doSave(SILENT_YES);
   }
 
   return FALSE;

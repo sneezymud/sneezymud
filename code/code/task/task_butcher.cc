@@ -277,6 +277,9 @@ int TTool::butcherPulse(TBeing* ch, TBaseCorpse* corpse) {
     act(gl_msg, FALSE, ch, item, corpse, TO_ROOM);
 
     *ch += *item;
+    ch->gainTaskExp(corpse->getCorpseLevel(), 30.0);
+    ch->doSave(SILENT_YES);
+
 #endif
   }
 
