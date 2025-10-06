@@ -106,8 +106,21 @@ int seed_to_plant(int vnum) {
       return 13;  // candy heart tree
     case 34216:   // grape seeds
       return 14;  // gray grapes
+    case 5939:    // foxglove seeds
+      return 15;  // foxglove
+    case 31026:   // death camas seeds
+      return 16;  
+    case 31027:   // jimson weed seeds
+      return 17;
+    case 31028:   // hemlock seeds
+      return 18;
+    case 31029:   // monkshood seeds
+      return 19;
+    case 31030:   // sweet pea seeds
+      return 20;
+    case 31031:   // acacia seeds
+      return 21;
   }
-
   return 0;
 }
 
@@ -130,13 +143,26 @@ void TPlant::updateDesc() {
     "<o>orange<1> tree", "<g>money<1> tree", "<w>pipe<g>weed<1><o> bush<1>",
     "<o>pumpkin<1> vine", "<g>turnip<1> plant", "<G>lettuce<1> plant",
     "<g>marijuana<1> plant", "<p>catnip<1> <g>plant<1>",
-    "<P>candy heart<1> tree", "vine of <k>gray grapes<1>"};
+    "<P>candy heart<1> tree", "vine of <k>gray grapes<1>", "<G>foxglove<1> bush",
+    "<g>death camas<1> plant",
+    "<g>jimson weed<1> plant",
+    "<g>hemlock<1> plant",
+    "<p>monkshood<1> plant",
+    "<Y>sweet pea<1> vine",
+    "<y>acacia<1> tree"};
   const char* planttypeskeywords[] = {"tomato", "red rose bush", "apple tree",
     "white rose bush", "yellow rose bush", "orange tree", "money tree",
     "pipeweed bush", "pumpkin vine", "turnip plant", "lettuce plant",
-    "marijuana plant", "catnip plant", "candy heart tree", "gray grape vine"};
+    "marijuana plant", "catnip plant", "candy heart tree", "gray grape vine",
+    "foxglove",
+    "death camas plant",
+    "jimson weed plant",
+    "hemlock plant",
+    "monkshood plant",
+    "sweet pea vine",
+    "acacia tree"};
   int plantfruits[] = {14348, 28917, 8936, 28918, 28919, 432, 13, 34212, 33507,
-    33508, 33525, 33601, 34737, 29405, 34215};
+    33508, 33525, 33601, 34737, 29405, 34215, 34217, 31333, 31032, 31034, 31035, 31036, 31042, 31043};
 
   // considering a plant ages an average of 2 'age' points each mud hour,
   // a plant will age to 17520 in a mud year
@@ -155,7 +181,14 @@ void TPlant::updateDesc() {
     17520,   // 1 year
     17520,   // 1 year
     2350,    // 2 real days
-    262800   // 15 years
+    262800,  // 15 years
+    2350,    // 2 real days
+    8760,    // (1/2 year)
+    8760,    // (1/2 year)
+    8760,    // (1/2 year)
+    8760,    // (1/2 year)
+    8760,   //  (1/2 year)
+    8760   // (1/2 year)
   };
 
   // really old plants should wither and die

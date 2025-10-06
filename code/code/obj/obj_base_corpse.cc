@@ -261,6 +261,9 @@ int TBaseCorpse::dissectMe(TBeing* caster) {
     act(msg, FALSE, caster, obj, this, TO_CHAR);
     act(gl_msg, FALSE, caster, obj, this, TO_ROOM);
     log_object(obj);
+    caster->gainTaskExp(getCorpseLevel(), 30.0);
+    caster->doSave(SILENT_YES);
+
     return TRUE;
   }
 

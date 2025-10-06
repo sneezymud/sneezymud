@@ -222,19 +222,8 @@ int task_logging(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
               (log = harvest_a_log(rp))) {
             *rp += *log;
 
-            int lvl = ch->GetMaxLevel();
-            if (lvl > 15)
-              lvl -= 15;
-            else
-              lvl = 1;
-
-            // 10% exp variance
-            double exp = mob_exp(lvl);
-            exp *=
-              0.1 *
-              (1.0 + ((::number(0, 20) - 10) / 100.0));  // 0.1 x fishing xp
-
-            gain_exp(ch, exp, -1);
+            ch->gainTaskExp(0, 50.0);
+            ch->doSave(SILENT_YES);
 
             ch->doSave(SILENT_YES);
 

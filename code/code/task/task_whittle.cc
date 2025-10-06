@@ -23,6 +23,24 @@ using std::min;
 
 std::map<unsigned long int, taskWhittleEntry> whittleItems;
 
+double getWhittleScaleFactor(whittleTypeT type) {
+  switch(type) {
+    case WHITTLE_ERROR:        return 50.0;  // least exp
+    case WHITTLE_GENERAL:      return 45.0;
+    case WHITTLE_EASY:         return 40.0;
+    case WHITTLE_MEDIUM:       return 35.0;
+    case WHITTLE_STANDARD:     return 30.0;
+    case WHITTLE_HARD:         return 25.0;
+    case WHITTLE_TOUGH:        return 20.0;
+    case WHITTLE_DELICATE:     return 15.0;
+    case WHITTLE_INVOLVED:     return 12.0;
+    case WHITTLE_STRONG:       return 10.0;
+    case WHITTLE_TIMECONSUMING: return 7.0;
+    case WHITTLE_VALUABLE:     return 5.0;   // most exp
+    default:                   return 50.0;
+  }
+}
+
 void initWhittle() {
   int i = 0;
 
@@ -520,6 +538,9 @@ int task_whittleObject(TBeing* ch, sstring tStWood) {
     TThing* tThing;
     tThing = ch->task->obj;
     *ch += *tThing;
+    double scaleFactor = getWhittleScaleFactor(whittleItems[ch->task->flags].itemType);
+    ch->gainTaskExp(0, scaleFactor);
+    ch->doSave(SILENT_YES);
     ch->task->obj = NULL;
 
     if (tArrow) {

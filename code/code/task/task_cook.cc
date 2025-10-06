@@ -106,8 +106,9 @@ void TBeing::doCook(sstring arg) {
     return;
   }
 
-  //  if(isImmortal())
-  //    show_recipe(this, recipe);
+  // Store recipe number for later use
+  start_task(this, pot, NULL, TASK_COOK, "", recipes[recipe].difficulty, 
+             inRoom(), recipe, 0, 5);  // Use recipe difficulty for initial timeLeft
 
   // check ingredients
   if (!check_ingredients(pot, recipe)) {
@@ -134,8 +135,29 @@ void TBeing::doCook(sstring arg) {
   start_task(this, pot, NULL, TASK_COOK, "", 2, inRoom(), 0, 0, 5);
 }
 
-int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
-  TObj* pot) {
+double getCookingDifficultyScale(taskDiffT diff) {
+  switch(diff) {
+    case TASK_HOPELESS:    return 20.0;   // Most exp - hardest task
+    case TASK_DANGEROUS:   return 35.0;
+    case TASK_DIFFICULT:   return 50.0;
+    case TASK_NORMAL:      return 65.0;
+    case TASK_EASY:        return 75.0;
+    case TASK_TRIVIAL:     return 80.0;   // Least exp - easiest task
+    default:               return 65.0;   // Normal as default
+  }
+}
+
+int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj* pot) {
+  int recipe_index = ch->task->status;
+  const int MAX_TIME = 50; // Prevent infinite failure loop
+  
+  // Basic validation
+  if (recipe_index < 0 || recipes[recipe_index].recipe < 0) {
+    ch->sendTo("Something went wrong with the recipe.\n\r");
+    ch->stopTask();
+    return FALSE;
+  }
+
   // basic tasky safechecking
   if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) || !pot) {
     act("You stop cooking.", FALSE, ch, 0, 0, TO_CHAR);
@@ -145,7 +167,7 @@ int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
     if (pot)
       delete pot->stuff.front();
 
-    return FALSE;  // returning FALSE lets command be interpreted
+    return FALSE;
   }
 
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd)) {
@@ -155,8 +177,42 @@ int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   if (ch->task->timeLeft < 0) {
     act("You finish cooking.", FALSE, ch, pot, 0, TO_CHAR);
     act("$n finishes cooking.", TRUE, ch, pot, 0, TO_ROOM);
+    
+    // Verify the food object matches our recipe
+    TObj* food = dynamic_cast<TObj*>(pot->stuff.front());
+    if (!food || food->number != recipes[recipe_index].vnum) {
+      ch->sendTo("Something went wrong with the cooking.\n\r");
+      ch->stopTask();
+      if (food) delete food;
+      return FALSE;
+    }
+    
+    if (ch->bSuccess(ch->getSkillValue(SKILL_COOK), SKILL_COOK)) {
+      ch->sendTo(format("You successfully prepare %s.\n\r") % recipes[recipe_index].name);
+      int diffValue = recipes[recipe_index].difficulty * 10;
+      if (diffValue <= 1)
+        diffValue = 5;
+      
+      // Apply difficulty scaling to experience gain
+      double scaleFactor = getCookingDifficultyScale(recipes[recipe_index].difficulty);
+      ch->gainTaskExp(diffValue, scaleFactor);
+    } else {
+      ch->sendTo("Your cooking attempt fails, ruining the ingredients.\n\r");
+      if (recipes[recipe_index].difficulty >= TASK_DIFFICULT) {
+        ch->sendTo("You burn yourself in the process!\n\r");
+        int dam = 1 + number(recipes[recipe_index].difficulty, recipes[recipe_index].difficulty * 5);
+        int rc = ch->reconcileDamage(ch, dam, DAMAGE_FIRE);
+        if (rc == -1)
+          return DELETE_THIS;
+      }
+      delete food;
+      TObj* burnt = read_object(BOGUS_PLACEHOLDER, VIRTUAL);
+      if (burnt)
+        *pot += *burnt;
+    }
+    
+    ch->doSave(SILENT_YES);
     ch->stopTask();
-
     return FALSE;
   }
 
@@ -164,45 +220,73 @@ int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
     case CMD_TASK_CONTINUE:
       ch->task->calcNextUpdate(pulse, Pulse::MOBACT * 3);
 
-      switch (ch->task->timeLeft) {
-        case 2:
-          act("You prepare the ingredients in $p.", FALSE, ch, pot, 0, TO_CHAR);
-          act("$n prepares $s ingredients.", TRUE, ch, pot, 0, TO_ROOM);
-          ch->task->timeLeft--;
-          break;
-        case 1:
-          act("You cook the ingredients in $p.", FALSE, ch, pot, 0, TO_CHAR);
-          act("$n cooks the ingredients in $p.", TRUE, ch, pot, 0, TO_ROOM);
-          ch->task->timeLeft--;
-
-          break;
-        case 0:
-          act("You continue cooking the ingredients in $p.", FALSE, ch, pot, 0,
-            TO_CHAR);
-          act("$n continues cooking.", TRUE, ch, pot, 0, TO_ROOM);
-          ch->task->timeLeft--;
-          break;
+      if (ch->bSuccess(ch->getSkillValue(SKILL_COOK), SKILL_COOK)) {
+        // More skilled = more time removed
+        int timeReduction = 1;
+        if (ch->getSkillValue(SKILL_COOK) > 50) timeReduction++;
+        if (ch->getSkillValue(SKILL_COOK) > 75) timeReduction++;
+        ch->task->timeLeft -= timeReduction;
+        
+        switch (ch->task->timeLeft) {
+          case 2:
+          case 1:
+            act("You prepare the ingredients in $p.", FALSE, ch, pot, 0, TO_CHAR);
+            act("$n prepares $s ingredients.", TRUE, ch, pot, 0, TO_ROOM);
+            break;
+          case 0:
+          case -1:
+            act("You cook the ingredients in $p.", FALSE, ch, pot, 0, TO_CHAR);
+            act("$n cooks the ingredients in $p.", TRUE, ch, pot, 0, TO_ROOM);
+            break;
+        }
+      } else {
+        // Higher difficulty = more time added on failure
+        int penalty = (recipes[recipe_index].difficulty + 1) / 2;
+        
+        if (ch->task->timeLeft < MAX_TIME) {
+          ch->task->timeLeft += penalty;
+          act("You make a mistake and ruin some of your work.", FALSE, ch, pot, 0, TO_CHAR);
+          act("$n makes a mistake while cooking.", TRUE, ch, pot, 0, TO_ROOM);
+          
+          if (recipes[recipe_index].difficulty >= TASK_DIFFICULT) {
+            ch->sendTo("You burn yourself in the process!\n\r");
+            int dam = 1 + number(5, 15);
+            int rc = ch->reconcileDamage(ch, dam, DAMAGE_FIRE);
+            if (rc == -1)
+              return DELETE_THIS;
+          }
+        } else {
+          // Task automatically fails if it takes too long
+          ch->sendTo("You've completely ruined this cooking attempt.\n\r");
+          ch->stopTask();
+          delete pot->stuff.front();
+          TObj* burnt = read_object(BOGUS_PLACEHOLDER, VIRTUAL);
+          if (burnt)
+            *pot += *burnt;
+          return FALSE;
+        }
       }
       break;
+
     case CMD_ABORT:
     case CMD_STOP:
       act("You stop cooking.", FALSE, ch, 0, 0, TO_CHAR);
       act("$n stops cooking.", TRUE, ch, 0, 0, TO_ROOM);
       ch->stopTask();
-
       delete pot->stuff.front();
-
       break;
+
     case CMD_TASK_FIGHTING:
       ch->sendTo("You can't properly cook while under attack.\n\r");
       ch->stopTask();
       delete pot->stuff.front();
       break;
+
     default:
       if (cmd < MAX_CMD_LIST)
         warn_busy(ch);
       delete pot->stuff.front();
-      break;  // eat the command
+      break;
   }
   return TRUE;
 }

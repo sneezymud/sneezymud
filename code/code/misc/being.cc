@@ -1654,3 +1654,26 @@ void TBeing::removeAllProtection() {
   affectFrom(SPELL_PROTECTION_FROM_ENERGY);
 
 }
+
+double TBeing::gainTaskExp(int baseLevel, double scaleFactor) {
+  if (roomp && roomp->isRoomFlag(ROOM_ARENA))
+    return -1;
+    
+  if (isPking() || isImmortal())
+    return -1;
+
+  int lvl = baseLevel ? baseLevel : GetMaxLevel();
+  if (lvl > 15)
+    lvl -= 15;
+  else
+    lvl = 1;
+
+  // 10% exp variance
+  double exp = mob_exp(lvl);
+  exp *= (1.0 + ((::number(0, 20) - 10) / 100.0));
+  double finalExp = exp / scaleFactor;
+
+  gain_exp(this, finalExp, -1);
+  return finalExp;
+}
+

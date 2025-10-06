@@ -1206,6 +1206,7 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme) const {
       case SKILL_DEATHSTROKE:
       case SKILL_BASH_DEIKHAN:
       case SKILL_BASH:
+      case SKILL_COOK:
       case SPELL_BONE_BREAKER:
       case SPELL_PARALYZE:
       case SPELL_PARALYZE_LIMB:
