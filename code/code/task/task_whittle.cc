@@ -25,19 +25,19 @@ std::map<unsigned long int, taskWhittleEntry> whittleItems;
 
 double getWhittleScaleFactor(whittleTypeT type) {
   switch(type) {
-    case WHITTLE_ERROR:        return 50.0;  // least exp
-    case WHITTLE_GENERAL:      return 45.0;
-    case WHITTLE_EASY:         return 40.0;
-    case WHITTLE_MEDIUM:       return 35.0;
-    case WHITTLE_STANDARD:     return 30.0;
-    case WHITTLE_HARD:         return 25.0;
-    case WHITTLE_TOUGH:        return 20.0;
-    case WHITTLE_DELICATE:     return 15.0;
-    case WHITTLE_INVOLVED:     return 12.0;
-    case WHITTLE_STRONG:       return 10.0;
-    case WHITTLE_TIMECONSUMING: return 7.0;
-    case WHITTLE_VALUABLE:     return 5.0;   // most exp
-    default:                   return 50.0;
+    case WHITTLE_ERROR:        return .20;  // least exp
+    case WHITTLE_GENERAL:      return .25;
+    case WHITTLE_EASY:         return .30;
+    case WHITTLE_MEDIUM:       return .35;
+    case WHITTLE_STANDARD:     return .40;
+    case WHITTLE_HARD:         return .45;
+    case WHITTLE_TOUGH:        return .50;
+    case WHITTLE_DELICATE:     return .55;
+    case WHITTLE_INVOLVED:     return .60;
+    case WHITTLE_STRONG:       return .70;
+    case WHITTLE_TIMECONSUMING: return .80;
+    case WHITTLE_VALUABLE:     return .90;   // most exp
+    default:                   return .40;
   }
 }
 

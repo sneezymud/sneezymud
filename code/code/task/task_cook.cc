@@ -135,13 +135,13 @@ void TBeing::doCook(sstring arg) {
 
 double getCookingDifficultyScale(taskDiffT diff) {
   switch(diff) {
-    case TASK_HOPELESS:    return 20.0;   // Most exp - hardest task
-    case TASK_DANGEROUS:   return 35.0;
-    case TASK_DIFFICULT:   return 50.0;
-    case TASK_NORMAL:      return 65.0;
-    case TASK_EASY:        return 75.0;
-    case TASK_TRIVIAL:     return 80.0;   // Least exp - easiest task
-    default:               return 65.0;   // Normal as default
+    case TASK_HOPELESS:    return .80;   // Most exp - hardest task
+    case TASK_DANGEROUS:   return .65;
+    case TASK_DIFFICULT:   return .50;
+    case TASK_NORMAL:      return .35;
+    case TASK_EASY:        return .25;
+    case TASK_TRIVIAL:     return .20;   // Least exp - easiest task
+    default:               return .35;   // Normal as default
   }
 }
 
@@ -162,9 +162,10 @@ int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj* po
     act("$n stops cooking.", TRUE, ch, 0, 0, TO_ROOM);
     ch->stopTask();
 
-    if (pot)
+    if (!pot->stuff.empty()) {
       delete pot->stuff.front();
-
+    }
+    
     return FALSE;
   }
 
@@ -178,7 +179,7 @@ int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj* po
     
     // Verify the food object matches our recipe
     TObj* food = dynamic_cast<TObj*>(pot->stuff.front());
-    if (!food || food->number != recipes[recipe_index].vnum) {
+   if (!food || obj_index[food->number].virt != recipes[recipe_index].vnum) {
       ch->sendTo("Something went wrong with the cooking.\n\r");
       ch->stopTask();
       if (food) delete food;
@@ -205,9 +206,11 @@ int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj* po
       }
       delete food;
       TObj* burnt = read_object(Obj::GENERIC_COMMODITY, VIRTUAL);
-      burnt->setMaterial(MAT_POWDER);  // Ash
-      if (burnt)
+      
+      if (burnt) {
+        burnt->setMaterial(MAT_POWDER);  // Ash
         *pot += *burnt;
+      }
     }
     
     ch->doSave(SILENT_YES);
@@ -249,7 +252,7 @@ int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj* po
           
           if (recipes[recipe_index].difficulty >= TASK_DIFFICULT) {
             ch->sendTo("You burn yourself in the process!\n\r");
-            int dam = 1 + number(5, 15);
+            int dam = 1 + number(recipes[recipe_index].difficulty, recipes[recipe_index].difficulty * 5);
             int rc = ch->reconcileDamage(ch, dam, DAMAGE_FIRE);
             if (rc == -1)
               return DELETE_THIS;
@@ -258,11 +261,13 @@ int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj* po
           // Task automatically fails if it takes too long
           ch->sendTo("You've completely ruined this cooking attempt.\n\r");
           ch->stopTask();
-          delete pot->stuff.front();
+          if (!pot->stuff.empty())
+            delete pot->stuff.front();
           TObj* burnt = read_object(Obj::GENERIC_COMMODITY, VIRTUAL);
-          burnt->setMaterial(MAT_POWDER);  // Ash
-          if (burnt)
+          if (burnt) {
+            burnt->setMaterial(MAT_POWDER);  // Ash
             *pot += *burnt;
+          }
           return FALSE;
         }
       }
@@ -273,19 +278,22 @@ int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj* po
       act("You stop cooking.", FALSE, ch, 0, 0, TO_CHAR);
       act("$n stops cooking.", TRUE, ch, 0, 0, TO_ROOM);
       ch->stopTask();
-      delete pot->stuff.front();
+      if (!pot->stuff.empty())
+        delete pot->stuff.front();
       break;
 
     case CMD_TASK_FIGHTING:
       ch->sendTo("You can't properly cook while under attack.\n\r");
       ch->stopTask();
-      delete pot->stuff.front();
+      if (!pot->stuff.empty())
+        delete pot->stuff.front();
       break;
 
     default:
       if (cmd < MAX_CMD_LIST)
         warn_busy(ch);
-      delete pot->stuff.front();
+      if (!pot->stuff.empty())
+        delete pot->stuff.front();
       break;
   }
   return TRUE;
