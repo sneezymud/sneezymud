@@ -1677,7 +1677,7 @@ void TBeing::removeAllProtection() {
   // 10% exp variance
   double exp = mob_exp(lvl);
   exp *= (1.0 + ((::number(0, 20) - 10) / 100.0));
-  double finalExp = exp / scaleFactor;
+  double finalExp = exp * scaleFactor;
 
   gain_exp(this, finalExp, -1);
   return finalExp;
