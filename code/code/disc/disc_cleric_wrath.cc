@@ -720,7 +720,7 @@ int earthquake(TBeing* caster, int level, short bKnown, spellNumT spell,
 
           if (tmp_victim->riding) {
             TBeing* mount = dynamic_cast<TBeing*>(tmp_victim->riding);
-            if (mount && (!mount->isFlying() || !mount->isLevitating())) {
+            if (mount && !mount->isFlying() && !mount->isLevitating()) {
               rc = tmp_victim->fallOffMount(mount, true);
               if (IS_SET_DELETE(rc, DELETE_THIS)) {
                 delete tmp_victim;

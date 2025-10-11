@@ -321,9 +321,11 @@ int TBeing::bashFail(TBeing* victim, spellNumT skill,
   }
 
   if (hasLegs()) {
-    int rc = stumble();
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
+    int stumbleDam = stumble();
+    if (stumbleDam > 0) {
+      if (reconcileDamage(this, stumbleDam, DAMAGE_FALL) == -1)
+        return DELETE_THIS;
+    }
   }
 
   reconcileDamage(victim, 0, skill);

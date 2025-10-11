@@ -99,10 +99,13 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
         mob->addPlayerAction(PLR_SOLOQUEST);
         act("$n just set your solo quest flag.", FALSE, this, 0, mob, TO_VICT);
         mob->dieFollower();
-        if (dynamic_cast<TBeing*>(mob->riding)) {
-          rc = mob->fallOffMount(mob->riding, false);
-          if (IS_SET_DELETE(rc, DELETE_THIS))
-            return DELETE_VICT;
+        if (mob->riding) {
+          int crashDam = mob->fallOffMount(mob->riding, false);
+          if (crashDam > 0) {
+            if (mob->reconcileDamage(mob, crashDam, DAMAGE_FALL) == -1) {
+              return DELETE_VICT;
+            }
+          }
         }
       }
       return TRUE;

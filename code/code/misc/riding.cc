@@ -816,8 +816,8 @@ int TBeing::getRideMod(TBeing *rider, TBeing *mount) {
     }
   }
   
-  if (rider->doesKnowSkill(mountSkillType()) && rider->bSuccess(mountSkillType())) {
-  mod += getSkillValue(mountSkillType()) / 5;  
+  if (rider->doesKnowSkill(mount->mountSkillType()) && rider->bSuccess(mount->mountSkillType())) {
+  mod += getSkillValue(mount->mountSkillType()) / 5;  
   }
  
 
@@ -966,12 +966,28 @@ int TBeing::rideCheck(int mod) {
   if (!rider->isTanking() && !mount->isTanking()) {
     if (!rider->bSuccess(mod, SKILL_RIDE) &&
         !rider->bSuccess(mod, SKILL_RIDE)) {
-      rider->fallOffMount(mount, false);
+      int crashDam = rider->fallOffMount(mount, false);
+      if (crashDam == -1) {
+        return DELETE_THIS;
+      }
+      if (crashDam > 0) {
+        if (rider->reconcileDamage(rider, crashDam, DAMAGE_FALL) == -1) {
+          return DELETE_THIS;
+        }
+      }
       return FALSE;
     }
   } else {
     if (!rider->bSuccess(mod, SKILL_RIDE)) {
-      rider->fallOffMount(mount, false);
+      int crashDam = rider->fallOffMount(mount, false);
+      if (crashDam == -1) {
+        return DELETE_THIS;
+      }
+      if (crashDam > 0) {
+        if (rider->reconcileDamage(rider, crashDam, DAMAGE_FALL) == -1) {
+          return DELETE_THIS;
+        }
+      }
       return FALSE;
     }
   }

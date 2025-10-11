@@ -25,9 +25,14 @@ int TBeing::slamIntoWall(roomDirData* exitp) {
   sendTo("OUCH!  That REALLY Hurt!\n\r");
   sprintf(buf, "$n crashes against the %s with no effect.\n\r", doorname);
   act(buf, FALSE, this, 0, 0, TO_ROOM);
-  if (reconcileDamage(this, (::number(1, 10) * 2), DAMAGE_COLLISION) == -1)
+  int dam = ::number(1, 10) * 2;
+  dam = stumble() + dam;
+  if (isBrawny()) {
+    dam /= 2;
+  }
+  addToWait(combatRound(dam));
+   if (reconcileDamage(this, dam, DAMAGE_COLLISION) == -1)
     return DELETE_THIS;
-
   if (!isImmortal()) {
     affectedData aff;
 
@@ -36,12 +41,6 @@ int TBeing::slamIntoWall(roomDirData* exitp) {
     aff.bitvector = AFF_STUNNED;
     affectTo(&aff, -1);
   }
-
-#if 0
-  addToWait(combatRound(12));
-#else
-  stumble();
-#endif
 
   return TRUE;
 }

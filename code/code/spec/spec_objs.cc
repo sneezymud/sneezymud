@@ -2371,6 +2371,9 @@ int teleportVial(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
       NULL);
     act("When the smoke clears, $n is gone!<1>", TRUE, ch, o, NULL, TO_ROOM,
       NULL);
+    if (ch->riding) {
+      ch->dismount(POSITION_STANDING);
+    }
     --(*ch);
     *newRoom += *ch;
     vlogf(LOG_PROC, format("TELEPORT VIAL: %s transfered to room #%d") %
@@ -2381,9 +2384,7 @@ int teleportVial(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
     ch->doLook("", CMD_LOOK);
     ch->addToWait(combatRound(2));
     ch->cantHit += ch->loseRound(1);
-    if (ch->riding) {
-      ch->dismount(POSITION_STANDING);
-    }
+
     return TRUE;
   }
   return FALSE;

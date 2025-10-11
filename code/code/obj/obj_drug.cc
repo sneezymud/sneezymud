@@ -370,8 +370,17 @@ void applyDrugAffects(TBeing* ch, drugTypeT drug, bool istick) {
           act("You smoked a bit too much pot and decide to crash.", TRUE, ch, 0,
             0, TO_CHAR);
           if (ch->riding) {
-            act("$n coughs and the momentum knmocks $m off $s mount.", TRUE, ch,
+            act("$n coughs and the momentum knocks $m off $s mount.", TRUE, ch,
               0, 0, TO_ROOM);
+              int crashDam = ch->fallOffMount(ch->riding, true);
+              if (crashDam == -1) {
+                return;
+              }
+              if (crashDam > 0) {
+                if (ch->reconcileDamage(ch, crashDam, DAMAGE_FALL) == -1) {
+                  return;
+                }
+              }
           } else {
             act("$n ignores you and decides to crash.", TRUE, ch, 0, 0,
               TO_ROOM);

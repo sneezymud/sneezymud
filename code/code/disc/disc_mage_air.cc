@@ -180,7 +180,6 @@ int gust(TBeing* caster, TBeing* victim, TMagicItem* obj) {
 }
 
 int immobilize(TBeing* caster, TBeing* victim, int level, short bKnown) {
-  int rc;
   TThing* chair;
   int retCode = 0;
 
@@ -298,21 +297,25 @@ int immobilize(TBeing* caster, TBeing* victim, int level, short bKnown) {
       caster->addToWait(cr);
 
       if (caster->riding) {
-        rc = caster->fallOffMount(caster->riding, true);
-        if (IS_SET_DELETE(rc, DELETE_THIS)) {
-          return DELETE_THIS;
+        int crashDam = caster->fallOffMount(caster->riding, false);
+        if (crashDam > 0) {
+          if (caster->reconcileDamage(caster, crashDam, DAMAGE_FALL) == -1) {
+            return DELETE_THIS;
+          }
         }
       }
       while ((chair = caster->rider)) {
         TBeing* tb = dynamic_cast<TBeing*>(chair);
         if (tb) {
-          rc = tb->fallOffMount(caster, true);
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            delete tb;
-            tb = NULL;
+          int riderCrashDam = tb->fallOffMount(caster, false);
+          if (riderCrashDam > 0) {
+            if (tb->reconcileDamage(tb, riderCrashDam, DAMAGE_FALL) == -1) {
+              delete tb;
+              tb = NULL;
+            }
           }
         } else {
-          chair->dismount(POSITION_DEAD);
+          chair->dismount(POSITION_SITTING);
         }
       }
       if (caster->fight())

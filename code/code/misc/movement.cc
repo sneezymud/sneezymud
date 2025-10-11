@@ -657,7 +657,10 @@ int TBeing::rawMove(dirTypeT dir) {
     }
   } else if (riding) {
     // Perform all riding stability checks
-    if (!rideCheck(0)) {
+  int rideRc = rideCheck(0);
+    if (IS_SET_DELETE(rideRc, DELETE_THIS))
+      return DELETE_THIS;
+    if (!rideRc) {
       // rideCheck already handled falling off and messages
       act("You fail to urge your mount forward.", FALSE, this, riding, 0,
           TO_CHAR);

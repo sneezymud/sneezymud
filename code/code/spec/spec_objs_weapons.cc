@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+#include "enum.h"
 #include "extern.h"
 #include "room.h"
 #include "handler.h"
@@ -11,6 +12,7 @@
 #include "obj_general_weapon.h"
 #include "disc_mage_fire.h"
 #include "being.h"
+#include "spells.h"
 #include "weather.h"
 
 int ghostlyShiv(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
@@ -2179,15 +2181,24 @@ int weaponFumbler(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*) {
   TBeing* ch;
   TThing* obj;
 
-  ch = genericWeaponProcCheck(vict, cmd, o, 19);
+  ch = genericWeaponProcCheck(vict, cmd, o, 10);
   if (!ch)
     return FALSE;
 
-  act("You cleave $N's body hard with your $o.", TRUE, ch, o, vict, TO_CHAR,
+  TBaseWeapon* weap = dynamic_cast<TBaseWeapon*>(o);
+  spellNumT wtype = TYPE_HIT;
+  wtype = ch->getAttackType(nullptr, HAND_PRIMARY);
+  
+  if (weap) {
+    wtype = weap->getWtype();
+  } 
+  const char* attackVerb = attack_hit_text[wtype - TYPE_MIN_HIT].singular;
+
+  act(format("You %s $N's body hard with your $o.") % attackVerb, TRUE, ch, o, vict, TO_CHAR,
     ANSI_ORANGE);
-  act("$n cleaves your body hard with $s $o.", TRUE, ch, o, vict, TO_VICT,
+  act(format("$n %s your body hard with $s $o.") % attackVerb, TRUE, ch, o, vict, TO_VICT,
     ANSI_ORANGE);
-  act("$n cleaves $N's body hard with $s $o.", TRUE, ch, o, vict, TO_NOTVICT,
+  act(format("$n %s $N's body hard with $s $o.") % attackVerb, TRUE, ch, o, vict, TO_NOTVICT,
     ANSI_ORANGE);
 
   if (ch->reconcileDamage(vict, ::number(1, 3), o->getWtype()) == -1) {

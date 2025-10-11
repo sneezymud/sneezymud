@@ -427,6 +427,7 @@ static int stab(TBeing* thief, TBeing* victim) {
 
     return TRUE;
   } else {
+    int stumbleDam = 0;
     switch (critFail(thief, SKILL_STABBING)) {
       case CRIT_F_HITSELF:
       case CRIT_F_HITOTHER:
@@ -436,7 +437,11 @@ static int stab(TBeing* thief, TBeing* victim) {
           thief, obj, victim, TO_NOTVICT);
         act("$n misses $s thrust into you and falls flat on their face!", FALSE,
           thief, obj, victim, TO_VICT);
-        thief->stumble();
+        stumbleDam = thief->stumble();
+        if (stumbleDam > 0) {
+          if (thief->reconcileDamage(thief, stumbleDam, DAMAGE_FALL) == -1)
+            return DELETE_THIS;
+        }
         break;
       case CRIT_F_NONE:
       default:
@@ -448,7 +453,7 @@ static int stab(TBeing* thief, TBeing* victim) {
           TO_VICT);
         break;
     }
-
+    
     thief->reconcileDamage(victim, 0, SKILL_STABBING);
   }
 

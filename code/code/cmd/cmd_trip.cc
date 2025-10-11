@@ -125,19 +125,17 @@ bool TBeing::canTrip(TBeing* victim, silentTypeT silent) {
     return FALSE;
   }
 
-  if (victim->getHeight() < 12) {
+  if (victim->getHeight() < 12 && (getAdvLearning(skill)<50)) {
     if (!silent)
       sendTo(
-        "That creature has less ground clearance than the height of your "
-        "foot.\n\r");
+        "Hard to trip someone that short. Probably better off knocking them over.\n\r");
     return FALSE;
   }
 
-  if (3 * getHeight() < victim->getHeight()) {
+  if (3 * getHeight() < victim->getHeight() && (getAdvLearning(skill)<50)) {
     if (!silent)
       sendTo(
-        "Rule of thumb:  you can't trip someone when their kneecaps are higher "
-        "than your eye level.\n\r");
+        "You are not skilled enough to trip someone that tall.\n\r");
     return FALSE;
   }
 
@@ -177,7 +175,10 @@ static int trip(TBeing* c, TBeing* victim, spellNumT skill) {
   if (victim->isFourLegged()) {
     c->sendTo(
       "The stability of this creature makes it more difficult to trip.\n\r");
-    percent -= 50;
+    percent -= 25;
+    if (c->getAdvLearning(skill)<75) {
+      percent -= 25;
+    }
   }
 
   int bKnown = c->getSkillValue(skill);
@@ -199,7 +200,6 @@ static int trip(TBeing* c, TBeing* victim, spellNumT skill) {
 }
 
 int TBeing::tripFail(TBeing* victim, spellNumT skill) {
-  int rc;
 
   act("$n attempts to trip $N but $E quickly hops over $n's leg.", FALSE, this,
     0, victim, TO_NOTVICT);
@@ -209,20 +209,19 @@ int TBeing::tripFail(TBeing* victim, spellNumT skill) {
     victim, TO_VICT);
 
   if (hasLegs()) {
-    rc = crashLanding(0, false);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-
     sendTo(
       format("%sYou lose your balance and fall over.%s\n\r") % red() % norm());
     act("<r>$n loses $s balance and falls over.<1>", TRUE, this, 0, 0, TO_ROOM);
+    int crashDam = crashLanding(0, false);
+    if (crashDam > 0) {
+      if (reconcileDamage(this, crashDam, DAMAGE_FALL) == -1)
+        return DELETE_THIS;
+    }
   }
-  reconcileDamage(victim, 0, skill);
   return FALSE;
 }
 
 int TBeing::tripSuccess(TBeing* victim, spellNumT skill) {
-  int rc = 0;
   int distNum = 0;
 
   act("$n sticks a leg out and trips $N to the ground!", FALSE, this, 0, victim,
@@ -237,9 +236,7 @@ int TBeing::tripSuccess(TBeing* victim, spellNumT skill) {
   distNum = 1;
   if (isLucky(levelLuckModifier(victim->GetMaxLevel())))
     distNum++;
-  rc = victim->crashLanding(0, false);
-  if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_VICT;
+  int crashDam = victim->crashLanding(0, true);
 
   float wait = combatRound(discArray[SKILL_TRIP]->lag);
   addToMove(-5);
@@ -252,9 +249,11 @@ int TBeing::tripSuccess(TBeing* victim, spellNumT skill) {
   if (victim->spelltask)
     victim->addToDistracted(distNum, FALSE);
 
-  reconcileHurt(victim, 0.01);
+  int dam = getSkillDam(victim, skill, getSkillLevel(skill),
+    getAdvLearning(skill));
+  dam += crashDam;
 
-  if (reconcileDamage(victim, 0, skill) == -1)
+  if (reconcileDamage(victim, dam, skill) == -1)
     return DELETE_VICT;
 
   return FALSE;

@@ -184,7 +184,7 @@ int TBeing:: doSaddlePosture(TBeing* deikhan, TBeing* mount) {
   }
 
   if (deikhan->fight()) {
-    
+    mod += 5;
   }
 
   if (deikhan->bSuccess(skillLevel + mod, SKILL_SADDLE_POSTURE)) {
