@@ -802,18 +802,9 @@ int tornado(TBeing* caster, int level, short bKnown, int adv_learn) {
           act("You choke on the dust!", FALSE, tb, NULL, NULL, TO_CHAR);
           if (tb->riding) {
             tb->dismount(POSITION_STANDING);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              delete tb;
-              tb = NULL;
-              continue;
-            }
           }
           while ((chair = tb->rider)) {
             chair->dismount(POSITION_DEAD);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              delete chair;
-              chair = NULL;
-            }
           }
           tb->setPosition(POSITION_SITTING);
           if (caster->reconcileDamage((TBeing*)tb, dam, SPELL_TORNADO) == -1) {

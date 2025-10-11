@@ -203,6 +203,7 @@ void TBeing::affectChange(uint64_t original, silentTypeT silent) {
           // Apply crash damage from losing flight
           if (reconcileDamage(this, crashDam, DAMAGE_FALL) == -1) {
             vlogf(LOG_BUG, "Character died from fall damage in affectChange");
+            return;
           }
         }
       }

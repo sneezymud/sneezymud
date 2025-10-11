@@ -58,6 +58,7 @@ int TBeing::doLeap(const sstring& arg) {
         return DELETE_THIS;
       }
     }
+    rc = FALSE;
   } else {
     rc = doMove(getDirFromChar(arg));
   }
