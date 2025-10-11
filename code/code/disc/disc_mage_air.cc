@@ -14,7 +14,6 @@
 
 int gust(TBeing* caster, TBeing* victim, int level, short bKnown,
   int adv_learn) {
-  int rc;
   TThing* chair;
 
   if (caster->roomp->isUnderwaterSector()) {
@@ -54,13 +53,21 @@ int gust(TBeing* caster, TBeing* victim, int level, short bKnown,
       while ((chair = victim->rider)) {
         TBeing* tb = dynamic_cast<TBeing*>(chair);
         if (tb) {
-          rc = tb->fallOffMount(victim, true);
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
+          int crashDam = tb->fallOffMount(victim, true);
+          if (crashDam == -1) {
             delete tb;
-            tb = NULL;
+            tb = nullptr;
+          } else {
+            // Apply fall damage to riders
+            if (crashDam > 0) {
+              if (tb->reconcileDamage(tb, crashDam, DAMAGE_FALL) == -1) {
+                delete tb;
+                tb = nullptr;
+              }
+            }
           }
         } else {
-          chair->dismount(POSITION_DEAD);
+          chair->dismount(POSITION_SITTING);
         }
       }
 
@@ -103,13 +110,21 @@ int gust(TBeing* caster, TBeing* victim, int level, short bKnown,
       while ((chair = caster->rider)) {
         TBeing* tb = dynamic_cast<TBeing*>(chair);
         if (tb) {
-          rc = tb->fallOffMount(caster, false);
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
+          int crashDam = tb->fallOffMount(caster, false);
+          if (crashDam == -1) {
             delete tb;
-            tb = NULL;
+            tb = nullptr;
+          } else {
+            // Apply fall damage to riders
+            if (crashDam > 0) {
+              if (tb->reconcileDamage(tb, crashDam, DAMAGE_FALL) == -1) {
+                delete tb;
+                tb = nullptr;
+              }
+            }
           }
         } else {
-          chair->dismount(POSITION_DEAD);
+          chair->dismount(POSITION_SITTING);
         }
       }
       caster->setPosition(POSITION_SITTING);
@@ -308,10 +323,13 @@ int immobilize(TBeing* caster, TBeing* victim, int level, short bKnown) {
         TBeing* tb = dynamic_cast<TBeing*>(chair);
         if (tb) {
           int riderCrashDam = tb->fallOffMount(caster, false);
-          if (riderCrashDam > 0) {
+          if (riderCrashDam == -1) {
+            delete tb;
+            tb = nullptr;
+          } else {
             if (tb->reconcileDamage(tb, riderCrashDam, DAMAGE_FALL) == -1) {
               delete tb;
-              tb = NULL;
+              tb = nullptr;
             }
           }
         } else {
