@@ -822,7 +822,7 @@ int tornado(TBeing* caster, int level, short bKnown, int adv_learn) {
             tb->dismount(POSITION_STANDING);
           }
           while ((chair = tb->rider)) {
-            chair->dismount(POSITION_DEAD);
+            chair->dismount(POSITION_SITTING);
           }
           tb->setPosition(POSITION_SITTING);
           if (caster->reconcileDamage((TBeing*)tb, dam, SPELL_TORNADO) == -1) {
