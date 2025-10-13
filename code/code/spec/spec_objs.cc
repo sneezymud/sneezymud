@@ -7271,145 +7271,113 @@ extern int weaponBlinder(TBeing*, cmdTypeT, const char*, TObj*, TObj*);
 extern int weaponManaDrainer(TBeing*, cmdTypeT, const char*, TObj*, TObj*);
 extern int weaponLightningRod(TBeing*, cmdTypeT, const char*, TObj*, TObj*);
 extern int thiefQuestWeapon(TBeing*, cmdTypeT, const char*, TObj*, TObj*);
-extern int deikhanSword(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int blackSun(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int tequilaCutlass(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int poisonCutlass(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int holyCutlass(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int unholyCutlass(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int lotteryTicket(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int sweepsScratch(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int sweepsSplitJoin(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int graffitiMaker(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int graffitiObject(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
+extern int deikhanSword(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int blackSun(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int tequilaCutlass(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int poisonCutlass(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int holyCutlass(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int unholyCutlass(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int lotteryTicket(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int sweepsScratch(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int sweepsSplitJoin(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int graffitiMaker(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int graffitiObject(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
 extern int Gwarthir(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*);
 extern int warMaker(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*);
-extern int weaponDisruption(TBeing* vict, cmdTypeT cmd, const char*, TObj* o,
-  TObj*);
-extern int weaponFumbler(TBeing* vict, cmdTypeT cmd, const char*, TObj* o,
-  TObj*);
-extern int weaponBreaker(TBeing* vict, cmdTypeT cmd, const char*, TObj* o,
-  TObj*);
+extern int weaponDisruption(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
+extern int weaponFumbler(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
+extern int weaponBreaker(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
 extern int glowCutlass(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
 extern int poisonWhip(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
-extern int daggerOfHunting(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* me,
-  TObj*);
+extern int daggerOfHunting(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* me, TObj*);
 extern int flameWeapon(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
 extern int frostWeapon(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
-extern int dragonSlayer(TBeing* vict, cmdTypeT cmd, const char*, TObj* o,
-  TObj*);
-extern int boneStaff(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int bloodspike(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int brokenBottle(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int wickedDagger(TBeing* vict, cmdTypeT cmd, const char*, TObj* me,
-  TObj* ch_obj);
+extern int dragonSlayer(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
+extern int boneStaff(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int bloodspike(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int brokenBottle(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int wickedDagger(TBeing* vict, cmdTypeT cmd, const char*, TObj* me, TObj* ch_obj);
 extern int poisonSap(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
 extern int daySword(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
 extern int nightBlade(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
 extern int scirenDrown(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
 extern int energyBlade(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
-extern int poisonViperBlade(TBeing* vict, cmdTypeT cmd, const char*, TObj* o,
-  TObj*);
-extern int weaponShadowSlayer(TBeing* vict, cmdTypeT cmd, const char*, TObj* o,
-  TObj*);
-extern int blazeOfGlory(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int elementalWeapon(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
+extern int poisonViperBlade(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
+extern int weaponShadowSlayer(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
+extern int blazeOfGlory(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int elementalWeapon(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
 extern int vorpal(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
-extern int berserkerWeap(TBeing* vict, cmdTypeT cmd, const char*, TObj* o,
-  TObj*);
-extern int randomizer(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int bluntPierce(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int dualStyleWeapon(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int splinteredClub(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
+extern int berserkerWeap(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
+extern int randomizer(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int bluntPierce(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int dualStyleWeapon(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int splinteredClub(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
 extern int sonicBlast(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
-extern int ghostlyShiv(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int frostSpear(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int iceStaff(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int weaponUnmaker(TBeing* vict, cmdTypeT cmd, const char*, TObj* o,
-  TObj*);
-extern int chromaticWeapon(TBeing* vict, cmdTypeT cmd, const char*, TObj* o,
-  TObj*);
-extern int fireballWeapon(TBeing* vict, cmdTypeT cmd, const char*, TObj* o,
-  TObj*);
-extern int gnomeTenderizer(TBeing* vict, cmdTypeT cmd, const char*, TObj* o,
-  TObj*);
-extern int marukalia(TBeing* targ, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
+extern int ghostlyShiv(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int frostSpear(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int iceStaff(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int weaponUnmaker(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
+extern int chromaticWeapon(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
+extern int fireballWeapon(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
+extern int gnomeTenderizer(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
+extern int marukalia(TBeing* targ, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
 extern int lightsaber(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
 extern int demonSlayer(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
-extern int objWornAstralWalk(TBeing* targ, cmdTypeT cmd, const char* arg,
-  TObj* o, TObj*);
-extern int objWornMinorAstralWalk(TBeing* targ, cmdTypeT cmd, const char* arg,
-  TObj* o, TObj*);
-extern int objWornPortal(TBeing* targ, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int comboEQCast(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int ofManyPotions(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int shadowWeapon(TBeing* vict, cmdTypeT cmd, const char*, TObj* o,
-  TObj*);
+extern int objWornAstralWalk(TBeing* targ, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int objWornMinorAstralWalk(TBeing* targ, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int objWornPortal(TBeing* targ, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int comboEQCast(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int ofManyPotions(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int shadowWeapon(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
 extern int livingVines(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
 extern int dkSword(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
-extern int moltenWeapon(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
-extern int glacialWeapon(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
-  TObj*);
+extern int moltenWeapon(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int glacialWeapon(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int gustWeaponT1(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int gustWeaponT2(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int gustWeaponT3(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
 
 // assign special procedures to objects
 
 TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
   {TRUE, "BOGUS", bogusObjProc},  // 0
-  {TRUE, "ballot box", ballotBox}, {TRUE, "bulletin board", board},
+  {TRUE, "ballot box", ballotBox},
+  {TRUE, "bulletin board", board},
   {TRUE, "note dispenser", dispenser},
-  {TRUE, "statue of feeding", statue_of_feeding}, {FALSE, "pager", pager},  // 5
-  {FALSE, "ear muffs", ear_muffs}, {FALSE, "Jewel of Judgment", JewelJudgment},
-  {FALSE, "Gwarthir", Gwarthir}, {FALSE, "vending machine", vending_machine},
+  {TRUE, "statue of feeding", statue_of_feeding},
+  {FALSE, "pager", pager},  // 5
+  {FALSE, "ear muffs", ear_muffs},
+  {FALSE, "Jewel of Judgment", JewelJudgment},
+  {FALSE, "Gwarthir", Gwarthir},
+  {FALSE, "vending machine", vending_machine},
   {FALSE, "Orb of Destruction", orbOfDestruction},  // 10
   {FALSE, "War Maker", warMaker},
   {TRUE, "Weapon: disruption", weaponDisruption},
-  {TRUE, "Weapon: fumbler", weaponFumbler}, {TRUE, "ladder", ladder},
+  {TRUE, "Weapon: fumbler", weaponFumbler},
+  {TRUE, "ladder", ladder},
   {TRUE, "regeneration", regeneration},  // 15
   {TRUE, "Weapon: bonebreaker", weaponBreaker},
-  {FALSE, "Glowing Cutlass", glowCutlass}, {TRUE, "poison whip", poisonWhip},
+  {FALSE, "Glowing Cutlass", glowCutlass},
+  {TRUE, "poison whip", poisonWhip},
   {TRUE, "magic gills", magicGills},
   {FALSE, "recharging wand", rechargingWand},  // 20
   {FALSE, "rainbow bridge", rainbowBridge},
   {FALSE, "Hunting Dagger", daggerOfHunting},
-  {TRUE, "flame weapon", flameWeapon}, {TRUE, "frost weapon", frostWeapon},
+  {TRUE, "flame weapon", flameWeapon},
+  {TRUE, "frost weapon", frostWeapon},
   {TRUE, "food&drink", foodItem},  // 25
   {TRUE, "crystal ball", crystal_ball},
   {FALSE, "Orb of Teleportation", orbOfTeleportation},
   {FALSE, "Weather Armor", weatherArmor},
   {FALSE, "caravan wagon", caravan_wagon},
   {TRUE, "Bleed Chair", bleedChair},  // 30
-  {TRUE, "Harm Chair", harmChair}, {TRUE, "Dragon Slayer", dragonSlayer},
-  {TRUE, "Blood Drainer", bloodDrain}, {FALSE, "Stone Altar", stoneAltar},
+  {TRUE, "Harm Chair", harmChair},
+  {TRUE, "Dragon Slayer", dragonSlayer},
+  {TRUE, "Blood Drainer", bloodDrain},
+  {FALSE, "Stone Altar", stoneAltar},
   {TRUE, "Bone Staff", boneStaff},  // 35
-  {FALSE, "Bloodspike", bloodspike}, {TRUE, "behir horn item", behirHornItem},
+  {FALSE, "Bloodspike", bloodspike},
+  {TRUE, "behir horn item", behirHornItem},
   {FALSE, "Newbie Helper", newbieHelperWProc},
   {FALSE, "pirate hat dispenser", pirateHatDispenser},
   {FALSE, "Blood Bowl", bowl_of_blood},  // 40
@@ -7418,7 +7386,8 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
   {TRUE, "poison sap dagger", poisonSap},
   {FALSE, "blinder weapon", weaponBlinder},
   {TRUE, "mana drain weapon", weaponManaDrainer},  // 45
-  {FALSE, "tequila cutlass", tequilaCutlass}, {FALSE, "daySword", daySword},
+  {FALSE, "tequila cutlass", tequilaCutlass},
+  {FALSE, "daySword", daySword},
   {FALSE, "nightBlade", nightBlade},
   {TRUE, "Lightning Rod", weaponLightningRod},
   {TRUE, "Thief Quest Weapon", thiefQuestWeapon},  // 50
@@ -7428,48 +7397,62 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
   {FALSE, "trolley", trolley},
   {FALSE, "Stone Skin Amulet", stoneSkinAmulet},  // 55
   {TRUE, "Razor Glove", razorGlove},
-  {FALSE, "ShadowSlayer", weaponShadowSlayer}, {FALSE, "Squirt Gun", squirtGun},
+  {FALSE, "ShadowSlayer", weaponShadowSlayer},
+  {FALSE, "Squirt Gun", squirtGun},
   {FALSE, "Glory Weapon", blazeOfGlory},
   {TRUE, "Elemental Weapon", elementalWeapon},  // 60
   {FALSE, "Life Leech Glove", lifeLeechGlove},
   {TRUE, "Mechanical Wings", mechanicalWings},
-  {FALSE, "Key in Knife", keyInKnife}, {FALSE, "Teleport Vial", teleportVial},
+  {FALSE, "Key in Knife", keyInKnife},
+  {FALSE, "Teleport Vial", teleportVial},
   {FALSE, "Sun Circle Amulet", sunCircleAmulet},  // 65
-  {FALSE, "Better Vender", vending_machine2}, {FALSE, "Mine Cart", minecart},
-  {FALSE, "Switchtrack", switchtrack}, {FALSE, "vorpal", vorpal},
+  {FALSE, "Better Vender", vending_machine2},
+  {FALSE, "Mine Cart", minecart},
+  {FALSE, "Switchtrack", switchtrack},
+  {FALSE, "vorpal", vorpal},
   {TRUE, "Berserker Weapon", berserkerWeap},  // 70
-  {FALSE, "Travel Gear", travelGear}, {FALSE, "Maquahuitl", maquahuitl},
-  {FALSE, "Randomizer", randomizer}, {FALSE, "Blunt/Pierce", bluntPierce},
+  {FALSE, "Travel Gear", travelGear},
+  {FALSE, "Maquahuitl", maquahuitl},
+  {FALSE, "Randomizer", randomizer},
+  {FALSE, "Blunt/Pierce", bluntPierce},
   {TRUE, "Dual Style Weapon", dualStyleWeapon},  // 75
   {FALSE, "Mana Burn Robe", manaBurnRobe},
   {FALSE, "Chrism: minor heal", healingNeckwear},
   {FALSE, "Chrism: bless hold item", blessingHoldItem},
   {FALSE, "Chrism: vitality restore", moveRestoreNeckwear},
   {FALSE, "Chipped Tooth Food Item", chippedTooth},  // 80
-  {FALSE, "Goofers Dust", goofersDust}, {FALSE, "teleport ring", teleportRing},
+  {FALSE, "Goofers Dust", goofersDust},
+  {FALSE, "teleport ring", teleportRing},
   {TRUE, "self repairing", selfRepairing},
   {FALSE, "undead spewing portal", USPortal},
   {FALSE, "Amulet of Aeth Koralm", AKAmulet},  // 85
-  {TRUE, "fire glove", fireGlove}, {FALSE, "Shaman's Totem Mask", totemMask},
+  {TRUE, "fire glove", fireGlove},
+  {FALSE, "Shaman's Totem Mask", totemMask},
   {FALSE, "perma death monument", permaDeathMonument},
   {FALSE, "fishing boat", fishingBoat},
   {TRUE, "Splintered Club", splinteredClub},  // 90
-  {FALSE, "Suffocation Glove", suffGlove}, {FALSE, "Force", force},
+  {FALSE, "Suffocation Glove", suffGlove},
+  {FALSE, "Force", force},
   {FALSE, "trophy board", trophyBoard},
   {FALSE, "shopinfo board", shopinfoBoard},
   {TRUE, "Sonic Blast", sonicBlast},  // 95
   {FALSE, "highrollers board", highrollersBoard},
   {FALSE, "faction score board", factionScoreBoard},
-  {FALSE, "fragile arrow", fragileArrow}, {FALSE, "Weapon: Starfire", starfire},
+  {FALSE, "fragile arrow", fragileArrow},
+  {FALSE, "Weapon: Starfire", starfire},
   {FALSE, "Sheath: Starfire", starfiresheath},  // 100
   {FALSE, "Teleport Rescue Item", teleportRescue},
-  {TRUE, "Deikhan Sword", deikhanSword}, {TRUE, "black sun", blackSun},
+  {TRUE, "Deikhan Sword", deikhanSword},
+  {TRUE, "black sun", blackSun},
   {TRUE, "poison cutlass", poisonCutlass},
-  {TRUE, "unholy cutlass", unholyCutlass}, {FALSE, "ghostly shiv", ghostlyShiv},
-  {FALSE, "hammer set: peke", HSPeke}, {FALSE, "hammer set: copsi", HSCopsi},
+  {TRUE, "unholy cutlass", unholyCutlass},
+  {FALSE, "ghostly shiv", ghostlyShiv},
+  {FALSE, "hammer set: peke", HSPeke},
+  {FALSE, "hammer set: copsi", HSCopsi},
   {FALSE, "hammer set: pendant", HSPendant},
   {FALSE, "blizzard ring", blizzardRing},  // 110
-  {TRUE, "frost spear", frostSpear}, {TRUE, "ice staff", iceStaff},
+  {TRUE, "frost spear", frostSpear},
+  {TRUE, "ice staff", iceStaff},
   {FALSE, "heart of the arctic", arcticHeart},
   {FALSE, "frost armor", frostArmor},
   {FALSE, "telekinesis glove", telekinesisGlove},  // 115
@@ -7483,8 +7466,10 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
   {FALSE, "holy cutlass", holyCutlass},
   {FALSE, "fortune cookie", fortuneCookie},
   {TRUE, "Fireball Weapon", fireballWeapon},  // 125
-  {FALSE, "Fire Shield", fireArmor}, {FALSE, "Finns Gaff", finnsGaff},
-  {FALSE, "stim pack", stimPack}, {FALSE, "lottery ticket", lotteryTicket},
+  {FALSE, "Fire Shield", fireArmor},
+  {FALSE, "Finns Gaff", finnsGaff},
+  {FALSE, "stim pack", stimPack},
+  {FALSE, "lottery ticket", lotteryTicket},
   {FALSE, "lycanthropy cure", lycanthropyCure},  // 130
   {FALSE, "vella key join", vellaKeyJoin},
   {FALSE, "Gnath well bucket", fillBucket},
@@ -7493,22 +7478,32 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
   {FALSE, "graffiti maker", graffitiMaker},  // 135
   {FALSE, "graffiti object", graffitiObject},
   {FALSE, "statue arm twist", statueArmTwist},
-  {FALSE, "sticker bush", stickerBush}, {FALSE, "switch object", switchObject},
+  {FALSE, "sticker bush", stickerBush},
+  {FALSE, "switch object", switchObject},
   {FALSE, "gnome tenderizer", gnomeTenderizer},  // 140
-  {FALSE, "Marukalia", marukalia}, {FALSE, "lightsaber", lightsaber},
-  {FALSE, "broken bottle", brokenBottle}, {FALSE, "Demon Slayer", demonSlayer},
+  {FALSE, "Marukalia", marukalia},
+  {FALSE, "lightsaber", lightsaber},
+  {FALSE, "broken bottle", brokenBottle},
+  {FALSE, "Demon Slayer", demonSlayer},
   {FALSE, "Astral Walk", objWornAstralWalk},  // 145
   {FALSE, "Minor Astral Walk", objWornMinorAstralWalk},
   {FALSE, "Portal", objWornPortal},
   {FALSE, "brick quest scorecard", brickScorecard},
   {FALSE, "EQ Combo Casting", comboEQCast},
   {FALSE, "Skittish Object", skittishObject},  // 150
-  {FALSE, "Dwarf Power", dwarfPower}, {FALSE, "Mob Spawn Grab", mobSpawnGrab},
+  {FALSE, "Dwarf Power", dwarfPower},
+  {FALSE, "Mob Spawn Grab", mobSpawnGrab},
   {FALSE, "rubik's cube", rubiksCube},
   {FALSE, "Immortal Exchange Computer", ieComputer},
   {FALSE, "liquid source", liquidSource},  // 155
   {FALSE, "of many potions", ofManyPotions},
-  {TRUE, "Shadow Weapon", shadowWeapon}, {TRUE, "Living Vines", livingVines},
-  {TRUE, "Piety Regen", pietyRegen}, {TRUE, "DK Sword", dkSword},
+  {TRUE, "Shadow Weapon", shadowWeapon},
+  {TRUE, "Living Vines", livingVines},
+  {TRUE, "Piety Regen", pietyRegen},
+  {TRUE, "DK Sword", dkSword},
   {TRUE, "Molten Weapon", moltenWeapon},
-  {TRUE, "Glacial Weapon", glacialWeapon}, {FALSE, "last proc", bogusObjProc}};
+  {TRUE, "Glacial Weapon", glacialWeapon},
+  {TRUE, "Gust Weapon Tier 1", gustWeaponT1},
+  {TRUE, "Gust Weapon Tier 2", gustWeaponT2},
+  {TRUE, "Gust Weapon Tier 3", gustWeaponT3},
+  {FALSE, "last proc", bogusObjProc}};
