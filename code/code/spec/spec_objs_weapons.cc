@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+#include "combat.h"
 #include "extern.h"
 #include "room.h"
 #include "handler.h"
@@ -2091,32 +2092,69 @@ int poisonWhip(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*) {
 
 int glowCutlass(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*) {
   TBeing* ch;
-  int rc;
 
-  if (cmd != CMD_OBJ_HITTING)
-    return FALSE;
-  if (!o || !vict)
-    return FALSE;
-  if (!(ch = dynamic_cast<TBeing*>(o->equippedBy)))
-    return FALSE;  // weapon not equipped (carried or on ground)
-
-  primaryTypeT primary =
-    (ch->heldInPrimHand() == o) ? HAND_PRIMARY : HAND_SECONDARY;
-
-  if (!::number(0, 9)) {
-    // this potentially sets up infinite loop
-    rc = ch->oneHit(vict, primary, o, 0, 0);
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      delete ch;
-      ch = NULL;
-      REM_DELETE(rc, DELETE_THIS);
-    }
-    if (IS_SET_DELETE(rc, DELETE_VICT) || IS_SET_DELETE(rc, DELETE_ITEM)) {
-      return rc;
-    }
-    return FALSE;
+  if (cmd != CMD_OBJ_HITTING) {
+    return false;
   }
-  return FALSE;
+  
+  if (!o || !vict) {
+    return false;
+  }
+
+  if (!(ch = dynamic_cast<TBeing*>(o->equippedBy))) {
+    return false;  // weapon not equipped (carried or on ground)
+  }
+
+  if (o->isObjStat(ITEM_GLOW)) {
+    if (!::number(0, 1)) {
+      // Simulate a real weapon strike with proper damage and type
+      int dam = o->swungObjectDamage(ch, vict) / 2;  // 50% of normal weapon damage
+      spellNumT weaponType = o->getWtype();  // Use actual weapon type
+      int mod = ch->attackRound(vict) - vict->defendRound(ch);
+      int hitResult = ch->hits(vict, mod);
+      const char* attackVerb = attack_hit_text[weaponType - TYPE_MIN_HIT].plural;
+
+      if (hitResult == FALSE) {
+        act("Your <y>$p glows briefly<1> as you swing, but <k>fades to nothing.<1>", false, ch, o, vict, TO_CHAR);
+        act("$n's <y>$p glows briefly<1> as $e swings, but <k>fades to nothing.<1>", false, ch, o, vict, TO_ROOM);
+        o->remObjStat(ITEM_GLOW);
+        return false;
+      }
+      
+      act(format("$p gleams with brilliant light as it %s $N!") % attackVerb,
+          false, ch, o, vict, TO_CHAR, ANSI_YELLOW_BOLD);
+      act(format("$n's $p gleams with brilliant light as it %s $N!") % attackVerb,
+          false, ch, o, vict, TO_NOTVICT, ANSI_YELLOW_BOLD);
+      act(format("$n's $p gleams with brilliant light as it %s you!") % attackVerb,
+          false, ch, o, vict, TO_VICT, ANSI_YELLOW_BOLD);
+
+      if (hitResult == GUARANTEED_SUCCESS) {
+        dam *= 2;  // Double damage on a successful hit
+        weaponType = DAMAGE_HOLY;  // Change damage type to radiant
+      }
+      
+      o->remObjStat(ITEM_GLOW);
+
+      if (vict->reconcileDamage(vict, dam, weaponType) == -1) {
+        return DELETE_VICT;
+      }
+      return true;
+    }
+    return false;  // 50% chance failed, no bonus damage
+  }
+
+  // Not affected by ITEM_GLOW, check for charging up
+  if (!::number(0, 4)) {
+    o->setObjStat(ITEM_GLOW);
+
+    act("$p glows brightly, preparing for another strike!",
+        false, ch, o, vict, TO_CHAR, ANSI_YELLOW);
+    act("$n's $p glows brightly, preparing for another strike!",
+        false, ch, o, vict, TO_ROOM, ANSI_YELLOW);
+    return true;  // Successfully charged up
+  }
+
+  return false;  // No proc triggered
 }
 
 int weaponBreaker(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*) {
