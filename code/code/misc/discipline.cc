@@ -2340,6 +2340,11 @@ int TBeing::isNotPowerful(TBeing* vict, int lev, spellNumT skill,
       if (cd && cd->getLearnedness() > 0)
         lev += 2 + (cd->getLearnedness() / 34);
       break;
+    case DISC_STEALTH:
+      cd = getDiscipline(DISC_THIEF);
+      if (cd && cd->getLearnedness() > 0)
+        lev += 2 + (cd->getLearnedness() / 34);
+      break;
     default:
       break;
   }
