@@ -2616,6 +2616,12 @@ void buildSpellArray() {
       LEARN_1, START_DO_10, LEARN_DO_2, START_DO_NO, LEARN_DO_NO,
       LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
+    discArray[SKILL_SKULK] =
+    new spellInfo(SKILL_THIEF, DISC_STEALTH, DISC_STEALTH, STAT_EXT, "skulk",
+      TASK_NORMAL, LAG_0, POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
+      SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_10,
+      LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
+
   // disc_traps
 
   discArray[SKILL_SET_TRAP_ARROW] = new spellInfo(SKILL_THIEF, DISC_TRAPS,

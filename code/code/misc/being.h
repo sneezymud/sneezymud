@@ -585,6 +585,7 @@ class TBeing : public TThing {
     int specialAttack(TBeing* target, spellNumT, int, bool);
     int specialAttack(TBeing* target, spellNumT, int, statTypeT, statTypeT,
       statTypeT, statTypeT, bool);
+    int specAttackMod(TBeing* target);
 
     void updateStatistics();
     bool checkForDiceHeld() const;
@@ -1974,6 +1975,7 @@ class TBeing : public TThing {
     void doNewbieEqLoad(race_t, unsigned short, bool);
     virtual void doLoad(const char*);
     int doDisguise(const char*);
+    int doSkulk();
     int doPoisonWeapon(sstring);
     int doGarrotte(const char*, TBeing*);
     int doStab(const char*, TBeing*);

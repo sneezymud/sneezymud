@@ -910,6 +910,8 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
       return &((CDStealth*)cd)->skConcealment;
     case SKILL_DISGUISE:  //                  499
       return &((CDStealth*)cd)->skDisguise;
+    case SKILL_SKULK:
+      return &((CDStealth*)cd)->skSkulk;
 
       // disc_traps
     case SKILL_SET_TRAP_CONT:

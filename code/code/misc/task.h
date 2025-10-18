@@ -145,6 +145,7 @@ enum taskTypeT {
   TASK_RIDE,
   TASK_PAINT,
   TASK_PREEN,
+  TASK_SKULK,
   NUM_TASKS  // keep this as max
 };
 

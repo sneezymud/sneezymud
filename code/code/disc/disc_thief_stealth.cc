@@ -1,5 +1,4 @@
 #include "defs.h"
-#include "enum.h"
 #include "extern.h"
 #include "handler.h"
 #include "being.h"
@@ -16,7 +15,6 @@
 #include "obj_portal.h"
 #include "client.h"
 #include "spec_mobs.h"
-#include "spells.h"
 
 
 void TBeing::doTrack(const char* argument) {
@@ -1195,7 +1193,7 @@ int spy(TBeing* thief) {
   return TRUE;
 }
 
-int skulk(TBeing* thief, spellNumT skill) {
+int skulk(TBeing* thief, spellNumT skill) {  
   if (thief->fight()) {
     thief->sendTo("You can't skulk while fighting!\n\r");
     return FALSE;

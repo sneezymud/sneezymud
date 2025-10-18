@@ -7,6 +7,7 @@ class CDStealth : public CDiscipline {
   public:
     CSkill skConcealment;
     CSkill skDisguise;
+    CSkill skSkulk;
 
     virtual CDStealth* cloneMe() { return new CDStealth(*this); }
 
@@ -19,3 +20,4 @@ int hide(TBeing*, spellNumT);
 int subterfuge(TBeing*, TBeing*);
 int spy(TBeing*);
 int disguise(TBeing*, char*);
+int skulk(TBeing*, spellNumT);
