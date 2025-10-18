@@ -317,11 +317,6 @@ int backstab(TBeing* thief, TBeing* victim) {
   modifier -= noise(thief) / 20;
   modifier += thief->visibility() / 15;
 
-  if (thief->isAffected(AFF_SNEAK))
-    modifier += 5;
-  if (thief->isAffected(AFF_HIDE))
-    modifier += 5;
-
   if (thief->makesNoise() && victim->awake()) {
     modifier -= 10;
 
@@ -664,11 +659,6 @@ int throatSlit(TBeing* thief, TBeing* victim) {
 
   modifier -= noise(thief) / 20;
   modifier += thief->visibility() / 15;
-
-  if (thief->isAffected(AFF_SNEAK))
-    modifier += 5;
-  if (thief->isAffected(AFF_HIDE))
-    modifier += 5;
 
   if (thief->makesNoise() && victim->awake()) {
     modifier -= 10;
