@@ -25,6 +25,7 @@
 #include "materials.h"
 #include "range.h"
 #include "combat.h"
+#include "spells.h"
 #include "statistics.h"
 #include "person.h"
 #include "disease.h"
@@ -2959,6 +2960,134 @@ int TBeing::defendRound(const TBeing* attacker) const {
   return bonus;
 }
 
+/*
+  Calculate baseline situational modifiers for special attacks.
+  Factors in position, stealth, spell effects, and visibility.
+  Returns a single modifier combining attacker bonuses and defender penalties.
+*/
+int TBeing::specAttackMod(const TBeing* target) const {
+  int mod = 0;
+
+  // Attacker position modifiers
+  switch (getPosition()) {
+    case POSITION_RESTING:
+      mod -= 5;
+      break;
+    case POSITION_SITTING:
+      mod -= 3;
+      break;
+    case POSITION_CRAWLING:
+      mod -= 1;
+      break;
+    case POSITION_STANDING:
+    case POSITION_ENGAGED:
+    case POSITION_FIGHTING:
+      break;
+    case POSITION_MOUNTED:
+      mod += 2;
+      break;
+    case POSITION_FLYING:
+      mod += 3;
+      break;
+    default:
+      break;
+  }
+
+  // Attacker stealth bonuses (thief only) not in combat
+  if (hasClass(CLASS_THIEF) && !fight()) {
+    if (isAffected(AFF_SNEAK))
+      mod += 5;
+    if (isAffected(AFF_HIDE))
+      mod += 5;
+  }
+
+  // Attacker inevitability bonus
+  if (affectedBySpell(SKILL_INEVITABILITY)) {
+    affectedData* ch_affected;
+    for (ch_affected = affected; ch_affected; ch_affected = ch_affected->next) {
+      if (ch_affected->type == SKILL_INEVITABILITY) {
+        mod += ch_affected->modifier;
+        break;
+      }
+    }
+  }
+
+  // Attacker spell effects
+  if (isAffected(AFF_WEB))
+    mod -= 4;
+  if (affectedBySpell(SPELL_STUPIDITY))
+    mod -= 1;
+  if (affectedBySpell(SPELL_CURSE))
+    mod -= 2;
+  if (affectedBySpell(SPELL_BLESS))
+    mod += 1;
+  if (affectedBySpell(SPELL_AURA_MIGHT))
+    mod += 3;
+
+  // Visibility check - attacker can't see target
+  if (target && !canSee(target)) {
+    int blindPenalty = 6;
+    if (doesKnowSkill(SKILL_BLINDFIGHTING)) {
+      blindPenalty = blindPenalty * (100 - getSkillValue(SKILL_BLINDFIGHTING)) / 100;
+    }
+    mod -= blindPenalty;
+  }
+
+  // Defender position modifiers (inverted - bad position for defender helps attacker)
+  if (target) {
+    switch (target->getPosition()) {
+      case POSITION_RESTING:
+        mod += 5;
+        break;
+      case POSITION_SITTING:
+        mod += 3;
+        break;
+      case POSITION_CRAWLING:
+        mod += 1;
+        break;
+      case POSITION_STANDING:
+      case POSITION_ENGAGED:
+      case POSITION_FIGHTING:
+        break;
+      case POSITION_MOUNTED:
+        mod -= 2;
+        break;
+      case POSITION_FLYING:
+        mod -= 4;
+        break;
+      default:
+        break;
+    }
+
+    // Defender spell effects (inverted - bad effects on defender help attacker)
+    if (target->isAffected(AFF_WEB))
+      mod += 4;
+    if (target->affectedBySpell(SPELL_STUPIDITY))
+      mod += 1;
+    if (target->affectedBySpell(SPELL_CURSE))
+      mod += 2;
+    if (target->affectedBySpell(SPELL_SANCTUARY))
+      mod -= 3;
+    if (target->affectedBySpell(SPELL_CRUSADE))
+      mod -= 3;
+    if (target->affectedBySpell(SPELL_AURA_GUARDIAN))
+      mod -= 3;
+
+    // Visibility check - target can't see attacker
+    if (!target->canSee(this)) {
+      int blindPenalty = 6;
+      if (target->doesKnowSkill(SKILL_BLINDFIGHTING)) {
+        blindPenalty = blindPenalty * (100 - target->getSkillValue(SKILL_BLINDFIGHTING)) / 100;
+      }
+      mod += blindPenalty;
+    }
+  }
+
+
+  
+  return mod;
+}
+
 // specialAttack() is used for combat specials like kick, bash, grapple, etc.
 int TBeing::specialAttack(TBeing* target, spellNumT skill) {
   int rc = specialAttack(target, skill, 0);
@@ -2994,19 +3123,23 @@ int TBeing::specialAttack(TBeing* target, spellNumT skill,
       IS_SET(desc->autobits, AUTO_SUCCESS))
     return COMPLETE_SUCCESS;
 
+  // Add baseline situational modifiers (position, stealth, spells, visibility)
+  situationalModifier += specAttackMod(target);
+
+  // Handle surprise attacks
+  if (skill == SKILL_BACKSTAB || skill == SKILL_CUDGEL || skill == SKILL_THROATSLIT || skill == SKILL_RANGED_PROF) {
+    if (target->isWary())
+      situationalModifier -= 10;
+    else
+      if (!target->affectedBySpell(SKILL_SUBTERFUGE)) 
+        target->makeWary();
+  }
+
   if (situationalModifier < SITUATIONAL_MOD_LOWER_BOUND)
     situationalModifier = SITUATIONAL_MOD_LOWER_BOUND;
   else if (situationalModifier > SITUATIONAL_MOD_UPPER_BOUND)
     situationalModifier = SITUATIONAL_MOD_UPPER_BOUND;
 
-  // Handle surprise attacks
-  if (skill == SKILL_BACKSTAB || skill == SKILL_CUDGEL ||
-      skill == SKILL_RANGED_PROF) {
-    if (target->isWary())
-      situationalModifier -= 10;
-    else
-      target->makeWary();
-  }
 
   // Adjust for level difference
   int attackerLevel = GetMaxLevel(), defenderLevel = target->GetMaxLevel();
@@ -3030,16 +3163,33 @@ int TBeing::specialAttack(TBeing* target, spellNumT skill,
 
   // sendTo(format("Modified roll is (%i) - \n") % roll);
 
+  int result;
   if (roll <= 5)
-    return GUARANTEED_SUCCESS;
+    result = GUARANTEED_SUCCESS;
   else if (roll > 95)
-    return GUARANTEED_FAILURE;
+    result = GUARANTEED_FAILURE;
   else if (roll < SUCCESS_THRESHOLD)
-    return COMPLETE_SUCCESS;
+    result = COMPLETE_SUCCESS;
   else if (partialSuccessAllowed && roll < PARTIAL_SUCCESS_THRESHOLD)
-    return PARTIAL_SUCCESS;
+    result = PARTIAL_SUCCESS;
   else
-    return FAILURE;
+    result = FAILURE;
+
+  // Remove inevitability if we hit
+  if (result == GUARANTEED_SUCCESS || result == COMPLETE_SUCCESS ||
+      result == PARTIAL_SUCCESS) {
+    if (affectedBySpell(SKILL_INEVITABILITY)) {
+      affectedData* ch_affected;
+      for (ch_affected = affected; ch_affected; ch_affected = ch_affected->next) {
+        if (ch_affected->type == SKILL_INEVITABILITY) {
+          affectRemove(ch_affected, SILENT_YES);
+          break;
+        }
+      }
+    }
+  }
+
+  return result;
 }
 
 // hits() is for an individual hit.
