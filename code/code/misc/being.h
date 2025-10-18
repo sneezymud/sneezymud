@@ -580,6 +580,7 @@ class TBeing : public TThing {
     bool canAttack(primaryTypeT);
     int attackRound(const TBeing* target) const;
     int defendRound(const TBeing* attacker) const;
+    int specAttackMod(const TBeing* target) const;
     int specialAttack(TBeing* target, spellNumT);
     int specialAttack(TBeing* target, spellNumT, int);
     int specialAttack(TBeing* target, spellNumT, int, bool);
