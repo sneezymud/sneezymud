@@ -1371,7 +1371,7 @@ int TThing::visibility() const {
       }
     }
     if (tbt->isAffected(AFF_SNEAK) || tbt->isAffected(AFF_HIDE))
-      cbs += min (1, (eqbonus / 2000));
+      cbs += max (1, (eqbonus / 2000));
     else
       cbs += (eqbonus / 6000);
   }
