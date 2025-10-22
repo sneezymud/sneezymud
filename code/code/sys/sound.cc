@@ -133,33 +133,18 @@ int noise(const TBeing* ch) {
   if (ch->isAffected(AFF_SNEAK) && !ch->fight())
     total -= 1 + ch->GetMaxLevel() / 2;
 
-  // if in natural environs, reduce even further
-  // traps areas that SHOULDN'T aid them
-  if (ch->roomp && ch->getRace() == RACE_ELVEN) {
-    switch (ch->roomp->getSectorType()) {
-      case SECT_ARCTIC_CITY:
-      case SECT_ARCTIC_ROAD:
-      case SECT_ARCTIC_BUILDING:
-      case SECT_TEMPERATE_CITY:
-      case SECT_TEMPERATE_ROAD:
-      case SECT_TEMPERATE_BUILDING:
-      case SECT_TROPICAL_CITY:
-      case SECT_TROPICAL_ROAD:
-      case SECT_TROPICAL_BUILDING:
-        break;
-      default:
-        total -= 20;
-        break;
-    }
-  }
+  // if on home turf or matching background, reduce noise
+  if (ch->homeTurf())
+    total -= 10;
+  if (ch->backgroundBonus())
+    total -= 10;
 
   // adjust for height, ogres = noisy, hobbits quiet
   total += ch->getHeight() - 70;
 
-  // big, strong, loud and arrogant
-  if ((ch->getRace() == RACE_OGRE) || (ch->getRace() == RACE_DWARF))
-    total += 20;
+  
 
+  // spell affects
   for (af = ch->affected; af; af = af->next) {
     if (af->location == APPLY_NOISE) {
       total += af->modifier;

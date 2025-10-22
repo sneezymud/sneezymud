@@ -1145,6 +1145,8 @@ class TBeing : public TThing {
     bool canClimb();
     bool canFly() const;
     bool sectorSafe();
+    bool homeTurf() const;
+    bool backgroundBonus() const;
 
     // this can't be const due to checkDoneBasic
     void pracPath(TMonster*, classIndT);
