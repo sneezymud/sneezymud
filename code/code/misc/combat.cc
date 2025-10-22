@@ -3001,6 +3001,14 @@ int TBeing::specAttackMod(const TBeing* target) const {
       mod += 5;
   }
 
+  if (homeTurf()) {
+    mod += 3;
+  }
+
+  if (backgroundBonus()) {
+    mod += 3;
+  }
+
   // Attacker inevitability bonus
   if (affectedBySpell(SKILL_INEVITABILITY)) {
     affectedData* ch_affected;
