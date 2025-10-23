@@ -1009,7 +1009,8 @@ int subterfugePlayer(TBeing* thief, TBeing* victim) {
 int subterfugeHit(TBeing* thief, TBeing* victim) {
 // Mob success actions
 int level = thief->getSkillLevel(SKILL_SUBTERFUGE);
-level += thief->getChaReaction();
+level = (max (1, (level + (thief->getChaReaction()))));
+
 int advLearning = thief->getAdvLearning(SKILL_SUBTERFUGE);
   act("$N seems pretty confused by your show!", FALSE, thief, NULL, victim, TO_CHAR, ANSI_ORANGE);
   act("$n confuses $N with a show.", FALSE, thief, NULL, victim, TO_NOTVICT, ANSI_ORANGE);
