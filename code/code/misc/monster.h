@@ -145,7 +145,9 @@ class TMonster : public TBeing {
     bool isMalice() const { return (::number(0, 101) < malice()); }
     bool isSusp() const { return (::number(0, 101) < susp()); }
     void US(int num) {
-      setSusp(susp() + min(::number(0, 2 * num), 100 - susp()));
+      if (!affectedBySpell(SKILL_SUBTERFUGE)) {
+        setSusp(susp() + min(::number(0, 2 * num), 100 - susp()));
+      }
     }
     void DS(int num) { setSusp(susp() - min(::number(0, 2 * num), susp())); }
     void UG(int num) {
