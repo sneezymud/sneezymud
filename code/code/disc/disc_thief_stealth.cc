@@ -1011,9 +1011,9 @@ int subterfugeHit(TBeing* thief, TBeing* victim) {
 int level = thief->getSkillLevel(SKILL_SUBTERFUGE);
 level += thief->getChaReaction();
 int advLearning = thief->getAdvLearning(SKILL_SUBTERFUGE);
-  act("$N seems pretty confused by your show!", FALSE, thief, NULL, victim, TO_CHAR);
-  act("$n confuses $N with a show.", FALSE, thief, NULL, victim, TO_NOTVICT);
-  act("$n confuses you with a show.", FALSE, thief, NULL, victim, TO_VICT);
+  act("$N seems pretty confused by your show!", FALSE, thief, NULL, victim, TO_CHAR, ANSI_ORANGE);
+  act("$n confuses $N with a show.", FALSE, thief, NULL, victim, TO_NOTVICT, ANSI_ORANGE);
+  act("$n confuses you with a show.", FALSE, thief, NULL, victim, TO_VICT, ANSI_ORANGE);
 
   // Apply subterfuge affect for PER reduction
   affectedData af;
@@ -1049,33 +1049,36 @@ int advLearning = thief->getAdvLearning(SKILL_SUBTERFUGE);
     REMOVE_BIT(mob->specials.act, ACT_HUNTING);
     REMOVE_BIT(mob->specials.act, ACT_HATEFUL);
     act("$N seems to forget why $E was so angry.", FALSE, thief, NULL, victim, TO_CHAR);
+    act("$N seems to forget why $E was so angry.", FALSE, thief, NULL, victim, TO_NOTVICT);
+    act("You seem to forget why you were so angry.", FALSE, thief, NULL, victim, TO_VICT);
   }
 
   // Tier 3: 20% advanced discipline - Remove thief/cityguard procs
   if (mob && advLearning >= 20) {
     if (IS_SET(mob->specials.act, ACT_NICE_THIEF)) {
-      act("$N seems to look a little less mischievous.", FALSE, thief, NULL, victim, TO_CHAR);
+      act("$N seems to look a little less mischievous.", FALSE, thief, NULL, victim, TO_CHAR, ANSI_PURPLE_BOLD);
+      REMOVE_BIT(mob->specials.act, ACT_NICE_THIEF);
     }
     if (IS_SET(mob->specials.act, ACT_GUARDIAN)) {
-      act("$N seems to look a little less watchful.", FALSE, thief, NULL, victim, TO_CHAR);
+      act("$N seems to look a little less watchful.", FALSE, thief, NULL, victim, TO_CHAR, ANSI_YELLOW);
+      REMOVE_BIT(mob->specials.act, ACT_GUARDIAN);
     }
     if (IS_SET(mob->specials.act, ACT_AFRAID)) {
-      act("$N seems to look a little less afraid.", FALSE, thief, NULL, victim, TO_CHAR);
+      act("$N seems to look a little less afraid.", FALSE, thief, NULL, victim, TO_CHAR, ANSI_ORANGE);
+      REMOVE_BIT(mob->specials.act, ACT_AFRAID);
     }
-    
-    
 
     if (mob->spec == SPEC_CITYGUARD ||
         mob->spec == SPEC_JANITOR ||
         mob->spec == SPEC_ARCHER) {
           if (mob->spec == SPEC_CITYGUARD) {
-            act("$N seems to forget $S duties as a cityguard.", FALSE, thief, NULL, victim, TO_CHAR);
+            act("$N seems to forget $S duties as a <Y>cityguard.<z>", FALSE, thief, NULL, victim, TO_CHAR);
           }
           if (mob->spec == SPEC_JANITOR) {
-            act("$N seems to forget $S duties as a janitor.", FALSE, thief, NULL, victim, TO_CHAR);
+            act("$N seems to forget $S duties as a <B>janitor.<z>", FALSE, thief, NULL, victim, TO_CHAR);
           }
           if (mob->spec == SPEC_ARCHER) {
-            act("$N seems to forget $S duties as an archer.", FALSE, thief, NULL, victim, TO_CHAR);
+            act("$N seems to forget $S duties as an <o>archer.<z>", FALSE, thief, NULL, victim, TO_CHAR);
           }
       mob->spec = 0;  // Set to no special proc
       }
@@ -1084,7 +1087,9 @@ int advLearning = thief->getAdvLearning(SKILL_SUBTERFUGE);
   // Tier 4: 50% advanced discipline - Remove aggro flag
   if (mob && advLearning >= 50 && IS_SET(mob->specials.act, ACT_AGGRESSIVE)) {
     REMOVE_BIT(mob->specials.act, ACT_AGGRESSIVE);
-    act("$N's aggressive demeanor softens considerably.", FALSE, thief, NULL, victim, TO_CHAR);
+    act("$N's aggressive demeanor softens considerably.", FALSE, thief, NULL, victim, TO_CHAR, ANSI_YELLOW);
+    act("$N's aggressive demeanor softens considerably.", FALSE, thief, NULL, victim, TO_NOTVICT, ANSI_YELLOW);
+    act("Your demeanor softens considerably.", FALSE, thief, NULL, victim, TO_VICT, ANSI_YELLOW);
   }
 
   return true;
@@ -1101,6 +1106,8 @@ int subterfugeSuccess(TBeing* thief, TBeing* victim) {
   if (victim->isWary()) {
     victim->affectFrom(AFFECT_WARY);
     act("$N seems less wary now.", FALSE, thief, NULL, victim, TO_CHAR);
+    act("$N seems less wary now.", FALSE, thief, NULL, victim, TO_NOTVICT);
+    act("You seem less wary now.", FALSE, thief, NULL, victim, TO_VICT);
   }
 
   // For mobs, do specialAttack
@@ -1127,9 +1134,9 @@ int subterfugeSuccess(TBeing* thief, TBeing* victim) {
   // Crit actions
   if (attackValue >= GUARANTEED_SUCCESS) {
     victim->cantHit += max(1, thief->getChaReaction());
-    act("$N seems TOTALLY befuddled by your skills!", FALSE, thief, NULL, victim, TO_CHAR);
-    act("$n TOTALLY befuddles you with $S antics!", FALSE, thief, NULL, victim, TO_VICT);
-    act("$n TOTALLY befuddles $N with $S antics!", FALSE, thief, NULL, victim, TO_NOTVICT);
+    act("$N seems <p>TOTALLY befuddled<1> by your skills!", FALSE, thief, NULL, victim, TO_CHAR);
+    act("$n <p>TOTALLY befuddles<1> you with $S antics!", FALSE, thief, NULL, victim, TO_VICT);
+    act("$n <p>TOTALLY befuddles<1> $N with $S antics!", FALSE, thief, NULL, victim, TO_NOTVICT);
   }
 
   return subterfugeHit(thief, victim);
@@ -1176,7 +1183,7 @@ int subterfuge(TBeing* thief, TBeing* victim) {
   level += thief->getChaReaction();
   int bKnown = thief->getSkillValue(SKILL_SUBTERFUGE);
   
-  thief->addToMove(-25);
+  
 
   if (thief->isNotPowerful(victim, level, SKILL_SUBTERFUGE, SILENT_YES)) {
     act("$N's mind is too powerful to be confused.", FALSE, thief, NULL, victim, TO_CHAR);
@@ -1187,7 +1194,9 @@ int subterfuge(TBeing* thief, TBeing* victim) {
     thief->sendTo("You aren't skilled enough to trick monsters, yet.\n\r");
     return false;
   }
-
+  
+  thief->addToMove(-25);
+  
   // bSuccess check
   if (!thief->bSuccess(bKnown, SKILL_SUBTERFUGE)) {
     return subterfugeFail(thief, victim);
