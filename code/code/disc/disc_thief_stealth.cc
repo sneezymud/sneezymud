@@ -962,120 +962,58 @@ int TBeing::doSubterfuge(const char* arg) {
 
   return rc;
 }
-
-int subterfuge(TBeing* thief, TBeing* victim) {
-  if (thief->fight()) {
-    thief->sendTo("No way!! You simply can NOT concentrate!\n\r");
-    return FALSE;
-  }
-
-  if (victim->fight()) {
-    thief->sendTo("You can't get their attention while they are fighting.\n\r");
-    return FALSE;
-  }
-
-  if (thief->getMove() < 10) {
-    thief->sendTo("You don't have enough mp to make the move.\n\r");
-    return FALSE;
-  }
-
-  // failure sets fighting
-  if (thief->checkPeaceful("You can't subterfuge in a place of refuge.\n\r"))
-    return FALSE;
-
-  int level = thief->getSkillLevel(SKILL_SUBTERFUGE);
-  level += thief->getChaReaction();
-  int bKnown = thief->getSkillValue(SKILL_SUBTERFUGE);
-  int advLearning = thief->getAdvLearning(SKILL_SUBTERFUGE);
-
-  thief->addToMove(-10);
-
-  if (thief->isNotPowerful(victim, level, SKILL_SUBTERFUGE, SILENT_YES)) {
-    act("$N's mind is too powerful to be confused.", FALSE, thief, NULL, victim, TO_CHAR);
-    return TRUE;
-  }
-
-  if (!victim->isHumanoid() && bKnown < 80) {
-    thief->sendTo("You aren't skilled enough to trick monsters, yet.\n\r");
-    return TRUE;
-  }
-
-  // skill execution with bSuccess
-  if (!thief->bSuccess(bKnown, SKILL_SUBTERFUGE)) {
-    thief->sendTo("You fail to execute the subterfuge properly.\n\r");
-    return TRUE;
-  }
-
-  // Tier 1: Remove wary status (base effect, always happens on success)
-  if (victim->isWary()) {
-    victim->affectFrom(AFFECT_WARY);
-    act("$N seems less wary now.", FALSE, thief, NULL, victim, TO_CHAR);
-  }
-
-    int situationalMod = 0;
-  
-    if (!victim->isWise()) {
-      situationalMod += 10;
-    }
-
-    if (!victim->isIntelligent()) {
-      situationalMod += 10;
-    }
-
-    if (thief->isCharismatic()) {
-      situationalMod += 10;
-    }
-
-  // specialAttack with custom stats
-  int attackValue = thief->specialAttack(victim, SKILL_SUBTERFUGE, situationalMod,
-                                        STAT_CHA, STAT_INT,  // Attacker stats
-                                        STAT_PER, STAT_WIS,  // Defender stats
-                                        true);  // Allow partial success
-
-  TMonster* mob = dynamic_cast<TMonster*>(victim);
-
-  if (attackValue <= FAILURE) {
-    // Failure
-    if (victim->isPc()) {
-      // PC failure actions
-      if (victim->isCombatMode(ATTACK_BERSERK)) {
-        act("Luckily, $N can't get any more angry.", FALSE, thief, NULL, victim, TO_CHAR);
-        act("$n's subtle gestures and words fail to calm your rage.", FALSE, thief, NULL, victim, TO_VICT);
-        act("$n's subtle gestures and words fail to calm $N's rage.", FALSE, thief, NULL, victim, TO_NOTVICT);
-        return TRUE;
-      }
-      victim->setCombatMode(ATTACK_BERSERK);
-      act("Your antics have made $N incredibly angry!", FALSE, thief, NULL, victim, TO_CHAR);
-      act("$n's subtle gestures and words make $N incredibly angry!", FALSE, thief, NULL, victim, TO_NOTVICT);
-      act("$n's subtle gestures and words make you incredibly angry!", FALSE, thief, NULL, victim, TO_VICT);
-      return TRUE;
-    }
-    // Mob failure actions
-    thief->sendTo("Uhoh! Something went wrong!\n\r");
-    thief->setCharFighting(victim);
-    thief->setVictFighting(victim);
-    return TRUE;
-  }
-
-  // Success actions
+int subterfugeMiss(TBeing* thief, TBeing* victim) {
   if (victim->isPc()) {
-    // PC success actions
-    if (victim->isCombatMode(ATTACK_BERSERK)) {
-      victim->setCombatMode(ATTACK_NORMAL);
-      victim->affectFrom(SKILL_BERSERK);
-      act("$N's berserker rage subsides as you calm $M down.", FALSE, thief, NULL, victim, TO_CHAR);
-      act("$n's subtle gestures and words calm your rage.", FALSE, thief, NULL, victim, TO_VICT);
-      act("$n somehow calms $N's berserker rage.", FALSE, thief, NULL, victim, TO_NOTVICT);
-      return TRUE;
+    return false;
+  }
+  
+  if (!thief->fight()) {
+    if (!thief->isAgile(0)) {
+      act("$n tries to put on a show for you and falls on $s face!", FALSE, thief, NULL, victim, TO_VICT);
+      act("$n tries to put on a show for $N and falls on $s face!", FALSE, thief, NULL, victim, TO_NOTVICT);
+      act("You try to put on a show for $N and fall on your face!", FALSE, thief, NULL, victim, TO_CHAR);
+      thief->crashLanding(POSITION_SITTING);
+    } else {
+      act("$n does a dumb little dance for you. $e has no talent!", FALSE, thief, NULL, victim, TO_VICT);
+      act("$n does a dumb little dance for $N. $e has no talent!", FALSE, thief, NULL, victim, TO_NOTVICT);
+      act("You do a dumb little dance for $N. You have no talent!", FALSE, thief, NULL, victim, TO_CHAR);
     }
-    act("$N seems confused.", FALSE, thief, NULL, victim, TO_CHAR);
-    act("$n confuses you.", FALSE, thief, NULL, victim, TO_VICT);
-    act("$n confuses $N.", FALSE, thief, NULL, victim, TO_NOTVICT);
-    return TRUE;
+
+    thief->setCharFighting(victim);
+    victim->setVictFighting(thief);
+  }
+  return true;
+}
+
+int subterfugePlayer(TBeing* thief, TBeing* victim) {
+  if (!victim->isPc()) {
+    return false;
+  }
+  // PC success actions
+  if (victim->isCombatMode(ATTACK_BERSERK)) {
+    victim->setCombatMode(ATTACK_NORMAL);
+    victim->affectFrom(SKILL_BERSERK);
+    act("$N's berserker rage subsides as you calm $M down.", FALSE, thief, NULL, victim, TO_CHAR);
+    act("$n's subtle gestures and words calm your rage.", FALSE, thief, NULL, victim, TO_VICT);
+    act("$n somehow calms $N's berserker rage.", FALSE, thief, NULL, victim, TO_NOTVICT);
+  } else {
+    act("You put on a show to confuse $N.", FALSE, thief, NULL, victim, TO_CHAR);
+    act("$n puts on a show for you. It is a confusing performance!", FALSE, thief, NULL, victim, TO_VICT);
+    act("$n puts on a show for $N. It is a confusing performance!", FALSE, thief, NULL, victim, TO_NOTVICT);
+    victim->addToWait(combatRound(1));
   }
 
-  // Mob success actions
-  thief->sendTo("You have confused the monster!\n\r");
+  return true;
+} 
+
+int subterfugeHit(TBeing* thief, TBeing* victim) {
+// Mob success actions
+int level = thief->getSkillLevel(SKILL_SUBTERFUGE);
+level += thief->getChaReaction();
+int advLearning = thief->getAdvLearning(SKILL_SUBTERFUGE);
+  act("$N seems pretty confused by your show!", FALSE, thief, NULL, victim, TO_CHAR);
+  act("$n confuses $N with a show.", FALSE, thief, NULL, victim, TO_NOTVICT);
+  act("$n confuses you with a show.", FALSE, thief, NULL, victim, TO_VICT);
 
   // Apply subterfuge affect for PER reduction
   affectedData af;
@@ -1104,8 +1042,10 @@ int subterfuge(TBeing* thief, TBeing* victim) {
   af3.bitvector = 0;
   victim->affectTo(&af3);
 
+  TMonster* mob = dynamic_cast<TMonster*>(victim);
+
   // Tier 2: 75% skill - Remove hunting/hateful flags
-  if (mob && bKnown >= 75) {
+  if (mob && level >= 75) {
     REMOVE_BIT(mob->specials.act, ACT_HUNTING);
     REMOVE_BIT(mob->specials.act, ACT_HATEFUL);
     act("$N seems to forget why $E was so angry.", FALSE, thief, NULL, victim, TO_CHAR);
@@ -1113,17 +1053,32 @@ int subterfuge(TBeing* thief, TBeing* victim) {
 
   // Tier 3: 20% advanced discipline - Remove thief/cityguard procs
   if (mob && advLearning >= 20) {
-    REMOVE_BIT(mob->specials.act, ACT_NICE_THIEF);
-    REMOVE_BIT(mob->specials.act, ACT_GUARDIAN);
-    REMOVE_BIT(mob->specials.act, ACT_AFRAID);
-    act("$N looks less vigilant about $S duties.", FALSE, thief, NULL, victim, TO_CHAR);
+    if (IS_SET(mob->specials.act, ACT_NICE_THIEF)) {
+      act("$N seems to look a little less mischievous.", FALSE, thief, NULL, victim, TO_CHAR);
+    }
+    if (IS_SET(mob->specials.act, ACT_GUARDIAN)) {
+      act("$N seems to look a little less watchful.", FALSE, thief, NULL, victim, TO_CHAR);
+    }
+    if (IS_SET(mob->specials.act, ACT_AFRAID)) {
+      act("$N seems to look a little less afraid.", FALSE, thief, NULL, victim, TO_CHAR);
+    }
+    
+    
 
     if (mob->spec == SPEC_CITYGUARD ||
         mob->spec == SPEC_JANITOR ||
         mob->spec == SPEC_ARCHER) {
+          if (mob->spec == SPEC_CITYGUARD) {
+            act("$N seems to forget $S duties as a cityguard.", FALSE, thief, NULL, victim, TO_CHAR);
+          }
+          if (mob->spec == SPEC_JANITOR) {
+            act("$N seems to forget $S duties as a janitor.", FALSE, thief, NULL, victim, TO_CHAR);
+          }
+          if (mob->spec == SPEC_ARCHER) {
+            act("$N seems to forget $S duties as an archer.", FALSE, thief, NULL, victim, TO_CHAR);
+          }
       mob->spec = 0;  // Set to no special proc
-      act("$N seems to forget $S special duties completely.", FALSE, thief, NULL, mob, TO_CHAR);
-    }
+      }
   }
 
   // Tier 4: 50% advanced discipline - Remove aggro flag
@@ -1132,15 +1087,113 @@ int subterfuge(TBeing* thief, TBeing* victim) {
     act("$N's aggressive demeanor softens considerably.", FALSE, thief, NULL, victim, TO_CHAR);
   }
 
-  // Crit actions
-  if (attackValue >= CRIT_S_DOUBLE) {
-    victim->cantHit += max(1, thief->getChaReaction());
-    act("$N seems TOTALLY befuddled by your skills!", FALSE, thief, NULL, victim, TO_CHAR);
-    act("$n TOTALLY confuses you with $S antics!", FALSE, thief, NULL, victim, TO_VICT);
-    act("$n totally confuses $N with $S antics!", FALSE, thief, NULL, victim, TO_NOTVICT);
+  return true;
+}
+
+int subterfugeSuccess(TBeing* thief, TBeing* victim) {
+
+  // If PC, handle PC-specific logic and exit
+  if (victim->isPc()) {
+    return subterfugePlayer(thief, victim);
   }
 
-  return TRUE;
+  // Tier 1: Remove wary status (base effect, always happens on success)
+  if (victim->isWary()) {
+    victim->affectFrom(AFFECT_WARY);
+    act("$N seems less wary now.", FALSE, thief, NULL, victim, TO_CHAR);
+  }
+
+  // For mobs, do specialAttack
+  int situationalMod = 0;
+  if (!victim->isWise()) {
+    situationalMod -= 10;
+  }
+  if (!victim->isIntelligent()) {
+    situationalMod -= 10;
+  }
+  if (thief->isCharismatic()) {
+    situationalMod += 10;
+  }
+
+  int attackValue = thief->specialAttack(victim, SKILL_SUBTERFUGE, situationalMod,
+                                        STAT_CHA, STAT_INT,
+                                        STAT_PER, STAT_WIS,
+                                        true);
+
+  if (attackValue <= FAILURE) {
+    return subterfugeMiss(thief, victim);
+  }
+
+  // Crit actions
+  if (attackValue >= GUARANTEED_SUCCESS) {
+    victim->cantHit += max(1, thief->getChaReaction());
+    act("$N seems TOTALLY befuddled by your skills!", FALSE, thief, NULL, victim, TO_CHAR);
+    act("$n TOTALLY befuddles you with $S antics!", FALSE, thief, NULL, victim, TO_VICT);
+    act("$n TOTALLY befuddles $N with $S antics!", FALSE, thief, NULL, victim, TO_NOTVICT);
+  }
+
+  return subterfugeHit(thief, victim);
+}
+
+int subterfugeFail(TBeing* thief, TBeing* victim) {
+   thief->sendTo("You fail to execute the subterfuge properly.\n\r");
+    if (!thief->isCharismatic() && !victim->isPc()) {
+      act("WUH OH! $N looks pretty pissed off.", FALSE, thief, NULL, victim, TO_CHAR); 
+      act("$n tried to trick you! $e's gonna pay for that!", FALSE, thief, NULL, victim, TO_VICT);
+      act("$n tried to trick $N! $e's gonna pay for that!", FALSE, thief, NULL, victim, TO_NOTVICT);
+      thief->setCharFighting(victim);
+      victim->setVictFighting(thief);
+    }
+  return true;
+}
+
+int subterfuge(TBeing* thief, TBeing* victim) {
+  // Hard fail checks
+  if (thief->fight()) {
+    thief->sendTo("No way!! You simply can NOT concentrate!\n\r");
+    return false;
+  }
+
+  if (victim->fight()) {
+    thief->sendTo("You can't get their attention while they are fighting.\n\r");
+    return false;
+  }
+
+  if (thief->getMove() < 25) {
+    thief->sendTo("You are too tired to make the move.\n\r");
+    return false;
+  }
+
+  if (victim->isPc() && (thief->getSkillLevel(SKILL_SUBTERFUGE) < 80)) {
+    thief->sendTo("You aren't skilled enough to dazzle characters, yet.\n\r");
+    return false;
+  }
+
+  if (thief->checkPeaceful("You can't subterfuge in a place of refuge.\n\r"))
+    return false;
+
+  int level = thief->getSkillLevel(SKILL_SUBTERFUGE);
+  level += thief->getChaReaction();
+  int bKnown = thief->getSkillValue(SKILL_SUBTERFUGE);
+  
+  thief->addToMove(-25);
+
+  if (thief->isNotPowerful(victim, level, SKILL_SUBTERFUGE, SILENT_YES)) {
+    act("$N's mind is too powerful to be confused.", FALSE, thief, NULL, victim, TO_CHAR);
+    return false;
+  }
+
+  if (!victim->isHumanoid() && bKnown < 80) {
+    thief->sendTo("You aren't skilled enough to trick monsters, yet.\n\r");
+    return false;
+  }
+
+  // bSuccess check
+  if (!thief->bSuccess(bKnown, SKILL_SUBTERFUGE)) {
+    return subterfugeFail(thief, victim);
+  }
+
+  return subterfugeSuccess(thief, victim);
 }
 
 int TBeing::SpyCheck() {
