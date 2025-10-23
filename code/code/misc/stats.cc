@@ -1020,6 +1020,15 @@ int TBeing::getAgiReaction() const {
   return plotStat(STAT_CURRENT, STAT_AGI, -4, 6, 0);
 }
 
+int TBeing::getChaReaction() const {
+  return plotStat(STAT_CURRENT, STAT_CHA, -4, 6, 0);
+}
+
+int TBeing::getSpeReaction() const {
+  return plotStat(STAT_CURRENT, STAT_SPE, -4, 6, 0);
+}
+
+
 int TBeing::getConShock() const {
   return plotStat(STAT_CURRENT, STAT_CON, 15, 99, 65);
 }
