@@ -1181,7 +1181,7 @@ int subterfuge(TBeing* thief, TBeing* victim) {
     return false;
 
   int level = thief->getSkillLevel(SKILL_SUBTERFUGE);
-  level += thief->getChaReaction();
+  level = (max (1, (level + (thief->getChaReaction()))));
   int bKnown = thief->getSkillValue(SKILL_SUBTERFUGE);
   
   
