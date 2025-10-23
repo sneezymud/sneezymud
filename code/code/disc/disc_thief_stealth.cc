@@ -1055,12 +1055,15 @@ int advLearning = thief->getAdvLearning(SKILL_SUBTERFUGE);
   if (mob && advLearning >= 20) {
     if (IS_SET(mob->specials.act, ACT_NICE_THIEF)) {
       act("$N seems to look a little less mischievous.", FALSE, thief, NULL, victim, TO_CHAR);
+      REMOVE_BIT(mob->specials.act, ACT_NICE_THIEF);
     }
     if (IS_SET(mob->specials.act, ACT_GUARDIAN)) {
       act("$N seems to look a little less watchful.", FALSE, thief, NULL, victim, TO_CHAR);
+      REMOVE_BIT(mob->specials.act, ACT_GUARDIAN);
     }
     if (IS_SET(mob->specials.act, ACT_AFRAID)) {
       act("$N seems to look a little less afraid.", FALSE, thief, NULL, victim, TO_CHAR);
+      REMOVE_BIT(mob->specials.act, ACT_AFRAID);
     }
     
     
