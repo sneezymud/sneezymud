@@ -61,6 +61,7 @@ int debridePulse(TBeing* ch, TObj* obj, TThing* w) {
       if (file->getToolUses() <= 0) {
         act("Your $o has been used up.", FALSE, ch, file, 0, TO_CHAR);
         act("$n's $o has been used up.", FALSE, ch, file, 0, TO_ROOM);
+        ch->unequip(ch->getPrimaryHold());
         delete file;
         return -1;  // Signal to stop task
       }
@@ -139,6 +140,7 @@ int task_debriding(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
           if (file->getToolUses() <= 0) {
             act("Your $o has been used up.", FALSE, ch, file, 0, TO_CHAR);
             act("$n's $o has been used up.", FALSE, ch, file, 0, TO_ROOM);
+            ch->unequip(ch->getPrimaryHold());
             delete file;
           }
         }
