@@ -213,6 +213,7 @@ TaskEntry tasks[NUM_TASKS] = {
   {"repenting", "You are too busy repenting.\n\r", task_penance},
   {"brewing", "You are brewing and must concentrate!\n\r", task_brew},
   {"smoothing", "You are too busy smoothing.\n\r", task_dulling},
+  {"debriding", "You are too busy debriding.\n\r", task_debriding},
   {"skinning", "You are too busy skinning.\n\r", task_skinning},
   {"scribing", "You are scribing and must concentrate!\n\r", task_scribe},
   {"setting a trap", "You are too busy setting your trap.\n\r",

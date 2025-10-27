@@ -1382,6 +1382,7 @@ class TBeing : public TThing {
     void doAdjust(const char*);
     void doDull(const char*);
     void doRepair(const char*);
+    void doDebride(const char*);
     void doEat(const char*);
     int doDrink(const char*);
     void foodNDrink(sectorTypeT, int);
@@ -2041,6 +2042,9 @@ class TBeing : public TThing {
     // shaman helpers
     TObj* getWornShamanMask();
     TTool* getHeldTotem();
+
+    // tool helpers
+    TTool* getToolSlot(wearSlotT slot, toolTypeT toolType);
 
     // New utility methods
     bool isTMonster() const;

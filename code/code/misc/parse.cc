@@ -1293,6 +1293,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring& argument, TThing* vict,
           doRepair(newarg.c_str());
           addToLifeforce(1);
           break;
+        case CMD_DEBRIDE:
+          doDebride(newarg.c_str());
+          break;
         case CMD_SACRIFICE:
           doSacrifice(newarg.c_str());
           break;
@@ -2811,6 +2814,7 @@ void buildCommandArray(void) {
   commandArray[CMD_RECEIVE] = new commandInfo("receive", POSITION_CRAWLING, 0);
   commandArray[CMD_CLS] = new commandInfo("cls", POSITION_DEAD, 0);
   commandArray[CMD_REPAIR] = new commandInfo("repair", POSITION_CRAWLING, 0);
+  commandArray[CMD_DEBRIDE] = new commandInfo("debride", POSITION_CRAWLING, 0);
   commandArray[CMD_MEND] = new commandInfo("mend", POSITION_CRAWLING, 0);
   commandArray[CMD_SACRIFICE] =
     new commandInfo("sacrifice", POSITION_CRAWLING, 0);
