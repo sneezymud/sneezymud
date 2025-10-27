@@ -16,6 +16,7 @@
 #include "being.h"
 #include "database.h"
 #include "obj_opal.h"
+#include "obj_tool.h"
 #include "account.h"
 #include "person.h"
 #include "monster.h"
@@ -671,6 +672,18 @@ wearSlotT TBeing::getPrimaryLeg() const {
 
 wearSlotT TBeing::getSecondaryLeg() const {
   return (isRightHanded() ? WEAR_LEG_L : WEAR_LEG_R);
+}
+
+TTool* TBeing::getToolSlot(wearSlotT slot, toolTypeT toolType) {
+  TThing* thing = equipment[slot];
+  if (!thing)
+    return nullptr;
+
+  TTool* tool = dynamic_cast<TTool*>(thing);
+  if (!tool || tool->getToolType() != toolType)
+    return nullptr;
+
+  return tool;
 }
 
 int TBeing::maxWimpy() {
