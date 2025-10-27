@@ -1295,6 +1295,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring& argument, TThing* vict,
           break;
         case CMD_DEBRIDE:
           doDebride(newarg.c_str());
+          addToLifeforce(1);
           break;
         case CMD_SACRIFICE:
           doSacrifice(newarg.c_str());

@@ -674,7 +674,10 @@ wearSlotT TBeing::getSecondaryLeg() const {
   return (isRightHanded() ? WEAR_LEG_L : WEAR_LEG_R);
 }
 
-TTool* TBeing::getToolSlot(wearSlotT slot, toolTypeT toolType) {
+TTool* TBeing::getToolSlot(wearSlotT slot, toolTypeT toolType) const {
+  if (slot < MIN_WEAR || slot >= MAX_WEAR)
+    return nullptr;
+
   TThing* thing = equipment[slot];
   if (!thing)
     return nullptr;

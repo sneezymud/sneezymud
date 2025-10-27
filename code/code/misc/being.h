@@ -2044,7 +2044,7 @@ class TBeing : public TThing {
     TTool* getHeldTotem();
 
     // tool helpers
-    TTool* getToolSlot(wearSlotT slot, toolTypeT toolType);
+    TTool* getToolSlot(wearSlotT slot, toolTypeT toolType) const;
 
     // New utility methods
     bool isTMonster() const;

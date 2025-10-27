@@ -3,7 +3,6 @@
 #include "obj_tool.h"
 #include "materials.h"
 #include "obj.h"
-#include "obj_tool.h"
 
 void TBeing::doRepair(const char* arg) {
   char v_name[MAX_INPUT_LENGTH];
@@ -92,7 +91,8 @@ void TBeing::doDebride(const char* arg) {
   char v_name[MAX_INPUT_LENGTH];
   TThing* obj = NULL;
 
-  strcpy(v_name, arg);
+  strncpy(v_name, arg, MAX_INPUT_LENGTH - 1);
+  v_name[MAX_INPUT_LENGTH - 1] = '\0';
 
   if (!*v_name) {
     act("What is it you intend to debride?", FALSE, this, 0, 0, TO_CHAR);
