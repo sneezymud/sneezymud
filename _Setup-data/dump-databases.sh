@@ -7,7 +7,11 @@ for database in *; do
 	pushd $database
 	for i in *; do
 		table=`echo $i | sed s/.sql//`
-		docker exec sneezy-db mysqldump -h sneezy-db -u sneezy --password=password $database $table | sed 's/),(/),\n(/g' > $i
+		# Use mariadb-dump for consistency with modern MariaDB containers
+		# Remove timestamp comments to match nightly backup format
+		docker exec sneezy-db mariadb-dump -h sneezy-db -u sneezy --password=password $database $table | \
+			sed 's/),(/),\n(/g' | \
+			grep -v '^-- Dump completed on' > $i
 	done
 	popd
 done
