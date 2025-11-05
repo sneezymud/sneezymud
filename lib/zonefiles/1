@@ -399,12 +399,12 @@ O 0 1865 1 28860         Petrified in Undead Graveyard
 *G 1 24699 9999               shiny silver potion
 
 * * Low level pumpkin seedlings
-*M 0 29601 9999 13700	pumpkin plant monster (level 14)
+*M 0 29601 500 13700	pumpkin plant monster (level 14)
 *G 1 31367 9999		        faerie fire scroll
 *G 1 803 9999             	blue potion
 
 * * Mid level pumpkin squashlings
-*M 0 29611 9999 13700	pumpkin plant monster (level 25)
+*M 0 29611 500 13700	pumpkin plant monster (level 25)
 *G 1 14148 9999		ghostly wand
 *G 1 823 9999      vermillion potion
 
@@ -422,63 +422,63 @@ O 0 1865 1 28860         Petrified in Undead Graveyard
 * M 0 3907 1 239       	a fat helper elf (3 - boss insignia trader)
 *
 * * Low level holiday minions, empty handed
-* M 0 29603 9999 13700	a holiday minion (level 10)
+* M 0 29603 500 13700	a holiday minion (level 10)
 *
 * * Low level holiday minions, with a candy cane + green gift
-* M 0 29603  9999 13700	a holiday minion (level 10)
+* M 0 29603  500 13700	a holiday minion (level 10)
 * G 1 29625 9999		stolen gift green
 * G 1 3961 9999             	candy cane
 *
 * * * Low level holiday minions, with a candy cane and champagne + green gift
-* M 0 29603 9999 13700	a holiday minion (level 10)
+* M 0 29603 500 13700	a holiday minion (level 10)
 * G 1 3961 9999             	candy cane
 * G 1 3959 9999             	a cheery holiday flask (champagne)
 * G 1 29625 9999		stolen gift green
 *
 * * Mid level holiday minions, with green gift
-* M 0 29604 9999 13700	a holiday minion (level 25)
+* M 0 29604 500 13700	a holiday minion (level 25)
 * G 1 29625 9999		stolen gift green
 *
 * * Mid level holiday minions, with a candy cane + blue gift
-* M 0 29604 9999 13700	a holiday minion (level 25)
+* M 0 29604 500 13700	a holiday minion (level 25)
 * G 1 29624 9999		stolen gift blue
 * G 1 3961 9999             	candy cane
 *
 * * Mid level holiday minions, with a candy cane and champagne + blue gift
-* M 0 29604 9999 13700	a holiday minion (level 25)
+* M 0 29604 500 13700	a holiday minion (level 25)
 * G 1 29624 9999		stolen gift blue
 * G 1 3961 9999             	candy cane
 * G 1 3959 9999             	a cheery holiday flask (champagne)
 *
 * * Mid-high level holiday minions with candy cane + blue gift
-* M 0 29605 9999 13700	a holiday minion (level 40)
+* M 0 29605 500 13700	a holiday minion (level 40)
 * G 1 29624 9999		stolen gift blue
 * G 1 3961 9999             	candy cane
 *
 * * Mid-high level holiday minions, with blue/green gift
-* M 0 29605 9999 13700	a holiday minion (level 40)
+* M 0 29605 500 13700	a holiday minion (level 40)
 * G 1 29624 9999		stolen gift blue
 * G 1 29625 9999		stolen gift green
 *
 * * Mid-high level holiday minions, with a candy cane and potion of mystery + blue gift
-* M 0 29605 9999 13700	a holiday minion (level 40)
+* M 0 29605 500 13700	a holiday minion (level 40)
 * G 1 29624 9999		stolen gift blue
 * G 1 3961 9999             	candy cane
 * G 1 3958 9999             	cheery holiday flask (potion of mystery)
 *
 * * High level holiday minions with blue gift
-* M 0 29606 9999 13700	a holiday minion (level 60)
+* M 0 29606 500 13700	a holiday minion (level 60)
 * G 1 29624 9999		stolen gift blue
 * G 1 3958 9999             	cheery holiday flask (potion of mystery)
 *
 * * High level holiday minions, with a candy cane + red/blue gift
-* M 0 29606 10 13700	a holiday minion (level 60)
+* M 0 29606 500 13700	a holiday minion (level 60)
 * G 1 29624 9999		stolen gift blue
 * G 1 29623 9999		stolen gift red
 * G 1 3961 9999             	candy cane
 *
 * * High level holiday minions, with a candy cane and potion of mystery + red gift
-* M 0 29606 9999 13700	a holiday minion (level 60)
+* M 0 29606 500 13700	a holiday minion (level 60)
 * G 1 29623 9999		stolen gift red
 * G 1 3961 9999             	candy cane
 * G 1 3958 9999             	cheery holiday flask (potion of mystery)
@@ -511,7 +511,7 @@ O 0 1865 1 28860         Petrified in Undead Graveyard
 * G 1 29629 9999             	insignia abominable snowman
 *
 * * Reindeer - Santa Hat
-* M 0 3908 9999 13700     a reindeer
+* M 0 3908 500 13700     a reindeer
 * G 1 29634 9999              red santa hat
 *
 **********************************
