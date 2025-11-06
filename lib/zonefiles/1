@@ -404,9 +404,14 @@ O 0 1865 1 28860         Petrified in Undead Graveyard
 *G 1 803 9999             	blue potion
 
 * * Mid level pumpkin squashlings
-*M 0 29611 500 13700	pumpkin plant monster (level 25)
-*G 1 14148 9999		ghostly wand
+*M 0 29611 250 13700	pumpkin plant monster (level 25)
 *G 1 823 9999      vermillion potion
+*G 1 1647 9999		scroll (blast of fury)
+
+* * Mid level pumpkin squashlings
+*M 0 29611 250 13700	pumpkin plant monster (level 25)
+*G 1 823 9999      vermillion potion
+*G 1 1646 9999		scroll (acid blast)
 
 **********************************
 * END OF October holiday quest *
