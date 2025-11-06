@@ -414,3 +414,13 @@ int TBaseContainer::isSaddle() const {
   }
   return FALSE;
 }
+
+TObj* TBaseContainer::findObjectInContainer(int vnum) const {
+  for (TThing* thing : stuff) {
+    auto* obj = dynamic_cast<TObj*>(thing);
+    if (obj && obj->objVnum() == vnum) {
+      return obj;
+    }
+  }
+  return nullptr;
+}
