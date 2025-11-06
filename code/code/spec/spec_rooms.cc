@@ -1368,6 +1368,40 @@ int monkQuestProcFall(TBeing* ch, cmdTypeT cmd, const char*, TRoom* rp) {
   return TRUE;
 }
 
+int blazingroom (TBeing*, cmdTypeT cmd, const char*, TRoom* roomp) {
+  TBeing* tb;
+  int rc;
+  int flamDam = ::number(20, 50);
+
+  if (cmd != CMD_GENERIC_PULSE)
+    return FALSE;
+
+  if (::number(0, 100))
+    return FALSE;
+
+  // check for player in this room and poison if so
+  for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end(); ++it) {
+    if ((tb = dynamic_cast<TBeing*>(*it)) && tb->isPc()) {
+      tb->sendTo(COLOR_BASIC,
+        "<R>The blazing heat around you erupts into a raging inferno.<1>\n\r");
+      tb->sendTo(COLOR_BASIC,
+        "<r>The flames engulf you, singing your flesh!<1>\n\r");
+      if (tb->isAgile(50)) {
+      flamDam = flamDam / 2;
+      tb->sendTo("You manage to dodge the worst of the flames.\n\r");
+      }
+      rc = tb->reconcileDamage(tb, flamDam, DAMAGE_TRAP_FIRE);
+      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+        delete tb;
+        continue;
+      }
+
+    }
+  }
+
+  return TRUE;
+}
+
 int BankVault(TBeing*, cmdTypeT cmd, const char*, TRoom* roomp) {
   TRoom* rp;
   TBeing* tb;
@@ -1706,6 +1740,7 @@ extern int bankRoom(TBeing*, cmdTypeT, const char*, TRoom*);
 extern int healing_room(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp);
 extern int emergency_room(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp);
 extern int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp);
+extern int blazingroom(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp);
 
 int bogusRoomProc(TBeing*, cmdTypeT, const char*, TRoom* rp) {
   vlogf(LOG_PROC,
@@ -1745,6 +1780,7 @@ TRoomSpecs roomSpecials[NUM_ROOM_SPECIALS + 1] = {
   {FALSE, "sleep Tag Control", sleepTagControl},
   {FALSE, "sleep Tag Room", sleepTagRoom}, {FALSE, "slide", slide},  // 30
   {FALSE, "the Knot", theKnot}, {FALSE, "weird Circle", weirdCircle},
+  {TRUE, "blazingroom", blazingroom},
   {FALSE, "last proc", bogusRoomProc}};
 
 // the following procs are unused but preserved here for future interest

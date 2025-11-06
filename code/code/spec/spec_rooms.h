@@ -6,7 +6,7 @@ struct TRoomSpecs {
     int (*proc)(TBeing*, cmdTypeT, const char*, TRoom*);
 };
 
-const int NUM_ROOM_SPECIALS = 33;
+const int NUM_ROOM_SPECIALS = 34;
 
 extern TRoomSpecs roomSpecials[NUM_ROOM_SPECIALS + 1];
 

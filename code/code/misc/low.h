@@ -145,6 +145,14 @@ class Obj {
     static const int PHOENIX_FEATHER = 4847;
     static const int ITEM_DAYGATE = 5890;
     static const int ITEM_MOONGATE = 5891;
+    static const int HEART_APPLE = 5907;
+    static const int HEART_CHERRY = 5908;
+    static const int HEART_PEAR = 5909;
+    static const int HEART_HICKORY = 5910;
+    static const int HEART_OAK = 5911;
+    static const int HEART_CHESTNUT = 5912;
+    static const int PETRIFIED_PORTAL_IN = 5931;
+    static const int PETRIFIED_PORTAL_OUT = 5933;
     static const int MINELIFT_UP = 7085;
     static const int MINELIFT_DOWN = 7086;
     static const int TALISMAN = 9700;

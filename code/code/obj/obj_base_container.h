@@ -41,6 +41,7 @@ class TBaseContainer : public virtual TObj {
     virtual TThingKind getKind() const;
 
     int isSaddle() const;
+    TObj* findObjectInContainer(int vnum) const;
 
   protected:
     TBaseContainer();

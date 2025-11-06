@@ -64,6 +64,8 @@
 
 #include "handler.h"
 #include "extern.h"
+#include "limbs.h"
+#include "parse.h"
 #include "room.h"
 #include "low.h"
 #include "monster.h"
@@ -1737,6 +1739,9 @@ int newbieHelperWProc(TBeing* vict, cmdTypeT cmd, const char* Parg, TObj* o,
                                 "area for newbies]\n\r") %
                          o->getName());
           } else
+  return FALSE;
+
+
             return FALSE;  // He didn't call on us for help, maybe another
                            // player?
           return TRUE;     // If we got here, we had a topic so lets eat the
@@ -2784,7 +2789,42 @@ int telekinesisGlove(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o,
   }
   return FALSE;
 }
+int tinkerBagFuse(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
+  if (cmd != CMD_GENERIC_PULSE)
+    return FALSE;
+    
+  TOpenContainer* container = dynamic_cast<TOpenContainer*>(o);
+  if (!container || !container->isContainerFlag(CONT_TRAPPED))
+    return FALSE;
 
+  // Make sure it's specifically a bag
+  if (o->itemType() != ITEM_BAG)
+    return FALSE;
+
+  // Countdown using structure as timer
+  if (container->getStructPoints() > 0) {
+    container->addToStructPoints(-1);
+    return FALSE;
+  }
+
+  // Time's up! Trigger the trap
+  // Check if item is equipped or in inventory
+  ch = dynamic_cast<TBeing*>(container->equippedBy);
+  if (!ch) {
+    ch = dynamic_cast<TBeing*>(container->parent);
+    if (!ch)
+      return FALSE;
+  }
+
+  act("$p makes an ominous clicking sound!", TRUE, ch, container, 0, TO_CHAR);
+  act("$n's $p makes an ominous clicking sound!", TRUE, ch, container, 0, TO_ROOM);
+  
+  ch->triggerContTrap(container);
+
+  // Destroy the bag after explosion
+  container->makeScraps();
+  return DELETE_THIS;
+}
 int manaBurnRobe(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
 #if 0
   
@@ -6197,21 +6237,121 @@ int stickerBush(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
 }
 
 int rechargingWand(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
-  TWand* tw;
+  if (cmd != CMD_GENERIC_PULSE || ::number(0, 49 || !o))
+    return false;
 
-  if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+  ch = dynamic_cast<TBeing*>(o->equippedBy);
 
-  if (!(tw = dynamic_cast<TWand*>(o)))
-    return FALSE;
+  // The proc should only work when a mage mob or PC has the object equipped
+  if (!ch || !ch->hasClass(CLASS_MAGE))
+    return false;
 
-  if (::number(0, 99))
-    return FALSE;
+  int manaCost = ::number(10,50);
 
-  if (tw->getCurCharges() < tw->getMaxCharges())
-    tw->addToCurCharges(1);
+  // The PC/mob should have enough mana for the proc to work
+  if (ch->getMana() < manaCost)
+    return false;
 
-  return TRUE;
+  TWand* wand = dynamic_cast<TWand*>(o);
+
+  // The proc should only work on wands that aren't already at max charges
+  if (!wand || wand->getCurCharges() >= wand->getMaxCharges())
+    return false;
+
+  wand->addToCurCharges(1);
+  ch->addToMana(-manaCost);
+  act("You feel <P>energy<z> pulled from you and into $o.", false, ch, wand, nullptr, TO_CHAR);
+  return true;
+}
+
+int satyrShrine(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
+  // Validate basic preconditions
+  if (!ch || !o) {
+    return false;
+  }
+
+  if (cmd != CMD_SAY && cmd != CMD_SAY2) {
+    return false;
+  }
+
+  sstring buf = sstring(arg).word(0);
+  if (buf != "Thozgich") {
+    return false;
+  }
+
+  // Cast and validate shrine
+  TBaseContainer* shrine = dynamic_cast<TBaseContainer*>(o);
+  if (!shrine || !shrine->roomp) {
+    return false;
+  }
+
+  // Get destination room
+  TRoom* destinationRoom = real_roomp(6070);
+  if (!destinationRoom) {
+    return false;
+  }
+
+  // Collect required objects
+  static constexpr std::array<int, 6> required_obj_vnums = {
+    Obj::HEART_APPLE,
+    Obj::HEART_CHERRY,
+    Obj::HEART_PEAR,
+    Obj::HEART_HICKORY,
+    Obj::HEART_OAK,
+    Obj::HEART_CHESTNUT
+  };
+
+  std::vector<TObj*> found_objs;
+  for (int vnum : required_obj_vnums) {
+    TObj* obj = shrine->findObjectInContainer(vnum);
+    if (!obj) {
+      ch->sendTo(
+        "Nothing happens, but you feel the satyr shrine pulse in response to "
+        "the word of power. It must be missing something.\n\r");
+      act("$p seems to pulse briefly in response to $n's voice.", false, ch,
+        shrine, nullptr, TO_ROOM);
+      return false;
+    }
+    found_objs.push_back(obj);
+  }
+
+  // Consume the required objects
+  for (TObj* obj : found_objs) {
+    act("You feel $p crumble and be absorbed by the shrine!", false, ch, obj,
+      nullptr, TO_CHAR);
+    act("$p crumbles and is absorbed by the shrine!", false, ch, obj, nullptr,
+      TO_ROOM);
+    --(*obj);
+    delete obj;
+  }
+
+  // Create and place portals
+  TObj* portalIn = read_object(Obj::PETRIFIED_PORTAL_IN, VIRTUAL);
+  TObj* portalOut = read_object(Obj::PETRIFIED_PORTAL_OUT, VIRTUAL);
+
+  *shrine->roomp += *portalIn;
+  act("The shrine dissolves into mist!", false, portalIn, nullptr, nullptr,
+    TO_ROOM);
+
+  // Dump remaining contents
+  if (!shrine->stuff.empty()) {
+    act("The remaining objects in the shrine tumble to the $g.", false, shrine,
+      nullptr, nullptr, TO_ROOM);
+
+    // Copy the list before iterating to avoid modification during iteration
+    std::vector<TThing*> contents(shrine->stuff.begin(), shrine->stuff.end());
+    for (TThing* thing : contents) {
+      --(*thing);
+      *shrine->roomp += *thing;
+    }
+  }
+
+  // Place destination portal
+  *destinationRoom += *portalOut;
+  act("A shimmering portal appears!", false, portalOut, nullptr, nullptr,
+    TO_ROOM);
+
+  return DELETE_ITEM;
 }
 
 int skittishObject(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
@@ -7511,4 +7651,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
   {TRUE, "Shadow Weapon", shadowWeapon}, {TRUE, "Living Vines", livingVines},
   {TRUE, "Piety Regen", pietyRegen}, {TRUE, "DK Sword", dkSword},
   {TRUE, "Molten Weapon", moltenWeapon},
-  {TRUE, "Glacial Weapon", glacialWeapon}, {FALSE, "last proc", bogusObjProc}};
+  {TRUE, "Glacial Weapon", glacialWeapon}, //162
+  {FALSE, "satyr shrine", satyrShrine},
+  {FALSE, "last proc", bogusObjProc}};
