@@ -6353,8 +6353,16 @@ int satyrShrine(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   // Create and place portals
   TObj* portalIn = read_object(Obj::PETRIFIED_PORTAL_IN, VIRTUAL);
   TObj* portalOut = read_object(Obj::PETRIFIED_PORTAL_OUT, VIRTUAL);
+
   if (!portalIn || !portalOut) {
     vlogf(LOG_PROC, "satyrShrine: failed to load portal prototype(s)");
+    // Clean up whichever portal was created
+    if (portalIn) {
+      delete portalIn;
+    }
+    if (portalOut) {
+      delete portalOut;
+    }
     return false;
   }
 
