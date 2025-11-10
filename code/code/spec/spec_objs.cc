@@ -62,6 +62,7 @@
 
 #include <cmath>
 
+#include "ansi.h"
 #include "handler.h"
 #include "extern.h"
 #include "limbs.h"
@@ -2792,7 +2793,7 @@ int telekinesisGlove(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o,
 int tinkerBagFuse(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   if (cmd != CMD_GENERIC_PULSE)
     return FALSE;
-    
+
   TOpenContainer* container = dynamic_cast<TOpenContainer*>(o);
   if (!container || !container->isContainerFlag(CONT_TRAPPED))
     return FALSE;
@@ -2804,26 +2805,50 @@ int tinkerBagFuse(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   // Countdown using structure as timer
   if (container->getStructPoints() > 0) {
     container->addToStructPoints(-1);
+    container->dropGas(1, GAS_SMOKE);
+
+    if (ch) {
+      // Held by someone - show personal messages
+      act("$p hisses slightly, and releases a tiny bit of smoke.", TRUE, ch, container, 0, TO_CHAR, ANSI_GRAY);
+      act("$p hisses slightly, and releases a tiny bit of smoke.", TRUE, ch, container, 0, TO_ROOM, ANSI_GRAY);
+      act("$p wiggles, as if something within it is moving.", TRUE, ch, container, 0, TO_CHAR, ANSI_ORANGE);
+      act("$n's $p wiggles, as if something within it is moving.", TRUE, ch, container, 0, TO_ROOM, ANSI_ORANGE);
+    } else if (container->roomp) {
+      // On the ground - show room-wide messages
+      act("$p hisses slightly, and releases a tiny bit of smoke.", TRUE, nullptr, container, 0, TO_ROOM, ANSI_GRAY);
+      act("$p wiggles, as if something within it is moving.", TRUE, nullptr, container, 0, TO_ROOM, ANSI_ORANGE);
+    }
     return FALSE;
   }
 
   // Time's up! Trigger the trap
-  // Check if item is equipped or in inventory
+  // Try to find who's holding it
   ch = dynamic_cast<TBeing*>(container->equippedBy);
   if (!ch) {
     ch = dynamic_cast<TBeing*>(container->parent);
-    if (!ch)
-      return FALSE;
   }
 
-  act("$p makes an ominous clicking sound!", TRUE, ch, container, 0, TO_CHAR);
-  act("$n's $p makes an ominous clicking sound!", TRUE, ch, container, 0, TO_ROOM);
-  
-  ch->triggerContTrap(container);
+  // Trigger trap if held by someone
+  if (ch) {
+    act("$p makes an ominous clicking sound!", TRUE, ch, container, 0, TO_CHAR);
+    act("$n's $p makes an ominous clicking sound!", TRUE, ch, container, 0, TO_ROOM);
+    int rc = ch->triggerContTrap(container);
+    // If trap destroyed the container, don't try to makeScraps
+    if (IS_SET_DELETE(rc, DELETE_ITEM)) {
+      return DELETE_THIS;
+    }
+  } else if (container->roomp) {
+    // Bag is on the ground - just announce it
+    act("$p makes an ominous clicking sound!", TRUE, nullptr, container, 0, TO_ROOM);
+    act("$p explodes!", TRUE, nullptr, container, 0, TO_ROOM);
+  }
 
-  // Destroy the bag after explosion
-  container->makeScraps();
-  return DELETE_THIS;
+  // Destroy the bag after the timer if the trap didn't trigger
+  if (container) {
+    container->makeScraps();
+    return DELETE_THIS;
+  }
+  return FALSE;
 }
 int manaBurnRobe(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
 #if 0
@@ -6237,7 +6262,7 @@ int stickerBush(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
 }
 
 int rechargingWand(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
-  if (cmd != CMD_GENERIC_PULSE || ::number(0, 49 || !o))
+  if (cmd != CMD_GENERIC_PULSE || !o || ::number(0, 49))
     return false;
 
   ch = dynamic_cast<TBeing*>(o->equippedBy);
@@ -6328,6 +6353,10 @@ int satyrShrine(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   // Create and place portals
   TObj* portalIn = read_object(Obj::PETRIFIED_PORTAL_IN, VIRTUAL);
   TObj* portalOut = read_object(Obj::PETRIFIED_PORTAL_OUT, VIRTUAL);
+  if (!portalIn || !portalOut) {
+    vlogf(LOG_PROC, "satyrShrine: failed to load portal prototype(s)");
+    return false;
+  }
 
   *shrine->roomp += *portalIn;
   act("The shrine dissolves into mist!", false, portalIn, nullptr, nullptr,

@@ -1371,21 +1371,21 @@ int monkQuestProcFall(TBeing* ch, cmdTypeT cmd, const char*, TRoom* rp) {
 int blazingroom (TBeing*, cmdTypeT cmd, const char*, TRoom* roomp) {
   TBeing* tb;
   int rc;
-  int flamDam = ::number(20, 50);
-
+  
   if (cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
   if (::number(0, 100))
     return FALSE;
 
-  // check for player in this room and poison if so
+  // check for player in this room if so
   for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end(); ++it) {
     if ((tb = dynamic_cast<TBeing*>(*it)) && tb->isPc()) {
+      int flamDam = ::number(20, 50);
       tb->sendTo(COLOR_BASIC,
         "<R>The blazing heat around you erupts into a raging inferno.<1>\n\r");
       tb->sendTo(COLOR_BASIC,
-        "<r>The flames engulf you, singing your flesh!<1>\n\r");
+        "<r>The flames engulf you, singeing your flesh!<1>\n\r");
       if (tb->isAgile(50)) {
       flamDam = flamDam / 2;
       tb->sendTo("You manage to dodge the worst of the flames.\n\r");
