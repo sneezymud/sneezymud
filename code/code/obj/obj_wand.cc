@@ -231,6 +231,10 @@ int TWand::useMe(TBeing* ch, const char* argument) {
       if ((IS_SET_DELETE(rc, DELETE_VICT) && ch == tmp_char) ||
           IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_VICT;
+
+      // Trigger CMD_OBJ_USED for after-spell procs
+      if (spec && checkSpec(ch, CMD_OBJ_USED, "", NULL))
+        return TRUE;
     } else
       act("$p seems powerless.", FALSE, ch, this, 0, TO_CHAR);
   } else

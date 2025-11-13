@@ -1440,6 +1440,7 @@ class TBeing : public TThing {
     int getAgiReaction() const;
     int getSpeReaction() const;
     int getChaReaction() const;
+    int getKarReaction() const;
     int getConShock() const;
     float getConHpModifier() const;
     double getStatMod(statTypeT statType, int multiplier = 1) const;
