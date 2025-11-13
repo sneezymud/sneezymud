@@ -86,6 +86,7 @@
 #include "obj_potion.h"
 #include "obj_staff.h"
 #include "obj_wand.h"
+#include "obj_magic_item.h"
 #include "disc_mage_fire.h"
 #include "obj_note.h"
 #include "pathfinder.h"
@@ -6268,24 +6269,27 @@ int rechargingWand(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
   ch = dynamic_cast<TBeing*>(o->equippedBy);
 
   // The proc should only work when a mage mob or PC has the object equipped
-  if (!ch || !ch->hasClass(CLASS_MAGE))
+  if (!ch) {
     return false;
-
-  int manaCost = ::number(10,50);
+  }
+  
+  TWand* wand = dynamic_cast<TWand*>(o);
+  int level = wand->getMagicLevel();
+  int manaCost = ::number(10, (50 + level));
 
   // The PC/mob should have enough mana for the proc to work
-  if (ch->getMana() < manaCost)
+  if (ch->getMana() < manaCost){
+    act("$p begins tries to pull energy from you, but you are too weak.", false, ch, o, nullptr, TO_CHAR);
     return false;
-
-  TWand* wand = dynamic_cast<TWand*>(o);
-
+  }
+  
   // The proc should only work on wands that aren't already at max charges
   if (!wand || wand->getCurCharges() >= wand->getMaxCharges())
     return false;
 
   wand->addToCurCharges(1);
   ch->addToMana(-manaCost);
-  act("You feel <P>energy<z> pulled from you and into $o.", false, ch, wand, nullptr, TO_CHAR);
+  act("You feel <P>energy<z> pulled from you and into $p.", false, ch, wand, nullptr, TO_CHAR);
   return true;
 }
 
