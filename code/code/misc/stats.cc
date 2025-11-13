@@ -1028,6 +1028,10 @@ int TBeing::getSpeReaction() const {
   return plotStat(STAT_CURRENT, STAT_SPE, -4, 6, 0);
 }
 
+int TBeing::getKarReaction() const {
+  return plotStat(STAT_CURRENT, STAT_KAR, -4, 6, 0);
+}
+
 
 int TBeing::getConShock() const {
   return plotStat(STAT_CURRENT, STAT_CON, 15, 99, 65);
