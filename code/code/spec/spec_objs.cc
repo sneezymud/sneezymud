@@ -6299,11 +6299,12 @@ int rechargingWand(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
   
 
   if (cmd == CMD_OBJ_USED) {
-    if (!ch) {
+    if (!ch || !wand) {
       return false;
     }
 
     int strainChance = max(1,(wand->getMaxCharges() * 5) - ch->getKarReaction());
+    strainChance = min(strainChance, 99);
 
     if (wand->getCurCharges() > 0) {
       return false;
@@ -6318,7 +6319,9 @@ int rechargingWand(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
     wand->setMaxCharges(maxCharge - 1);
     act("$p is <p>stressed<1> by the strain of overuse!", false, ch, wand, nullptr, TO_CHAR);
     act("$p emits <y>sparks<1> and <k>smoke<1> as some magic leaves it.", false, ch, wand, nullptr, TO_CHAR);
-    act("$N's $p emits <y>sparks<1> and <k>smoke<1>!", false, ch, wand, nullptr, TO_ROOM);
+    act("$n's $p emits <y>sparks<1> and <k>smoke<1>!", false, ch, wand, nullptr, TO_ROOM);
+    wand->dropGas(::number(1, 5), GAS_SMOKE);
+
     if (wand->getMaxCharges() <= 0) {
       act("$p <k>crumbles<1> into dust!", false, ch, wand, nullptr, TO_CHAR);
       act("$p <k>crumbles<1> into dust!", false, ch, wand, nullptr, TO_ROOM);
