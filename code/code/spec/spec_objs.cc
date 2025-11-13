@@ -6263,35 +6263,77 @@ int stickerBush(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
 }
 
 int rechargingWand(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
-  if (cmd != CMD_GENERIC_PULSE || !o || ::number(0, 49))
+  if (!o){
     return false;
+  }
 
   ch = dynamic_cast<TBeing*>(o->equippedBy);
-
-  // The proc should only work when a mage mob or PC has the object equipped
-  if (!ch) {
-    return false;
-  }
-  
   TWand* wand = dynamic_cast<TWand*>(o);
-  int level = wand->getMagicLevel();
-  int manaCost = ::number(10, (50 + level));
-
-  // The PC/mob should have enough mana for the proc to work
-  if (ch->getMana() < manaCost){
-    act("$p begins tries to pull energy from you, but you are too weak.", false, ch, o, nullptr, TO_CHAR);
-    return false;
-  }
   
-  // The proc should only work on wands that aren't already at max charges
-  if (!wand || wand->getCurCharges() >= wand->getMaxCharges())
-    return false;
+  if (cmd == CMD_GENERIC_PULSE && !::number(0, 49)) {
 
-  wand->addToCurCharges(1);
-  ch->addToMana(-manaCost);
-  act("You feel <P>energy<z> pulled from you and into $p.", false, ch, wand, nullptr, TO_CHAR);
-  return true;
+    // The proc should only work when a mage mob or PC has the object equipped
+    if (!ch) {
+      return false;
+    }
+  
+    // The proc should only work on wands that aren't already at max charges
+    if (!wand || wand->getCurCharges() >= wand->getMaxCharges())
+      return false;
+    
+    int level = wand->getMagicLevel();
+    int manaCost = ::number(10, (50 + level));
+
+    // The PC/mob should have enough mana for the proc to work
+    if (ch->getMana() < manaCost){
+      act("$p begins to pull energy from you, but you are too weak.", false, ch, o, nullptr, TO_CHAR);
+      return false;
+    }
+  
+    wand->addToCurCharges(1);
+    ch->addToMana(-manaCost);
+    act("You feel <P>energy<z> pulled from you and into $p.", false, ch, wand, nullptr, TO_CHAR);
+    return true;
+  }
+
+  
+
+  if (cmd == CMD_OBJ_USED) {
+    if (!ch) {
+      return false;
+    }
+
+    int strainChance = max(1,(wand->getMaxCharges() * 5) - ch->getKarReaction());
+
+    if (wand->getCurCharges() > 0) {
+      return false;
+    }
+
+    if (!percentChance(strainChance)) {
+      act("$p <C>glows<1> just for a moment, then <k>dims.<z>", false, ch, wand, nullptr, TO_CHAR);
+      return false;
+    }
+
+    int maxCharge = wand->getMaxCharges();
+    wand->setMaxCharges(maxCharge - 1);
+    act("$p is <p>stressed<1> by the strain of overuse!", false, ch, wand, nullptr, TO_CHAR);
+    act("$p emits <y>sparks<1> and <k>smoke<1> as some magic leaves it.", false, ch, wand, nullptr, TO_CHAR);
+    act("$N's $p emits <y>sparks<1> and <k>smoke<1>!", false, ch, wand, nullptr, TO_ROOM);
+    if (wand->getMaxCharges() <= 0) {
+      act("$p <k>crumbles<1> into dust!", false, ch, wand, nullptr, TO_CHAR);
+      act("$p <k>crumbles<1> into dust!", false, ch, wand, nullptr, TO_ROOM);
+      if (!wand->makeScraps()){
+        delete wand;
+        wand = nullptr;
+      }
+      return TRUE;
+    }
+    return TRUE;
+  }
+
+  return false;
 }
+
 
 int satyrShrine(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   // Validate basic preconditions

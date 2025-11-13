@@ -5295,6 +5295,11 @@ void TWand::descMagicSpells(TBeing* ch) const {
         format("%s produces: Something from the %s discipline.\n\r") %
           sstring(capbuf).cap() % discNames[das].properName);
   }
+
+  ch->sendTo(COLOR_OBJECTS, format("%s has %d out of %d charge%s left.\n\r") %
+                              sstring(capbuf).cap() % getCurCharges() %
+                              getMaxCharges() %
+                              (getMaxCharges() == 1 ? "" : "s"));
 }
 
 void TStaff::descMagicSpells(TBeing* ch) const {
@@ -5314,6 +5319,11 @@ void TStaff::descMagicSpells(TBeing* ch) const {
         format("%s produces: Something from the %s discipline.\n\r") %
           sstring(capbuf).cap() % discNames[das].properName);
   }
+
+  ch->sendTo(COLOR_OBJECTS, format("%s has %d out of %d charge%s left.\n\r") %
+                              sstring(capbuf).cap() % getCurCharges() %
+                              getMaxCharges() %
+                              (getMaxCharges() == 1 ? "" : "s"));
 }
 
 void TScroll::descMagicSpells(TBeing* ch) const {
