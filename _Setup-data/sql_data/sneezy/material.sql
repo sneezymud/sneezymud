@@ -132,7 +132,7 @@ INSERT INTO `material` VALUES (0,'undefined'),
 (170,'athanor'),
 (171,'tin'),
 (172,'tungsten'),
-(173,'admintite'),
+(173,'starmetal'),
 (174,'terbium'),
 (175,'mithril'),
 (176,'steel');
