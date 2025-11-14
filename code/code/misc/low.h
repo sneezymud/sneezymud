@@ -153,6 +153,12 @@ class Obj {
     static const int HEART_CHESTNUT = 5912;
     static const int PETRIFIED_PORTAL_IN = 5931;
     static const int PETRIFIED_PORTAL_OUT = 5933;
+    static const int SOUL_APPLE = 5925;
+    static const int SOUL_CHERRY = 5926;
+    static const int SOUL_PEAR = 5927;
+    static const int SOUL_HICKORY = 5928;
+    static const int SOUL_OAK = 5929;
+    static const int SOUL_CHESTNUT = 5930;
     static const int MINELIFT_UP = 7085;
     static const int MINELIFT_DOWN = 7086;
     static const int TALISMAN = 9700;
