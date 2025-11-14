@@ -3840,6 +3840,8 @@ int TBeing::getMineTrapDam(doorTrapT trap_type) {
   damage *= getMineTrapLearn(trap_type);
   damage /= 100;
 
+  damage *= getFocusMod();
+
   switch (trap_type) {
     case DOOR_TRAP_TNT:
       damage += 3;
@@ -3900,6 +3902,8 @@ int TBeing::getGrenadeTrapDam(doorTrapT trap_type) {
   damage *= getGrenadeTrapLearn(trap_type);
   damage /= 100;
 
+  damage *= getFocusMod();
+
   switch (trap_type) {
     case DOOR_TRAP_TNT:
       damage += 3;
@@ -3956,6 +3960,8 @@ int TBeing::getArrowTrapDam(doorTrapT trap_type) {
 
   damage *= getArrowTrapLearn(trap_type);
   damage /= 100;
+
+  damage *= getFocusMod();
 
   switch (trap_type) {
     case DOOR_TRAP_TNT:

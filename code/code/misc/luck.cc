@@ -33,8 +33,12 @@ bool TBeing::isLucky(int mod) const {
   int diff = lev - mod;
   int chance = 5000 + (int)(7.5 * diff);
 
-  if (::number(0, 9999) < chance)
+  if (::number(0, 9999) < chance) {
+    if (this->affectedBySpell(SPELL_CURSE) && ::number(0, 9999) > chance) {
+      return false;
+    }
     return true;
+  }
   return false;
 }
 

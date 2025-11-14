@@ -2003,6 +2003,7 @@ class TBeing : public TThing {
     bool isRealUgly() const;
     bool isWary() const;
     void makeWary();
+    float getFocusMod() const;
     sstring displayExp() const;
     int hurtLimb(int, wearSlotT);
     void stunIfLimbsUseless();
