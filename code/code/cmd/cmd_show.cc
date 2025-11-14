@@ -27,6 +27,8 @@
 #include "database.h"
 #include "obj_commodity.h"
 #include "spec_mobs.h"
+#include "spec_objs.h"
+#include "spec_rooms.h"
 #include "person.h"
 
 extern int getObjLoadPotential(const int obj_num);
@@ -1201,6 +1203,15 @@ void TPerson::doShow(const sstring& argument) {
         sb += format("%i) [%s] %s\n\r") % i %
               (mob_specials[i].assignable ? "X" : " ") % mob_specials[i].name;
     }
+  } else if (is_abbrev(buf, "rproc")) {
+    sb += "Room Specials\n\r";
+    sb += "No.) Assignable  Name\n\r";
+    sb += "------------------------------------\n\r";
+    for (int i = 1; i <= NUM_ROOM_SPECIALS; i++) {
+      if (!is_abbrev(my_arg, "assignable") || roomSpecials[i].assignable)
+        sb += format("%i) [%s] %s\n\r") % i %
+              (roomSpecials[i].assignable ? "X" : " ") % roomSpecials[i].name;
+    }
   } else if (is_abbrev(buf, "boobies")) {
     sb += "     (.Y.) <==== BOOBIES!!!\n\r";
   } else {
@@ -1226,6 +1237,7 @@ void TPerson::doShow(const sstring& argument) {
     sb += "  show liquids\n\r";
     sb += "  show oproc <assignable>\n\r";
     sb += "  show mproc <assignable>\n\r";
+    sb += "  show rproc <assignable>\n\r";
     sb += "  show boobies\n\r";
   }
 
