@@ -23,6 +23,7 @@
 #include "database.h"
 #include "person.h"
 #include "weather.h"
+#include "spec_rooms.h"
 
 const char* room_fields[] = {"description",  //  1
   "exdscr",                                  //  2
@@ -120,6 +121,7 @@ static void update_room_menu(const TBeing* ch) {
     "    5) Exits                      6) Extra Description\n\r"
     "    7) Maximum Capacity           8) Room Height\n\r"
     "    9) Delete an exit            10) Delete all extra descs\n\r"
+    "   11) Room Spec\n\r"
     "\n\r";
   const char* edit_menu_advanced =
     "%s 1)%s %s\n\r"
@@ -131,7 +133,8 @@ static void update_room_menu(const TBeing* ch) {
     "%s 7)%s %sMax Capacity%s: %d\n\r"
     "%s 8)%s %sRoom Height%s: %d\n\r"
     "%s 9)%s %sDelete an Exit%s\n\r"
-    "%s10)%s %sDelete All Extra Descriptions%s\n\r";
+    "%s10)%s %sDelete All Extra Descriptions%s\n\r"
+    "%s11)%s %sRoom Spec%s: %s\n\r";
 
   ch->sendTo(VT_HOMECLR);
   ch->sendTo(format(VT_CURSPOS) % 1 % 1);
@@ -174,7 +177,9 @@ static void update_room_menu(const TBeing* ch) {
       ch->norm() % ch->roomp->getMoblim() % ch->cyan() % ch->norm() %
       ch->purple() % ch->norm() % ch->roomp->getRoomHeight() % ch->cyan() %
       ch->norm() % ch->purple() % ch->norm() % ch->cyan() % ch->norm() %
-      ch->purple() % ch->norm());
+      ch->purple() % ch->norm() % ch->cyan() % ch->norm() % ch->purple() %
+      ch->norm() %
+      (ch->roomp->spec ? roomSpecials[ch->roomp->spec].name : "none"));
   } else
     ch->sendTo(edit_menu_basic);
 
@@ -3543,6 +3548,54 @@ int mapDirToFile(dirTypeT dir) {
   return -1;
 }
 
+static void change_room_spec(TRoom* rp, TBeing* ch, const char* arg,
+  editorEnterTypeT type) {
+  char buf[256];
+  int row, j, i, new_spec;
+
+  if (type != ENTER_CHECK) {
+    if (!*arg || (*arg == '\n')) {
+      ch->specials.edit = MAIN_MENU;
+      update_room_menu(ch);
+      return;
+    }
+    new_spec = convertTo<int>(arg);
+    if (new_spec < 0 || new_spec > NUM_ROOM_SPECIALS) {
+      ch->sendTo(
+        format("Please enter a number from 0 to %d.\n\r") % NUM_ROOM_SPECIALS);
+      return;
+    } else if (!roomSpecials[new_spec].assignable &&
+               !ch->hasWizPower(POWER_REDIT_ENABLED)) {
+      ch->sendTo(
+        "That spec_proc has been deemed unassignable by builders sorry.\n\r");
+      return;
+    } else {
+      rp->spec = new_spec;
+      ch->specials.edit = MAIN_MENU;
+      update_room_menu(ch);
+      return;
+    }
+  }
+  ch->sendTo(VT_HOMECLR);
+  ch->sendTo(
+    format("Current room spec: %s\n\r\n\r") %
+    ((rp->spec) ? roomSpecials[rp->spec].name : "none"));
+  row = 0;
+  for (i = 1, j = 1; i <= NUM_ROOM_SPECIALS; i++) {
+    if (!roomSpecials[i].assignable && !ch->hasWizPower(POWER_REDIT_ENABLED))
+      continue;
+    sprintf(buf, VT_CURSPOS, row + 5, ((((j - 1) % 3) * 25) + 5));
+    if (!(j % 3))
+      row++;
+    ch->sendTo(buf);
+    ch->sendTo(format("%2d) %s") % i % roomSpecials[i].name);
+    j++;
+  }
+  ch->sendTo(format(VT_CURSPOS) % 22 % 1);
+
+  ch->sendTo("Select a new special procedure (0 = no procedure).\n\r--> ");
+}
+
 void room_edit(TBeing* ch, const char* arg) {
   TRoom* rp = ch->roomp;
 
@@ -3601,6 +3654,10 @@ void room_edit(TBeing* ch, const char* arg) {
         ch->specials.edit = MAIN_MENU;
         DeleteExtraDesc(rp, ch);
         return;
+      case 11:
+        ch->specials.edit = CHANGE_ROOM_SPEC;
+        change_room_spec(rp, ch, "", ENTER_CHECK);
+        return;
       default:
         update_room_menu(ch);
         return;
@@ -3636,6 +3693,9 @@ void room_edit(TBeing* ch, const char* arg) {
     case CHANGE_ROOM_EXTRA:
     case CHANGE_ROOM_ROOM_EXDESC:
       change_room_extra(rp, ch, arg, ENTER_REENTRANT);
+      return;
+    case CHANGE_ROOM_SPEC:
+      change_room_spec(rp, ch, arg, ENTER_REENTRANT);
       return;
     case CHANGE_ROOM_TYPE_NORTH:
     case CHANGE_ROOM_TYPE_EAST:
