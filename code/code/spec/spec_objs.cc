@@ -6322,12 +6322,12 @@ int satyrShrine(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
 
   // Collect required objects
   static constexpr std::array<int, 6> required_obj_vnums = {
-    Obj::HEART_APPLE,
-    Obj::HEART_CHERRY,
-    Obj::HEART_PEAR,
-    Obj::HEART_HICKORY,
-    Obj::HEART_OAK,
-    Obj::HEART_CHESTNUT
+    Obj::SOUL_APPLE,
+    Obj::SOUL_CHERRY,
+    Obj::SOUL_PEAR,
+    Obj::SOUL_HICKORY,
+    Obj::SOUL_OAK,
+    Obj::SOUL_CHESTNUT
   };
 
   std::vector<TObj*> found_objs;
@@ -6371,7 +6371,7 @@ int satyrShrine(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   }
 
   *shrine->roomp += *portalIn;
-  act("The shrine dissolves into mist!", false, portalIn, nullptr, nullptr,
+  act("<k>The shrine dissolves into<1> <c>mist!<z>", false, portalIn, nullptr, nullptr,
     TO_ROOM);
 
   // Dump remaining contents
