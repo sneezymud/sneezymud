@@ -9,6 +9,7 @@
 #include "being.h"
 #include "combat.h"
 #include "obj_base_clothing.h"
+#include "obj_general_weapon.h"
 
 static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
   int percent;
@@ -16,10 +17,6 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
   int rc;
   int bKnown;
   int grapple_move = 25 + ::number(1, 10);
-
-  TThing* obj = NULL;
-  TBaseClothing* tbc = NULL;
-  int suitDam = 0;
 
   if (c->checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return FALSE;
@@ -29,6 +26,7 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
       "You are berserking! You can't focus enough to grapple anyone!\n\r");
     return FALSE;
   }
+
   if (victim == c) {
     c->sendTo("Aren't we funny today?\n\r");
     return FALSE;
@@ -45,8 +43,8 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
     c->sendTo("Grappling while mounted is impossible!\n\r");
     return FALSE;
   }
-  if (victim->isFlying()) {
-    c->sendTo("You can't grapple someone that is flying.\n\r");
+  if (victim->isFlying() && !c->isFlying()) {
+    c->sendTo("You can't grapple someone that is flying, unless you are also flying.\n\r");
     return FALSE;
   }
 
@@ -59,7 +57,7 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
   percent = 0;
 
   percent += c->getDexReaction() * 5;
-  percent -= victim->getAgiReaction() * 10;
+  percent -= victim->getAgiReaction() * 5;
 
   if (victim->riding) {
     // difficult
@@ -71,7 +69,7 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
 
   if ((c->bSuccess(bKnown + percent, skill) &&
         // insure they can hit this critter
-        (i = c->specialAttack(victim, skill)) && i != GUARANTEED_FAILURE &&
+        (i = c->specialAttack(victim, skill, 0, STAT_STR, STAT_DEX, STAT_BRA, STAT_AGI, false)) && i != GUARANTEED_FAILURE &&
         // make sure they have reasonable training
         (percent < bKnown)) ||
       !victim->awake()) {
@@ -90,6 +88,7 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
         return rc;
 
       rc = c->trySpringleap(victim);
+      
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
         return rc;
     } else if (victim->canFocusedAvoidance(bKnown / 2)) {
@@ -111,22 +110,13 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
         victim, TO_NOTVICT);
       act("$n wrestles you to the $g.", TRUE, c, 0, victim, TO_VICT);
 
-      // if eqipment worn on body is spiked, add a little extra 10-20-00, -dash
-      if (((obj = c->equipment[WEAR_BODY]) &&
-            (tbc = dynamic_cast<TBaseClothing*>(obj)) &&
-            (tbc->isSpiked() || tbc->isObjStat(ITEM_SPIKED)))) {
-        suitDam = (int)((tbc->getWeight() / 10) + 1);
-
-        act("The spikes on your $o sink into $N.", FALSE, c, tbc, victim,
-          TO_CHAR);
-        act("The spikes on $n's $o sink into $N.", FALSE, c, tbc, victim,
-          TO_NOTVICT);
-        act("The spikes on $n's $o sink into you.", FALSE, c, tbc, victim,
-          TO_VICT);
-
-        if (c->reconcileDamage(victim, suitDam, TYPE_STAB) == -1)
-          return DELETE_VICT;
-      }
+      int dam = c->getSkillDam(victim, skill, c->getSkillLevel(skill),
+        c->getAdvLearning(skill));
+      // Use impactSpec to handle all impact effects (spikes, thorns, hardness)
+      wearSlotT targetLimb = victim->getPartHit(c, TRUE);
+      dam += impactSpec(c, victim, WEAR_BODY, targetLimb);
+      if (c->reconcileDamage(victim, dam, SKILL_GRAPPLE) == -1)
+        return DELETE_VICT;
 
       rc = c->crashLanding(POSITION_SITTING);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -136,7 +126,8 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
         return rc;
 
-      rc = victim->crashLanding(POSITION_SITTING);
+      positionTypeT pinned = victim->isAgile(0) ? POSITION_SITTING : POSITION_RESTING;
+      rc = victim->crashLanding(pinned);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_VICT;
 

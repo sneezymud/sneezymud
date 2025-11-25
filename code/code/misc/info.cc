@@ -4742,6 +4742,9 @@ void TBeing::describeOtherFeatures(const TGenWeapon* obj, int learn) const {
   }
 
   if (hasClass(CLASS_THIEF) || isImmortal()) {
+    if (obj->isObjStat(ITEM_SPIKED))
+      sendTo(COLOR_OBJECTS,
+        format("%s seems to have spikes on it.\n\r") % sstring(capbuf).cap());
     if (obj->canCudgel())
       sendTo(COLOR_OBJECTS,
         format("%s seems small enough to be used for cudgeling.\n\r") %

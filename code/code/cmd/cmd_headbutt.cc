@@ -13,6 +13,7 @@
 #include "combat.h"
 #include "enum.h"
 #include "skill_handler.h"
+#include "obj_general_weapon.h"
 
 bool TBeing::canHeadbutt(TBeing* victim, const silentTypeT silent) const {
   // Define static vector of tests that need to pass before headbutt can
@@ -80,7 +81,6 @@ int TBeing::headbuttMiss(TBeing* v) {
 
 int TBeing::headbuttHit(TBeing* victim) {
   int rc;
-  int h_dam = 1, spikeddam = 0;
   int hgt;
   spellNumT dam_type = SKILL_HEADBUTT;
   wearSlotT pos;
@@ -103,110 +103,58 @@ int TBeing::headbuttHit(TBeing* victim) {
       return DELETE_VICT;
 
     return TRUE;
-  } else if (hgt < victim->getPartMinHeight(ITEM_WEAR_LEGS)) {
-    pos = (::number(0, 1) ? WEAR_FOOT_L : WEAR_FOOT_R);
-    dam_type = DAMAGE_HEADBUTT_FOOT;
-    act("$n headbutts $N, slamming $s head into $N's foot.", FALSE, this, 0,
-      victim, TO_NOTVICT);
-    act("You headbutt $N, slamming your head into $S foot.", FALSE, this, 0,
-      victim, TO_CHAR);
-    act("$n headbutts you, slamming $s head into your foot.", FALSE, this, 0,
-      victim, TO_VICT);
-  } else if (hgt < victim->getPartMinHeight(ITEM_WEAR_WAIST)) {
-    pos = (::number(0, 1) ? WEAR_LEG_L : WEAR_LEG_R);
-    dam_type = DAMAGE_HEADBUTT_LEG;
-    act("$n headbutts $N, slamming $s head into $N's leg.", FALSE, this, 0,
-      victim, TO_NOTVICT);
-    act("You headbutt $N, slamming your head into $S leg.", FALSE, this, 0,
-      victim, TO_CHAR);
-    act("$n headbutts you, slamming $s head into your leg.", FALSE, this, 0,
-      victim, TO_VICT);
-  } else if (hgt < victim->getPartMinHeight(ITEM_WEAR_BODY)) {
-    pos = WEAR_WAIST;
-    dam_type = DAMAGE_HEADBUTT_CROTCH;
-    act("$n headbutts $N, slamming $s head into $N's crotch.", FALSE, this, 0,
-      victim, TO_NOTVICT);
-    act("You headbutt $N, slamming your head into $S crotch.", FALSE, this, 0,
-      victim, TO_CHAR);
-    act("$n headbutts you, slamming $s head into your crotch.", FALSE, this, 0,
-      victim, TO_VICT);
-    victim->addToWait(combatRound(0.25));
-  } else if (hgt < victim->getPartMinHeight(ITEM_WEAR_ARMS)) {
-    pos = WEAR_BODY;
-    dam_type = DAMAGE_HEADBUTT_BODY;
-    act("$n headbutts $N, slamming $s head into $N's solar plexus.", FALSE,
-      this, 0, victim, TO_NOTVICT);
-    act("You headbutt $N, slamming your head into $S solar plexus.", FALSE,
-      this, 0, victim, TO_CHAR);
-    act("$n headbutts you, slamming $s head into your solar plexus.", FALSE,
-      this, 0, victim, TO_VICT);
-    victim->addToWait(combatRound(0.25));
-  } else if (hgt < victim->getPartMinHeight(ITEM_WEAR_NECK)) {
-    pos = WEAR_NECK;
-    dam_type = DAMAGE_HEADBUTT_THROAT;
-    act("$n headbutts $N, slamming $s head into $N's throat.", FALSE, this, 0,
-      victim, TO_NOTVICT);
-    act("You headbutt $N, slamming your head into $S throat.", FALSE, this, 0,
-      victim, TO_CHAR);
-    act("$n headbutts you, slamming $s head into your throat.", FALSE, this, 0,
-      victim, TO_VICT);
-    victim->addToWait(combatRound(0.25));
-  } else if (hgt < victim->getPartMinHeight(ITEM_WEAR_HEAD)) {
-    pos = WEAR_HEAD;
-    dam_type = DAMAGE_HEADBUTT_JAW;
-    act("$n headbutts $N, slamming $s head into $N's jaw.", FALSE, this, 0,
-      victim, TO_NOTVICT);
-    act("You headbutt $N, slamming your head into $S jaw.", FALSE, this, 0,
-      victim, TO_CHAR);
-    act("$n headbutts you, slamming $s head into your jaw.", FALSE, this, 0,
-      victim, TO_VICT);
-    victim->addToWait(combatRound(0.25));
   } else {
-    pos = WEAR_HEAD;
-    dam_type = DAMAGE_HEADBUTT_SKULL;
-    act("$n headbutts $N, slamming $s head into $N's skull.", FALSE, this, 0,
-      victim, TO_NOTVICT);
-    act("You headbutt $N, slamming your head into $S skull.", FALSE, this, 0,
-      victim, TO_CHAR);
-    act("$n headbutts you, slamming $s head into your skull.", FALSE, this, 0,
-      victim, TO_VICT);
-    victim->addToWait(combatRound(0.25));
-  }
+    static constexpr const char* headbutt_msg = "%s headbutt %s, slamming %s head into %s %s.";
 
-  TObj* item = dynamic_cast<TObj*>(victim->equipment[pos]);
-  if (!item) {
-    rc = damageLimb(victim, pos, 0, &h_dam);
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
-  } else if (dentItem(victim, item, 1, WEAR_HEAD) == DELETE_ITEM) {
-    delete item;
-    item = NULL;
-  }
+    const char* target_area;
+    bool causes_wait = false;
 
-  item = dynamic_cast<TObj*>(equipment[WEAR_HEAD]);
-  if (!item) {
-    rc = damageLimb(this, WEAR_HEAD, 0, &h_dam);
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_THIS;
-  } else {
-    if (item->isSpiked() || item->isObjStat(ITEM_SPIKED))
-      spikeddam = (int)(dam * 0.15);
-    if (dentItem(victim, item, 1, WEAR_HEAD) == DELETE_ITEM) {
-      delete item;
-      item = NULL;
+    if (hgt < victim->getPartMinHeight(ITEM_WEAR_LEGS)) {
+      pos = (::number(0, 1) ? WEAR_FOOT_L : WEAR_FOOT_R);
+      dam_type = DAMAGE_HEADBUTT_FOOT;
+      target_area = "foot";
+    } else if (hgt < victim->getPartMinHeight(ITEM_WEAR_WAIST)) {
+      pos = (::number(0, 1) ? WEAR_LEG_L : WEAR_LEG_R);
+      dam_type = DAMAGE_HEADBUTT_LEG;
+      target_area = "leg";
+    } else if (hgt < victim->getPartMinHeight(ITEM_WEAR_BODY)) {
+      pos = WEAR_WAIST;
+      dam_type = DAMAGE_HEADBUTT_CROTCH;
+      target_area = "crotch";
+      causes_wait = true;
+    } else if (hgt < victim->getPartMinHeight(ITEM_WEAR_ARMS)) {
+      pos = WEAR_BODY;
+      dam_type = DAMAGE_HEADBUTT_BODY;
+      target_area = "solar plexus";
+      causes_wait = true;
+    } else if (hgt < victim->getPartMinHeight(ITEM_WEAR_NECK)) {
+      pos = WEAR_NECK;
+      dam_type = DAMAGE_HEADBUTT_THROAT;
+      target_area = "throat";
+      causes_wait = true;
+    } else if (hgt < victim->getPartMinHeight(ITEM_WEAR_HEAD)) {
+      pos = WEAR_HEAD;
+      dam_type = DAMAGE_HEADBUTT_JAW;
+      target_area = "jaw";
+      causes_wait = true;
+    } else {
+      pos = WEAR_HEAD;
+      dam_type = DAMAGE_HEADBUTT_SKULL;
+      target_area = "skull";
+      causes_wait = true;
+    }
+
+    act(format(headbutt_msg) % "$n" % "$N" % "$s" % "$N's" % target_area, FALSE, this, 0, victim, TO_NOTVICT);
+    act(format(headbutt_msg) % "You" % "$N" % "your" % "$S" % target_area, FALSE, this, 0, victim, TO_CHAR);
+    act(format(headbutt_msg) % "$n" % "you" % "$s" % "your" % target_area, FALSE, this, 0, victim, TO_VICT);
+
+    if (causes_wait) {
+      victim->addToWait(combatRound(0.25));
     }
   }
 
-  if (spikeddam) {
-    act("The spikes on your $o sink into $N.", FALSE, this, item, victim,
-      TO_CHAR);
-    act("The spikes on $n's $o sink into $N.", FALSE, this, item, victim,
-      TO_NOTVICT);
-    act("The spikes on $n's $o sink into you.", FALSE, this, item, victim,
-      TO_VICT);
-    if ((rc = reconcileDamage(victim, spikeddam, TYPE_STAB)) == -1)
-      return DELETE_VICT;
-  }
+  // Use impactSpec to handle all impact effects (spikes, thorns, hardness)
+  dam += impactSpec(this, victim, WEAR_HEAD, pos);
   if ((rc = reconcileDamage(victim, dam, dam_type)) == -1)
     return DELETE_VICT;
 

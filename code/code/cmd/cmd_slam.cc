@@ -2,6 +2,7 @@
 #include "being.h"
 #include "combat.h"
 #include "obj_base_weapon.h"
+#include "obj_general_weapon.h"
 
 int TBeing::doSlam(const char* argument, TBeing* vict) {
   int rc;
@@ -170,9 +171,15 @@ int TBeing::slamSuccess(TBeing* victim) {
     damageType = DAMAGE_IMPALE;
   else if (weapon->isSlashWeapon())
     damageType = DAMAGE_HACKED;
+
+  // Apply impact effects from weapon contact
+  wearSlotT targetLimb = victim->getPartHit(this, TRUE);
+  dam += impactSpec(this, victim, getPrimaryHold(), targetLimb);
+
   // Reconcile damage
   if (reconcileDamage(victim, dam, damageType) == -1)
     return DELETE_VICT;
+
 
   return true;
 }
