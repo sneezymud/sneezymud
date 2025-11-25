@@ -17,3 +17,7 @@ Tools necessary:
      In-room:   forge
      In-room:   anvil
 
+Smiths are also able to DEBRIDE rust from metal objects. Doing so requires the
+blacksmith to hold a file in their primary hand. Removing rust from an item
+will require a decent amount of time to complete, the amount is proportional
+to how large the object is.
