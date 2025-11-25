@@ -4,9 +4,13 @@
 #include "shop.h"
 #include "shopowned.h"
 #include "liquids.h"
+#include "spells.h"
 #include "toggle.h"
 #include "extern.h"
 #include "being.h"
+#include "materials.h"
+#include "obj.h"
+
 
 TGenWeapon::TGenWeapon() : TBaseWeapon() {
   for (int i = 0; i < 3; ++i) {
@@ -159,4 +163,289 @@ bool TGenWeapon::canBackstab() const {
 
 bool TGenWeapon::canStab() const {
   return isPierceWeapon() && getVolume() <= 2000;
+}
+
+
+int thornsHit(TBeing* victim, TBeing* ch, wearSlotT chLimb, wearSlotT vicLimb) {
+  // Check for valid parameters
+  if (!victim || !ch || vicLimb == WEAR_NOWHERE || !ch->affectedBySpell(SPELL_THORNFLESH)) {
+    return 0;
+  }
+
+  if (victim->isLimbFlags(vicLimb, PART_MISSING)) {
+    return 0;
+  }
+
+  int dam = ::number(1, 10);
+
+  if (victim->isUndead() || victim->isImmune(IMMUNE_BLEED, vicLimb)) {
+    // No bleeding for undead or immune creatures
+    return dam;
+  }
+  // Check for victim's limb hardness against attacker's limb hardness
+  int vicLimbHardness = getHardnessSpec(victim, vicLimb);
+  int chLimbHardness = getHardnessSpec(ch, chLimb);
+
+  // Calculate chance based on hardness difference
+  int hardnessDiff = chLimbHardness - vicLimbHardness;
+  
+  // Only proceed if attacker's hardness is higher AND random check passes
+  if (hardnessDiff <= 0) {
+    return dam;
+  }
+  
+  // Use hardness difference as percentage chance
+  if (!::percentChance(hardnessDiff)) {
+    return dam;
+  }
+  
+  if (victim->isLimbFlags(vicLimb, PART_BLEEDING)) {
+    static constexpr const char* bleeding_msg =
+      "Blood spatters as the thorns on %s %s sink into %s bleeding %s!";
+
+    sstring chBodyPart = ch->describeBodySlot(chLimb);
+    sstring vicBodyPart = victim->describeBodySlot(vicLimb);
+    act(format(bleeding_msg) % "your" % chBodyPart % "$N's" % vicBodyPart,
+        FALSE, ch, nullptr, victim, TO_CHAR);
+    act(format(bleeding_msg) % "$n's" % chBodyPart % "$N's" % vicBodyPart,
+        FALSE, ch, nullptr, victim, TO_NOTVICT);
+    act(format(bleeding_msg) % "$n's" % chBodyPart % "your" % vicBodyPart,
+        FALSE, ch, nullptr, victim, TO_VICT);
+
+    // Increment the bleed stack
+    victim->incrementBleedStack(vicLimb, 250);
+  } else {
+    static constexpr const char* wound_msg =
+      "The thorns on %s %s tear open a <R>bloody wound<1> in %s %s!";
+
+    sstring chBodyPart = ch->describeBodySlot(chLimb);
+    sstring vicBodyPart = victim->describeBodySlot(vicLimb);
+    act(format(wound_msg) % "your" % chBodyPart % "$N's" % vicBodyPart,
+        FALSE, ch, nullptr, victim, TO_CHAR);
+    act(format(wound_msg) % "$n's" % chBodyPart % "$N's" % vicBodyPart,
+        FALSE, ch, nullptr, victim, TO_NOTVICT);
+    act(format(wound_msg) % "$n's" % chBodyPart % "your" % vicBodyPart,
+        FALSE, ch, nullptr, victim, TO_VICT);
+
+    victim->rawBleed(vicLimb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+  }
+
+  return dam;
+}
+
+int hardHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT vicLimb, wearSlotT chLimb) {
+  if (!victim || !ch || vicLimb == WEAR_NOWHERE) {
+    return 0;
+  }
+  TObj *weap = dynamic_cast<TObj*>(ch->equipment[chLimb]);
+  TObj *vicEq = dynamic_cast<TObj*>(victim->equipment[vicLimb]);
+  int vicHard = vicEq ? material_nums[vicEq->getMaterial()].hardness : 0;
+  int weapHard = weap ? material_nums[weap->getMaterial()].hardness : 0;
+  if (!weap) {
+    weapHard = getHardnessSpec(ch, chLimb);
+  }
+  
+  if (!vicEq) {
+    vicHard = getHardnessSpec(victim, vicLimb);
+  }
+  
+  int dam = ::number(1, 10);
+
+  int hardChance = (weapHard - vicHard);
+  if ((percentChance(hardChance)) && !victim->isTough()) {
+      int eqDamage = (weapHard-vicHard)/10;
+      // Case 1: Weapon hits victim's equipment
+    if (weap && vicEq) {
+      static constexpr const char* weap_vs_eq_msg =
+        "%s $p strikes %s $P with a solid impact!";
+      dam += weap->getWeight()/4;
+
+      act(format(weap_vs_eq_msg) % "Your" % "$N's", FALSE, ch, weap, vicEq, TO_CHAR);
+      act(format(weap_vs_eq_msg) % "$n's" % "your", FALSE, ch, weap, vicEq, TO_VICT);
+      act(format(weap_vs_eq_msg) % "$n's" % "$N's", FALSE, ch, weap, vicEq, TO_NOTVICT);
+      vicEq->damageItem(eqDamage);
+
+      if (vicEq->getStructPoints() <= 0 && !vicEq->makeScraps()) {
+         delete vicEq;
+      }
+
+    }
+    // Case 2: Weapon hits victim's body part
+    else if (weap && !vicEq) {
+      static constexpr const char* weap_vs_body_msg =
+        "%s $p strikes %s %s with a solid impact!";
+      dam += weap->getWeight()/4;
+
+      sstring bodyPart = victim->describeBodySlot(vicLimb);
+      act(format(weap_vs_body_msg) % "Your" % "$N's" % bodyPart, FALSE, ch, weap, victim, TO_CHAR);
+      act(format(weap_vs_body_msg) % "$n's" % "your" % bodyPart, FALSE, ch, weap, victim, TO_VICT);
+      act(format(weap_vs_body_msg) % "$n's" % "$N's" % bodyPart, FALSE, ch, weap, victim, TO_NOTVICT);
+      if (victim->isLimbFlags(vicLimb, PART_BRUISED)) {
+        victim->incrementBruiseStack(vicLimb, 100);
+      } else {
+        victim->rawBruise(vicLimb, 100, SILENT_NO, CHECK_IMMUNITY_NO);
+      }
+    }
+    // Case 3: Body part hits victim's equipment
+    else if (!weap && vicEq) {
+      static constexpr const char* body_vs_eq_msg =
+        "%s %s strikes %s $p with a solid impact!";
+
+      sstring bodyPart = ch->describeBodySlot(chLimb);
+      act(format(body_vs_eq_msg) % "Your" % bodyPart % "$N's", FALSE, ch, vicEq, victim, TO_CHAR);
+      act(format(body_vs_eq_msg) % "$n's" % bodyPart % "your", FALSE, ch, vicEq, victim, TO_VICT);
+      act(format(body_vs_eq_msg) % "$n's" % bodyPart % "$N's", FALSE, ch, vicEq, victim, TO_NOTVICT);
+      vicEq->damageItem(eqDamage);
+      if (vicEq->getStructPoints() <= 0 && !vicEq->makeScraps()) {
+         delete vicEq;
+      }
+    }
+    // Case 4: Body part hits victim's body part
+    else {
+      static constexpr const char* body_vs_body_msg =
+        "%s %s strikes %s %s with a solid impact!";
+
+      sstring attackerPart = ch->describeBodySlot(chLimb);
+      sstring victimPart = victim->describeBodySlot(vicLimb);
+      act(format(body_vs_body_msg) % "Your" % attackerPart % "$N's" % victimPart, FALSE, ch, nullptr, victim, TO_CHAR);
+      act(format(body_vs_body_msg) % "$n's" % attackerPart % "your" % victimPart, FALSE, ch, nullptr, victim, TO_VICT);
+      act(format(body_vs_body_msg) % "$n's" % attackerPart % "$N's" % victimPart, FALSE, ch, nullptr, victim, TO_NOTVICT);
+      if (victim->isLimbFlags(vicLimb, PART_BRUISED)) {
+        victim->incrementBruiseStack(vicLimb, 100);
+      } else {
+        victim->rawBruise(vicLimb, 100, SILENT_NO, CHECK_IMMUNITY_NO);
+      }
+    }
+    
+  }
+  return dam;  
+}
+int spikesBreak(TBeing* victim, TBeing* ch, TObj* obj) {
+  int dam = ::number(1, 4);
+  if (!obj)
+    return 0;
+
+  if ((obj->isObjStat(ITEM_SPIKED)) && percentChance(25) && victim->isTough()) {
+    static constexpr const char* catch_msg = "$n's $o catches on $N's $o!";
+    static constexpr const char* spikes_break_msg = "Some spikes break off, damaging $n's $o!";
+
+    obj->addToStructPoints(-dam);
+    obj->addToMaxStructPoints(-1);
+    act(format(catch_msg) % "Your" % "$N", FALSE, ch, obj, victim, TO_CHAR);
+    act(format(catch_msg) % "$n's" % "$N", FALSE, ch, obj, victim, TO_NOTVICT);
+    act(format(catch_msg) % "$n's" % "$N", FALSE, ch, obj, victim, TO_VICT);
+    act(format(spikes_break_msg) % "$n's", FALSE, ch, obj, nullptr, TO_ROOM, ANSI_GRAY);
+    act(format(spikes_break_msg) % "your", FALSE, ch, obj, nullptr, TO_CHAR, ANSI_GRAY);
+
+    if (obj->getMaxStructPoints() <= 0) {
+      if (!obj->makeScraps()){
+        delete obj;
+        obj = nullptr;
+      }
+      return true;
+    }
+
+    if (auto* weapon = dynamic_cast<TGenWeapon*>(obj)) {
+      static constexpr const char* mars_edge_msg = "The impact mars the edge of %s $o!";
+
+      weapon->addToCurSharp(-dam);
+      weapon->addToMaxSharp(-1);
+      act(format(mars_edge_msg) % "$n's", FALSE, ch, obj, nullptr, TO_ROOM);
+      act(format(mars_edge_msg) % "your", FALSE, ch, obj, nullptr, TO_CHAR);
+
+      if (weapon->getMaxSharp() <= 0) {
+        if (!weapon->makeScraps()){
+          delete weapon;
+          weapon = nullptr;
+        }
+          return true;
+      }
+    }
+
+    if (percentChance(25)) {
+      static constexpr const char* less_dangerous_msg = "%s $p looks less dangerous now.";
+
+      obj->remObjStat(ITEM_SPIKED);
+      act(format(less_dangerous_msg) % "$n's", FALSE, ch, obj, nullptr, TO_ROOM, ANSI_GRAY);
+      act(format(less_dangerous_msg) % "Your", FALSE, ch, obj, nullptr, TO_CHAR, ANSI_GRAY);
+    }
+    return true;
+  }
+  return false;
+}
+
+int impactSpec(TBeing* ch, TBeing* victim, wearSlotT damSource, wearSlotT pos) {
+  // Get the object at the damage source (if any)
+  if (!ch || !victim || pos == WEAR_NOWHERE) {
+    return 0;
+  }
+  TObj* obj = dynamic_cast<TObj*>(ch->equipment[damSource]);
+
+  if (obj) {
+    // There is equipment on damSource
+    if (obj->isSpiked()) {
+      // Equipment has spikes - use spikesHit
+      return spikesHit(victim, ch, obj, pos);
+    }
+      // Equipment has no spikes - use hardHit
+      return hardHit(victim, ch, obj, pos, damSource);
+    
+  } else {
+    // No equipment on damSource
+    if (ch->affectedBySpell(SPELL_THORNFLESH)) {
+      // Has thornflesh - use thornsHit
+      return thornsHit(victim, ch, damSource, pos);
+    }
+      // No thornflesh - use hardHit
+      return hardHit(victim, ch, nullptr, pos, damSource);
+    
+  }
+}
+
+int spikesHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT limb) {
+  // Check for valid parameters
+  if (!victim || !ch || !obj || limb == WEAR_NOWHERE) {
+    return 0;
+  }
+
+  if (!obj->isSpiked()) {
+    return 0;
+  }
+
+  if (victim->isLimbFlags(limb, PART_MISSING)) {
+    return 0;
+  }
+
+  int dam = ::number(1, 10) + obj->getWeight() / 4;
+
+  if (victim->isUndead() || victim->isImmune(IMMUNE_BLEED, limb)) {
+    // No bleeding for undead or immune creatures
+    return dam;
+  }
+
+  if (victim->isLimbFlags(limb, PART_BLEEDING)) {
+    static constexpr const char* spikes_bleeding_msg =
+      "Blood spatters as the spikes on %s $o sink into %s bleeding %s!";
+
+    sstring vicBodyPart = victim->describeBodySlot(limb);
+    act(format(spikes_bleeding_msg) % "your" % "$N's" % vicBodyPart, FALSE, ch, obj, victim, TO_CHAR);
+    act(format(spikes_bleeding_msg) % "$n's" % "$N's" % vicBodyPart, FALSE, ch, obj, victim, TO_NOTVICT);
+    act(format(spikes_bleeding_msg) % "$n's" % "your" % vicBodyPart, FALSE, ch, obj, victim, TO_VICT);
+
+    // Increment the bleed stack
+    victim->incrementBleedStack(limb, 250);
+  } else {
+    static constexpr const char* spikes_wound_msg =
+      "The spikes on $p tear open a <R>bloody wound<1> in %s %s!";
+
+    sstring vicBodyPart = victim->describeBodySlot(limb);
+    act(format(spikes_wound_msg) % "$N's" % vicBodyPart, FALSE, ch, obj, victim, TO_CHAR);
+    act(format(spikes_wound_msg) % "$N's" % vicBodyPart, FALSE, ch, obj, victim, TO_NOTVICT);
+    act(format(spikes_wound_msg) % "your" % vicBodyPart, FALSE, ch, obj, victim, TO_VICT);
+
+    victim->rawBleed(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+  }
+  
+  spikesBreak(victim, ch, obj);
+  return dam;
 }

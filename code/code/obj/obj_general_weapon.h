@@ -40,3 +40,9 @@ class TGenWeapon : public TBaseWeapon {
     TGenWeapon& operator=(const TGenWeapon& a);
     virtual ~TGenWeapon();
 };
+
+int impactSpec(TBeing* ch, TBeing* victim, wearSlotT damSource, wearSlotT pos);
+int spikesHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT limb);
+int spikesBreak(TBeing* victim, TBeing* ch, TObj* obj);
+int thornsHit(TBeing* victim, TBeing* ch, wearSlotT chLimb, wearSlotT vicLimb);
+int hardHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT vicLimb, wearSlotT chLimb);

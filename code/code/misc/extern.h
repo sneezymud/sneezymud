@@ -306,6 +306,7 @@ extern sstring talenDisplay(int);
 extern sstring volumeDisplay(int);
 extern TThing* unequip_char_for_save(TBeing* ch, wearSlotT pos);
 extern bool isVitalPart(wearSlotT);
+extern int getHardnessSpec(const TBeing*, wearSlotT);
 extern bool hideThisSpell(spellNumT);
 extern void test_fight_death(TBeing*, TBeing*, int);
 extern sstring shutdown_or_reboot();

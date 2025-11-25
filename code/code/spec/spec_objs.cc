@@ -63,8 +63,11 @@
 #include <cmath>
 
 #include "ansi.h"
+#include "ansi.h"
 #include "handler.h"
 #include "extern.h"
+#include "limbs.h"
+#include "parse.h"
 #include "limbs.h"
 #include "parse.h"
 #include "room.h"

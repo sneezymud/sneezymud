@@ -396,6 +396,43 @@ void TBaseWeapon::changeObjValue3(TBeing* ch) {
   ch->sendTo(format(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Enter new value.\n\r--> ");
 }
+  
+int getHardnessSpec(const TBeing* ch, wearSlotT limb) {
+  if (!ch || limb == WEAR_NOWHERE) {
+    return 0;
+  }
+
+  if (ch->equipment[limb]) {
+    return material_nums[ch->equipment[limb]->getMaterial()].hardness;
+  }
+
+  int hardness = material_nums[ch->getMaterial(limb)].hardness;
+  
+  if (ch->affectedBySpell(SPELL_THORNFLESH)) {
+    hardness = material_nums[MAT_WOOD].hardness;
+  }
+  
+  if (ch->affectedBySpell(SPELL_STONE_SKIN)) {
+    hardness = material_nums[MAT_STONE].hardness;
+  }
+  
+  if (ch->doesKnowSkill(SKILL_IRON_FLESH)) {
+    int skillValue = ch->getSkillValue(SKILL_IRON_FLESH);
+    int ironFleshHardness = (skillValue * material_nums[MAT_IRON].hardness) / 100;
+    if (ironFleshHardness > hardness) {
+      hardness = ironFleshHardness;
+    }
+  }
+  
+  if ((limb == WEAR_HAND_R || limb == WEAR_HAND_L) && ch->doesKnowSkill(SKILL_IRON_FIST)) {
+    int ironFistHardness = (ch->getSkillValue(SKILL_IRON_FIST) * material_nums[MAT_IRON].hardness) / 100;
+    if (ironFistHardness > hardness) {
+      hardness = ironFistHardness;
+    }
+  }
+  
+  return hardness;
+}
 
 int TBaseWeapon::damageMe(TBeing* ch, TBeing* v, wearSlotT part_hit) {
   int hardness;
