@@ -766,7 +766,7 @@ int TBeing::updateAffects() {
     }
     if ((af->type == SPELL_POLYMORPH) || (af->type == SKILL_DISGUISE) ||
         (af->type == SPELL_SHAPESHIFT)) {
-      if (!desc->original) {
+      if (!desc || !desc->original) {
         affectRemove(af);
         continue;
       }
@@ -861,7 +861,7 @@ int TBeing::updateAffects() {
     }
   }
   if (shouldReturn) {
-    doReturn("", WEAR_NOWHERE, true);
+    doReturn("", WEAR_NOWHERE, true, false);
     return ALREADY_DELETED;
   }
   return 0;
@@ -1675,7 +1675,7 @@ int TBeing::updateHalfTickStuff() {
           (desc->original->polyed == POLY_TYPE_SHAPESHIFT)) {
         sendTo(
           "Your shape can not survive without a connection to nature.\n\r");
-        doReturn("", WEAR_NOWHERE, true);
+        doReturn("", WEAR_NOWHERE, true, false);
         return ALREADY_DELETED;
       }
     }

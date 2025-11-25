@@ -2116,9 +2116,9 @@ void TBeing::doReturn(const sstring& argument, wearSlotT limb, bool tell,
       *(real_roomp(Room::CS)) += *originalBody;
 
     SwitchStuff(this, originalBody);
-    originalBody->affectFrom(SPELL_POLYMORPH);
-    originalBody->affectFrom(SKILL_DISGUISE);
-    originalBody->affectFrom(SPELL_SHAPESHIFT);
+    affectFrom(SPELL_POLYMORPH);
+    affectFrom(SKILL_DISGUISE);
+    affectFrom(SPELL_SHAPESHIFT);
   }
 
   originalBody->desc = desc;
