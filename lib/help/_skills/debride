@@ -1,0 +1,17 @@
+Syntax: debride <item>
+
+With the proper tools, a trained warrior has the ability to remove
+rust from metal equipment. Debriding metal equipment requires a high
+degree of focus and attention to detail, lest the item be damaged.
+
+The appropriate tool must be held in your primary hand and the item
+you wish to debride must be in your inventory in order to debride
+it.
+
+Only rusty metal equipment can be debrided using this skill.
+
+Tool necessary:
+     Primary:   file
+
+Debriding rust from an item will require a decent amount of time to
+complete, and the amount is proportional to how large the object is.

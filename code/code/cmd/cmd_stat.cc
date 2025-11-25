@@ -1727,6 +1727,7 @@ void TBeing::statBeing(TBeing* k) {
       case SKILL_REPAIR_SHAMAN:
       case SKILL_REPAIR_THIEF:
       case SKILL_BLACKSMITHING_ADVANCED:
+      case SKILL_DEBRIDE:
       case SKILL_MEND:
       case SKILL_DISARM:
       case SKILL_DUAL_WIELD:

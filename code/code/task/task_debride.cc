@@ -25,12 +25,9 @@ int debridePulse(TBeing* ch, TObj* obj, TThing* w) {
   int strDam = number(1, 2);
   TTool* file = dynamic_cast<TTool*>(w);
 
-  if (ch->bSuccess(SKILL_BLACKSMITHING)) {
-    // Success: reduce timer by 1 or 2, plus 1 if advanced blacksmithing is learned
+  if (ch->bSuccess(SKILL_DEBRIDE)) {
+    // Success: reduce timer by 1 or 2
     int timerReduction = ::number(1, 2);
-    if (ch->getAdvLearning(SKILL_BLACKSMITHING) > 0) {
-      timerReduction += 1;
-    }
     act ("You scrape the file against $p, removing some rust.", FALSE, ch, obj, 0, TO_CHAR, ANSI_YELLOW);
     act("$n scrapes the file against $p, removing some rust.", FALSE, ch, obj, 0, TO_ROOM, ANSI_YELLOW);
     if (!ch->isFocused()) {

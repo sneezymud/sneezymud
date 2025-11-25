@@ -9,6 +9,7 @@
 //
 /////////////////////////////////////////////////////////////////
 
+#include "discipline.h"
 #include "extern.h"
 #include "spell2.h"
 #include "toggle.h"
@@ -1710,6 +1711,12 @@ void buildSpellArray() {
     TASK_NORMAL, LAG_0, POSITION_SITTING, MANA_0, LIFEFORCE_0, PRAY_0, 0,
     SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1, LEARN_DO_1,
     START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
+
+    discArray[SKILL_DEBRIDE] = new spellInfo(SKILL_WARRIOR, DISC_BLACKSMITHING,
+    DISC_BLACKSMITHING, STAT_EXT, "debride", TASK_NORMAL, LAG_0,
+    POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "",
+    "", "", START_50, LEARN_3, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO,
+    LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   // no new spells will just let someone  do armor
 
