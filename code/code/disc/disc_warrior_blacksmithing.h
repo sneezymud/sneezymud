@@ -5,6 +5,7 @@
 
 class CDBlacksmithing : public CDiscipline {
   public:
+    CSkill skDebride;
     CSkill skBlacksmithingAdvanced;
 
     virtual CDBlacksmithing* cloneMe() { return new CDBlacksmithing(*this); }

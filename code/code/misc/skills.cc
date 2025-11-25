@@ -569,6 +569,8 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
       return &((CDSoldiering*)cd)->skFortify;
 
       // disc_blacksmithing
+    case SKILL_DEBRIDE:
+      return &((CDBlacksmithing*)cd)->skDebride;
     case SKILL_BLACKSMITHING_ADVANCED:
       return &((CDBlacksmithing*)cd)->skBlacksmithingAdvanced;
 
