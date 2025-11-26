@@ -220,11 +220,16 @@ bool TThing::isMetal() const {
     case MAT_PLATINUM:
     case MAT_TITANIUM:
     case MAT_MITHRIL:
+    case MAT_ADAMANTITE:
     case MAT_ALUMINUM:
+    case MAT_GNICKEL:
     case MAT_ELECTRUM:
     case MAT_ATHANOR:
     case MAT_TIN:
+    case MAT_TUNGSTEN:
     case MAT_TERBIUM:
+    case MAT_STARMETAL:
+    case MAT_ETERNIUM:
       return TRUE;
     default:
       return FALSE;
@@ -238,7 +243,7 @@ bool TThing::isMineral() const {
     case MAT_GLASS:
     case MAT_PORCELAIN:
     case MAT_GEN_MINERAL:
-    case MAT_RUNED:
+    case MAT_RUNESTONE:
     case MAT_CRYSTAL:
     case MAT_DIAMOND:
     case MAT_EBONY:
@@ -260,7 +265,11 @@ bool TThing::isMineral() const {
     case MAT_DRAGONBONE:
     case MAT_MALACHITE:
     case MAT_GRANITE:
-    case MAT_ADAMANTITE:
+    case MAT_QUARTZ:
+    case MAT_JET:
+    case MAT_CORUNDUM:
+    case MAT_CLAY:
+    case MAT_PUMICE:
       return TRUE;
     default:
       return FALSE;
@@ -312,6 +321,24 @@ bool TThing::isOrganic() const {
   }
 }
 
+bool TThing::isElemental() const {
+  ubyte mat = convertV9MaterialToV10(getMaterial());
+
+  switch (mat) {
+    case MAT_PLASMA:
+    case MAT_WATER:
+    case MAT_FIRE:
+    case MAT_EARTH:
+    case MAT_ELEMENTAL:
+    case MAT_ICE:
+    case MAT_LIGHTNING:
+    case MAT_CHAOS:
+      return TRUE;
+    default:
+      return FALSE;
+  }
+}
+
 bool TObj::canRust() {
   ubyte mat = convertV9MaterialToV10(getMaterial());
 
@@ -342,7 +369,6 @@ ubyte convertV9MaterialToV10(ubyte oldMat) {
     case 154:  // MAT_CHAIN_MAIL
     case 155:  // MAT_PLATE
     case 167:  // MAT_RINGMAIL
-    case 168:  // MAT_GNOMEMAIL
       return MAT_STEEL;
 
     case 175:  // MAT_ELVENMAIL
