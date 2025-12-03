@@ -241,20 +241,61 @@ bool TBeing::validMove(dirTypeT cmd) {
   affectedData* aff;
   for (aff = affected; aff; aff = aff->next) {
     if (aff->type == SPELL_BIND) {
-      if (!isLucky(levelLuckModifier(aff->level))) {
+      if (!isStrong() || (!isLucky(levelLuckModifier(aff->level)) && !isStrong())) {
         sendTo("You are entrapped in sticky webs!\n\r");
+        act("Sticky webs entangle $n!", TRUE, this, 0, 0, TO_ROOM);
         sendTo("Your struggles only entrap you further!\n\r");
         addToWait(combatRound(3));
         if (!isPc())
-          setMove(0);
+          setMove(getMove()/2);
         return FALSE;
       } else {
         addToWait(combatRound(1));
         addToMove(-50);
         sendTo("You briefly pull free from the sticky webbing!\n\r");
+        act("$n briefly pulls free from the sticky webbing!", TRUE, this, 0, 0, TO_ROOM);
+      }
+      break;
+    }
+    if (aff->type == SPELL_LIVING_VINES) {
+      if (!isAgile(0) || (!isLucky(levelLuckModifier(aff->level)) && !isAgile(0))) {
+        sendTo("You are entangled in a mass of vines!\n\r");
+        act("A mass of vines entangles $n!", TRUE, this, 0, 0, TO_ROOM);
+        addToWait(combatRound(3));
+
+        // Reduce duration with each failed escape attempt
+        aff->duration = max(0, aff->duration - 800);
+
+        wearSlotT foot = percentChance(50) ? getPrimaryFoot() : getSecondaryFoot();
+
+        if (foot && (!isTough() || (isLucky(levelLuckModifier(aff->level)) && !isTough()))) {
+          sendTo("The vines tear at your flesh!\n\r");
+          act("The vines tear at $n's flesh!", TRUE, this, 0, 0, TO_ROOM);
+
+          if (isLimbFlags(foot, PART_BLEEDING)) {
+            incrementBleedStack(foot, 250);
+          } else {
+            rawBleed(foot, 50, SILENT_NO, CHECK_IMMUNITY_YES);
+          }
+
+          if (!isPc()){
+            setMove(getMove()/2);
+          }
+
+          return FALSE;
+
+        } else {
+          addToWait(combatRound(1));
+          addToMove(-50);
+          sendTo("You manage to slip free from the vines!\n\r");
+          act("$n manages to slip free from the vines!", TRUE, this, 0, 0, TO_ROOM);
+        }
+
+      break;
       }
     }
   }
+
   if (riding) {
     tbt = dynamic_cast<TBeing*>(riding);
     if (tbt && tbt->fight()) {
@@ -2615,6 +2656,26 @@ void TBeing::doStand() {
   if (bothLegsHurt()) {
     sendTo("You can't stand up.  You have no working legs.\n\r");
     return;
+  }
+
+  affectedData* aff;
+  for (aff = affected; aff; aff = aff->next) {
+    if (aff->type == SPELL_LIVING_VINES) {
+      if (!isStrong() || (!isLucky(levelLuckModifier(aff->level)) && !isStrong())) {
+        sendTo("The vines that entangle you prevent you from standing!\n\r");
+        act("A mass of vines prevents $n from standing!", TRUE, this, 0, 0, TO_ROOM);
+        addToWait(combatRound(3));
+        if (!isPc())
+          setMove(0);
+        return;
+      } else {
+        addToWait(combatRound(1));
+        addToMove(-50);
+        sendTo("You briefly pull free from the vines!\n\r");
+        act("$n briefly pulls free from the vines!", TRUE, this, 0, 0, TO_ROOM);
+      }
+      break;
+    }
   }
 
   switch (getPosition()) {

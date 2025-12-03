@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 
+#include "limbs.h"
 #include "log.h"
 #include "extern.h"
 #include "room.h"
@@ -281,6 +282,33 @@ int TMonster::standUp() {
         (getPosition() > POSITION_STUNNED)) ||
       ((getPosition() > POSITION_STUNNED) && riding &&
         !dynamic_cast<TBeing*>(riding))) {
+    affectedData* aff;
+    for (aff = affected; aff; aff = aff->next) {
+      if (aff->type == SPELL_LIVING_VINES) {
+        if (!isStrong() || (!isLucky(levelLuckModifier(aff->level)) && !isStrong())) {
+          act("A mass of vines prevents $n from standing!", TRUE, this, 0, 0, TO_ROOM);
+
+          // Reduce duration with each failed escape attempt
+          aff->duration = max(0, aff->duration - 800);
+
+          if (!isTough() || (!isLucky(levelLuckModifier(aff->level)) && !isTough())) {
+            wearSlotT limb = getRandomPart(PART_MISSING);
+            if (limb != WEAR_NOWHERE) {
+              act("The vines tear at $n's flesh!", TRUE, this, 0, 0, TO_ROOM);
+              if (isLimbFlags(limb, PART_BLEEDING)) {
+                incrementBleedStack(limb, 250);
+              } else {
+                rawBleed(limb, 50, SILENT_NO, CHECK_IMMUNITY_YES);
+              }
+            }
+          }
+          return FALSE;
+        } else {
+          act("$n briefly pulls free from the vines!", TRUE, this, 0, 0, TO_ROOM);
+        }
+        break;
+      }
+    }
     if (isFourLegged()) {
       if (getHit() > (hitLimit() / 2))
         act("$n quickly rolls over and leaps to $s feet.", TRUE, this, 0, 0,
