@@ -4540,6 +4540,9 @@ void TObj::describeMe(TBeing* ch) const {
     act("It is <k>charred<1>.", FALSE, ch, 0, 0, TO_CHAR);
   if (isObjStat(ITEM_RUSTY))
     act("It is <o>rusty<1>.", FALSE, ch, 0, 0, TO_CHAR);
+  if (isObjStat(ITEM_SPIKED))
+    act("It is <k>spiked<1>.", FALSE, ch, 0, 0, TO_CHAR);
+
   describeContains(ch);
 
   if (dynamic_cast<TBeing*>(rider)) {

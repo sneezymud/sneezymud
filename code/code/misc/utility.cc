@@ -285,13 +285,13 @@ int TMonster::standUp() {
     affectedData* aff;
     for (aff = affected; aff; aff = aff->next) {
       if (aff->type == SPELL_LIVING_VINES) {
-        if (!isStrong() || (!isLucky(levelLuckModifier(aff->level)) && !isStrong())) {
+        if (!isStrong() && !(isLucky(levelLuckModifier(aff->level)) && isStrong())) {
           act("A mass of vines prevents $n from standing!", TRUE, this, 0, 0, TO_ROOM);
 
           // Reduce duration with each failed escape attempt
           aff->duration = max(0, aff->duration - 800);
 
-          if (!isTough() || (!isLucky(levelLuckModifier(aff->level)) && !isTough())) {
+          if (!isTough() && !(isLucky(levelLuckModifier(aff->level)) && isTough())) {
             wearSlotT limb = getRandomPart(PART_MISSING);
             if (limb != WEAR_NOWHERE) {
               act("The vines tear at $n's flesh!", TRUE, this, 0, 0, TO_ROOM);

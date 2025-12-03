@@ -258,7 +258,7 @@ bool TBeing::validMove(dirTypeT cmd) {
       break;
     }
     if (aff->type == SPELL_LIVING_VINES) {
-      if (!isAgile(0) || (!isLucky(levelLuckModifier(aff->level)) && !isAgile(0))) {
+      if (!isAgile(0) && !(isLucky(levelLuckModifier(aff->level)) && isAgile(0))) {
         sendTo("You are entangled in a mass of vines!\n\r");
         act("A mass of vines entangles $n!", TRUE, this, 0, 0, TO_ROOM);
         addToWait(combatRound(3));
@@ -268,7 +268,7 @@ bool TBeing::validMove(dirTypeT cmd) {
 
         wearSlotT foot = percentChance(50) ? getPrimaryFoot() : getSecondaryFoot();
 
-        if (foot && (!isTough() || (isLucky(levelLuckModifier(aff->level)) && !isTough()))) {
+        if (foot && !isTough() && !(isLucky(levelLuckModifier(aff->level)) && isTough())) {
           sendTo("The vines tear at your flesh!\n\r");
           act("The vines tear at $n's flesh!", TRUE, this, 0, 0, TO_ROOM);
 
