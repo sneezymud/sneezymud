@@ -125,8 +125,7 @@ info('Submodules initialized.')
 
 # Detect compiler and version
 # Lowest accepted versions are the default versions in whatever version
-# of Ubuntu our Dockerfile uses (currently g++ 9.4 and clang++ 10.0 for
-# Ubuntu 20.04 Focal)
+# of Ubuntu our Dockerfile uses
 compiler_config = {
     'g++': {
         'min_version': (9, 4, 0),
@@ -390,50 +389,68 @@ env.Append(CXXFLAGS=[
 # Compiler-independent warnings
 env.Append(CXXFLAGS=[
     '-Wall',  # Enable all recommended warnings
-    #'-Wpointer-arith', # look for things that depend on sizeof()
-    '-Wcast-qual', # warn about using casting to remove const
-    '-Wcast-align', # a pointer cast changes alignment
-    '-Wwrite-strings', # look for formal const char* sent to char*
-    #'-Wshadow', # Warn whenever a local variable shadows another variable
-    '-Wnon-virtual-dtor', # Warn when class has virtual functions but non-virtual dtor
-    '-Wpedantic', # Issue all the warnings demanded by strict ISO C and ISO C++
-    '-Wnull-dereference', # Warn about potential null derefs. More accurate and finds more with higher optimization.
-    #'-Wdouble-promotion', # Give a warning when a value of type float is implicitly promoted to double.
-    '-Wformat=2', # Enable -Wformat plus additional format checks. Equivalent to -Wformat -Wformat-nonliteral -Wformat-security -Wformat-y2k.
-    '-Wuninitialized', # Warn if an object with automatic or allocated storage duration is used without having been initialized.
-    '-Wunknown-pragmas', # Warn when a #pragma directive is encountered that is not understood by compiler.
-    '-Wstring-compare', # Warn about strcmp and strncmp safety
-    '-Wredundant-decls', # Warn if anything is declared more than once in the same scope, even in cases where multiple declaration is valid and changes nothing.
-    '-Wdisabled-optimization', # Warn if a requested optimization pass is disabled
+    '-Wpointer-arith',  # look for things that depend on sizeof()
+    '-Wcast-qual',  # warn about using casting to remove const
+    '-Wcast-align',  # a pointer cast changes alignment
+    '-Wwrite-strings',  # look for formal const char* sent to char*
+    '-Wshadow',  # Warn whenever a local variable shadows another variable
+    '-Wnon-virtual-dtor',  # Warn when class has virtual functions but non-virtual dtor
+    '-Wpedantic',  # Issue all the warnings demanded by strict ISO C and ISO C++
+    # Warn about potential null derefs. More accurate and finds more with higher optimization.
+    '-Wnull-dereference',
+    # Give a warning when a value of type float is implicitly promoted to double.
+    '-Wdouble-promotion',
+    # Enable -Wformat plus additional format checks. Equivalent to -Wformat -Wformat-nonliteral -Wformat-security -Wformat-y2k.
+    '-Wformat=2',
+    # Warn if an object with automatic or allocated storage duration is used without having been initialized.
+    '-Wuninitialized',
+    # Warn when a #pragma directive is encountered that is not understood by compiler.
+    '-Wunknown-pragmas',
+    # Warn about strcmp and strncmp safety. Requires g++ 10+.
+    '-Wstring-compare',
+    # Warn if anything is declared more than once in the same scope, even in cases where multiple declaration is valid and changes nothing.
+    '-Wredundant-decls',
+    '-Wdisabled-optimization',  # Warn if a requested optimization pass is disabled
     '-Woverloaded-virtual',     # virtual without a declaration in base class
-    #'-Werror', # Turn warnings into errors. Can cause lots of extra work when upgrading compilers.
-    '-Wextra', # include some extra warnings
-    #'-Wconversion', # Warn about implicit conversions that may alter a value
+    '-Wextra',  # include some extra warnings
+    '-Wconversion',  # Warn about implicit conversions that may alter a value
+    '-Wimplicit-fallthrough=5',  # Stricter than -Wextra. Forces [[fallthrough]]; attribute, ignores comments.
+    '-Wsuggest-override',  # Force use of 'override' keyword on virtual functions (prevents silent breakage)
 ])
 
 # GCC-only warnings
 if gcc:
     env.Append(CXXFLAGS=[
-        '-Wduplicated-cond', # Warn about duplicated conditions in an if-else-if chain.
-        '-Wduplicated-branches', # Warn when an if-else has identical branches.
-        '-Wlogical-op', # Warn about suspicious uses of logical operators in expressions.
-        '-Wuseless-cast', # Warn when an expression is casted to its own type.
-        '-Wformat-overflow=2', # Warn about calls to formatted input/output functions that might overflow the destination buffer.
-        '-Wformat-truncation=2', # Warn about calls to formatted input/output functions that might result in output truncation.
-        '-funsafe-loop-optimizations', # Pairs with below flag to enable unsafe loop optimization warnings
-        '-Wunsafe-loop-optimizations', # Warn if the loop cannot be optimized because the compiler cannot assume anything on the bounds of the loop indices.
+        # Warn about duplicated conditions in an if-else-if chain.
+        '-Wduplicated-cond',
+        # Warn when an if-else has identical branches.
+        '-Wduplicated-branches',
+        # Warn about suspicious uses of logical operators in expressions.
+        '-Wlogical-op',
+        '-Wuseless-cast',  # Warn when an expression is casted to its own type.
+        # Warn about calls to formatted input/output functions that might overflow the destination buffer.
+        '-Wformat-overflow=2',
+        # Warn about calls to formatted input/output functions that might result in output truncation.
+        '-Wformat-truncation=2',
+        # Pairs with below flag to enable unsafe loop optimization warnings
+        '-funsafe-loop-optimizations',
+        # Warn if the loop cannot be optimized because the compiler cannot assume anything on the bounds of the loop indices.
+        '-Wunsafe-loop-optimizations',
+        '-Wanalyzer-possible-null-dereference',  # Warn about possible null derefs (might be slow)
     ])
 
 # Clang-only warnings
 if clang:
     env.Append(CXXFLAGS=[
         '-ferror-limit=0',  # Don't limit number of warnings/errors reported
-        '-Wformat-non-iso', # Extra string format warnings
-        '-Wformat-pedantic', # Extra string format warnings
+        '-Wformat-non-iso',  # Extra string format warnings
+        '-Wformat-pedantic',  # Extra string format warnings
         '-Wc++20-compat-pedantic',  # C++20 compatibility warnings
         '-Wc++20-extensions',  # C++20 extension warnings
-        '-Wno-inconsistent-missing-override',
-        '-Wno-vla-cxx-extension',
+        '-Wno-inconsistent-missing-override', # Overrides with different 'override' presence don't warn
+        '-Wno-vla-cxx-extension', # Disable VLA extension warnings
+        '-Wrange-loop-construct', # Warns when a range-based for loop creates unnecessary copies
+        '-Wctad-maybe-unsupported' # Warns if Class Template Argument Deduction might fail or behave unexpectedly
     ])
 
 # Explicitly disabled warnings
