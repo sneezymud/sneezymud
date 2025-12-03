@@ -281,18 +281,16 @@ bool TBeing::validMove(dirTypeT cmd) {
           if (!isPc()){
             setMove(getMove()/2);
           }
-
-          return FALSE;
-
-        } else {
-          addToWait(combatRound(1));
-          addToMove(-50);
-          sendTo("You manage to slip free from the vines!\n\r");
-          act("$n manages to slip free from the vines!", TRUE, this, 0, 0, TO_ROOM);
         }
 
-      break;
+        return FALSE;
+      } else {
+        addToWait(combatRound(1));
+        addToMove(-50);
+        sendTo("You manage to slip free from the vines!\n\r");
+        act("$n manages to slip free from the vines!", TRUE, this, 0, 0, TO_ROOM);
       }
+      break;
     }
   }
 
@@ -2666,7 +2664,7 @@ void TBeing::doStand() {
         act("A mass of vines prevents $n from standing!", TRUE, this, 0, 0, TO_ROOM);
         addToWait(combatRound(3));
         if (!isPc())
-          setMove(0);
+          setMove(getMove()/2);
         return;
       } else {
         addToWait(combatRound(1));
