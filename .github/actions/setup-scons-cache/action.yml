@@ -1,0 +1,25 @@
+name: Setup SCons cache configuration
+runs:
+  using: composite
+  steps:
+    - name: Export SCons cache settings
+      shell: bash
+      run: |
+        {
+          echo "SCONS_CACHE_HASH_GLOBS<<EOF"
+          cat <<'EOT'
+code/SConstruct
+code/code/SConscript
+code/**/SConscript
+code/site_scons/**
+code/code/**.cc
+code/code/**.h
+EOT
+          echo "EOF"
+          echo "SCONS_CACHE_PATHS<<EOF"
+          cat <<'EOT'
+code/.sconsign.dblite
+code/objs
+EOT
+          echo "EOF"
+        } >> "$GITHUB_ENV"

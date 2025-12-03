@@ -1,0 +1,37 @@
+name: Build SCons target
+inputs:
+  working-dir:
+    description: Directory containing the SCons build
+    required: false
+    default: code
+  extra-args:
+    description: Additional arguments to pass to SCons, one per line
+    required: false
+    default: |
+      pretty=0
+      asan=1
+      optimize=1
+  target:
+    description: Build target to invoke
+    required: false
+    default: sneezy
+runs:
+  using: composite
+  steps:
+    - name: Compile code
+      shell: bash
+      env:
+        BUILD_DIR: ${{ inputs.working-dir }}
+        EXTRA_ARGS: ${{ inputs.extra-args }}
+        TARGET: ${{ inputs.target }}
+      run: |
+        set -e
+        args=(scons -C "${BUILD_DIR}" -j"$(nproc)")
+        while IFS= read -r line; do
+          [ -n "${line}" ] || continue
+          args+=("${line}")
+        done <<<"${EXTRA_ARGS}"
+        if [ -n "${TARGET}" ]; then
+          args+=("${TARGET}")
+        fi
+        "${args[@]}"
