@@ -1,18 +1,21 @@
 # cmake/Sanitizers.cmake
 # AddressSanitizer and UndefinedBehaviorSanitizer configuration
 #
-# WHY ASAN IN PRODUCTION?
-# -----------------------
-# SneezyMUD runs ASan even in production builds. This is intentional:
+# WHY SANITIZERS IN PRODUCTION?
+# -----------------------------
+# SneezyMUD runs ASan and UBSan even in production builds. This is intentional:
 #   1. Small, trusted playerbase - ~2x memory/CPU overhead is acceptable
 #   2. Untested code often goes live - limited developer time means inadequate testing
-#   3. ASan catches bugs immediately - memory corruption, use-after-free, buffer overflows
-#   4. Better than crashes - ASan provides clear stack traces vs mysterious segfaults
+#   3. Sanitizers catch bugs immediately - memory corruption, undefined behavior, overflows
+#   4. Better than crashes - sanitizers provide clear stack traces vs mysterious segfaults
 #   5. Volunteer development - inexperienced contributors benefit from runtime checks
 #
 # Recommended runtime environment variables for enhanced error reporting:
 #   export ASAN_OPTIONS=strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1
-#   export UBSAN_OPTIONS=print_stacktrace=1:halt_on_error=1
+#   export UBSAN_OPTIONS=print_stacktrace=1:halt_on_error=1   # halt_on_error=0 for production
+#
+# Production runs UBSan with halt_on_error=0, so undefined behavior is logged but
+# doesn't crash the server. This allows catching bugs without disrupting players.
 #
 # WHY NO SECURITY HARDENING FLAGS?
 # --------------------------------
@@ -21,7 +24,7 @@
 #   2. Stack protector is redundant - ASan catches all stack overflows and more
 #   3. PIE adds ~3% overhead - for security-only benefit we don't need
 #   4. Security is not a priority - small userbase, low-value target, trusted players
-#   5. ASan is superior - catches more bugs than all hardening flags combined
+#   5. Sanitizers are superior - catch more bugs than all hardening flags combined
 
 add_library(sneezy_sanitizers INTERFACE)
 add_library(sneezy::sanitizers ALIAS sneezy_sanitizers)
