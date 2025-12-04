@@ -6,9 +6,27 @@ runs:
     - name: Set cache paths and hash globs
       shell: bash
       run: |
-        # Paths to cache - the CMake build directory contains all compiled objects
-        echo "CMAKE_CACHE_PATHS=build/" >> "$GITHUB_ENV"
+        # Paths to cache:
+        # - build/: CMake build directory with compiled objects
+        # - ~/.cache/ccache: ccache directory (content-addressed, survives timestamp changes)
+        {
+          echo "CMAKE_CACHE_PATHS<<EOF"
+          echo "build/"
+          echo "~/.cache/ccache"
+          echo "EOF"
+        } >> "$GITHUB_ENV"
 
         # Files that affect the build - if any of these change, cache should be invalidated
         # Includes CMake files, source files, and headers
-        echo "CMAKE_CACHE_HASH_GLOBS=CMakeLists.txt CMakePresets.json cmake/** code/CMakeLists.txt code/code/CMakeLists.txt code/code/**/*.cc code/code/**/*.h" >> "$GITHUB_ENV"
+        # Note: hashFiles() requires newline-separated patterns, not space-separated
+        {
+          echo "CMAKE_CACHE_HASH_GLOBS<<EOF"
+          echo "CMakeLists.txt"
+          echo "CMakePresets.json"
+          echo "cmake/**"
+          echo "code/CMakeLists.txt"
+          echo "code/code/CMakeLists.txt"
+          echo "code/code/**/*.cc"
+          echo "code/code/**/*.h"
+          echo "EOF"
+        } >> "$GITHUB_ENV"
