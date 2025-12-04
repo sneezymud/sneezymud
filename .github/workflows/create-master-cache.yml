@@ -1,4 +1,8 @@
-# Caches created via actions/cache are not shared between PRs. However, a cache created on a parent branch is accessible by a child branch, including PRs that are attempting to merge to the parent branch. Therefore, if we create a cache of the build files every time changes are pushed to master, new PRs should be able to utilize those during their compilation to enable incremental compilation via scons's .sconsign.dblite file.
+# Caches created via actions/cache are not shared between PRs. However, a cache
+# created on a parent branch is accessible by a child branch, including PRs that
+# are attempting to merge to the parent branch. Therefore, if we create a cache
+# of the build files every time changes are pushed to master, new PRs should be
+# able to utilize those during their compilation to enable incremental builds.
 name: Create Master Branch Compilation Cache
 on:
   push:
@@ -22,35 +26,43 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          submodules: recursive
 
       - name: Configure cache settings
-        uses: ./.github/actions/setup-scons-cache
+        uses: ./.github/actions/setup-cmake-cache
 
       - name: Determine cache key
         id: cache-key
         run: |
-          cache_key="${{ runner.os }}-scons-master-${{ hashFiles(env.SCONS_CACHE_HASH_GLOBS) }}"
+          cache_key="${{ runner.os }}-cmake-master-${{ hashFiles(env.CMAKE_CACHE_HASH_GLOBS) }}"
           echo "value=$cache_key" >> "$GITHUB_OUTPUT"
-          echo "SCONS_CACHE_KEY=$cache_key" >> "$GITHUB_ENV"
+          echo "CMAKE_CACHE_KEY=$cache_key" >> "$GITHUB_ENV"
 
       - name: Install build prerequisites
         uses: ./.github/actions/install-build-deps
 
-      # Use cached build metadata and objects from the previous master build, if available, to avoid a full recompilation when no relevant sources or build scripts changed.
+      # Use cached build objects from the previous master build, if available,
+      # to avoid a full recompilation when no relevant sources changed.
       - name: Restore cached build objects
         uses: actions/cache/restore@v4
         with:
-          path: ${{ env.SCONS_CACHE_PATHS }}
-          key: ${{ env.SCONS_CACHE_KEY }}
+          path: ${{ env.CMAKE_CACHE_PATHS }}
+          key: ${{ env.CMAKE_CACHE_KEY }}
           restore-keys: |
-            ${{ runner.os }}-scons-master-
+            ${{ runner.os }}-cmake-master-
 
       - name: Compile code
-        uses: ./.github/actions/build-scons
+        uses: ./.github/actions/build-cmake
+        with:
+          preset: release-gcc
 
       - name: Cache compilation results
         uses: actions/cache/save@v4
         with:
-          path: ${{ env.SCONS_CACHE_PATHS }}
-          # Use a unique key per cache based on a hash of the sources and SCons build scripts, because GitHub Actions caches are immutable and a new cache will not overwrite an existing key. Using restore-keys in the test.yml workflow allows the PR to fall back to the most recent cache prefixed with ${{ runner.os }}-scons-master-.
-          key: ${{ env.SCONS_CACHE_KEY }}
+          path: ${{ env.CMAKE_CACHE_PATHS }}
+          # Use a unique key per cache based on a hash of the sources and CMake
+          # files, because GitHub Actions caches are immutable and a new cache
+          # will not overwrite an existing key. Using restore-keys in the
+          # test.yml workflow allows the PR to fall back to the most recent
+          # cache prefixed with ${{ runner.os }}-cmake-master-.
+          key: ${{ env.CMAKE_CACHE_KEY }}

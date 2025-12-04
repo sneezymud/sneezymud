@@ -3,7 +3,7 @@
 # Build arguments
 ARG UBUNTU_VERSION=noble
 ARG BRANCH="master"
-ARG BUILD_OPTS="asan=1 optimize=1"
+ARG CMAKE_PRESET="release-gcc"
 
 FROM ubuntu:${UBUNTU_VERSION} AS build
 
@@ -16,6 +16,7 @@ RUN --mount=type=cache,target=/var/cache/apt \
   TZ=utc apt-get install --yes --no-install-recommends \
   build-essential \
   ca-certificates \
+  cmake \
   git \
   libboost-filesystem1.83-dev \
   libboost-program-options1.83-dev \
@@ -24,13 +25,14 @@ RUN --mount=type=cache,target=/var/cache/apt \
   libboost1.83-dev \
   libcurl4-openssl-dev \
   libmariadb-dev \
-  pkgconf \
-  scons && \
+  mold \
+  ninja-build \
+  pkgconf && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
-RUN --mount=type=cache,target=/var/cache/apt \
-  echo Building from branch: "${BRANCH}" && \
+ARG BRANCH
+RUN echo Building from branch: "${BRANCH}" && \
   git clone \
   --depth 1 \
   --shallow-submodules \
@@ -39,8 +41,12 @@ RUN --mount=type=cache,target=/var/cache/apt \
   --branch "${BRANCH}" \
   --no-tags https://github.com/sneezymud/sneezymud /home/ubuntu/sneezymud
 
-RUN --mount=type=cache,target=/home/ubuntu/sneezymud/code/objs \
-  scons -C /home/ubuntu/sneezymud/code -j$(nproc) ${BUILD_OPTS} sneezy
+ARG CMAKE_PRESET
+RUN --mount=type=cache,target=/home/ubuntu/sneezymud/build \
+  cd /home/ubuntu/sneezymud && \
+  cmake --preset ${CMAKE_PRESET} && \
+  cmake --build --preset ${CMAKE_PRESET} && \
+  cp build/${CMAKE_PRESET}/code/code/sneezy code/sneezy
 
 FROM ubuntu:${UBUNTU_VERSION} AS run
 LABEL maintainer="SneezyMUD Development Team <https://discord.gg/F5zdYwWBzY>"
@@ -48,6 +54,9 @@ LABEL org.opencontainers.image.source="https://github.com/sneezymud/sneezymud"
 LABEL org.opencontainers.image.description="SneezyMUD Game Server"
 
 ENV DEBIAN_FRONTEND=noninteractive
+
+# Sanitizer options for enhanced error reporting (ASan is enabled in production builds)
+ENV ASAN_OPTIONS=strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1
 
 RUN --mount=type=cache,target=/var/cache/apt \
   apt-get update && \

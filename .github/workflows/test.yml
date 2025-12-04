@@ -13,15 +13,24 @@ concurrency:
 jobs:
   build_and_test:
     runs-on: ubuntu-24.04
-    name: Build and Test
+    name: Build and Test (${{ matrix.preset }})
+    strategy:
+      fail-fast: false
+      matrix:
+        preset:
+          # Dev build: catches unity-masked bugs (ODR violations, namespace collisions)
+          - dev-gcc
+          # Release build: catches optimization-only bugs (UB, LTO issues)
+          - release-gcc
     steps:
       - name: Checkout this commit
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          submodules: recursive
 
       - name: Configure cache settings
-        uses: ./.github/actions/setup-scons-cache
+        uses: ./.github/actions/setup-cmake-cache
 
       - name: Install dependencies
         uses: ./.github/actions/install-build-deps
@@ -44,16 +53,18 @@ jobs:
             done
           done
 
-      - name: Restore cached build metadata and objects from master branch
+      - name: Restore cached build objects from master branch
         uses: actions/cache/restore@v4
         with:
-          path: ${{ env.SCONS_CACHE_PATHS }}
-          key: ${{ runner.os }}-scons-master-${{ hashFiles(env.SCONS_CACHE_HASH_GLOBS) }}
+          path: ${{ env.CMAKE_CACHE_PATHS }}
+          key: ${{ runner.os }}-cmake-master-${{ hashFiles(env.CMAKE_CACHE_HASH_GLOBS) }}
           restore-keys: |
-            ${{ runner.os }}-scons-master-
+            ${{ runner.os }}-cmake-master-
 
       - name: Compile code
-        uses: ./.github/actions/build-scons
+        uses: ./.github/actions/build-cmake
+        with:
+          preset: ${{ matrix.preset }}
 
       - name: Verify the game boots up successfully
-        run: ./verify_boot.sh
+        run: ./scripts/verify_boot.sh

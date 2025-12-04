@@ -1,26 +1,11 @@
-# scons build output
-/code/.sconsign.dblite
-/code/.sconf_temp/
-/code/config.log
-/code/objs/
-/code/sneezy
-/code/code/tags
-/code/tags
-/code/lowtools
-/tags
+# build output
+build/
 lib/version.txt
 cscope.*out
+compile_commands.json
+code/sneezy
 
 # dynamically changing mud files
-/lib/account/
-/lib/corpses/
-/lib/immortals/
-/lib/player/
-/lib/rent/
-/lib/roomdata/
-/lib/mobdata/repairs/
-/lib/txt/stats
-/lib/txt/stats.bak
 /lib/mutable/
 
 # local config file
