@@ -15,7 +15,7 @@
 #include "obj_drug.h"
 
 #include <sys/select.h>  // for fd_set
-#include <random>
+#include <cmath>         // for pow
 
 struct PolyType;
 class charFile;
@@ -23,7 +23,6 @@ class charFile;
 using std::max;
 using std::min;
 
-extern std::mt19937 rng;
 extern wearSlotT slot_from_bit(int);
 extern void cleanCharBuf(char*);
 extern int split_string(const sstring& str, const sstring& sep,
@@ -386,29 +385,6 @@ extern int atoi_safe(const sstring);
 extern double atof_safe(const sstring);
 extern int GetApprox(int, int);
 extern double GetApprox(double, int);
-
-// Template functions need to be defined in header to be visible in other
-// translation units. Defining them here in extern.h avoids massive header
-// infinite include loop problem.s
-
-// Helper to retrieve by value a random entry from a vector.
-// Receives a copy of a std::vector<T>, shuffles it in place using C++ <random>
-// library, then returns first entry by value.
-template <typename T>
-T getRandomEntryByVal(std::vector<T> v) {
-  std::shuffle(v.begin(), v.end(), std::minstd_rand{std::random_device{}()});
-  return v.front();
-}
-
-// Helper to retrieve by reference a random entry from a vector.
-// Takes an instance of std::vector<T>, shuffles in place using C++ <random>
-// library, then returns reference to first entry. Mutates the original vector.
-// Should be more efficient when mutability of original isn't an issue.
-template <typename T>
-T& getRandomEntryByRef(std::vector<T>& v) {
-  std::shuffle(v.begin(), v.end(), std::minstd_rand{std::random_device{}()});
-  return v.front();
-}
 
 // Takes a value of type V where `V value >= than V lowerBound` and `V value <=
 // V upperBound` and passes it to a function in the form `Y(value) = A * value^n
