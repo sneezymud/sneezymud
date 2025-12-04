@@ -751,7 +751,7 @@ void Weather::weatherChange() {
   // keep in range 1040 - 960
 
   int diff = 0;
-  changeWeatherT change;
+  changeWeatherT change = CHANGE_NONE;
 
   // create nice fluxuating driven toward 1000
   if (Weather::getPressure() > 1024)
