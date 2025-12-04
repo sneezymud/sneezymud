@@ -72,18 +72,22 @@ if(SNEEZY_ENABLE_UBSAN)
     )
 
     # Clang-only: additional UBSan checks
-    # - integer: signed/unsigned overflow, division by zero
+    # - signed-integer-overflow: arithmetic overflow (most valuable check)
     # - nullability: null pointer violations
     # - local-bounds: out-of-bounds array access
-    # - implicit-conversion: dangerous implicit type conversions
+    #
+    # NOTE: We avoid -fsanitize=integer group because it includes checks that
+    # trigger false positives in third-party libraries:
+    # - unsigned-integer-overflow: libstdc++ std::string::_S_compare() uses intentional wrap
+    # - implicit-integer-sign-change: Boost.Regex char trait handling (unsigned char → char)
     target_compile_options(sneezy_sanitizers INTERFACE
         $<$<CXX_COMPILER_ID:Clang>:
-            -fsanitize=integer,nullability,local-bounds,implicit-conversion
+            -fsanitize=signed-integer-overflow,nullability,local-bounds
         >
     )
     target_link_options(sneezy_sanitizers INTERFACE
         $<$<CXX_COMPILER_ID:Clang>:
-            -fsanitize=integer,nullability,local-bounds,implicit-conversion
+            -fsanitize=signed-integer-overflow,nullability,local-bounds
         >
     )
 endif()
