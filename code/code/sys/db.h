@@ -280,7 +280,7 @@ class objIndexData : public indexData {
   public:
     extraDescription* ex_description;  // extra descriptions
     objAffData affected[MAX_OBJ_AFFECT];
-    byte max_struct;
+    short max_struct;  // Can be -1 sentinel or positive (0-250+)
     short armor;
     unsigned int where_worn;
     ubyte itemtype;
