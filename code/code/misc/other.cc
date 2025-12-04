@@ -28,6 +28,7 @@ extern "C" {
 #include "account.h"
 #include "games.h"
 #include "person.h"
+#include "random.h"
 #include "mail.h"
 #include "obj_drug.h"
 #include "skillsort.h"
@@ -4705,7 +4706,7 @@ void TBeing::addToRandomStat(int extra_points) {
   for (whichStat = MIN_STAT; whichStat < MAX_STATS_USED; whichStat++) {
     stats.push_back(whichStat);
   }
-  std::shuffle(stats.begin(), stats.end(), rng);
+  shuffleContainer(stats);
   while (extra_points != 0) {
     if (i >= stats.size()) {
       i = 0;

@@ -2,6 +2,7 @@
 #include "being.h"
 #include "process.h"
 #include "extern.h"
+#include "random.h"
 #include "obj_base_weapon.h"
 #include "skills.h"
 
@@ -32,7 +33,7 @@ void TBeing::doLogging() {
       treetypes.push_back(woodtypes[i]);
       i++;
     }
-    std::shuffle(treetypes.begin(), treetypes.end(), rng);
+    shuffleContainer(treetypes);
     roomp->setTreetype(treetypes[0]);
   }
 

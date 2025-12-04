@@ -7,6 +7,7 @@
 #include "socket.h"
 #include "configuration.h"
 #include "extern.h"
+#include "random.h"
 #include "enum.h"
 #include "discord.h"
 #include "sstring.h"
@@ -85,7 +86,7 @@ int main(int argc, char* argv[]) {
 
   srand(time(0));
   std::random_device rd;
-  rng = std::mt19937(rd());
+  getRng() = std::mt19937(rd());
 
   WizLock = false;
 
