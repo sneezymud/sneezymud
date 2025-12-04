@@ -22,14 +22,13 @@ SneezyMUD    :    ca. 2021 - Ongoing, versionless, open-source development
 ------------------------------------------------------------------------------
 Active SneezyMUD Contributors:
 
-Elmo Todurov (Cizra)       : Coder, GitHub Code Support
-Jeff Wolak   (Warluk)      : Sysadmin, Coder
-             (Onslaught)   : OPS manager, VPS hosting
-             (Sidartha)    : Senior LOW
-             (Vasco)       : Senior builder
-             (Bozwell)     : Coder
-             (Cirius)      : Coder
-             (Dash)        : Coder
+                (Bozwell)  : Sysadmin, Coder
+                (Cirius)   : Sysadmin, Coder
+Elmo Todurov    (Cizra)    : Sysadmin, Coder
+Gabriel	Rotberg	(Dash)     : Coder
+Joe Fiorenza    (Sidartha) : LOW, Builder, Donations Manager, Community Manager
+                (Vasco)    : LOW, Builder, Coder
+Jeff Wolak      (Warluk)   : Sysadmin, Coder
 
 Past members of the MUD Admin:
 
@@ -38,8 +37,9 @@ Jeff Bennett (Batopr)      : Coder, Partner
 Ben Sarnoff  (Cosmo)       : Coder, Partner
 Travis Nelson (Peel)       : Coder, Partner
 
+(Onslaught)                : Hosting, Patreon Manager, Site Provider
 (Wry)                      : Sysadmin support
-Elmo Todurov  (Cizra)      : Sysadmin, Coder, Site Provider
+Elmo Todurov  (Cizra)      : Site Provider
 Ryan Smith-Roberts         : Coder
 Aaron Nebeker (Aion)       : MUDAdmin, LOW, Master of Coin
 JD Fenech    (Juno)        : Sysadmin, Coder
