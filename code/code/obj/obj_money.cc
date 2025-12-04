@@ -108,7 +108,15 @@ TMoney::~TMoney() {}
 
 void TMoney::assignFourValues(int x1, int x2, int, int) {
   setMoney(x1);
-  setCurrency((currencyTypeT)x2);
+  // Validate x2 before casting to enum to avoid undefined behavior
+  if (x2 < MIN_CURRENCY || x2 >= MAX_CURRENCY) {
+    vlogf(LOG_BUG,
+      format("TMoney::assignFourValues currency %d out of range for '%s' "
+             "(vnum %d), using default") %
+        x2 % getName() % objVnum());
+    x2 = CURRENCY_GRIMHAVEN;
+  }
+  setCurrency(static_cast<currencyTypeT>(x2));
 }
 
 void TMoney::getFourValues(int* x1, int* x2, int* x3, int* x4) const {
