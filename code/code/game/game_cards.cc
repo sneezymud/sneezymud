@@ -13,6 +13,7 @@
 #include "being.h"
 #include "games.h"
 #include "extern.h"
+#include "random.h"
 #include "game_drawpoker.h"
 #include "game_crazyeights.h"
 
@@ -81,7 +82,7 @@ const Card* CardDeck::undraw() {
 
 void CardDeck::shuffle() {
   auto& deck = pimpl->deck;
-  std::shuffle(deck.begin(), deck.end(), rng);
+  shuffleContainer(deck);
 }
 
 CardDeck::CardDeck() {

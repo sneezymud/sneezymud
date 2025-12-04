@@ -16,41 +16,16 @@ Unity builds combine multiple source files into single translation units, reduci
 
 ## Issues Discovered
 
-### 1. Static Initialization Order Fiasco (Critical)
+### 1. Static Initialization Order Fiasco (Critical) - ✅ FIXED
 
 **Symptom:** Program hangs at startup in `std::shuffle` within `CardDeck::CardDeck()`
 
 **Root Cause:** Global game objects are constructed before `main()`, and their constructors use a global RNG that may not be initialized yet.
 
-**Files Involved:**
-```cpp
-// sys/configuration.cc:14 - Global RNG definition
-std::mt19937 rng{std::random_device{}()};
-
-// game_drawpoker.cc:21 - Global game object
-DrawPokerGame gDrawPoker;
-
-// game_crazyeights.cc:21 - Global game object
-CrazyEightsGame gEights;
-
-// game_cards.cc:87-97 - Constructor calls shuffle()
-CardDeck::CardDeck() {
-    // ... populate deck ...
-    shuffle();  // Uses global rng - may not be initialized!
-}
-```
-
-**Fix Options:**
-1. **Construct-on-first-use idiom** (recommended):
-   ```cpp
-   // In a header or configuration.cc
-   std::mt19937& getRng() {
-       static std::mt19937 instance{std::random_device{}()};
-       return instance;
-   }
-   ```
-2. **Lazy initialization** - Don't shuffle in constructor, shuffle on first use
-3. **Remove global game objects** - Use pointers initialized in `main()`
+**Solution Applied:** Implemented construct-on-first-use idiom (Meyer's singleton) in
+`sys/random.h` and `sys/random.cc`. The `getRng()` function now returns a reference to
+a function-local static `std::mt19937`, ensuring it's initialized on first use regardless
+of static initialization order.
 
 ---
 
@@ -134,7 +109,7 @@ CardDeck::CardDeck() {
 
 ### Phase 1: Fix Critical Issues (Required)
 
-1. **Fix static initialization order** - Implement construct-on-first-use for `rng`
+1. ~~**Fix static initialization order** - Implement construct-on-first-use for `rng`~~ ✅ Done
 2. **Add missing include guards** - Audit all headers in `game/`
 3. **Fix duplicate definitions** - Convert `const` to `inline constexpr`
 

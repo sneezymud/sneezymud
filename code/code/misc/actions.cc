@@ -21,6 +21,7 @@
 #include "liquids.h"
 #include "obj_drinkcon.h"
 #include "obj_drug.h"
+#include "random.h"
 
 class socialMessg {
   public:
@@ -907,7 +908,7 @@ void TBeing::doPunch(const sstring& arg) {
   for (wearSlotT slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
     slots.push_back(slot);
   }
-  std::shuffle(slots.begin(), slots.end(), rng);
+  shuffleContainer(slots);
 
   for (StuffIter it = roomp->stuff.begin();
        it != roomp->stuff.end() && (t = *it); ++it) {

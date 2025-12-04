@@ -8,6 +8,7 @@
 #include "being.h"
 #include "obj_tooth_necklace.h"
 #include "extern.h"
+#include "random.h"
 #include "monster.h"
 #include "obj_card_deck.h"
 #include "handler.h"
@@ -35,7 +36,7 @@ void TBeing::doShuffle(const sstring& arg) {
     cards.push_back(t);
   }
 
-  std::shuffle(cards.begin(), cards.end(), rng);
+  shuffleContainer(cards);
 
   for (unsigned int i = 0; i < cards.size(); ++i) {
     *deck += *cards[i];
