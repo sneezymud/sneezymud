@@ -1,5 +1,6 @@
 #include "extern.h"
 #include "being.h"
+#include "random.h"
 #include <algorithm>
 
 std::vector<discNumT> disclist;
@@ -201,7 +202,7 @@ void TBeing::assignSkills(classIndT Class, discNumT primDisc,
 
     // first, let's choose a favored disc, this is our "specialization"
     if (!favored) {
-      std::shuffle(favorites.begin(), favorites.end(), rng);
+      shuffleContainer(favorites);
       favoredNum = favorites[0];
 
       if (!(favored = getDiscipline(favoredNum))) {
@@ -219,7 +220,7 @@ void TBeing::assignSkills(classIndT Class, discNumT primDisc,
 
     // now let's learn some random discs
     // first, shuffle our list
-    std::shuffle(disclist.begin(), disclist.end(), rng);
+    shuffleContainer(disclist);
 
     // now go down the list and practice the first one that isn't maxed
     bool found = false;
