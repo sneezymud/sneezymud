@@ -796,7 +796,8 @@ void loadSetClass::suitAdd(const char* tName, int tHelm, int tCollar,
     }
   }
 
-  newSuitStruct.suitLevel /= suitCount;
+  if (suitCount > 0)
+    newSuitStruct.suitLevel /= suitCount;
 
   for (int suitIndex = suits.size(); suitIndex > 0; suitIndex--)
     suits[suitIndex] = suits[suitIndex - 1];
