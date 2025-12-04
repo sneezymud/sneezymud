@@ -99,12 +99,13 @@ int TMonster::checkSpec(TBeing* t, cmdTypeT cmd, const char* arg, TThing* t2) {
   if (inRoom() == Room::HELL && spec != SPEC_TORMENTOR)
     return FALSE;
 
-  // we will use a static cast on t2 as we don't always pass a true
-  // TThing as the extra pointer.  e.g.
-  // CMD_MOB_KILLED_NEARBY: vict passed as t2
+  // We use reinterpret_cast as we don't always pass a true TThing as the extra
+  // pointer. Some commands pass integers cast to pointers (e.g.,
+  // CMD_MOB_MOVED_INTO_ROOM passes room number, CMD_MOB_KILLED_NEARBY passes
+  // vict).
   if (spec) {
     rc = (mob_specials[GET_MOB_SPE_INDEX(spec)].proc)(t, cmd, arg, this,
-      static_cast<TObj*>(t2));
+      reinterpret_cast<TObj*>(t2));
     return rc;
   }
   return FALSE;
