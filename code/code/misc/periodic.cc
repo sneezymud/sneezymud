@@ -2113,9 +2113,13 @@ int TObj::updateBurning(void) {
     // suppose we have a wooden staff, 4000 volume, 20 structure and 500
     // flammability, (20/4000)=.005, .005*500 = 2.5, 20/2.5 = 8
     // so it will burn for approx 8 rounds
-    int burnamount =
-      (int)((double)((double)getMaxStructPoints() / getVolume()) *
-            material_nums[getMaterial()].flammability);
+    int volume = getVolume();
+    int burnamount = 0;
+    if (volume > 0) {
+      burnamount =
+        (int)((double)((double)getMaxStructPoints() / volume) *
+              material_nums[getMaterial()].flammability);
+    }
 
     // roll in global modifier for burn damage
     burnamount *= tweakInfo[TWEAK_BURNRATE]->current;
