@@ -899,7 +899,7 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
     case SKILL_THROATSLIT:
       return &((CDMurder*)cd)->skThroatSlit;
     case SKILL_GARROTTE:  //                  501
-      return &((CDMurder*)cd)->skGarrotte;
+      return &((CDThiefFight*)cd)->skGarrotte;
 
       // disc_poisons
 
@@ -1091,7 +1091,7 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
     case SKILL_DIVINATION:  //                391
       return &((CDAdvAdventuring*)cd)->skDivination;
     case SKILL_ENCAMP:  //                    393
-      return &((CDAdvAdventuring*)cd)->skEncamp;
+      return &((CDAdventuring*)cd)->skEncamp;
     case SKILL_FISHLORE:
       return &((CDAdvAdventuring*)cd)->skFishlore;
     case SKILL_TROLLISH:

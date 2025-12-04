@@ -36,6 +36,7 @@ class CDAdventuring : public CDiscipline {
     CSkill skGnollJargon;
     CSkill skTroglodytePidgin;
     CSkill skCook;
+    CSkill skEncamp;
 
     virtual CDAdventuring* cloneMe() { return new CDAdventuring(*this); }
 
