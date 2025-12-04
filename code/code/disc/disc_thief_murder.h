@@ -5,7 +5,6 @@
 
 class CDMurder : public CDiscipline {
   public:
-    CSkill skGarrotte;
     CSkill skThroatSlit;
 
     virtual CDMurder* cloneMe() { return new CDMurder(*this); }
