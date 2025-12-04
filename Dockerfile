@@ -55,8 +55,10 @@ LABEL org.opencontainers.image.description="SneezyMUD Game Server"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Sanitizer options for enhanced error reporting (ASan is enabled in production builds)
+# Sanitizer options for enhanced error reporting (ASan + UBSan enabled in production builds)
+# halt_on_error=0 for UBSan allows continued execution after logging undefined behavior
 ENV ASAN_OPTIONS=strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1
+ENV UBSAN_OPTIONS=print_stacktrace=1:halt_on_error=0
 
 RUN --mount=type=cache,target=/var/cache/apt \
   apt-get update && \
@@ -64,6 +66,7 @@ RUN --mount=type=cache,target=/var/cache/apt \
   ca-certificates \
   gdb \
   libasan8 \
+  libubsan1 \
   libboost-atomic1.83.0 \
   libboost-filesystem1.83.0 \
   libboost-program-options1.83.0 \

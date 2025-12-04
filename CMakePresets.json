@@ -56,26 +56,26 @@
         {
             "name": "release-gcc",
             "displayName": "GCC Production",
-            "description": "Release build with GCC, -O2 + ASan + LTO",
+            "description": "Release build with GCC, -O2 + ASan + UBSan + LTO",
             "inherits": "base-gcc",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_CXX_FLAGS_RELEASE": "-O2 -g",
                 "SNEEZY_ENABLE_ASAN": "ON",
-                "SNEEZY_ENABLE_UBSAN": "OFF",
+                "SNEEZY_ENABLE_UBSAN": "ON",
                 "SNEEZY_ENABLE_LTO": "ON"
             }
         },
         {
             "name": "release-clang",
             "displayName": "Clang Production",
-            "description": "Release build with Clang, -O2 + ASan + ThinLTO",
+            "description": "Release build with Clang, -O2 + ASan + UBSan + ThinLTO",
             "inherits": "base-clang",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_CXX_FLAGS_RELEASE": "-O2 -g",
                 "SNEEZY_ENABLE_ASAN": "ON",
-                "SNEEZY_ENABLE_UBSAN": "OFF",
+                "SNEEZY_ENABLE_UBSAN": "ON",
                 "SNEEZY_ENABLE_LTO": "ON"
             }
         },
