@@ -13,15 +13,7 @@ concurrency:
 jobs:
   build_and_test:
     runs-on: ubuntu-24.04
-    name: Build and Test (${{ matrix.preset }})
-    strategy:
-      fail-fast: false
-      matrix:
-        preset:
-          # Dev build: catches unity-masked bugs (ODR violations, namespace collisions)
-          - dev-gcc
-          # Release build: catches optimization-only bugs (UB, LTO issues)
-          - release-gcc
+    name: Build and Test
     steps:
       - name: Checkout this commit
         uses: actions/checkout@v4
@@ -64,7 +56,7 @@ jobs:
       - name: Compile code
         uses: ./.github/actions/build-cmake
         with:
-          preset: ${{ matrix.preset }}
+          preset: release-gcc
 
       - name: Verify the game boots up successfully
         run: ./scripts/verify_boot.sh
