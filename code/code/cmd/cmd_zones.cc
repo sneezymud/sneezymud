@@ -415,8 +415,13 @@ void TBeing::doZones(sstring tStString) {
       }
     }*/
 
-    total /= (count - 1);
-    dev = sqrt(total);
+    // Guard against division by zero (need at least 2 samples for variance).
+    if (count > 1) {
+      total /= (count - 1);
+      dev = sqrt(total);
+    } else {
+      dev = 0;
+    }
     total = count = 0;
 
     // find the median
