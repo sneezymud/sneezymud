@@ -24,6 +24,23 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Require minimum compiler versions for full C++20 support
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "13")
+        message(FATAL_ERROR
+            "GCC ${CMAKE_CXX_COMPILER_VERSION} does not fully support C++20.\n"
+            "Please upgrade to GCC 13 or later."
+        )
+    endif()
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "17")
+        message(FATAL_ERROR
+            "Clang ${CMAKE_CXX_COMPILER_VERSION} does not fully support C++20.\n"
+            "Please upgrade to Clang 17 or later."
+        )
+    endif()
+endif()
+
 # Generate compile_commands.json for IDE support (clangd, VS Code, etc.)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
