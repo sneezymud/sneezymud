@@ -128,25 +128,28 @@ target_compile_options(sneezy_compiler_options INTERFACE
 )
 
 # Debug-specific compile options (for better debugging and sanitizer stack traces)
+# Use debugger-native formats: -ggdb3 for GCC/GDB, -glldb for Clang/LLDB
 target_compile_options(sneezy_compiler_options INTERFACE
     $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:
-        -ggdb3
         -fno-common
         -fno-optimize-sibling-calls
         -fno-omit-frame-pointer
     >
-)
-
-# Clang needs explicit flag for full debug info on libstdc++ types
-target_compile_options(sneezy_compiler_options INTERFACE
+    $<$<AND:$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>,$<CXX_COMPILER_ID:GNU>>:
+        -ggdb3
+    >
     $<$<AND:$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>,$<CXX_COMPILER_ID:Clang>>:
+        -glldb
         -fno-limit-debug-info
     >
 )
 
 # Debug symbols for linker
 target_link_options(sneezy_compiler_options INTERFACE
-    $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:
+    $<$<AND:$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>,$<CXX_COMPILER_ID:GNU>>:
         -ggdb3
+    >
+    $<$<AND:$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>,$<CXX_COMPILER_ID:Clang>>:
+        -glldb
     >
 )
