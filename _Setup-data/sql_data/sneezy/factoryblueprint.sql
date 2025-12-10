@@ -1,6 +1,6 @@
 -- MariaDB dump 10.19  Distrib 10.5.9-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: sneezy-db    Database: sneezy
+-- Host: localhost    Database: sneezy
 -- ------------------------------------------------------
 -- Server version	10.5.9-MariaDB-1:10.5.9+maria~focal
 
@@ -35,8 +35,7 @@ CREATE TABLE `factoryblueprint` (
 
 LOCK TABLES `factoryblueprint` WRITE;
 /*!40000 ALTER TABLE `factoryblueprint` DISABLE KEYS */;
-INSERT INTO `factoryblueprint` VALUES (403,1,18),
-(404,1,18);
+INSERT INTO `factoryblueprint` VALUES (403,1,18),(404,1,18);
 /*!40000 ALTER TABLE `factoryblueprint` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -49,4 +48,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-02 15:14:41
+-- Dump completed on 2025-12-10  5:33:30

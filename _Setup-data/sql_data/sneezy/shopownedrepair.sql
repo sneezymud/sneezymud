@@ -1,6 +1,6 @@
 -- MariaDB dump 10.19  Distrib 10.5.9-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: sneezy-db    Database: sneezy
+-- Host: localhost    Database: sneezy
 -- ------------------------------------------------------
 -- Server version	10.5.9-MariaDB-1:10.5.9+maria~focal
 
@@ -35,12 +35,7 @@ CREATE TABLE `shopownedrepair` (
 
 LOCK TABLES `shopownedrepair` WRITE;
 /*!40000 ALTER TABLE `shopownedrepair` DISABLE KEYS */;
-INSERT INTO `shopownedrepair` VALUES (127,20,1),
-(129,5.5,0.9),
-(128,6,1),
-(130,5,1),
-(132,6,1),
-(131,6,1);
+INSERT INTO `shopownedrepair` VALUES (127,20,1),(129,5.5,0.9),(128,6,1),(130,5,1),(132,6,1),(131,6,1);
 /*!40000 ALTER TABLE `shopownedrepair` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +48,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-02 15:14:49
+-- Dump completed on 2025-12-10  5:33:42

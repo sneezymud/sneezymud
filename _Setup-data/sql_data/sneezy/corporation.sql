@@ -1,6 +1,6 @@
 -- MariaDB dump 10.19  Distrib 10.5.9-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: sneezy-db    Database: sneezy
+-- Host: localhost    Database: sneezy
 -- ------------------------------------------------------
 -- Server version	10.5.9-MariaDB-1:10.5.9+maria~focal
 
@@ -36,27 +36,7 @@ CREATE TABLE `corporation` (
 
 LOCK TABLES `corporation` WRITE;
 /*!40000 ALTER TABLE `corporation` DISABLE KEYS */;
-INSERT INTO `corporation` VALUES (1,'Small Business Alliance',4),
-(2,'Regents of the University of KYA',4),
-(3,'Fitz Inc.',4),
-(4,'The Frobozz Magic Company',4),
-(6,'Spiff Inc.',4),
-(7,'The Four Spots Pirate Gang',142),
-(8,'Adoresqua Inc.',4),
-(10,'Metal Workers Union',4),
-(11,'Buff and Chub Inc.',4),
-(12,'Wicked Wonka Inc.',4),
-(13,'GoldLama Co.',4),
-(16,'Food Workers Union',4),
-(17,'Players Alliance Against Crappy Shops',4),
-(21,'Royal Kingdom of Grimhaven',4),
-(23,'The Brotherhood of Galek',140),
-(24,'The Cult of Logrus',141),
-(25,'The Order of the Serpents',142),
-(27,'Royal Kingdom of Amber',142),
-(28,'Realm of the Cult of Logrus',141),
-(29,'Honorable Kingdom of Brightmoon',140),
-(30,'Sage Enterprises',4);
+INSERT INTO `corporation` VALUES (1,'Small Business Alliance',4),(2,'Regents of the University of KYA',4),(3,'Fitz Inc.',4),(4,'The Frobozz Magic Company',4),(6,'Spiff Inc.',4),(7,'The Four Spots Pirate Gang',142),(8,'Adoresqua Inc.',4),(10,'Metal Workers Union',4),(11,'Buff and Chub Inc.',4),(12,'Wicked Wonka Inc.',4),(13,'GoldLama Co.',4),(16,'Food Workers Union',4),(17,'Players Alliance Against Crappy Shops',4),(21,'Royal Kingdom of Grimhaven',4),(23,'The Brotherhood of Galek',140),(24,'The Cult of Logrus',141),(25,'The Order of the Serpents',142),(27,'Royal Kingdom of Amber',142),(28,'Realm of the Cult of Logrus',141),(29,'Honorable Kingdom of Brightmoon',140),(30,'Sage Enterprises',4);
 /*!40000 ALTER TABLE `corporation` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -69,4 +49,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-02 15:14:40
+-- Dump completed on 2025-12-10  5:33:39
