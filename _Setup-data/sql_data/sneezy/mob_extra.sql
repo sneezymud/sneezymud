@@ -44,7 +44,6 @@ INSERT INTO `mob_extra` VALUES (10,'bamfin','This is a <r>test<z> of the <k><n> 
 (6460,'repop','324946152'),
 (8950,'deathcry','The ground shakes as it connects with the lifeless body of the Rhentek nearby.'),
 (9095,'deathcry','<r>I have failed you L\'yrel!!!!!  AVENGE ME!!!'),
-(9576,'deathcry','Glodo stares at nothing and whispers, \"Even death will not keep me from Niomi.....\"'),
 (10601,'deathcry','With her last burst of electrical energy, Shorenjin burns the caves walls in her death throes!'),
 (10601,'repop','The dragon Shorenjin, the Ancient bursts from the water below your feet.'),
 (10602,'deathcry','Loranth-gil, King of the Lake Elves invokes a curse upon right before his body falls lifeless.'),
@@ -96,4 +95,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-02 15:14:42
+-- Dump completed on 2025-12-11  1:17:48

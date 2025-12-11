@@ -43,6 +43,7 @@ INSERT INTO `globaltoggles` VALUES (1,0,0,'No-Shouting','allow shouting'),
 (5,1,0,'Clients','allow connections with SneezyMUD client'),
 (6,1,0,'Builder Wiznet','allow builders to hear wiznet'),
 (7,1,0,'PCs w/mob names','allow PCs with mob names'),
+(8,0,0,'Twinky Combat','twinky combat messages'),
 (9,0,0,'Time DB Queries','time database queries'),
 (10,0,0,'Game Loop Timing','print timing info for game loop'),
 (11,1,0,'Double Exp','turn on double exp'),
@@ -69,4 +70,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-02 15:14:41
+-- Dump completed on 2025-12-11  1:17:47

@@ -285,7 +285,6 @@ INSERT INTO `permadeath` VALUES ('Telaqui',5,1,'a robber'),
 ('Chaynal',31,0,'no one'),
 ('Mortal',4,0,'no one'),
 ('Colambo',7,0,'no one'),
-('Stark',20,0,'no one'),
 ('Arya',21,0,'no one'),
 ('Aquaman',4,1,'Nicodemus the old fisherman'),
 ('Permidaeth',50,0,'no one'),
@@ -306,4 +305,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-02 15:14:43
+-- Dump completed on 2025-12-11  1:17:48

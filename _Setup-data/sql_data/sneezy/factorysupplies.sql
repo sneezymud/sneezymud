@@ -36,7 +36,7 @@ CREATE TABLE `factorysupplies` (
 
 LOCK TABLES `factorysupplies` WRITE;
 /*!40000 ALTER TABLE `factorysupplies` DISABLE KEYS */;
-INSERT INTO `factorysupplies` VALUES (251,1,'meat',13);
+INSERT INTO `factorysupplies` VALUES (251,1,'meat',0);
 /*!40000 ALTER TABLE `factorysupplies` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -49,4 +49,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-02 15:14:41
+-- Dump completed on 2025-12-11  1:17:47
