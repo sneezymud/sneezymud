@@ -317,7 +317,6 @@ INSERT INTO `shop` VALUES (0,1.1,0.9,'I don\'t have that right now.  Try \"list\
 (261,1,0,'I don\'t have that right now.  Try \"list\".','I\'ve never heard of that!','Go sell it to someone who cares!','I can\'t afford that!','I don\'t think you have that kind of money!','That\'ll be %d talens.  Thank you!','Here is your %d talens.  Thank you!',2,1,16708,0,16712,0,96,0,0,0),
 (262,1.5,0.1,'I don\'t have that right now.  Try \"list\".','I\'ve never heard of that!','Go sell it to someone who cares!','I can\'t afford that!','I don\'t think you have that kind of money!','That\'ll be %d talens.  Thank you!','Here is your %d talens.  Thank you!',2,1,46551,0,46593,0,96,0,0,1),
 (263,1.5,0.1,'I don\'t have that right now.  Try \"list\".','I\'ve never heard of that!','Go sell it to someone who cares!','I can\'t afford that!','I don\'t think you have that kind of money!','That\'ll be %d talens.  Thank you!','Here is your %d talens.  Thank you!',2,1,46550,0,46594,0,96,0,0,1);
-
 /*!40000 ALTER TABLE `shop` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -330,4 +329,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-02 15:14:48
+-- Dump completed on 2025-12-11  1:17:50
