@@ -197,7 +197,10 @@ if flag_debug:
         env.Append(CXXFLAGS='-fsanitize=integer')
 
 env.Append(extra_libs=[opt_libs])
-env.ParseConfig('pkg-config --cflags --libs mariadb')
+try:
+  env.ParseConfig('pkg-config --cflags --libs mariadb')
+except OSError:
+  env.ParseConfig('pkg-config --cflags --libs libmariadb')
 
 ## harden: security flags, slows runtime a bit
 if flag_harden:
