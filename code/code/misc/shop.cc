@@ -882,7 +882,7 @@ int TObj::sellMe(TBeing* ch, TMonster* keeper, int shop_nr, int num = 1) {
         "It's been damaged, but I guess I can buy it as scrap.");
     }
   }
-  max(cost, 1);  // at least 1 talen
+  cost = max(cost, 1);  // at least 1 talen
   if (keeper->getMoney() < cost) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].missing_cash1);
     return false;
@@ -1405,7 +1405,7 @@ void TObj::valueMe(TBeing* ch, TMonster* keeper, int shop_nr, int num = 1) {
         "It's been damaged, but I guess I can buy it as scrap.");
     }
   }
-  max(cost, 1);  // at least 1 talen
+  cost = max(cost, 1);  // at least 1 talen
   if (willbuy) {
     buf = format("I'll give you %d talens for %s!") % cost % getName();
   } else {
