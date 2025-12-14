@@ -36,3 +36,4 @@ discord.cfg
 *.pyc
 *.pyo
 /lib/core
+.ccls-cache
