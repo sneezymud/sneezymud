@@ -1369,7 +1369,7 @@ static void logLearnFail(TBeing *caster, spellNumT spell, int type)
 
   if (caster->GetMaxLevel() > MAX_MORT) {
     return;
-  } 
+  }
 
   if (!caster->desc) {
     vlogf(LOG_BUG,format("Something went into logLearnFail with no desc (%d)") %  spell);
@@ -2200,7 +2200,7 @@ void TBeing::initSkillsBasedOnDiscLearning(discNumT disc_num) {
           boost = min(max_amt, (int)discArray[i]->startLearnDo);
           if ((5 * discArray[i]->learn) >= MAX_SKILL_LEARNEDNESS) {
             value = 50 + ((disc_learn - discArray[i]->start) * 2);
-            min(value, 100);
+            value = min(value, 100);
             value = value * max_amt;
             value /= 100;
             value = min((int)MAX_SKILL_LEARNEDNESS, value);
@@ -2209,7 +2209,7 @@ void TBeing::initSkillsBasedOnDiscLearning(discNumT disc_num) {
           } else {
             if (disc_learn <= MAX_DISC_LEARNEDNESS) {
               value = 75 + (disc_learn - discArray[i]->start);
-              min(value, 100);
+              value = min(value, 100);
               value = value * max_amt;
               value /= 100;
               value = min((int)MAX_SKILL_LEARNEDNESS, value);
@@ -2690,7 +2690,7 @@ static void logLearnAttempts(TBeing *caster, spellNumT spell, logLearnAttemptT t
     case LEARN_ATT_ADD:
       discArray[spell]->learnAttempts++;
       discArray[spell]->learnLearn += caster->getSkillValue(spell);
-      discArray[spell]->learnLevel += caster->GetMaxLevel(); 
+      discArray[spell]->learnLevel += caster->GetMaxLevel();
       break;
     case LEARN_ATT_REM:
       discArray[spell]->learnAttempts -= 1;
@@ -2710,7 +2710,7 @@ enum logLearnSuccessT {
 
 static void logLearnSuccess(TBeing *caster, spellNumT spell, logLearnSuccessT type, int boost)
 {
-  // this is used to log learn success 
+  // this is used to log learn success
   // there is usually no need to call this directly as it sits inside i
   // learnFromDoing and learnFromDoingUnusual
 

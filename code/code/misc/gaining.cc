@@ -331,7 +331,7 @@ void TBeing::raiseDiscOnce(discNumT which) {
     if (isPc() || desc)
       affectTotal();
   }
-  max(amount, 0);
+  amount = max(amount, 0);
   amount += calcRaiseDisc(which, FALSE);
   d->setNatLearnedness(min((int)MAX_DISC_LEARNEDNESS, amount));
   d->setLearnedness(min((int)MAX_DISC_LEARNEDNESS, amount));
