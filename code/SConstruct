@@ -281,8 +281,6 @@ if flag_pretty:
     env.Append(CXXCOMSTR=pretty_compile, SHCXXCOMSTR=pretty_compile,
                LINKCOMSTR=pretty_link, SHLINKCOMSTR=pretty_link,
                ARCOMSTR=pretty_link, RANLIBCOMSTR=pretty_index)
-    Progress([ "\033[32mChecking targets\033[0m %s\r" % s for s in '-\\|/' ],
-             interval=5)
 
 try:
     git_hash = subprocess.check_output(
