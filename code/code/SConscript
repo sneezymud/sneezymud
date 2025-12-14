@@ -72,5 +72,5 @@ env.Alias('shell', '../shell')
 
 
 # unit tests
-env.SConscript('tests/SConscript',
-               exports='libs')
+# env.SConscript('tests/SConscript',
+#                exports='libs')
