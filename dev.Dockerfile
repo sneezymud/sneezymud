@@ -1,22 +1,33 @@
-FROM ubuntu:focal AS build
+# syntax=docker/dockerfile:1
 
-RUN apt-get update && \
-  DEBIAN_FRONTEND=noninteractive TZ=utc apt-get install --yes --no-install-recommends \
+FROM ubuntu:noble
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN --mount=type=cache,target=/var/cache/apt \
+  apt-get update && \
+  TZ=utc apt-get install --yes --no-install-recommends \
   build-essential \
-  libboost-dev \
-  libboost-program-options-dev \
-  libboost-regex-dev \
-  libboost-filesystem-dev \
-  libboost-system-dev \
-  pkg-config \
-  libmariadbclient-dev \
-  scons \
-  libcurl4-openssl-dev \
-  git \
   ca-certificates \
+  cmake \
   gdb \
-  netcat \
+  git \
+  libasan8 \
+  libubsan1 \
+  libboost-filesystem1.83-dev \
+  libboost-program-options1.83-dev \
+  libboost-regex1.83-dev \
+  libboost-system1.83-dev \
+  libboost1.83-dev \
+  libcurl4-openssl-dev \
+  libmariadb-dev \
+  mold \
+  netcat-openbsd \
+  ninja-build \
+  pkgconf \
   tintin++ && \
-  git config --global --add safe.directory /sneezymud-docker/sneezymud
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/* && \
+  git config --global --add safe.directory /sneezymud-docker/services/sneezymud
 
-WORKDIR /sneezymud-docker/sneezymud/code
+WORKDIR /sneezymud-docker/services/sneezymud
