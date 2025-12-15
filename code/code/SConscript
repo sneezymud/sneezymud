@@ -14,10 +14,11 @@ if not sys.platform.startswith('darwin'):
 
 # ordered by dependencies
 libsneezy_dirs = 'sys misc cmd disc game obj spec task'.split()
+include_dirs = libsneezy_dirs + ['io']
 
 Import('env');
 
-env.Append(CPPPATH=[ '#/code/' + path for path in libsneezy_dirs ])
+env.Append(CPPPATH=[ '#/code/' + path for path in include_dirs ])
 env.Append(CPPPATH=[ '#/libs/json/src' ])
 
 # libsneezy
@@ -29,7 +30,11 @@ else:
     # single static library, included whole in every binary
     libsneezy_files = [ Glob('%s/*.cc' % path) for path in libsneezy_dirs ]
     libsneezy = [ env.StaticLibrary(target='sneezy', source=libsneezy_files) ]
-libs = libsneezy  + env.get('extra_libs', []) + external_libs + env.get('LIBS')
+
+libio_files = [ Glob('io/*.cc') ]
+libio = [ env.StaticLibrary(target='io', source=libio_files) ]
+
+libs = libsneezy + libio + env.get('extra_libs', []) + external_libs + env.get('LIBS')
 
 # main binary
 sneezy = env.Program('sneezy', 'main.cc', LIBS=libs)

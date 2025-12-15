@@ -17,8 +17,7 @@ env.Append(CXXFLAGS=[
     ])
 
 env.Append(LIBPATH='../../objs')  # for libsneezy
-libsneezy = 'libsneezy'
-libs = [libsneezy] + env.get('extra_libs', []) + external_libs + env.get('LIBS')
+libs = ['libsneezy'] + env.get('extra_libs', []) + external_libs + env.get('LIBS')
 
 tests = env.Program(target='tests', source=Glob('test_*.cc'), LIBS=libs)
 test_alias = env.Alias('tests', [tests], tests[0].abspath)

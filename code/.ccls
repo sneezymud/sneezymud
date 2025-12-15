@@ -1,6 +1,7 @@
 clang
 %h -std=c++17
 %cpp -std=c++17
+-Icode/io
 -Icode/sys
 -Icode/misc
 -Icode/cmd

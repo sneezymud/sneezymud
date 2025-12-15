@@ -1,4 +1,5 @@
 #include "database.h"
+#include "sstring.h"
 #include <iostream>
 
 class MockDb : public IDatabase {
