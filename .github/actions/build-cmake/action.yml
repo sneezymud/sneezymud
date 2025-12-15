@@ -1,9 +1,10 @@
 name: Build with CMake
+description: Configure and build project using CMake presets with ccache
 inputs:
   preset:
     description: CMake preset to use
     required: false
-    default: release-gcc
+    default: release-clang
 runs:
   using: composite
   steps:

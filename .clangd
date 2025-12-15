@@ -1,0 +1,16 @@
+# clangd language server configuration
+#
+# clang-tidy checks are inherited from .clang-tidy automatically.
+# Compile flags are inherited from compile_commands.json.
+
+Diagnostics:
+  ClangTidy:
+    FastCheckFilter: None
+  UnusedIncludes: Strict
+  MissingIncludes: Strict
+Hover:
+  ShowAKA: Yes
+InlayHints:
+  Enabled: Yes
+  ParameterNames: Yes
+  DeducedTypes: Yes
