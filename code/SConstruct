@@ -26,7 +26,7 @@ def error_exit(*msg):
 # - link to clang's libc++ on linux
 # - clang LTO on linux, probably needs the above
 
-Default('tests', 'sneezy')
+Default('sneezy')
 
 Help("""
 Targets: (default is 'sneezy')
