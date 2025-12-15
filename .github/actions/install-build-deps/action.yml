@@ -1,4 +1,5 @@
 name: Install build dependencies
+description: Install apt packages required for building SneezyMUD
 inputs:
   extra-packages:
     description: Additional apt packages to install
