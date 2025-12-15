@@ -1,15 +1,12 @@
 // For linking unittests against a fake database implementation.
-// Do not call these methods, instead use the MockDb if you need to verify DB queries.
+// use the MockDb if you need to verify DB queries
 
+#include "database.h"
+#include "sstring.h"
 
 #include <cassert>
-#include <stdarg.h>
-
-#include "configuration.h"
-#include "extern.h"
-#include "database.h"
-#include "timing.h"
-#include "toggle.h"
+#include <string>
+#include <vector>
 
 std::vector<std::string> db_hosts(DB_MAX);
 std::vector<std::string> db_names(DB_MAX);
@@ -33,7 +30,7 @@ long TDatabase::lastInsertId() {
 }
 
 bool TDatabase::fetchRow() {
-  assert(false);
+  return false;
 }
 
 unsigned long TDatabase::escape_string(char* to, const char* from,
@@ -55,7 +52,7 @@ const sstring TDatabase::operator[](const sstring& s) const {
 }
 
 bool TDatabase::query(const char* query, ...) {
-  assert(false);
+  return false;
 }
 
 bool TDatabase::isResults() {

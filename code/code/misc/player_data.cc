@@ -597,7 +597,7 @@ void TPerson::loadFromDb(const std::string& name) {
 }
 
 // TODO: move the whole mess into DB
-void TPerson::loadFromSt(charFile* st) {
+void TPerson::loadFromSt(charFile* st, std::unique_ptr<IDatabase> dbase) {
   int i;
 
   name = st->name;
@@ -787,30 +787,32 @@ void TPerson::loadFromSt(charFile* st) {
   // fatigue = st->fatigue;
   setHeroNum(st->hero_num);
 
-  TDatabase db(DB_SNEEZY);
+  std::unique_ptr<IDatabase> db(
+    dbase ? std::move(dbase)
+          : std::move(std::unique_ptr<IDatabase>(new TDatabase(DB_SNEEZY))));
 
   desc->playerID = 0;
-  db.query(
+  db->query(
     "select p_type, hp, mana, move, money, exp, room, opp, tank, piety, "
     "lifeforce, time from playerprompt where player_id=%i",
     getPlayerID());
 
-  if (db.fetchRow()) {
-    desc->prompt_d.type = convertTo<int>(db["p_type"]);
+  if (db->fetchRow()) {
+    desc->prompt_d.type = convertTo<int>((*db)["p_type"]);
 
-    strcpy(desc->prompt_d.hpColor, db["hp"].c_str());
-    strcpy(desc->prompt_d.manaColor, db["mana"].c_str());
-    strcpy(desc->prompt_d.moveColor, db["move"].c_str());
-    strcpy(desc->prompt_d.moneyColor, db["money"].c_str());
-    strcpy(desc->prompt_d.expColor, db["exp"].c_str());
-    strcpy(desc->prompt_d.roomColor, db["room"].c_str());
-    strcpy(desc->prompt_d.oppColor, db["opp"].c_str());
-    strcpy(desc->prompt_d.tankColor, db["tank"].c_str());
-    strcpy(desc->prompt_d.pietyColor, db["piety"].c_str());
-    strcpy(desc->prompt_d.lifeforceColor, db["lifeforce"].c_str());
-    strcpy(desc->prompt_d.timeColor, db["time"].c_str());
+    strcpy(desc->prompt_d.hpColor, (*db)["hp"].c_str());
+    strcpy(desc->prompt_d.manaColor, (*db)["mana"].c_str());
+    strcpy(desc->prompt_d.moveColor, (*db)["move"].c_str());
+    strcpy(desc->prompt_d.moneyColor, (*db)["money"].c_str());
+    strcpy(desc->prompt_d.expColor, (*db)["exp"].c_str());
+    strcpy(desc->prompt_d.roomColor, (*db)["room"].c_str());
+    strcpy(desc->prompt_d.oppColor, (*db)["opp"].c_str());
+    strcpy(desc->prompt_d.tankColor, (*db)["tank"].c_str());
+    strcpy(desc->prompt_d.pietyColor, (*db)["piety"].c_str());
+    strcpy(desc->prompt_d.lifeforceColor, (*db)["lifeforce"].c_str());
+    strcpy(desc->prompt_d.timeColor, (*db)["time"].c_str());
   } else {
-    db.query(
+    db->query(
       "insert into playerprompt (player_id, p_type, hp, mana, move, money, "
       "exp, room, opp, tank, piety, lifeforce, time) values (%i, 267869, '', "
       "'', '', '', '', '', '', '', '', '', '')",
@@ -845,13 +847,13 @@ void TPerson::loadFromSt(charFile* st) {
   }
 
   // tacked on account and player id here
-  db.query(
+  db->query(
     "select id as player_id, account_id, load_room from player where id = %i",
     getPlayerID());
-  db.fetchRow();
-  in_room = convertTo<int>(db["load_room"]);
-  player.account_id = convertTo<int>(db["account_id"]);
-  player.player_id = convertTo<int>(db["player_id"]);
+  db->fetchRow();
+  in_room = convertTo<int>((*db)["load_room"]);
+  player.account_id = convertTo<int>((*db)["account_id"]);
+  player.player_id = convertTo<int>((*db)["player_id"]);
   if (!in_room && st->load_room)
     in_room = st->load_room;
 

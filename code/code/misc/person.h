@@ -13,6 +13,7 @@
 extern Descriptor* descriptor_list;
 extern Descriptor* next_to_process;
 
+class IDatabase;
 class TPersonPimpl;
 
 class TPerson : public TBeing {
@@ -60,7 +61,7 @@ class TPerson : public TBeing {
     void resetChar();
     int genericLoadPC();
     void loadFromDb(const std::string& name);
-    void loadFromSt(charFile*);
+    void loadFromSt(charFile*, std::unique_ptr<IDatabase> = nullptr);
     void fixPracs();
     void initChar();
     void doStart();
