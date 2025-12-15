@@ -26,7 +26,7 @@ def error_exit(*msg):
 # - link to clang's libc++ on linux
 # - clang LTO on linux, probably needs the above
 
-Default('sneezy')
+Default('tests', 'sneezy')
 
 Help("""
 Targets: (default is 'sneezy')
@@ -311,7 +311,6 @@ with open('../lib/version.txt', 'w') as f:
 ## pull in C++ targets
 env.SConscript(
         'code/SConscript', variant_dir='#/objs', duplicate=0, exports='env')
-
 
 ## etags
 PhonyTargets(env, tags='@etags code/*/*')

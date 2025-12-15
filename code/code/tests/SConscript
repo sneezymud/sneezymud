@@ -2,29 +2,24 @@
 
 Import(['env', 'libs'])
 
+external_libs = [
+    'crypt',
+    'gtest',
+    'gtest_main',
+    'boost_program_options',
+    'boost_regex',
+    'boost_filesystem',
+    'boost_system',
+]
+
 env.Append(CXXFLAGS=[
     '-Wno-unused-result',
     ])
 
-cxx_tests = (
-        'DescriptorListTest',
-        'SString',
-        'SpellParser',
-        'AllocateDeallocateTPersonDescriptorAndDb',
-        'Run',
-        'Act',
-        'CommTest',
-        # 'Tell', disabled as it requires better mocking of DB than available now
-        'Exceptions',
-        'GarbleTest',
-        'Pfile',
-        'ConfigFile',
-        'ConvertTo',
-        # 'DBTest', disabled as the MySQL connection in TDatabase class is not comfily mockable
-        # 'Fruit', needs DB
-        # 'Stat', needs DB
-)
+env.Append(LIBPATH='../../objs')  # for libsneezy
+libsneezy = 'libsneezy'
+libs = [libsneezy] + env.get('extra_libs', []) + external_libs + env.get('LIBS')
 
-for test in cxx_tests:
-    env.CxxTest(test, CXXTEST_SUFFIX='.h', LIBS=libs,
-                CXXTEST_SKIP_ERRORS=False)
+tests = env.Program(target='tests', source=Glob('test_*.cc'), LIBS=libs)
+test_alias = env.Alias('tests', [tests], tests[0].abspath)
+env.AlwaysBuild(test_alias)
