@@ -16,7 +16,7 @@ runs:
         set -e
         sudo apt-get update
         export DEBIAN_FRONTEND=noninteractive
-        packages="build-essential ccache cmake ninja-build mold libboost1.83-dev libboost-program-options1.83-dev libboost-regex1.83-dev libboost-filesystem1.83-dev libboost-system1.83-dev libmariadb-dev libcurl4-openssl-dev ca-certificates pkgconf"
+        packages="build-essential ca-certificates ccache clang cmake git libclang-rt-dev libboost-atomic1.83-dev libboost-filesystem1.83-dev libboost-program-options1.83-dev libboost-regex1.83-dev libboost-system1.83-dev libcurl4-openssl-dev libmariadb-dev lld llvm ninja-build pkgconf"
         if [ -n "${EXTRA_PACKAGES}" ]; then
           packages="${packages} ${EXTRA_PACKAGES}"
         fi

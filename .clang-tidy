@@ -1,0 +1,101 @@
+# .clang-tidy - clang-tidy configuration for SneezyMUD
+# Run with: cmake --build --preset <preset_name> --target clang-tidy
+#
+# Comprehensive modern C++20 checks for refactoring and new code.
+# This is intentionally strict - use it to ensure touched code follows modern best practices.
+# Legacy code will have **many** warnings; fix them incrementally as you work on each file.
+#
+# Requires: clang-tidy 17+ for misc-include-cleaner (Ubuntu 24.04 LTS provides 19 by default, has 20 available in apt)
+#
+# Disabled check explanations:
+#   - Platform/library-specific: abseil, altera, android, boost, darwin, fuchsia, linuxkernel, llvmlibc, mpi, objc, openmp, zircon
+#   - Style preferences: llvm-*
+#   - Would require major refactoring: cert-err58-cpp, cppcoreguidelines-avoid-non-const-global-variables,
+#       cppcoreguidelines-pro-bounds-constant-array-index, cppcoreguidelines-non-private-member-variables-in-classes,
+#       misc-non-private-member-variables-in-classes,
+#   - Purely stylistic or too noisy:
+#       modernize-use-trailing-return-type, readability-identifier-length, bugprone-easily-swappable-parameters,
+#       readability-function-size, readability-function-cognitive-complexity, misc-no-recursion,
+#       google-default-arguments, google-runtime-int, hicpp-named-parameter, hicpp-signed-bitwise,
+#       readability-avoid-nested-conditional-operator, readability-implicit-bool-conversion, readability-named-parameter
+#   - Requires GSL: cppcoreguidelines-owning-memory
+#   - C++23 only: modernize-use-std-print
+#
+# Specifically not disabled:
+#   - readability-braces-around-statements: Enforces consistent use of braces, improving readability and reducing errors
+#
+# Now that we support C++20, we could fix warnings from cppcoreguidelines-pro-bounds-constant-array-index with judicious
+# use of std::to_array/std::span, but it's going to be a lot of work to fix existing code and generate a ton of noise in
+# the meantime, so we'll leave it disabled for now. Enabling and fixing it incrementally could be a future improvement.
+
+---
+HeaderFilterRegex: 'code/code/.*\.h$'
+
+Checks: >
+  *,
+  misc-include-cleaner,
+  -abseil-*,
+  -altera-*,
+  -android-*,
+  -boost-*,
+  -bugprone-easily-swappable-parameters,
+  -cert-err58-cpp,
+  -cppcoreguidelines-avoid-non-const-global-variables,
+  -cppcoreguidelines-non-private-member-variables-in-classes,
+  -cppcoreguidelines-owning-memory,
+  -cppcoreguidelines-pro-bounds-constant-array-index,
+  -darwin-*,
+  -fuchsia-*,
+  -google-default-arguments,
+  -google-runtime-int,
+  -hicpp-named-parameter,
+  -hicpp-signed-bitwise,
+  -linuxkernel-*,
+  -llvm-header-guard,
+  -llvm-include-order,
+  -llvm-namespace-comment,
+  -llvmlibc-*,
+  -misc-no-recursion,
+  -misc-non-private-member-variables-in-classes,
+  -modernize-use-trailing-return-type,
+  -mpi-*,
+  -objc-*,
+  -openmp-*,
+  -readability-avoid-nested-conditional-operator,
+  -readability-function-cognitive-complexity,
+  -readability-function-size,
+  -readability-identifier-length,
+  -readability-implicit-bool-conversion,
+  -readability-named-parameter,
+  -zircon-*,
+
+CheckOptions:
+  # Naming Conventions (match existing codebase patterns)
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.StructCase
+    value: CamelCase
+  - key: readability-identifier-naming.FunctionCase
+    value: camelBack
+  - key: readability-identifier-naming.MethodCase
+    value: camelBack
+  - key: readability-identifier-naming.VariableCase
+    value: camelBack
+  - key: readability-identifier-naming.ParameterCase
+    value: camelBack
+  - key: readability-identifier-naming.MemberCase
+    value: camelBack
+  - key: readability-identifier-naming.EnumConstantCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.GlobalConstantCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.StaticConstantCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.NamespaceCase
+    value: lower_case
+
+  # Performance Check Configuration
+  - key: performance-for-range-copy.WarnOnAllAutoCopies
+    value: true
+  - key: performance-inefficient-string-concatenation.StrictMode
+    value: true

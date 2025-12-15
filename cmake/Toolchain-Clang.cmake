@@ -4,7 +4,7 @@
 # WHY SEPARATE GCC/CLANG TOOLCHAINS?
 # ----------------------------------
 # Each compiler has an optimal toolchain configuration:
-#   - GCC: mold/gold linker, gcc-ar/gcc-ranlib for LTO, classic LTO with auto parallelism
+#   - GCC: bfd linker, gcc-ar/gcc-ranlib for LTO, classic LTO with auto parallelism
 #   - Clang: lld linker, ThinLTO for faster link times, additional sanitizer features
 # See Toolchain-GCC.cmake for rationale on static libraries vs shared.
 

@@ -56,7 +56,7 @@ jobs:
       - name: Compile code
         uses: ./.github/actions/build-cmake
         with:
-          preset: release-gcc
+          preset: release-clang
 
       - name: Verify the game boots up successfully
         run: ./scripts/verify_boot.sh

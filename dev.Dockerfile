@@ -10,11 +10,11 @@ RUN --mount=type=cache,target=/var/cache/apt \
   build-essential \
   ca-certificates \
   ccache \
+  clang \
   cmake \
   gdb \
   git \
-  libasan8 \
-  libubsan1 \
+  libclang-rt-dev \
   libboost-atomic1.83-dev \
   libboost-filesystem1.83-dev \
   libboost-program-options1.83-dev \
@@ -22,7 +22,8 @@ RUN --mount=type=cache,target=/var/cache/apt \
   libboost-system1.83-dev \
   libcurl4-openssl-dev \
   libmariadb-dev \
-  mold \
+  lld \
+  llvm \
   netcat-openbsd \
   ninja-build \
   pkgconf \

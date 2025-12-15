@@ -54,7 +54,7 @@ jobs:
       - name: Compile code
         uses: ./.github/actions/build-cmake
         with:
-          preset: release-gcc
+          preset: release-clang
 
       - name: Cache compilation results
         uses: actions/cache/save@v4

@@ -28,11 +28,11 @@ sudo apt update
 sudo apt install build-essential \
   ca-certificates \
   ccache \
+  clang \
   cmake \
   gdb \
   git \
-  libasan8 \
-  libubsan1 \
+  libclang-rt-dev \
   libboost-atomic1.83-dev \
   libboost-filesystem1.83-dev \
   libboost-program-options1.83-dev \
@@ -40,7 +40,8 @@ sudo apt install build-essential \
   libboost-system1.83-dev \
   libcurl4-openssl-dev \
   libmariadb-dev \
-  mold \
+  lld \
+  llvm \
   netcat-openbsd \
   ninja-build \
   pkgconf
@@ -121,11 +122,11 @@ rm -rf build/dev-gcc
 
 The build system automatically uses these optimizations when available:
 
-| Technique        | When Used                 | Benefit                             |
-| ---------------- | ------------------------- | ----------------------------------- |
-| ccache           | Auto-enabled if installed | Caches object files across builds   |
-| PCH              | Always                    | Pre-parses common STL/Boost headers |
-| mold/lld linkers | Auto-detected             | Faster linking                      |
+| Technique | When Used                 | Benefit                             |
+| --------- | ------------------------- | ----------------------------------- |
+| ccache    | Auto-enabled if installed | Caches object files across builds   |
+| PCH       | Always                    | Pre-parses common STL/Boost headers |
+| lld       | Clang builds              | Faster linking                      |
 
 ## Running the Server
 

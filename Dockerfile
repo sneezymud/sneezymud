@@ -3,7 +3,7 @@
 # Build arguments
 ARG UBUNTU_VERSION=noble
 ARG BRANCH="master"
-ARG CMAKE_PRESET="release-gcc"
+ARG CMAKE_PRESET="release-clang"
 
 FROM ubuntu:${UBUNTU_VERSION} AS build
 
@@ -17,8 +17,10 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   TZ=utc apt-get install --yes --no-install-recommends \
   build-essential \
   ca-certificates \
+  clang \
   cmake \
   git \
+  libclang-rt-dev \
   libboost-atomic1.83-dev \
   libboost-filesystem1.83-dev \
   libboost-program-options1.83-dev \
@@ -26,7 +28,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   libboost-system1.83-dev \
   libcurl4-openssl-dev \
   libmariadb-dev \
-  mold \
+  lld \
+  llvm \
   ninja-build \
   pkgconf && \
   apt-get clean && \
@@ -66,8 +69,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   TZ=utc apt-get install --yes --no-install-recommends \
   ca-certificates \
   gdb \
-  libasan8 \
-  libubsan1 \
   libboost-atomic1.83.0 \
   libboost-filesystem1.83.0 \
   libboost-program-options1.83.0 \
