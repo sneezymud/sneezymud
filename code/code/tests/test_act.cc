@@ -1,11 +1,11 @@
-#include "configuration.h"
-#include "person.h"
-#include "extern.h"
-#include "charfile.h"
 #include "MockDb.h"
+#include "charfile.h"
+#include "configuration.h"
 #include "connect.h"
-#include "socket.h"
+#include "extern.h"
+#include "person.h"
 #include "player_data.h"
+#include "socket.h"
 
 #include <gtest/gtest.h>
 
