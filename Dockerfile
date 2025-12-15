@@ -11,7 +11,8 @@ FROM ubuntu:${UBUNTU_VERSION} AS build
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Using cache mounts throughout and removing cache after install reduces image size and speeds up builds
-RUN --mount=type=cache,target=/var/cache/apt \
+# sharing=locked serializes access to prevent apt lock conflicts when stages run in parallel
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   apt-get update && \
   TZ=utc apt-get install --yes --no-install-recommends \
   build-essential \
@@ -60,7 +61,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV ASAN_OPTIONS=strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1
 ENV UBSAN_OPTIONS=print_stacktrace=1:halt_on_error=0
 
-RUN --mount=type=cache,target=/var/cache/apt \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   apt-get update && \
   TZ=utc apt-get install --yes --no-install-recommends \
   ca-certificates \
@@ -78,9 +79,11 @@ RUN --mount=type=cache,target=/var/cache/apt \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
+# Use existing ubuntu user if present, otherwise create it
 # useradd -r flag creates a system account, which is preferrable when running as a service
 # useradd -m flag forces creation of home directory, which -r flag prevents by default
-RUN groupadd -r ubuntu && useradd -r -g ubuntu -m ubuntu
+RUN getent group ubuntu >/dev/null || groupadd -r ubuntu && \
+    id ubuntu >/dev/null 2>&1 || useradd -r -g ubuntu -m ubuntu
 
 COPY --from=build --chown=ubuntu:ubuntu /home/ubuntu/sneezymud/code/sneezy /home/ubuntu/code/sneezy
 COPY --from=build --chown=ubuntu:ubuntu /home/ubuntu/sneezymud/lib /home/ubuntu/lib
