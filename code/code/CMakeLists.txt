@@ -46,14 +46,12 @@ target_link_libraries(sneezy
         sneezy::sanitizers
 )
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_custom_command(TARGET sneezy POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E create_symlink
-            "$<TARGET_FILE:sneezy>"
-            "${CMAKE_SOURCE_DIR}/code/sneezy"
-        COMMENT "Symlinked code/sneezy -> $<TARGET_FILE:sneezy>"
-    )
-endif()
+add_custom_command(TARGET sneezy POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E create_symlink
+        "$<TARGET_FILE:sneezy>"
+        "${CMAKE_SOURCE_DIR}/code/sneezy"
+    COMMENT "Symlinked code/sneezy -> $<TARGET_FILE:sneezy>"
+)
 
 if(SNEEZY_BUILD_LOWTOOLS)
     message(STATUS "Building LOW tools (deprecated)")

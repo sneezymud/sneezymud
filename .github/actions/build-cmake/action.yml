@@ -30,9 +30,3 @@ runs:
       shell: bash
       if: always()
       run: ccache --show-stats
-
-    - name: Symlink binary for verify_boot.sh
-      shell: bash
-      env:
-        PRESET: ${{ inputs.preset }}
-      run: ln -sf "build/${PRESET}/code/code/sneezy" code/sneezy
