@@ -3,6 +3,8 @@ set(LIBSNEEZY_DIRS sys misc cmd disc game obj spec task)
 set(LIBSNEEZY_SOURCES "")
 set(LIBSNEEZY_INCLUDE_DIRS "")
 
+# NOTE: file(GLOB) doesn't detect added/removed files automatically.
+# After adding or removing .cc files, re-run cmake configuration.
 foreach(dir ${LIBSNEEZY_DIRS})
     file(GLOB dir_sources "${CMAKE_CURRENT_SOURCE_DIR}/${dir}/*.cc")
     list(APPEND LIBSNEEZY_SOURCES ${dir_sources})

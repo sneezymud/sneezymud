@@ -8,7 +8,7 @@ set -eu
 export ASAN_OPTIONS="strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1"
 export UBSAN_OPTIONS="print_stacktrace=1:halt_on_error=1"
 
-timeout 180 ./code/sneezy 2>&1 | tee sneezy.log | (grep -q "Entering game loop." && killall sneezy) || (
+timeout 180 ./code/sneezy 2>&1 | tee sneezy.log | (grep -q "Entering game loop." && (killall sneezy || true)) || (
   cat sneezy.log
   exit 1
 )

@@ -12,7 +12,7 @@ runs:
         {
           echo "CMAKE_CACHE_PATHS<<EOF"
           echo "build/"
-          echo "~/.cache/ccache"
+          echo "$HOME/.cache/ccache"
           echo "EOF"
         } >> "$GITHUB_ENV"
 
