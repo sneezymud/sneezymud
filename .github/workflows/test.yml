@@ -59,4 +59,4 @@ jobs:
           preset: release-clang
 
       - name: Verify the game boots up successfully
-        run: ./scripts/verify_boot.sh
+        run: make verify

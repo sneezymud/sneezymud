@@ -82,17 +82,24 @@ done
 
 ## Build System
 
-The build uses CMake with Ninja. Parallel builds are automatic.
+The easiest way to build is with Make:
 
 ```bash
-# Configure build first (only needed once)
-cmake --preset <preset-name>
-
-# Add --build to actually compile every time thereafter
-cmake --build --preset <preset-name>
+make              # Build with default preset (dev-clang)
+make run          # Build and run with sanitizer options
+make help         # Show all available targets
 ```
 
 The binary is output to `build/<preset-name>/code/code/sneezy` with a symlink at `code/sneezy`.
+
+### Direct CMake Usage
+
+For more control, you can use CMake directly:
+
+```bash
+cmake --preset <preset-name>        # Configure
+cmake --build --preset <preset-name> # Build
+```
 
 ### Available Presets
 
@@ -106,16 +113,20 @@ The binary is output to `build/<preset-name>/code/code/sneezy` with a symlink at
 ### Example Build Commands
 
 ```bash
-# Development build (use dev-gcc or dev-clang)
-cmake --preset dev-gcc
-cmake --build --preset dev-gcc
+# Development build (default: dev-clang)
+make
 
-# Production build with LTO (for CI/Docker)
-cmake --preset release-gcc
-cmake --build --preset release-gcc
+# Use a different preset
+make PRESET=dev-gcc
 
-# Clean a build
-rm -rf build/dev-gcc
+# Production build with LTO
+make PRESET=release-clang
+
+# Clean current preset's build directory
+make clean
+
+# Clean all build directories
+make clean-all
 ```
 
 ### Build Acceleration
@@ -131,7 +142,10 @@ The build system automatically uses these optimizations when available:
 ## Running the Server
 
 ```bash
-# Run from project root
+# Build and run with sanitizer options (recommended for development)
+make run
+
+# Or run the binary directly
 ./code/sneezy
 ```
 
@@ -180,11 +194,11 @@ The first character created in a new instance automatically becomes a level 60 i
 
 ## Testing
 
-Test setup is currently pretty minimal. Run the following scripts from the project root:
+Test setup is currently pretty minimal. Run the following from the project root:
 
 ```bash
-# Boot smoke test (requires database)
-./scripts/verify_boot.sh
+# Boot smoke test (requires database and prior build)
+make build verify
 
 # Functional tests (requires running server)
 func-test/run_test.sh
@@ -226,7 +240,7 @@ Ongoing changes to the database structure are stored as numbered migrations in `
 
 1. Join the [SneezyMUD Discord](https://discord.gg/AE3xf8BQHr) to discuss changes
 2. Fork the repository and create a feature branch
-3. Run `./scripts/run_clang_format.sh` on modified files (or configure pre-commit on your system - see `.pre-commit-config.yaml`)
+3. Run `make format` before committing (or configure pre-commit on your system - see `.pre-commit-config.yaml`)
 4. Submit a pull request
 
 See the [development wiki](https://github.com/sneezymud/sneezymud/wiki) for detailed guides.
