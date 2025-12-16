@@ -176,8 +176,20 @@ int TBeing::backstabHit(TBeing* victim, TThing* obj, int modifier) {
     d = 0;
   }
 
+  // Apply backstab damage
   if (reconcileDamage(victim, d, SKILL_BACKSTAB) == -1)
     return DELETE_VICT;
+
+  // Chain into stab if hit but didn't kill and high enough advanced learning
+  if (victim && d > 0 && victim->getHit() > 0 &&
+      getAdvLearning(SKILL_STABBING) >= 50) {
+    int rc = doStab("", victim);
+    if (IS_SET_DELETE(rc, DELETE_VICT)) {
+      delete victim;
+      victim = NULL;
+      return DELETE_VICT;
+    }
+  }
 
   return 0;
 }
