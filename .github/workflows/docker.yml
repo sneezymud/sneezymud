@@ -1,3 +1,8 @@
+# Build, cache, and publish Docker image on push to master.
+# This workflow compiles on the runner then packages the pre-built binary
+# into a Docker image and pushes it to the GitHub Container Registry.
+# Building on the runner allows us to leverage CMake caching to speed up
+# builds, which is not possible when building entirely within Docker.
 name: Build and Publish
 on:
   push:
@@ -14,15 +19,47 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build_image:
+  build_and_publish:
     runs-on: ubuntu-24.04
-    name: Build Image
+    name: Build and Publish
     steps:
-      - uses: actions/checkout@v4
-        name: Check out code
+      - name: Checkout code
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          submodules: "true"
+          submodules: recursive
+
+      - name: Configure cache settings
+        uses: ./.github/actions/setup-cmake-cache
+
+      - name: Determine cache key
+        id: cache-key
+        run: |
+          cache_key="${{ runner.os }}-cmake-master-${{ hashFiles(env.CMAKE_CACHE_HASH_GLOBS) }}"
+          echo "value=$cache_key" >> "$GITHUB_OUTPUT"
+          echo "CMAKE_CACHE_KEY=$cache_key" >> "$GITHUB_ENV"
+
+      - name: Install build prerequisites
+        uses: ./.github/actions/install-build-deps
+
+      - name: Restore cached build objects
+        uses: actions/cache/restore@v5
+        with:
+          path: ${{ env.CMAKE_CACHE_PATHS }}
+          key: ${{ env.CMAKE_CACHE_KEY }}
+          restore-keys: |
+            ${{ runner.os }}-cmake-master-
+
+      - name: Compile code
+        uses: ./.github/actions/build-cmake
+        with:
+          preset: release-clang
+
+      - name: Cache compilation results
+        uses: actions/cache/save@v5
+        with:
+          path: ${{ env.CMAKE_CACHE_PATHS }}
+          key: ${{ env.CMAKE_CACHE_KEY }}
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -35,7 +72,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build & Push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: Dockerfile

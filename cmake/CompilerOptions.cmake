@@ -2,7 +2,9 @@
 # Compiler warning flags, debug options, ccache, PCH, and IWYU support
 
 # ccache support - auto-enabled if found (speeds up clean rebuilds and branch switching)
-find_program(CCACHE_PROGRAM ccache)
+# NO_CACHE ensures we always check for ccache, even when reusing a cached CMake configuration
+# (otherwise a cached "not found" result prevents ccache from being used after installation)
+find_program(CCACHE_PROGRAM ccache NO_CACHE)
 if(CCACHE_PROGRAM)
     set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
     message(STATUS "Using ccache: ${CCACHE_PROGRAM}")
@@ -10,29 +12,36 @@ endif()
 
 # Precompiled headers (PCH) - stable STL/Boost headers only
 # These rarely change and are included by most source files
-# PCH works alongside ccache (they cache different things)
-set(SNEEZY_PCH_HEADERS
-    <algorithm>
-    <cstdio>
-    <cstdlib>
-    <cstring>
-    <ctime>
-    <fstream>
-    <functional>
-    <list>
-    <map>
-    <memory>
-    <optional>
-    <queue>
-    <set>
-    <sstream>
-    <string>
-    <unordered_map>
-    <vector>
-    # Boost headers (commonly used throughout codebase)
-    <boost/algorithm/string.hpp>
-    <boost/regex.hpp>
-)
+# Note: PCH and ccache are incompatible - PCH invalidates ccache on every clean build
+# ccache provides better overall build performance, so PCH is disabled by default
+option(SNEEZY_ENABLE_PCH "Enable precompiled headers (breaks ccache)" OFF)
+if(SNEEZY_ENABLE_PCH)
+    set(SNEEZY_PCH_HEADERS
+        <algorithm>
+        <cstdio>
+        <cstdlib>
+        <cstring>
+        <ctime>
+        <fstream>
+        <functional>
+        <list>
+        <map>
+        <memory>
+        <optional>
+        <queue>
+        <set>
+        <sstream>
+        <string>
+        <unordered_map>
+        <vector>
+        # Boost headers (commonly used throughout codebase)
+        <boost/algorithm/string.hpp>
+        <boost/regex.hpp>
+    )
+else()
+    set(SNEEZY_PCH_HEADERS "")
+    message(STATUS "PCH disabled")
+endif()
 
 # Include-What-You-Use (IWYU) - optional analysis tool for header cleanup
 # Usage: cmake --preset dev-gcc -DSNEEZY_USE_IWYU=ON

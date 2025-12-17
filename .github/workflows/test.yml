@@ -16,7 +16,7 @@ jobs:
     name: Build and Test
     steps:
       - name: Checkout this commit
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           submodules: recursive
@@ -46,7 +46,7 @@ jobs:
           done
 
       - name: Restore cached build objects from master branch
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: ${{ env.CMAKE_CACHE_PATHS }}
           key: ${{ runner.os }}-cmake-master-${{ hashFiles(env.CMAKE_CACHE_HASH_GLOBS) }}
