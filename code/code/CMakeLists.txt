@@ -49,10 +49,10 @@ target_link_libraries(sneezy
 )
 
 add_custom_command(TARGET sneezy POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E create_symlink
+    COMMAND ${CMAKE_COMMAND} -E rename
         "$<TARGET_FILE:sneezy>"
         "${CMAKE_SOURCE_DIR}/code/sneezy"
-    COMMENT "Symlinked code/sneezy -> $<TARGET_FILE:sneezy>"
+    COMMENT "Moved sneezy binary to code/sneezy"
 )
 
 if(SNEEZY_BUILD_LOWTOOLS)

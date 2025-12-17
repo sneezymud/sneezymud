@@ -49,8 +49,7 @@ ARG CMAKE_PRESET
 RUN --mount=type=cache,target=/home/ubuntu/sneezymud/build \
   cd /home/ubuntu/sneezymud && \
   cmake --preset ${CMAKE_PRESET} && \
-  cmake --build --preset ${CMAKE_PRESET} && \
-  cp build/${CMAKE_PRESET}/code/code/sneezy code/sneezy
+  cmake --build --preset ${CMAKE_PRESET}
 
 FROM ubuntu:${UBUNTU_VERSION} AS run
 LABEL maintainer="SneezyMUD Development Team <https://discord.gg/F5zdYwWBzY>"
