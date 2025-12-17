@@ -29,8 +29,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   libboost-regex1.83.0 \
   libboost-system1.83.0 \
   libcurl4 \
-  libmariadb3 \
-  netcat-openbsd && \
+  libmariadb3 && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
@@ -46,5 +45,4 @@ WORKDIR /home/sneezy/code
 
 EXPOSE 7900
 USER sneezy
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD nc -z localhost 7900 || exit 1
 CMD ["./sneezy"]
