@@ -6,6 +6,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
+#include "spells.h"
 extern "C" {
 #include <stdio.h>
 
@@ -2233,6 +2234,10 @@ int TBeing::doQuaff(sstring argument) {
 int doLiqSpell(TBeing* ch, TBeing* vict, liqTypeT liq, int amt) {
   int rc = 0, i;
   int level = max(30, amt * 6), learn = max(100, amt * 20);
+  if (ch->doesKnowSkill(SKILL_POISON_WEAPON)) {
+    level = ch->GetMaxLevel();
+    learn = ch->getSkillValue(SKILL_POISON_WEAPON);
+  }
   int duration = (level << 2) * Pulse::UPDATES_PER_MUDHOUR;
   affectedData aff, aff5[5];
   statTypeT whichStat;
