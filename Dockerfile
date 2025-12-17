@@ -34,20 +34,17 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
-# Use existing ubuntu user if present, otherwise create it
-# useradd -r flag creates a system account, which is preferrable when running as a service
+# useradd -r flag creates a system account, which is preferable when running as a service
 # useradd -m flag forces creation of home directory, which -r flag prevents by default
-RUN getent group ubuntu >/dev/null || groupadd -r ubuntu && \
-    id ubuntu >/dev/null 2>&1 || useradd -r -g ubuntu -m ubuntu
+RUN groupadd -r sneezy && useradd -r -g sneezy -m sneezy
 
-# Copy pre-built artifacts from build context
-COPY --chown=ubuntu:ubuntu code/sneezy /home/ubuntu/code/sneezy
-COPY --chown=ubuntu:ubuntu lib /home/ubuntu/lib
-COPY --chown=ubuntu:ubuntu code/sneezy.cfg /home/ubuntu/code/sneezy.cfg
+COPY --chown=sneezy:sneezy code/sneezy /home/sneezy/code/sneezy
+COPY --chown=sneezy:sneezy lib /home/sneezy/lib
+COPY --chown=sneezy:sneezy code/sneezy.cfg /home/sneezy/code/sneezy.cfg
 
-WORKDIR /home/ubuntu/code
+WORKDIR /home/sneezy/code
 
 EXPOSE 7900
-USER ubuntu
+USER sneezy
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD nc -z localhost 7900 || exit 1
 CMD ["./sneezy"]
