@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 
+#include "immunity.h"
 #include "limbs.h"
 #include "log.h"
 #include "extern.h"
@@ -286,15 +287,17 @@ int TMonster::standUp() {
     for (aff = affected; aff; aff = aff->next) {
       if (aff->type == SPELL_LIVING_VINES) {
         if (!isStrong() && !(isLucky(levelLuckModifier(aff->level)) && isStrong())) {
-          act("A mass of vines prevents $n from standing!", TRUE, this, 0, 0, TO_ROOM);
-
+          act("A mass of vines makes it difficult for $n to stand!", TRUE, this, 0, 0, TO_ROOM);
+          act("A mass of vines makes it difficult for you to stand!", TRUE, this, 0, 0, TO_CHAR);
+          addToWait(combatRound(1));
           // Reduce duration with each failed escape attempt
           aff->duration = max(0, aff->duration - 800);
 
-          if (!isTough() && !(isLucky(levelLuckModifier(aff->level)) && isTough())) {
+          if (!isTough() && !(isLucky(levelLuckModifier(aff->level)) && isTough()) && !isUndead()) {
             wearSlotT limb = getRandomPart(PART_MISSING);
-            if (limb != WEAR_NOWHERE) {
+            if (limb != WEAR_NOWHERE && !isImmune(IMMUNE_BLEED, limb)) {
               act("The vines tear at $n's flesh!", TRUE, this, 0, 0, TO_ROOM);
+              act("The vines tear at your flesh!", TRUE, this, 0, 0, TO_CHAR);
               if (isLimbFlags(limb, PART_BLEEDING)) {
                 incrementBleedStack(limb, 250);
               } else {
@@ -302,9 +305,10 @@ int TMonster::standUp() {
               }
             }
           }
-          return FALSE;
+          
         } else {
           act("$n briefly pulls free from the vines!", TRUE, this, 0, 0, TO_ROOM);
+          act("You briefly pull free from the vines!", TRUE, this, 0, 0, TO_CHAR);
         }
         break;
       }
