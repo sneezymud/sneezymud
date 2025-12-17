@@ -115,6 +115,16 @@ static int stabOffAtk(TBeing* thief, TBeing* victim, TGenWeapon* weapon) {
   int dam = thief->getSkillDam(victim, SKILL_STABBING, level,
     thief->getAdvLearning(SKILL_STABBING));
   dam = thief->getActualDamage(victim, weapon, dam, SKILL_STABBING);
+  
+  if (dam <= 0) {
+    act("Your $o fails to penetrate $N's thick hide.", FALSE, thief, weapon,
+      victim, TO_CHAR);
+    act("$n's $o fails to penetrate your thick hide.", FALSE, thief, weapon,
+      victim, TO_VICT);
+    act("$n's $o fails to penetrate $N's thick hide.", FALSE, thief, weapon,
+      victim, TO_NOTVICT);
+    return TRUE;
+  }
 
   // Get target limb
   wearSlotT limb = victim->getPartHit(thief, FALSE);
@@ -157,6 +167,16 @@ static int stabPrimAtk(TBeing* thief, TBeing* victim, TGenWeapon* primWeapon,
   int dam = thief->getSkillDam(victim, SKILL_STABBING, level,
     thief->getAdvLearning(SKILL_STABBING));
   dam = thief->getActualDamage(victim, primWeapon, dam, SKILL_STABBING);
+
+  if (dam <= 0) {
+    act("Your $o fails to penetrate $N's thick hide.", FALSE, thief, primWeapon,
+      victim, TO_CHAR);
+    act("$n's $o fails to penetrate your thick hide.", FALSE, thief, primWeapon,
+      victim, TO_VICT);
+    act("$n's $o fails to penetrate $N's thick hide.", FALSE, thief, primWeapon,
+      victim, TO_NOTVICT);
+    return TRUE;
+  }
 
   // Get target limb
   wearSlotT limb = victim->getPartHit(thief, FALSE);
