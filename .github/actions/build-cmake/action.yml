@@ -10,22 +10,15 @@ runs:
   steps:
     - name: Configure ccache
       shell: bash
-      run: |
-        ccache --set-config=max_size=500M
-        ccache --set-config=compression=true
-        ccache --zero-stats
+      run: ccache --zero-stats
 
     - name: Configure
       shell: bash
-      env:
-        PRESET: ${{ inputs.preset }}
-      run: cmake --preset "${PRESET}"
+      run: cmake --preset "${{ inputs.preset }}"
 
     - name: Build
       shell: bash
-      env:
-        PRESET: ${{ inputs.preset }}
-      run: cmake --build --preset "${PRESET}"
+      run: cmake --build --preset "${{ inputs.preset }}"
 
     - name: Show ccache stats
       shell: bash

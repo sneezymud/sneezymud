@@ -3860,7 +3860,7 @@ int Descriptor::inputProcessing() {
           break;
 
       } else {
-        vlogf(LOG_PIO, "EOF encountered on socket read.");
+        vlogf(LOG_PIO, format("EOF encountered on socket read from %s (state: %d).") % host % connected);
         return (-1);
       }
     }
