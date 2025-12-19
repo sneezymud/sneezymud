@@ -33,9 +33,11 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
-# useradd -r flag creates a system account, which is preferable when running as a service
-# useradd -m flag forces creation of home directory, which -r flag prevents by default
-RUN groupadd -r sneezy && useradd -r -g sneezy -m sneezy
+# Rename the default 'ubuntu' user (UID/GID 1000) to 'sneezy'.
+# UID 1000 must be preserved to match file ownership in the sneezy-mutable Docker volume.
+# The monitor service running on the host sets volume ownership to UID 1000, so the in-container user must match
+# or the game server will not have permission to read/write its data files.
+RUN usermod -l sneezy -d /home/sneezy -m ubuntu && groupmod -n sneezy ubuntu
 
 COPY --chown=sneezy:sneezy code/sneezy /home/sneezy/code/sneezy
 COPY --chown=sneezy:sneezy lib /home/sneezy/lib
