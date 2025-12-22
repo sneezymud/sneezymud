@@ -241,9 +241,9 @@ void TPlant::updateDesc() {
       ++count;
     }
 
-    if (count <= 4 &&
-        (obj_index[real_object(plantfruits[getType()])].getNumber() <
-          obj_index[real_object(plantfruits[getType()])].max_exist)) {
+    const int fruitRobj = real_object(plantfruits[getType()]);
+    if (count <= 4 && fruitRobj >= 0 &&
+        (obj_index[fruitRobj].getNumber() < obj_index[fruitRobj].max_exist)) {
       t = read_object(plantfruits[getType()], VIRTUAL);
       *this += *t;
       setYield(getYield() + 1);
@@ -258,7 +258,7 @@ void TPlant::updateDesc() {
       ++count;
     }
 
-    if (count <= 2) {
+    if (count <= 2 && real_object(plantfruits[getType()]) >= 0) {
       t = read_object(plantfruits[getType()], VIRTUAL);
       *this += *t;
       setYield(getYield() + 1);
