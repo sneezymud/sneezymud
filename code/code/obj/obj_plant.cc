@@ -143,7 +143,7 @@ void TPlant::updateDesc() {
     "<o>orange<1> tree", "<g>money<1> tree", "<w>pipe<g>weed<1><o> bush<1>",
     "<o>pumpkin<1> vine", "<g>turnip<1> plant", "<G>lettuce<1> plant",
     "<g>marijuana<1> plant", "<p>catnip<1> <g>plant<1>",
-    "<P>candy heart<1> tree", "vine of <k>gray grapes<1>", "<G>foxglove<1> bush",
+    "<P>candy heart<1> tree", "vine of <k>gray grapes<1>", "<G>foxglove<1> plant",
     "<g>death camas<1> plant",
     "<g>jimson weed<1> plant",
     "<g>hemlock<1> plant",
@@ -162,7 +162,7 @@ void TPlant::updateDesc() {
     "sweet pea vine",
     "acacia tree"};
   int plantfruits[] = {14348, 28917, 8936, 28918, 28919, 432, 13, 34212, 33507,
-    33508, 33525, 33601, 34737, 29405, 34215, 34217, 31333, 31032, 31034, 31035, 31036, 31042, 31043};
+    33508, 33525, 33601, 34737, 29405, 34215, 31333, 31032, 31034, 31035, 31036, 31042, 31043};
 
   // considering a plant ages an average of 2 'age' points each mud hour,
   // a plant will age to 17520 in a mud year
