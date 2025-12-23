@@ -1,0 +1,51 @@
+# IWYU mapping file for SneezyMUD
+# See: https://github.com/include-what-you-use/include-what-you-use/blob/master/docs/IWYUMappings.md
+#
+# We use umbrella header mappings for Boost because:
+# 1. Boost documents umbrella headers as the stable public API
+# 2. Internal sub-headers often don't work standalone (missing dependencies)
+# 3. The bundled IWYU mappings map to intermediate headers that break builds
+
+[
+  # ==========================================================================
+  # C++ standard headers - prefer <cxxx> over deprecated <xxx.h> forms
+  # Note: POSIX headers (unistd.h, dirent.h, sys/*, etc.) have no C++ equivalents
+  # ==========================================================================
+  { include: ["<assert.h>", public, "<cassert>", public] },
+  { include: ["<ctype.h>", public, "<cctype>", public] },
+  { include: ["<errno.h>", public, "<cerrno>", public] },
+  { include: ["<float.h>", public, "<cfloat>", public] },
+  { include: ["<limits.h>", public, "<climits>", public] },
+  { include: ["<locale.h>", public, "<clocale>", public] },
+  { include: ["<math.h>", public, "<cmath>", public] },
+  { include: ["<setjmp.h>", public, "<csetjmp>", public] },
+  { include: ["<signal.h>", public, "<csignal>", public] },
+  { include: ["<stdarg.h>", public, "<cstdarg>", public] },
+  { include: ["<stddef.h>", public, "<cstddef>", public] },
+  { include: ["<stdint.h>", public, "<cstdint>", public] },
+  { include: ["<stdio.h>", public, "<cstdio>", public] },
+  { include: ["<stdlib.h>", public, "<cstdlib>", public] },
+  { include: ["<string.h>", public, "<cstring>", public] },
+  { include: ["<time.h>", public, "<ctime>", public] },
+  { include: ["<wchar.h>", public, "<cwchar>", public] },
+  { include: ["<wctype.h>", public, "<cwctype>", public] },
+
+  # ==========================================================================
+  # GCC 14 internal headers for C++20 <format>
+  # ==========================================================================
+  { include: ["<bits/unicode-data.h>", private, "<format>", public] },
+  { include: ["<bits/unicode.h>", private, "<format>", public] },
+
+  # ==========================================================================
+  # Boost umbrella header mappings
+  # Use [^/]+ to match only direct children, avoiding detail/ subdirectories
+  # Use .* for libraries with deeply nested structure (format, regex, etc.)
+  # Internal Boost headers are marked 'private', umbrella headers are 'public'
+  # ==========================================================================
+
+  # Boost.Format - deeply nested, use .* pattern
+  { include: ["@<boost/format/.*>", private, "<boost/format.hpp>", public] },
+
+  # Boost.ProgramOptions
+  { include: ["@<boost/program_options/[^/]+>", private, "<boost/program_options.hpp>", public] },
+]

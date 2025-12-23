@@ -22,3 +22,7 @@ discord.cfg
 *.pyo
 /lib/core
 .ccls-cache
+
+# Static analysis results
+.codechecker-results/
+codechecker-report/

@@ -43,17 +43,44 @@ else()
     message(STATUS "PCH disabled")
 endif()
 
-# Include-What-You-Use (IWYU) - optional analysis tool for header cleanup
-# Usage: cmake --preset dev-gcc -DSNEEZY_USE_IWYU=ON
-option(SNEEZY_USE_IWYU "Run include-what-you-use during build (for header analysis)" OFF)
-if(SNEEZY_USE_IWYU)
-    find_program(IWYU_PROGRAM include-what-you-use)
-    if(IWYU_PROGRAM)
-        set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE "${IWYU_PROGRAM}")
-        message(STATUS "IWYU enabled: ${IWYU_PROGRAM}")
-    else()
-        message(WARNING "IWYU requested but include-what-you-use not found")
+# IWYU fix target - runs IWYU analysis and automatically applies fixes
+# Usage: cmake --build build --target iwyu-fix
+find_program(IWYU_TOOL iwyu_tool.py)
+find_program(FIX_INCLUDES fix_includes.py)
+if(IWYU_TOOL AND FIX_INCLUDES)
+    # IWYU options:
+    #   --cxx17ns: C++17 nested namespace syntax for forward declarations
+    # Note: --no_comments removes line numbers needed by fix_includes.py, so only use for check
+    set(IWYU_ARGS_BASE "-Xiwyu;--cxx17ns")
+
+    # Project-specific mappings (if present)
+    if(EXISTS "${CMAKE_SOURCE_DIR}/iwyu.imp")
+        list(APPEND IWYU_ARGS_BASE "-Xiwyu;--mapping_file=${CMAKE_SOURCE_DIR}/iwyu.imp")
     endif()
+
+    # Fix target needs line numbers in output (no --no_comments)
+    string(REPLACE ";" " " IWYU_ARGS_FIX "${IWYU_ARGS_BASE}")
+
+    # Check target can use cleaner output without line number comments
+    set(IWYU_ARGS_CHECK "${IWYU_ARGS_BASE};-Xiwyu;--no_comments")
+    string(REPLACE ";" " " IWYU_ARGS_CHECK "${IWYU_ARGS_CHECK}")
+
+    add_custom_target(iwyu-fix
+        COMMAND ${CMAKE_COMMAND} -E echo "Running IWYU analysis and applying fixes..."
+        COMMAND sh -c "${IWYU_TOOL} -j 0 -p ${CMAKE_BINARY_DIR} -- ${IWYU_ARGS_FIX} 2>&1 | grep -v 'unicode-data.h.*warning.*no private include name' | ${FIX_INCLUDES}"
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Running include-what-you-use and applying fixes"
+        VERBATIM
+    )
+
+    add_custom_target(iwyu-check
+        COMMAND ${CMAKE_COMMAND} -E echo "Running IWYU analysis (dry run)..."
+        COMMAND sh -c "${IWYU_TOOL} -j 0 -p ${CMAKE_BINARY_DIR} -- ${IWYU_ARGS_CHECK} 2>&1 | grep -v 'unicode-data.h.*warning.*no private include name'"
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Running include-what-you-use (analysis only, no fixes applied)"
+        VERBATIM
+    )
+    message(STATUS "IWYU targets available: iwyu-fix, iwyu-check")
 endif()
 
 # Create interface library for common compile options

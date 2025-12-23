@@ -107,8 +107,8 @@ cmake --build --preset <preset-name> # Build
 | --------------- | -------- | ------- | ---- | ----- | ------- |
 | `dev-gcc`       | GCC      | Debug   | Yes  | Yes   | No      |
 | `dev-clang`     | Clang    | Debug   | Yes  | Yes   | No      |
-| `release-gcc`   | GCC      | Release | Yes  | No    | Yes     |
-| `release-clang` | Clang    | Release | Yes  | No    | ThinLTO |
+| `release-gcc`   | GCC      | Release | Yes  | Yes   | Yes     |
+| `release-clang` | Clang    | Release | Yes  | Yes   | ThinLTO |
 
 ### Example Build Commands
 
@@ -127,6 +127,51 @@ make clean
 
 # Clean all build directories
 make clean-all
+
+# Rebuild from scratch
+make rebuild
+```
+
+### Code Quality Tools
+
+The Makefile provides several targets for maintaining code quality:
+
+```bash
+# Format all C++ source files with clang-format
+make format
+
+# Format a specific file
+make format FILE=code/code/foo.cc
+
+# Run include-what-you-use analysis (dry run)
+make iwyu-check
+
+# Run include-what-you-use and apply fixes
+make iwyu-fix
+
+# Run comprehensive static analysis (critical clang-tidy checks + clangsa with CTU)
+make analyze
+
+# Export results in various formats
+# Add CRITICAL=1 to only export critical issues
+make analyze-export FMT=html              # Interactive HTML report (default)
+make analyze-export FMT=text              # LLM-friendly text
+make analyze-export FMT=sqlite            # SQLite database
+
+# CI gating (exits non-zero if critical violations found)
+make analyze-ci
+```
+
+### Build Profiling
+
+For investigating build performance:
+
+```bash
+# Profile the build using ClangBuildAnalyzer (requires Clang preset)
+make build-profile
+
+# Generate Ninja build trace for visualization
+make ninja-trace
 ```
 
 ### Build Acceleration
@@ -144,6 +189,9 @@ The build system automatically uses these optimizations when available:
 ```bash
 # Build and run with sanitizer options (recommended for development)
 make run
+
+# Build and run under gdb
+make debug
 
 # Or run the binary directly
 ./code/sneezy
