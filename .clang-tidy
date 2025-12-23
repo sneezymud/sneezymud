@@ -29,10 +29,12 @@
 # the meantime, so we'll leave it disabled for now. Enabling and fixing it incrementally could be a future improvement.
 
 ---
-HeaderFilterRegex: 'code/code/.*\.h$'
+# Ensure we see bugs in all files
+HeaderFilterRegex: 'code/code/.*'
 
 Checks: >
   *,
+  misc-header-include-cycle,
   misc-include-cleaner,
   -abseil-*,
   -altera-*,
@@ -99,3 +101,30 @@ CheckOptions:
     value: true
   - key: performance-inefficient-string-concatenation.StrictMode
     value: true
+
+# Production-critical checks surfaced as errors in IDE
+# These are also the checks CodeChecker will run via clang-tidy analyzer for CI blocking
+# Criteria: issues likely to cause crashes, memory/data corruption, or invalid game state
+WarningsAsErrors: >
+  bugprone-assert-side-effect,
+  bugprone-bool-pointer-implicit-conversion,
+  bugprone-dangling-handle,
+  bugprone-exception-escape,
+  bugprone-inaccurate-erase,
+  bugprone-infinite-loop,
+  bugprone-misplaced-widening-cast,
+  bugprone-not-null-terminated-result,
+  bugprone-parent-virtual-call,
+  bugprone-signed-char-misuse,
+  bugprone-sizeof-expression,
+  bugprone-string-constructor,
+  bugprone-suspicious-memset-usage,
+  bugprone-suspicious-semicolon,
+  bugprone-swapped-arguments,
+  bugprone-throw-keyword-missing,
+  bugprone-undelegated-constructor,
+  bugprone-undefined-memory-manipulation,
+  bugprone-unhandled-self-assignment,
+  bugprone-unused-raii,
+  bugprone-use-after-move,
+  bugprone-virtual-near-miss
