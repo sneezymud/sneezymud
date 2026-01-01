@@ -2646,7 +2646,6 @@ int doLiqSpell(TBeing* ch, TBeing* vict, liqTypeT liq, int amt) {
       for (classIndT Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
         if (vict->hasClass(1 << Class)) {
           vict->addPracs(amt, Class);
-          break;
         }
       }
 
