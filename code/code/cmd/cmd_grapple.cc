@@ -88,7 +88,7 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
         return rc;
 
       rc = c->trySpringleap(victim);
-      
+
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
         return rc;
     } else if (victim->canFocusedAvoidance(bKnown / 2)) {
@@ -126,7 +126,7 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
         return rc;
 
-      positionTypeT pinned = victim->isAgile(0) ? POSITION_SITTING : POSITION_RESTING;
+      positionTypeT pinned = victim->isAgile(0, true) ? POSITION_SITTING : POSITION_RESTING;
       rc = victim->crashLanding(pinned);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_VICT;

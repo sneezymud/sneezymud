@@ -30,7 +30,7 @@ int debridePulse(TBeing* ch, TObj* obj, TThing* w) {
     int timerReduction = ::number(1, 2);
     act ("You scrape the file against $p, removing some rust.", FALSE, ch, obj, 0, TO_CHAR, ANSI_YELLOW);
     act("$n scrapes the file against $p, removing some rust.", FALSE, ch, obj, 0, TO_ROOM, ANSI_YELLOW);
-    if (!ch->isFocused(0)) {
+    if (!ch->isFocused(0, false)) {
         moveCost += 2;
         ch->sendTo ("Phew! Work this careful requires a lot of concentration.\n\r");
         act("$n begins to sweat.", FALSE, ch, 0, 0, TO_ROOM);
@@ -43,7 +43,7 @@ int debridePulse(TBeing* ch, TObj* obj, TThing* w) {
     act("Your file slips and damages $p slightly.", FALSE, ch, obj, 0, TO_CHAR, ANSI_ORANGE);
     act("$n's file slips and damages $p slightly.", FALSE, ch, obj, 0, TO_ROOM, ANSI_ORANGE);
     moveCost += 2;
-    if (!ch->isFocused(0)){
+    if (!ch->isFocused(0, false)){
         strDam *= 2;
         moveCost *= 3;
         ch->sendTo("You lose your focus, botching the stroke and tiring yourself out.\n\r");

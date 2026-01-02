@@ -24,7 +24,7 @@
 int TMonster::aiBounce(TBeing* doer, TBeing*, aiTarg cond) {
   switch (cond) {
     case TARGET_NONE:
-      if (!isPerceptive(0)) {
+      if (!isPerceptive(0, true)) {
         if (!::number(0, 2)) {
           act("$n's head bobs up and down following your antics.", TRUE, this,
             0, doer, TO_VICT);
@@ -40,7 +40,7 @@ int TMonster::aiBounce(TBeing* doer, TBeing*, aiTarg cond) {
       }
       break;
     case TARGET_SELF:
-      if (!isPerceptive(0)) {
+      if (!isPerceptive(0, true)) {
         if (!::number(0, 2)) {
           act("$n's head bobs up and down following your antics.", TRUE, this,
             0, doer, TO_VICT);
@@ -94,21 +94,21 @@ int TMonster::aiDance(TBeing* doer, TBeing* other, aiTarg cond) {
   switch (cond) {
     case TARGET_NONE:
     case TARGET_SELF:
-      if (!doer->isUgly(0) && doer->isAgile(0)) {
+      if (!doer->isUgly(0, true) && doer->isAgile(0, true)) {
         DA(2);
         DMal(1);
         if (!::number(0, 2)) {
           act("$n checks out your moves.", TRUE, this, 0, doer, TO_VICT);
           act("$n watches $N's moves.", TRUE, this, 0, doer, TO_NOTVICT);
         }
-      } else if (!doer->isUgly(0)) {
+      } else if (!doer->isUgly(0, true)) {
         DA(1);
         if (!::number(0, 2)) {
           act("$n thinks you're cute, but clumsy.", TRUE, this, 0, doer,
             TO_VICT);
           act("$n watches $N dance.", TRUE, this, 0, doer, TO_NOTVICT);
         }
-      } else if (doer->isAgile(0)) {
+      } else if (doer->isAgile(0, true)) {
         DA(1);
         if (!::number(0, 2)) {
           act("$n watches your fancy footwork.", TRUE, this, 0, doer, TO_VICT);
@@ -136,17 +136,17 @@ int TMonster::aiDance(TBeing* doer, TBeing* other, aiTarg cond) {
           return takeFirstHit(*doer);
         } else if (pissed())
           aiFag(doer, 1);
-      } else if (!doer->isUgly(0) && doer->isAgile(0)) {
+      } else if (!doer->isUgly(0, true) && doer->isAgile(0, true)) {
         DA(6);
         DMal(3);
         act("$n enjoys dancing with you.", TRUE, this, 0, doer, TO_VICT);
         act("$n enjoys dancing with $N.", TRUE, this, 0, doer, TO_NOTVICT);
-      } else if (!doer->isUgly(0)) {
+      } else if (!doer->isUgly(0, true)) {
         act("$n gazes longingly into your eyes as your dance.", TRUE, this, 0,
           doer, TO_VICT);
         DMal(2);
         DA(4);
-      } else if (doer->isUgly(0)) {
+      } else if (doer->isUgly(0, true)) {
         UA(6);
         UM(3);
         act("$n is totally repulsed by your looks!", TRUE, this, 0, doer,
@@ -156,7 +156,7 @@ int TMonster::aiDance(TBeing* doer, TBeing* other, aiTarg cond) {
         if (pissed()) {
           return takeFirstHit(*doer);
         }
-      } else if (doer->isAgile(0)) {
+      } else if (doer->isAgile(0, true)) {
         DMal(2);
         DA(4);
         act("$n is enthralled by your superb dancing.", TRUE, this, 0, doer,
@@ -186,7 +186,7 @@ int TMonster::aiDance(TBeing* doer, TBeing* other, aiTarg cond) {
           return takeFirstHit(*doer);
         } else if (pissed())
           aiFag(doer, 1);
-      } else if ((getSex() != other->getSex()) && !other->isUgly(0)) {
+      } else if ((getSex() != other->getSex()) && !other->isUgly(0, true)) {
         UA(2);
         UM(1);
         if (::number(0, 1)) {
@@ -195,7 +195,7 @@ int TMonster::aiDance(TBeing* doer, TBeing* other, aiTarg cond) {
           act("$n watches you dance with someone else.", TRUE, this, 0, other,
             TO_VICT);
         }
-      } else if (!doer->isUgly(0) && (doer->getSex() != getSex())) {
+      } else if (!doer->isUgly(0, true) && (doer->getSex() != getSex())) {
         UA(2);
         UM(1);
         if (!::number(0, 1)) {
@@ -224,7 +224,7 @@ int TMonster::aiSmile(TBeing* doer, TBeing* other, aiTarg cond) {
   switch (cond) {
     case TARGET_NONE:
     case TARGET_SELF:
-      if (!doer->isUgly(0) && !isSusp()) {
+      if (!doer->isUgly(0, true) && !isSusp()) {
         DA(2);
         DMal(1);
         DS(2);
@@ -234,7 +234,7 @@ int TMonster::aiSmile(TBeing* doer, TBeing* other, aiTarg cond) {
           act("$n's face brightens as $N smiles.", TRUE, this, 0, doer,
             TO_NOTVICT);
         }
-      } else if (!doer->isUgly(0)) {
+      } else if (!doer->isUgly(0, true)) {
         US(1);
         DA(2);
         if (!::number(0, 2)) {
@@ -280,13 +280,13 @@ int TMonster::aiSmile(TBeing* doer, TBeing* other, aiTarg cond) {
         US(6);
         if (pissed())
           aiFag(doer, 1);
-      } else if ((doer->isUgly(0) && doer->isUgly(0)) && isSusp()) {
+      } else if ((doer->isUgly(0, true) && doer->isUgly(0, true)) && isSusp()) {
         UA(5);
         UM(2);
         US(6);
         act("$n watches you cautiously.", TRUE, this, 0, doer, TO_VICT);
         act("$n watches $N alertly.", TRUE, this, 0, doer, TO_NOTVICT);
-      } else if (doer->isUgly(0)) {
+      } else if (doer->isUgly(0, true)) {
         doAction(fname(doer->name), CMD_SMILE);
         DA(2);
       } else {
@@ -300,14 +300,14 @@ int TMonster::aiSmile(TBeing* doer, TBeing* other, aiTarg cond) {
       if ((doer->getSex() == SEX_NEUTER) || (getSex() == SEX_NEUTER) ||
           (other->getSex() == SEX_NEUTER)) {
         // could care less about it
-      } else if ((getSex() != other->getSex()) && !other->isUgly(0)) {
+      } else if ((getSex() != other->getSex()) && !other->isUgly(0, true)) {
         UA(2);
         UM(1);
         if (::number(0, 1)) {
           act("$n smiles at $N too.", TRUE, this, 0, other, TO_NOTVICT);
           act("$n smiles at you as well.", TRUE, this, 0, other, TO_VICT);
         }
-      } else if (!doer->isUgly(0) && (doer->getSex() != getSex())) {
+      } else if (!doer->isUgly(0, true) && (doer->getSex() != getSex())) {
         UA(2);
         UM(1);
         if (!::number(0, 1))
@@ -429,7 +429,7 @@ int TMonster::aiShake(TBeing* doer, TBeing*, aiTarg cond) {
         act("$n watches the jello-thing wobble around.", TRUE, this, 0, doer,
           TO_NOTVICT);
     } else if ((cond == TARGET_MOB) && (getRace() == RACE_CANINE)) {
-      if (isPerceptive(0))
+      if (isPerceptive(0, true))
         act("$n learned this trick in obedience school.", TRUE, this, 0, doer,
           TO_ROOM);
       else {
@@ -439,7 +439,7 @@ int TMonster::aiShake(TBeing* doer, TBeing*, aiTarg cond) {
         doAction(fname(doer->name), CMD_GROWL);
         UA(1);
       }
-    } else if ((cond == TARGET_MOB) && isStrong(0)) {
+    } else if ((cond == TARGET_MOB) && isStrong(0, true)) {
       act("$n has been known to rip the arms off of folks who do that...", TRUE,
         this, 0, doer, TO_VICT);
       UA(2);
@@ -2845,7 +2845,7 @@ void TMonster::aiLook(TBeing* doer) {
     tmons->US(2);
     if (tmons == this) {
       US(3);
-      if (doer->isRealUgly(0)) {
+      if (doer->isRealUgly(0, true)) {
         if (getRace() == doer->getRace())
           buf = "Stop looking at me ugly!";
         else
@@ -2888,7 +2888,7 @@ void TMonster::aiLook(TBeing* doer) {
         }
       } else if (getSex() == SEX_NEUTER || doer->getSex() == SEX_NEUTER) {
         continue;
-      } else if (doer->isUgly(0)) {
+      } else if (doer->isUgly(0, true)) {
         if (!::number(0, 2))
           doAction(fname(doer->name), CMD_SMILE);
         DA(1);

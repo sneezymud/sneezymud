@@ -188,17 +188,17 @@ int thornsHit(TBeing* victim, TBeing* ch, wearSlotT chLimb, wearSlotT vicLimb) {
 
   // Calculate chance based on hardness difference
   int hardnessDiff = chLimbHardness - vicLimbHardness;
-  
+
   // Only proceed if attacker's hardness is higher AND random check passes
   if (hardnessDiff <= 0) {
     return dam;
   }
-  
+
   // Use hardness difference as percentage chance
   if (!::percentChance(hardnessDiff)) {
     return dam;
   }
-  
+
   if (victim->isLimbFlags(vicLimb, PART_BLEEDING)) {
     static constexpr const char* bleeding_msg =
       "Blood spatters as the thorns on %s %s sink into %s bleeding %s!";
@@ -244,15 +244,15 @@ int hardHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT vicLimb, wearSlotT 
   if (!weap) {
     weapHard = getHardnessSpec(ch, chLimb);
   }
-  
+
   if (!vicEq) {
     vicHard = getHardnessSpec(victim, vicLimb);
   }
-  
+
   int dam = ::number(1, 10);
 
   int hardChance = (weapHard - vicHard);
-  if ((percentChance(hardChance)) && !victim->isTough(0)) {
+  if ((percentChance(hardChance)) && !victim->isTough(0, false)) {
       int eqDamage = (weapHard-vicHard)/10;
       // Case 1: Weapon hits victim's equipment
     if (weap && vicEq) {
@@ -316,16 +316,16 @@ int hardHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT vicLimb, wearSlotT 
         victim->rawBruise(vicLimb, 100, SILENT_NO, CHECK_IMMUNITY_NO);
       }
     }
-    
+
   }
-  return dam;  
+  return dam;
 }
 int spikesBreak(TBeing* victim, TBeing* ch, TObj* obj) {
   int dam = ::number(1, 4);
   if (!obj)
     return 0;
 
-  if ((obj->isObjStat(ITEM_SPIKED)) && percentChance(25) && victim->isTough(0)) {
+  if ((obj->isObjStat(ITEM_SPIKED)) && percentChance(25) && victim->isTough(0, false)) {
     static constexpr const char* catch_msg = "$n's $o catches on $N's $o!";
     static constexpr const char* spikes_break_msg = "Some spikes break off, damaging $n's $o!";
 
@@ -389,7 +389,7 @@ int impactSpec(TBeing* ch, TBeing* victim, wearSlotT damSource, wearSlotT pos) {
     }
       // Equipment has no spikes - use hardHit
       return hardHit(victim, ch, obj, pos, damSource);
-    
+
   } else {
     // No equipment on damSource
     if (ch->affectedBySpell(SPELL_THORNFLESH)) {
@@ -398,7 +398,7 @@ int impactSpec(TBeing* ch, TBeing* victim, wearSlotT damSource, wearSlotT pos) {
     }
       // No thornflesh - use hardHit
       return hardHit(victim, ch, nullptr, pos, damSource);
-    
+
   }
 }
 
@@ -445,7 +445,7 @@ int spikesHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT limb) {
 
     victim->rawBleed(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
   }
-  
+
   spikesBreak(victim, ch, obj);
   return dam;
 }

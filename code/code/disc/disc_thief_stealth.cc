@@ -966,7 +966,7 @@ int subterfugeMiss(TBeing* thief, TBeing* victim) {
   if (victim->isPc()) {
     return false;
   }
-  
+
   if (!thief->fight()) {
     if (!thief->isAgile(0)) {
       act("$n tries to put on a show for you and falls on $s face!", FALSE, thief, NULL, victim, TO_VICT);
@@ -1004,7 +1004,7 @@ int subterfugePlayer(TBeing* thief, TBeing* victim) {
   }
 
   return true;
-} 
+}
 
 int subterfugeHit(TBeing* thief, TBeing* victim) {
 // Mob success actions
@@ -1113,13 +1113,13 @@ int subterfugeSuccess(TBeing* thief, TBeing* victim) {
 
   // For mobs, do specialAttack
   int situationalMod = 0;
-  if (!victim->isWise(0)) {
+  if (!victim->isWise(0, true)) {
     situationalMod -= 10;
   }
-  if (!victim->isIntelligent(0)) {
+  if (!victim->isIntelligent(0, true)) {
     situationalMod -= 10;
   }
-  if (thief->isCharismatic(0)) {
+  if (thief->isCharismatic(0, true)) {
     situationalMod += 10;
   }
 
@@ -1145,8 +1145,8 @@ int subterfugeSuccess(TBeing* thief, TBeing* victim) {
 
 int subterfugeFail(TBeing* thief, TBeing* victim) {
    thief->sendTo("You fail to execute the subterfuge properly.\n\r");
-    if (!thief->isCharismatic(0) && !victim->isPc()) {
-      act("WUH OH! $N looks pretty pissed off.", FALSE, thief, NULL, victim, TO_CHAR); 
+    if (!thief->isCharismatic(0, false) && !victim->isPc()) {
+      act("WUH OH! $N looks pretty pissed off.", FALSE, thief, NULL, victim, TO_CHAR);
       act("$n tried to trick you! $e's gonna pay for that!", FALSE, thief, NULL, victim, TO_VICT);
       act("$n tried to trick $N! $e's gonna pay for that!", FALSE, thief, NULL, victim, TO_NOTVICT);
       thief->setCharFighting(victim);
@@ -1183,8 +1183,8 @@ int subterfuge(TBeing* thief, TBeing* victim) {
   int level = thief->getSkillLevel(SKILL_SUBTERFUGE);
   level = (max (1, (level + (thief->getChaReaction()))));
   int bKnown = thief->getSkillValue(SKILL_SUBTERFUGE);
-  
-  
+
+
 
   if (thief->isNotPowerful(victim, level, SKILL_SUBTERFUGE, SILENT_YES)) {
     act("$N's mind is too powerful to be confused.", FALSE, thief, NULL, victim, TO_CHAR);
@@ -1195,9 +1195,9 @@ int subterfuge(TBeing* thief, TBeing* victim) {
     thief->sendTo("You aren't skilled enough to trick monsters, yet.\n\r");
     return false;
   }
-  
+
   thief->addToMove(-25);
-  
+
   // bSuccess check
   if (!thief->bSuccess(bKnown, SKILL_SUBTERFUGE)) {
     return subterfugeFail(thief, victim);

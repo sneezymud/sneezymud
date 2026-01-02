@@ -268,7 +268,7 @@ int weaponShadowSlayer(TBeing* vict, cmdTypeT cmd, const char*, TObj* o,
       ch->setHit(0);
       ch->setPosition(POSITION_STUNNED);
     }
-    if (!ch->isTough(0)) {
+    if (!ch->isTough(0, false)) {
       *ch->roomp += *ch->unequip(o->eq_pos);
       act("$n screams loudly, dropping $s $p.", 1, ch, o, NULL, TO_ROOM);
       act("You scream loudly, dropping your $p.", 1, ch, o, NULL, TO_CHAR);
@@ -2299,7 +2299,7 @@ int warMaker(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
             ch->setHit(0);
             ch->setPosition(POSITION_STUNNED);
           }
-          if (!ch->isTough(0)) {
+          if (!ch->isTough(0, false)) {
             *ch->roomp += *ch->unequip(o->eq_pos);
             act("$n screams loudly, dropping $s $p.", 1, ch, o, NULL, TO_ROOM);
             act("You scream loudly, dropping your $p.", 1, ch, o, NULL,

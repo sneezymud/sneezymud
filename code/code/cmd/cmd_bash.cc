@@ -362,14 +362,14 @@ int TBeing::bashSuccess(TBeing* victim, spellNumT skill, bool isHoldingShield,
   // Determine which limb gets hit - same logic for all damage types
   wearSlotT limb = WEAR_BODY;
   if (!this->isTanking()) {
-    limb = WEAR_BACK; 
+    limb = WEAR_BACK;
   }
-  if (victim->isAgile(0)){
+  if (victim->isAgile(0, true)){
     limb = WEAR_ARM_R;
     if (percentChance(50)){
       limb = WEAR_ARM_L;
     }
-    
+
     if ((victim->getHeight()*2/3) > this->getHeight()) {
       limb = WEAR_LEG_R;
       if (percentChance(50)){

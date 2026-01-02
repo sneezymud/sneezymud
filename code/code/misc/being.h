@@ -600,7 +600,7 @@ class TBeing : public TThing {
     void checkGuardiansLight();
     int checkAdvDefense();
     int doAdvDefense(TBeing*, TThing*, int*, int, wearSlotT);
-    
+
 
     // Postmaster
     void postmasterSendMail(const char*, TMonster*);
@@ -1993,20 +1993,20 @@ class TBeing : public TThing {
     virtual void setTimer(unsigned int) = 0;
     virtual void addToTimer(unsigned int) = 0;
     bool statSelfCheck(statTypeT stat, int num = 0) const;
-    bool isStrong(int num) const;
-    bool isPerceptive(int num) const;
-    bool isDextrous(int num) const;
-    bool isAgile(int num) const;
-    bool isTough(int num) const;
-    bool isBrawny(int num) const;
-    bool isIntelligent(int num) const;
-    bool isWise(int num) const;
-    bool isQuick(int num) const;
-    bool isFocused(int num) const;
-    bool isCharismatic(int num) const;
-    bool isKarmic(int num) const;
-    bool isUgly(int num) const;
-    bool isRealUgly(int num) const;
+    bool isStrong(int num = 0, bool silent = false) const;
+    bool isPerceptive(int num = 0, bool silent = false) const;
+    bool isDextrous(int num = 0, bool silent = false) const;
+    bool isAgile(int num = 0, bool silent = false) const;
+    bool isTough(int num = 0, bool silent = false) const;
+    bool isBrawny(int num = 0, bool silent = false) const;
+    bool isIntelligent(int num = 0, bool silent = false) const;
+    bool isWise(int num = 0, bool silent = false) const;
+    bool isQuick(int num = 0, bool silent = false) const;
+    bool isFocused(int num = 0, bool silent = false) const;
+    bool isCharismatic(int num = 0, bool silent = false) const;
+    bool isKarmic(int num = 0, bool silent = false) const;
+    bool isUgly(int num = 0, bool silent = false) const;
+    bool isRealUgly(int num = 0, bool silent = false) const;
     bool isWary() const;
     void makeWary();
     sstring displayExp() const;

@@ -20,7 +20,7 @@ int tuskGoring(TBeing* ch, cmdTypeT tCmd, const char* tArg, TMonster* tMyself,
       tMyself->getPosition() < POSITION_STANDING)
     return FALSE;
 
-  if (!tVictim->isAgile(0) && ::number(0, 4)) {
+  if (!tVictim->isAgile(0, true) && ::number(0, 4)) {
     act("$n charges into $N, impaling him fiercly!", TRUE, tMyself, NULL,
       tVictim, TO_NOTVICT);
     act("$n barrels down on you, impaling you painfully!", TRUE, tMyself, NULL,

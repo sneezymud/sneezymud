@@ -52,7 +52,7 @@ static void pick_pulse(TBeing* ch, TThing* pick) {
 
   int difficulty = 3 * exit->lock_difficulty;
   if ((!pickable || difficulty > skill) && difficulty > (skill + 100) &&
-      !ch->isDextrous(0)) {
+      !ch->isDextrous(0, false)) {
     act("Uhoh, $n seems to have jammed the lock!", true, ch, nullptr, nullptr,
       TO_ROOM);
     ch->sendTo("Uhoh.  You seemed to have jammed the lock!\n\r");
@@ -69,15 +69,15 @@ static void pick_pulse(TBeing* ch, TThing* pick) {
                   fname(exit->keyword))
         : sstring("$n picks the lock.");
     act(msg, true, ch, nullptr, nullptr, TO_ROOM);
-    
+
     ch->sendTo("The lock quickly yields to your skills.\n\r");
-    
+
     double lockExp = 50.0 - ((exit->lock_difficulty / 100.0) * 40.0);
     lockExp = max(10.0, min(50.0, lockExp));
-    
+
     ch->gainTaskExp(0, lockExp);
     ch->doSave(SILENT_YES);
-    
+
     // now for unlocking the other side, too
     TRoom* other = real_roomp(exit->to_room);
     roomDirData* back;
