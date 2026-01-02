@@ -1834,13 +1834,13 @@ void TBeing::trapDisease(int amt) {
     act("Hmmm, lucky you, it doesn't seem to have had any effect.", FALSE, this,
       0, 0, TO_CHAR);
     return;
-  } else if (isLucky(amt) && isTough()) {
+  } else if (isLucky(amt) && isTough(0)) {
     act(
       "You are able to shake off most of the effects, but you still feel "
       "somewhat sick.",
       FALSE, this, 0, 0, TO_CHAR);
     act("$n doesn't look so hot.", TRUE, this, 0, 0, TO_ROOM);
-  } else if (!isLucky(amt) && !isTough()) {
+  } else if (!isLucky(amt) && !isTough(0)) {
     aff.duration *= 4;
     act("You feel VERY sick.", FALSE, this, 0, 0, TO_CHAR);
     act("$n doesn't look so hot.", TRUE, this, 0, 0, TO_ROOM);

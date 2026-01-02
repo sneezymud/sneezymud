@@ -72,7 +72,7 @@ int TMonster::aiUglyMug(TBeing* tmp_ch) {
     return FALSE;
   if (isAffected(AFF_CHARM))
     return FALSE;
-  if (!tmp_ch->isRealUgly())
+  if (!tmp_ch->isRealUgly(0))
     return FALSE;
   if ((lmob * (tmp_ch->getStat(STAT_CURRENT, STAT_CHA) - 1) / 10) > ltmp)
     return FALSE;

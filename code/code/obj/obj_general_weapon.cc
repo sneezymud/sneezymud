@@ -252,7 +252,7 @@ int hardHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT vicLimb, wearSlotT 
   int dam = ::number(1, 10);
 
   int hardChance = (weapHard - vicHard);
-  if ((percentChance(hardChance)) && !victim->isTough()) {
+  if ((percentChance(hardChance)) && !victim->isTough(0)) {
       int eqDamage = (weapHard-vicHard)/10;
       // Case 1: Weapon hits victim's equipment
     if (weap && vicEq) {
@@ -325,7 +325,7 @@ int spikesBreak(TBeing* victim, TBeing* ch, TObj* obj) {
   if (!obj)
     return 0;
 
-  if ((obj->isObjStat(ITEM_SPIKED)) && percentChance(25) && victim->isTough()) {
+  if ((obj->isObjStat(ITEM_SPIKED)) && percentChance(25) && victim->isTough(0)) {
     static constexpr const char* catch_msg = "$n's $o catches on $N's $o!";
     static constexpr const char* spikes_break_msg = "Some spikes break off, damaging $n's $o!";
 

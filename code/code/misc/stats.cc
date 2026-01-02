@@ -1,7 +1,10 @@
 // stats.cc
 
+#include "defs.h"
+#include "disease.h"
 #include "extern.h"
 #include "being.h"
+#include "spells.h"
 #include "stats.h"
 
 #include <cmath>
@@ -1096,30 +1099,276 @@ bool TBeing::statSelfCheck(statTypeT stat, int num) const {
   return percentChance(plotStat(STAT_CURRENT, stat, 5, 95, 25) + num);
 }
 
-bool TBeing::isStrong() const { return statSelfCheck(STAT_STR); }
+bool TBeing::isStrong(int num) const { 
+  if (hasDisease(DISEASE_POISON))
+    num -= 10;
+  if (hasDisease(DISEASE_FROSTBITE))
+    num -= 10;
+  if (eitherArmHurt()) {
+        num -= 10;
+        if (bothArmsHurt()) {
+          num -= 10;
+        }
+  }
+     if (eitherHandHurt()){
+    num -= 10;
+    if (bothHandsHurt()) {
+      num -= 10;
+    }
+  }
+  if (statSelfCheck(STAT_STR, num)) {
+    sendTo("Your <y>strength<1> prevails!\n\r");
+    return true;
+  }
+  sendTo("You are <o>not <y>strong<1>!\n\r");
+  return false; 
+}
 
-bool TBeing::isPerceptive() const { return statSelfCheck(STAT_PER); }
+bool TBeing::isPerceptive(int num) const {
+  if (affectedBySpell(SPELL_BLINDNESS))
+    num -= 10;
+  if (affectedBySpell(SPELL_STUPIDITY))
+    num -= 10;
+  if (affectedBySpell(SPELL_FUMBLE))
+    num -= 10;
+  if (affectedBySpell(SPELL_TRUE_SIGHT))
+    num += 10;
+  if (affectedBySpell(SPELL_INFRAVISION))
+    num += 4;
+  if (affectedBySpell(SPELL_CLARITY))
+    num += 10;
+  if (affectedBySpell(SKILL_SUBTERFUGE))
+    num -= 10;
 
-bool TBeing::isAgile(int num) const { return statSelfCheck(STAT_AGI, num); }
+  if (statSelfCheck(STAT_PER, num)) {
+    sendTo("Your <y>perceptive<1> eyes and ears save you!\n\r");
+    return true;
+  }
+  sendTo("You are <o>not <y>perceptive<1>!\n\r");
+  return false;
+ }
 
-bool TBeing::isDextrous() const { return statSelfCheck(STAT_DEX); }
+bool TBeing::isAgile(int num) const {
+  if (affectedBySpell(SPELL_HASTE))
+    num += 10;
+  if (affectedBySpell(SPELL_CELERITE))
+    num += 10;
+  if (affectedBySpell(SPELL_ACCELERATE))
+    num += 5;
+  if (affectedBySpell(SPELL_CHEVAL))
+    num += 5;
+  if (affectedBySpell(SPELL_FUMBLE))
+    num -= 10;
+  if (hasDisease(DISEASE_FROSTBITE))
+    num -= 10;
+  if (isAffected(AFF_PARALYSIS))
+    num -= 100;
+  if (eitherLegHurt()) {
+    num -= 10;
+    if (bothLegsHurt()) {
+      num -= 10;
+    }
+  }
+  if (statSelfCheck(STAT_AGI, num)) {
+    sendTo("Your <y>agility<1> is unmatched!\n\r");
+    return true;
+  }
+  sendTo("You are <o>not <y>agile<1>!\n\r");
+  return false;
+}
+bool TBeing::isDextrous(int num) const {
+  if (affectedBySpell(SPELL_HASTE))
+    num += 5;
+  if (affectedBySpell(SPELL_CELERITE))
+    num += 5;
+  if (affectedBySpell(SPELL_ACCELERATE))
+    num += 5;
+  if (affectedBySpell(SPELL_CHEVAL))
+    num += 5;
+  if (affectedBySpell(SPELL_FUMBLE))
+    num -= 10;
+  if (hasDisease(DISEASE_FROSTBITE))
+    num -= 10;
+  if (isAffected(AFF_PARALYSIS))
+    num -= 100;
+  if (eitherHandHurt()) {
+    num -= 10;
+    if (bothHandsHurt()) {
+      num -= 10;
+    }
+  }
+  if (statSelfCheck(STAT_DEX, num)) {
+    sendTo("Your <y>nimble fingers<1> cannot be beaten!\n\r");
+    return true;
+  }
+  sendTo("You are <o>not <y>dextrous<1>!\n\r");
+  return false;
+}
+bool TBeing::isTough(int num) const {
+  if (hasDisease(DISEASE_POISON))
+    num -= 10;
+  if (hasDisease(DISEASE_FLU))
+    num -= 10;
+  if (hasDisease(DISEASE_COLD))
+    num -= 10;
+  if (isLimbFlags(WEAR_BODY, PART_BROKEN))
+    num -= 25;
+  if (statSelfCheck(STAT_CON, num)) {
+    sendTo("You are <y>tough<1> enough!\n\r");
+    return true;
+  }
+  sendTo("You are <o>not <y>tough<1>!\n\r");
+  return false;
+}
+bool TBeing::isBrawny(int num) const {
+  if (hasDisease(DISEASE_POISON))
+    num -= 10;
+  if (hasDisease(DISEASE_FLU))
+    num -= 10;
+  if (hasDisease(DISEASE_COLD))
+    num -= 10;
+  if (isLimbFlags(WEAR_BODY, PART_BROKEN))
+    num -= 25;
+  if (statSelfCheck(STAT_BRA, num)) {
+    sendTo("You are <y>brawny<1> beyond compare!\n\r");
+    return true;
+  }
+  sendTo("You are <o>not <y>brawny<1>!\n\r");
+  return false;
+  }
 
-bool TBeing::isTough() const { return statSelfCheck(STAT_CON); }
+bool TBeing::isIntelligent(int num) const {
+  if (affectedBySpell(SPELL_STUPIDITY))
+    num -= 10;
+  if (affectedBySpell(SKILL_SUBTERFUGE))
+    num -= 10;
+  if (hasDisease(DISEASE_COLD))
+    num -= 10;
+  if (isLimbFlags(WEAR_HEAD, PART_INFECTED))
+    num -= 25;
+  if (statSelfCheck(STAT_INT, num)) {
+    sendTo("You are <y>intelligent!<1> A real genius!\n\r");
+    return true;
+  }
+  sendTo("You are <o>not <y>intelligent<1>!\n\r");
+  return false;
+  }
 
-bool TBeing::isBrawny() const { return statSelfCheck(STAT_BRA); }
+bool TBeing::isWise(int num) const { 
+  if (affectedBySpell(SPELL_STUPIDITY))
+    num -= 10;
+  if (affectedBySpell(SKILL_SUBTERFUGE))
+    num -= 10;
+  if (hasDisease(DISEASE_COLD))
+    num -= 10;
+  if (isLimbFlags(WEAR_HEAD, PART_INFECTED))
+    num -= 25;
+  if (statSelfCheck(STAT_WIS, num)) {
+    sendTo("You have the <y>wisdom<1> of an old owl!\n\r");
+    return true;
+  }
+  sendTo("You are <o>not <y>wise<1>!\n\r");
+  return false; }
 
-bool TBeing::isIntelligent() const { return statSelfCheck(STAT_INT); }
+bool TBeing::isQuick(int num) const { 
+  if (affectedBySpell(SPELL_ACCELERATE))
+    num += 5;
+  if (affectedBySpell(SPELL_HASTE))
+    num += 10;
+  if (affectedBySpell(SPELL_CELERITE))
+    num += 10;
+  if (affectedBySpell(SPELL_CHEVAL))
+    num += 5;
+  if (affectedBySpell(SPELL_FUMBLE))
+    num -= 10;
+  if (hasDisease(DISEASE_FROSTBITE))
+    num -= 10;
+  if (eitherLegHurt()) {
+    num -= 10;
+    if (bothLegsHurt()) {
+      num -= 10;
+    }
+  }
+  if (isAffected(AFF_PARALYSIS))
+    num -= 100;
+  if (statSelfCheck(STAT_SPE, num)) {
+    sendTo("You are among the <y>quickest<1>!\n\r");
+    return true;
+  }
+  sendTo("You are <o>not <y>quick<1>!\n\r");
+  return false; }
 
-bool TBeing::isWise() const { return statSelfCheck(STAT_WIS); }
+bool TBeing::isFocused(int num) const { 
+  if (affectedBySpell(SPELL_STUPIDITY))
+    num -= 10;
+  if (affectedBySpell(SKILL_SUBTERFUGE))
+    num -= 10;
+  if (hasDisease(DISEASE_POISON))
+    num -= 10;
+  if (hasDisease(DISEASE_FLU))
+    num -= 10;
+  if (hasDisease(DISEASE_COLD))
+    num -= 10;
+  if (isLimbFlags(WEAR_HEAD, PART_INFECTED))
+    num -= 25;
+  if (statSelfCheck(STAT_FOC, num)) {
+    sendTo("You have the <y>focus<1> of a true master!\n\r");
+    return true;
+  }
+  sendTo("You are <o>not <y>focused<1>!\n\r");
+  return false;
+  }
 
-bool TBeing::isFast() const { return statSelfCheck(STAT_SPE); }
+bool TBeing::isCharismatic(int num) const { 
+  if (affectedBySpell(SPELL_BLESS) || affectedBySpell(SPELL_BLESS_DEIKHAN))
+    num -= 10;
+  if (affectedBySpell(SPELL_CURSE))
+    num -= 10;
+  if (affectedBySpell(SKILL_TAUNT))
+    num -= 10;
+  if (hasDisease(DISEASE_COLD))
+    num -= 4;
+  if (hasDisease(DISEASE_FLU))
+    num -= 4;
+  if (hasDisease(DISEASE_SYPHILIS))
+    num -= 8;
+  if (hasDisease(DISEASE_LEPROSY))
+    num -= 8;
+  if (statSelfCheck(STAT_CHA, num)) {
+    sendTo("You exude <y>charisma<1>! Everyone loves you!\n\r");
+    return true;
+  }
+  sendTo("You are <o>not <y>charismatic<1>!\n\r");
+  return false;
+  }
+bool TBeing::isKarmic(int num) const { 
+  if (affectedBySpell(SPELL_CURSE))
+    num -= 10;
+  return statSelfCheck(STAT_KAR, num); 
+  }
 
-bool TBeing::isFocused() const { return statSelfCheck(STAT_FOC); }
-
-bool TBeing::isCharismatic() const { return statSelfCheck(STAT_CHA); }
-
-bool TBeing::isLucky() const { return statSelfCheck(STAT_KAR); }
-
-bool TBeing::isUgly() const { return statSelfCheck(STAT_CHA); }
-
-bool TBeing::isRealUgly() const { return (isUgly() && isUgly()); }
+bool TBeing::isUgly(int num) const { 
+  if (affectedBySpell(SPELL_BLESS) || affectedBySpell(SPELL_BLESS_DEIKHAN))
+    num += 10;
+  if (affectedBySpell(SPELL_CURSE))
+    num -= 10;
+  if (affectedBySpell(SKILL_TAUNT))
+    num -= 10;
+  if (hasDisease(DISEASE_COLD))
+    num -= 4;
+  if (hasDisease(DISEASE_FLU))
+    num -= 4;
+  if (hasDisease(DISEASE_SYPHILIS))
+    num -= 8;
+  if (hasDisease(DISEASE_LEPROSY))
+    num -= 8;
+  if (statSelfCheck(STAT_CHA, num)) {
+    sendTo("You are so <o>ugly<1>! Everyone thinks so!\n\r");
+    return true;
+  }
+  sendTo("You are <o>not <y>ugly<1>!\n\r");
+  return false;
+  }
+bool TBeing::isRealUgly(int num) const {
+   return (isUgly(num +35));
+  }

@@ -52,7 +52,7 @@ static void pick_pulse(TBeing* ch, TThing* pick) {
 
   int difficulty = 3 * exit->lock_difficulty;
   if ((!pickable || difficulty > skill) && difficulty > (skill + 100) &&
-      !ch->isDextrous()) {
+      !ch->isDextrous(0)) {
     act("Uhoh, $n seems to have jammed the lock!", true, ch, nullptr, nullptr,
       TO_ROOM);
     ch->sendTo("Uhoh.  You seemed to have jammed the lock!\n\r");

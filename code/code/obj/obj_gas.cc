@@ -113,7 +113,7 @@ void doScent(TGas* myself) {
         myself, TO_CHAR);
       act("$n coughs and gags on $N in the room!", FALSE, being, NULL, myself,
         TO_ROOM);
-      if (!being->isTough()) {
+      if (!being->isTough(0)) {
         act("You feel really queasy.", FALSE, being, NULL, myself, TO_CHAR);
         act("$n turns a sickly pale color.", FALSE, being, NULL, myself,
           TO_ROOM);

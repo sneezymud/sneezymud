@@ -1113,13 +1113,13 @@ int subterfugeSuccess(TBeing* thief, TBeing* victim) {
 
   // For mobs, do specialAttack
   int situationalMod = 0;
-  if (!victim->isWise()) {
+  if (!victim->isWise(0)) {
     situationalMod -= 10;
   }
-  if (!victim->isIntelligent()) {
+  if (!victim->isIntelligent(0)) {
     situationalMod -= 10;
   }
-  if (thief->isCharismatic()) {
+  if (thief->isCharismatic(0)) {
     situationalMod += 10;
   }
 
@@ -1145,7 +1145,7 @@ int subterfugeSuccess(TBeing* thief, TBeing* victim) {
 
 int subterfugeFail(TBeing* thief, TBeing* victim) {
    thief->sendTo("You fail to execute the subterfuge properly.\n\r");
-    if (!thief->isCharismatic() && !victim->isPc()) {
+    if (!thief->isCharismatic(0) && !victim->isPc()) {
       act("WUH OH! $N looks pretty pissed off.", FALSE, thief, NULL, victim, TO_CHAR); 
       act("$n tried to trick you! $e's gonna pay for that!", FALSE, thief, NULL, victim, TO_VICT);
       act("$n tried to trick $N! $e's gonna pay for that!", FALSE, thief, NULL, victim, TO_NOTVICT);

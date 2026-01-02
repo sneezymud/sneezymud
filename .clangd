@@ -7,7 +7,7 @@ Diagnostics:
   ClangTidy:
     FastCheckFilter: None
   UnusedIncludes: Strict
-  MissingIncludes: Strict
+  MissingIncludes: None
 Hover:
   ShowAKA: Yes
 InlayHints:

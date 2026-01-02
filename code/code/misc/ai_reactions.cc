@@ -788,7 +788,7 @@ int TMonster::aiMobHappy(TBeing* doer) {
 int TMonster::aiMudSex(TBeing* doer) {
   sstring buf;
 
-  if (doer->isRealUgly()) {
+  if (doer->isRealUgly(0)) {
     return aiMudSexRepulsed(doer);
   }
 

@@ -22,3 +22,6 @@ discord.cfg
 *.pyo
 /lib/core
 .ccls-cache
+
+# clangd config (personal preference)
+.clangd

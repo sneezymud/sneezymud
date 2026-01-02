@@ -384,7 +384,7 @@ static int steal(TBeing* thief, TBeing* victim) {
     }
   }
 
-  if (victim->isPerceptive())
+  if (victim->isPerceptive(0))
     victim->sendTo("You suddenly feel lighter in your moneypouch...\n\r");
 
   return TRUE;
@@ -511,7 +511,7 @@ static int steal(TBeing* thief, TBeing* victim, const sstring& obj_name) {
           vlogf(LOG_MISC, format("%s stole %s from %s.") % thief->getName() %
                             obj->getName() % victim->getName());
 
-        if (victim->isPerceptive() && !thief->isImmortal())
+        if (victim->isPerceptive(0) && !thief->isImmortal())
           victim->sendTo("You suddenly feel like something is missing...\n\r");
       } else
         thief->sendTo("You can't carry that much weight.\n\r");

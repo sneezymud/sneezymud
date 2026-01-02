@@ -272,7 +272,7 @@ void TBeing::listExits(const TRoom* rp) const {
     // the || case is a chance at a false-positive   :)
     if ((IS_SET(exitdata->condition, EXIT_SECRET) &&
           IS_SET(exitdata->condition, EXIT_CLOSED)) ||
-        (!::number(0, 100) && !isPerceptive())) {
+        (!::number(0, 100) && !isPerceptive(0))) {
       int chance = max(0, (int)getSkillValue(SKILL_SEARCH));
 
       if (getRace() == RACE_ELVEN)

@@ -502,7 +502,7 @@ void TFood::eatMe(TBeing* ch) {
     return;
   }
   if (isFoodFlag(FOOD_SPOILED) &&
-      !ch->getMyRace()->hasTalent(TALENT_GARBAGEEATER) && ch->isPerceptive()) {
+      !ch->getMyRace()->hasTalent(TALENT_GARBAGEEATER) && ch->isPerceptive(0)) {
     act("You notice some spoilage on $p and discard it instead.", TRUE, ch,
       this, 0, TO_CHAR);
     act("$n disposes of some spoiled $o.", TRUE, ch, this, 0, TO_ROOM);
