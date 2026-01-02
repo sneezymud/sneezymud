@@ -223,7 +223,8 @@ int task_logging(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
               (log = harvest_a_log(rp))) {
             *rp += *log;
 
-            ch->gainTaskExp(0, 50.0);
+            // Logging is a simple task with moderate difficulty
+            ch->gainTaskExp(0.5);
             ch->doSave(SILENT_YES);
             act("You harvest $p.", FALSE, ch, log, 0, TO_CHAR);
             act("$n harvests $p.", TRUE, ch, log, 0, TO_ROOM);

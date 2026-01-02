@@ -145,7 +145,7 @@ int TBeing::doSeedPlant(sstring arg) {
     if ((seeds = dynamic_cast<TTool*>(t))) {
       if (seeds->getToolType() == TOOL_SEED) {
         found = 1;
-        
+
         // Check for poisonous seeds
         switch(seeds->objVnum()) {
           case 31026:  // death camas
@@ -163,14 +163,14 @@ int TBeing::doSeedPlant(sstring arg) {
               aff.modifier = -25;
               aff.location = APPLY_STR;
               aff.bitvector = AFF_POISON;
-              
+
               aff2.type = AFFECT_DISEASE;
               aff2.level = 0;
               aff2.duration = aff.duration;
               aff2.modifier = DISEASE_POISON;
               aff2.location = APPLY_NONE;
               aff2.bitvector = AFF_POISON;
-              
+
               sendTo("The seeds contain a dangerous toxin that seeps into your skin!\n\r");
               affectTo(&aff);
               affectTo(&aff2);
@@ -229,7 +229,9 @@ int task_plant(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   if (ch->task->timeLeft < 0) {
     act("You finish planting $p.", FALSE, ch, obj, 0, TO_CHAR);
     act("$n finishes planting $p.", TRUE, ch, obj, 0, TO_ROOM);
-    ch->gainTaskExp(0, 50);
+
+    // Planting is a simple task with moderate difficulty
+    ch->gainTaskExp(0.5);
     ch->doSave(SILENT_YES);
     ch->stopTask();
 
@@ -271,14 +273,14 @@ int task_plant(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
             aff.modifier = -25;
             aff.location = APPLY_STR;
             aff.bitvector = AFF_POISON;
-            
+
             aff2.type = AFFECT_DISEASE;
             aff2.level = 0;
             aff2.duration = aff.duration;
             aff2.modifier = DISEASE_POISON;
             aff2.location = APPLY_NONE;
             aff2.bitvector = AFF_POISON;
-            
+
             ch->affectTo(&aff);
             ch->affectTo(&aff2);
             disease_start(ch, &aff2);

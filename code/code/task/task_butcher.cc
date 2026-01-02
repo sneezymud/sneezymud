@@ -216,7 +216,15 @@ int TThing::butcherPulse(TBeing* ch, TBaseCorpse* corpse) {
     steak->setDescr(buf);
 
     *ch += *steak;
-    ch->gainTaskExp(corpse->getCorpseLevel(), 30.0);
+
+    // Calculate difficulty based on corpse vs character level
+    int corpseLvl = min((int)corpse->getCorpseLevel(), 20);
+    int charLvl = min((int)ch->GetMaxLevel(), 20);
+    int effectiveCorpseLvl = min(corpseLvl, charLvl + 5);
+    double difficulty = 0.5 + ((effectiveCorpseLvl - charLvl) / 10.0);
+    difficulty = max(0.1, min(1.0, difficulty));
+
+    ch->gainTaskExp(difficulty);
     ch->doSave(SILENT_YES);
   }
   return FALSE;
@@ -281,7 +289,14 @@ int TTool::butcherPulse(TBeing* ch, TBaseCorpse* corpse) {
 #endif
   }
 
-  ch->gainTaskExp(corpse->getCorpseLevel(), 30.0);
+  // Calculate difficulty based on corpse vs character level
+  int corpseLvl = min((int)corpse->getCorpseLevel(), 20);
+  int charLvl = min((int)ch->GetMaxLevel(), 20);
+  int effectiveCorpseLvl = min(corpseLvl, charLvl + 5);
+  double difficulty = 0.5 + ((effectiveCorpseLvl - charLvl) / 10.0);
+  difficulty = max(0.1, min(1.0, difficulty));
+
+  ch->gainTaskExp(difficulty);
   ch->doSave(SILENT_YES);
   return FALSE;
 }
@@ -424,7 +439,15 @@ int bareHandsButcherPulse(TBeing* ch, TBaseCorpse* corpse) {
                     meats[whichmeat] % fromName);
 
     *ch += *steak;
-    ch->gainTaskExp(corpse->getCorpseLevel(), 30.0);
+
+    // Calculate difficulty based on corpse vs character level
+    int corpseLvl = min((int)corpse->getCorpseLevel(), 20);
+    int charLvl = min((int)ch->GetMaxLevel(), 20);
+    int effectiveCorpseLvl = min(corpseLvl, charLvl + 5);
+    double difficulty = 0.5 + ((effectiveCorpseLvl - charLvl) / 10.0);
+    difficulty = max(0.1, min(1.0, difficulty));
+
+    ch->gainTaskExp(difficulty);
     ch->doSave(SILENT_YES);
   }
   return FALSE;

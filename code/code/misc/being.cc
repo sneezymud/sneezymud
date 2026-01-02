@@ -1680,31 +1680,32 @@ void TBeing::removeAllProtection() {
 
 }
 
- double TBeing::gainTaskExp(int baseLevel, double scaleFactor) {
-   if (roomp && roomp->isRoomFlag(ROOM_ARENA))
-     return -1;
-     
-   if (isPking() || isImmortal())
-     return -1;
- 
-   if (scaleFactor <= 0.0) {
-     vlogf(LOG_BUG,
-       format("gainTaskExp called with non-positive scaleFactor: %f") % scaleFactor);
-     return -1;
-   }
-   
-   int lvl = baseLevel ? baseLevel : GetMaxLevel();
-   if (lvl > 15)
-     lvl -= 15;
-   else
-     lvl = 1;
+double TBeing::gainTaskExp(double difficulty) {
+  if (roomp && roomp->isRoomFlag(ROOM_ARENA))
+    return -1;
 
-  // 10% exp variance
-  double exp = mob_exp(lvl);
+  if (isPking() || isImmortal())
+    return -1;
+
+  if (difficulty <= 0.0) {
+    vlogf(LOG_BUG,
+      format("gainTaskExp called with non-positive difficulty: %f") % difficulty);
+    return -1;
+  }
+
+  int level = min((int)GetMaxLevel(), 20);  // Cap at level 20 for exp calculation
+
+  // Give roughly 1/15th of a level per task completion at max difficulty
+  double expNeeded = getExpClassLevel(level + 1) - getExpClassLevel(level);
+  double exp = (expNeeded / 15.0) * difficulty;
+
+  // Add some variance (±10%)
   exp *= (1.0 + ((::number(0, 20) - 10) / 100.0));
-  double finalExp = exp * scaleFactor;
 
-  gain_exp(this, finalExp, -1);
-  return finalExp;
+  // Ensure at least 1 exp
+  exp = max(1.0, exp);
+
+  gain_exp(this, exp, -1);
+  return exp;
 }
 

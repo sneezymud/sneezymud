@@ -261,7 +261,15 @@ int TBaseCorpse::dissectMe(TBeing* caster) {
     act(msg, FALSE, caster, obj, this, TO_CHAR);
     act(gl_msg, FALSE, caster, obj, this, TO_ROOM);
     log_object(obj);
-    caster->gainTaskExp(getCorpseLevel(), 30.0);
+
+    // Calculate difficulty based on corpse vs character level
+    int corpseLvl = min((int)getCorpseLevel(), 20);
+    int charLvl = min((int)caster->GetMaxLevel(), 20);
+    int effectiveCorpseLvl = min(corpseLvl, charLvl + 5);
+    double difficulty = 0.5 + ((effectiveCorpseLvl - charLvl) / 10.0);
+    difficulty = max(0.1, min(1.0, difficulty));
+
+    caster->gainTaskExp(difficulty);
     caster->doSave(SILENT_YES);
 
     return TRUE;

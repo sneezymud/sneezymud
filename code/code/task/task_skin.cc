@@ -232,7 +232,14 @@ int TThing::skinPulse(TBeing* ch, TBaseCorpse* corpse) {
   } else
     *ch += *item;
 
-  ch->gainTaskExp(corpse->getCorpseLevel(), 30.0);
+  // Calculate difficulty based on corpse vs character level
+  int corpseLvl = min((int)corpse->getCorpseLevel(), 20);
+  int charLvl = min((int)ch->GetMaxLevel(), 20);
+  int effectiveCorpseLvl = min(corpseLvl, charLvl + 5);
+  double difficulty = 0.5 + ((effectiveCorpseLvl - charLvl) / 10.0);
+  difficulty = max(0.1, min(1.0, difficulty));
+
+  ch->gainTaskExp(difficulty);
   ch->doSave(SILENT_YES);
 
   return FALSE;
@@ -301,7 +308,15 @@ int TTool::skinPulse(TBeing* ch, TBaseCorpse* corpse) {
     act(gl_msg, FALSE, ch, item, corpse, TO_ROOM);
 
     *ch += *item;
-    ch->gainTaskExp(corpse->getCorpseLevel(), 30.0);
+
+    // Calculate difficulty based on corpse vs character level
+    int corpseLvl = min((int)corpse->getCorpseLevel(), 20);
+    int charLvl = min((int)ch->GetMaxLevel(), 20);
+    int effectiveCorpseLvl = min(corpseLvl, charLvl + 5);
+    double difficulty = 0.5 + ((effectiveCorpseLvl - charLvl) / 10.0);
+    difficulty = max(0.1, min(1.0, difficulty));
+
+    ch->gainTaskExp(difficulty);
     ch->doSave(SILENT_YES);
   }
 

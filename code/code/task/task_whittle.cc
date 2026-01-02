@@ -23,21 +23,21 @@ using std::min;
 
 std::map<unsigned long int, taskWhittleEntry> whittleItems;
 
-double getWhittleScaleFactor(whittleTypeT type) {
+double getWhittleDifficulty(whittleTypeT type) {
   switch(type) {
-    case WHITTLE_ERROR:        return .20;  // least exp
-    case WHITTLE_GENERAL:      return .25;
-    case WHITTLE_EASY:         return .30;
-    case WHITTLE_MEDIUM:       return .35;
-    case WHITTLE_STANDARD:     return .40;
-    case WHITTLE_HARD:         return .45;
-    case WHITTLE_TOUGH:        return .50;
-    case WHITTLE_DELICATE:     return .55;
-    case WHITTLE_INVOLVED:     return .60;
-    case WHITTLE_STRONG:       return .70;
-    case WHITTLE_TIMECONSUMING: return .80;
-    case WHITTLE_VALUABLE:     return .90;   // most exp
-    default:                   return .40;
+    case WHITTLE_ERROR:        return 0.2;
+    case WHITTLE_GENERAL:      return 0.25;
+    case WHITTLE_EASY:         return 0.3;
+    case WHITTLE_MEDIUM:       return 0.35;
+    case WHITTLE_STANDARD:     return 0.4;
+    case WHITTLE_HARD:         return 0.45;
+    case WHITTLE_TOUGH:        return 0.5;
+    case WHITTLE_DELICATE:     return 0.55;
+    case WHITTLE_INVOLVED:     return 0.6;
+    case WHITTLE_STRONG:       return 0.7;
+    case WHITTLE_TIMECONSUMING: return 0.8;
+    case WHITTLE_VALUABLE:     return 0.9;
+    default:                   return 0.4;
   }
 }
 
@@ -538,8 +538,10 @@ int task_whittleObject(TBeing* ch, sstring tStWood) {
     TThing* tThing;
     tThing = ch->task->obj;
     *ch += *tThing;
-    double scaleFactor = getWhittleScaleFactor(whittleItems[ch->task->flags].itemType);
-    ch->gainTaskExp(0, scaleFactor);
+
+    // Calculate difficulty based on whittle type
+    double difficulty = getWhittleDifficulty(whittleItems[ch->task->flags].itemType);
+    ch->gainTaskExp(difficulty);
     ch->doSave(SILENT_YES);
     ch->task->obj = NULL;
 

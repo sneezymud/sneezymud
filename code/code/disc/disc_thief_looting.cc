@@ -113,7 +113,9 @@ int detectSecret(TBeing* thief) {
                                  : "NO NAME. TELL A GOD"));
         act(buf, FALSE, thief, 0, 0, TO_ROOM);
         thief->setMove(max(0, (thief->getMove() - 30)));
-        thief->gainTaskExp(0, 50);
+
+        // Finding a secret door is a moderate difficulty task
+        thief->gainTaskExp(0.5);
         thief->doSave(SILENT_YES);
         return TRUE;
       }

@@ -450,7 +450,8 @@ int task_fishing(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
               (::number(5, 10) > rp->getFished())) {
             *ch += *fish;
 
-            ch->gainTaskExp(0, 50.0);
+            // Fishing is a simple task with moderate difficulty
+            ch->gainTaskExp(0.5);
             ch->doSave(SILENT_YES);
 
             if (awesomeFisher) {
