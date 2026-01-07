@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#include <vector>
+#include <algorithm>
 #include "extern.h"
 #include "room.h"
 #include "low.h"
@@ -637,6 +639,363 @@ int castDustStorm(TBeing* caster) {
   } else {
   }
   return TRUE;
+}
+
+int lightningBolt(TBeing* caster, TBeing* victim, int level, short bKnown,
+  int adv_learn) {
+  if (caster->roomp->isUnderwaterSector()) {
+    caster->sendTo(COLOR_SPELLS,
+      "<W>The water grounds out your electrical energy!<z>\n\r");
+    caster->nothingHappens(SILENT_YES);
+    return SPELL_FAIL;
+  }
+
+  int dam = caster->getSkillDam(victim, SPELL_LIGHTNING_BOLT, level, adv_learn);
+
+  caster->reconcileHurt(victim, discArray[SPELL_LIGHTNING_BOLT]->alignMod);
+
+  if (caster->bSuccess(bKnown, SPELL_LIGHTNING_BOLT)) {
+    if (victim->isLucky(caster->spellLuckModifier(SPELL_LIGHTNING_BOLT))) {
+      SV(SPELL_LIGHTNING_BOLT);
+      act(
+        "<W>A crackling bolt of lightning strikes $N, but $E shrugs off most of "
+        "the damage!<z>",
+        FALSE, caster, NULL, victim, TO_NOTVICT);
+      act(
+        "<W>A crackling bolt of lightning strikes you, but you shrug off most "
+        "of the damage!<z>",
+        FALSE, caster, NULL, victim, TO_VICT);
+      act(
+        "<W>You hurl a crackling bolt of lightning at $N, but $E shrugs off "
+        "most of the damage!<z>",
+        FALSE, caster, NULL, victim, TO_CHAR);
+      dam /= 2;
+    } else if (critSuccess(caster, SPELL_LIGHTNING_BOLT) != CRIT_S_NONE) {
+      CS(SPELL_LIGHTNING_BOLT);
+      dam *= 2;
+      act(
+        "<W>A MASSIVE bolt of lightning BLASTS $N with tremendous force!<z>",
+        FALSE, caster, NULL, victim, TO_NOTVICT);
+      act(
+        "<W>A MASSIVE bolt of lightning BLASTS you with tremendous force!<z>",
+        FALSE, caster, NULL, victim, TO_VICT);
+      act(
+        "<W>You unleash a MASSIVE bolt of lightning that BLASTS $N with "
+        "tremendous force!<z>",
+        FALSE, caster, NULL, victim, TO_CHAR);
+    } else {
+      act("<W>A crackling bolt of lightning strikes $N!<z>", FALSE, caster,
+        NULL, victim, TO_NOTVICT);
+      act("<W>A crackling bolt of lightning strikes you!<z>", FALSE, caster,
+        NULL, victim, TO_VICT);
+      act("<W>You hurl a crackling bolt of lightning at $N!<z>", FALSE, caster,
+        NULL, victim, TO_CHAR);
+    }
+    if (caster->reconcileDamage(victim, dam, SPELL_LIGHTNING_BOLT) == -1)
+      return SPELL_SUCCESS + VICTIM_DEAD;
+    return SPELL_SUCCESS;
+  } else {
+    if (critFail(caster, SPELL_LIGHTNING_BOLT)) {
+      CF(SPELL_LIGHTNING_BOLT);
+      act("<W>Oh No!  Your lightning bolt arcs back and strikes you!<z>", FALSE,
+        caster, NULL, victim, TO_CHAR);
+      act("<W>$n's lightning bolt arcs back and strikes $mself!<z>", FALSE,
+        caster, NULL, victim, TO_NOTVICT);
+      if (caster->reconcileDamage(caster, dam, SPELL_LIGHTNING_BOLT) == -1)
+        return SPELL_CRIT_FAIL + CASTER_DEAD;
+      caster->setCharFighting(victim);
+      caster->setVictFighting(victim);
+      return SPELL_CRIT_FAIL;
+    } else {
+      caster->nothingHappens();
+      caster->setCharFighting(victim);
+      caster->setVictFighting(victim);
+      return SPELL_FAIL;
+    }
+  }
+}
+
+int lightningBolt(TBeing* caster, TBeing* victim) {
+  if (!bPassMageChecks(caster, SPELL_LIGHTNING_BOLT, victim))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_LIGHTNING_BOLT]->lag;
+  taskDiffT diff = discArray[SPELL_LIGHTNING_BOLT]->task;
+
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_LIGHTNING_BOLT, diff, 1,
+    "", rounds, caster->in_room, 0, 0, TRUE, 0);
+
+  return TRUE;
+}
+
+int castLightningBolt(TBeing* caster, TBeing* victim) {
+  if (victim->isImmortal() || IS_SET(victim->specials.act, ACT_IMMORTAL)) {
+    act("<W>You can't electrocute $M, $E's immortal.<z>", TRUE, caster, 0, victim,
+      TO_CHAR);
+    caster->nothingHappens(SILENT_YES);
+    return FALSE;
+  }
+  
+  int level = caster->getSkillLevel(SPELL_LIGHTNING_BOLT);
+  int ret = lightningBolt(caster, victim, level,
+    caster->getSkillValue(SPELL_LIGHTNING_BOLT),
+    caster->getAdvLearning(SPELL_LIGHTNING_BOLT));
+
+  int rc = 0;
+  if (IS_SET(ret, VICTIM_DEAD))
+    ADD_DELETE(rc, DELETE_VICT);
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+  return rc;
+}
+
+int lightningBolt(TBeing* caster, TBeing* victim, TMagicItem* obj) {
+  if (victim->isImmortal() || IS_SET(victim->specials.act, ACT_IMMORTAL)) {
+    caster->sendTo(COLOR_SPELLS,
+      "<W>Now that was pretty stupid of you...<z>\n\r");
+    return FALSE;
+  }
+
+  int level = obj->getMagicLevel();
+
+  int ret =
+    lightningBolt(caster, victim, level, obj->getMagicLearnedness(), 0);
+
+  int retCode = 0;
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(retCode, DELETE_THIS);
+  if (IS_SET(ret, VICTIM_DEAD))
+    ADD_DELETE(retCode, DELETE_VICT);
+
+  return retCode;
+}
+
+int chainLightning(TBeing* caster, TBeing* victim, int level, short bKnown,
+  int adv_learn) {
+  if (caster->roomp->isUnderwaterSector()) {
+    caster->sendTo(COLOR_SPELLS,
+      "<W>The water grounds out your electrical energy!<z>\n\r");
+    caster->nothingHappens(SILENT_YES);
+    return SPELL_FAIL;
+  }
+
+  int baseDam = caster->getSkillDam(victim, SPELL_CHAIN_LIGHTNING, level, adv_learn);
+
+  caster->reconcileHurt(victim, discArray[SPELL_CHAIN_LIGHTNING]->alignMod);
+
+  if (caster->bSuccess(bKnown, SPELL_CHAIN_LIGHTNING)) {
+    int dam = baseDam;
+    bool crit = (critSuccess(caster, SPELL_CHAIN_LIGHTNING) != CRIT_S_NONE);
+
+    if (victim->isLucky(caster->spellLuckModifier(SPELL_CHAIN_LIGHTNING))) {
+      SV(SPELL_CHAIN_LIGHTNING);
+      act(
+        "<W>A crackling bolt of lightning strikes $N, but $E shrugs off most of "
+        "the damage!<z>",
+        FALSE, caster, NULL, victim, TO_NOTVICT);
+      act(
+        "<W>A crackling bolt of lightning strikes you, but you shrug off most "
+        "of the damage!<z>",
+        FALSE, caster, NULL, victim, TO_VICT);
+      act(
+        "<W>You hurl a crackling bolt of lightning at $N, but $E shrugs off "
+        "most of the damage!<z>",
+        FALSE, caster, NULL, victim, TO_CHAR);
+      dam /= 2;
+    } else if (crit) {
+      CS(SPELL_CHAIN_LIGHTNING);
+      dam *= 2;
+      act("<W>A MASSIVE bolt of lightning BLASTS $N with tremendous force!<z>",
+        FALSE, caster, NULL, victim, TO_NOTVICT);
+      act("<W>A MASSIVE bolt of lightning BLASTS you with tremendous force!<z>",
+        FALSE, caster, NULL, victim, TO_VICT);
+      act(
+        "<W>You unleash a MASSIVE bolt of lightning that BLASTS $N with "
+        "tremendous force!<z>",
+        FALSE, caster, NULL, victim, TO_CHAR);
+    } else {
+      act("<W>A crackling bolt of lightning strikes $N!<z>", FALSE, caster, NULL,
+        victim, TO_NOTVICT);
+      act("<W>A crackling bolt of lightning strikes you!<z>", FALSE, caster,
+        NULL, victim, TO_VICT);
+      act("<W>You hurl a crackling bolt of lightning at $N!<z>", FALSE, caster,
+        NULL, victim, TO_CHAR);
+    }
+
+    bool victimDied = false;
+    if (caster->reconcileDamage(victim, dam, SPELL_CHAIN_LIGHTNING) == -1)
+      victimDied = true;
+
+    // Build list of valid arc targets (not caster, not grouped, not immortal)
+    // Always exclude primary victim - we add them back later if alive
+    std::vector<TBeing*> validTargets;
+    for (StuffIter it = caster->roomp->stuff.begin();
+         it != caster->roomp->stuff.end(); ++it) {
+      TBeing* tb = dynamic_cast<TBeing*>(*it);
+      if (!tb)
+        continue;
+      if (tb == caster || caster->inGroup(*tb))
+        continue;
+      if (tb->isImmortal() || IS_SET(tb->specials.act, ACT_IMMORTAL))
+        continue;
+      if (tb == victim)
+        continue;
+      validTargets.push_back(tb);
+    }
+
+    // Need at least 2 valid targets to arc (can bounce between them)
+    if (validTargets.size() >= 2 || (!victimDied && validTargets.size() >= 1)) {
+      // Calculate number of arcs based on INT
+      // Low INT: 1-2 arcs, High INT: 2-3 arcs
+      int minArcs = caster->isIntelligent() ? 2 : 1;
+      int maxArcs = minArcs + 1;
+      int numArcs = ::number(minArcs, maxArcs);
+
+      // Add victim back to valid targets if alive (for bouncing)
+      if (!victimDied)
+        validTargets.push_back(victim);
+
+      // Track last target for arc messages - use nullptr if victim died
+      TBeing* lastTarget = victimDied ? nullptr : victim;
+      std::vector<TBeing*> toDelete;
+      double damageMultiplier = 0.8;  // First arc does 80%
+
+      for (int arc = 0; arc < numArcs && validTargets.size() >= 1; ++arc) {
+        // Pick a random target that isn't the last one hit
+        std::vector<TBeing*> arcTargets;
+        for (TBeing* tb : validTargets) {
+          if (tb != lastTarget)
+            arcTargets.push_back(tb);
+        }
+
+        if (arcTargets.empty())
+          break;
+
+        TBeing* arcVictim = arcTargets[::number(0, arcTargets.size() - 1)];
+        int arcDam = static_cast<int>(baseDam * damageMultiplier);
+
+        // Show arc messages - handle case where lastTarget is dead/nullptr
+        if (lastTarget) {
+          act("<W>The lightning arcs from $N!<z>", FALSE, caster, NULL,
+            lastTarget, TO_NOTVICT);
+          act("<W>Your lightning arcs from $N to $p!<z>", FALSE, caster,
+            arcVictim, lastTarget, TO_CHAR);
+        } else {
+          act("<W>The lightning continues to arc!<z>", FALSE, caster, NULL, NULL,
+            TO_ROOM);
+          act("<W>Your lightning arcs to $N!<z>", FALSE, caster, NULL, arcVictim,
+            TO_CHAR);
+        }
+        act("<W>A crackling bolt of lightning strikes $N!<z>", FALSE, caster,
+          NULL, arcVictim, TO_NOTVICT);
+        act("<W>The lightning arcs toward you!<z>\n\r"
+            "<W>A crackling bolt of lightning strikes you!<z>",
+          FALSE, caster, NULL, arcVictim, TO_VICT);
+
+        caster->reconcileHurt(arcVictim,
+          discArray[SPELL_CHAIN_LIGHTNING]->alignMod);
+
+        if (caster->reconcileDamage(arcVictim, arcDam, SPELL_CHAIN_LIGHTNING) ==
+            -1) {
+          // Remove from valid targets
+          std::erase(validTargets, arcVictim);
+          lastTarget = nullptr;  // Don't reference dead target
+
+          // Only add secondary targets to toDelete; the primary victim's
+          // deletion is handled by the caller via the VICTIM_DEAD return code
+          if (arcVictim == victim)
+            victimDied = true;
+          else
+            toDelete.push_back(arcVictim);
+        } else {
+          lastTarget = arcVictim;
+        }
+        damageMultiplier -= 0.2;  // 80% -> 60% -> 40%
+      }
+
+      // Delete victims after loop completes
+      for (TBeing* tb : toDelete) {
+        delete tb;
+      }
+    }
+
+    if (victimDied)
+      return SPELL_SUCCESS + VICTIM_DEAD;
+    return SPELL_SUCCESS;
+  } else {
+    if (critFail(caster, SPELL_CHAIN_LIGHTNING)) {
+      CF(SPELL_CHAIN_LIGHTNING);
+      act("<W>Oh No! Your chain lightning arcs back and strikes you!<z>", FALSE,
+        caster, NULL, victim, TO_CHAR);
+      act("<W>$n's chain lightning arcs back and strikes $mself!<z>", FALSE,
+        caster, NULL, victim, TO_NOTVICT);
+      if (caster->reconcileDamage(caster, baseDam, SPELL_CHAIN_LIGHTNING) == -1)
+        return SPELL_CRIT_FAIL + CASTER_DEAD;
+      caster->setCharFighting(victim);
+      caster->setVictFighting(victim);
+      return SPELL_CRIT_FAIL;
+    } else {
+      caster->nothingHappens();
+      caster->setCharFighting(victim);
+      caster->setVictFighting(victim);
+      return SPELL_FAIL;
+    }
+  }
+}
+
+int chainLightning(TBeing* caster, TBeing* victim) {
+  if (!bPassMageChecks(caster, SPELL_CHAIN_LIGHTNING, victim))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_CHAIN_LIGHTNING]->lag;
+  taskDiffT diff = discArray[SPELL_CHAIN_LIGHTNING]->task;
+
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_CHAIN_LIGHTNING, diff, 1,
+    "", rounds, caster->in_room, 0, 0, TRUE, 0);
+
+  return TRUE;
+}
+
+int castChainLightning(TBeing* caster, TBeing* victim) {
+  if (victim->isImmortal() || IS_SET(victim->specials.act, ACT_IMMORTAL)) {
+    act("<W>You can't electrocute $M, $E's immortal.<z>", TRUE, caster, 0, victim,
+      TO_CHAR);
+    caster->nothingHappens(SILENT_YES);
+    return FALSE;
+  }
+
+  int level = caster->getSkillLevel(SPELL_CHAIN_LIGHTNING);
+  int ret = chainLightning(caster, victim, level,
+    caster->getSkillValue(SPELL_CHAIN_LIGHTNING),
+    caster->getAdvLearning(SPELL_CHAIN_LIGHTNING));
+
+  int rc = 0;
+  if (IS_SET(ret, VICTIM_DEAD))
+    ADD_DELETE(rc, DELETE_VICT);
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+  return rc;
+}
+
+int chainLightning(TBeing* caster, TBeing* victim, TMagicItem* obj) {
+  if (victim->isImmortal() || IS_SET(victim->specials.act, ACT_IMMORTAL)) {
+    caster->sendTo(COLOR_SPELLS,
+      "<W>Now that was pretty stupid of you...<z>\n\r");
+    return FALSE;
+  }
+
+  int level = obj->getMagicLevel();
+
+  int ret =
+    chainLightning(caster, victim, level, obj->getMagicLearnedness(), 0);
+
+  int retCode = 0;
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(retCode, DELETE_THIS);
+  if (IS_SET(ret, VICTIM_DEAD))
+    ADD_DELETE(retCode, DELETE_VICT);
+
+  return retCode;
 }
 
 int tornado(TBeing* caster, int level, short bKnown, int adv_learn) {

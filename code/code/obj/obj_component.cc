@@ -978,6 +978,12 @@ void buildComponentArray() {
       "$n tightly squeezes $p as $e stares at you.",
       "You tightly squeeze $p as your eyes roll back into your head.",
       "$n tightly squeezes $p as $s eyes roll back into $s head.", "", ""));
+  CompInfo.push_back(
+    compInfo(SPELL_CHAIN_LIGHTNING, "You toss $p into the air as you stare at $N.",
+      "$n tosses $p into the air as $e stares at $N.",
+      "$n tosses $p into the air as $e stares at you.",
+      "You toss $p into the air as your eyes roll back into your head.",
+      "$n tosses $p into the air as $s eyes roll back into $s head.", "", ""));
   CompInfo.push_back(compInfo(SPELL_METEOR_SWARM,
     "You toss $p at $N.  The stone floats skywards before it can hit $M.",
     "$n tosses $p at $N.  The stone floats skywards before it can hit $M.",

@@ -1502,6 +1502,8 @@ void TBeing::statBeing(TBeing* k) {
       case SPELL_TORNADO:
       case SKILL_QUIV_PALM:
       case SKILL_SHOULDER_THROW:
+      case SPELL_LIGHTNING_BOLT:
+      case SPELL_CHAIN_LIGHTNING:
       case SPELL_CALL_LIGHTNING:
       case SPELL_LIGHTNING_BREATH:
       case SPELL_GUSHER:

@@ -1614,6 +1614,20 @@ static spellNumT get_mage_spell(TMonster& ch, TBeing& vict, bool& on_me) {
         TO_ROOM);
       return spell;
     }
+    spell = SPELL_CHAIN_LIGHTNING;
+    if (!::number(0, 4) && (cutoff < discArray[spell]->start) &&
+        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+      act("$n utters the words, 'Zap Zap Zap!'", TRUE, &ch, 0, 0,
+        TO_ROOM);
+      return spell;
+    }
+    spell = SPELL_LIGHTNING_BOLT;
+    if (!::number(0, 2) && (cutoff < discArray[spell]->start) &&
+        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
+      act("$n utters the words, 'Time to fry!'", TRUE, &ch, 0, 0,
+        TO_ROOM);
+      return spell;
+    }
     spell = SPELL_IMMOBILIZE;
     if (!::number(0, 3) && !vict.affectedBySpell(SPELL_IMMOBILIZE) &&
         (cutoff < discArray[spell]->start) && ch.doesKnowSkill(spell) &&

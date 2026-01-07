@@ -263,6 +263,10 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
       return &((CDAir*)cd)->skImmobilize;
     case SPELL_SUFFOCATE:
       return &((CDAir*)cd)->skSuffocate;
+    case SPELL_LIGHTNING_BOLT:
+      return &((CDAir*)cd)->skLightningBolt;
+    case SPELL_CHAIN_LIGHTNING:
+      return &((CDAir*)cd)->skChainLightning;
     case SPELL_FLY:
       return &((CDAir*)cd)->skFly;
     case SPELL_ANTIGRAVITY:

@@ -236,6 +236,10 @@ int mapSpellnumToFile(spellNumT stt) {
       return 59;
     case SPELL_HASTE:
       return 60;
+    case SPELL_LIGHTNING_BOLT:
+      return 62;
+    case SPELL_CHAIN_LIGHTNING:
+      return 63;
     case SPELL_IMMOBILIZE:
       return 66;
     case SPELL_SUFFOCATE:
@@ -1399,6 +1403,10 @@ spellNumT mapFileToSpellnum(int stt) {
       return SPELL_COPY;
     case 60:
       return SPELL_HASTE;
+    case 62:
+      return SPELL_LIGHTNING_BOLT;
+    case 63:
+      return SPELL_CHAIN_LIGHTNING;
     case 66:
       return SPELL_IMMOBILIZE;
     case 67:

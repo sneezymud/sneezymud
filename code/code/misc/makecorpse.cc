@@ -203,6 +203,8 @@ TThing* TBeing::makeCorpse(spellNumT dmg_type, TBeing* tKiller,
           namebuf);
         break;
       case DAMAGE_ELECTRIC:
+      case SPELL_LIGHTNING_BOLT:
+      case SPELL_CHAIN_LIGHTNING:
       case SPELL_CALL_LIGHTNING:
       case SPELL_LIGHTNING_BREATH:
         sprintf(buf, "The charred and burnt corpse of %s smolders here.",
