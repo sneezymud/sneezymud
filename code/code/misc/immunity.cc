@@ -236,7 +236,8 @@ immuneTypeT getTypeImmunity(spellNumT type) {
     case TYPE_FIRE:
       bit = IMMUNE_HEAT;
       break;
-      //    case SPELL_LIGHTNING_BOLT:
+    case SPELL_LIGHTNING_BOLT:
+    case SPELL_CHAIN_LIGHTNING:
     case SPELL_CALL_LIGHTNING:
     case SPELL_LIGHTNING_BREATH:
     case DAMAGE_ELECTRIC:

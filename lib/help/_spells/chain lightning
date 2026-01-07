@@ -1,0 +1,31 @@
+The chain lightning spell channels electrical energy from the air into a
+crackling bolt of lightning that strikes a single target with devastating
+force.  Unlike its lesser cousin, lightning bolt, the chain lightning spell
+can arc from the initial target to strike additional enemies in the room.
+
+The damage from the initial strike is moderate to heavy, and the victim has
+a chance to dodge or resist some of the electrical energy.  A successful
+resistance will reduce the damage by half.  Exceptionally well-cast spells
+can result in double damage on the initial strike as the lightning arcs with
+increased intensity.
+
+After striking the primary target, the lightning can arc to other enemies
+in the room.  The number of arcs depends on the caster's intelligence - a
+more intelligent caster can sustain more arcs.  Each arc deals reduced
+damage: 80 percent on the first arc, 60 percent on the second, and 40
+percent on the third.  The lightning can bounce back and forth between two
+targets, but requires at least two valid targets in the room to arc at all.
+Valid targets are enemies not grouped with the caster.
+
+However, the spell is not without risk.  Should the caster lose control of
+the electrical energies, the lightning may arc back and strike the caster
+instead, ending the spell immediately without arcing to any enemies.
+
+The spell cannot be cast underwater, as the water grounds out the electrical
+energy before it can be properly channeled.  Creatures with immunity to
+electricity will be unaffected by this spell.
+
+Chain lightning is available to mages who have mastered the air discipline
+and is learned starting at 80 percent learnedness.
+
+

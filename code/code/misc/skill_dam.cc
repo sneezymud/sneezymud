@@ -258,6 +258,17 @@ int TBeing::getSkillDam(const TBeing* victim, spellNumT skill, int level,
       dam = genericDam(victim, this, skill, DISC_MAGE, level, adv_learn, 2.5,
         REDUCE_YES, !isPc(), TRIM_NO);
       break;
+    case SPELL_LIGHTNING_BOLT:
+      // Single target electricity damage with saving throw
+      dam = genericDam(victim, this, skill, DISC_MAGE, level, adv_learn,
+        2.05 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
+      break;
+    case SPELL_CHAIN_LIGHTNING:
+      // Multi-target electricity damage with saving throw
+      // Higher base damage since it costs double mana and has longer lag
+      dam = genericDam(victim, this, skill, DISC_MAGE, level, adv_learn,
+        2.05 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
+      break;
     case SPELL_TORNADO:
       dam = genericDam(victim, this, skill, DISC_MAGE, level, adv_learn,
         2.5 * OUTDOOR_ONLY, REDUCE_YES, !isPc(), TRIM_NO);

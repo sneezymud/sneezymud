@@ -4,12 +4,29 @@
           powers are also now documented. Type 'help <skill>' or 'help <spell>'
           to check them out.
 
-02-08-26: Added mobs to Kalysia and adjusted the level of a few existing
+02-14-26: New Air Discipline Spells: Lightning Bolt & Chain Lightning
+          Air mages now have access to two new offensive spells!
+
+          Lightning Bolt - A single-target electrical damage spell available
+          starting at 20 percent learnedness. Channels atmospheric electricity
+          into a crackling bolt that strikes a single enemy with devastating
+          force.
+
+          Chain Lightning - An advanced multi-target spell available starting
+          at 80 percent learnedness. The initial bolt strikes your target, then
+          arcs to additional enemies in the room. More intelligent casters can
+          sustain additional arcs. Each arc deals reduced damage as the
+          lightning dissipates.
+
+          Both spells cannot be cast underwater, and losing control may cause
+          the lightning to arc back at the caster! See the help files for each
+          spell for more details.
+          
+02-08-26: Added mobs to Kalysia and adjusted the level of a few existing 
           mobs. Changed the sector type of the rooms in The Hospitality
           Center to be underwater.
 
 01-25-26: Adjusted when the coronary spell is learned and becomes maxable.
-
           There's long been no reason for a shaman to invest practices in the
           skunk discipline past 80%, as the coronary spell was learned at 75%
           and became maxable at 80%.

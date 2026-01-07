@@ -6,8 +6,10 @@
 class CDAir : public CDiscipline {
   public:
     CSkill skProtectionFromAir;
-    CSkill skImmobilize;  // NEW  30th level individual
-    CSkill skSuffocate;   //      40th level individual
+    CSkill skImmobilize;     // NEW  30th level individual
+    CSkill skSuffocate;      //      40th level individual
+    CSkill skLightningBolt;   //      20th level single target
+    CSkill skChainLightning;  //      80th level chaining
     CSkill skFly;
     CSkill skAntigravity;
     CSkill skPierceResist;
@@ -34,6 +36,16 @@ int castSuffocate(TBeing*, TBeing*);
 int dustStorm(TBeing*);
 int dustStorm(TBeing*, int, short, int);
 int castDustStorm(TBeing*);
+
+int lightningBolt(TBeing* caster, TBeing* victim);
+int lightningBolt(TBeing* caster, TBeing* victim, int level, short bKnown, int advLearn);
+int castLightningBolt(TBeing* caster, TBeing* victim);
+int lightningBolt(TBeing* caster, TBeing* victim, TMagicItem* obj);
+
+int chainLightning(TBeing* caster, TBeing* victim);
+int chainLightning(TBeing* caster, TBeing* victim, int level, short bKnown, int advLearn);
+int castChainLightning(TBeing* caster, TBeing* victim);
+int chainLightning(TBeing* caster, TBeing* victim, TMagicItem* obj);
 
 void tornado(TBeing*);
 void tornado(TBeing*, TMagicItem*);

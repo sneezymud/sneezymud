@@ -1950,6 +1950,18 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
       else
         vlogf(LOG_BUG, "SPELL_DUST_STORM called with null obj");
       break;
+    case SPELL_LIGHTNING_BOLT:
+      if (!o)
+        rc = castLightningBolt(this, victim);
+      else
+        vlogf(LOG_BUG, "SPELL_LIGHTNING_BOLT called with null obj");
+      break;
+    case SPELL_CHAIN_LIGHTNING:
+      if (!o)
+        rc = castChainLightning(this, victim);
+      else
+        vlogf(LOG_BUG, "SPELL_CHAIN_LIGHTNING called with null obj");
+      break;
     case SPELL_FEATHERY_DESCENT:
       if (!o) {
         rc = castFeatheryDescent(this, victim);

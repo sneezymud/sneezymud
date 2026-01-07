@@ -1209,6 +1209,8 @@ namespace {
     {SPELL_HASTE, "SPELL_HASTE"},
     {SPELL_IMMOBILIZE, "SPELL_IMMOBILIZE"},
     {SPELL_SUFFOCATE, "SPELL_SUFFOCATE"},
+    {SPELL_LIGHTNING_BOLT, "SPELL_LIGHTNING_BOLT"},
+    {SPELL_CHAIN_LIGHTNING, "SPELL_CHAIN_LIGHTNING"},
     {SPELL_FLY, "SPELL_FLY"},
     {SPELL_ANTIGRAVITY, "SPELL_ANTIGRAVITY"},
     {SPELL_DIVINATION, "SPELL_DIVINATION"},
@@ -1803,6 +1805,12 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
     case SPELL_SUFFOCATE:
       rc = suffocate(this, ch);
       break;
+    case SPELL_LIGHTNING_BOLT:
+      rc = lightningBolt(this, ch);
+      break;
+    case SPELL_CHAIN_LIGHTNING:
+      rc = chainLightning(this, ch);
+      break;
     case SPELL_DUST_STORM:
       rc = dustStorm(this);
       break;
@@ -2028,11 +2036,6 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
     case SPELL_ACID_BLAST:
       rc = acidBlast(this);
       break;
-#if 0
-    case SPELL_CHAIN_LIGHTNING:
-      rc = chainLightning(this);
-      break;
-#endif
     case SPELL_ANIMATE:
       animate(this);
       break;
