@@ -67,7 +67,7 @@ const unsigned short int PART_ENTANGLED = (1 << 10);
 const unsigned short int PART_BRUISED = (1 << 11);
 const unsigned short int PART_GANGRENOUS = (1 << 12);
 
-const int MAX_PARTS = 12;  // move and change
+const int MAX_PARTS = 13;  // must match number of PART_* flags
 
 /* 'class' for PC's */
 const unsigned short CLASS_MAGE = (1 << 0);      // 1
@@ -133,7 +133,7 @@ const int AFF_MAX = 35;
 // they are combinations of bits, IS_SET, REMOVE_BIT, SET_BIT can not be used
 // use IS_SET_DELETE, ADD_DELETE, REM_DELETE instead
 //
-#if 0 
+#if 0
 const int DELETE_ITEM          = ((1<<5));
 const int DELETE_THIS          = ((1<<6));
 const int DELETE_VICT          = ((1<<7));
