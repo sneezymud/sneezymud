@@ -1108,9 +1108,7 @@ const byte sharpness[TYPE_MAX_HIT - TYPE_MIN_HIT] = {
 
 const char* const body_flags[] = {"bleeding", "infected", "paralyzed", "broken",
   "scarred", "bandaged", "missing", "useless", "leprosed", "transformed",
-  "entangled", "bruised",
-  "gangrenous"
-  "\n"};
+  "entangled", "bruised", "gangrenous", "\n"};
 
 const char* const card_names[14] = {"Nothing", "Ace", "Two", "Three", "Four",
   "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"};

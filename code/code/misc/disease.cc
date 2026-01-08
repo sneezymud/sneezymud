@@ -105,10 +105,10 @@ void spread_affect(TBeing* ch, int chance_to_spread, bool race, bool not_race,
     if ((af->type != AFFECT_DISEASE && !v->affectedBySpell(af->type)) ||
         (af->type == AFFECT_DISEASE && !v->hasDisease(affToDisease(*af)))) {
 #if 0
-      vlogf(LOG_MISC, format("%s (%s:%d) spreading from %s to %s at %d") % 
+      vlogf(LOG_MISC, format("%s (%s:%d) spreading from %s to %s at %d") %
              af->type == AFFECT_DISEASE ? "Disease" : "Spell" %
-             af->type == AFFECT_DISEASE ? 
-                 DiseaseInfo[af->modifier].name : 
+             af->type == AFFECT_DISEASE ?
+                 DiseaseInfo[af->modifier].name :
                  discArray[af->type]->name %
              af->type == AFFECT_DISEASE ? af->modifier : af->type %
              ch->getName() % v->getName() % ch->inRoom());
@@ -1497,6 +1497,7 @@ int disease_gangrene(TBeing* victim, int message, affectedData* af) {
             return DELETE_THIS;
         break;
       }
+      break;
     case DISEASE_DONE:
       // infection duration will be shortened from permanent in the
       // disease_infect pulse
