@@ -19,13 +19,13 @@ void br() { vlogf(LOG_BUG, "sstring::escape(): TODO implement"); }
 
 const sstring sstring::escape() const {
   sstring oBuf;
-  unsigned int MY_MAX_STRING_LENGTH = MAX_STRING_LENGTH * 2;
+  constexpr unsigned int maxEscapeLength = MAX_STRING_LENGTH * 2;
 
-  char buf[MY_MAX_STRING_LENGTH];
+  char buf[maxEscapeLength];
   TDatabase::escape_string_ugly(buf, c_str(), strlen(c_str()));
   oBuf = (sstring)buf;
 
-  if (oBuf.length() == MY_MAX_STRING_LENGTH - 1) {
+  if (oBuf.length() == maxEscapeLength - 1) {
     vlogf(LOG_BUG, "sstring::escape(): buffer reached MAX_STRING_LENGTH");
 
     // avoid formatting just to be safe
@@ -37,7 +37,7 @@ const sstring sstring::escape() const {
 
 const sstring sstring::ansiToAard() const {
   sstring oBuf;
-  unsigned int MY_MAX_STRING_LENGTH = MAX_STRING_LENGTH * 2;
+  constexpr unsigned int maxAardLength = MAX_STRING_LENGTH * 2;
 
   boost::regex e("(^|[^<])<.>");
   boost::sregex_iterator m((*this).begin(), (*this).end(), e);
@@ -252,11 +252,11 @@ const sstring sstring::ansiToAard() const {
   oBuf.inlineReplaceString(ANSI_WH_ON_PR, "@m");
   oBuf.inlineReplaceString(ANSI_WH_ON_RD, "@r");
 
-  if (oBuf.length() == MY_MAX_STRING_LENGTH - 1) {
-    vlogf(LOG_BUG, "sstring::escape(): buffer reached MAX_STRING_LENGTH");
+  if (oBuf.length() == maxAardLength - 1) {
+    vlogf(LOG_BUG, "sstring::ansiToAard(): buffer reached MAX_STRING_LENGTH");
 
     // avoid formatting just to be safe
-    vlogf(LOG_BUG, sstring("sstring::escape(): buffer=") + oBuf.substr(70));
+    vlogf(LOG_BUG, sstring("sstring::ansiToAard(): buffer=") + oBuf.substr(70));
   }
 
   return oBuf;

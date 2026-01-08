@@ -1916,7 +1916,7 @@ static void ChangeExitSlopedStatus(TRoom* rp, TBeing* ch, const char* arg,
     case CHANGE_ROOM_DIR_SLOPED_SW:
       dir = DIR_SOUTHWEST;
       break;
-    case MAX_DIR:
+    case CHANGE_ROOM_EXIT:
       ChangeExitSlopedStatus(rp, ch, "", ENTER_CHECK);
     default:
       return;
@@ -2363,7 +2363,7 @@ static void ChangeExitCondition(TRoom* rp, TBeing* ch, const char* arg,
     case CHANGE_ROOM_CONDITION_SW:
       dir = DIR_SOUTHWEST;
       break;
-    case MAX_DIR:
+    case CHANGE_ROOM_EXIT:
       ChangeExitCondition(rp, ch, "", ENTER_CHECK);
       return;
     default:

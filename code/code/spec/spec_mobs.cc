@@ -539,13 +539,13 @@ int newbieEquipper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
       if (cmd == CMD_SAY)
         ch->doSay(arg);
       else if (cmd == CMD_WHISPER)
-        ch->doWhisper(arg); 
+        ch->doWhisper(arg);
       else
         ch->doAsk(arg);
       sprintf(tmp_buf, "%s You are not a mage or ranger.  I am not that charitable.", ch->getName());
       me->doTell(tmp_buf);
       return TRUE;
-    } else 
+    } else
       request = 4;
 #endif
 
@@ -4530,12 +4530,13 @@ int corpseMuncher(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
   TThing* t;
   TObj* obj = NULL;
   int found = 0, msg;
+  // clang-format off
   const char* munch[] = {
-    "$n stops eating, looks up at you and burps loudly, then resumes feasting "
-    "on $p.",
+    "$n stops eating, looks up at you and burps loudly, then resumes feasting on $p.",
     "<r>Blood<1> spatters about as $n bites deeply into $p.",
     "$n utters a low growl as $e rips a chunk of flesh off $p.",
     "$n stops to spit out a piece of <W>bone<1>, then resumes eating $p."};
+  // clang-format on
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
     return FALSE;

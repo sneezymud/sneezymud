@@ -2596,14 +2596,15 @@ static void change_mob_sstring_values(TBeing* ch, TMonster* tMob,
 
   unsigned int iter;
   for (iter = 0; iter < 6; iter++) {
+    // clang-format off
     const char* tMobStringValues[] = {
       "%s1%s) bamfin [diurnal/nocturnal enter world message\n\r%s<z>\n\r\n\r",
       "%s2%s) bamfout [diurnal/nocturnal leave world message\n\r%s<z>\n\r\n\r",
       "%s3%s) death cry [blood freezes message when mob dies]\n\r%s<z>\n\r\n\r",
-      "%s4%s) repop [when mob is added to the world "
-      "initially]\n\r%s<z>\n\r\n\r",
+      "%s4%s) repop [when mob is added to the world initially]\n\r%s<z>\n\r\n\r",
       "%s5%s) movein [message when mobile enters a room]\n\r%s<z>\n\r\n\r",
       "%s6%s) moveout [message when mobile leaves a room]\n\r%s<z>\n\r\n\r"};
+    // clang-format on
 
     const char* exd = NULL;
     if (tHas && tMob->ex_description) {

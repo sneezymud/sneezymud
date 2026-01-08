@@ -35,7 +35,7 @@ recipeTypeT recipes[] = {
     {2, "rat stick", "rat on a stick", 14352, TASK_TRIVIAL},
     {3, "potatoes mashed", "side of mashed potatoes", 31773, TASK_TRIVIAL},
     {4, "salad side", "small side salad", 31774, TASK_TRIVIAL},
-    
+
     // Complete Meals (More complex preparation)
     {5, "steak dinner", "steak dinner", 31775, TASK_NORMAL},
     {6, "chicken fried", "fried chicken", 3324, TASK_EASY},
@@ -47,7 +47,7 @@ recipeTypeT recipes[] = {
     {10, "berry friendship bread", "berry friendship bread", 34705, TASK_NORMAL},
     {11, "pancake", "pancake", 34708, TASK_EASY},
     {12, "berry pancake", "berry pancake", 34709, TASK_NORMAL},
-    
+
     // Poisons (Dangerous ingredients, precise measurements)
     {13, "poison death camas", "vial death camas", 31008, TASK_DANGEROUS},
     {14, "poison destroying angel", "vial destroying angel", 31009, TASK_DANGEROUS},
@@ -62,7 +62,7 @@ recipeTypeT recipes[] = {
     {23, "poison infant", "vial infant", 31018, TASK_DANGEROUS},
     {24, "poison pea seed", "vial pea seed", 31019, TASK_DANGEROUS},
     {25, "poison acacia", "vial acacia", 31020, TASK_DANGEROUS},
-   
+
     // Water and holy water
     {26, "water skin regular", "regular water skin", 410, TASK_TRIVIAL},
     {27, "water skin large", "large water skin", 411, TASK_EASY},
@@ -165,17 +165,17 @@ ingredientTypeT ingredients[] = {
   {15, 2, 1, TYPE_VNUM, 13849}, // can of leeches
   {15, 3, 1, TYPE_VNUM, 34706}, // sugar
   {15, 4, 5, TYPE_LIQUID, LIQ_VODKA},  // grain alcohol
-  
-  // hemlock 
+
+  // hemlock
   {16, 1, 1, TYPE_VNUM, 31035},  // hemlock
   {16, 2, 1, TYPE_VNUM, 13849}, // can of leeches
   {16, 3, 1, TYPE_VNUM, 37139}, // honeysap
   {16, 4, 5, TYPE_LIQUID, LIQ_VODKA},  // grain alcohol
-   
+
   // monkshood
   {17, 1, 1, TYPE_VNUM, 31036},  // monkshood
   {17, 2, 1, TYPE_VNUM, 278}, // small egg
-  {17, 3, 1, TYPE_VNUM, 37140}, // jojupus 
+  {17, 3, 1, TYPE_VNUM, 37140}, // jojupus
   {17, 4, 5, TYPE_LIQUID, LIQ_VODKA},  // grain alcohol
 
   // glow fish
@@ -183,12 +183,12 @@ ingredientTypeT ingredients[] = {
   {18, 2, 1, TYPE_VNUM, 23654}, // pixie parts
   {18, 3, 1, TYPE_VNUM, 37141}, // ginseng
   {18, 4, 5, TYPE_LIQUID, LIQ_VODKA},  // grain alcohol
-  
+
   // scorpion
   {19, 1, 1, TYPE_VNUM, 31043},  // scorpion
   {19, 2, 1, TYPE_VNUM, 89}, // rat tail
   {19, 3, 1, TYPE_VNUM, 431}, // donut pastry
-  {19, 3, 1, TYPE_VNUM, 26896}, // donut glazed 
+  {19, 3, 1, TYPE_VNUM, 26896}, // donut glazed
   {19, 4, 5, TYPE_LIQUID, LIQ_VODKA},  // grain alcohol
 
   // violet fungus
@@ -198,7 +198,7 @@ ingredientTypeT ingredients[] = {
   {20, 4, 1, TYPE_VNUM, 7510},  // ancient wine
   {20, 4, 1, TYPE_VNUM, 7511},  // ancient wine
 
-  // devil ice 
+  // devil ice
   {21, 1, 1, TYPE_VNUM, 31038},  // devil ice
   {21, 2, 1, TYPE_VNUM, 10030}, // offal
   {21, 3, 1, TYPE_VNUM, 37143}, // snow locust
@@ -216,7 +216,7 @@ ingredientTypeT ingredients[] = {
   {23, 3, 1, TYPE_VNUM, 37145}, // ginseng
   {23, 4, 5, TYPE_LIQUID, LIQ_URINE},  // urine
 
-  // pea seed 
+  // pea seed
   {24, 1, 1, TYPE_VNUM, 31041},  // pea seed
   {24, 2, 1, TYPE_VNUM, 27237}, // moldy book
   {24, 3, 5, TYPE_LIQUID, LIQ_MILK}, // milk
@@ -278,6 +278,6 @@ ingredientTypeT ingredients[] = {
   {30, 3, 1, TYPE_VNUM, 514}, // holy symbol - mithril
 
 
-  {-1, -1, -1, -1}};
+  {-1, -1, -1, -1, -1}};
 
- 
+
