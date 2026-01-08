@@ -20,6 +20,7 @@
 #include "guild.h"
 
 #include <algorithm>
+#include <set>
 #include <sys/types.h>
 #include <dirent.h>
 
@@ -1103,10 +1104,12 @@ void TBeing::doExamine(const char* argument, TThing* specific) {
 }
 
 // affect is on ch, this is person looking
-sstring TBeing::describeAffects(TBeing* ch, showMeT showme) const {
+sstring TBeing::describeAffects(TBeing* ch, showMeT showme,
+  bool showDiseases) const {
   affectedData *aff, *af2;
   sstring str;
   int objused;
+  std::set<sstring> diseases;
 
   // limit what others can see.  Magic should reveal truth, but in general
   // keep some stuff concealed
@@ -1587,9 +1590,8 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme) const {
         }
         break;
       case AFFECT_DISEASE:
-        if (show) {
-          str +=
-            format("Disease: '%s'\n\r") % DiseaseInfo[affToDisease(*aff)].name;
+        if (show && showDiseases) {
+          diseases.insert(DiseaseInfo[affToDisease(*aff)].name);
         }
         break;
       case AFFECT_DUMMY:
@@ -2173,6 +2175,11 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme) const {
         break;
     }
   }
+
+  for (const auto& disease : diseases) {
+    str += format("Disease: '%s'\n\r") % disease;
+  }
+
   return str;
 }
 

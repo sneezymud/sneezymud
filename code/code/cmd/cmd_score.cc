@@ -291,5 +291,5 @@ void TBeing::doScore() {
       getWimpy());
 
   describeLimbDamage(this);
-  sendTo(COLOR_BASIC, describeAffects(this, SHOW_ME));
+  sendTo(COLOR_BASIC, describeAffects(this, SHOW_ME, false));
 }
