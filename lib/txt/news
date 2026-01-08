@@ -1,3 +1,12 @@
+01-08-26: Fixed an issue that was preventing the display of limb afflictions in
+          various commands like 'score', 'look', 'glance', and 'att con'. You
+          should now be able to see all limb afflictions properly in these
+          commands, instead of only via the `limb` command.
+
+01-08-26: Fixed some bugs related to gangrene. It should no longer cure itself
+          automatically right after being applied, and should be curable by the
+          doctor in the Grimhaven hospital.
+
 11-29-25: Two new shops have set up business in the realm. A Tailor and a
           Smith, capable of altering existing gear to fit their select, and
           of course wealthy, clients. Rumor has it they've set up shop together
@@ -10,12 +19,12 @@
           Furries should thank Vasco!
 
 11-20-25: Pointy bits galore! Face-smashings and skull-crackings to be had
-          for the whole family! Be on the look out for new exciting 
-          oppotunities to apply bleeding and bruises.  
+          for the whole family! Be on the look out for new exciting
+          oppotunities to apply bleeding and bruises.
 
 11-17-25: Scouts near the Avalon Outpost report a foul burning smell, and
           have heard that a terrified messenger is warning adventurers about
-          the terrors found in the Petrified Forest. Use caution.    
+          the terrors found in the Petrified Forest. Use caution.
 
 10-04-25: The Advanced Defense skill has undergone a makeover. Consult the
           new help file to learn of the changes! Enjoy!
