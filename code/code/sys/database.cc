@@ -178,9 +178,11 @@ const sstring TDatabase::operator[](const sstring& s) const {
 bool TDatabase::query(const char* query, ...) {
   va_list ap;
   sstring buf;
-  int fromlen = 0, tolen = (32768 * 2) + 1;
+  constexpr int toBufferSize = (32768 * 2) + 1;
+  int fromlen = 0;
   const char* qsave = query;
-  char *from = NULL, to[tolen];
+  char* from = nullptr;
+  char to[toBufferSize];
   MYSQL_RES* restmp;
   TTiming t;
 
@@ -216,7 +218,7 @@ bool TDatabase::query(const char* query, ...) {
 
           // mysql_escape_string needs a buffer that is
           // (string * 2) + 1 in size to avoid overruns
-          if (((fromlen * 2) + 1) > tolen) {
+          if (((fromlen * 2) + 1) > toBufferSize) {
             vlogf(LOG_DB, format("query - buffer overrun on %s") % from);
             vlogf(LOG_DB, format("%s") % qsave);
             return FALSE;

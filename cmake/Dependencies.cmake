@@ -25,7 +25,7 @@ find_library(CRYPT_LIBRARY crypt REQUIRED)
 # nlohmann/json (header-only, bundled as submodule)
 # Located at code/libs/json/src
 add_library(nlohmann_json INTERFACE)
-target_include_directories(nlohmann_json INTERFACE
+target_include_directories(nlohmann_json SYSTEM INTERFACE
     ${CMAKE_SOURCE_DIR}/code/libs/json/src
 )
 add_library(nlohmann_json::nlohmann_json ALIAS nlohmann_json)

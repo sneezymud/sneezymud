@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include <stdio.h>
+#include <vector>
 
 #include "being.h"
 #include "games.h"
@@ -432,22 +433,22 @@ void TBeing::doSort(const char* arg) const {
     cnt = gEights.count(index_num);
     if (is_abbrev(arg, "ascending")) {
       if (cnt % 2) {
-        int tmp3[cnt + 1];
+        std::vector<int> tmp3(cnt + 1);
         for (i = 0; i < cnt; tmp3[i] = gHearts.hands[index_num][i], i++)
           ;
         tmp3[cnt] = 999999;
-        qsort(tmp3, cnt + 1, 4, cardnumComparAscend);
+        qsort(tmp3.data(), cnt + 1, 4, cardnumComparAscend);
         for (i = 0; i < cnt; gHearts.hands[index_num][i] = tmp3[i], i++)
           ;
       } else
         qsort(gHearts.hands[index_num], cnt, 4, cardnumComparAscend);
     } else {
       if (cnt % 2) {
-        int tmp4[cnt + 1];
+        std::vector<int> tmp4(cnt + 1);
         for (i = 0; i < cnt; tmp4[i] = gHearts.hands[index_num][i], i++)
           ;
         tmp4[cnt] = 0;
-        qsort(tmp4, cnt + 1, 4, cardnumComparDescend);
+        qsort(tmp4.data(), cnt + 1, 4, cardnumComparDescend);
         for (i = 0; i < cnt; gHearts.hands[index_num][i] = tmp4[i], i++)
           ;
       } else
@@ -461,11 +462,11 @@ void TBeing::doSort(const char* arg) const {
     if (is_abbrev(arg, "ascending")) {
       if (cnt % 2) {
         // Kludges rule
-        int tmp3[cnt + 1];
+        std::vector<int> tmp3(cnt + 1);
         for (i = 0; i < cnt; tmp3[i] = gHearts.hands[index_num][i], i++)
           ;
         tmp3[cnt] = 999999;
-        qsort(tmp3, cnt + 1, 4, cardnumComparAscend);
+        qsort(tmp3.data(), cnt + 1, 4, cardnumComparAscend);
         for (i = 0; i < cnt; gHearts.hands[index_num][i] = tmp3[i], i++)
           ;
       } else
@@ -473,11 +474,11 @@ void TBeing::doSort(const char* arg) const {
     } else {
       if (cnt % 2) {
         // Kludges rule
-        int tmp4[cnt + 1];
+        std::vector<int> tmp4(cnt + 1);
         for (i = 0; i < cnt; tmp4[i] = gHearts.hands[index_num][i], i++)
           ;
         tmp4[cnt] = 0;
-        qsort(tmp4, cnt + 1, 4, cardnumComparDescend);
+        qsort(tmp4.data(), cnt + 1, 4, cardnumComparDescend);
         for (i = 0; i < cnt; gHearts.hands[index_num][i] = tmp4[i], i++)
           ;
       } else

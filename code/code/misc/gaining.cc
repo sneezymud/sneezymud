@@ -1451,7 +1451,7 @@ TRAININFO TrainerInfo[] = {
       CLASS_MAGE | CLASS_THIEF | CLASS_SHAMAN},
   {SPEC_TRAINER_OFFENSE, "offense", "about Offense", DISC_OFFENSE,
     CLASS_THIEF | CLASS_MONK},
-  {-1} /* required terminator */
+  {-1, "", "", DISC_NONE, 0} /* required terminator */
 };
 
 int CDGenericTrainer(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,

@@ -8,6 +8,7 @@
 
 #include <dirent.h>
 #include <stdio.h>
+#include <vector>
 
 #include "extern.h"
 #include "room.h"
@@ -161,11 +162,8 @@ unsigned long int showFreeMobObj(int shFrZoneNumber, sstring* sb,
 
   int shFrCountSize = (shFrTop - shFrBot + 1),
       shFrCountMax = (isMobileF ? mob_index.size() : obj_index.size());
-  bool shFrCountList[shFrCountSize];
+  std::vector<bool> shFrCountList(shFrCountSize, false);
   char tString[256];
-
-  for (int Runner = 0; Runner < shFrCountSize; Runner++)
-    shFrCountList[Runner] = false;
 
   shFrTotalCount[0] = shFrCountSize;
 
