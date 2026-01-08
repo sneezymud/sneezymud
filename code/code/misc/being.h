@@ -1974,7 +1974,7 @@ class TBeing : public TThing {
     void doMotd(const char*);
     void doLimbs(const sstring&);
     void describeLimbDamage(const TBeing*) const;
-    sstring describeAffects(TBeing*, showMeT) const;
+    sstring describeAffects(TBeing*, showMeT, bool showDiseases = true) const;
     void doStand();
     void doCrawl();
     void doFollow(const char*);

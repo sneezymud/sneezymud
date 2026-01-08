@@ -1017,7 +1017,7 @@ void TBeing::doAttribute(const char* arg) {
       sendTo("Your account has MUD Sound Protocol enabled.\n\r");
 
     describeLimbDamage(this);
-    sendTo(COLOR_BASIC, describeAffects(this, SHOW_ME));
+    sendTo(COLOR_BASIC, describeAffects(this, SHOW_ME, false));
 
     return;
   } else if (is_abbrev(cmdbuf, "statistics")) {
