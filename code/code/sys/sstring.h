@@ -1,6 +1,9 @@
 #pragma once
 
 #include <boost/format.hpp>
+#include <format>
+#include <string>
+#include <string_view>
 
 extern boost::format format(const std::string&);
 
@@ -11,6 +14,7 @@ class sstring : public std::string {
     sstring(const char* str) : std::string(str ? str : "") {}
     sstring(const std::string& str) : std::string(str) {}
     sstring(boost::format& a) : std::string(a.str()) {}
+    sstring(std::string_view sv) : std::string(sv) {}
 
     const sstring& operator=(const boost::format& a);
     const sstring& operator+=(const boost::format& a);
@@ -151,6 +155,18 @@ class sstring : public std::string {
 
     // simple function; probably should just macro but what the hell
     void inlinePad(const char pad, int num) { resize(length() + num, pad); }
+};
+
+// std::format doesn't automatically work with classes that inherit from
+// std::string - it only knows how to format the types it has specializations
+// for. This formatter tells std::format "treat sstring like std::string" so
+// we can pass sstrings to std::format without explicit conversion.
+template <>
+struct std::formatter<sstring> : std::formatter<std::string> {
+    auto format(const sstring& s, std::format_context& ctx) const {
+      return std::formatter<std::string>::format(
+        static_cast<const std::string&>(s), ctx);
+    }
 };
 
 extern bool isvowel(const char c);
