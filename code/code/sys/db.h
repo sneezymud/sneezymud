@@ -87,7 +87,7 @@ class TDatabase;
 void bootOneZone(TDatabase&, int, int&);
 int create_entry(char* name);
 void zone_update(void);
-int real_object(int);
+int real_object(int, bool silent = false);
 int real_mobile(int);
 
 // forward class decl

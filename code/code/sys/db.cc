@@ -3838,7 +3838,7 @@ int real_mobile(int virt) {
 }
 
 // returns the real number of the object with given virtual number
-int real_object(int virt) {
+int real_object(int virt, bool silent) {
   int bot, top, mid;
 
   bot = 0;
@@ -3851,7 +3851,10 @@ int real_object(int virt) {
     if (obj_index[mid].virt == virt)
       return (mid);
     if (bot >= top) {
-      vlogf(LOG_SILENT, format("real_object: probable failure for %d") % virt);
+      if (!silent) {
+        vlogf(LOG_SILENT,
+          format("real_object: probable failure for %d") % virt);
+      }
       return (-1);
     }
     if (obj_index[mid].virt > virt)

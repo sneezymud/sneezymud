@@ -6,6 +6,9 @@
 
 #pragma once
 
+class TBeing;
+class sstring;
+
 class Room {
   public:
     static constexpr int AUTO_RENT = -2; /* for auto-renting */
@@ -480,3 +483,5 @@ class Mob {
 
     Mob() = delete;
 };
+
+void lowShop(const TBeing&, const sstring&);
