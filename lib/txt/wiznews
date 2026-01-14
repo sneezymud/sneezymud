@@ -1,3 +1,8 @@
+01-14-26: Added 'shop' as a new option to the 'low' command, to allow configuration
+          of shops in-game without needing direct database access.
+
+          Type 'low shop' for full details on usage.
+
 07-02-24: Added 'mvresponse' as a new option to the 'low' command, to allow
           moving mob responses from the imm database to production. It works
           just like mvroom/mvmob/etc.

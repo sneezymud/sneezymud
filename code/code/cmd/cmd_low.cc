@@ -1521,7 +1521,7 @@ void TPerson::doLow(const sstring& argument) {
   sstring options = one_argument(argument, command);
 
   static constexpr const char* usage =
-    "Syntax: low [mobs | race | statbonus | statcharts | tasks | path | "
+    "Syntax: low [mobs | race | statbonus | statcharts | tasks | path | shop | "
     "mvroom <builder> <zone> <vnums> | mvobj <builder> <vnums> | mvmob "
     "<builder> <vnums> | mvresponse <builder> <vnums>] \n\r";
 
@@ -1740,6 +1740,11 @@ void TPerson::doLow(const sstring& argument) {
           break;
       }
     }
+    return;
+  }
+
+  if (is_abbrev(command, "shop")) {
+    lowShop(*this, options);
     return;
   }
 
