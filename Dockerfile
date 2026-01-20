@@ -18,11 +18,13 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV ASAN_OPTIONS=strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1
 ENV UBSAN_OPTIONS=print_stacktrace=1:halt_on_error=0
 
+# Include llvm for symbolizer support in sanitizer error reports. Otherwise, sanitizer stack traces will be mostly useless.
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   apt-get update && \
   TZ=utc apt-get install --yes --no-install-recommends \
   ca-certificates \
   gdb \
+  llvm \
   libboost-atomic1.83.0 \
   libboost-filesystem1.83.0 \
   libboost-program-options1.83.0 \
