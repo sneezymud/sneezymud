@@ -156,8 +156,6 @@ int TBeing::backstabHit(TBeing* victim, TThing* obj, int modifier) {
 
         if (weapon && weapon->checkSpec(victim, CMD_BACKSTAB, "-special-",
                         this) == DELETE_VICT) {
-          delete victim;
-          victim = NULL;
           return DELETE_VICT;
         }
 
@@ -185,8 +183,6 @@ int TBeing::backstabHit(TBeing* victim, TThing* obj, int modifier) {
       getAdvLearning(SKILL_STABBING) >= 50) {
     int rc = doStab("", victim);
     if (IS_SET_DELETE(rc, DELETE_VICT)) {
-      delete victim;
-      victim = NULL;
       return DELETE_VICT;
     }
   }
@@ -501,8 +497,6 @@ int TBeing::throatSlitHit(TBeing* victim, TThing* obj, int modifier) {
 
         if (weapon && weapon->checkSpec(victim, CMD_SLIT, "-special-", this) ==
                         DELETE_VICT) {
-          delete victim;
-          victim = NULL;
           return DELETE_VICT;
         }
 
