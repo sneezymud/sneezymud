@@ -3072,8 +3072,8 @@ void buildSpellArray() {
   discArray[SPELL_LEGBA] =
     new spellInfo(SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_ARMADILLO, STAT_INT,
       "legba's guidance", TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_0,
-      LIFEFORCE_70, PRAY_0, TAR_FIGHT_SELF | TAR_CHAR_ROOM, SYMBOL_STRESS_0, "",
-      "", "", "", START_80, LEARN_10, START_DO_30, LEARN_DO_5, START_DO_NO,
+      LIFEFORCE_70, PRAY_0, TAR_FIGHT_SELF | TAR_CHAR_ROOM, SYMBOL_STRESS_0, "Legba's presence leaves you.",
+      "The presence of Legba leaves $n.", "Legba's presence feels far from you.", "", START_80, LEARN_10, START_DO_30, LEARN_DO_5, START_DO_NO,
       LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.04,
       COMP_GESTURAL | COMP_GESTURAL_RANDOM | COMP_VERBAL | COMP_VERBAL_RANDOM |
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
@@ -3082,8 +3082,8 @@ void buildSpellArray() {
   discArray[SPELL_DJALLA] =
     new spellInfo(SPELL_SHAMAN, DISC_SHAMAN, DISC_SHAMAN_ARMADILLO, STAT_INT,
       "djalla's protection", TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_0,
-      LIFEFORCE_60, PRAY_0, TAR_FIGHT_SELF | TAR_CHAR_ROOM, SYMBOL_STRESS_0, "",
-      "", "", "", START_75, LEARN_10, START_DO_30, LEARN_DO_5, START_DO_NO,
+      LIFEFORCE_60, PRAY_0, TAR_FIGHT_SELF | TAR_CHAR_ROOM, SYMBOL_STRESS_0, "Djalla's presence leaves you.",
+      "The presence of Djalla leaves $n.", "Djalla's presence feels far from you.", "", START_75, LEARN_10, START_DO_30, LEARN_DO_5, START_DO_NO,
       LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.04,
       COMP_GESTURAL | COMP_GESTURAL_RANDOM | COMP_VERBAL | COMP_VERBAL_RANDOM |
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
