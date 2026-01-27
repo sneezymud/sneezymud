@@ -798,13 +798,13 @@ int djallasProtection(TBeing* caster, TBeing* victim, int level, short bKnown) {
         aff3.modifier2 = (level * 2);
         aff4.duration *= 2;
         aff4.modifier2 = (level * 2);
-        act("$n becomes one with the spirits.", FALSE, victim, NULL, NULL,
+        act("$n becomes one with the Djalla spirits.", FALSE, victim, NULL, NULL,
           TO_ROOM, ANSI_GREEN);
         act("You have been greatly blessed with the protection of Djalla!",
           FALSE, victim, NULL, NULL, TO_CHAR, ANSI_GREEN);
         break;
       case CRIT_S_NONE:
-        act("$n becomes one with the spirits.", FALSE, victim, NULL, NULL,
+        act("$n becomes one with the Djalla spirits.", FALSE, victim, NULL, NULL,
           TO_ROOM, ANSI_GREEN);
         act("You have been granted the protection of Djalla!", FALSE, victim,
           NULL, NULL, TO_CHAR, ANSI_GREEN);
@@ -907,13 +907,13 @@ int legbasGuidance(TBeing* caster, TBeing* victim, int level, short bKnown) {
         aff3.modifier2 = (level * 2);
         aff4.duration *= 2;
         aff4.modifier2 = (level * 2);
-        act("$n becomes one with the spirits.", FALSE, victim, NULL, NULL,
+        act("$n becomes one with the Legba spirits.", FALSE, victim, NULL, NULL,
           TO_ROOM, ANSI_GREEN);
         act("You have been greatly blessed with the protection of Legba!",
           FALSE, victim, NULL, NULL, TO_CHAR, ANSI_GREEN);
         break;
       case CRIT_S_NONE:
-        act("$n becomes one with the spirits.", FALSE, victim, NULL, NULL,
+        act("$n becomes one with the Legba spirits.", FALSE, victim, NULL, NULL,
           TO_ROOM, ANSI_GREEN);
         act("You have been granted the protection of Legba!", FALSE, victim,
           NULL, NULL, TO_CHAR, ANSI_GREEN);
