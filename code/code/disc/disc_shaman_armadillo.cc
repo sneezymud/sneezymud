@@ -322,7 +322,7 @@ int shadowWalk(TBeing* caster, TBeing* victim, int level, short bKnown) {
 #if 0
   if (victim->affectedBySpell(SPELL_SHADOW_WALK)) {
     char buf[256];
-    act("You already walk among the shadows.", FALSE, caster, NULL, victim, 
+    act("You already walk among the shadows.", FALSE, caster, NULL, victim,
 TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
@@ -392,7 +392,7 @@ int shadowWalk(TBeing* caster, TBeing* victim) {
 #if 0
   if (victim->affectedBySpell(SPELL_SHADOW_WALK)) {
     char buf[256];
-    act("You already are walking among the shadows.", FALSE, caster, NULL, victim, 
+    act("You already are walking among the shadows.", FALSE, caster, NULL, victim,
 TO_CHAR);
     return FALSE;
   }
@@ -413,9 +413,9 @@ int castShadowWalk(TBeing* caster, TBeing* victim) {
   int ret = shadowWalk(caster, victim, level, bKnown);
   if (ret == SPELL_SUCCESS) {
 #if 0
-    act("$n becomes dark and walks a little swifter!", FALSE, victim, NULL, NULL, 
+    act("$n becomes dark and walks a little swifter!", FALSE, victim, NULL, NULL,
 TO_ROOM, ANSI_GREEN);
-    act("You now walk among the shadows!", FALSE, victim, NULL, NULL, TO_CHAR, 
+    act("You now walk among the shadows!", FALSE, victim, NULL, NULL, TO_CHAR,
 ANSI_GREEN);
 #endif
   } else {
@@ -798,13 +798,13 @@ int djallasProtection(TBeing* caster, TBeing* victim, int level, short bKnown) {
         aff3.modifier2 = (level * 2);
         aff4.duration *= 2;
         aff4.modifier2 = (level * 2);
-        act("$n becomes one with the spirits.", FALSE, victim, NULL, NULL,
+        act("$n is greatly blessed with the protection of Djalla.", FALSE, victim, NULL, NULL,
           TO_ROOM, ANSI_GREEN);
         act("You have been greatly blessed with the protection of Djalla!",
           FALSE, victim, NULL, NULL, TO_CHAR, ANSI_GREEN);
         break;
       case CRIT_S_NONE:
-        act("$n becomes one with the spirits.", FALSE, victim, NULL, NULL,
+        act("$n is granted the protection of Djalla.", FALSE, victim, NULL, NULL,
           TO_ROOM, ANSI_GREEN);
         act("You have been granted the protection of Djalla!", FALSE, victim,
           NULL, NULL, TO_CHAR, ANSI_GREEN);
@@ -907,15 +907,15 @@ int legbasGuidance(TBeing* caster, TBeing* victim, int level, short bKnown) {
         aff3.modifier2 = (level * 2);
         aff4.duration *= 2;
         aff4.modifier2 = (level * 2);
-        act("$n becomes one with the spirits.", FALSE, victim, NULL, NULL,
+        act("$n is greatly blessed with the guidance of Legba.", FALSE, victim, NULL, NULL,
           TO_ROOM, ANSI_GREEN);
-        act("You have been greatly blessed with the protection of Legba!",
+        act("You have been greatly blessed with the guidance of Legba!",
           FALSE, victim, NULL, NULL, TO_CHAR, ANSI_GREEN);
         break;
       case CRIT_S_NONE:
-        act("$n becomes one with the spirits.", FALSE, victim, NULL, NULL,
+        act("$n is granted the guidance of Legba.", FALSE, victim, NULL, NULL,
           TO_ROOM, ANSI_GREEN);
-        act("You have been granted the protection of Legba!", FALSE, victim,
+        act("You have been granted the guidance of Legba!", FALSE, victim,
           NULL, NULL, TO_CHAR, ANSI_GREEN);
         break;
     }
