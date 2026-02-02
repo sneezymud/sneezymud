@@ -1,7 +1,6 @@
 ---
 title: Affects System
 category: critical
-created_by_model: opus
 keywords: [affectedData, affectTo, affectJoin, APPLY_IMMUNITY, APPLY_SPELL, PERMANENT_DURATION, AFF_SANCTUARY, renewal, protection]
 related: [tohit-defense.md, combat-formulas.md, combat-rounds.md, spell-combat.md]
 primary_symbols:
@@ -56,6 +55,10 @@ The system automatically clears bitvectors when affects expire, but only if no o
 
 Multiple `APPLY_PROTECTION` sources stack into a single value clamped to [-100, 100]. Design protection amounts knowing they contribute to a shared pool. Sanctuary at 25% plus Aura of Guardian at 12% yields 37% total protection.
 
+### Validate desc and desc->original for Polymorph Affects
+
+`SPELL_POLYMORPH`, `SKILL_DISGUISE`, and `SPELL_SHAPESHIFT` require valid descriptor and original character references. The periodic update system automatically removes these affects if either becomes null. Never assume `desc->original` remains valid throughout the affect's lifetime.
+
 ---
 
 ## Reference
@@ -82,8 +85,8 @@ Multiple `APPLY_PROTECTION` sources stack into a single value clamped to [-100, 
 
 | Category | Examples |
 |----------|----------|
-| Stats | `APPLY_STR`, `APPLY_INT`, `APPLY_WIS`, `APPLY_DEX`, `APPLY_CON`, `APPLY_CHA` |
-| Resources | `APPLY_HIT`, `APPLY_MANA`, `APPLY_MOVE` |
+| Stats | `APPLY_STR`, `APPLY_INT`, `APPLY_WIS`, `APPLY_DEX`, `APPLY_CON`, `APPLY_CHA`, `APPLY_AGI`, `APPLY_KAR`, `APPLY_SPE`, `APPLY_FOC` |
+| Resources | `APPLY_HIT`, `APPLY_MANA`, `APPLY_MOVE`, `APPLY_LIFEFORCE` |
 | Combat | `APPLY_HITROLL`, `APPLY_DAMROLL`, `APPLY_ARMOR` |
 | Special | `APPLY_IMMUNITY`, `APPLY_SPELL`, `APPLY_DISCIPLINE`, `APPLY_PROTECTION` |
 
@@ -94,6 +97,22 @@ Multiple `APPLY_PROTECTION` sources stack into a single value clamped to [-100, 
 | Normal applies | Effect value | Unused |
 | `APPLY_IMMUNITY` | Immunity type | Immunity amount |
 | `APPLY_SPELL` | Skill/spell ID | Skill bonus |
+
+### Duration Values
+
+| Value | Meaning |
+|-------|---------|
+| -9 (`PERMANENT_DURATION`) | Permanent, never decays |
+| 0 | Expires immediately on next tick |
+| Positive integer | Ticks remaining before expiration |
+
+### Renew Parameter Values
+
+| Value | Meaning |
+|-------|---------|
+| -1 | Never renewable |
+| 0 | Auto-calculate as duration / 2 |
+| Positive integer | Explicit renewal threshold in ticks |
 
 ### AFF_* Combat Flags
 
@@ -109,6 +128,10 @@ Multiple `APPLY_PROTECTION` sources stack into a single value clamped to [-100, 
 | `AFF_RIPOSTE` | Extra attack after successful parry |
 | `AFF_FOCUS_ATTACK` | Guarantees next hit succeeds |
 | `AFF_ENGAGER` | Engaged but not actively fighting |
+| `AFF_INVISIBLE` | Not visible to normal sight |
+| `AFF_FLYING` | Can traverse air sectors |
+| `AFF_POISON` | Taking poison damage over time |
+| `AFF_CHARM` | Under mental control of another |
 
 ### Combat Spell Effects
 
@@ -123,6 +146,21 @@ Multiple `APPLY_PROTECTION` sources stack into a single value clamped to [-100, 
 | `SPELL_AURA_MIGHT` | Special attack bonus | +3 |
 | `SPELL_CURSE` | Special attack penalty | -2 attacker, +2 enemies |
 | `SPELL_STUPIDITY` | Special attack penalty | -1 attacker, +1 enemies |
+
+### Immunity Types
+
+| Type | Damage Category |
+|------|-----------------|
+| `IMMUNE_SLASH` | Slashing weapon damage |
+| `IMMUNE_PIERCE` | Piercing weapon damage |
+| `IMMUNE_BLUNT` | Blunt weapon damage |
+| `IMMUNE_HEAT` | Fire damage |
+| `IMMUNE_COLD` | Cold damage |
+| `IMMUNE_ACID` | Acid damage |
+| `IMMUNE_ELECTRICITY` | Lightning damage |
+| `IMMUNE_POISON` | Poison damage |
+| `IMMUNE_NONMAGIC` | Non-magical weapons |
+| `IMMUNE_PLUS1`/`PLUS2`/`PLUS3` | Weapons below enchantment level |
 
 ### affectJoin Averaging Flags
 
@@ -155,6 +193,8 @@ Multiple `APPLY_PROTECTION` sources stack into a single value clamped to [-100, 
 | `periodic.cc` | tick-based affect processing |
 | `being.cc` | protection methods |
 | `damage.cc` | damage reduction via protection |
+| `disc_*.cc` | Individual spell implementations creating affects |
+| `spec_objs.cc` | Object-based affect triggers |
 
 ---
 
@@ -192,6 +232,24 @@ When removing an affect, the system only clears the bitvector if no other source
 
 `getProtection()` returns `my_protection` directly. Damage reduction in `reconcileDamage()` multiplies damage by `(100 - protection) / 100`.
 
+### Immunity Processing
+
+`APPLY_IMMUNITY` affects modify damage intake in `preProcDam()`. For each immunity affect, the system extracts the immunity type from `modifier` and percentage from `modifier2`. If the immunity type matches incoming damage, damage is reduced by that percentage.
+
+Multiple immunity affects of the same type stack additively: 50% fire immunity + 30% fire immunity = 80% fire immunity.
+
+Weapon immunity types (`IMMUNE_NONMAGIC`, `IMMUNE_PLUS1`, etc.) prevent damage entirely from insufficiently enchanted weapons.
+
+### Stat Modification Mechanics
+
+When an affect is applied or removed, `affectModify()` updates being stats based on the apply location:
+
+- **Stat applies** (STR, INT, etc.): Add/subtract modifier to/from temporary stat, clamp to valid ranges
+- **Resource applies** (HIT, MANA, MOVE): Add/subtract from max and current values, adjust current proportionally on removal
+- **Combat applies** (HITROLL, DAMROLL, ARMOR): Direct add/subtract of modifier
+- **Protection applies**: Call `addToProtection()` with clamping
+- **Immunity/Spell applies**: Stored in affect list, queried during damage/skill checks
+
 ### Combat Integration
 
 Hit resolution in `hits()` checks `AFF_FOCUS_ATTACK` first for guaranteed success. Otherwise, it computes `attackRound() - defendRound()` to get a modifier. Both functions check visibility (blind penalties), position, and spell-task penalties.
@@ -213,6 +271,18 @@ Certain spells provide percentage chances to avoid limb damage entirely. `SPELL_
 ### Permanent Affects
 
 Affects with `PERMANENT_DURATION` (-9) skip duration decrement in `updateAffects()`. These are used for permanent diseases, encampment state, combat affects, pet/thrall bonds, and bleeding wounds.
+
+### Special Affect Categories
+
+**Encampment:** `SKILL_ENCAMP` creates a permanent affect with a room object reference in the `be` field. When the character enters the encamped room, rest/recovery bonuses trigger.
+
+**Combat Affects:** Many combat-initiated affects use `PERMANENT_DURATION` and are cleaned up manually when combat ends or the character dies (engagement tracking, combat round timing, temporary combat state).
+
+**Pet/Thrall Bonds:** Charm and domination use permanent affects with special removal conditions. Explicit dispel or death removes them.
+
+**Bleeding Wounds:** Damage-over-time effects use affects with positive duration. Each tick, `updateAffects()` applies damage and decrements duration.
+
+**Disease Progression:** Some diseases progress through stages by replacing the affect with a higher-severity version. Others use modifier values to track disease intensity.
 
 ---
 
@@ -258,6 +328,26 @@ Affects with `PERMANENT_DURATION` (-9) skip duration decrement in `updateAffects
 
 **Fix:** Protection is clamped to [-100, 100]. Design protection values knowing they share a pool.
 
+### Immunity Affect Not Preventing Damage
+
+**Symptom:** `APPLY_IMMUNITY` affect exists but damage of the immune type still occurs.
+
+**Likely cause:** Modifier fields are reversed (immunity amount in modifier, type in modifier2).
+
+**Diagnostic approach:** Check modifier field contains `IMMUNE_*` type constant and modifier2 contains immunity percentage. Verify affect was created using `setMod()` accessor.
+
+**Fix:** Use `setMod()` accessor when setting immunity affects, or explicitly assign to correct fields based on `APPLY_IMMUNITY` semantics.
+
+### Duration Never Decreases
+
+**Symptom:** Affect duration stays constant, never ticking down.
+
+**Likely cause:** Duration set to `PERMANENT_DURATION` (-9) when temporary duration was intended.
+
+**Diagnostic approach:** Check affect duration field value. If -9, it's permanent.
+
+**Fix:** Set duration to appropriate tick count (usually `level * Pulse::UPDATES_PER_MUDHOUR` or similar).
+
 ### Polymorph Affect Immediately Removed
 
 **Symptom:** Polymorph/disguise/shapeshift instantly ends after application.
@@ -267,3 +357,23 @@ Affects with `PERMANENT_DURATION` (-9) skip duration decrement in `updateAffects
 **Diagnostic approach:** Check `updateAffects()` processing. These affects require valid descriptor chain.
 
 **Fix:** Ensure descriptor integrity before applying polymorph affects. These affects cannot exist on mobs without players.
+
+### Renewal Message But Spell Still Fails
+
+**Symptom:** Player sees "The effects of X can now be renewed." but casting X still fails with duration message.
+
+**Likely cause:** Multiple instances of the affect with different renewal states.
+
+**Diagnostic approach:** Check for multiple affects of same type on character (`allowMultiples` flag usage). Verify renew threshold is set correctly.
+
+**Fix:** Ensure only one instance of affect exists (don't use `allowMultiples` for renewable buffs), or adjust renew threshold calculation.
+
+### Affect List Corruption Crash
+
+**Symptom:** Crash when iterating affect list, usually in `updateAffects()` or combat code.
+
+**Likely cause:** Affect was freed without being unlinked from list, or next pointer was not cached before modification.
+
+**Diagnostic approach:** Check for direct delete of `affectedData` without calling `affectRemove()`. Verify all affect removal goes through proper handler functions.
+
+**Fix:** Always use `affectRemove()` to remove affects, never delete directly. Cache next pointer before any operation that might modify the list.

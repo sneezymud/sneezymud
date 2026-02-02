@@ -1,12 +1,11 @@
 ---
 title: Communication UI - OOC Channels, Ignore Lists, and Time/Calendar
 category: understanding
-created_by_model: opus
-keywords: [shout, newbie, commune, ignore, gametime, calendar, channels, autobits, GMCP]
+keywords: [shout, newbie, commune, ignore, gametime, calendar, channels, autobits, GMCP, twitterShout, blockedlist]
 related: [communication-system.md, scheduler-pulses.md, configuration-reference.md]
 primary_symbols:
-  functions: [doShout, sendShout, doNewbie, doCommune, doIgnore, doTime, isIgnored, anotherHour, is_daytime]
-  classes: [ignoreList, GameTime]
+  functions: [doShout, sendShout, doNewbie, doCommune, doIgnore, doTime, isIgnored, isMailIgnored, anotherHour, mudTimePassed, realTimePassed, calcNewSunRise, is_daytime]
+  classes: [ignoreList, GameTime, time_info_data]
   files: [code/code/misc/talk.cc, code/code/misc/newbie.cc, code/code/misc/other.cc, code/code/sys/gametime.cc, code/code/misc/weather.cc]
 ---
 
@@ -34,6 +33,8 @@ MUD time runs approximately 24 times faster than real time. One real hour equals
 
 **Never reveal ignore status to senders.** When a tell is blocked by ignore, return success to the sender. This prevents harassment confirmation. The ignored party simply never receives the message.
 
+**Never skip GMCP integration for modern clients.** Send `comm.channel` messages with channel type, sender name, and content to support client-side filtering and logging. Clients receive both text and GMCP messages for compatibility.
+
 ### Ignore System Usage
 
 **Always check ignore status using `isIgnored()` before delivering player-to-player communications.** This applies to tells, whispers, shouts, emotes, and social actions.
@@ -44,6 +45,8 @@ MUD time runs approximately 24 times faster than real time. One real hour equals
 
 **Always persist ignore list changes to the database immediately.** The `blockedlist` table stores ignore entries. Use `addDB()` and `removeDB()` to maintain persistence.
 
+**Never allow players to ignore themselves.** Check that the target is different from the requester before adding to ignore list.
+
 ### Time System Usage
 
 **Never confuse MUD time with real time.** One MUD hour equals approximately 4.8 real minutes. Use `GameTime::mudTimePassed()` for MUD-relative calculations and `GameTime::realTimePassed()` for real-time conversions.
@@ -51,6 +54,14 @@ MUD time runs approximately 24 times faster than real time. One real hour equals
 **Always use `is_daytime()` and `is_nighttime()` for light-dependent logic.** These functions account for seasonal variation in sunrise/sunset times.
 
 **Remember that minutes increment in 15-minute blocks.** MUD minutes are always 0, 15, 30, or 45 - never intermediate values.
+
+**Always recalculate sunrise/sunset when months change.** Seasonal day length variation requires updating these values monthly through `calcNewSunRise()` and `calcNewSunSet()`.
+
+### Toggle and Preference Management
+
+**Always save descriptor state after toggle changes.** Call `doQueueSave()` to persist autobit modifications to database. Missing persistence means preferences reset on reconnect.
+
+**Never allow toggle changes for disconnected descriptors.** Toggles are stored on descriptors and require active connections to modify safely.
 
 ---
 
@@ -67,10 +78,16 @@ MUD time runs approximately 24 times faster than real time. One real hour equals
 | `doIgnore()` | function | Manage player ignore list |
 | `doTime()` | function | Display MUD time information |
 | `isIgnored()` | function | Check if source is on ignore list |
+| `isMailIgnored()` | function | Static check for mail filtering without descriptor |
 | `anotherHour()` | function | Advance MUD time by one hour |
+| `mudTimePassed()` | function | Calculate MUD time elapsed between timestamps |
+| `realTimePassed()` | function | Calculate real time elapsed between timestamps |
+| `calcNewSunRise()` | function | Compute sunrise time based on season |
 | `is_daytime()` | function | Check if currently day |
+| `is_nighttime()` | function | Check if currently night |
 | `ignoreList` | class | Per-player communication filter |
 | `GameTime` | class | Central time management |
+| `time_info_data` | struct | Stores current time components |
 
 ### Channel Requirements
 
@@ -80,14 +97,25 @@ MUD time runs approximately 24 times faster than real time. One real hour equals
 | Newbie | `newbie` | Newbie account or `PLR_NEWBIEHELP` | None |
 | Commune | `commune` | `POWER_WIZNET` | `TOG_WIZBUILD` |
 
+### Shout Restrictions
+
+| Restriction | Check | Effect |
+|-------------|-------|--------|
+| Minimum level | `getLevel() >= 2` | Prevents level 1 spam |
+| Movement cost | `getMove() >= 15` | Deducts 15 move per shout |
+| Wait state | N/A | Adds 0.5 combat rounds |
+| Charmed | `isCharmed()` | Prevents charmed shouts |
+| Global toggle | `TOG_SHOUTING` | Disables shouting entirely |
+| God ban | `PLR_GODNOSHOUT` | Immortal-imposed silence |
+
 ### Autobits (Player Preferences)
 
-| Autobit | Effect |
-|---------|--------|
-| `AUTO_NOSHOUT` | Block receiving shouts |
-| `AUTO_NOTELL` | Block incoming tells |
-| `AUTO_AFK` | Auto-AFK after idle |
-| `AUTO_PG13` | Profanity filter |
+| Autobit | Default | Effect |
+|---------|---------|--------|
+| `AUTO_NOSHOUT` | Off | Block receiving shouts |
+| `AUTO_NOTELL` | Off | Block incoming tells |
+| `AUTO_AFK` | Off | Auto-AFK after idle |
+| `AUTO_PG13` | Off | Profanity filter |
 
 ### Global Toggles (Immortal)
 
@@ -95,6 +123,22 @@ MUD time runs approximately 24 times faster than real time. One real hour equals
 |--------|--------|
 | `TOG_SHOUTING` | Globally disable shouting |
 | `TOG_WIZBUILD` | Allow builders to see wiznet |
+
+### Player Flags
+
+| Flag | Effect |
+|------|--------|
+| `PLR_NEWBIEHELP` | Marks player as newbie helper |
+| `PLR_GODNOSHOUT` | God-imposed communication ban |
+
+### Powers
+
+| Power | Effect |
+|-------|--------|
+| `POWER_WIZNET` | Required to use commune channel |
+| `POWER_WIZNET_ALWAYS` | Always sees wiznet regardless of toggle |
+| `POWER_ACCESS` | Required for account-wide ignore |
+| `POWER_ACCOUNT` | Required for account-wide ignore |
 
 ### Communications Filtered by Ignore
 
@@ -175,7 +219,9 @@ When a player shouts, `doShout()` validates the sender meets requirements: minim
 
 Distribution via `sendShout()` iterates all descriptors. Recipients must satisfy all conditions: connection state `CON_PLYNG`, position above sleeping, not in a soundproof room, not ignoring the shouter, and not set `AUTO_NOSHOUT` (immortals and mobs bypass this last check).
 
-GMCP integration sends `comm.channel { "chan": "yell", ... }` for client applications. Twitter integration posts shouts via `twitterShout()`.
+GMCP integration sends `comm.channel { "chan": "yell", ... }` for client applications. For immortals, the message includes the room vnum where the shout originated.
+
+Twitter integration posts shouts via `twitterShout()`, sending a garbled version to avoid spoiling puzzles or secret information. The integration runs asynchronously to avoid blocking the game.
 
 ### Newbie Channel Logic
 
@@ -201,7 +247,7 @@ For performance optimization, small ignore lists share a static array (`m_static
 
 Database persistence uses the `blockedlist` table with columns `player_id` (ignoring player) and `blocked` (ignored name). Account blocks are stored with `~` prefix: player block stores "playername" while account block stores "~accountname".
 
-The `isIgnored()` method checks both player names and associated accounts. For mail checking, `isMailIgnored()` provides a static check without requiring a descriptor.
+The `isIgnored()` method checks both player names and associated accounts. For mail checking, `isMailIgnored()` provides a static check without requiring a descriptor, loading ignore data on demand.
 
 ### Ignore Command Processing
 
@@ -211,6 +257,12 @@ The `doIgnore()` function handles several subcommands:
 - `remove <player>`: remove player from ignore list
 - `addall <account>`: block entire account (requires `POWER_ACCESS` or `POWER_ACCOUNT`)
 - `removeall <account>`: unblock account (requires same powers)
+
+### Tell Ignore Behavior
+
+When a tell is sent to an ignored player, the sending code calls `isIgnored()` before delivering the message. If the target is ignoring the sender, the code returns success to the sender without delivering the message. From the sender's perspective, the tell succeeded normally - they receive their "You tell <target>" confirmation. The target never sees the message.
+
+This asymmetric feedback is intentional. If the sender received "That player is ignoring you" messages, harassers could use ignoring/unignoring patterns as a communication channel or identify when they've been ignored to escalate harassment through other means.
 
 ### GameTime Architecture
 
@@ -226,11 +278,13 @@ Day length varies seasonally using sinusoidal calculation. The `calcNewSunRise()
 
 The formula produces a sinusoidal variation of +/- 1.5 hours from the 6 AM baseline. This creates the seasonal range: winter solstice sunrise around 7:30 AM with sunset around 4:30 PM (9 hours daylight), equinox at 6 AM/6 PM (12 hours), summer solstice at 4:30 AM/7:30 PM (15 hours).
 
+Month changes trigger `calcNewSunRise()` and `calcNewSunSet()` to recompute these values based on the new seasonal position.
+
 ### Moon Phase System
 
 Moon cycle runs 32 days. The phase calculation divides moon value into ranges: 0-3 and 28-31 are new moon, 4-11 is waxing, 12-19 is full moon, 20-27 is waning.
 
-Full moon affects outdoor lighting at night, providing +1 light level. This matters for visibility calculations in nighttime outdoor rooms.
+Full moon affects outdoor lighting at night, providing +1 light level. This matters for visibility calculations in nighttime outdoor rooms. Moon rise and set times also vary throughout the cycle.
 
 ### Weekday Calculation
 
@@ -240,7 +294,11 @@ Weekday is computed as `((28 * month) + day + 1) % 7` using standard weekday nam
 
 The `doTime()` command displays comprehensive time information: current MUD hour/minute in AM/PM format, day of week, day of month, month name, year in P.S. era, sunrise/sunset times, moonrise/moonset times with phase, and real-world time.
 
-Players can set a timezone offset stored in `desc->account->time_adjust` to adjust displayed real-world time.
+Players can set a timezone offset stored in `desc->account->time_adjust` to adjust displayed real-world time. Use `time <offset>` to set (e.g., `time -5` for EST).
+
+### Toggle Persistence
+
+Toggles are stored in the `autobits` field of the descriptor. When a player modifies a toggle, `doQueueSave()` persists the change to the database. The system does not sync toggle state between multiple logins - each connection loads saved state from the database.
 
 ---
 
@@ -287,7 +345,7 @@ Players can set a timezone offset stored in `desc->account->time_adjust` to adju
 
 **Likely cause:** Account name mismatch or using player name instead of account name.
 
-**Diagnostic approach:** Check the `blockedlist` table for the `~accountname` entry. Verify the account name is correct (accounts and player names differ).
+**Diagnostic approach:** Check the `blockedlist` table for the `~accountname` entry. Verify the account name is correct (accounts and player names differ). Verify immortal has `POWER_ACCESS` or `POWER_ACCOUNT`.
 
 **Fix:** Use the correct account name with `ignore addall <accountname>`.
 
@@ -310,3 +368,43 @@ Players can set a timezone offset stored in `desc->account->time_adjust` to adju
 **Diagnostic approach:** Compare account creation time against the purgatory length constant.
 
 **Fix:** If player should retain access as helper, grant `PLR_NEWBIEHELP` flag or have them use `toggle newbiehelper`.
+
+### Sunrise/Sunset Times Not Updating
+
+**Symptom:** Sunrise/sunset times stay frozen despite months passing.
+
+**Likely cause:** `calcNewSunRise()` not being called on month transitions.
+
+**Diagnostic approach:** Verify month transition logic in `anotherHour()` triggers sunrise recalculation.
+
+**Fix:** Ensure month transition calls weather update functions.
+
+### Full Moon Not Providing Light Bonus
+
+**Symptom:** Outdoor nighttime light level unchanged during full moon.
+
+**Likely cause:** Light calculation not checking moon phase value.
+
+**Diagnostic approach:** Check outdoor room light calculation during full moon (moon value 12-19, nighttime). Should add +1 to ambient light.
+
+**Fix:** Verify light calculation functions include moon phase check.
+
+### Toggle Changes Not Persisting
+
+**Symptom:** Toggle changes reset after reconnect.
+
+**Likely cause:** `doQueueSave()` not called after toggle modification, or database write failed.
+
+**Diagnostic approach:** Check descriptor save queue after toggle command. Verify database write success.
+
+**Fix:** Ensure toggle code calls `doQueueSave()` for every autobits modification.
+
+### Commune Messages Reaching Non-Immortals
+
+**Symptom:** Builder players see commune/wiznet messages unexpectedly.
+
+**Likely cause:** `TOG_WIZBUILD` is on.
+
+**Diagnostic approach:** Check `TOG_WIZBUILD` global state.
+
+**Fix:** If `TOG_WIZBUILD` is intentionally on, this is expected behavior. Otherwise, toggle it off to restrict to actual immortals.

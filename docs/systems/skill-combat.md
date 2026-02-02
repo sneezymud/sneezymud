@@ -1,7 +1,6 @@
 ---
 title: Combat Skills
 category: critical
-created_by_model: opus
 keywords: [combat skills, bSuccess, specialAttack, getSkillDam, ranged combat, unarmed combat]
 related: [damage-pipeline.md, delete-flags.md, combat-formulas.md, weapon-system.md]
 primary_symbols:
@@ -85,7 +84,7 @@ Apply lag only on successful skill execution. Use `addSkillLag()` with the skill
 
 ### Ranged Skill Minimum
 
-Always check `SKILL_RANGED_PROF` is at least 10 before allowing shooting. Characters with lower skill cannot effectively use ranged weapons. The skill check occurs in `doShoot()` but should be understood when working with ranged combat.
+Always check `SKILL_RANGED_PROF` is at least 10 before allowing shooting. Characters with lower skill cannot effectively use ranged weapons. Between 1-9 skill, arrows load but fail to fire properly. Characters with 0 skill receive "you don't know how to shoot" messages.
 
 ### Monk Barehand Damage
 
@@ -94,6 +93,10 @@ Always check for `SKILL_KUBO` when calculating monk barehand damage. Standard ba
 ### Immediate Return on DELETE
 
 Never continue execution after detecting a DELETE flag. Check immediately and return or break. Continuing can lead to use-after-free crashes when accessing deleted objects.
+
+### Clear DELETE Flags After Local Deletion
+
+After deleting an object locally and clearing the pointer to null, always call `REM_DELETE(rc, DELETE_VICT)` or `REM_DELETE(rc, DELETE_ITEM)` before returning. Failing to clear the flag can cause double-free when the flag propagates to code that didn't receive the pointer.
 
 ## Reference
 
@@ -121,6 +124,19 @@ Never continue execution after detecting a DELETE flag. Check immediately and re
 | Thief | `SKILL_THIEF` | Backstab, throatslit, garrotte, stabbing, poisoning, ambush |
 | Deikhan | `SKILL_DEIKHAN` | Charge, smite, shock cavalry, harm, deathstroke, defend |
 | Ranger | `SKILL_RANGER` | Transfix |
+
+### spellInfo Structure Fields
+
+| Field | Purpose | Values |
+|-------|---------|--------|
+| `typ` | Skill class type | `SKILL_WARRIOR`, `SKILL_MONK`, `SKILL_THIEF`, `SKILL_DEIKHAN`, `SKILL_RANGER`, `SKILL_SHAMAN` |
+| `disc` | Primary discipline | `discNumT` enum (e.g., `DISC_SOLDIERING`, `DISC_MINDBODY`, `DISC_MURDER`) |
+| `assDisc` | Associated discipline for do-learning | Usually matches `disc` |
+| `modifierStat` | Stat affecting success/damage | `STAT_STR`, `STAT_DEX`, `STAT_AGI` |
+| `task` | Difficulty rating | `TASK_TRIVIAL` through `TASK_IMPOSSIBLE` |
+| `lag` | Lag penalty | `lag_t` enum values |
+| `minPosition` | Required position | `POSITION_STANDING`, `POSITION_FIGHTING`, `POSITION_RESTING` |
+| `targets` | Target bitflags | `TAR_VIOLENT`, `TAR_FIGHT_VICT`, `TAR_CHAR_ROOM` |
 
 ### specialAttack() Return Values
 
@@ -156,6 +172,28 @@ Never continue execution after detecting a DELETE flag. Check immediately and re
 | `LAG_5` | 60 | 6.0 sec | Devastating |
 | `LAG_9` | 108 | 10.8 sec | Ultimate abilities |
 
+### Ranged Combat Skills
+
+| Skill | Number | Effect |
+|-------|--------|--------|
+| `SKILL_RANGED_PROF` | 569 | Basic ranged competency (min 10 to shoot), adds 0-50% damage |
+| `SKILL_RANGED_SPEC` | 568 | Advanced mastery (Warriors/Rangers), adds 0-50% damage |
+| `SKILL_FAST_LOAD` | - | Increases arrows per round |
+
+Arrows per round formula: `1.0 + max(0, SKILL_FAST_LOAD/100) + max(0, SKILL_RANGED_SPEC/100)`
+
+### Unarmed Combat Skills
+
+| Skill | Number | Effect |
+|-------|--------|--------|
+| `SKILL_BAREHAND_PROF` | 563 | Basic unarmed competency (1-3 damage without monk skills) |
+| `SKILL_BAREHAND_SPEC` | 567 | Advanced unarmed mastery for monks |
+| `SKILL_KUBO` | - | Monk barehand scaling |
+| `SKILL_IRON_FIST` | - | +0-8.3% damage when ungloved |
+| `SKILL_VOPLAT` | - | +0-10% damage bonus |
+
+KUBO damage formula: `value = 3.0 * SKILL_KUBO / 10.0` (clamped 0-50), then `weapDam = 6.0 * sqrt(value) / 2.0`
+
 ### Arrow Types
 
 | Type | Value | Description |
@@ -169,6 +207,19 @@ Never continue execution after detecting a DELETE flag. Check immediately and re
 | Heavy sling ammo | 6 | Large sling stone |
 | Common sling ammo | 7 | Standard sling stone |
 
+### Berserk Skill Weights
+
+| Skill | Weight |
+|-------|--------|
+| Bash | 2 |
+| Headbutt | 3 |
+| Bodyslam | 2 |
+| Grapple | 1 |
+| Slam | 3 |
+| Deathstroke | 1 |
+
+Higher weights increase selection probability during berserk rage.
+
 ### Key Files
 
 | File | Purpose |
@@ -181,6 +232,7 @@ Never continue execution after detecting a DELETE flag. Check immediately and re
 | `code/code/obj/obj_arrow.cc` | TArrow implementation |
 | `code/code/cmd/cmd_*.cc` | Individual skill command handlers |
 | `code/code/disc/disc_*.cc` | Class-specific skill implementations |
+| `code/code/spec/spec_mobs_archer.cc` | Archer MOB AI |
 
 ## Implementation
 
@@ -202,7 +254,11 @@ A random roll from 0-99 is compared against the final percentage. Values below t
 
 After successful execution, `specialAttack()` determines if the technique connects. This compares the attacker's attack round against the defender's defense round, adding situational modifiers for position, stats, equipment, level difference, and combat mode.
 
-A random roll from 1-100 is compared against thresholds derived from this modifier. Rolls at or below 50 minus the modifier achieve guaranteed success. Rolls below 80 minus the modifier achieve partial success. A natural 100 is guaranteed failure. Everything else is regular failure.
+A random roll from 1-100 compares against threshold bands:
+- Roll <= 50 minus modifier: `GUARANTEED_SUCCESS`
+- Roll < 80 minus modifier: `PARTIAL_SUCCESS`
+- Roll == 100: `GUARANTEED_FAILURE`
+- Otherwise: `FAILURE`
 
 The return value indicates success level: `GUARANTEED_SUCCESS` (1000) means maximum effect, `COMPLETE_SUCCESS` (100) means full effect, `PARTIAL_SUCCESS` (50) means reduced effect (typically half damage), and failures mean the attack misses.
 
@@ -226,7 +282,7 @@ Ranged combat involves `TBow` objects (bows, crossbows, slings, blowguns) firing
 
 The bow tracks its ammunition type (arrows must match the bow), state flags (broken string, crafting progress), and maximum range in rooms. The arrow tracks its type, head type and material (affecting damage), and optional trap effects.
 
-When shooting, the `doShoot()` function validates the shooter has a bow equipped, checks minimum `SKILL_RANGED_PROF` of 10, finds the target in the specified direction, and delegates to `shootMeBow()`. The bow function verifies it's loaded, checks range limits, performs bowstring break checks, calculates arrows per round based on `SKILL_FAST_LOAD` and `SKILL_RANGED_SPEC`, fires the arrows, and auto-reloads if ammunition remains.
+When shooting, the `doShoot()` function validates the shooter has a bow equipped, checks minimum `SKILL_RANGED_PROF` of 10, finds the target in the specified direction, and delegates to `shootMeBow()`. The bow function verifies it's loaded, checks range limits, performs bowstring break checks (random against struct points; on 0, `BOW_STRING_BROKE` flag sets), calculates arrows per round based on `SKILL_FAST_LOAD` and `SKILL_RANGED_SPEC`, fires the arrows, and auto-reloads if ammunition remains.
 
 Ranged damage starts with the arrow's damage level. The `get_range_actual_damage()` function applies skill modifiers: proficiency adds up to 50% at max skill, specialization adds another 50%. Thrown objects use only proficiency. Total damage at maximum skills is 200% of base arrow damage.
 
@@ -234,7 +290,7 @@ When an arrow hits, `catchSmack()` handles the impact. It checks if the target d
 
 ### Throwing Mechanics
 
-Objects with the `ITEM_WEAR_THROW` flag can be thrown. Throw distance uses a physics simulation: acceleration from brawn stat divided by object weight determines initial velocity. Trajectory angle from focus stat affects range calculation. Maximum distance is derived from these factors, with outdoor environments allowing twice the range of indoor.
+Objects with the `ITEM_WEAR_THROW` flag can be thrown. Throw distance uses a physics simulation: acceleration from brawn stat (500-5000 based on `STAT_BRA`) divided by object weight determines initial velocity (`v0 = 0.2 * acceleration`). Trajectory angle from focus stat (0-45 degrees based on `STAT_FOC`) affects range calculation using projectile motion formula. Maximum distance derives from these factors, with outdoor environments allowing twice the range of indoor.
 
 ### Archer MOB Behavior
 
@@ -244,7 +300,7 @@ MOBs with the `archer` spec proc automatically engage in ranged combat. They fin
 
 Standard barehand damage is minimal: 1-3 points per hit. Monks transform unarmed combat through the `SKILL_KUBO` skill tree.
 
-The `getMonkWeaponDam()` function scales barehand damage with KUBO learning. The formula takes the skill value, divides by 10, caps at 30, takes the square root, and multiplies by 6. This produces base damage around 9 at 33% skill, 13 at 66%, and 16 at maximum.
+The `getMonkWeaponDam()` function scales barehand damage with KUBO learning. The formula takes the skill value, multiplies by 3.0/10.0, clamps to 0-50, takes the square root, and multiplies by 6/2. This produces base damage around 9 at 33% skill, 13 at 66%, and 16 at maximum. The `balanceCorrectionForLevel()` multiplier then scales for character level, followed by +/- 10% random variance.
 
 Additional modifiers layer on top. Strength provides its standard damage bonus. `SKILL_IRON_FIST` adds up to 8.3% when fighting with ungloved hands. `SKILL_VOPLAT` adds up to 10% additional damage.
 
@@ -351,3 +407,33 @@ The failure handler sends failure messages, may apply side effects (falling, bal
 **Diagnostic approach:** Check if `canXXX()` calls `UtilMobProc()`. Verify the skill's target flags allow MOB usage.
 
 **Fix:** Adjust validation logic for MOB compatibility.
+
+### Bowstring Break Ignored
+
+**Symptom:** Bow continues firing after string breaks.
+
+**Likely cause:** `BOW_STRING_BROKE` flag not checked before arrow launch.
+
+**Diagnostic approach:** Check if `shootMeBow()` tests for bowstring break and returns `FALSE` when string snaps.
+
+**Fix:** Check for bowstring break before arrow launch, set flag and return immediately on break.
+
+### Berserk Mode Allows All Skills
+
+**Symptom:** Berserking characters can use any skill instead of restricted set.
+
+**Likely cause:** Skill selection not validating against berserk-allowed set.
+
+**Diagnostic approach:** Check if `affectedBySpell(SKILL_BERSERK)` triggers skill restriction logic.
+
+**Fix:** Validate skill selection against allowed set (bash, headbutt, bodyslam, grapple, slam, deathstroke) during berserk rage.
+
+### Combat Mode Damage Not Applied
+
+**Symptom:** Defensive/offensive/berserk modes don't affect damage output.
+
+**Likely cause:** `getCombatMode()` modifier not applied in damage calculation.
+
+**Diagnostic approach:** Trace through `getSkillDam()` or skill-specific damage functions for mode multiplier.
+
+**Fix:** Apply mode-specific multiplier (0.9x defensive, 1.1x offensive, 1.2x berserk).

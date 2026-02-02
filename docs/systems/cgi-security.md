@@ -1,7 +1,6 @@
 ---
 title: CGI Web Interface Security
 category: critical
-created_by_model: opus
 keywords: [TSession, session, CGI, authentication, SQL injection, CSRF, cookies]
 related: []
 primary_symbols:
@@ -16,7 +15,7 @@ How does a MUD provide browser-based utilities while protecting player accounts 
 
 The CGI web interface exposes player utilities (mail, shop info) and builder tools (object/room/response editors) through traditional CGI applications. The `TSession` class manages authentication by storing session tokens in the database and validating them on each request. Builder tools additionally require wizard powers, checked via `hasWizPower()` against the account's character permissions.
 
-This system presents substantial attack surface. Session tokens are generated with weak entropy, making them potentially predictable. Several endpoints lack authentication entirely, exposing game data to unauthenticated users. At least one endpoint concatenates user input directly into SQL queries, creating injection vulnerabilities. Cookies lack modern security attributes, and no CSRF protection exists.
+This system presents substantial attack surface. Session tokens are generated with weak entropy, making them potentially predictable. Several endpoints lack authentication entirely, exposing game data to unauthenticated users. At least one endpoint concatenates user input directly into SQL queries, creating injection vulnerabilities. Cookies lack modern security attributes, and no CSRF protection exists. Session fixation is possible because session IDs are not regenerated after authentication.
 
 When a player logs in, they submit credentials to `session.cgi.cc`. The system validates passwords using legacy `crypt()`, generates a session ID, stores it in the `cgisession` table, and returns it as a cookie. Subsequent requests validate the session by checking the cookie against the database and verifying the session hasn't expired. For builder tools, the system additionally queries the `wizpower` table to verify the account has appropriate administrative privileges.
 
@@ -76,9 +75,11 @@ Never use predictable values as entropy sources. Current generation uses `time(N
 
 Always use cryptographic random sources for session IDs. Read from `/dev/urandom` or use OpenSSL's `RAND_bytes()`.
 
+Always regenerate session IDs after authentication. Failure to do so enables session fixation attacks where an attacker sets a victim's session cookie before login.
+
 ### Error Messages
 
-Never reveal internal state in error messages. Messages should be generic enough that attackers cannot infer implementation details.
+Never reveal internal state in error messages. Messages should be generic enough that attackers cannot infer implementation details. Avoid "joke" messages that reference authorization checks or internal systems.
 
 ### Session Duration
 
@@ -114,6 +115,13 @@ Never allow year-long session durations. The auto-login feature creates sessions
 | `corpinfo.cgi.cc` | Corporation listings | **None** | Medium |
 | `limb_quest.cgi.cc` | Quest limb tracking | **None** | Medium |
 
+### Wizard Powers
+
+| Power | Purpose | Endpoints Requiring It |
+|-------|---------|------------------------|
+| `POWER_BUILDER` | Zone editing | objeditor, roomeditor, respeditor, objlog |
+| `POWER_LOAD` | Object spawning | (varies by tool) |
+
 ### TDatabase Format Specifiers
 
 | Specifier | Type | Escaping | Safety |
@@ -121,6 +129,15 @@ Never allow year-long session durations. The auto-login feature creates sessions
 | `%s` | string | `mysql_real_escape_string` | Safe for user input |
 | `%i` | integer | Numeric conversion | Safe |
 | `%r` | raw string | None | Unsafe for user input |
+
+### Session ID Entropy Sources
+
+| Source | Value | Entropy Level | Attack Vector |
+|--------|-------|---------------|---------------|
+| `time(NULL)` | Current Unix timestamp | Very Low | Predictable to the second |
+| `random()` | Unseeded PRNG | Very Low | Defaults to seed 1 if not initialized |
+| `getpid()` | Process ID | Low | Observable via /proc, sequential allocation |
+| `&seed` | Stack address | Low-Medium | Limited ASLR, predictable stack layout |
 
 ### Session Table Schema
 
@@ -138,6 +155,7 @@ Never allow year-long session durations. The auto-login feature creates sessions
 |---------------|----------|----------|
 | Weak session ID entropy | `generateSessionID()` | Critical |
 | SQL injection | `objlog.cgi.cc` | Critical |
+| Session fixation | `createSession()` | High |
 | Unauthenticated endpoints | `corpinfo.cgi.cc`, `limb_quest.cgi.cc` | Medium |
 | No CSRF protection | All forms | Medium |
 | Missing cookie security flags | `TSession` cookie handling | Medium |
@@ -171,6 +189,12 @@ The `%r` specifier performs no transformation, inserting the argument verbatim. 
 
 The SQL injection vulnerability in `objlog.cgi.cc` arises from string concatenation rather than format specifiers. The `type` parameter from the form is concatenated directly into the query string with `+` operators, bypassing `TDatabase` escaping entirely.
 
+### Form Processing
+
+CGI endpoints use the cgicc library to parse HTTP requests. The `Cgicc` object extracts form elements by name using `getElement()`. The double-dereference (`**`) extracts the string value. This value is untrusted user input and must be validated or escaped before use in SQL queries or HTML output.
+
+Integer form elements use `convertTo<int>()`. This handles non-numeric input by returning zero, preventing crashes but not logic errors if zero is a valid ID.
+
 ### HTML Output Escaping
 
 The `escape_html()` function in `session.cgi.cc` transforms HTML-significant characters. It replaces `&` with `&amp;`, `<` with `&lt;`, and `>` with `&gt;`. This prevents user-supplied content from injecting HTML tags or scripts.
@@ -200,6 +224,10 @@ Some endpoints accept a `player_id` form parameter without fully verifying owner
 Builder endpoints follow a common pattern after session validation. After confirming `isValid()`, they call `hasWizPower(POWER_BUILDER)` to verify the account has builder privileges. Only if this check passes does the application proceed to display or modify data.
 
 The wizard power check queries the `wizpower` table, searching for any character on the session's account that has the requested power flag set.
+
+### File Organization
+
+All CGI executables are in `code/cgi/` with `.cc` source files. Each endpoint is a standalone executable compiled and deployed to the web server's CGI directory. The `TSession` class is defined in `session.cgi.h` and implemented in `session.cgi.cc`, but compiled separately into each endpoint that uses it, not as a shared library.
 
 ## Troubleshooting
 
@@ -242,3 +270,33 @@ The wizard power check queries the `wizpower` table, searching for any character
 **Diagnostic approach:** Trace the display path for the affected content. Verify `escape_html()` is called before output.
 
 **Fix:** Apply `escape_html()` to all user-generated content before HTML output.
+
+### Session Hijacking After Logout
+
+**Symptom:** Session remains valid after user logs out, or attacker can predict session IDs.
+
+**Likely cause:** Session not deleted from database on logout, or session ID predictable due to weak entropy.
+
+**Diagnostic approach:** Check if logout handler deletes the session from `cgisession` table. Test session ID predictability by creating multiple sessions and analyzing patterns.
+
+**Fix:** Delete session from database on logout. Implement cryptographically secure random session ID generation.
+
+### Users Accessing Other Accounts' Data
+
+**Symptom:** User can view or modify data belonging to other accounts by manipulating form parameters.
+
+**Likely cause:** Missing account ownership verification in query.
+
+**Diagnostic approach:** Identify which endpoint is leaking data. Check if SQL queries include `account_id` in WHERE clause. Test by manipulating form parameters (`player_id`, `mail_id`) to access other accounts' data.
+
+**Fix:** Add `account_id` to WHERE clause in all queries that access player-specific data. Join with player table to verify ownership.
+
+### CSRF Attack Executing Unwanted Actions
+
+**Symptom:** State-changing operations execute without user consent when visiting external pages.
+
+**Likely cause:** No CSRF token validation.
+
+**Diagnostic approach:** Check if form includes a CSRF token field. Check if form handler validates the token against session. Test by crafting an external page that submits the form.
+
+**Fix:** Generate random token on form render, store in session, include as hidden field, validate on submission.

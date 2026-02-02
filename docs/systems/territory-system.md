@@ -1,18 +1,8 @@
 ---
 title: Territory/Homeland System
-created_by_model: opus
 category: Character Systems
 related: [character-foundation.md, vital-statistics.md]
-source_files:
-  - code/code/misc/enum.h
-  - code/code/misc/constants.cc
-  - code/code/misc/stats.cc
-  - code/code/sys/create_character.cc
-  - code/code/misc/charfile.h
-  - code/code/misc/being.h
-  - code/code/cmd/cmd_attribute.cc
-  - code/code/cmd/cmd_set.cc
-  - code/code/cmd/cmd_stat.cc
+source_files: [code/code/misc/enum.h, code/code/misc/constants.cc, code/code/misc/stats.cc, code/code/sys/create_character.cc, code/code/misc/charfile.h, code/code/misc/being.h, code/code/cmd/cmd_attribute.cc, code/code/cmd/cmd_set.cc, code/code/cmd/cmd_stat.cc]
 ---
 
 # Territory/Homeland System
@@ -29,12 +19,14 @@ Territories are permanent sub-races selected during character creation that modi
 - Validate territory-race compatibility before setting via admin commands
 - Use `territory_adjustment()` to get stat modifiers
 - Handle `HOME_TER_NONE` (value 0) as valid, returning 0 for all stats (used for NPCs)
+- Query `STAT_TERRITORY` for territory modifier alone, `STAT_NATURAL` for combined stats
 
 ### Never
 
 - Insert new territory values mid-enum (corrupts existing character files)
 - Assume territory grants skills (stats only)
 - Modify charfile struct layout (binary format frozen)
+- Assume `STAT_CURRENT` includes territory modifiers (only `STAT_NATURAL` does)
 
 ## Reference
 
@@ -136,6 +128,8 @@ Territories are permanent sub-races selected during character creation that modi
 | Gnome | `HOME_TER_GNOME_URBAN`, `_VILLAGER`, `_HILL`, `_SWAMP` |
 | Ogre | `HOME_TER_OGRE_VILLAGER`, `_PLAINS`, `_HILL` |
 | Hobbit | `HOME_TER_HOBBIT_URBAN`, `_SHIRE`, `_GRASSLANDS`, `_HILL`, `_WOODLAND`, `_MARITIME` |
+| Extended (Goblin, Gnoll, Troglodyte, Orc) | Eight territories following human model with race-specific names |
+| Advanced (Bullywug, Kalysian, Aarakocra, Troll) | Unique territory sets, some values marked UNUSED (return 0 for all stats) |
 
 ### Key Functions and Data
 
@@ -144,7 +138,7 @@ Territories are permanent sub-races selected during character creation that modi
 | `territoryT` | Enum defining all territories |
 | `home_terrains[]` | Display name strings |
 | `territory_adjustment()` | Returns stat modifier for territory/stat pair |
-| `nannyRaces[]` | Maps races to available territories |
+| `nannyRaces[]` | Maps races to available territories (array pointer + count) |
 | `playerData.hometerrain` | Runtime storage in TBeing |
 | `charFile.hometerrain` | Persistent storage (ubyte) |
 
@@ -181,10 +175,11 @@ Query territory modifier alone with `getStat(STAT_TERRITORY, whichStat)`.
 ### Character Creation Flow
 
 1. Player selects race
-2. System presents territories from `nannyRaces[race].terrains`
-3. Player sees menu with `home_terrains[]` display names
-4. Selection stored in `playerData.hometerrain`
-5. On save, written to `charFile.hometerrain` (ubyte)
+2. System enters `CON_CREATION_TRAITS` state
+3. System presents territories from `nannyRaces[race].terrains`
+4. Player sees menu with `home_terrains[]` display names (checkbox-style indicators, default is first option)
+5. Selection stored in `playerData.hometerrain`
+6. On save, written to `charFile.hometerrain` (ubyte)
 
 ### Storage Details
 
@@ -203,7 +198,7 @@ When setting territory via `@set`, validate race compatibility:
 
 ### Display
 
-- `attribute` command: "You grew up as an urban dweller and began adventuring at age 17."
+- `attribute` command: "You grew up as an urban dweller and began adventuring at age 17." (uses a/an article selection)
 - Character launchpad: "Race/Homeland: Human/urban dweller"
 - `@stat`: Shows territory in admin view
 
@@ -217,3 +212,7 @@ When setting territory via `@set`, validate race compatibility:
 | NPC shows territory stats | `HOME_TER_NONE` not set | Ensure NPCs use `HOME_TER_NONE` (0) |
 | Extended race wrong stats | Modular mapping issue | Verify formula: `1 + ((ter - BASE) % 8)` |
 | Admin set fails | Invalid territory for race | Check race-specific enum bounds |
+| Stats missing territory bonus | Using wrong stat type | Query `STAT_NATURAL`, not `STAT_CURRENT` |
+| Advanced race has unexpected modifiers | UNUSED territory not returning zero | Check `territory_adjustment()` switch cases |
+| Missing territories in creation menu | `nannyRaces[]` misconfigured | Verify array pointer and count in race entry |
+| Territory help not found | Missing help file | Create `lib/help/territory help <race>` |

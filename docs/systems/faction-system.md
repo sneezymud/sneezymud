@@ -1,7 +1,6 @@
 ---
 title: Faction System
 category: understanding
-created_by_model: opus
 keywords: [factionTypeT, TFactionInfo, faction-percentage, reconcileHelp, percModifier, caravan, potency, tithe, FACTIONS_IN_USE]
 related: [affects-system.md, economy-system.md]
 primary_symbols:
@@ -26,7 +25,7 @@ Five metrics determine faction standing: average member level (biased toward hig
 
 ### Faction Membership
 
-Always verify faction membership before granting faction-specific privileges. Use `getFaction()` and compare against `factionTypeT` values, not raw integers.
+Always verify faction membership before granting faction-specific privileges. Use `getFaction()` and compare against `factionTypeT` values, not raw integers. Use `FACT_NONE` to check for unaffiliated characters, not comparisons to zero or negative values.
 
 Never allow players to hold membership in multiple factions simultaneously. The system enforces this at the code level, and immortals enforce the out-of-character rule that no player may have characters in separate factions.
 
@@ -38,9 +37,11 @@ Always validate leadership authority before executing faction commands. Primary 
 
 Never allow self-modification of leadership status. A leader cannot demote themselves or modify their own slot.
 
+Leadership validation uses `strcmp()` for exact name matching. Trailing spaces, capitalization differences, or truncated names cause validation to fail.
+
 ### Percentage Tracking (When Enabled)
 
-Always call `reconcileHelp()` after beneficial actions toward another being. Always call `reconcileHurt()` after harmful actions. These functions handle the complex inter-faction relationship calculations.
+Always call `reconcileHelp()` after beneficial actions toward another being. Always call `reconcileHurt()` after harmful actions (damage, killing, stealing). These functions handle the complex inter-faction relationship calculations.
 
 Never modify faction percentages directly. Use `setPerc()` and `setPercX()` accessors, which maintain consistency between composite and individual percentages.
 
@@ -64,11 +65,21 @@ Always track both attempts and successes separately. The success rate matters fo
 
 Never spawn caravans without decrementing the caravan counter. The interval system prevents excessive spawning.
 
+Never allow negative caravan defense values. Defense spending is capped by faction corporate wealth.
+
 ### Corporate Wealth
 
 Always save both faction data and corporate account after wealth transfers. A crash between transfer and save causes duplication or loss.
 
 Never allow withdrawals exceeding the corporate balance. Validate before transfer, not after.
+
+### Faction Array Access
+
+The faction relationship array uses two indices: target faction and relationship type (help/hurt). Always validate both indices before accessing `faction_array`. Never access with `FACT_UNDEFINED` or values beyond `MAX_FACTIONS`.
+
+### Database Synchronization
+
+Always update the factionmembers database immediately when membership changes. Don't rely on periodic saves. Failure to synchronize causes rollcall displays to show stale membership and score calculations to be incorrect.
 
 ## Reference
 
@@ -89,7 +100,21 @@ Never allow withdrawals exceeding the corporate balance. Validate before transfe
 | `FACTIONS_IN_USE` | constant | Compile-time feature toggle |
 | `ABS_MAX_FACTION` | constant | Binary format limit (frozen at 6) |
 | `MAX_FACTIONS` | constant | Active faction count (4) |
+| `MIN_FACTION` | constant | Loop start for faction iteration (0) |
 | `FACT_LEADER_SLOTS` | constant | Leadership positions per faction (4) |
+| `OFF_HELP` | constant | Faction array index for help values (0) |
+| `OFF_HURT` | constant | Faction array index for hurt values (1) |
+
+### TBeing Accessor Methods
+
+| Method | Purpose |
+|--------|---------|
+| `getFaction()` | Returns current faction enum |
+| `setFaction(factionTypeT)` | Changes faction affiliation |
+| `getPerc()` | Returns composite faction percentage |
+| `setPerc(double)` | Sets composite faction percentage |
+| `getPercX(factionTypeT)` | Returns individual faction percentage |
+| `setPercX(double, factionTypeT)` | Sets individual faction percentage |
 
 ### Faction Enumeration
 
@@ -119,6 +144,13 @@ Never allow withdrawals exceeding the corporate balance. Validate before transfe
 | `adjust` | Varies | Modify help/hurt values (blocked when disabled) |
 | `send` | Leader/subleader | Send faction-wide message |
 
+### Leadership Slot Authority
+
+| Slot | Role | Authority |
+|------|------|-----------|
+| 0 | Primary Leader | Full authority: newmember, rmember, makeleader, send, adjust |
+| 1-3 | Subleader | Varies by faction: typically newmember, rmember, send |
+
 ### Percentage Effects (When Enabled)
 
 | Percentage | Prayer Modifier | Effective Power |
@@ -142,6 +174,19 @@ Never allow withdrawals exceeding the corporate balance. Validate before transfe
 | reconcileHelp/Hurt | Active | Empty functions |
 | Dynamic prayer power | Active | Fixed at 0.75 |
 | Help/hurt adjustment | Available | Blocked |
+| Potency effects | Active | No gameplay impact |
+
+### Caravan Fields
+
+| Field | Type | Purpose |
+|-------|------|---------|
+| `caravan_interval` | int | Ticks between caravan spawns |
+| `caravan_counter` | int | Countdown to next spawn |
+| `caravan_flags` | unsigned int | Configuration (route, protection) |
+| `caravan_value` | int | Talens per successful delivery |
+| `caravan_defense` | int | Money spent on guards |
+| `caravan_attempts` | int | Total caravans launched |
+| `caravan_successes` | int | Caravans that reached destination |
 
 ### Scoring Metrics
 
@@ -150,7 +195,7 @@ Never allow withdrawals exceeding the corporate balance. Validate before transfe
 | Average Level | Biased toward high levels (one 50 > two 25s) |
 | Pounds of Fish | Records held (1pt each) + total weight |
 | Average Trophy | Level-biased trophy percentage |
-| Shops Owned | Unique shops with faction owner |
+| Shops Owned | Unique shops with faction owner (multiple owners from same faction count as one) |
 | Faction Wealth | Corporate bank balance in talens |
 
 ### Key Files
@@ -163,6 +208,7 @@ Never allow withdrawals exceeding the corporate balance. Validate before transfe
 | `person.h` | TPerson reconcile functions |
 | `lib/faction/faction_info` | Runtime faction data persistence |
 | `factionmembers.sql` | Membership database schema |
+| `lib/help/` | Help topics: factions, faction overview, faction percent, faction leaders, faction rules, faction score |
 
 ## Implementation
 
@@ -176,7 +222,7 @@ The `factionTypeT` enumeration defines faction identities from -1 (undefined) th
 
 ### Faction Identification
 
-The `factionNumber()` function parses faction names using abbreviation matching. It accepts multiple aliases per faction (e.g., "brotherhood" or "galek" for `FACT_BROTHERHOOD`) and returns `FACT_UNDEFINED` for unrecognized input. This function drives all user-facing faction commands.
+The `factionNumber()` function parses faction names using abbreviation matching. It accepts multiple aliases per faction (e.g., "brotherhood" or "galek" for `FACT_BROTHERHOOD`) and returns `FACT_UNDEFINED` for unrecognized input. This function drives all user-facing faction commands. Always check for `FACT_UNDEFINED` before using the result.
 
 ### Percentage Tracking Flow
 
@@ -186,11 +232,13 @@ When `FACTIONS_IN_USE` is enabled, `reconcileHelp()` and `reconcileHurt()` form 
 2. Look up the relationship values from the victim's faction array for the actor's faction
 3. Apply the help or hurt value multiplied by an amplitude factor to the individual percentage
 4. Recalculate the composite percentage by summing all individual faction percentages
-5. Adjust the actor's faction power pool by a fraction of the change
+5. Adjust the actor's faction power pool by `help_value * amplitude / 5.0`
 
 The amplitude factor allows different actions to have different weights (healing vs. minor help, lethal damage vs. minor harm).
 
 Integration points call these functions throughout the codebase: `doPray()` for tithes, `applyDamage()` for damage, healing spells for restoration, `perform_violence()` for combat, and `gainExpPerHit()` for group sharing.
+
+When `FACTIONS_IN_USE` is disabled, both functions are empty shells wrapped in preprocessor conditionals, making the performance impact zero.
 
 ### Prayer Power Calculation
 
@@ -199,6 +247,8 @@ Integration points call these functions throughout the codebase: `doPray()` for 
 ### Inter-Faction Relationships
 
 The faction array stores bidirectional relationship values. Each faction maintains a 4x2 array where the first index is the other faction and the second index selects help (0) or hurt (1) values. These values range from -4.0 to +4.0 and determine how much helping or hurting members of one faction affects standing with another.
+
+For example, the Brotherhood might have +4.0 help value toward other Brotherhood members (strongly encouraged), +1.0 toward unaffiliated characters (mildly encouraged), -2.0 toward Cult members (discouraged), and -4.0 toward Snake members (strongly discouraged).
 
 The `adjust` command allows leaders to modify these values, but only when `FACTIONS_IN_USE` is enabled. The command is explicitly blocked otherwise to prevent confusion.
 
@@ -210,11 +260,11 @@ Leadership changes are restricted: only the primary leader can execute `makelead
 
 ### Caravan Operations
 
-Each faction tracks caravan state independently. The interval determines ticks between spawns; the counter counts down to the next spawn. When the counter reaches zero, the system spawns caravan mobs carrying faction goods and resets the counter to the interval.
+Each faction tracks caravan state independently. The interval determines ticks between spawns; the counter counts down to the next spawn. When the counter reaches zero, the system spawns caravan mobs carrying faction goods, resets the counter to the interval, and increments `caravan_attempts`.
 
 Caravans travel predefined routes between faction bases. Players can intercept and raid enemy caravans (incrementing that faction's attempts without a corresponding success) or escort allied caravans to completion (incrementing both attempts and successes).
 
-Defense spending affects caravan guard strength, making raids more difficult. The success rate (successes/attempts) serves as a leadership performance metric.
+Defense spending affects caravan guard strength, making raids more difficult. The success rate (successes/attempts) serves as a leadership performance metric. Higher defense spending increases success rate but reduces net profit per caravan.
 
 ### Corporate Integration
 
@@ -224,9 +274,9 @@ Tithe calculation uses `TITHE_FACTOR` (0.0003) to convert talens to percentage i
 
 ### Membership Database
 
-The `factionmembers` table tracks membership separately from character files. It stores name, faction identifier, and level for each member. This enables faction rollcall displays and membership verification without loading full character data.
+The `factionmembers` table tracks membership separately from character files. It stores name (varchar 80, primary key), faction identifier (varchar 8), and level (int) for each member. The table uses InnoDB engine with latin1 charset.
 
-The table is synchronized when players join, leave, or level up. Leadership commands query this table rather than iterating through online players.
+This enables faction rollcall displays and membership verification without loading full character data. The table is synchronized when players join, leave, or level up. Leadership commands query this table rather than iterating through online players.
 
 ### Persistence
 
@@ -252,6 +302,16 @@ Each faction associates with specific deities for divine spell flavor text. The 
 
 Holy symbols can be attuned to specific factions. Aligned usage provides full effectiveness; unaligned usage may be less effective. Attunement options depend on the symbol's properties and the wielder's faction membership.
 
+### Scoring Calculations
+
+Five metrics contribute to faction score, queried from different data sources:
+
+- **Average Level:** Queries factionmembers table with biased weighting. Higher-level members contribute disproportionately more, preventing padding with alts.
+- **Pounds of Fish:** Queries fishing records. Each record held contributes one point; total pounds contribute additional value.
+- **Average Trophy:** Combines trophy percentage with level-biased weighting. A level 50 character with 50% trophy contributes more than two level 25s with 50% each.
+- **Shops Owned:** Counts distinct shops where at least one faction member has owner privileges. Multiple owners from the same faction don't increase the count.
+- **Faction Wealth:** Queries corporation bank balance directly.
+
 ## Troubleshooting
 
 ### Prayer Power Always 75%
@@ -274,6 +334,16 @@ Holy symbols can be attuned to specific factions. Aligned usage provides full ef
 
 **Fix:** Same as above - enable `FACTIONS_IN_USE` if percentage tracking is desired.
 
+### Faction Percentage Stuck at Zero
+
+**Symptom:** Percentage tracking is enabled but a player's faction percentage never changes.
+
+**Likely cause:** Actions only involve `FACT_NONE` characters with zero relationship values, or no actions triggering reconcileHelp/reconcileHurt.
+
+**Diagnostic approach:** Verify FACTIONS_IN_USE is enabled. Check faction_data arrays to see if help/hurt values toward FACT_NONE are configured.
+
+**Fix:** Perform actions affecting factioned characters. Use the adjust command to set appropriate help/hurt values for each faction pair.
+
 ### Adjust Command Fails
 
 **Symptom:** Leaders receive "not permitted to alter the help/harm values" when using the adjust command.
@@ -294,6 +364,16 @@ Holy symbols can be attuned to specific factions. Aligned usage provides full ef
 
 **Fix:** Restore original constant values. If data is already corrupted, affected players may need character wipes for their faction data sections.
 
+### New Members Not Appearing in Rollcall
+
+**Symptom:** A new faction member doesn't appear in the rollcall display.
+
+**Likely cause:** Database insert failed or saveChar not called after faction assignment.
+
+**Diagnostic approach:** Check the factionmembers table directly with `SELECT * FROM factionmembers WHERE name='PlayerName'`. If the row is missing, the database operation failed. Check logs for SQL errors.
+
+**Fix:** Re-run the newmember command. If the problem persists, check database permissions and table structure (requires latin1 charset compatibility).
+
 ### Caravan Not Spawning
 
 **Symptom:** Expected caravan spawns do not occur.
@@ -313,3 +393,33 @@ Holy symbols can be attuned to specific factions. Aligned usage provides full ef
 **Diagnostic approach:** Verify the faction's `corp_id` points to a valid corporation. Check for database errors during the tithe transaction.
 
 **Fix:** Correct the `corp_id` or create the missing corporate account. Ensure database transactions complete successfully.
+
+### Leadership Commands Failing for Subleaders
+
+**Symptom:** A subleader cannot execute commands despite being in a leader slot.
+
+**Likely cause:** Name mismatch between leader array entry and character name.
+
+**Diagnostic approach:** Check faction_data[faction].leader[] array values. Compare stored names against the character's getName() result.
+
+**Fix:** Use makeleader to re-assign the subleader with the exact name. Leadership validation uses strcmp, which is case-sensitive and requires exact matches.
+
+### Crash When Accessing Faction Data
+
+**Symptom:** Server crashes when processing faction-related code.
+
+**Likely cause:** Faction enum out of bounds, accessing faction_data with FACT_UNDEFINED or value >= MAX_FACTIONS.
+
+**Diagnostic approach:** Add bounds checking around faction_data accesses. Log the faction value before indexing.
+
+**Fix:** Always validate faction values before indexing faction_data. Check that factionNumber() didn't return FACT_UNDEFINED. Ensure loops use `i < MAX_FACTIONS` not `i <= MAX_FACTIONS`.
+
+### Faction Data File Corruption
+
+**Symptom:** Server fails to boot with faction load errors.
+
+**Likely cause:** Server crash during faction data write, struct layout change, or manual file editing.
+
+**Diagnostic approach:** Compare file size against expected size (sizeof(TFactionInfo) * MAX_FACTIONS). If sizes don't match, struct layout changed or file was truncated.
+
+**Fix:** Restore from faction_info.bak backup. If backup is also corrupted, recreate faction data from scratch, reinitializing leadership, relationship values, and caravan settings.

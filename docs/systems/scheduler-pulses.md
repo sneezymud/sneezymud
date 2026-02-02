@@ -1,16 +1,9 @@
 ---
 title: Scheduler and Pulse System
 description: Central timing mechanism orchestrating all periodic game updates
-created_by_model: opus
 category: Critical Systems
-related:
-  - task-system.md
-  - memory-safety.md
-source_files:
-  - code/code/sys/process.h
-  - code/code/sys/process.cc
-  - code/code/sys/socket.cc
-  - code/code/sys/comm.h
+related: [task-system.md, memory-safety.md]
+source_files: [code/code/sys/process.h, code/code/sys/process.cc, code/code/sys/socket.cc, code/code/sys/comm.h]
 ---
 
 # Scheduler and Pulse System
@@ -32,6 +25,8 @@ The scheduler distributes game processing across time ticks to maintain responsi
 **Never delete characters during iteration.** Collect in a vector, batch-delete after loop completes.
 
 **Never continue execution after detecting a deletion signal.** Return immediately to prevent use-after-free.
+
+**Register time-critical processes before less critical ones at the same frequency.** Processes sharing a frequency execute in registration order.
 
 ## Reference
 
@@ -89,19 +84,25 @@ Base unit: Pulse::ONE_SECOND = 10 ticks
 
 **TCharProcess:** procCharAffects, procCharCantHit, procCharDrowning, procCharFalling, procCharHalfTickUpdate, procCharImmLeash, procCharLightning, procCharLycanthropy, procCharMobileActivity, procCharNoise, procCharNutrition, procCharRegen, procCharResponses, procCharRiverFlow, procCharScreenUpdate, procCharSinking, procCharSpecProcs, procCharSpecProcsQuick, procCharSpellTask, procCharTasks, procCharTeleportRoom, procCharThaw, procCharTickUpdate, procCharVampireBurn, procPaladinAura
 
+### Process Naming Convention
+
+Process names follow the pattern `proc` + EntityType + Feature. EntityType is `Obj` for TObjProcess or `Char` for TCharProcess; global processes omit the entity type. The `name` field in each process instance should match the class name for debugging clarity.
+
 ## Implementation
 
 ### Core Architecture
 
 **TScheduler** manages three process vectors: procs (global), obj_procs (per-object), char_procs (per-character). Each tick, it initializes TPulse with the current tick number, then iterates each vector calling run() on processes whose trigger_pulse divides evenly into the current pulse.
 
-**TPulse** precomputes boolean flags for each pulse category, avoiding repeated modulo operations during process checks.
+**TPulse** precomputes boolean flags for each pulse category, avoiding repeated modulo operations during process checks. Fields include: `every`, `teleport`, `combat`, `drowning`, `special_procs`, `update_stuff`, `pulse_mudhour`, `mobstuff`, `pulse_tick`, `wayslowpulse`. The `init12` variant aligns the pulse to multiples of 12 for object and character processing.
 
 **TBaseProcess** provides the base should_run() check: `!(pulse % trigger_pulse)`. Derived types TProcess, TObjProcess, and TCharProcess add entity-specific run() signatures.
 
 ### Load Distribution
 
-runObj() and runChar() process approximately 1/12th of their lists per call using integer division: `(int)((float)count / 11.5)`. A placeholder object maintains iteration position across calls, ensuring every entity is processed exactly once per 12-tick cycle.
+runObj() and runChar() process approximately 1/12th of their lists per call using: `(int)((float)count / 11.5)`. The 11.5 divisor ensures exactly 12 pulses cover the complete entity list (12.0 would cause systematic skipping due to rounding; the 0.5 offset accounts for the placeholder occupying one list position).
+
+A placeholder object maintains iteration position across calls, advancing by the exact processed count each pulse. When the placeholder reaches the end, it wraps to the beginning, ensuring every entity is processed exactly once per 12-tick cycle.
 
 ### Adapter Pattern
 
@@ -115,12 +116,16 @@ Proc implementations must translate: check IS_SET_DELETE(rc, DELETE_THIS) and re
 
 runChar() cannot delete during iteration because CharacterList is global. Instead, it collects deletions in a vector, then batch-deletes after iteration completes. This prevents iterator invalidation.
 
+Object processes can delete immediately because the placeholder pattern maintains iteration position independently of object removals.
+
 ### Adding a New Process
 
 1. Declare class in process.h inheriting TProcess/TObjProcess/TCharProcess
 2. Implement constructor setting trigger_pulse and name
 3. Implement run() returning appropriate bool/void
 4. Register in gameLoop() via scheduler.add()
+
+Registration order matters for processes sharing the same frequency - they execute in registration order.
 
 ## Troubleshooting
 
@@ -143,3 +148,11 @@ runChar() cannot delete during iteration because CharacterList is global. Instea
 **Symptom:** New process never executes
 **Cause:** Missing registration in gameLoop()
 **Fix:** Add scheduler.add(new procMyProcess(Pulse::FREQUENCY)) in socket.cc gameLoop()
+
+**Symptom:** Load distribution skips entities
+**Cause:** Using 12.0 divisor instead of 11.5, or placeholder not advancing by processed count
+**Fix:** Verify divisor is 11.5 with float cast before division; verify placeholder advances by actual processed count
+
+**Symptom:** Crash in runChar after process returns true
+**Cause:** Immediate deletion instead of batch deletion, or continuing iteration after adding to deleteMe
+**Fix:** Add to deleteMe vector and break from char_procs loop; never delete beings directly in run()

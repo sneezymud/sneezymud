@@ -3,7 +3,6 @@ title: Builder Systems
 description: World building tools including OLC editors (redit/medit/oedit), content creation workflow, and zone publishing
 keywords: [redit, medit, oedit, OLC, room editor, mobile editor, object editor, blocka, blockb, zone publishing, content creation, builder workflow]
 category: Important Systems
-created_by_model: opus
 last_updated: 2026-02-01
 source_files: [code/code/cmd/cmd_low.cc, code/code/misc/immortal.cc, code/code/misc/create_rooms.cc, code/code/misc/create_mobs.cc, code/code/misc/create_objs.cc]
 related: [admin-systems.md, zone-management.md, object-system.md, room-environment.md]
@@ -31,7 +30,7 @@ Always publish content in the correct order: rooms first, then mobiles and objec
 
 Always test content in-game before publishing. Load rooms with `rload`, reset zones with `boot zone`, walk through all rooms, fight mobs, interact with objects.
 
-Never use `oedit resave` unless absolutely necessary. The command deletes before saving; a crash between those operations loses the object permanently.
+Never use `oedit resave` unless absolutely necessary. The command deletes before saving; a crash between those operations loses the object permanently. Consider requesting a LOW immortal to perform the resave with a database backup taken immediately before.
 
 Never publish content that hasn't been saved to the immortal database. The `low mv*` commands read from immortal and write to production; they cannot access in-memory state.
 
@@ -42,6 +41,8 @@ Always verify your assigned blocks before editing with `stat self`. Attempting t
 Always request block assignments from a LOW before starting work on a new zone. Request both a contiguous vnum range and temporary access to any existing rooms you need to modify for zone connections.
 
 Never modify vnums outside your assigned blocks. Even if the command appears to succeed, the immortal database rejects the save.
+
+Use blocks 101 and 102 as backup slots. Save known-good versions to these slots before making experimental changes; they can be restored if needed.
 
 ### Zone Enablement
 
@@ -57,6 +58,12 @@ Always clear prototype and strung flags from objects during publishing. These fl
 
 Always use transactions when publishing. The `low mv*` commands wrap operations atomically; never interrupt them.
 
+Always create bidirectional exits manually. The room editor does not automatically create reverse exits; after adding an exit from room A to B, switch to B and add the return exit to A.
+
+### Zone Connection
+
+Always connect new zones to the existing world after publishing. Identify an appropriate connection point in an existing room, request temporary blocka access to that vnum, add exits in both directions, save both rooms to immortal, and publish both to sneezy. Verify the connection by walking through both directions before removing temporary block access.
+
 ## Reference
 
 ### Permission Requirements
@@ -64,17 +71,19 @@ Always use transactions when publishing. The `low mv*` commands wrap operations 
 | Permission | Level | Purpose |
 |------------|-------|---------|
 | `POWER_REDIT` | 51 | Basic room editing |
-| `POWER_REDIT_ENABLED` | 51 | Unrestricted vnum access |
+| `POWER_REDIT_ENABLED` | 51 | Unrestricted room vnum access |
+| `POWER_MEDIT_ENABLED` | 51 | Unrestricted mobile vnum access |
+| `POWER_OEDIT_ENABLED` | 51 | Unrestricted object vnum access |
 | `POWER_LOW` | 51 | Publishing access |
 | `POWER_OEDIT_IMP_POWER` | 60 | Object resave access |
 
 ### Editor Commands
 
-| Editor | Create | Load | Modify | Save |
-|--------|--------|------|--------|------|
-| redit | `redit create <vnum>` | `rload <block> [vnum]` | `redit [vnum]` | `rsave <block> [vnum]` |
-| medit | `medit create` | `medit load <vnum>` | `medit mod <name>` | `medit save <name> <vnum>` |
-| oedit | `oedit create` | `oedit load <vnum>` | `oedit mod <name>` | `oedit save <name> <vnum>` |
+| Editor | Create | Load | Modify | Save | Copy |
+|--------|--------|------|--------|------|------|
+| redit | `redit create <vnum>` | `rload <block> [vnum]` | `redit [vnum]` | `rsave <block> [vnum]` | - |
+| medit | `medit create` | `medit load <vnum>` | `medit mod <name>` | `medit save <name> <vnum>` | `medit copy <vnum>` |
+| oedit | `oedit create` | `oedit load <vnum>` | `oedit mod <name>` | `oedit save <name> <vnum>` | `oedit copy <vnum>` |
 
 ### Publishing Commands
 
@@ -203,7 +212,7 @@ Always use transactions when publishing. The `low mv*` commands wrap operations 
 
 | Type | val0 | val1 | val2 | val3 |
 |------|------|------|------|------|
-| Weapon | Sharpness | Damage levels | Weapon types | Reserved |
+| Weapon | Sharpness (curSharp + maxSharp packed) | Damage levels (damLevel + damDev packed) | Weapon types | Reserved |
 | Armor | AC bonus | Reserved | Reserved | Reserved |
 | Container | Max weight | Flags/trap/damage | Key vnum | Max volume |
 | Drink | Max units | Current units | Liquid type | Drink flags |
@@ -228,6 +237,8 @@ Always use transactions when publishing. The `low mv*` commands wrap operations 
 | D | `D <if> <room> <dir> <state>` | Set door state |
 | S | `S` | End of reset commands |
 
+The `<if>` parameter determines whether the command executes unconditionally (0) or only if the previous command succeeded (1).
+
 ### Zonefile Header Format
 
 ```
@@ -235,6 +246,8 @@ Always use transactions when publishing. The `low mv*` commands wrap operations 
 <Zone Name>~
 <top_room> <lifespan> <reset_mode> <enabled>
 ```
+
+Reset mode 2 resets only when no players are present in the zone.
 
 ## Implementation
 
@@ -248,7 +261,7 @@ Publishing copies from immortal to sneezy, stripping ownership metadata. The des
 
 ### Block Validation
 
-The `limitPowerCheck()` function gates every OLC operation. It first checks for `POWER_REDIT_ENABLED` which bypasses all restrictions. Otherwise it compares the target vnum against the builder's blockastart/blockaend and blockbstart/blockbend descriptor fields.
+The `limitPowerCheck()` function gates every OLC operation. It first checks for `POWER_REDIT_ENABLED`, `POWER_MEDIT_ENABLED`, or `POWER_OEDIT_ENABLED` depending on the command type, which bypasses all restrictions. Otherwise it compares the target vnum against the builder's blockastart/blockaend and blockbstart/blockbend descriptor fields.
 
 Block assignments are stored on the player's descriptor and saved with `save`. The `@set blocka` and `@set blockb` commands modify these fields.
 
@@ -266,7 +279,7 @@ Loading replaces the in-memory room state. Any unsaved changes to that room are 
 
 ### Mobile Save Implementation
 
-Before saving, `stripSpellAffects()` iterates the mobile's affect list and removes any spell-based affects (those with type between 0 and MAX_SKILL). This prevents testing-applied buffs and debuffs from persisting.
+Before saving, `stripSpellAffects()` iterates the mobile's affect list using a cached next pointer pattern and removes any spell-based affects (those with type between 0 and MAX_SKILL). Permanent affects use negative type values or values above MAX_SKILL. This prevents testing-applied buffs and debuffs from persisting.
 
 The mobile then writes to immortal.mob with related data going to immortal.mob_extra and immortal.mob_imm tables.
 
@@ -280,11 +293,11 @@ The resave operation first deletes the existing row then inserts the new version
 
 The `doLowMvRoom()` function wraps its operations in a database transaction. It reads from immortal, transforms the data (stripping owner/block metadata), deletes any existing production row, and inserts the new content. Related tables follow the same pattern within the transaction.
 
-Mobile publishing additionally clears the `ACT_STRINGS_CHANGED` bit from action flags. This flag indicates that strings were modified and is only relevant during development.
+Mobile publishing additionally clears the `ACT_STRINGS_CHANGED` bit from action flags. This flag indicates that strings were modified during editing and is only relevant during development.
 
-Object publishing clears `ITEM_STRUNG` and `ITEM_PROTOTYPE` bits from extra flags. Strung items have customized strings; prototype items are development-only templates.
+Object publishing clears `ITEM_STRUNG` and `ITEM_PROTOTYPE` bits from extra flags. `ITEM_STRUNG` indicates a unique player-customized item that should never exist as a zone reset; `ITEM_PROTOTYPE` marks unfinished builder work.
 
-All three publishing commands handle vnum ranges, iterating through each vnum in sequence within the same transaction.
+All three publishing commands handle vnum ranges, iterating through each vnum in sequence within the same transaction. If any vnum in the range fails to fetch from immortal, the entire transaction rolls back to prevent partial zone updates.
 
 ### Zone Creation Flow
 
@@ -314,7 +327,7 @@ Cause: Attempting to edit a room that was never created.
 
 Diagnostic: Try `goto <vnum>` to verify the room exists.
 
-Fix: Use `redit create <vnum>` to create the room before editing.
+Fix: Use `redit create <vnum>` to create the room before editing. Creating a room at a vnum already present in memory overwrites the in-memory instance without affecting the database until explicit save.
 
 ### Symptom: "Not found" during low mvroom
 
@@ -322,7 +335,7 @@ Cause: Content not saved to immortal database, or wrong builder/block specified 
 
 Diagnostic: Check immortal database directly with a query, or verify the save command was issued.
 
-Fix: Save content with `rsave <block> <vnum>` before publishing. Verify builder name and block number match those used during save.
+Fix: Save content with `rsave <block> <vnum>` before publishing. Verify builder name and block number match those used during save. The builder name parameter must match the owner field exactly, accounting for case sensitivity.
 
 ### Symptom: Mobs/objects not loading in zone
 
@@ -330,7 +343,7 @@ Cause: Zone disabled, content not published, or zonefile references non-existent
 
 Diagnostic: Check zonefile header for enabled flag. Query sneezy.mob and sneezy.obj for the vnums. Compare zonefile vnum references against published content.
 
-Fix: Publish content with `low mvmob` and `low mvobj`. Change zonefile enabled flag to 1. Correct any vnum mismatches in reset commands.
+Fix: Publish content with `low mvmob` and `low mvobj`. Change zonefile enabled flag to 1. Correct any vnum mismatches in reset commands. Syntax errors in the zonefile prevent parsing beyond the error point.
 
 ### Symptom: Lost work after crash
 
@@ -346,7 +359,7 @@ Cause: Crash occurred between delete and insert during resave operation.
 
 Diagnostic: Query both immortal.obj and sneezy.obj for the vnum to confirm absence.
 
-Fix: Recreate the object with `oedit create`. Avoid `resave` for critical content.
+Fix: Recreate the object with `oedit create`. Avoid `resave` for critical content. Always maintain a backup copy in block 101 or 102 before using resave.
 
 ### Symptom: Spell effects persisting on published mobs
 
@@ -354,4 +367,28 @@ Cause: Mobile was saved while spell affects were active.
 
 Diagnostic: Load the mob and check for unexpected affects.
 
-Fix: Use `medit load <vnum>` to get a clean copy, or manually strip affects before saving. Republish with `low mvmob`.
+Fix: Use `medit load <vnum>` to get a clean copy, or manually strip affects before saving. The `medit save` command invokes `stripSpellAffects` automatically, but direct database manipulation bypasses this safety check. Republish with `low mvmob`.
+
+### Symptom: Builder flags appearing on production objects
+
+Cause: Objects published without proper flag stripping, likely via direct database copy instead of `low mvobj`.
+
+Diagnostic: Check object extra_flags for `ITEM_STRUNG` or `ITEM_PROTOTYPE` bits.
+
+Fix: Always use the `low mvobj` command for publishing rather than manual SQL operations. The publishing function strips these flags automatically.
+
+### Symptom: One-way exits confusing players
+
+Cause: Exit created in one direction without corresponding reverse exit.
+
+Diagnostic: Walk from room A to B, then check if exit back to A exists.
+
+Fix: Switch to the destination room and manually add the return exit. Some zones intentionally use one-way exits for puzzles or drops; verify design intent before assuming bidirectionality.
+
+### Symptom: New zone inaccessible to players
+
+Cause: Zone not connected to existing world geography.
+
+Diagnostic: Check whether any existing room has an exit leading into the new zone.
+
+Fix: Identify an appropriate connection point in an existing room. Request temporary blocka access to that vnum from a LOW. Edit both the existing room and the new zone entrance to add exits in both directions. Save and publish both rooms. Verify by walking through both directions.

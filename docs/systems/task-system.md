@@ -1,7 +1,6 @@
 ---
 title: Task System
 description: Delayed, sequenced, and periodic character actions via scheduler-driven processes spanning multiple game pulses.
-created_by_model: opus
 ---
 
 ## Overview
@@ -21,6 +20,8 @@ The scheduler calls task functions every 1.2 seconds, passing control signals th
 **Always set timing in the first CMD_TASK_CONTINUE.** The initial `nextUpdate` from `start_task()` is effectively ignored; the first continue fires immediately. Use the `status` field to detect the first call.
 
 **Always stop tasks on linkdead.** Check `ch->isLinkdead()` in CMD_TASK_CONTINUE handlers.
+
+**Always call stopTask before returning from abort conditions.** Whether from successful completion, player abort, combat interruption, or validation failure, call stopTask to prevent memory leaks.
 
 **Never block utility commands.** Call `nobrainerTaskCommand()` and `utilityTaskCommand()` at the start of every task function to allow passive actions like say, look, score, and inventory.
 
@@ -57,8 +58,18 @@ The scheduler calls task functions every 1.2 seconds, passing control signals th
 
 ### Allowed Commands During Tasks
 
-- **nobrainerTaskCommand**: say, tell, shout, inventory, equipment, social emotes, wiznet, reply
-- **utilityTaskCommand**: look, score, who, help, save, time, weather, toggle
+- **nobrainerTaskCommand**: say, tell, shout, gossip, auction, holler, emote, semote, inventory, equipment, social emotes, sockets, wiznet, reply
+- **utilityTaskCommand**: look, exits, score, who, help, save, time, weather, toggle
+
+### Task Type Categories
+
+| Category | Examples |
+|----------|----------|
+| Repair | sharpening, smithing, mending |
+| Crafting | brewing, scribing, cooking, leatherworking, tailoring |
+| Skill | tracking, fishing, logging, mining, foraging |
+| Combat-adjacent | bandaging, poison extraction |
+| Utility | meditation, resting, trap-setting, lockpicking, preen |
 
 ### Source Files
 
@@ -88,7 +99,7 @@ The `taskData` class stores all per-task state. Key fields:
 
 **Starting**: `start_task()` allocates taskData, stores object pointer, marks object with `setIsTaskObj(true)`, and attaches to character.
 
-**Processing**: `procCharTasks::run()` executes every Pulse::MOBACT. When `pulse >= task->nextUpdate`, it invokes the task function with CMD_TASK_CONTINUE and handles DELETE flag returns.
+**Processing**: `procCharTasks::run()` executes every Pulse::MOBACT. It checks `isLinkdead()` before invoking the task function. When `pulse >= task->nextUpdate`, it invokes the task function with CMD_TASK_CONTINUE and handles DELETE flag returns.
 
 **Stopping**: `TBeing::stopTask()` clears `isTaskObj` flag, frees `orig_arg`, deletes the taskData struct, and sets `task = NULL`.
 
@@ -103,7 +114,15 @@ The `tasks[]` array maps taskTypeT to TaskEntry structs containing:
 - `you_are_busy_msg` - message shown when blocking commands
 - `taskf` - function pointer to task handler
 
-51 task types exist (TASK_BOGUS through TASK_PREEN), covering repair, crafting, meditation, tracking, fishing, and other timed actions.
+51 task types exist (TASK_BOGUS through TASK_PREEN), covering repair, crafting, meditation, tracking, fishing, and other timed actions. Adding a new task requires defining the enum value, implementing the task function, and adding the corresponding TaskEntry to the table.
+
+### Dangling Pointer Protection
+
+When an object marked with `isTaskObj` is deleted, the destructor iterates all descriptors to find characters whose `task->obj` matches the deleted object. For each match, it calls `stopTask()` to cleanly terminate the task before the object memory is freed. Rooms lack similar protection, so task functions must validate room pointers independently.
+
+### Command Dispatch
+
+The character's `parseCommand` flow checks whether a task is active and invokes the task function before normal command processing. If the task function returns TRUE, the command is consumed and normal processing is skipped. If it returns FALSE, the command proceeds through standard handler lookup and execution.
 
 ## Troubleshooting
 
@@ -114,6 +133,10 @@ The `tasks[]` array maps taskTypeT to TaskEntry structs containing:
 **Symptom**: Task fires immediately without delay
 **Cause**: Initial nextUpdate ignored; relying on start_task() timing
 **Fix**: Set proper interval in first CMD_TASK_CONTINUE using `calcNextUpdate()`
+
+**Symptom**: Task fires every pulse instead of at intervals
+**Cause**: Task function not calling `calcNextUpdate()` during CMD_TASK_CONTINUE
+**Fix**: Add `calcNextUpdate()` call at the start of CMD_TASK_CONTINUE before any other processing
 
 **Symptom**: Task continues after character moved rooms
 **Cause**: Missing room validation
@@ -126,3 +149,19 @@ The `tasks[]` array maps taskTypeT to TaskEntry structs containing:
 **Symptom**: Linkdead character stuck in task
 **Cause**: Missing linkdead check in task handler
 **Fix**: Check `ch->isLinkdead()` in CMD_TASK_CONTINUE and call stopTask()
+
+**Symptom**: Commands blocked that should be allowed
+**Cause**: Task function returning TRUE for utility/communication commands
+**Fix**: Check nobrainer and utility command sets first, returning FALSE to permit them
+
+**Symptom**: Commands allowed that should be blocked
+**Cause**: Task function returning FALSE for disallowed commands
+**Fix**: Ensure default case returns TRUE to consume unexpected commands
+
+**Symptom**: Memory leak on task abort
+**Cause**: Task function not calling stopTask() before returning
+**Fix**: Always call stopTask() when terminating the task for any reason
+
+**Symptom**: Timing drift over long tasks
+**Cause**: Incrementing timeLeft without tracking actual elapsed time
+**Fix**: Calculate expected completion pulse during first continue, then compare against target

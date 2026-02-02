@@ -1,11 +1,10 @@
 ---
 title: Group and Party System
 category: important
-created_by_model: opus
 keywords: [followData, master-follower, AFF_GROUP, inGroup, reformGroup, XP-distribution, money-sharing]
 related: [experience-leveling.md, combat-formulas.md, quest-system.md]
 primary_symbols:
-  functions: [inGroup, addFollower, stopFollower, circleFollow, reformGroup, getExpShare, gainExpPerHit, doSplit, splitShares]
+  functions: [inGroup, addFollower, stopFollower, circleFollow, reformGroup, getExpShare, getExpSharePerc, gainExpPerHit, doSplit, splitShares, dieFollower]
   classes: [TBeing, followData, Descriptor]
   files: [code/code/misc/being.h, code/code/misc/movement.cc, code/code/misc/spell_parser.cc, code/code/misc/combat.cc, code/code/misc/other.cc, code/code/misc/utility.cc, code/code/misc/rent.cc, code/code/sys/connect.h]
 ---
@@ -26,19 +25,90 @@ XP distribution is level-weighted. Higher-level characters receive proportionall
 
 When the group leader dies, `reformGroup()` automatically promotes a suitable successor from among the followers, transferring all remaining followers to the new leader. This prevents group dissolution on leader death.
 
+### Common Scenarios
+
+**Party Formation:**
+- Player A types `follow B`
+- Validation checks: no circular chains, matching quest flags, not mounted
+- `addFollower()` sets A's `master=B` and adds A to B's followers linked list
+- A still does not receive group benefits
+- B types `group A` which sets A's `AFF_GROUP` flag
+- Now A receives XP and can participate in splits
+
+**Experience Distribution in Combat:**
+- Group of 3 (levels 10, 15, 20) in same room fights a mob
+- Each hit calls `gainExpPerHit()`
+- Total shares calculated: `mob_exp(10) + mob_exp(15) + mob_exp(20)`
+- Each character receives: `(total_exp / total_shares) * their_share * trophy_modifier`
+- Trophy modifier penalizes repeated kills of same mob type
+- If level 10 moves to different room, they stop receiving XP
+
+**Leader Death and Succession:**
+- Group leader dies in combat
+- `reformGroup()` called automatically
+- Pass 1: Search for first valid player follower with AFF_GROUP
+- Found follower removed from list, `master` set to NULL
+- All remaining followers transferred to new leader
+- Messages announce leadership change
+- If no players available, Pass 2 relaxes restrictions to accept immortals/polymorphed
+
+**Money Split:**
+- Leader has `group_share=5`, two followers have `3` and `2`
+- Leader types `split 1000`
+- Total shares: 5+3+2 = 10
+- Distribution: 500, 300, 200 talens respectively
+- Only characters in same room receive shares
+- NPCs receive zero (no descriptor means no group_share value)
+
 ## Patterns
 
 ### Group Membership Validation
 
 Always use `inGroup()` to check group membership. Do not rely on pointer relationships alone.
 
+```cpp
+// WRONG: Checking only master pointer
+if (ch->master == leader) {
+    giveXP(ch, amount);  // Fails if AFF_GROUP not set
+}
+
+// CORRECT: Validate via inGroup()
+if (ch->inGroup(*leader)) {
+    giveXP(ch, amount);
+}
+```
+
 The `inGroup()` function validates that both characters have `AFF_GROUP` set AND share a direct master relationship (same master, one is master of the other, or mount/rider). Checking only the `master` pointer misses the flag requirement; checking only the flag misses the relationship requirement.
 
 Never assume transitive group membership. If A follows B and B follows C, A is NOT in a group with C. They have different masters. The group system is explicitly two-tier: leader and direct followers only.
 
+```cpp
+// WRONG: Assuming nested followers are grouped
+Leader (master=NULL)
+  +-- Follower1 (master=Leader, AFF_GROUP)
+      +-- Follower2 (master=Follower1, AFF_GROUP)
+
+// Follower2 is NOT in Leader's group - different masters
+if (Follower2->inGroup(*Leader)) {  // Returns FALSE
+    // Never executes
+}
+```
+
 ### Following and Grouping
 
 Always check `circleFollow()` before calling `addFollower()`. Circular follow chains (A follows B follows C follows A) corrupt the master-follower tree and cause infinite loops during traversal.
+
+```cpp
+// WRONG: Adding without validation
+victim->addFollower(this);  // Creates A->B->A if victim already follows this
+
+// CORRECT: Validate first
+if (circleFollow(victim)) {
+    sendTo("That would create a circular follow chain!\n\r");
+    return;
+}
+victim->addFollower(this);
+```
 
 Never assume `addFollower()` sets `AFF_GROUP`. It does not. The follow command establishes the master-follower relationship; the group command sets the flag. Without the flag, no benefits apply.
 
@@ -48,6 +118,23 @@ Always set `AFF_GROUP` explicitly via the group command or by setting the bitvec
 
 Always check both `AFF_GROUP` flag AND same-room location before distributing XP. Characters in different rooms are excluded from combat XP regardless of group status.
 
+```cpp
+// WRONG: Distributing to all group members
+for (followData* f = master->followers; f; f = f->next) {
+    if (f->follower->isAffected(AFF_GROUP)) {
+        f->follower->gain_exp(amount);  // Gets XP even in different room
+    }
+}
+
+// CORRECT: Validate room location
+for (followData* f = master->followers; f; f = f->next) {
+    if (f->follower->isAffected(AFF_GROUP) &&
+        f->follower->in_room == in_room) {
+        f->follower->gain_exp(amount);
+    }
+}
+```
+
 Never confuse money shares with XP shares. Money uses `group_share` (1-10 factor set by leader); XP uses `getExpShare()` (level-based `mob_exp()` value). NPCs get XP shares but zero money shares.
 
 Always include the `FRACT()` trophy modifier when distributing XP. Each character's individual trophy history affects their share independently.
@@ -56,6 +143,15 @@ Always include the `FRACT()` trophy modifier when distributing XP. Each characte
 
 Always call `reformGroup()` before deleting a group leader. Deleting without reform leaves followers with dangling `master` pointers. The function promotes a new leader and transfers all followers.
 
+```cpp
+// WRONG: Deleting without reform
+delete leader;  // All followers now have invalid master pointer
+
+// CORRECT: Reform first
+leader->reformGroup();  // Promotes new leader, updates pointers
+delete leader;
+```
+
 Always call `dieFollower()` when a character dies or disconnects. This breaks all follow relationships in both directions (as follower and as leader), preventing stale pointers.
 
 ### Session Configuration
@@ -63,6 +159,24 @@ Always call `dieFollower()` when a character dies or disconnects. This breaks al
 The `group_share` factor on the Descriptor affects only money distribution. It has no effect on XP. Leaders set this via `group share <player> <1-10>`.
 
 NPCs return 0 from `splitShares()` because they lack a descriptor. They receive no money from splits but do receive their level-based XP share.
+
+Always validate descriptor existence before accessing group_share. NPCs have no descriptor.
+
+```cpp
+// WRONG: Accessing without check
+int share = ch->desc->session.group_share;  // Crash if NPC
+
+// CORRECT: Check descriptor first (or use splitShares() helper)
+int share = ch->splitShares();  // Returns 0 for NPCs
+```
+
+### Group Formation Validation
+
+Never allow following while mounted. The `rider` check in `doFollow()` blocks this because mount/rider relationships create implicit grouping via `inGroup()` checks.
+
+Always validate quest flag compatibility. `PLR_SOLOQUEST` prevents all grouping; `PLR_GRPQUEST` requires all group members to have matching flag state.
+
+Never allow charmed followers to follow anyone except their master. Charmed characters are magically compelled and switching follows breaks the charm semantic.
 
 ## Reference
 
@@ -74,6 +188,10 @@ NPCs return 0 from `splitShares()` because they lack a descriptor. They receive 
 | `master` | pointer | Who this character follows (NULL for leaders) |
 | `followers` | pointer | Head of follower linked list (NULL if no followers) |
 | `AFF_GROUP` | flag | Required for XP/money distribution |
+| `AFF_CHARM` | flag | Restricts following to charm master only |
+| `PLR_SOLOQUEST` | flag | Prevents all grouping during solo quest |
+| `PLR_GRPQUEST` | flag | Requires matching flag among group members |
+| `AUTO_AUTOGROUP` | flag | Leader automatically groups new followers |
 | `inGroup()` | function | Validates group membership between two characters |
 | `addFollower()` | function | Establishes master-follower relationship |
 | `stopFollower()` | function | Breaks master-follower relationship, clears flags |
@@ -85,7 +203,14 @@ NPCs return 0 from `splitShares()` because they lack a descriptor. They receive 
 | `doSplit()` | function | Distributes money to in-room group members |
 | `splitShares()` | function | Returns money share factor (0 for NPCs) |
 | `dieFollower()` | function | Breaks all follow relationships on death |
-| `group_share` | field | Per-session money share factor (1-10) |
+
+### Session Configuration Fields
+
+| Field | Type | Purpose |
+|-------|------|---------|
+| `group_share` | byte (1-10) | Per-session money share factor |
+| `groupName` | sstring | Custom group name |
+| `amGroupTank` | bool | Tank flag for healer targeting |
 
 ### Follow Validation Checks
 
@@ -105,6 +230,13 @@ NPCs return 0 from `splitShares()` because they lack a descriptor. They receive 
 | `STOP_FOLLOWER_CHAR_VICT` | Messages to follower and leader only |
 | `STOP_FOLLOWER_CHAR_NOTVICT` | Messages to room only |
 | `STOP_FOLLOWER_SILENT` | No messages |
+
+### Leadership Succession Passes
+
+| Pass | Criteria |
+|------|----------|
+| Pass 1 | Valid player with AFF_GROUP (excludes pure mobs unless original leader was mob) |
+| Pass 2 | Relaxed: accepts immortals, polymorphed, linkdead |
 
 ### Group Commands
 
@@ -227,6 +359,16 @@ Groups survive polymorph transformation. The original character is stored as `de
 
 **Fix:** Ensure the `group` command was used after `follow`. Verify physical presence in the combat room.
 
+### Nested Follower Gets XP Incorrectly
+
+**Symptom:** A follower's follower receives XP when they should not.
+
+**Likely cause:** XP distribution code walks followers recursively instead of checking only direct followers.
+
+**Diagnostic approach:** Print master pointers for both characters - if different and neither is the other's master, they should not be grouped.
+
+**Fix:** Use `inGroup()` for all membership tests. Never iterate followers of followers assuming transitive membership. Only the leader's direct followers list matters.
+
 ### Circular Follow Chain Crashes
 
 **Symptom:** Server hangs or crashes when processing group operations.
@@ -266,3 +408,33 @@ Groups survive polymorph transformation. The original character is stored as `de
 **Diagnostic approach:** Check the `master` pointer of each character. Group membership requires sharing the same master (or one being the master of the other).
 
 **Fix:** All characters who need to share benefits must follow the same leader directly. Reorganize the follow chain so everyone follows a single leader.
+
+### Group Share Percentages Do Not Sum to 100%
+
+**Symptom:** Displayed group percentages add up to more or less than 100%.
+
+**Likely cause:** `getExpSharePerc()` sums different members than XP distribution uses (e.g., including out-of-room members in total).
+
+**Diagnostic approach:** Compare follower iteration in `getExpSharePerc()` versus `gainExpPerHit()`.
+
+**Fix:** Percentages show potential shares assuming all members are present. Actual distribution only includes in-room members. This is documented behavior, not a bug.
+
+### Charmed Follower Follows Wrong Master
+
+**Symptom:** A charmed character's master pointer differs from their charm caster.
+
+**Likely cause:** Charm affect added but master pointer points to different character, or charm cleared without removing follower relationship.
+
+**Diagnostic approach:** Check `isAffected(AFF_CHARM)` and compare master pointer to expected charm caster.
+
+**Fix:** When applying charm, call `stopFollower()` to clear any existing master, then set master to caster and `addFollower()`. When charm expires, call `stopFollower()` to break relationship.
+
+### Stale FollowData Node After StopFollower
+
+**Symptom:** Follower's master pointer is NULL but character still appears in group list.
+
+**Likely cause:** `stopFollower()` did not properly remove followData node from master's followers list before clearing master pointer.
+
+**Diagnostic approach:** Iterate leader's followers list and check each follower's master pointer - should all point back to leader.
+
+**Fix:** Ensure `stopFollower()` removes from followers list before clearing master pointer. Never manually clear master pointer without removing from list.

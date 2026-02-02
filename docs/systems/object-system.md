@@ -1,7 +1,6 @@
 ---
 title: Object System
 category: critical
-created_by_model: opus
 keywords: [itemTypeT, TObj, makeNewObj, assignFourValues, TBaseContainer, TOpenContainer, TLight, TFood, TDrinkCon, TBaseCup, TVehicle, TBook, TBed, objectDecay, StuffIter, CONT_LOCKED, CONT_TRAPPED]
 related: [spatial-relationships.md, trap-mechanics.md, affects-system.md, material-system.md, scheduler-pulses.md]
 primary_symbols:
@@ -82,6 +81,21 @@ Frozen drinks (`DRINK_FROZEN` flag) cannot be consumed. Permanent containers (`D
 | Portals | TSeeThru | TPortal, TWindow |
 | Food | TFood | TFruit, TEgg |
 | Direct TObj | - | TBow, TComponent, TTool, TSymbol, TTrap, TBed, TTable, TMoney, TBoat, TAudio, TBoard, TBook, TTree, TNote, TPen, TKey, TBandage, TStatue, TFuel, TOpal, TTreasure, TTrash, TOtherObj, TGemstone, TJewelry, TCommodity, TOrganic, TAppliedSub, TGas, TDrugContainer, TDrug, TGun, TAmmo, TPlant, TVehicle, TCasinoChip, TPoison, THandgonne, TCannon |
+
+### itemTypeT Core Types
+
+| Type | Value | Description |
+|------|-------|-------------|
+| `ITEM_UNDEFINED` | 0 | Invalid or uninitialized. Factory returns nullptr. |
+| `ITEM_LIGHT` | 1 | Refillable light sources (TLight) |
+| `ITEM_CHEST` | 15 | Lockable storage (TChest via TOpenContainer) |
+| `ITEM_DRINKCON` | 17 | Drink containers (TDrinkCon) |
+| `ITEM_FOOD` | 19 | Edible items (TFood) |
+| `ITEM_BAG` | 27 | Expandable containers (TBag) |
+| `ITEM_CORPSE` | 28 | NPC corpses, relocate contents on destruction |
+| `ITEM_BED` | 40 | Resting furniture (TBed) |
+| `ITEM_PCORPSE` | 47 | Player corpses for equipment recovery |
+| `ITEM_VEHICLE` | 61 | Drivable objects (TVehicle extends TPortal) |
 
 ### Value Field Semantics by Type
 
@@ -167,6 +181,10 @@ Frozen drinks (`DRINK_FROZEN` flag) cannot be consumed. Permanent containers (`D
 | DRUNK | 0-24 | -1 = immune |
 | FULL | 0-24 | -1 = immune, 0 = starving |
 | THIRST | 0-24 | -1 = immune, 0 = dehydrated |
+| PEE | 0-24 | Need to urinate |
+| POOP | 0-24 | Need to defecate |
+
+Zero FULL or THIRST reduces HP and mana regeneration by 75%.
 
 ### Light Intensity
 
@@ -197,6 +215,24 @@ Frozen drinks (`DRINK_FROZEN` flag) cannot be consumed. Permanent containers (`D
 | 1 | Rest, sit | Rest: 2, Sit: 1 |
 | 2 | Sit only | Sit: 1 |
 | 3 | Unusable | - |
+
+### Vehicle Constants
+
+| Constant | Value | Description |
+|----------|-------|-------------|
+| `VEHICLE_BOAT` | 1 | Water vessel, nautical messages |
+| `VEHICLE_TROLLEY` | 2 | Rail vehicle, rumbling messages |
+| `FAST_SPEED` | 100 | Maximum speed |
+| `MED_SPEED` | 50 | Standard operational speed |
+| `SLOW_SPEED` | 25 | Minimum active speed |
+
+### Volume Reduction Multipliers
+
+| Material | vol_mult | Reduction |
+|----------|----------|-----------|
+| Cloth | 2 | 50% |
+| Metal | 1 | None |
+| Leather | 3 | 33% |
 
 ### Key Files
 
@@ -232,9 +268,11 @@ Weight calculation traverses the stuff list recursively, summing `getTotalWeight
 
 ### Lock and Key System
 
-Keys match by object vnum. The `has_key()` function searches inventory, keyrings, held items, worn equipment, and potential mob loads. Keyrings prevent duplicate keys of the same vnum.
+Keys match by object vnum. The `has_key()` function searches inventory, keyrings, held items, worn equipment, and potential mob loads. The `keyCheck` helper compares vnum directly, with a special case for dynamically generated keys using objVnum -1 and getSnum matching. Keyrings prevent duplicate keys of the same vnum.
 
 Locking requires: container closed, has key_num, character has matching key, not already locked. Picking requires: SKILL_PICK_LOCK success roll, container not pickproof or jammed. Critical failure jams the lock permanently.
+
+Door picking differs from container picking: doors use task system with TASK_PICKLOCKS requiring a lockpick tool and extended time. Containers use instant resolution via `pickMe()`.
 
 ### Trap System
 
@@ -269,6 +307,12 @@ Liquid weight is 0.065 pounds per unit (SIP_WEIGHT constant). Container total we
 ### Vehicle Movement
 
 TVehicle extends TPortal with direction, speed, and type. Movement occurs via `vehiclePulse()` called by scheduler. Speed determines movement frequency. Direction determines which exit to traverse. Auto-pathing follows single valid exits. Boats can enter non-water once but must return.
+
+The `update_exits()` function synchronizes interior room exits to the vehicle's current location before each movement check. Whole-zone vehicles update all zone exits when moving.
+
+### Book Content Loading
+
+The `lookAtObj()` method in TBook constructs filenames from `objdata/books/` using the object vnum. If a section is specified, appends `.section`. For characters with color support, tries `.ansi` extension first, falling back to plain text. Content is displayed via `page_string()` or client note system.
 
 ### Bed Regeneration
 

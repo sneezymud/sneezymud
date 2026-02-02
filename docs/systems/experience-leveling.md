@@ -6,7 +6,6 @@ category: Important Systems
 related: [spell-skill-framework.md, group-party.md, combat-formulas.md, quest-system.md]
 source_files: [code/code/misc/limits.cc, code/code/misc/combat.cc, code/code/misc/gaining.cc, code/code/cmd/cmd_low.cc, code/code/cmd/cmd_trophy.cc, code/code/misc/being.h]
 last_updated: 2026-02-01
-created_by_model: opus
 ---
 
 # Experience and Leveling System
@@ -71,7 +70,8 @@ Death carries an XP penalty capped at either 20% of current XP or a level-scaled
 | Kills to level | `17 + (1.25 * level)` | Linear increase per level |
 | Mob XP value | Compound 2% growth per level | Level 50+ divided by 3 |
 | Level threshold | Sum of (kills_to_level * mob_exp) for all prior levels | Exponential curve |
-| Soft cap | `(1.0 - pow(1.1, -gain/newgain)) + 1.0` | Returns 1.0 to 2.0 |
+| Soft cap threshold | `1.15 * current_level` | Gains below this receive no reduction |
+| Soft cap formula | `(1.0 - pow(1.1, -gain/newgain)) + 1.0` | Returns 1.0 to 2.0 |
 
 ### XP Modifiers
 
@@ -92,6 +92,17 @@ Death carries an XP penalty capped at either 20% of current XP or a level-scaled
 | 15-20 | 50-60% | "fair amount" |
 | 21-26 | 30-40% | "some" |
 | 27+ | 30% minimum | "little" |
+
+### Trophy Constants
+
+| Constant | Value | Purpose |
+|----------|-------|---------|
+| free_kills | 8 | Kills before penalties begin |
+| num_steps | 14.0 | Steps from 100% to 30% |
+| step_mod | 0.5 | Reduction per step |
+| min_mod | 0.3 | Floor modifier |
+| max_mod | 1.0 | Full XP modifier |
+| decay_rate | 0.25 | Per-pulse count reduction |
 
 ### Death Penalty Calculation
 
@@ -122,7 +133,7 @@ Death carries an XP penalty capped at either 20% of current XP or a level-scaled
 
 ### Experience Storage
 
-Characters store XP as double-precision floating-point values in `being.h`. The `exp` member holds accumulated points; `max_exp` holds the threshold for the next level. Class levels are stored in a fixed-size array indexed by class constant, allowing simultaneous progression in up to 12 classes.
+Characters store XP as double-precision floating-point values in `being.h`. The `exp` member holds accumulated points; `max_exp` holds the threshold for the next level. Class levels are stored in a fixed-size array (`MAX_SAVED_CLASSES` entries, `ubyte` values) indexed by class constant, allowing simultaneous progression in up to 12 classes. These values persist across sessions through database serialization.
 
 ### Level Threshold Calculation
 
@@ -130,9 +141,11 @@ The `getExpClassLevel()` function in `gaining.cc` computes XP requirements recur
 
 ### XP Award Processing
 
-The `gain_exp()` function in `limits.cc` orchestrates XP distribution. It first validates the context (not in arena, not PvP, not immortal), then applies toggle modifiers. The multiclass division happens twice, creating quadratic scaling. A per-class loop then processes each class independently, applying soft caps and awarding practice points based on XP intervals within the level range.
+The `gain_exp()` function in `limits.cc` orchestrates XP distribution. It first validates the context (not in arena, not PvP, not immortal), then applies toggle modifiers. The multiclass division happens twice, creating quadratic scaling. A per-class loop then processes each class independently (iterating `MIN_CLASS_IND` through `MAX_CLASSES`, skipping zero-level indices), applying soft caps and awarding practice points based on XP intervals within the level range.
 
-The soft cap uses a logarithmic function that returns values between 1.0 and 2.0. As the ratio of attempted gain to baseline increases, the cap asymptotically approaches 2.0, preventing unbounded XP spikes while allowing legitimate large gains.
+The soft cap uses a logarithmic function that returns values between 1.0 and 2.0. The threshold is `gainmod = 1.15 * level`; gains below this threshold receive no reduction. As the ratio of attempted gain to baseline increases, the cap asymptotically approaches 2.0, preventing unbounded XP spikes while allowing legitimate large gains.
+
+FAE_TOUCHED division uses a `fae_reduction_done` flag to ensure single application across all classes. Final experience assignment uses `addToExp()` to modify the character's exp value.
 
 ### Practice Point Distribution
 
@@ -148,9 +161,15 @@ Trophy counts decay at 0.25 per game pulse through `procCharTickUpdate`, gradual
 
 The `gainExpPerHit()` function in `combat.cc` handles group XP distribution. It counts participating group members within combat range, divides total XP by that count, then applies each character's individual trophy modifier. Range validation ensures only nearby characters benefit from a kill.
 
+Combat list iteration uses the `gCombatNext` caching pattern to prevent iterator invalidation during potential character deletion within `gain_exp()` processing.
+
 ### Death Penalty Processing
 
 The `deathExp()` function in `combat.cc` calculates loss as the minimum of 20% of current XP and 25 times the mob XP value for the character's level. This protects low-level characters (who lose little because their current XP is low) while capping high-level losses. PvP deaths divide the penalty by 10. The `die()` function applies the penalty by calling `gain_exp()` with a negative value.
+
+### Level Advancement
+
+The `advanceLevel()` function increments the specified class level, recalculates `max_exp` using `getExpClassLevel()` for the new level, and invokes `gain_hp()` to award hit points (10 plus constitution modifier times 5). Level 50 advancement triggers Discord notification through configured webhooks. Level 30 advancement unlocks multiclass specialization options.
 
 ### Legacy Character Migration
 
@@ -194,7 +213,7 @@ Characters converted from older systems may have `max_exp` set to zero. The XP g
 - XP landed between interval boundaries within the level
 - This is expected behavior, not a bug
 
-**Diagnostic:** Compare exact XP gained against level's delta_exp intervals.
+**Diagnostic:** Compare exact XP gained against level's delta_exp intervals. Calculate interval as `(level_end_xp - level_start_xp) / pracsPerLevel`.
 
 **Fix:** Continue gaining XP; practices will be awarded when crossing the next interval boundary.
 
@@ -233,3 +252,40 @@ Characters converted from older systems may have `max_exp` set to zero. The XP g
 **Diagnostic:** Check trophy command output for kill counts across mob types.
 
 **Fix:** Diversify targets. Allow time for trophy decay. Seek out new areas with unfamiliar creatures.
+
+### Soft Cap Reducing Expected Gains
+
+**Symptoms:** Large single kills or combat bursts yield less XP than calculated base value.
+
+**Causes:**
+- Gain exceeded the soft cap threshold (`1.15 * current_level`)
+- Logarithmic scaling applied to reduce the spike
+
+**Diagnostic:** Verify threshold calculation matches expected level. Confirm gain amount exceeds this value.
+
+**Fix:** This is intentional anti-exploit behavior. Soft caps prevent unbounded XP spikes while allowing reasonable large gains from difficult encounters.
+
+### FAE_TOUCHED Not Halving XP
+
+**Symptoms:** Character with FAE_TOUCHED quest bit receives full XP.
+
+**Causes:**
+- Character has no active classes (zero-level in all indices)
+- Character is immortal (bypasses `gain_exp()` entirely)
+- `TOG_NO_XP_GAIN` blocking all gain before FAE_TOUCHED check
+
+**Diagnostic:** Verify quest bit state through `hasQuestBit`. Confirm character has at least one active class. Check for blocking toggles.
+
+**Fix:** Ensure character meets prerequisites for XP gain processing.
+
+### Legacy Character With Zero Max_Exp
+
+**Symptoms:** Level 50 character has zero or incorrect `max_exp` value.
+
+**Causes:**
+- Character converted from older database format
+- Legacy conversion handling not yet triggered
+
+**Diagnostic:** Check `getMaxExp()` return value.
+
+**Fix:** Trigger recalculation with any XP gain. The system clamps exp to level 50 threshold and recalculates `max_exp` automatically.

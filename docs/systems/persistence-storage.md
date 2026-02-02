@@ -2,7 +2,6 @@
 title: Persistence and Storage
 description: Hybrid persistence using binary charFile format and MariaDB for character/item storage
 keywords: [TDatabase, charFile, save_char, load_char, ItemSave, ItemLoad, rent, SQL injection]
-created_by_model: opus
 ---
 
 # Persistence and Storage
@@ -19,7 +18,7 @@ SneezyMUD uses hybrid storage: binary files for character data (stats, skills, a
 - Use `%i`/`%f` for numeric values
 - Never use `%r` with user input (bypasses all escaping)
 - Always use local `TDatabase` instances (never `new`); destructor handles cleanup
-- Wrap related queries in `TTransaction` for atomicity
+- Wrap related queries in `TTransaction` for atomicity (destructor calls `COMMIT`, ensuring transactions complete even if exceptions occur)
 
 ### Binary File Safety
 
@@ -38,8 +37,14 @@ SneezyMUD uses hybrid storage: binary files for character data (stats, skills, a
 ### Corpse and Rent Files
 
 - Always save corpse when items are added/removed
-- Move corrupted files to `corrupt/` subdirectory (never delete)
+- Move corrupted files to `corrupt/` subdirectory via `handleCorrupted()` (never delete)
 - Track player corpses via `pc_corpse_list` global
+
+### Container Hierarchy
+
+- Use the `container` field in the `rent` table to link nested items to their parent's `rent_id`
+- Top-level items have `container = -1`
+- Recursive save/load reconstructs containment by following `rent_id` references
 
 ## Reference
 
@@ -66,7 +71,7 @@ SneezyMUD uses hybrid storage: binary files for character data (stats, skills, a
 |--------|---------|-------------|
 | `query(fmt, ...)` | `bool` | Execute query with printf-style args |
 | `fetchRow()` | `bool` | Advance to next row |
-| `operator[col]` | `sstring` | Get column by name or index |
+| `operator[col]` | `sstring` | Get column by name or index (empty string on error) |
 | `isResults()` | `bool` | True if query returned rows |
 | `rowCount()` | `long` | Affected/retrieved row count (-1 on error) |
 | `lastInsertId()` | `long` | Auto-increment ID from last INSERT |
@@ -93,6 +98,45 @@ SneezyMUD uses hybrid storage: binary files for character data (stats, skills, a
 | `alias` | Player command aliases |
 | `playerprompt` | Prompt configuration |
 | `playertoggle` | Toggle settings |
+
+### rent Table Fields
+
+| Field | Description |
+|-------|-------------|
+| `rent_id` | Auto-increment primary key |
+| `owner_type` | Enum: `player`, `shop`, `room`, `mail` |
+| `owner` | Player ID, shop number, room number, or mail ID |
+| `slot` | Equipment slot or -1 for inventory |
+| `vnum` | Object virtual number |
+| `container` | Parent item's `rent_id`, or -1 for top-level |
+| `val0`-`val3` | Object-specific values (charges, capacity, weapon stats) |
+| `extra_flags`, `bitvector` | Object flags |
+| `material`, `volume`, `weight` | Physical properties |
+| `price`, `depreciation` | Economic values |
+| `cur_struct`, `max_struct` | Durability |
+| `decay` | Time-based deterioration |
+
+### rent_obj_aff Table Fields
+
+| Field | Description |
+|-------|-------------|
+| `rent_id` | Foreign key to `rent.rent_id` |
+| `type` | Spell or affect type |
+| `level` | Caster level or effect strength |
+| `duration`, `renew` | Duration and auto-refresh |
+| `modifier`, `modifier2` | Numeric bonuses/penalties |
+| `location` | Target attribute |
+| `bitvector` | Special effect flags |
+
+### rent_strung Table Fields
+
+| Field | Description |
+|-------|-------------|
+| `rent_id` | Foreign key to `rent.rent_id` |
+| `name` | Custom item name |
+| `short_desc` | Brief description (inventory/equipment) |
+| `long_desc` | Ground description |
+| `action_desc` | Use/activation text |
 
 ### rent.owner_type Values
 
@@ -127,6 +171,14 @@ SneezyMUD uses hybrid storage: binary files for character data (stats, skills, a
 | `lib/mutable/rent/{a-z}/{name}.fr` | Follower rent |
 | `lib/mutable/corpses/{name}` | Binary corpse file |
 
+### Cache Data Structures
+
+| Structure | Description |
+|-----------|-------------|
+| `TObjectCache` | Map from real numbers to `cached_object` pointers |
+| `TMobileCache` | Three maps: `cache` (basic data), `extra` (descriptions), `imm` (immunities) |
+| `cached_object` | Field maps keyed by column name (access via `obj->s["short_desc"]`) |
+
 ## Implementation
 
 ### Database Architecture
@@ -135,13 +187,13 @@ SneezyMUD uses hybrid storage: binary files for character data (stats, skills, a
 
 `TTransaction` provides RAII transaction handling: constructor calls `BEGIN`, destructor calls `COMMIT`.
 
-Object and mobile caches (`TObjectCache`, `TMobileCache`) preload templates from database during `bootDb()` into `obj_cache` and `mob_cache` maps for O(1) instantiation lookup.
+Object and mobile caches (`TObjectCache`, `TMobileCache`) preload templates from database during `bootDb()` into `obj_cache` and `mob_cache` maps for O(1) instantiation lookup. These caches are populated at boot and never refreshed; restart the game to reload after database changes.
 
 ### Binary Character Files
 
 `charFile` struct in `charfile.h` is written/read via `fwrite`/`fread` with `sizeof(charFile)`. No serialization, versioning, or endianness handling. The exact memory layout is persisted.
 
-Key functions: `load_char()` reads binary and syncs money from DB; `raw_save_char()` writes binary and syncs money to DB; `storeToSt()` copies runtime to struct; `loadFromSt()` copies struct to runtime.
+Key functions: `load_char()` reads binary and syncs money from DB; `raw_save_char()` writes binary and syncs money to DB; `storeToSt()` copies runtime to struct; `loadFromSt()` copies struct to runtime. These conversion functions handle truncation when runtime data exceeds array limits defined by `MAX_AFFECT`, `ABSOLUTE_MAX_SKILL`, and other constants.
 
 Struct sections: basic info (sex, level, race, Class), physical (weight, height, body state), fixed-size strings (title[80], name[20], pwd[11]), time tracking, current stats, affects, faction, skills, obsolete/reserved fields.
 
@@ -153,6 +205,10 @@ Database storage (`ItemSaveDB`/`ItemLoadDB`) uses three tables: `rent` (primary 
 
 Corpses auto-save on creation, item add/remove, and mob looting. `TPCorpse::saveCorpseToFile()` writes to `mutable/corpses/`. Global `pc_corpse_list` tracks all player corpses.
 
+### Rent File Version Migration
+
+The `raw_read_item` function checks the version field in rent file headers. For versions below 10, it applies migration logic for each version. The next save writes the current version 10 format, progressively upgrading old files as players log in.
+
 ### Money Synchronization Flow
 
 Load: Query `player.talens`; if found, overwrite `char_element->money`; if not found, seed DB from binary value.
@@ -160,6 +216,10 @@ Load: Query `player.talens`; if found, overwrite `char_element->money`; if not f
 Save: `raw_save_char()` writes binary file, then updates `player.talens` via query joining `player` and `account` tables.
 
 Dual storage exists because `charFile.money` cannot be removed, but database is authoritative for all money operations.
+
+### Corruption Handling
+
+When corruption is detected, `handleCorrupted()` moves files to `corrupt/` subdirectories: player file, strings, toggles, career data, rent file, followers, and corpses. The character is removed from their account but data is preserved for manual recovery.
 
 ### Key Source Files
 
@@ -186,3 +246,8 @@ Dual storage exists because `charFile.money` cannot be removed, but database is 
 | Player file in `corrupt/` directory | Load detected data corruption | Manually inspect file; recover salvageable data to new record |
 | Database shows wrong row count | Query failed, returned -1 | Check `query()` return value before using `rowCount()` |
 | LIKE query finds nothing | Missing `%%` escaping | Use `'%%%s%%'` pattern for wildcard searches |
+| Shop items duplicate after reload | Items saved but not deleted from memory, causing double-save | Ensure shop code deletes items from memory after saving; clear before reload |
+| Database queries return stale data | Caches populated at boot, never refreshed | Restart game to reload caches after database changes |
+| Items lost from containers | Parent deleted without deleting children | Query for orphaned items (`container != -1` with missing parent); delete or set `container = -1` |
+| Transaction rollback leaves partial state | Exception or early return bypassed `TTransaction` destructor | Ensure transaction scope ends without throws; use manual BEGIN/COMMIT for multi-function transactions |
+| Follower rent files missing | Write failed silently (permissions, disk full) | Check `lib/mutable/rent/{a-z}/{name}.fol` and `.fr`; verify permissions and disk space |

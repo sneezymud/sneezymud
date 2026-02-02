@@ -5,7 +5,6 @@ keywords: [TComponent, COMP_MATERIAL, COMP_GESTURAL, COMP_VERBAL, spellInfo, fin
 category: Important Systems
 related: [spell-skill-framework.md, affects-system.md]
 last_updated: 2026-02-01
-created_by_model: opus
 source_files: [code/code/obj/obj_component.h, code/code/obj/obj_component.cc, code/code/obj/obj_spellbag.h, code/code/misc/spell2.h, code/code/misc/magicutils.cc, code/code/misc/discipline.cc, code/code/misc/spelltask.cc, code/code/misc/gaining.cc]
 ---
 
@@ -36,6 +35,10 @@ Always check the caster's discipline progression when debugging component-not-fo
 Never manually reset `spelltask->component_used`. The system clears it automatically on task completion.
 
 Always use `COMP_MATERIAL_END` with `SPELL_TASKED` for multi-round spells that consume at completion. Using `COMP_MATERIAL_INIT` consumes immediately even if the spell is interrupted.
+
+### Component Merging
+
+Components automatically merge when picked up if they share the same vnum and spell association. The `canMerge` function validates type, vnum, and spell number match before allowing combination. Personalized components do not merge with non-personalized or differently-personalized components.
 
 ### Special Cases
 
@@ -91,6 +94,55 @@ Always remember that `isMonster()` returns early from component consumption. NPC
 | `WIZ_LEV_COMP_WRIST` | Wrist pouches |
 | `WIZ_LEV_COMP_BELT` | Belt/full access |
 
+Ritualism uses parallel `RIT_LEV_COMP_*` constants with identical slot progression for clerics and shamans.
+
+### TComponent Class API
+
+| Method | Purpose |
+|--------|---------|
+| `getComponentCharges()` | Returns current charge count |
+| `setComponentCharges()` | Updates charge count |
+| `getComponentSpell()` | Returns associated spell number |
+| `setComponentSpell()` | Sets associated spell |
+| `getComponentType()` | Returns component type flags |
+| `setComponentType()` | Sets component type flags |
+| `canMerge()` | Determines if component can merge with another object |
+| `doMerge()` | Combines charges when merging components |
+| `itemType()` | Returns `ITEM_COMPONENT` for type identification |
+
+### CompInfo Structure Fields
+
+| Field | Purpose |
+|-------|---------|
+| `comp_num` | Component object vnum |
+| `spell_num` | Associated spell number |
+| `to_caster` | Message shown to caster when consuming |
+| `to_other` | Message shown to other room occupants |
+| `to_vict` | Message shown to spell target |
+| `to_self` | Message when self-targeting |
+| `to_room` | Generic room message |
+| `to_self_object` | Message when targeting owned object |
+| `to_room_object` | Message when targeting object visible to room |
+
+### compPlace Structure Fields
+
+| Field | Purpose |
+|-------|---------|
+| `room1`, `room2` | Room range for placement |
+| `mob` | Mob vnum or MOB_NONE for room placement |
+| `number` | Component vnum to load |
+| `place_act` | CACT_* flags controlling placement behavior |
+| `max_number` | Limits total instances |
+| `variance` | Percentage chance of placement occurring |
+| `hour1`, `hour2` | Hour range for timed placement |
+| `day1`, `day2` | Day range |
+| `month1`, `month2` | Month range |
+| `weather` | Required weather conditions (WEATHER_* constants) |
+| `message` | Room message on load or removal |
+| `glo_msg` | Global message to room range |
+| `sound` | Sound effect on load |
+| `sound_loop` | Sound repetition count |
+
 ### Error Messages
 
 | Condition | Message |
@@ -99,6 +151,7 @@ Always remember that `isMonster()` returns early from component consumption. NPC
 | Missing component (ranger) | "You seem to lack the proper natural materials to complete your task." |
 | Hands occupied | "You need a free hand to cast this spell." |
 | Arms non-functional | "You cannot gesture properly." |
+| Position penalty | "You struggle to gesture from this position." |
 | Silenced | "You cannot speak!" |
 | Paralyzed | "You are paralyzed!" |
 | Mouth non-functional | "Your mouth doesn't work properly!" |
@@ -138,9 +191,17 @@ The `enforceGestural` method checks COMP_GESTURAL flag presence, then validates 
 
 The `enforceVerbal` method checks for silence spell effects, paralysis, and head/mouth functionality. High Wizardry or Ritualism (75+ learnedness) grants immunity to verbal requirements, allowing silent casting. The method broadcasts mystical utterance messages to the room on success.
 
+### Component Merging Mechanism
+
+The `canMerge` function inherited from TMergeable examines object type, vnum, and spell association. Both objects must be TComponent instances with identical component spell numbers and matching vnums. The `doMerge` function adds charges from the merged object to the target, then deletes the merged object. Merging occurs automatically during object acquisition through `operator+=` overloads, which scan existing contents for mergeable candidates before adding new objects.
+
 ### Component Placement System
 
 The `compPlace` structure defines world component spawning with room ranges, mob targets, timing conditions (hour/day/month ranges), weather requirements, and variance percentages. Placement can be conditional on CACT_UNIQUE flag, limiting instances in the game world. Messages and sound effects accompany component appearance.
+
+### Component Acquisition Through Practice
+
+Components can be awarded during spell practice through the `learnFromDoing` function. When a player practices a spell, the function checks CompInfo for the practiced spell and creates component objects when defined. This provides a progression path where practicing spells generates components needed for future casting.
 
 ### compInfo Message Dispatch
 
@@ -194,9 +255,9 @@ The `useComponent` function checks `isImmunity(IMMU_NOHASSLE)` for immortals and
 
 **Cause:** COMP_MATERIAL_INIT combined with COMP_MATERIAL_ALWAYS or similar double-consumption pattern.
 
-**Diagnostic:** Review comp_types flags for conflicting timing flags.
+**Diagnostic:** Review comp_types flags for conflicting timing flags. Also check if `useComponent` is called from multiple code paths during the same round.
 
-**Fix:** Use only one timing flag per spell. INIT for immediate consumption, END for completion, ALWAYS for per-round.
+**Fix:** Use only one timing flag per spell. INIT for immediate consumption, END for completion, ALWAYS for per-round. Remove duplicate `useComponent` calls if present.
 
 ---
 
@@ -218,9 +279,9 @@ The `useComponent` function checks `isImmunity(IMMU_NOHASSLE)` for immortals and
 
 **Cause:** Both arms disabled by affects or equipment, or position penalty triggered.
 
-**Diagnostic:** Check canUseLimb for primary and secondary arms. Check position against POSITION_STANDING.
+**Diagnostic:** Check canUseLimb for primary and secondary arms. Check position against POSITION_STANDING. Look for equipment worn on arms that sets dysfunction flags.
 
-**Fix:** Stand up, remove arm-disabling affects, or free functional arm.
+**Fix:** Stand up, remove arm-disabling affects, or free functional arm. Remove or repair problematic arm equipment.
 
 ---
 
@@ -233,3 +294,27 @@ The `useComponent` function checks `isImmunity(IMMU_NOHASSLE)` for immortals and
 **Diagnostic:** Check getDiscipline(DISC_WIZARDRY)->getLearnedness() value.
 
 **Fix:** Train Wizardry to 75+ for verbal requirement bypass.
+
+---
+
+### Components not merging when picked up
+
+**Symptom:** Player has multiple stacks of the same component instead of merged charges.
+
+**Cause:** Components have different spell associations, different vnums, or mismatched personalization.
+
+**Diagnostic:** Compare `getComponentSpell()` values between components. Check personalization status on both.
+
+**Fix:** Ensure components have identical spell associations and matching personalization status. Components with different spell numbers will not merge even if vnums match.
+
+---
+
+### Component placement not spawning
+
+**Symptom:** Components defined in component_placement never appear in the world.
+
+**Cause:** Timing conditions too restrictive, low variance, or max_number already reached.
+
+**Diagnostic:** Check variance field (percentage chance per placement attempt). Verify hour/day/month/weather conditions are being met. Check existing component count against max_number.
+
+**Fix:** Increase variance value, expand timing condition ranges, or increase max_number limit. Implement component decay if max_number consistently reached.

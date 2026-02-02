@@ -1,7 +1,6 @@
 ---
 title: Drug Tracking System
 category: understanding
-created_by_model: opus
 keywords: [drug, addiction, withdrawal, descriptor, ephemeral-state]
 related: [affects-system.md, persistence-storage.md, scheduler-pulses.md]
 primary_symbols:
@@ -65,11 +64,13 @@ Drug effects do not consolidate. Each dose adds a separate `AFFECT_DRUG` with in
 
 ### Addiction Rate Calculation
 
-Addiction detection uses average consumption rate over total time since first use. Guard against division by zero when calculating hours since first use.
+Addiction detection uses average consumption rate over total time since first use. Guard against division by zero when calculating hours since first use. Require minimum usage history before calculating addiction.
 
 ```cpp
+if (total_consumed < 10)
+    return false;  // Insufficient data for pattern detection
 int hours = timeDiff(current_time, first_use);
-if (hours == 0)
+if (hours <= 0)
     return false;
 float rate = (float)total_consumed / hours;
 ```
@@ -88,7 +89,7 @@ The `timeDiff()` function assumes the first argument is greater than the second.
 | `drugData` | class | Per-drug usage statistics holder |
 | `TDrug` | class | Drug item object (consumable substance) |
 | `TDrugContainer` | class | Smoking device object (pipe, etc.) |
-| `Descriptor::drugs[]` | array | Ephemeral per-session drug state |
+| `Descriptor::drugs[]` | array | Ephemeral per-session drug state (MAX_DRUG slots) |
 | `doSmoke()` | function | Primary drug consumption entry point |
 | `saveDrugStats()` | function | Persist drug data to database |
 | `loadDrugStats()` | function | Load drug data from database on login |
@@ -114,6 +115,26 @@ The `timeDiff()` function assumes the first argument is greater than the second.
 | `last_use` | Yes | Game timestamp of most recent consumption |
 | `total_consumed` | Yes | Lifetime consumption count |
 | `current_consumed` | Buggy | Session count (reloads stale on reconnect) |
+
+### Key Return Values
+
+| Function | Return Value | Meaning |
+|----------|--------------|---------|
+| `doSmoke()` | TRUE | Consumption succeeded |
+| `doSmoke()` | FALSE | Validation failed (not lit, wrong item type, etc.) |
+| `isAddicted()` | true | Player meets addiction criteria for drug type |
+| `isAddicted()` | false | Not addicted or insufficient usage history |
+
+### Database Schema Fields
+
+| Column | Maps To | Notes |
+|--------|---------|-------|
+| `drug_id` | drugTypeT enum | Integer cast of enum value |
+| `player_id` | Character ID | Foreign key to player record |
+| `first_use_*` | drugData.first_use | Six fields for time_info_data components |
+| `last_use_*` | drugData.last_use | Six fields for time_info_data components |
+| `total_consumed` | drugData.total_consumed | Persists correctly across sessions |
+| `current_consumed` | drugData.current_consumed | Saved but improperly reloaded as non-zero |
 
 ### TDrug val Storage
 
@@ -168,7 +189,7 @@ The final step calls `applyDrugAffects()` to apply stat modifications via the af
 
 The `applyDrugAffects()` function creates `affectedData` structures with `type = AFFECT_DRUG` and drug-specific stat modifiers. Duration is one game hour (Pulse::UPDATES_PER_MUDHOUR).
 
-Different drugs apply different combinations of stat changes. Pipeweed gives hobbits a FOC bonus but penalizes INT for other races. Opium applies DEX and INT penalties that scale with current consumption. Pot reduces PER. Frogslime boosts CHA while severely penalizing WIS.
+Different drugs apply different combinations of stat changes. Pipeweed gives hobbits a FOC bonus but penalizes INT for other races. Opium applies DEX and INT penalties that scale with current consumption (e.g., `-(5 + current_consumed / 2)` for DEX, `-(10 + current_consumed)` for INT). Pot reduces PER. Frogslime boosts CHA while severely penalizing WIS.
 
 Each call to `affectTo()` creates a separate affect entry. Multiple doses create multiple entries that expire independently, producing stacking penalties that gradually wear off.
 
@@ -178,9 +199,15 @@ The `applyAddictionAffects()` function calculates whether a player is experienci
 
 It first computes hours since last use by comparing current game time against the `last_use` timestamp. It then calculates average consumption rate by dividing `total_consumed` by hours since `first_use`.
 
-Each drug has a withdrawal threshold in hours. If time since last use exceeds the threshold and average consumption rate exceeds 0.5 per hour, withdrawal kicks in. Severity scales with both addiction level (consumption rate) and how far past the threshold the player is.
+Each drug has a withdrawal threshold in hours. If time since last use exceeds the threshold and average consumption rate exceeds 0.5 per hour, withdrawal kicks in. Severity scales multiplicatively: average consumption rate times hours overdue beyond threshold. For example, a player smoking opium twice per hour who goes 10 hours without use faces severity of 2.0 * (10 - 6) = 8.0.
 
-Withdrawal applies STR and CON penalties via the affects system. The penalties persist for two game hours.
+Withdrawal applies STR and CON penalties via the affects system (STR loses severity/2, CON loses severity/3). The penalties persist for two game hours, double the duration of consumption effects.
+
+### Race-Specific Handling
+
+Pipeweed checks player race before applying effects. Hobbits receive positive stat modifiers while all other races receive penalties. This special case exists only for pipeweed; other drugs treat all races identically.
+
+Polymorphed characters get effects for their current form, not their original race. The race check happens every time effects apply, not just on first use.
 
 ### Withdrawal Trigger Points
 
@@ -204,19 +231,15 @@ The `saveDrugStats()` function iterates all drug types and updates the database.
 
 This delete-then-insert approach avoids the complexity of upsert logic but means every save performs two queries per drug type. Combined with the per-smoke save pattern, heavy drug use generates significant database traffic.
 
-The `loadDrugStats()` function queries all records for the player and populates the descriptor array. It validates drug type indices before populating to avoid array overflows from corrupted data.
+The `loadDrugStats()` function queries all records for the player and populates the descriptor array. It validates drug type indices before populating to avoid array overflows from corrupted data. The query has no ORDER BY clause, so row processing order is undefined.
 
 ### The current_consumed Bug
 
 The `current_consumed` field has problematic persistence behavior. When a player smokes 10 times and disconnects, `saveDrugStats()` writes 10 to the database. On reconnect, `loadDrugStats()` reads 10 back into the fresh descriptor.
 
-This creates false state: the player consumed zero drugs this session, but the system thinks they consumed 10. Effect scaling based on `current_consumed` produces incorrect intensity.
+This creates false state: the player consumed zero drugs this session, but the system thinks they consumed 10. Effect scaling based on `current_consumed` produces incorrect intensity. Subsequent consumption increments this already-nonzero value, creating compounding inflation.
 
 The field should either reset to zero on load (matching the ephemeral intent) or move to persistent character storage (making it truly persistent). Currently it occupies an inconsistent middle ground.
-
-### Race-Specific Handling
-
-Pipeweed checks player race before applying effects. Hobbits receive positive stat modifiers while all other races receive penalties. This special case exists only for pipeweed; other drugs treat all races identically.
 
 ## Troubleshooting
 
@@ -250,6 +273,16 @@ Pipeweed checks player race before applying effects. Hobbits receive positive st
 
 **Fix:** Add validation that time differences are non-negative. Handle edge cases where stored timestamps exceed current time.
 
+### Division by Zero in Addiction Calculation
+
+**Symptom:** Crash during addiction check.
+
+**Likely cause:** `timeDiff` returning zero when `first_use` equals current time (immediate second smoke) or negative when timestamps are reversed.
+
+**Diagnostic approach:** Log `total_hours` value before division. Check database `first_use` and `last_use` timestamps for the player and drug.
+
+**Fix:** Add validation before division. Check hours > 0 and bail out early if not. For reversed timestamps, either reset `first_use` to current time or delete the corrupted database row.
+
 ### High Database Load During Events
 
 **Symptom:** Database performance degrades during drug-heavy roleplay events.
@@ -279,3 +312,13 @@ Pipeweed checks player race before applying effects. Hobbits receive positive st
 **Diagnostic approach:** Check `isLit()` return value. Verify `getDrugType()` is not DRUG_NONE. Check `getCurBurn()` has remaining value.
 
 **Fix:** Ensure pipe has drug loaded before lighting. Reset burn values if pipe ran out previously.
+
+### Hobbit Gets Pipeweed Penalties Instead of Bonuses
+
+**Symptom:** Hobbit character receives INT penalty from pipeweed instead of FOC bonus.
+
+**Likely cause:** Race check failing due to polymorph or race field corruption.
+
+**Diagnostic approach:** Check `getRace()` return value during effect application. Log the race value and which branch executes. Verify the character is genuinely a hobbit and not polymorphed.
+
+**Fix:** If polymorphed, this is correct behavior (current form determines effects). If not polymorphed but race check fails, investigate race field integrity.

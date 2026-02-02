@@ -3,14 +3,11 @@ title: Object Manipulation System
 description: Core object manipulation commands including sacrifice, get/drop/put, give, junk/donate, and identify operations.
 keywords: [sacrifice, lifeforce, get, drop, put, give, junk, donate, identify, divination, NODROP, traps, containers]
 category: Important Systems
-related:
-  - trap-mechanics.md
-  - task-system.md
-  - economy-system.md
-  - material-system.md
-  - object-system.md
+related: [trap-mechanics.md, task-system.md, economy-system.md, material-system.md, object-system.md]
+primary_symbols:
+  functions: [doSacrifice, doGet, doDrop, doPut, doGive, doJunk, doDonate, canGet, canGetMe, canCarry, putMeInto, checkForGetTrap, checkForInsideTrap, identify, divinationObj, statObjInfo]
+  classes: [TBaseCorpse, TOpenContainer, TSpellBag, TKeyring, TQuiver, TMoneypouch, TSuitcase, TToothNecklace, TCardDeck]
 last_updated: 2026-02-01
-created_by_model: opus
 ---
 # Object Manipulation System
 
@@ -27,6 +24,7 @@ These operations interact with traps, capacity limits, and item flags. Misusing 
 - Always check trap trigger return values before continuing execution
 - Propagate DELETE_THIS and DELETE_ITEM flags up the call stack
 - Never access objects after functions that may have deleted them
+- checkForGetTrap and checkForInsideTrap return DELETE_THIS when character dies and DELETE_ITEM when item is destroyed
 
 **Corpse Concurrency**
 
@@ -86,7 +84,7 @@ These operations interact with traps, capacity limits, and item flags. Misusing 
 | TSpellBag | Spell components |
 | TKeyring | Keys |
 | TQuiver | Arrows |
-| TMoneypouch | Money |
+| TMoneypouch | TMoney objects |
 | TSuitcase | Clothing/armor |
 | TToothNecklace | Teeth |
 | TCardDeck | Playing cards (vnums 7748-7799) |
@@ -98,6 +96,8 @@ These operations interact with traps, capacity limits, and item flags. Misusing 
 |------|---------|---------|---------|
 | STR (weight) | 30 lbs | 1920 lbs | 495 lbs |
 | DEX (volume) | 45,000 cu.in. | 450,000 cu.in. | 135,000 cu.in. |
+
+Volume scales by character height divided by 70 (human baseline), clamped between 5,000 and 1,000,000. Four-legged beings have doubled weight capacity.
 
 ### Sacrifice Phases
 
@@ -129,6 +129,16 @@ These operations interact with traps, capacity limits, and item flags. Misusing 
 | No Hands | Recipient lacks hands |
 | Capacity | Recipient cannot carry |
 
+### Give Flag Effects
+
+| Flag | Behavior |
+|------|----------|
+| GIVE_FLAG_DEF | Normal give with visibility check and standard messages |
+| GIVE_FLAG_DROP_ON_FAIL | Drop item in room if recipient cannot carry |
+| GIVE_FLAG_IGN_DEX_TEXT | Bypass capacity checks, show messages (quest rewards) |
+| GIVE_FLAG_IGN_DEX_NOTEXT | Bypass capacity checks, silent (admin operations) |
+| GIVE_FLAG_SILENT_VICT | Suppress message to recipient (surprise deliveries) |
+
 ### Junk Restrictions
 
 | Flag/Condition | Effect |
@@ -137,6 +147,18 @@ These operations interact with traps, capacity limits, and item flags. Misusing 
 | ITEM_NODROP | Cannot junk |
 | Personalized | Cannot junk |
 | Non-empty container | Won't junk with AUTO_POUCH |
+
+### statObjInfo Return Values
+
+| Object Type | Information Returned |
+|-------------|---------------------|
+| TWeapon | Damage dice (e.g., 3d6), damage type |
+| TArmor | AC value, coverage percentage |
+| TOpenContainer | Capacity, lock/trap/closed status |
+| TFood | Nutrition (bites remaining), poisoned status |
+| TDrinkCon | Liquid type, current/max amount, poisoned status |
+| TScroll | Spell level, up to 3 spell names |
+| TWand/TStaff | Charges remaining/max, spell stored |
 
 ## Implementation
 
@@ -158,7 +180,7 @@ The canGetMe virtual method validates pickup: checks ITEM_WEAR_TAKE flag, ITEM_P
 
 Four-legged beings have doubled weight capacity. Volume scales with DEX and height, normalized to human height (70 units).
 
-Two trap types trigger during get: inside traps (reaching into trapped container) and get traps (on the item itself). Both return DELETE flags that must be checked.
+Two trap types trigger during get: inside traps (checkForInsideTrap on container) and get traps (checkForGetTrap on the item itself). Both return DELETE flags that must be checked.
 
 ITEM_NEWBIE items explode when dropped outside rooms 0-80 and the donation room.
 
@@ -166,7 +188,7 @@ Dropping trap items arms them; grenades activate on a timer instead.
 
 ### Put Mechanics
 
-Specialized containers reject inappropriate items via putMeInto virtual method. Volume reduction applies based on material properties when checking container capacity.
+Specialized containers reject inappropriate items via putMeInto virtual method. Volume reduction applies based on material properties when checking container capacity. Items made of the same material as the container get significant volume reduction through the material compression factor.
 
 ### Give/Receive Mechanics
 
@@ -182,7 +204,7 @@ Junk returns 0.1% of item cost (minimum 1 talen). ITEM_NEWBIE and prop items yie
 
 Race-specific junk messages: Ogre/Giant/Troll/Golem/Minotaur rip corpses limb by limb; Dragon/Dinosaur/Lion/Bear/Tiger devour; Tytan crumples and throws; others trash and disintegrate.
 
-Donate sends items to Room::DONATION. Items with no value, ITEM_NEWBIE, or ITEM_NORENT are junked instead.
+Donate sends items to Room::DONATION via genericTeleport. Items with no value, ITEM_NEWBIE, or ITEM_NORENT are junked instead. Personalized items and items containing NODROP or personalized items (detected through recursive container scan) are blocked.
 
 ### Identify Mechanics
 
@@ -217,3 +239,7 @@ Divination adds: wear flags, statObjInfo output (type-specific details), divinat
 | Newbie item vanishes | Dropped outside safe area | ITEM_NEWBIE items destroy when dropped in rooms >80 |
 | Mob deletes after give | checkResponses DELETE_THIS ignored | Check and handle DELETE_THIS from response |
 | Item consumed by mob silently | checkResponses DELETE_ITEM ignored | Check and handle DELETE_ITEM from response |
+| Give succeeds with overweight recipient | GIVE_FLAG_IGN_DEX used inappropriately | Use GIVE_FLAG_DEF for normal gives; reserve IGN_DEX for immortal/quest transfers |
+| Sacrifice interrupts immediately | Totem has exactly 1 use remaining | Check getToolUses before starting; warn if low |
+| Container volume appears wrong | Material compression not visible | getReducedVolume applies compression; identify shows base volume |
+| Identify shows wrong decay time | Absolute vs relative decay_time | Some items store absolute pulse count, others relative ticks remaining |

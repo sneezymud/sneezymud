@@ -3,7 +3,6 @@ title: Armor and Protection System
 description: Defensive equipment, armor class calculations, damage mitigation, and equipment durability
 keywords: [armor, AC, defense, protection, shields, durability, structure, galvanize, iron flesh]
 category: Important Systems
-created_by_model: opus
 last_updated: 2026-02-01
 source_files: [code/code/obj/obj_base_clothing.h, code/code/obj/obj_base_clothing.cc, code/code/obj/obj_armor.h, code/code/obj/obj_armor.cc, code/code/obj/obj_armor_wand.cc, code/code/obj/obj_saddle.cc, code/code/obj/obj_harness.cc, code/code/misc/being.cc, code/code/misc/combat.cc, code/code/misc/limbs.h]
 related: [combat-formulas.md, combat-rounds.md, equipment-wear.md, object-system.md, weapon-system.md, tohit-defense.md]
@@ -13,7 +12,7 @@ related: [combat-formulas.md, combat-rounds.md, equipment-wear.md, object-system
 
 ## Overview
 
-Armor Class (AC) is the primary defensive stat determining how hard a character is to hit. Lower AC values provide better protection, with typical values ranging from 200 (excellent) to 800 (poor). The system combines racial baselines, equipment bonuses, skill modifiers, and spell effects into a total AC that converts to defense bonus during combat.
+Armor Class (AC) is the primary defensive stat determining how hard a character is to hit. Lower AC values provide better protection, with typical values ranging from 200 (excellent) to 800 (poor). Each 25 points of AC provides roughly one level of protection. The system combines racial baselines, equipment bonuses, skill modifiers, and spell effects into a total AC that converts to defense bonus during combat.
 
 Structure points track equipment durability separately from protective value. Damaged items sell for less and may become unrepairable. The galvanize spell can permanently improve maximum structure at risk of destroying the item.
 
@@ -33,7 +32,7 @@ Never assume `getFourValues()` returns meaningful data for armor items. It retur
 
 Always check `affectShouldApply()` before counting equipment toward total AC. Some conditions prevent affects from applying.
 
-Always consider paired slot penalties when evaluating monk Iron Flesh. Wearing armor in one paired slot (e.g., left leg) removes Iron Flesh from its partner (right leg).
+Always consider paired slot penalties when evaluating monk Iron Flesh. Wearing armor in one paired slot (e.g., left leg) removes Iron Flesh from its partner (right leg). Use `isPaired()` to check wear flag compatibility and `getSecondarySlot()` to retrieve the opposite slot position.
 
 Never forget shields provide 25% of total AC contribution despite occupying a hold slot rather than a primary armor slot.
 
@@ -49,7 +48,7 @@ Never ignore the level cap on PC defense: `level * 16.67 + level` maximum regard
 
 Always verify minimum 2 structure points before attempting galvanize. The spell fails on nearly-destroyed items.
 
-Always handle critical failure outcomes where galvanize destroys the item entirely.
+Always handle critical failure outcomes where galvanize destroys the item entirely via `CF(SPELL_GALVANIZE)`.
 
 Never chain multiple galvanize attempts on valuable items without accepting the cumulative risk of failure.
 
@@ -101,6 +100,22 @@ Never chain multiple galvanize attempts on valuable items without accepting the 
 | Oomlat | `armor * skill / 250` | +0% to +40% armor |
 | Ground Fighting | Reduces position penalty | up to 100% reduction |
 
+### Position Modifiers
+
+| Position | Defense Modifier |
+|----------|-----------------|
+| Flying | +level/3 + 1 |
+| Mounted | +level/4 + 1 |
+| Standing | 0 |
+| Sitting | -level/4 - 1 |
+| Resting | -level/3 - 1 |
+
+### Spell Defense Bonuses
+
+| Spell | Defense Bonus |
+|-------|---------------|
+| Aura Guardian | +40 |
+
 ### MOB Default AC
 
 | ACLevel | Default AC |
@@ -121,6 +136,36 @@ Formula: `600 - (20 * ACLevel)`
 | Medium | +Monk, +Thief |
 | Heavy | +Cleric, +Ranger |
 
+### Object Flags Affecting Armor
+
+| Flag | Effect |
+|------|--------|
+| ITEM_STRUNG | Enables customized names/descriptions |
+| ITEM_BURNING | Causes structure damage over time |
+| ITEM_NODROP | Prevents dropping (cursed) |
+| ITEM_ANTI_* | Restricts by class (MAGE, CLERIC, WARRIOR, etc.) |
+| ITEM_MAGIC | Marks magical armor |
+| ITEM_BLESS | Marks blessed armor |
+| ITEM_NEWBIE | Marks starting equipment |
+
+### Wear Flags
+
+| Flag | Slot |
+|------|------|
+| ITEM_WEAR_TAKE | Enables pickup |
+| ITEM_WEAR_BODY | Body slot |
+| ITEM_WEAR_HEAD | Head slot |
+| ITEM_WEAR_LEGS | Leg slots |
+| ITEM_WEAR_FEET | Foot slots |
+| ITEM_WEAR_HANDS | Hand slots |
+| ITEM_WEAR_ARMS | Arm slots |
+| ITEM_WEAR_BACK | Back slot |
+| ITEM_WEAR_WAIST | Waist slot |
+| ITEM_WEAR_NECK | Neck slot |
+| ITEM_WEAR_WRISTS | Wrist slots |
+| ITEM_WEAR_FINGERS | Finger slots |
+| ITEM_WEAR_HOLD | Shield/held slot |
+
 ### Galvanize Outcomes
 
 | Result | Max Structure | Current Structure |
@@ -135,11 +180,11 @@ Formula: `600 - (20 * ACLevel)`
 
 `TBaseClothing` serves as the abstract base for all wearable items. It provides armor evaluation via `armorLevel()`, `structLevel()`, and `armorPercs()`, plus pricing through `suggestedPrice()` and `armorPriceStruct()`. The `isShield()` and `isBarding()` virtuals identify specialized armor types by checking for those keywords in the item name.
 
-`TArmor` inherits from `TBaseClothing` as the primary armor class. It implements `galvanizeMe()` for the reinforcement spell. Critically, `assignFourValues()` and `getFourValues()` are no-ops returning zeros; armor AC must be stored via the `affected[]` array with `APPLY_ARMOR` location.
+`TArmor` inherits from `TBaseClothing` as the primary armor class. It implements `galvanizeMe()` for the reinforcement spell. The `itemType()` method returns `ITEM_ARMOR`. Critically, `assignFourValues()` and `getFourValues()` are no-ops returning zeros; armor AC must be stored via the `affected[]` array with `APPLY_ARMOR` location.
 
-`TArmorWand` uses multiple inheritance from both `TArmor` and `TWand`, creating hybrid spell-casting armor. Its `suggestedPrice()` combines both parent prices but subtracts duplicate weight cost.
+`TArmorWand` uses multiple inheritance from both `TArmor` and `TWand`, creating hybrid spell-casting armor. The `itemType()` method returns `ITEM_ARMOR_WAND`. Its `suggestedPrice()` combines both parent prices but subtracts duplicate weight cost.
 
-`TSaddle` and `THarness` inherit from `TBaseClothing` for mount equipment. They provide armor benefits to mounted creatures without specialized storage fields.
+`TSaddle` and `THarness` inherit from `TBaseClothing` for mount equipment. They provide armor benefits to mounted creatures without specialized storage fields. Their `itemType()` methods return `ITEM_SADDLE` and `ITEM_HARNESS` respectively.
 
 ### Equipment Slots
 
@@ -167,13 +212,15 @@ Agility contributes `335 * getStatMod(STAT_AGI) - 335`, ranging from -67 to +84.
 
 Position modifiers range from +level/3 (flying) to -level/3 (resting). Ground Fighting skill reduces negative position penalties proportionally.
 
+Spell bonuses add directly to defense, such as `SPELL_AURA_GUARDIAN` which adds +40.
+
 ### Structure and Durability
 
 Structure points use `cur_struct` and `max_struct` fields in `TObj`, not the val fields. The `addToStructPoints()` and `addToMaxStructPoints()` methods modify durability.
 
-`galvanizeMe()` in `obj_armor.cc` handles the reinforcement spell. Success adds +1 to both current and maximum. Regular failure subtracts -2 from both. Critical failure destroys the item entirely. The spell requires at least 2 structure points to attempt.
+`galvanizeMe()` in `obj_armor.cc` handles the reinforcement spell. It calls `bSuccess()` to determine outcome. Success adds +1 to both current and maximum. Regular failure (when `critFail()` returns false) subtracts -2 from both. Critical failure (when `critFail()` returns true) destroys the item via `CF(SPELL_GALVANIZE)`. The spell requires at least 2 structure points to attempt.
 
-Structure damage occurs from combat, decay over time, fire (ITEM_BURNING), spell failures, and admin intervention.
+Structure damage occurs from combat, decay over time, fire (`ITEM_BURNING` flag), spell failures, and admin intervention.
 
 ### Armor Evaluation
 
@@ -217,7 +264,7 @@ Body part flags (`PART_MISSING`, `PART_PARALYZED`, `PART_INJURED`) affect armor 
 
 **Cause:** Paired slot penalty removing benefit, or skill not learned.
 
-**Diagnostic:** Verify `doesKnowSkill(SKILL_IRON_FLESH)` returns true. Check if any paired slot has equipment.
+**Diagnostic:** Verify `doesKnowSkill(SKILL_IRON_FLESH)` returns true. Check if any paired slot has equipment. Confirm `hasQuestBit(MONK_IRON_FLESH_SKILL)` for quest completion. Verify `getSkillValue(SKILL_IRON_FLESH)` returns non-zero percentage.
 
 **Fix:** Remove all armor for full Iron Flesh benefit, or accept partial benefit when mixing.
 
@@ -227,7 +274,7 @@ Body part flags (`PART_MISSING`, `PART_PARALYZED`, `PART_INJURED`) affect armor 
 
 **Cause:** Level cap on PC defense, position penalties, or combat mode.
 
-**Diagnostic:** Calculate expected defense manually: `(armor - 500) * 2/3`. Compare to `level * 16.67 + level` cap.
+**Diagnostic:** Calculate expected defense manually: `(armor - 500) * 2/3`. Compare to `level * 16.67 + level` cap. Check combat mode (ATTACK_OFFENSE and ATTACK_BERSERK apply penalties). Review agility stat as low values apply negative defense bonus.
 
 **Fix:** Higher level characters can utilize better armor. Check combat mode and position.
 
@@ -237,9 +284,9 @@ Body part flags (`PART_MISSING`, `PART_PARALYZED`, `PART_INJURED`) affect armor 
 
 **Cause:** Low structure points, low skill, or bad luck.
 
-**Diagnostic:** Verify `getStructPoints() >= 2` and `getMaxStructPoints() >= 2`. Check caster skill level.
+**Diagnostic:** Verify `getStructPoints() >= 2` and `getMaxStructPoints() >= 2`. Check caster skill level affecting `bSuccess()` probability.
 
-**Fix:** Repair items before galvanizing. Improve skill before attempting on valuable items.
+**Fix:** Repair items before galvanizing. Improve skill before attempting on valuable items. Accept that critical failure destroys items via `CF(SPELL_GALVANIZE)` as intended risk.
 
 ### Shield not parrying
 
@@ -247,7 +294,7 @@ Body part flags (`PART_MISSING`, `PART_PARALYZED`, `PART_INJURED`) affect armor 
 
 **Cause:** Item not recognized as shield, wrong slot, or parry check failing.
 
-**Diagnostic:** Verify `isShield()` returns true (requires "shield" in name). Confirm equipped in `HOLD_LEFT`.
+**Diagnostic:** Verify `isShield()` returns true (requires "shield" in name). Confirm equipped in `HOLD_LEFT`. Check shield has structure points remaining.
 
 **Fix:** Ensure item name contains "shield" keyword and is in correct slot.
 
@@ -260,3 +307,23 @@ Body part flags (`PART_MISSING`, `PART_PARALYZED`, `PART_INJURED`) affect armor 
 **Diagnostic:** Compare `600 - (20 * ACLevel)` to `mob->getArmor()`. System uses whichever is lower.
 
 **Fix:** Adjust ACLevel or remove equipment if default calculation should apply.
+
+### Paired item penalties incorrect
+
+**Symptom:** Iron Flesh bonus applied or removed unexpectedly for paired slots.
+
+**Cause:** Misunderstanding of paired slot mechanics.
+
+**Diagnostic:** Use `isPaired()` to check wear flag compatibility. Use `getSecondarySlot()` to retrieve opposite slot position. Verify penalty applies only when primary slot equipped but secondary slot empty.
+
+**Fix:** Full armor sets (both slots equipped) avoid penalties. Mixed equipment (one equipped, one bare) triggers penalty as intended to discourage partial armor.
+
+### Mount equipment not functioning
+
+**Symptom:** Saddle or harness not providing expected benefits.
+
+**Cause:** Item equipped to rider instead of mount, or wrong item type.
+
+**Diagnostic:** Confirm `itemType()` returns `ITEM_SADDLE` or `ITEM_HARNESS`. Verify items equipped to mount, not rider. Check `isBarding()` for mount armor pieces.
+
+**Fix:** Equip saddle/harness to mount directly. Verify chivalry skill bonus only applies when `riding()` returns true.

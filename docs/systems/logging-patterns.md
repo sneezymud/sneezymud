@@ -5,7 +5,6 @@ keywords: [vlogf, logTypeT, mud_assert, LOG_BUG, LOG_SILENT, setsev, severity fi
 category: Critical Systems
 related: [memory-safety.md, command-implementation.md]
 last_updated: 2026-02-01
-created_by_model: opus
 source_files: [code/code/misc/log.h, code/code/misc/utility.cc, code/code/sys/handler.cc, code/code/misc/immortal.cc, code/code/misc/wiz_data.cc, code/code/sys/signals.cc, code/code/sys/comm.h]
 ---
 
@@ -25,17 +24,64 @@ The assertion system provides a controlled crash mechanism for invariant violati
 
 Always include sufficient context to diagnose the problem without reading surrounding code. Include the function name, relevant identifiers, and numeric values.
 
+```cpp
+// BAD: No context
+vlogf(LOG_BUG, "Invalid value");
+
+// GOOD: Full context
+vlogf(LOG_BUG, format("Invalid damage value %d for %s attacking %s in room %d")
+               % damage % attacker->getName() % victim->getName() % room);
+```
+
 Never log passwords, authentication tokens, or sensitive player data. Log the event occurrence, not the credentials.
+
+```cpp
+// WRONG
+vlogf(LOG_PIO, format("Login attempt: %s with password %s") % name % password);
+
+// RIGHT
+vlogf(LOG_PIO, format("Login attempt: %s") % name);
+```
 
 Use silent logging for high-frequency events that would otherwise flood immortal consoles. Money transfers, component spawns, and routine NPC actions belong in the silent category.
 
+```cpp
+vlogf(LOG_SILENT, format("%s talens changed by %i.") % getName() % money);
+```
+
 Reserve stack traces for complex bugs where the call chain matters. The trace adds overhead and verbosity that is only worthwhile when the immediate context is insufficient.
+
+```cpp
+vlogf_trace(LOG_BUG, format("Unexpected state in %s") % __func__);
+```
 
 ### Assertion Usage
 
 Use assertions exclusively for programmer errors that cannot be safely recovered from. Null pointers that should never be null, array indices outside valid bounds, and violated bidirectional relationship invariants are appropriate assertion triggers.
 
+```cpp
+// Pointer validity
+mud_assert(t != NULL, "canSee with NULL t");
+
+// Array bounds
+mud_assert(i >= MIN_WEAR && i < MAX_WEAR, "Bad limb slot, %s %d", getName().c_str(), i);
+
+// Bidirectional relationship consistency
+mud_assert(t.parent == NULL, "TThing += : t.parent existed. item: %s", t.name.c_str());
+```
+
 Never assert on conditions that can arise from player input or external data. Check those conditions explicitly and handle them with logged error returns.
+
+```cpp
+// Recoverable: log and continue
+if (target == NULL) {
+    vlogf(LOG_BUG, "Null target in doAttack, aborting attack");
+    return FALSE;
+}
+
+// Fatal invariant violation: assert and crash
+mud_assert(this->roomp != NULL, "Being with no room pointer");
+```
 
 Never place side effects inside assertion conditions. The condition should be a pure read that does not modify state.
 
@@ -43,11 +89,32 @@ Never place side effects inside assertion conditions. The condition should be a 
 
 Match the category to the nature of the event, not its severity. A critical database error uses the database category. A minor spec proc warning uses the proc category. The severity filtering system allows immortals to tune what they see.
 
+| Situation | Category |
+|-----------|----------|
+| Code bug or logic error | LOG_BUG |
+| File read/write failure | LOG_FILE |
+| Database issue | LOG_DB |
+| Spec proc error | LOG_PROC |
+| Player login/logout | LOG_PIO |
+| Suspected cheating | LOG_CHEAT |
+| High-frequency debug | LOG_SILENT or personal |
+
 Use personal developer channels for debugging output that only one developer needs to see. Remove or comment out this logging before committing.
+
+```cpp
+vlogf(LOG_DASH, format("Debug: variable x = %d") % x);
+```
 
 ### Performance
 
 Avoid logging in tight loops or frequently-executed paths. Each log call performs system calls and iterates online descriptors. Hot paths should either skip logging entirely or guard expensive log construction behind a condition check.
+
+```cpp
+// Avoid computing message if no one will see it
+if (isDebugMode) {
+    vlogf(LOG_DEBUG, format("Expensive computation: %s") % computeExpensiveString());
+}
+```
 
 ## Reference
 
@@ -68,7 +135,7 @@ Avoid logging in tight loops or frequently-executed paths. Each log call perform
 | LOG_BUG | 3 | Code bugs and assertion failures |
 | LOG_PROC | 4 | Spec proc errors |
 | LOG_PIO | 5 | Player login/logout |
-| LOG_IIO | 6 | Immortal login/logout |
+| LOG_IIO | 6 | Immortal login/logout and wiz file loading |
 | LOG_CLIENT | 7 | Client protocol issues |
 | LOG_COMBAT | 8 | Combat system errors |
 | LOG_CHEAT | 9 | Detected cheating attempts |
@@ -83,6 +150,19 @@ Avoid logging in tight loops or frequently-executed paths. Each log call perform
 ### Personal Developer Channels (23-31)
 
 Channels visible only to specific developers: LOG_JESUS (23), LOG_BATOPR (24), LOG_BRUTIUS (25), LOG_COSMO (26), LOG_MAROR (27), LOG_PEEL (28), LOG_LAPSOS (29), LOG_DASH (30), LOG_ANGUS (31). LOG_MAX (23) marks the boundary between standard and personal categories.
+
+### setsev Command
+
+Immortals with POWER_SETSEV can toggle which categories they receive in real-time. POWER_SETSEV_IMM is required for non-LOW categories.
+
+```
+setsev           - Show current settings
+setsev misc      - Toggle LOG_MISC
+setsev combat    - Toggle LOG_COMBAT
+setsev <name>    - Toggle personal log (developer only)
+```
+
+Settings persist in the wizdata database table and restore on login.
 
 ### Signal Handlers
 
@@ -110,15 +190,15 @@ In-game format: `// Category: Message`
 
 ### Core Logging Path
 
-The primary logging function writes to stderr with a timestamp, then iterates all connected descriptors looking for immortals with the POWER_SETSEV permission and the corresponding category bit set in their severity mask. Matching immortals receive the message via a SystemLogComm object pushed to their output queue.
+The primary logging function writes to stderr with a timestamp, then iterates all connected descriptors looking for immortals with the POWER_SETSEV permission and the corresponding category bit set in their severity mask. Matching immortals receive the message via a SystemLogComm object pushed to their output queue. SystemLogComm handles formatting the message with the "//" prefix for in-game display.
 
-The trace variant appends a stack trace using the glibc backtrace facility before invoking the standard logging path.
+The trace variant appends a stack trace using the glibc backtrace facility (via backtrace_symbols) before invoking the standard logging path.
 
-Per-immortal logging writes to individual files under the immortals directory. The file handle is opened at login when should_be_logged returns true and remains open for the session.
+Per-immortal logging (TPerson::logf) writes to individual files under the immortals directory. The file handle is opened in append mode at login when should_be_logged returns true and remains open for the session. Commands and actions write to this log using printf-style format arguments.
 
 ### Severity Filtering
 
-Each Descriptor maintains a severity bitmask. The setsev command toggles individual bits. Settings persist in the wizdata database table and are restored by wizFileRead at login.
+Each Descriptor maintains a severity bitmask. The setsev command toggles individual bits via the tFields array which maps category names to bit positions. The tHelp array provides descriptions for the setsev help display. Settings persist in the wizdata database table and are restored by wizFileRead at login.
 
 Categories with negative values bypass the immortal notification loop entirely. LOG_SILENT writes only to stderr. LOG_NONE produces no output.
 
@@ -129,6 +209,10 @@ Personal developer channels (23-31) have additional access control. Only the nam
 The custom assertion evaluates its condition and returns immediately if true. On false, it formats the error message using variadic arguments, logs to LOG_BUG, and calls abort to produce a core dump.
 
 Unlike the standard assert macro, this mechanism is never disabled by build configuration. It always executes in all builds.
+
+### getLogType Function
+
+Maps logTypeT enum values to display strings used in log output. Called by vlogf to format the category prefix. Contains a switch statement with cases for all defined categories. Returns "UNKNOWN" for unrecognized values.
 
 ### Adding New Categories
 
@@ -195,6 +279,36 @@ Add the enum value in log.h after the existing standard categories but before LO
 **Diagnostic:** Evaluate whether the condition represents true programmer error.
 
 **Fix:** Replace assertion with logged error return if condition can arise legitimately.
+
+---
+
+**Symptom:** Assertion fails but no core dump is produced.
+
+**Cause:** System limits or configuration preventing core file creation.
+
+**Diagnostic:** Check ulimit allows core file creation. Check core_pattern sysctl points to writable location.
+
+**Fix:** Configure ulimit and core_pattern appropriately. Ensure no signal handlers prevent core dumps.
+
+### Personal Log Files Not Created
+
+**Symptom:** Immortal's personal log file is not being written.
+
+**Cause:** Preconditions for logging not met or directory issues.
+
+**Diagnostic:** Confirm should_be_logged returns true for the immortal. Check lib/mutable/immortals/{name}/ directory exists and is writable.
+
+**Fix:** Create the directory or fix permissions. Verify file handle opened successfully in descriptor login sequence.
+
+### Severity Settings Not Persisting
+
+**Symptom:** Immortal's setsev configuration resets on login.
+
+**Cause:** Database persistence failure.
+
+**Diagnostic:** Check wizdata database table for corruption. Verify wizFileWrite called on logout or setting change.
+
+**Fix:** Confirm wizFileRead executes during login and reads severity field correctly. Repair or recreate wizdata entry if corrupted.
 
 ### Performance Degradation
 

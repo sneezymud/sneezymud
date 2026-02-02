@@ -4,7 +4,6 @@ description: Core memory management system using return flags to signal object d
 keywords: [DELETE_THIS, DELETE_VICT, DELETE_ITEM, IS_SET_DELETE, REM_DELETE, ownership, flag propagation, polymorph, death processing]
 category: Critical Systems
 related: [combat-rounds.md, scheduler-pulses.md, command-implementation.md]
-created_by_model: opus
 ---
 
 # Memory Safety and DELETE Flags
@@ -25,21 +24,111 @@ This system extends to transformations (polymorph, switch, disguise) where a pla
 
 Always use `IS_SET_DELETE()` for DELETE flags. Never use `IS_SET()` which fails to detect the combined bit pattern.
 
-Always check return values from functions that can trigger death or destruction. Common triggers: `reconcileDamage()`, `doMove()`, `crashLanding()`, trap functions, spec procs.
+```cpp
+// WRONG - Will not detect DELETE flags reliably
+if (IS_SET(rc, DELETE_THIS)) {
+  delete victim;
+}
+
+// CORRECT - Use the specialized macro
+if (IS_SET_DELETE(rc, DELETE_THIS)) {
+  delete victim;
+}
+```
+
+Always check return values from functions that can trigger death or destruction. Common triggers: `reconcileDamage()`, `applyDamage()`, `die()`, `rawKill()`, `doMove()`, `crashLanding()`, `get()`, `drop()`, `put()`, `give()`, trap functions, `checkSpec()` on mobs/objects/rooms, and `doReturn()`.
 
 Always check immediately after the function call. Never access the pointer again until the check completes.
+
+```cpp
+// WRONG - Return value ignored, victim may be deleted
+victim->someAction();
+victim->sendTo("Message");  // CRASH if victim deleted
+
+// CORRECT - Check return value before continuing
+int rc = victim->someAction();
+if (IS_SET_DELETE(rc, DELETE_THIS)) {
+  return DELETE_VICT;  // Propagate to caller
+}
+victim->sendTo("Message");
+```
 
 ### Ownership
 
 Return the DELETE flag when the caller passed the pointer as a parameter. Translate the flag appropriately: if callee's method was called on the victim, callee's `DELETE_THIS` becomes caller's `DELETE_VICT`.
 
+```cpp
+// Pattern 1: Caller owns the victim (passed as parameter)
+int someFunction(TBeing* victim) {
+  int rc = victim->doSomething();
+  if (IS_SET_DELETE(rc, DELETE_THIS)) {
+    // Return flag so caller can delete
+    return DELETE_VICT;
+  }
+  return FALSE;
+}
+
+// Pattern 2: We own the victim (resolved locally)
+int someFunction() {
+  TBeing* victim = get_char_room_vis(this, arg);
+  if (!victim) return FALSE;
+
+  int rc = victim->doSomething();
+  if (IS_SET_DELETE(rc, DELETE_THIS)) {
+    // We resolved victim, we delete it
+    delete victim;
+    victim = nullptr;
+    REM_DELETE(rc, DELETE_THIS);  // Clear flag we handled
+  }
+  return rc;
+}
+```
+
 Delete directly and clear the flag with `REM_DELETE()` when you resolved the pointer yourself via lookup functions like `get_char_room_vis()`.
 
 Never delete objects you did not resolve. If someone else gave you a pointer, return a flag and let them handle it.
 
+### Combined Flags
+
+Functions can return multiple DELETE flags combined with bitwise OR when multiple objects should be deleted.
+
+```cpp
+// Function that might delete both attacker and victim
+int rc = performAttack(ch, victim, weapon);
+
+// Check and handle each flag independently
+if (IS_SET_DELETE(rc, DELETE_THIS)) {
+  ch->reformGroup();
+  delete ch;
+  ch = nullptr;
+}
+if (IS_SET_DELETE(rc, DELETE_VICT)) {
+  victim->reformGroup();
+  delete victim;
+  victim = nullptr;
+}
+```
+
+Never assume only one flag will be set. Combat, traps, and special attacks can kill multiple participants simultaneously.
+
 ### Combat Cleanup
 
 Always call `reformGroup()` before deleting any character. Failing to do so leaves followers with dangling master pointers.
+
+```cpp
+// WRONG - Followers left with dangling master pointer
+if (IS_SET_DELETE(rc, DELETE_THIS)) {
+  delete ch;
+  ch = nullptr;
+}
+
+// CORRECT - Reform group first
+if (IS_SET_DELETE(rc, DELETE_THIS)) {
+  ch->reformGroup();
+  delete ch;
+  ch = nullptr;
+}
+```
 
 Always use the global iterator cache `gCombatNext` when traversing combat lists. Local iterators become invalid when combatants die.
 
@@ -49,7 +138,42 @@ Never continue execution after detecting a DELETE flag. Check immediately and re
 
 Always validate `desc` and `desc->original` before dereferencing. Either pointer can be null during transformation edge cases.
 
+```cpp
+// WRONG - Crash if original is null
+TPerson* per = desc->original;
+per->getName();
+
+// CORRECT - Always validate first
+if (!desc || !desc->original) {
+  return FALSE;
+}
+TPerson* per = desc->original;
+per->getName();
+```
+
+The `original` field becomes null when: the transformation affect expires and is removed by `updateAffects()`, the player idles out and `checkIdling()` reverses the transformation, the player link-dies and descriptor cleanup runs, or the transformed mob dies and `rawKill()` reverses the transformation.
+
 Use `doReturn()` with `deleteMob=false` in scheduler procs, then return `true` to let the scheduler handle deletion. Direct deletion causes use-after-free.
+
+```cpp
+// WRONG - Deleting directly in scheduler breaks iterators
+bool procCharBad::run(const TPulse& pl, TBeing* ch) const {
+  if (shouldEndTransform(ch)) {
+    ch->doReturn("", WEAR_NOWHERE, true);  // Deletes ch!
+    return false;  // CRASH - ch is freed memory
+  }
+  return false;
+}
+
+// CORRECT - Signal deletion to scheduler
+bool procCharGood::run(const TPulse& pl, TBeing* ch) const {
+  if (shouldEndTransform(ch)) {
+    ch->doReturn("", WEAR_NOWHERE, true, false);  // Move to storage
+    return true;  // Scheduler handles deletion
+  }
+  return false;
+}
+```
 
 Never access the mob after calling `doReturn()` with `deleteMob=true`. The mob is freed immediately.
 
@@ -59,9 +183,37 @@ Always clear `ACT_POLYSELF` before deletion to prevent cleanup issues.
 
 Check for -1 return from `reconcileDamage()` to detect death. It returns damage dealt on survival, -1 on death. It does not return DELETE flags.
 
+```cpp
+// WRONG - Checking for DELETE flag
+int dam = reconcileDamage(victim, ...);
+if (IS_SET_DELETE(dam, DELETE_VICT)) {  // Never triggers!
+  return DELETE_VICT;
+}
+
+// CORRECT - Check for -1 death sentinel
+int dam = reconcileDamage(victim, ...);
+if (dam == -1) {
+  return DELETE_VICT;
+}
+```
+
 Never check `reconcileDamage()` with `IS_SET_DELETE()`. The -1 return is not a flag.
 
 Remember that `die()` returns `DELETE_THIS`, not `DELETE_VICT`. The dying being signals its own deletion.
+
+```cpp
+// WRONG - Checking for wrong flag
+int rc = victim->die(DAMAGE_NORMAL);
+if (IS_SET_DELETE(rc, DELETE_VICT)) {  // Never triggers!
+  delete victim;
+}
+
+// CORRECT - die returns DELETE_THIS
+int rc = victim->die(DAMAGE_NORMAL);
+if (IS_SET_DELETE(rc, DELETE_THIS)) {
+  delete victim;  // Or translate: return DELETE_VICT;
+}
+```
 
 Always translate appropriately when propagating: if you called `victim->die()` and it returns `DELETE_THIS`, return `DELETE_VICT` to your caller since the victim is their "vict".
 
@@ -77,6 +229,8 @@ Always translate appropriately when propagating: if you called `victim->die()` a
 | `ALREADY_DELETED` | (1<<8) \| (1<<29) | Object was already handled (transformation) |
 | `RET_STOP_PARSING` | (1<<9) \| (1<<29) | Stop command parsing |
 
+The high bit (1 << 29) distinguishes DELETE flags from damage integers.
+
 ### Utility Macros
 
 | Macro | Purpose |
@@ -87,12 +241,15 @@ Always translate appropriately when propagating: if you called `victim->die()` a
 
 ### Transformation Types
 
-| Type | Source | Transfers Stats | Transfers Equipment |
-|------|--------|-----------------|---------------------|
-| `POLY_TYPE_SWITCH` | Immortal switch command | No | No |
-| `POLY_TYPE_DISGUISE` | Thief disguise skill | Yes | Yes |
-| `POLY_TYPE_SHAPESHIFT` | Shaman shapeshift spell | Yes | Yes |
-| `POLY_TYPE_POLYMORPH` | Mage polymorph spell | Yes | Yes |
+| Type | Enum Value | Source | Transfers Stats | Transfers Equipment |
+|------|------------|--------|-----------------|---------------------|
+| None | `POLY_TYPE_NONE` | Not transformed | N/A | N/A |
+| Switch | `POLY_TYPE_SWITCH` | Immortal switch command | No | No |
+| Disguise | `POLY_TYPE_DISGUISE` | Thief disguise skill, werewolf | Yes | Yes |
+| Shapeshift | `POLY_TYPE_SHAPESHIFT` | Shaman shapeshift spell | Yes | Yes |
+| Polymorph | `POLY_TYPE_POLYMORPH` | Mage polymorph spell | Yes | Yes |
+
+Werewolf transformation uses `POLY_TYPE_DISGUISE` with the `TOG_TRANSFORMED_LYCANTHROPE` quest bit set to distinguish from player-activated disguise skill.
 
 ### Death Penalties
 
@@ -111,10 +268,24 @@ Always translate appropriately when propagating: if you called `victim->die()` a
 | XP loss | Yes | No |
 | Age penalty | Yes | No |
 | Corpse type | TPCorpse (vnum -2) | TCorpse (mob vnum) |
+| Corpse flags | CORPSE_NO_REGEN | None unless vnum < 0 |
 | Group handling | reformGroup() | None |
 | Rent cleanup | removeRent() | N/A |
 | Follower cleanup | removeFollowers() | N/A |
 | Permadeath logging | Yes | No |
+| Save location | Room::NOWHERE | N/A |
+| Limb healing | All limbs restored | N/A |
+| Disease cleanup | All diseases removed | N/A |
+
+### Pointer Validation Scenarios
+
+| Pointer | Must Validate | Becomes Null When |
+|---------|--------------|-------------------|
+| `desc` | Before any descriptor access | Link death, logout, character deletion |
+| `desc->original` | Before transformation operations | Affect expiry, idle timeout, manual return, death |
+| `desc->character` | Before accessing transformed body | Descriptor swap during return |
+| `victim` | After reconcileDamage returns -1 | Death processing completes |
+| `this` | After DELETE_THIS return | Caller deletion pending |
 
 ### Top-Level DELETE Handlers
 
@@ -124,6 +295,7 @@ Always translate appropriately when propagating: if you called `victim->die()` a
 | `TScheduler::runChar()` | Character proc returns (batch deletion) |
 | `perform_violence()` | Combat DELETE_THIS and DELETE_VICT |
 | Descriptor loop | parseCommand DELETE_THIS |
+| Account menu | DELETE_THIS from doAccountMenu |
 
 ### Key Files
 
@@ -131,13 +303,13 @@ Always translate appropriately when propagating: if you called `victim->die()` a
 |------|---------|
 | `misc/defs.h` | DELETE flag constants |
 | `misc/structs.h` | IS_SET_DELETE, ADD_DELETE, REM_DELETE |
-| `misc/combat.cc` | die(), rawKill(), reformGroup(), genericKillFix() |
+| `misc/combat.cc` | die(), rawKill(), reformGroup(), genericKillFix(), stopFighting() |
 | `misc/damage.cc` | reconcileDamage(), applyDamage() |
 | `misc/immortal.cc` | doReturn() |
 | `misc/periodic.cc` | updateAffects(), transformation removal |
 | `misc/limits.cc` | checkIdling() transformation handling |
 | `sys/process.cc` | TScheduler deletion handlers |
-| `sys/connect.cc` | parseCommand(), descriptor loop |
+| `sys/connect.cc` | parseCommand(), descriptor loop, preKillCheck() |
 | `sys/socket.cc` | proc*::run() adapter functions |
 
 ## Implementation
@@ -153,6 +325,8 @@ When a function receives a pointer as a parameter, the caller owns it. When a fu
 Ownership determines deletion responsibility. Owners delete directly and clear the flag with `REM_DELETE()`. Non-owners return the appropriate DELETE flag and let the owner handle deletion.
 
 The flag translation pattern handles parameter mapping. When calling a method on a victim and it returns `DELETE_THIS`, that means "delete what the method was called on" which is the victim. The caller translates this to `DELETE_VICT` for its own return value.
+
+Local ownership creates an exception to flag propagation. If a function resolves a victim locally, receives DELETE_THIS from a method call on that victim, and then deletes the victim itself, it must clear the DELETE_THIS flag with REM_DELETE before returning to prevent the caller from seeing a deletion flag for an object the caller never knew existed.
 
 ### Descriptor Swap During Transformation
 
@@ -174,7 +348,7 @@ The `doReturn()` function handles reverting transformations. It takes a `deleteM
 
 In scheduler contexts, use `deleteMob=false` and return true from the proc. The scheduler collects characters to delete in a batch, avoiding use-after-free from deleting mid-iteration.
 
-The function validates `desc` and `desc->original` exist, transfers equipment and stats back via `SwitchStuff()`, moves the original body back from storage, swaps the descriptor, clears transformation state, and either deletes or stores the mob.
+The function validates `desc` and `desc->original` exist, transfers equipment and stats back via `SwitchStuff()` (or `DisguiseStuff()` for disguise-based transformations), moves the original body back from storage, swaps the descriptor, clears transformation state, and either deletes or stores the mob.
 
 ### Automatic Transformation Affect Removal
 
@@ -182,7 +356,7 @@ The `updateAffects()` function in periodic.cc removes transformation affects whe
 
 ### Shapeshift Indoor Restriction
 
-Shapeshift transformations cannot survive indoors. The `updateTickStuff()` function checks if a shapeshifted character is in a non-outdoor room and forcibly ends the transformation with a message about needing nature connection.
+Shapeshift transformations cannot survive indoors. The `updateTickStuff()` function checks if a shapeshifted character is in a non-outdoor room and forcibly ends the transformation with a message about needing nature connection. It returns `ALREADY_DELETED` to signal deletion should happen at the scheduler level.
 
 ### Linkdeath During Transformation
 
@@ -196,9 +370,9 @@ The `checkIdling()` function handles idle timeout specially for transformed char
 
 Every death flows through: `die()` -> `rawKill()` -> `makeCorpse()`.
 
-`die()` handles penalties (XP loss, age increase) and calls `rawKill()`. It checks for polymorph/switch state and returns to original before death. It checks `AFFECT_FREE_DEATHS` and arena room flags to skip penalties.
+`die()` handles penalties (XP loss, age increase) and calls `rawKill()`. It checks for polymorph/switch state and returns to original before death. It checks `AFFECT_FREE_DEATHS` and arena room flags to skip penalties. For `POLY_TYPE_SWITCH` transformations, it calls `doReturn()` without deleting the mob, then recursively calls `rawKill()` on the transformed mob.
 
-`rawKill()` handles combat cleanup (stopping fights, removing berserk), creates the corpse, calls death cry, runs generic cleanup, and handles PC-specific operations (reformGroup, removeRent, removeFollowers, permadeath logging).
+`rawKill()` handles combat cleanup via `stopFighting()` (removing berserk mode, berserk affects, vampire bite affects), creates the corpse, calls death cry, runs generic cleanup, and handles PC-specific operations (reformGroup, removeRent, removeFollowers, permadeath logging). Shopkeeper special handling deletes all inventory and money since shopkeepers maintain infinite virtual inventory that should not transfer to corpses.
 
 Both functions return `DELETE_THIS` to signal the caller should delete.
 
@@ -226,9 +400,29 @@ This must be called before deletion or followers will have dangling master point
 
 Deaths in rooms with `ROOM_ARENA` flag skip XP loss, skip age increase, do not heal limbs, and save the character to the current room rather than `Room::NOWHERE`.
 
+### Corpse Creation
+
+The `makeCorpse()` function branches based on PC vs NPC. For PCs, it creates a TPCorpse with vnum -2. For NPCs, it creates a TCorpse with the mob's vnum. All PC corpses receive `CORPSE_NO_REGEN` which prevents cleanup proc destruction. NPC corpses only get this flag if their vnum is negative.
+
+Equipment transfer iterates through all wear slots, calls `unequip()` to handle affect removal, then transfers items to the corpse. Experience loss is embedded in the corpse as a float value for corpse retrieval systems.
+
 ### Scheduler Proc Adapter Pattern
 
 All `proc*::run()` functions convert DELETE flags to bool returns. They check `IS_SET_DELETE(rc, DELETE_THIS)` and return true to signal deletion, false to keep. This adapter layer lets the scheduler handle deletion uniformly without knowing the specific DELETE flag semantics of each operation.
+
+Key procs: `procCharLycanthropy` (werewolf transformation), `procCharAffects` (affect expiration), `procCharDrowning`, `procCharFalling`. Each checks for DELETE_THIS and returns true to signal scheduler deletion.
+
+### Combat Loop DELETE Handling
+
+The `perform_violence()` function caches `gCombatNext = ch->next_fighting` before processing each combatant to ensure safe iteration if ch is deleted.
+
+After `hit()` returns, it checks `IS_SET_DELETE(rc, DELETE_VICT)` first. If set, it calls `vict->reformGroup()`, deletes vict, and continues to the next iteration. Then it checks `IS_SET_DELETE(rc, DELETE_THIS)`. If set, it calls `ch->reformGroup()`, deletes ch, and breaks from the loop.
+
+The order matters: checking DELETE_VICT first allows the loop to continue. Checking DELETE_THIS second ensures we break when the primary iterator is invalidated. Both blocks execute for combined flags (DELETE_THIS | DELETE_VICT).
+
+### Iterator Safety in Linked Lists
+
+The combat participant list, river flow list, and rider chains require caching the next pointer before any operation that might delete the current node. For combat: `gCombatNext = ch->next_fighting`. For equipment lists (stuff), use `*(it++)` which post-increments the iterator before dereferencing.
 
 ### Architecture Overview
 
@@ -241,6 +435,16 @@ The deletion hierarchy flows from top-level handlers down through adapters to th
 The descriptor loop in `connect.cc` handles DELETE_THIS from `parseCommand()` for command-triggered deaths.
 
 ## Troubleshooting
+
+### Crash: IS_SET Used Instead of IS_SET_DELETE
+
+**Symptom:** DELETE flag checks never trigger despite deaths occurring.
+
+**Cause:** Using `IS_SET()` which does not handle the combined bit pattern.
+
+**Diagnostic:** Search for `IS_SET(` with DELETE flag arguments in recent changes.
+
+**Fix:** Replace with `IS_SET_DELETE()`.
 
 ### Crash: Use-After-Free on Character
 
@@ -282,6 +486,36 @@ The descriptor loop in `connect.cc` handles DELETE_THIS from `parseCommand()` fo
 
 **Fix:** Always call `reformGroup()` before deleting any character.
 
+### Crash: Double-Delete
+
+**Symptom:** Crash on double-free or invalid pointer.
+
+**Cause:** Multiple functions each thought they owned the pointer and deleted it.
+
+**Diagnostic:** Trace the pointer's origin. Was it passed as a parameter or resolved locally?
+
+**Fix:** Follow ownership rules. If passed as parameter, return DELETE flag. If resolved locally, delete and clear flag with `REM_DELETE()`.
+
+### Crash: Invalid Combatant Pointer
+
+**Symptom:** Crash during combat round with invalid combatant pointer.
+
+**Cause:** Not caching `gCombatNext` before operations that might delete combatants.
+
+**Diagnostic:** Check the combat loop. Verify that `gCombatNext = ch->next_fighting` appears before the hit call.
+
+**Fix:** Cache `gCombatNext` before any combat operation that might trigger deletion. Use the cached value to iterate.
+
+### Crash: Scheduler Invalid Character Pointer
+
+**Symptom:** Scheduler crash with invalid character pointer.
+
+**Cause:** Scheduler proc directly deleted character instead of returning true to signal deletion.
+
+**Diagnostic:** Review recent proc implementations. Check for direct `delete` or `doReturn(..., true)`.
+
+**Fix:** Replace direct delete with `return true`. Replace `doReturn(..., true)` with `doReturn(..., false)` followed by `return true`.
+
 ### Bug: Death Not Detected
 
 **Symptom:** Code continues after `reconcileDamage()` when victim should be dead.
@@ -302,26 +536,6 @@ The descriptor loop in `connect.cc` handles DELETE_THIS from `parseCommand()` fo
 
 **Fix:** Check DELETE_THIS when the method was called on the dying object. Translate appropriately for your return value.
 
-### Bug: IS_SET Used Instead of IS_SET_DELETE
-
-**Symptom:** DELETE flag checks never trigger.
-
-**Cause:** Using `IS_SET()` which does not handle the combined bit pattern.
-
-**Diagnostic:** Search for `IS_SET(` with DELETE flag arguments.
-
-**Fix:** Replace with `IS_SET_DELETE()`.
-
-### Bug: Double-Delete
-
-**Symptom:** Crash on double-free or invalid pointer.
-
-**Cause:** Multiple functions each thought they owned the pointer and deleted it.
-
-**Diagnostic:** Trace the pointer's origin. Was it passed as a parameter or resolved locally?
-
-**Fix:** Follow ownership rules. If passed as parameter, return DELETE flag. If resolved locally, delete and clear flag with `REM_DELETE()`.
-
 ### Bug: Transformation Affect Lingers
 
 **Symptom:** Orphaned mob has polymorph/disguise/shapeshift affect but no descriptor.
@@ -331,3 +545,13 @@ The descriptor loop in `connect.cc` handles DELETE_THIS from `parseCommand()` fo
 **Diagnostic:** Check if mob has transformation affect but `desc` or `desc->original` is null.
 
 **Fix:** The automatic cleanup in `updateAffects()` should catch this. If not, verify the affect type check includes all transformation spells.
+
+### Bug: Flag Propagation Error
+
+**Symptom:** DELETE_THIS not translated to DELETE_VICT when propagating.
+
+**Cause:** Not translating flag semantics when crossing function boundaries where parameter roles change.
+
+**Diagnostic:** Trace the function call chain. Identify where a callee's this becomes the caller's vict.
+
+**Fix:** Add translation logic: `if (IS_SET_DELETE(rc, DELETE_THIS)) return DELETE_VICT;` when the callee's this maps to the caller's victim.

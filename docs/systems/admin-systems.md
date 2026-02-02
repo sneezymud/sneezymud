@@ -3,7 +3,6 @@ title: Administrative Systems
 category: critical
 keywords: [wizard-powers, set-command, database-migration, remote-execution, privilege-escalation]
 related: [builder-systems.md, persistence-storage.md, cgi-security.md, snoop-switch.md]
-created_by_model: opus
 primary_symbols:
   functions: [hasWizPower, limitPowerCheck, doSet, doForce, doAt, doLoad, saveWizPowers]
   classes: [TPerson, TBeing]
@@ -103,6 +102,7 @@ Document all power grants with who granted, to whom, timestamp, and reason. The 
 | `POWER_FORCE` | Extreme | Execute commands as other players |
 | `POWER_SWITCH` | Extreme | Possess player characters |
 | `POWER_LOW` | High | Database migration between immortal/sneezy |
+| `POWER_PURGE_PC` | High | Delete player characters |
 | `POWER_IDLED` | Special | Restricts immortal to 5 powers only |
 
 ### IMP_POWER Variants
@@ -119,17 +119,17 @@ Document all power grants with who granted, to whom, timestamp, and reason. The 
 
 ### Power Packages
 
-| Package | Command | Powers | Use Case |
-|---------|---------|--------|----------|
-| basic | `@set ... wizpower basic` | 6 | Entry-level immortal |
-| rooms | `@set ... wizpower rooms` | 7 | Room builders |
-| mobs | `@set ... wizpower mobs` | 8 | Mob builders |
-| objs | `@set ... wizpower objs` | 7 | Object builders |
-| quest | `@set ... wizpower quest` | 8 | Quest immortals |
-| demi | `@set ... wizpower demi` | 14 | Demigods |
-| trust | `@set ... wizpower trust` | 8 | High-trust staff |
-| god | `@set ... wizpower god` | 23 | Full administrators |
-| allpowers | `@set ... wizpower allpowers` | 127 | Unrestricted access |
+| Package | Command | Powers Granted |
+|---------|---------|----------------|
+| basic | `@set ... wizpower basic` | BUILDER, GOTO, BUG, IDEA, TYPO, AT |
+| rooms | `@set ... wizpower rooms` | ROOMFLAGS, REDIT, REDIT_IMP_POWER, LOAD, STAT_ROOMS, PURGE, VSTAT |
+| mobs | `@set ... wizpower mobs` | MEDIT, MEDIT_IMP_POWER, LOAD, STAT_MOBS, PURGE, VSTAT, RANGE, APPROVE |
+| objs | `@set ... wizpower objs` | OEDIT, OEDIT_IMP_POWER, LOAD, STAT_OBJS, PURGE, VSTAT |
+| quest | `@set ... wizpower quest` | QEDIT, QEDIT_IMP_POWER, LOAD, FORCE, TRANSFER, RESTORE, SWITCH, FOLLOW |
+| demi | `@set ... wizpower demi` | 14 powers including SHOUT, INVIS, ARREST, ECHO |
+| trust | `@set ... wizpower trust` | SNOOP, MUZZLE, BAN, FREEZE + 4 others |
+| god | `@set ... wizpower god` | 23 powers including GOD, TIME, SHUTDOWN, SYSTEM, IMMUNITY |
+| allpowers | `@set ... wizpower allpowers` | All 127 powers unrestricted |
 
 ### Privilege Tiers
 
@@ -163,6 +163,42 @@ Document all power grants with who granted, to whom, timestamp, and reason. The 
 | Stat | Min | Max (Standard) | Max (IMP_POWER) |
 |------|-----|----------------|-----------------|
 | All primary stats | 5 | 100 | 205 |
+
+### Force Command Target Modes
+
+| Mode | Syntax | Behavior |
+|------|--------|----------|
+| Single | `force <name> <command>` | Target resolved via `get_char_vis`; requires higher level than target |
+| All | `force all <command>` | All connected players; iterates `descriptor_list` |
+| Room | `force room <command>` | All beings in current room; uses iterator caching |
+| Mobs | `force mobs <command>` | All NPCs in current room; excludes players |
+
+### At Command Location Resolution
+
+| Mode | Syntax | Resolution |
+|------|--------|------------|
+| Room vnum | `at <vnum> <command>` | `convertTo` + `real_roomp` |
+| Player | `at <player> <command>` | `get_char_vis` → `in_room` |
+| Mob | `at <mob> <command>` | `get_char_vis` (non-player) → `in_room` |
+| Object | `at <object> <command>` | `get_obj_vis` → `roomp` |
+
+### Load Command Entity Types
+
+| Type | Syntax | Notes |
+|------|--------|-------|
+| Mobile | `load mob <vnum/name>` | Adds PROTOTYPE flag unless `POWER_LOAD_NOPROTOS` |
+| Object | `load obj <vnum/name>` | Checks restricted items, max_exist |
+| Set | `load set <setname>` | Requires `POWER_LOAD_SET` |
+| Count | `load 5.obj <vnum>` | Loads specified quantity |
+
+### Purge Command Modes
+
+| Mode | Syntax | Behavior |
+|------|--------|----------|
+| Default | `purge` | All objects/mobs in room (respects ITEM_NOPURGE) |
+| Target | `purge <name>` | Single resolved entity |
+| Zone | `purge zone <zone#>` | Excess mobs above max_exist |
+| Room range | `purge room <start> [end]` | Evacuate entities from vnum range |
 
 ### LOW Migration Commands
 
@@ -211,6 +247,8 @@ The database schema stores powers in the `wizpower` table with player_id and wiz
 
 Power values undergo transformation between memory and database via `mapWizPowerToFile()` and `mapFilePowerToWiz()`. This indirection exists because the enum order has changed over time while database values must remain stable for existing characters.
 
+The `setWizPower()` and `remWizPower()` functions perform bitwise operations: `setWizPower` ORs with 0x1 to set true, `remWizPower` ANDs with ~0x1 to clear to false. This pattern accommodates potential future expansion to multi-bit power states.
+
 ### Power Check Flow
 
 When `hasWizPower()` is called, it first validates the power index is within bounds. For IDLED immortals (those with `POWER_IDLED` but lacking `POWER_WIZARD`), the function returns false for all powers except BUILDER, GOD, WIZARD, GOTO, and IDLED itself. This implements a restricted mode for inactive staff who retain their immortal status but lose most capabilities.
@@ -225,6 +263,8 @@ Administrative settings (office, blocka, blockb, wizpower) have additional check
 
 Stat modifications compare the requested value against 100. Values above 100 require `POWER_SET_IMP_POWER`. The valid range is 5-205.
 
+For the wizpower subcommand, the parameter converts to integer then subtracts 1 (user-facing is 1-indexed, enum is 0-indexed). The code toggles the power: if target lacks it, `setWizPower()` is called; if target has it, `remWizPower()` is called.
+
 All @set operations trigger immediate persistence via `doSave()` or `saveChar()`. The dual storage model means some properties (money, wizpowers) use database tables as authoritative while others (stats) rely on binary character files.
 
 ### Database Migration Architecture
@@ -237,11 +277,17 @@ Migration commands follow a delete-before-insert pattern. The command first quer
 
 Object migration strips prototype flags (ITEM_STRUNG bit 2, ITEM_PROTOTYPE bit 4) from action_flag. Mob migration clears ACT_STRINGS_CHANGED. These transformations prepare builder content for production use.
 
+Multi-table migration processes tables in sequence within the same transaction: room first, then roomextra, then roomexit. This ensures referential integrity since roomexit references room vnums. Transaction atomicity guarantees all-or-nothing semantics.
+
+Vnum list parsing via `parse_num_args` supports ranges like `13700-13780`. Each vnum processes in its own transaction, so partial failure leaves some vnums committed and others unmigrated.
+
 ### Remote Execution Mechanics
 
 The force command resolves its target, validates permissions (must be higher level than target, target vnum must be in assigned block for mobs), and calls `parseCommand()` on the victim with the specified command string. The critical detail is DELETE_THIS handling: if the forced command kills the target, the target is deleted immediately and the loop continues to the next victim (for force all/room/mobs variants).
 
-The at command teleports the executor to the target location, runs the command, then returns to the original room. It must handle DELETE_THIS from the executed command since the immortal themselves might die from what they executed remotely.
+For iterator safety, force room/mobs modes cache the next pointer before calling `parseCommand()`. If DELETE_THIS is detected, the victim is deleted, set to NULL, and iteration advances to the cached next pointer.
+
+The at command teleports the executor to the target location, runs the command, then returns to the original room. It must handle DELETE_THIS from the executed command since the immortal themselves might die from what they executed remotely. If DELETE_THIS is set, the function returns immediately without attempting the return teleport.
 
 The load command creates instances from the template database. Permission layers include: base loading requires `POWER_LOAD`, equipment sets require `POWER_LOAD_SET`, non-prototype loading requires `POWER_LOAD_NOPROTOS`, loading beyond max_exist requires `POWER_LOAD_LIMITED`, and certain restricted objects require `POWER_LOAD_IMP_POWER`.
 
@@ -253,7 +299,7 @@ A bug in the remgod package handler calls `setWizPower(POWER_DISTRIBUTE)` instea
 
 ### Purge and Restore
 
-The purge command operates in several modes: single target (specified object or mob), room-wide (all entities in current room), zone-wide (excess mobs in specified zone), and room range (evacuate entities from vnum range). Objects with ITEM_NOPURGE flag are immune.
+The purge command operates in several modes: single target (specified object or mob), room-wide (all entities in current room), zone-wide (excess mobs in specified zone), and room range (evacuate entities from vnum range). Objects with ITEM_NOPURGE flag are immune. Iteration uses cached next pointers before deletion to prevent use-after-free.
 
 Restore comes in three variants. Partial restore handles HP, mana, move, piety, and hunger/thirst. Full restore adds limb healing, affect removal (including diseases), dispel magic, and spirit chase. Practice restoration reimburses practice points.
 
@@ -310,3 +356,53 @@ Restore comes in three variants. Partial restore handles HP, mana, move, piety, 
 **Diagnostic approach:** Check for bypass powers in addition to block assignments. Query their full power set and check for NO_LIMITS or command-specific IMP_POWER variants.
 
 **Fix:** Revoke bypass powers if they weren't intentionally granted. Block ranges only enforce when bypass powers are absent.
+
+### Force Command Infinite Loops
+
+**Symptom:** Stack overflow crash or extreme CPU usage during force execution.
+
+**Likely cause:** Forced commands contain nested force commands creating unbounded recursion.
+
+**Diagnostic approach:** Check logs for nested force patterns. Look for commands like `force <immortal> force <target> <command>`.
+
+**Fix:** Implement recursion depth tracking in the force command. Consider revoking `POWER_FORCE` from immortals who create loops until they demonstrate understanding of proper usage.
+
+### Vnum Limit Bypass Through Container Loading
+
+**Symptom:** Immortal has objects with vnums outside their assigned blocks.
+
+**Likely cause:** Loaded containers with contents from restricted vnums. Only the container vnum is checked by `limitPowerCheck()`, not contained objects.
+
+**Diagnostic approach:** Audit immortal inventory for objects with vnums outside their blocka/blockb ranges.
+
+**Fix:** Purge improperly loaded objects. Consider implementing recursive vnum checking when loading containers.
+
+### At Command Room Pointer Invalidation
+
+**Symptom:** Crash in `char_to_room` when returning from at command.
+
+**Likely cause:** The executed command triggered a zone reset or room deletion, invalidating the cached origin_room pointer.
+
+**Diagnostic approach:** Check if the at command triggered zone resets or room deletion. Look for null entries in room_db at the origin vnum.
+
+**Fix:** Validate cached origin_room before return teleport. Default to immortal starting location if origin room was deleted.
+
+### Prototype Flag Preventing Mortal Interaction
+
+**Symptom:** Mortals report loaded items are visible but unusable.
+
+**Likely cause:** Objects loaded without `POWER_LOAD_NOPROTOS` receive ITEM_PROTOTYPE flag automatically.
+
+**Diagnostic approach:** Check object flags with stat command for ITEM_PROTOTYPE bit.
+
+**Fix:** Clear the flag with `flag <object> proto` to toggle it off. For future loads of mortal-usable items, ensure the loading immortal has `POWER_LOAD_NOPROTOS`.
+
+### Invalid Wizpower Parameter Bounds
+
+**Symptom:** Crash during `@set ... wizpower` with unusual parameter values.
+
+**Likely cause:** Parameter outside 1-128 range causing out-of-bounds array access.
+
+**Diagnostic approach:** Review set command logs for wizpower operations with values outside valid range. Check core dumps for memory corruption near wizPowers array.
+
+**Fix:** The code should validate bounds before enum cast. Delete invalid rows from wizpower table preventing load-time issues.

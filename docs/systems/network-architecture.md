@@ -4,7 +4,6 @@ description: Single-threaded event loop, descriptor lifecycle, telnet/GMCP proto
 category: Critical Systems
 related: [memory-safety.md, spatial-relationships.md, player-interface.md]
 source_files: [sys/socket.cc, sys/socket.h, sys/connect.cc, sys/connect.h, sys/gmcphandlers.cc, sys/comm.h, sys/DescriptorList.h]
-created_by_model: opus
 ---
 
 # Network and Protocol Architecture
@@ -30,8 +29,10 @@ The tick rate is 0.1 seconds. Each tick: accept new connections, close exception
 
 - Always handle partial reads by accumulating in the raw buffer until newline
 - Always double `$` characters on input to prevent printf issues (undone on output)
-- Always truncate lines exceeding `MAX_INPUT_LENGTH`
+- Always truncate lines exceeding `MAX_INPUT_LENGTH` (1024 characters)
 - Always handle telnet escape sequences before parsing commands
+- Always handle backspace characters by deleting previous character
+- Support command history expansion: `!` for last command, `!!` for repeat, `!number` for specific recall
 
 ### Output Processing
 
@@ -72,10 +73,18 @@ The tick rate is 0.1 seconds. Each tick: accept new connections, close exception
 | `CON_TERM` | 15 | Terminal type |
 | `CON_CONN` | 16 | Connecting character |
 | `CON_CREATION_START` | 84 | Character creation begins |
-| `CON_CREATION_MAX` | 108 | Character creation ends |
-| `CON_REDITING` | >MAX_CON_STATUS | Room editor |
-| `CON_OEDITING` | >MAX_CON_STATUS | Object editor |
-| `CON_MEDITING` | >MAX_CON_STATUS | Mobile editor |
+| `CON_CREATION_NAME` | 85 | Character name entry |
+| `CON_CREATION_SEX` | 88 | Sex selection |
+| `CON_CREATION_RACE` | 89 | Race selection |
+| `CON_CREATION_CLASS` | 90 | Class selection |
+| `CON_CREATION_DONE` | 108 | Creation finalization |
+| `CON_REDITING` | 109 | Room editor |
+| `CON_OEDITING` | 110 | Object editor |
+| `CON_MEDITING` | 111 | Mobile editor |
+| `CON_HELP` | 114 | Help file editor |
+| `CON_WRITING` | 115 | String editor |
+
+Editor states are above MAX_CON_STATUS. Creation states span 84-108 with 26 distinct substates for disclaimers, trait selection, and stat customization.
 
 ### Telnet Constants
 
@@ -90,31 +99,37 @@ The tick rate is 0.1 seconds. Each tick: accept new connections, close exception
 | `se` | 240 (0xF0) | Subnegotiation End |
 | `GMCP` | 201 (0xC9) | GMCP option code |
 
+Telnet sequences use IAC as escape prefix. Negotiations are three bytes: IAC WILL/WONT/DO/DONT option. Subnegotiations are: IAC SB option data IAC SE.
+
 ### GMCP Commands
 
-| Command | Behavior |
-|---------|----------|
-| `Core.Hello` | Stores client name/version in descriptor |
-| `Core.Supports.Set` | Ignored (squelched) |
-| `External.Discord.Hello` | Returns Discord invite URL |
-| `request sectors` | Returns sector type list |
-| `request area` | Returns current zone info |
-| `remember` | Player memory system storage |
-| `retrieve` | Player memory retrieval |
+| Command | Handler | Behavior |
+|---------|---------|----------|
+| `Core.Hello` | `handleCoreHello` | Stores client name/version in descriptor |
+| `Core.Supports.Set` | Squelched | Ignored (clients send extensive capability lists) |
+| `External.Discord.Hello` | `handleDiscord` | Returns Discord invite URL |
+| `request sectors` | `handleRequestSectors` | Returns sector type list |
+| `request area` | `handleRequestArea` | Returns current zone info |
+| `remember` | `handleRemember` | Player memory system storage |
+| `retrieve` | `handleRetrieve` | Player memory retrieval |
+
+Commands are dispatched through a std::map of std::function handlers. Unrecognized commands are silently ignored.
 
 ### Comm Classes
 
-| Class | Purpose |
-|-------|---------|
-| `UncategorizedComm` | Generic text output |
-| `GmcpComm` | GMCP protocol messages |
-| `LoginComm` | Login prompts |
-| `PromptComm` | Player prompts with metadata |
-| `SnoopComm` | Snoop output |
-| `TellFromComm` / `TellToComm` | Tell messages |
-| `RoomExitComm` | Exit data for clients |
-| `SoundComm` | Sound effects |
-| `WhoListComm` | Who list entries |
+| Class | Purpose | Metadata |
+|-------|---------|----------|
+| `UncategorizedComm` | Generic text output | None |
+| `GmcpComm` | GMCP protocol messages | JSON payload |
+| `LoginComm` | Login prompts | None |
+| `PromptComm` | Player prompts | HP, mana, move, position, flags |
+| `SnoopComm` | Snoop output | Source character name |
+| `TellFromComm` / `TellToComm` | Tell messages | Target/sender name |
+| `RoomExitComm` | Exit data for clients | Exit directions and vnums |
+| `SoundComm` | Sound effects | Sound file identifier |
+| `WhoListComm` | Who list entries | Character data |
+
+The Comm hierarchy uses shared_ptr ownership through CommPtr typedef. Each subclass implements getText to provide formatted output.
 
 ### Global Variables
 
@@ -126,15 +141,30 @@ The tick rate is 0.1 seconds. Each tick: accept new connections, close exception
 | `avail_descs` | `int` | Max allowed descriptors (150) |
 | `gSocket` | `TMainSocket*` | Global main socket |
 
+The next_to_process global is updated by the Descriptor destructor to skip deleted entries.
+
 ### Socket Configuration
 
 | Setting | Value | Purpose |
 |---------|-------|---------|
+| Socket type | PF_INET6, SOCK_STREAM | IPv6 TCP (also accepts IPv4) |
+| SO_REUSEADDR | enabled | Allow port reuse |
+| SO_LINGER | disabled | Close immediately, don't wait for send buffer |
+| SO_KEEPALIVE | enabled | Detect dead connections |
 | TCP_KEEPIDLE | 180 seconds | Idle time before probes |
 | TCP_KEEPINTVL | 180 seconds | Probe interval |
-| Listen backlog | 10 | Pending connection queue |
-| SO_REUSEADDR | enabled | Allow port reuse |
 | FNDELAY | enabled | Non-blocking I/O |
+| Listen backlog | 10 | Pending connection queue |
+
+### Limits and Constants
+
+| Constant | Value | Purpose |
+|----------|-------|---------|
+| MAX_INPUT_LENGTH | 1024 | Maximum command length before truncation |
+| m_raw buffer size | 4096 | Raw input accumulation buffer |
+| avail_descs | 150 | Maximum concurrent connections |
+| Tick duration | 0.1 seconds | Event loop cycle time |
+| Command pacing | 1 tick minimum | Default wait counter value |
 
 ## Implementation
 
@@ -158,7 +188,7 @@ The constructor prepends to `descriptor_list`. The destructor updates `next_to_p
 
 ### Input Flow
 
-`inputProcessing()` reads into `m_raw` accumulating partial data until newline. Telnet sequences are stripped via `handleTelnetOpts()`. Lines are parsed and pushed to the `input` queue. Dollar signs are doubled to prevent printf format string issues.
+`inputProcessing()` reads into `m_raw` accumulating partial data until newline. Telnet sequences are stripped via `handleTelnetOpts()`. Lines are parsed and pushed to the `input` queue. Dollar signs are doubled to prevent printf format string issues. Backspace characters delete the previous character. Command history expansion supports `!`, `!!`, and `!number` syntax.
 
 `processAllInput()` iterates descriptors, always caching `next_to_process` first. For each descriptor with positive `wait` counter and non-empty input queue, it pops a command and dispatches based on connection state:
 
@@ -174,13 +204,19 @@ The constructor prepends to `descriptor_list`. The destructor updates `next_to_p
 
 Output uses polymorphic Comm objects via shared pointers in a queue. `outputProcessing()` pops each Comm, undoes dollar doubling, forwards to snooper if any, applies color codes, and writes to socket. Errors return -1 triggering descriptor deletion.
 
-`setPrompts()` generates state-appropriate prompts (task prompts, editor prompts, game prompts with HP/mana/move). `afterPromptProcessing()` calls `outputProcessing()` for descriptors with pending output.
+`setPrompts()` generates state-appropriate prompts (task prompts, editor prompts, game prompts with HP/mana/move). Exit data is sent via RoomExitComm for clients that display mini-maps. `afterPromptProcessing()` calls `outputProcessing()` for descriptors with pending output.
 
 ### Telnet/GMCP Handling
 
 `handleTelnetOpts()` recursively processes IAC sequences. Any telnet command auto-enables GMCP (pragmatic hack for clients that don't negotiate properly). WILL/DO/WONT/DONT are answered appropriately. Subnegotiations (SB...SE) extract the payload and dispatch to `handleGmcpCommand()` for GMCP option.
 
-GMCP messages are sent via `sendGmcp()` which wraps content in IAC SB GMCP ... IAC SE framing. The `gmcp` flag is checked before sending.
+GMCP messages are sent via `sendGmcp()` which wraps content in IAC SB GMCP ... IAC SE framing. The `gmcp` flag is checked before sending. The `strip` parameter controls color code removal from the payload.
+
+### GMCP Negotiation Sequence
+
+On new connection, `startGmcp` pushes IAC WILL GMCP to the output queue. The client responds with IAC DO GMCP or IAC WILL GMCP. Both responses are accepted and set `gmcp` to true.
+
+After negotiation, the client sends `Core.Hello` via IAC SB GMCP Core.Hello JSON IAC SE. The handler parses JSON to extract client name and version, storing them in `mudclient`. `Core.Supports.Set` follows with capability lists, which are squelched.
 
 ### Linkdead Handling
 
@@ -200,3 +236,8 @@ When a descriptor is destroyed while character is in-game (connected >= CON_REDI
 | Linkdead character lost | Not saving on disconnect | Destructor calls `doQueueSave()` for in-game characters |
 | Duplicate items after disconnect | Followers not removed | Destructor removes followers before marking linkdead |
 | Connection refused | Capacity exceeded | Check `maxdesc + 1 >= avail_descs` in `newDescriptor()` |
+| Lost GMCP messages | Sending without checking gmcp flag | Guard all `sendGmcp()` calls with `if (descriptor->gmcp)` |
+| Input not processing | Wait counter stuck positive | Verify wait counter decrements each tick in processAllInput |
+| Telnet negotiation loops | Client doesn't respect DONT/WONT | Verify handleTelnetOpts sends appropriate rejections |
+| Command history corruption | History buffer indexing error | Check bounds and circular buffer wraparound logic |
+| Snoop chain crashes | Stale snoop pointers after deletion | Destructor must clear all snoop relationships first |

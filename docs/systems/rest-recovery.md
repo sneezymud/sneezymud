@@ -1,7 +1,6 @@
 ---
 title: Rest and Recovery System
 category: important
-created_by_model: opus
 keywords: [regeneration, sleep, rest, meditate, camp, hitGain, manaGain, moveGain, piety, lifeforce]
 related: [position-stance.md, scheduler-pulses.md, task-system.md, affects-system.md]
 primary_symbols:
@@ -98,6 +97,15 @@ Always check wet status for aquatic characters. Wet aquatic characters gain 1.3x
 | `POSITION_STANDING` | None | None | None | None | None | Half-tick only |
 | `POSITION_FIGHTING` | None | None | None | None | None | No recovery |
 
+### Position Command Restrictions
+
+Common restrictions across doSleep, doRest, and doSit:
+- Cannot enter position while flying
+- Cannot enter position while fighting or berserking
+- Cannot sleep or rest in water sectors without being aquatic or using a boat
+- ROOM_NO_HEAL prevents task-based recovery but allows position change
+- Sleep loses sneak status automatically
+
 ### Recovery Modifiers
 
 | Factor | HP Effect | Mana Effect | Move Effect |
@@ -115,6 +123,23 @@ Always check wet status for aquatic characters. Wet aquatic characters gain 1.3x
 | Enliven spell | 2x | None | 2x |
 | Aquatic (wet) | 1.3x | 1x | 1.3x |
 | Aquatic (dry) | 0.5x | 0.5x | 0.5x |
+
+### Condition Effects
+
+| Condition | Check | Effect |
+|-----------|-------|--------|
+| Hunger | `FULL == 0` | Quarters mana and move gain |
+| Thirst | `THIRST == 0` | Quarters mana and move gain |
+| Drunk | `DRUNK > 0` | Adds 1 + (drunk/3) to HP gain |
+| Poison | `AFF_POISON` | Quarters move gain |
+| Syphilis | `AFF_SYPHILIS` | Quarters move gain |
+
+### Spell Effects on Recovery
+
+| Spell/Affect | Effect |
+|--------------|--------|
+| `SPELL_ENLIVEN` | Doubles HP and move gain |
+| `AFFECT_WET` | Aquatic races gain 1.3x HP/mana/move; without this, aquatic races suffer 0.5x penalty |
 
 ### Meditation Skills
 
@@ -134,12 +159,72 @@ Always check wet status for aquatic characters. Wet aquatic characters gain 1.3x
 
 ### Pulse Timing Constants
 
+Defined in `code/code/sys/comm.h`:
+
 | Constant | Value | Real Time |
 |----------|-------|-----------|
 | `Pulse::ONE_SECOND` | 10 ticks | 1 second |
 | `Pulse::MOBACT` | 12 ticks | 1.2 seconds |
 | `Pulse::UPDATE` | 360 ticks | 36 seconds |
 | `Pulse::MUDHOUR` | 1440 ticks | 144 seconds |
+
+Task interval examples:
+- TASK_SLEEP: `regenTime()` pulses (varies, typically 10-60 pulses)
+- TASK_REST: `2 * regenTime()` pulses
+- TASK_SIT: `4 * regenTime()` pulses
+- TASK_MEDITATE: `4 * Pulse::MOBACT` = 48 pulses = 4.8 seconds
+- TASK_PENANCE: `5 * Pulse::MOBACT` = 60 pulses = 6 seconds
+- TASK_YOGINSA: `4 * Pulse::MOBACT` = 48 pulses = 4.8 seconds
+
+### Gain Function Formulas
+
+**hitGain** (`code/code/misc/limits.cc`):
+1. Base = graf(age, 2, 4, 5, 9, 4, 3, 2) + 4
+2. Constitution multiplier: 0.80 to 1.25 via plotStat
+3. Level scaling: gain *= max(20, GetMaxLevel()) / 20
+4. Bed bonus: gain += max(1, regen * gain / 100)
+5. Drunk bonus: gain += 1 + (drunk_level / 3)
+6. Hospital: gain *= 2
+7. Camp: gain += gain * campLevel / 100
+8. Enliven: gain *= 2
+9. Aquatic: gain *= (wet ? 1.3 : 0.5)
+10. Shamans with zero lifeforce: return 0
+11. Combat: return 0
+
+**manaGain** (`code/code/misc/limits.cc`):
+1. Base = graf(age, 2, 4, 6, 8, 10, 12, 14) * 4
+2. Mage class: gain += gain (double)
+3. Race modifier: gain += race->getManaMod()
+4. Hunger/thirst: gain >>= 2 (quarter if either empty)
+5. Aquatic: gain *= (wet ? 1 : 0.5)
+6. Combat or spellcasting (spelltask): return 0
+
+**moveGain** (`code/code/misc/limits.cc`):
+1. Base = plotStat(STAT_CON, 11, 41, 30)
+2. Bed bonus: gain += max(1, regen * gain / 100)
+3. Poison: gain >>= 2
+4. Syphilis: gain >>= 2
+5. Hunger/thirst: gain >>= 2 (quarter if either empty)
+6. Camp: gain += gain * campLevel / 100
+7. Enliven: gain *= 2
+8. Aquatic: gain *= (wet ? 1.3 : 0.5)
+9. ROOM_NO_HEAL: gain /= 3
+10. ROOM_HOSPITAL: gain *= 2
+11. Final scaling: gain = (gain * 4) / 3
+
+**regenTime** (`code/code/misc/limits.cc`):
+1. Start with iTime = 100
+2. If HP below max: iTime = min(iTime, hitGain())
+3. If move below max: iTime = min(iTime, moveGain())
+4. If mana below max: iTime = min(iTime, manaGain())
+5. iTime = max(iTime, 1) (floor at 1)
+6. Return Pulse::UPDATE / iTime (inverse relationship)
+
+### Camp System Functions
+
+**encamp** (`code/code/disc/disc_advanced_adventuring.cc`): Creates PERMANENT_DURATION affect with skill_level as affect level. On skill failure, affect level is halved. Validates terrain type. Blocks indoor camping, city camping, and hazardous room flags (fire, flooded, no_flee, no_escape, no_heal, have_to_walk). Blocks flying, underwater, ocean, and river sectors.
+
+**inCamp** (`code/code/disc/disc_advanced_adventuring.cc`): Scans character's affects for SKILL_ENCAMP and returns affect level. If character is grouped (AFF_GROUP), scans all roommates for SKILL_ENCAMP and returns max(1, affect_level / 2) for groupmate camps. Returns FALSE if no camp found.
 
 ### Key Files
 
@@ -150,6 +235,7 @@ Always check wet status for aquatic characters. Wet aquatic characters gain 1.3x
 | `movement.cc` | doSleep, doRest, doSit, doWake commands |
 | `task_sleep.cc` | TASK_SLEEP handler |
 | `task_rest.cc` | TASK_REST handler |
+| `task_sit.cc` | TASK_SIT handler |
 | `task_meditate.cc` | TASK_MEDITATE handler |
 | `task_penance.cc` | TASK_PENANCE handler |
 | `disc_monk_meditation.cc` | TASK_YOGINSA handler |
@@ -175,6 +261,8 @@ After setting the new position, the handler calls `start_task()` with the approp
 Each task handler receives control when its interval expires. The handler first calls `calcNextUpdate()` to schedule the next iteration, then checks ROOM_NO_HEAL to determine if recovery should apply.
 
 For standard sleep/rest/sit tasks, each cycle adds +1 to HP, mana, and movement (if below maximum). Rest additionally grants +0.10 piety. The shaman special case intercepts this flow for characters above level 5 who are not shapeshifted or immortal - instead of gaining HP, they lose 1 lifeforce with a warning message. Low-level shamans recover normally.
+
+Task handlers receive CMD_TASK_CONTINUE (normal cycle), CMD_TASK_FIGHTING (combat interruption), and CMD_GENERIC_PULSE (time advancement). On CMD_TASK_CONTINUE, the handler applies recovery (if not blocked by ROOM_NO_HEAL), calls `calcNextUpdate()` to schedule the next cycle, and returns FALSE to keep the task active. On CMD_TASK_FIGHTING, the handler applies cantHit penalty, stops the task via `stopTask()`, and returns FALSE.
 
 ### HP Gain Calculation
 
@@ -212,11 +300,17 @@ The `inCamp()` function checks for active camp status. It first examines the cha
 
 Camp bonuses apply inside `hitGain()` and `moveGain()` as percentage increases based on the returned skill level. This occurs regardless of position, making camps valuable even for standing characters.
 
+### Camp Affect Storage
+
+The encamp skill creates an affect structure with duration set to PERMANENT_DURATION (-1), level set to skill_level, type set to SKILL_ENCAMP, and the `be` pointer set to the character's current room pointer. This room linkage prevents the camp from traveling with the character. When the character moves, the camp remains in the original room. The `inCamp()` function compares the affect's `be` pointer to the character's current `roomp`. If they differ, the camp bonus does not apply.
+
 ### Bed System
 
 The TBed class represents furniture that provides recovery bonuses. Each bed has properties for minimum position (sleep/rest/sit), maximum users, maximum comfortable size, and regeneration percentage bonus.
 
 The `bedRegen()` function applies when a character in appropriate position is riding the bed object. The bonus adds regen% of the current gain value, minimum 1 point. If the character's height exceeds the bed's max_size plus 6 inches tolerance, a penalty reduces gain based on the height difference divided by 3. The gain cannot go below zero.
+
+When a character rests on a bed, the `riding` pointer points to the bed object. During recovery calculation, the code checks if `riding` is set and the object is a bed type, then calls `bed->bedRegen()`. Multiple users can share a bed up to its max_users capacity, enforced by counting characters with `riding == this_bed` in the room's stuff list.
 
 ### Meditation Skills
 
@@ -228,9 +322,11 @@ Cleric/deikhan penance through TASK_PENANCE runs on a 5 * Pulse::MOBACT interval
 
 Monk yoginsa through TASK_YOGINSA runs on the same interval as meditation. Success grants 80% of hitGain(), 50% of moveGain(), and 50% of manaGain(). Additionally, the Wohlin skill tree provides automatic curative effects at various thresholds: salve at 20%, cure poison at 35%, sterilize at 50%, cure disease at 60%, clot at 75%, and hunger reduction at 90%.
 
+For SKILL_YOGINSA, success requires two rolls: bSuccess against the SKILL_YOGINSA learn percentage, then a second roll against (70 + wohlin_learn / 4). This creates a difficulty curve where yoginsa becomes more reliable as wohlin skill increases.
+
 ### Combat Interruption Handling
 
-When a character in a recovery task is attacked, the CMD_TASK_FIGHTING case triggers. The handler sends a warning message, applies 1-2 lost combat rounds (the second round has 33% chance), and calls `stopTask()` to end recovery. This represents the disorientation of being caught in a vulnerable position.
+When a character in a recovery task is attacked, the CMD_TASK_FIGHTING case triggers. The handler sends a warning message, applies 1-2 lost combat rounds (the second round has 33% chance via `number(0,2) == 0`), and calls `stopTask()` to end recovery. This represents the disorientation of being caught in a vulnerable position.
 
 ## Troubleshooting
 
@@ -258,11 +354,11 @@ When a character in a recovery task is attacked, the CMD_TASK_FIGHTING case trig
 
 **Symptom:** Ranger has encamped but grouped characters or the ranger see no recovery improvement.
 
-**Likely cause:** Invalid terrain, room flag blocking camp, or group members not in same room.
+**Likely cause:** Invalid terrain, room flag blocking camp, group members not in same room, or character moved after camping.
 
-**Diagnostic approach:** Verify room sector type is valid (forest, hill, etc.). Check for blocking room flags. Confirm group members have AFF_GROUP and share the same room.
+**Diagnostic approach:** Verify room sector type is valid (forest, hill, etc.). Check for blocking room flags. Confirm group members have AFF_GROUP and share the same room. Check if the camp affect's room pointer matches the current room.
 
-**Fix:** Move to valid terrain without blocking flags. Ensure party members are properly grouped and in the same room as the camper.
+**Fix:** Move to valid terrain without blocking flags. Ensure party members are properly grouped and in the same room as the camper. Recast encamp if you moved since creating the camp.
 
 ### Meditation Stops Unexpectedly
 
@@ -293,3 +389,31 @@ When a character in a recovery task is attacked, the CMD_TASK_FIGHTING case trig
 **Diagnostic approach:** Compare character height to bed max_size (check for 6-inch tolerance). Verify position meets bed's min_pos_use requirement. Check current bed user count against max_users.
 
 **Fix:** Use a larger bed appropriate for character's race. Adjust position to meet bed requirements. Wait for other users to leave if bed is full.
+
+### updateHalfTickStuff Not Running
+
+**Symptom:** Character receives no passive regeneration. Position tasks work but no recovery occurs during movement or standing.
+
+**Likely cause:** Character is linkdead (desc is null) and is a PC. The linkdead check blocks HP and mana recovery for disconnected players. Another cause is fighting state, which blocks HP and mana recovery.
+
+**Diagnostic approach:** Check `isPc() && desc` boolean. Linkdead players show disconnected in the who list. For fighting block, check if `fight()` returns non-null.
+
+**Fix:** Reconnect to restore descriptor. End combat by fleeing, killing the opponent, or becoming incapacitated. Movement recovery continues during combat, so if movement regenerates but HP/mana don't, combat is the likely cause.
+
+### Camp Skill Fails in Valid Terrain
+
+**Symptom:** Encamp command returns failure message despite being in wilderness forest room with no apparent restrictions.
+
+**Likely cause:** Room has hazardous flags (ROOM_ON_FIRE, ROOM_FLOODED, ROOM_NO_FLEE, ROOM_NO_ESCAPE, ROOM_NO_HEAL, ROOM_HAVE_TO_WALK) that block camping. Another cause is being in a water sector or the room being marked as indoor.
+
+**Diagnostic approach:** Check room flags. Verify room's sector type isn't city, water, or indoor. For caves, check if ROOM_INDOORS flag is set (caves are allowed but indoor rooms are not).
+
+**Fix:** Remove hazardous flags if unintentional. Use appropriate sector type. For underwater or ocean sectors, surface to a shore. Valid sectors: forest, beach, hill, mountain, nature, road, swamp, arctic, cave.
+
+### Yoginsa Not Providing Wohlin Healing
+
+**Symptom:** TASK_YOGINSA runs successfully and grants HP/mana/move, but expected healing effects (salve, cure poison, etc.) don't trigger.
+
+**Likely cause:** Wohlin skill level below required threshold. Each healing effect requires minimum wohlin percentage: salve (20%), cure poison (35%), sterilize (50%), cure disease (60%), clot (75%), reduce hunger (90%). The healing effects only attempt if the character passes the yoginsa success roll AND the secondary (70 + wohlin_learn / 4) percentage roll.
+
+**Fix:** Increase SKILL_WOHLIN through practice. At 0% wohlin, no healing effects occur. At 90% wohlin, all effects can trigger. Each healing effect also applies its own internal skill check.

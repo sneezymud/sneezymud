@@ -3,7 +3,6 @@ title: Combat Formulas
 description: Mathematical formulas for hit probability, damage calculation, critical hits, attack counts, and defensive mechanics with stat scaling via plotStat.
 keywords: [attackRound, defendRound, hits, getWeaponDam, getSkillDam, reconcileDamage, critSuccessChance, blowCount, plotStat, getStatMod, specialAttack, genericDam, classAmt, dexModifier, armorClass]
 category: Important Systems
-created_by_model: opus
 last_updated: 2026-02-01
 source_files: [code/code/misc/combat.cc, code/code/misc/skill_dam.cc, code/code/misc/crit_combat.cc, code/code/misc/offense.cc, code/code/misc/being.h, code/code/misc/stats.cc, code/code/misc/damage.cc]
 related: [damage-pipeline.md, memory-safety.md, spell-skill-framework.md, position-stance.md, character-foundation.md]
@@ -13,11 +12,13 @@ related: [damage-pipeline.md, memory-safety.md, spell-skill-framework.md, positi
 
 ## Overview
 
-Combat resolution in SneezyMUD follows a probabilistic model where attack and defense bonuses compete to determine hit success. The system scales with level, equipment, stats, and skill training to produce meaningful progression while maintaining variance.
+Combat resolution in SneezyMUD follows a probabilistic model where attack and defense bonuses compete to determine hit success. The system uses accumulating bonuses rather than cascading multipliers to keep balance tractable. All combat outcomes derive from four primitive operations: hit detection, damage calculation, critical resolution, and attack count determination.
 
 Damage calculation uses a layered approach: weapon attacks derive from base damage dice modified by strength and skill learning, while spell/skill damage uses a universal formula driven by class-specific multipliers and casting time. Both systems scale with level and apply stat-based modifiers.
 
-Critical hits add variance through a karma-influenced probability check with severity scaling based on combat state. Attack frequency depends on class, combat modes, and buff effects, creating distinct combat cadences for different character builds.
+Critical hits add variance through a karma-influenced probability check with severity scaling based on combat state. PC critical chance operates on a 1-in-100,000 base while NPCs use 1-in-1,000,000 to compensate for higher attack counts. Severity determines effect intensity: limb damage at low severity, stunning at medium, bleeding and compounding injuries at high.
+
+Attack frequency depends on class, combat modes, and buff effects, creating distinct combat cadences for different character builds. Mobs use a simple multiplier field capped at 12 attacks, while PCs accumulate fractional bonuses from specialization skills, combat mode, and haste effects.
 
 All stat-to-modifier conversions flow through a non-linear scaling function that amplifies the value of extreme stats, making high-stat investment rewarding without making low stats completely unviable.
 
@@ -36,6 +37,8 @@ Never ignore dual wield penalties. Secondary hand damage ranges from 30-60% of p
 Never calculate crit probability without considering karma. Low karma characters have dramatically reduced crit rates while high karma can triple the baseline.
 
 Always validate stat values before passing to plotStat. The formula assumes stats fall within the game's standard range.
+
+Use getStatMod when you need standardized 0.8-1.25 range output for multiplicative effects. This wrapper applies plotStat with fixed bounds and adjusts the result around 1.0 as a neutral baseline.
 
 ## Reference
 
@@ -125,6 +128,22 @@ SKILL_GROUNDFIGHTING reduces these penalties proportionally to learning.
 | SKILL_CRIT_HIT | +20 x skillValue (max +2000) |
 | SKILL_POWERMOVE | +10 x skillValue (max +1000) |
 
+### Crit Severity
+
+| Severity Range | Effects |
+|----------------|---------|
+| 10-30 | Minor limb damage, light bleeding |
+| 31-60 | Stun duration, increased bleeding intensity |
+| 61-100 | Compounding effects, extended durations, potential instant kill on wounded victims |
+
+Severity formula: 10 + levelDifference + (100 - victimHPPercent) + skillBonuses
+
+### Critical Failure Types
+
+Twenty failure types including: weapon drop, self-damage, ally damage, falling prone, fumble opening defense.
+
+Failure roll: d300 vs (karma + drunkPenalty) x 10. Low karma and intoxication increase failure chance.
+
 ### plotStat Common Uses
 
 | Purpose | minValue | maxValue | Stat |
@@ -180,7 +199,7 @@ factor = clamp(600 + (9 x mod / 5), 0, 1000)
 hit = (roll(1, 1000) <= factor)
 ```
 
-The baseline hit rate is 60% when attack and defense are equal. The formula clamps to guarantee that extremely mismatched combatants still have hit floors and ceilings.
+The baseline hit rate is 60% when attack and defense are equal. Roll comparison uses less-than-or-equal so factor of 600 achieves exactly 60% probability. The formula clamps to guarantee that extremely mismatched combatants still have hit floors and ceilings.
 
 **specialAttack (combat.cc)** handles special attacks like bash and trip using a simpler model:
 
@@ -203,7 +222,7 @@ Situational modifiers are bounded to prevent extreme swings. Partial success typ
 weaponDamage = (baseDam + rollDam + bonusDam) x strModifier x weaponLearning / 100
 ```
 
-Base damage comes from the weapon's dice definition. Strength modifier varies by damage type: blunt and barehand receive full strength bonus, slashing receives 75%, piercing only 50%. Weapon learning derives from skill value or level, whichever is higher, capped at 100.
+Base damage comes from the weapon's dice definition. Bonus damage includes enchantments and crafting bonuses. Strength modifier varies by damage type: blunt and barehand receive full strength bonus, slashing receives 75%, piercing only 50%. Weapon learning derives from skill value or level, whichever is higher, capped at 100.
 
 Dual wield applies a secondary hand penalty: (30 + 30 x SKILL_DUAL_WIELD / 100)% of primary damage. Two-handed specialization provides a multiplier: (100 + 50 x SKILL_2H_SPEC / 100) / 100.
 
@@ -218,7 +237,7 @@ The classAmt value represents the spell's fundamental power coefficient. Lag rou
 
 NPC damage is reduced by approximately 48% (multiplied by 0.5195). Area effect spells receive an additional 25% reduction. Random variance adds plus or minus half the attacker's level.
 
-**reconcileDamage (damage.cc)** applies damage and returns -1 on victim death. This is a sentinel value, not a DELETE flag. Code must compare directly against -1, not use IS_SET_DELETE.
+**reconcileDamage (damage.cc)** applies damage and returns -1 on victim death. This is a sentinel value, not a DELETE flag. Code must compare directly against -1, not use IS_SET_DELETE. After confirming death, caller must construct DELETE_VICT flag if victim pointer was passed as parameter.
 
 ### Critical Hit System
 
@@ -242,7 +261,7 @@ Critical severity scales from 10-100:
 severity = 10 + levelDifference + (100 - victimHPPercent) + skillBonuses
 ```
 
-Higher severity produces more severe effects including limb damage, stuns, and bleeds.
+Higher severity produces more severe effects including limb damage, stuns, and bleeds. High severity (61-100) compounds multiple effects and can trigger instant kill on already-wounded victims.
 
 **critFailureChance (crit_combat.cc)** checks for fumbles:
 
@@ -270,6 +289,8 @@ secondaryAttacks = blowCountSplitter() + speedModifier
 ```
 
 Speed modifiers from Berserk, Advanced Berserking, Haste, and Celerite stack. Mounted combat reduces attacks by 33%. Typical PC attack counts range from 1-8+; MOBs can reach up to 12.
+
+Each fractional attack accumulates to the character's blow count. The combat round distributes attacks across equipped weapons. Each attack performs full hit detection, damage calculation, and critical check. Multi-attack rounds can trigger multiple crits per round, each using an independent probability roll.
 
 ### Stat-to-Modifier System
 
@@ -311,6 +332,26 @@ This produces a range from -67 to +84, translating to approximately -12% to +15%
 
 **Fix:** Verify AC values are in expected range. Check that skills are being added correctly. Confirm position is being detected accurately.
 
+### Combat mode confusion
+
+**Symptom:** Hit rates change unexpectedly when switching stances.
+
+**Cause:** Defense mode imposes attack penalty, offense mode provides attack bonus.
+
+**Diagnostic:** Check that stance matches intended strategy. Note that berserk provides larger bonus than offense but disables defense.
+
+**Fix:** Verify combat mode is being set correctly and mode modifiers are applying with correct signs.
+
+### Position penalty not applying
+
+**Symptom:** Defense appears unaffected by position changes.
+
+**Cause:** defendRound multiplies defense by position factor after accumulating bonuses. Groundfighting skill reduces penalties.
+
+**Diagnostic:** Check position is actually changing. Verify groundfighting skill learning level.
+
+**Fix:** Confirm position detection is working. If groundfighting is fully trained, penalty reduction is working as intended.
+
 ### Weapon damage inconsistent with weapon stats
 
 **Symptom:** High-damage weapons dealing low damage, or vice versa.
@@ -327,9 +368,19 @@ This produces a range from -67 to +84, translating to approximately -12% to +15%
 
 **Cause:** Karma stat too low, roll range issue, or skill bonus not being added.
 
-**Diagnostic:** Calculate expected crit chance. Verify karma base is being computed correctly via plotStat. Confirm skill bonuses are stacking.
+**Diagnostic:** Calculate expected crit chance. Verify karma base is being computed correctly via plotStat. Confirm skill bonuses are stacking. Check that roll range uses PC value (100000) not NPC value (1000000).
 
-**Fix:** Check that plotStat is receiving correct stat value. Verify SKILL_CRIT_HIT learning is being read. Confirm roll range is using PC value (100000) not NPC value (1000000).
+**Fix:** Check that plotStat is receiving correct stat value. Verify SKILL_CRIT_HIT learning is being read. Confirm roll range matches character type.
+
+### Critical failure too frequent
+
+**Symptom:** Failures occur frequently at normal karma levels.
+
+**Cause:** Karma stat below expected value or intoxication affecting roll.
+
+**Diagnostic:** Check karma stat and intoxication level. Remember failure roll is d300 versus karma x 10, so karma below 15 makes failures common.
+
+**Fix:** Verify karma stat retrieval. Check drunk status is not unexpectedly set.
 
 ### reconcileDamage death not detected
 
@@ -341,6 +392,16 @@ This produces a range from -67 to +84, translating to approximately -12% to +15%
 
 **Fix:** Replace IS_SET_DELETE(rc, DELETE_VICT) with direct comparison: reconcileDamage(...) == -1. Return appropriate DELETE flag after detection.
 
+### Death occurring but not detected
+
+**Symptom:** Victim should be dead but combat continues.
+
+**Cause:** reconcileDamage called with zero damage, hit point check using wrong comparison, or immortality flags.
+
+**Diagnostic:** Verify damage value passed to reconcileDamage is non-zero. Confirm hit point check uses <= 0 not just < 0. Check for immortality flags on victim.
+
+**Fix:** Ensure actual damage reaches reconcileDamage. Verify death threshold logic. Check immortality flag handling.
+
 ### Attack count lower than expected
 
 **Symptom:** Characters attacking fewer times per round than their skills should allow.
@@ -350,3 +411,23 @@ This produces a range from -67 to +84, translating to approximately -12% to +15%
 **Diagnostic:** Check for riding state. Verify buff affects are present. Log blowCount intermediate values.
 
 **Fix:** Confirm mounted penalty is only applied when actually riding. Verify haste/celerite/berserk affects are being detected. Check that blowCountSplitter is returning expected base value.
+
+### Stat modifiers not applying
+
+**Symptom:** Damage or hit chance unaffected by stat changes.
+
+**Cause:** plotStat receiving incorrect stat value, or modifier not being used in calculation.
+
+**Diagnostic:** Verify stat retrieval uses actual current stat including temporary bonuses, not base stat. Check affect system applies stat modifications before combat formula calls.
+
+**Fix:** Confirm stat retrieval path. Verify affects are being applied. Check that getStatMod result is actually multiplied into damage or added to hit bonus.
+
+### Dexterity bonus computed but not applied
+
+**Symptom:** Dexterity changes don't affect hit rates.
+
+**Cause:** attackRound or defendRound not adding dexterity result to accumulators.
+
+**Diagnostic:** Verify both functions add dexterity bonus. Check bonus is being added as integer, not truncated before casting.
+
+**Fix:** Ensure dexBonus calculation occurs and result is added to both offense and defense accumulators.

@@ -5,7 +5,9 @@ keywords: [TRoom, sectorTypeT, roomFlags, Weather, wetness, light]
 category: Critical Systems
 related: [movement-terrain-navigation.md, combat-formulas.md]
 source_files: [room.h, room.cc, weather.h, weather.cc, enum.h]
-created_by_model: opus
+primary_symbols:
+  functions: [real_roomp, getSectorType, getWeather, outdoorLight, getRoomWetness, getArcticSectorType]
+  classes: [TRoom, Weather, TTerrainInfo, roomDirData]
 last_updated: 2026-02-01
 ---
 
@@ -40,6 +42,10 @@ Rooms are the fundamental spatial unit containing all beings and objects. Each r
 - Characters dry slower than they get wet (rate /5 vs /3).
 - Wetness is capped at `WET_MAXIMUM = 100`.
 
+**Exit State Combinations:**
+- Check flags in logical order: SECRET prevents visibility, DESTROYED bypasses CLOSED/LOCKED, CAVED_IN blocks passage regardless of CLOSED state, WARDED creates magical barrier independent of physical state.
+- A LOCKED door can still be passed if DESTROYED. An OPEN door still blocks passage if CAVED_IN.
+
 ## Reference
 
 ### Room Flags (22-bit bitvector)
@@ -54,7 +60,7 @@ Rooms are the fundamental spatial unit containing all beings and objects. Each r
 | ROOM_NO_STEAL | 5 | Stealing disabled |
 | ROOM_NO_ESCAPE | 6 | Cannot flee from combat |
 | ROOM_NO_MAGIC | 7 | Magic use blocked |
-| ROOM_NO_PORTAL | 8 | Portal spells blocked |
+| ROOM_NO_PORTAL | 8 | Portal spells blocked (independent of ROOM_NO_MAGIC) |
 | ROOM_PRIVATE | 9 | Limited occupancy |
 | ROOM_SILENCE | 10 | No speech or sounds |
 | ROOM_NO_ORDER | 11 | Cannot order followers |
@@ -75,15 +81,15 @@ Rooms are the fundamental spatial unit containing all beings and objects. Each r
 |------|-----|--------|
 | EXIT_CLOSED | 0 | Door is shut |
 | EXIT_LOCKED | 1 | Requires key to open |
-| EXIT_SECRET | 2 | Hidden from observation |
-| EXIT_DESTROYED | 3 | Door has been broken |
+| EXIT_SECRET | 2 | Hidden from observation, requires search |
+| EXIT_DESTROYED | 3 | Door has been broken, ignores CLOSED/LOCKED |
 | EXIT_NOENTER | 4 | Cannot pass through |
 | EXIT_TRAPPED | 5 | Trap is set on door |
-| EXIT_CAVED_IN | 6 | Passage blocked by debris |
-| EXIT_WARDED | 7 | Magical barrier |
+| EXIT_CAVED_IN | 6 | Passage blocked by debris, prevents passage regardless of CLOSED |
+| EXIT_WARDED | 7 | Magical barrier, independent of physical state |
 | EXIT_SLOPED_UP | 8 | Upward slope |
 | EXIT_SLOPED_DOWN | 9 | Downward slope |
-| EXIT_JAMMED | 10 | Stuck closed |
+| EXIT_JAMMED | 10 | Stuck closed (different failure from LOCKED) |
 
 ### Directions
 
@@ -144,12 +150,12 @@ NORTH, EAST, SOUTH, WEST, UP, DOWN, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST (
 
 ### Weather-Dependent Spells
 
-| Spell | Requirement |
-|-------|-------------|
-| Call Lightning | RAINY or LIGHTNING |
-| Stormy Skies | RAINY, LIGHTNING, or SNOWY |
-| Plague of Locusts | NOT RAINY (fails in rain) |
-| Conjure Water Elemental | RAINY as water source |
+| Spell | Requirement | Notes |
+|-------|-------------|-------|
+| Call Lightning | RAINY or LIGHTNING | Lightning damage |
+| Stormy Skies | RAINY, LIGHTNING, or SNOWY | Lightning damage during RAINY/LIGHTNING, cold damage with hail during SNOWY |
+| Plague of Locusts | NOT RAINY (fails in rain) | |
+| Conjure Water Elemental | RAINY as water source | |
 
 ### Gunpowder Foul Rates (Outdoor Rain)
 
@@ -157,6 +163,17 @@ NORTH, EAST, SOUTH, WEST, UP, DOWN, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST (
 |--------|-------------|
 | Handgonne | 100% |
 | Cannon | 25% |
+
+### Seasonal Sector Mappings
+
+| Temperate Sector | Arctic Equivalent |
+|-----------------|-------------------|
+| SECT_PLAINS | SECT_SUBARCTIC |
+| SECT_TEMPERATE_FOREST | SECT_ARCTIC_FOREST |
+| SECT_TEMPERATE_OCEAN | SECT_ICEFLOW |
+| SECT_TEMPERATE_RIVER_SURFACE | SECT_ARCTIC_CONDITIONS |
+
+Additional mappings exist for roads, hills, swamps, and beaches.
 
 ## Implementation
 
@@ -178,16 +195,28 @@ Inherits from `TThing`. Key members:
 - `x, y, z` (int): World coordinates
 - `dir_option[MAX_DIR]` (roomDirData*): Exit array
 
+### Exit Data Structure (roomDirData)
+
+- `general_description`: Text shown when examining direction
+- `keyword`: Command matching for doors
+- `exit_info`: 11-bit flag bitvector
+- `key`: Vnum of object required to unlock
+- `to_room`: Destination room vnum (`Room::NOWHERE` if blocked)
+
+Null `dir_option` pointer means no exit in that direction. Non-null pointer with `to_room` set to `Room::NOWHERE` represents blocked or future passage.
+
 ### Dynamic State Thresholds
 
 - `ROOM_FIRE_THRESHOLD = 20000` cubic inches: When ROOM_ON_FIRE set, `getSectorType()` returns SECT_FIRE
 - `ROOM_FLOOD_THRESHOLD = 30000` cubic inches: When ROOM_FLOODED set, `getSectorType()` returns SECT_TEMPERATE_RIVER_SURFACE
 
+Room volume calculated from `roomHeight` multiplied by horizontal dimensions.
+
 ### Sector System
 
 58 sector types organized by climate zone (arctic, temperate, tropical) plus special types. Each has `TTerrainInfo` with: movement cost multiplier, visibility thickness, hunger/thirst drain rates, heat effect, wetness modifier.
 
-Winter mapping: During snowy weather (months 1-2, 11-12 in non-tropical sectors), `getArcticSectorType()` transforms temperate to arctic equivalents (PLAINS to SUBARCTIC, TEMPERATE_OCEAN to ICEFLOW).
+Winter mapping: During snowy weather (months 1-2, 11-12 in non-tropical sectors), `getArcticSectorType()` transforms temperate to arctic equivalents. Tropical sectors never receive SNOWY regardless of season.
 
 ### Weather System
 
@@ -204,9 +233,11 @@ Winter mapping: During snowy weather (months 1-2, 11-12 in non-tropical sectors)
 
 Total light = base (ROOM_ALWAYS_LIT = 18) + outdoor light + window light + object/being contributions. Thresholds: `brightSunlight()` = light > 20, `pitchBlackDark()` = light <= 0.
 
+Windows calculate percentage of outdoor light based on window count, not full outdoor contribution.
+
 ### Lightning Rod Spec Proc
 
-Objects with `weaponLightningRod` spec proc attract lightning when dropped outdoors during SKY_LIGHTNING weather. Strike conditions: 1% chance per pulse, room not indoors. Damage: 1 to weapDamLvl/4, affects all beings in room.
+Objects with `weaponLightningRod` spec proc attract lightning when dropped outdoors during SKY_LIGHTNING weather. Strike conditions: 1% chance per pulse, room not indoors, object must be in room inventory (not carried or equipped). Damage: 1 to weapDamLvl/4, affects all beings in room.
 
 ### Frostbite Disease
 
@@ -229,3 +260,10 @@ Component spawning uses weather bitmask. Example: rainbow bridge component spawn
 | River flow not working | `riverSpeed` is 0 | Set both `riverDir` and `riverSpeed` in zone file |
 | Room lookup returns nullptr | Vnum not loaded or invalid | Verify zone loaded; check vnum in zone files |
 | Help says hide affected by weather | Documentation out of sync | Code does not implement weather effects for hide |
+| Magic works in no-magic room | Flag check missing or flag removed | Verify `isRoomFlag` check before spell processing; some spells bypass by design |
+| Portal created in no-portal room | ROOM_NO_PORTAL check missing | Add flag check before portal creation; distinct from ROOM_NO_MAGIC |
+| Exit shows open but cannot pass | EXIT_CAVED_IN or EXIT_NOENTER flag set | Check all exit flags, not just CLOSED/LOCKED; verify `to_room` resolves |
+| Light level changes indoors | ROOM_INDOORS flag not set | Set flag to prevent outdoor light contribution |
+| Weather spell fails despite visible rain | Caster in indoor room | Verify caster room lacks ROOM_INDOORS; some rooms appear outdoor but have flag |
+| Lightning rod not triggering | Weapon carried or weather wrong | Drop weapon in outdoor room during SKY_LIGHTNING; 1% chance per pulse |
+| Room fire/flood override not working | Room volume below threshold | Verify volume exceeds 20000/30000; use `getSectorType()` not raw field |

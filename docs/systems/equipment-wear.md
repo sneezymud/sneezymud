@@ -1,7 +1,6 @@
 ---
 title: Equipment and Wear System
 category: understanding
-created_by_model: opus
 keywords: [wearSlotT, bodyPartsDamage, equipChar, stuckIn, limb-health]
 related: [combat-formulas.md, affects-system.md, object-system.md]
 primary_symbols:
@@ -28,6 +27,8 @@ When equipment is worn, the system applies any magical affects to the character'
 
 Always validate slot ranges before equipment operations. Valid humanoid slots are 1-20, with slots 21-24 reserved for non-humanoid extra limbs. Slot 0 (`WEAR_NOWHERE`) indicates an item is not worn.
 
+Always check item wear flags before attempting to equip. Items declare valid positions through `obj_flags.wear_flags`. An item without `ITEM_WEAR_HEAD` cannot be equipped to `WEAR_HEAD` even if the slot is empty.
+
 Never equip shields in the primary hand slot. The `equipChar` function enforces this, but code creating equipment scenarios must respect this constraint.
 
 Always check hand functionality before placing held items. Use `canUseLimb()` to verify the hand slot is functional before attempting to equip held items.
@@ -44,6 +45,8 @@ Always use the limb flag manipulation methods (`addToLimbFlags`, `remLimbFlags`,
 
 Always clear the stuck item reference when removing an object. The `pulloutObj` function handles this, but direct manipulation of `stuckIn` must maintain consistency.
 
+Always check for existing stuck items before insertion. A body part can only have one stuck item at a time. The `stickIn()` function validates this. Overwriting an existing `stuckIn` pointer without removing the old item leaks the previous object.
+
 Never forget that pulling stuck items causes bleeding damage. The `pulloutObj` function returns a result code indicating whether damage occurred.
 
 Always check both `stuckIn` and `equippedBy` when searching for objects on a character. An item in a body part slot might be stuck rather than equipped.
@@ -55,6 +58,12 @@ Always call `affectModify()` when equipping or unequipping items. Each entry in 
 Never assume affects are applied once. The system iterates through `MAX_OBJ_AFFECT` entries for each item during equip and unequip operations.
 
 Always pass the correct `add` parameter to `affectModify()`. Use `true` when equipping (adding affects) and `false` when unequipping (removing affects).
+
+### Paired Equipment Handling
+
+Always handle paired items occupying two slots. Pants occupy both `WEAR_LEG_R` and `WEAR_LEG_L`. The item's `eq_pos` stores one canonical slot, but both `equipment[]` entries point to the same object.
+
+Always clear both slots when removing paired items. Both `equipment[slot]` pointers must be cleared and affects should only be removed once.
 
 ### Handedness
 
@@ -68,6 +77,8 @@ Never hardcode `HOLD_RIGHT` or `HOLD_LEFT` for primary/secondary distinctions. L
 
 | Symbol | Type | Purpose |
 |--------|------|---------|
+| `wearSlotT` | enum | Defines 24 equipment slot constants |
+| `bodyPartsDamage` | struct | Per-limb health, flags, and stuck item data |
 | `equipChar` | function | Attach item to wear slot, apply affects |
 | `unequip` | function | Remove item from wear slot, reverse affects |
 | `affectModify` | function | Apply or remove item affects to character stats |
@@ -75,10 +86,15 @@ Never hardcode `HOLD_RIGHT` or `HOLD_LEFT` for primary/secondary distinctions. L
 | `pulloutObj` | function | Remove stuck object, may cause bleeding |
 | `break_bone` | function | Set PART_BROKEN on limb if valid |
 | `getCurLimbHealth` | function | Query current limb health points |
+| `setCurLimbHealth` | function | Set limb health points |
+| `getMaxLimbHealth` | function | Query maximum limb health |
+| `hasPart` | function | Check if creature has body part |
 | `canUseLimb` | function | Check if limb is functional |
+| `isRightHanded` | function | Query dominant hand preference |
+| `getPrimaryHold` | function | Get primary weapon slot |
+| `getSecondaryHold` | function | Get off-hand slot |
 | `TBeing` | class | Character base class, owns body_parts array |
 | `TThing` | class | Object base class, has stuckIn pointer |
-| `bodyPartsDamage` | struct | Per-limb health, flags, and stuck item data |
 
 ### Equipment Slots (wearSlotT)
 
@@ -148,6 +164,22 @@ Range constants: `MIN_WEAR` = 1, `MAX_HUMAN_WEAR` = 20, `MAX_WEAR` = 24
 | `ITEM_WEAR_HOLD` | 14 | Can be held |
 | `ITEM_WEAR_THROW` | 15 | Can be thrown |
 
+### bodyPartsDamage Structure
+
+| Field | Type | Purpose |
+|-------|------|---------|
+| `flags` | `unsigned short` | Limb status flags (PART_* bits) |
+| `stuckIn` | `TThing*` | Pointer to item embedded in limb |
+| `health` | `unsigned short` | Current limb health points |
+
+### Handedness Determination
+
+| Condition | Result |
+|-----------|--------|
+| DEX > 180 | Ambidextrous |
+| Race is Hobbit | Ambidextrous |
+| Otherwise | Right-handed |
+
 ### Key Files
 
 | File | Contents |
@@ -186,6 +218,8 @@ The `equipChar()` function attaches an item to a character's equipment slot. The
 
 Once validation passes, the function sets the object's `equippedBy` pointer to the character and `eq_pos` to the slot. It then iterates through the item's `affected[]` array (up to `MAX_OBJ_AFFECT` entries) and calls `affectModify()` for each, applying the item's magical effects to the character's statistics. Finally, it updates the character's light level if the item provides illumination.
 
+Items that occupy multiple slots (like pants) store the same pointer in multiple `equipment[]` array positions, but the item's `eq_pos` stores only one canonical slot.
+
 ### Equipment Flow: Unequipping
 
 The `unequip()` function reverses the equipping process. It calls `affectModify()` with `add=false` for each affect entry, removing the item's magical effects from the character. For paired items that occupy two slots (like pants covering both legs or dual-held items), the function handles clearing both slot references.
@@ -218,6 +252,16 @@ Ambidexterity is granted to characters with DEX above 180 or those of Hobbit rac
 
 **Fix:** Ensure equipment is always attached via `equipChar()`, never by directly setting `equipment[]` slots.
 
+### Ghost Affects After Unequipping
+
+**Symptom:** Character retains stat bonuses after removing equipment, leading to inflated attributes.
+
+**Likely cause:** `affectModify()` was not called during unequipping, or was called with incorrect `add` parameter.
+
+**Diagnostic approach:** Verify `unequip()` was called rather than directly clearing the equipment slot pointer. Check if `affectModify()` was called with `add=false` for affect removal.
+
+**Fix:** Always use `unequip()` to remove equipment. Never directly manipulate `equipment[]` slots.
+
 ### Stuck Item Not Visible
 
 **Symptom:** An arrow is stuck in a character but doesn't show in equipment or inventory checks.
@@ -247,3 +291,33 @@ Ambidexterity is granted to characters with DEX above 180 or those of Hobbit rac
 **Diagnostic approach:** Check if code uses `HOLD_RIGHT`/`HOLD_LEFT` directly or calls `getPrimaryHold()`/`getSecondaryHold()`.
 
 **Fix:** Replace hardcoded slot constants with the handedness helper methods.
+
+### Cannot Equip Item to Valid Slot
+
+**Symptom:** Player attempts to wear an item to an appropriate slot but receives error message.
+
+**Likely cause:** Limb is non-functional due to missing, broken, paralyzed, or useless status flags.
+
+**Diagnostic approach:** Check limb flags for `PART_MISSING`, `PART_BROKEN`, `PART_PARALYZED`, or `PART_USELESS`. Use `canUseLimb()` to verify functionality. Check if character has the body part via `hasPart()`.
+
+**Fix:** Heal or repair the limb before attempting to equip. For broken limbs, apply healing. For missing limbs, regeneration is required.
+
+### Stuck Item Causes Crash on Removal
+
+**Symptom:** Game crashes when player attempts to pull out embedded item.
+
+**Likely cause:** Bidirectional pointers were not properly established during `stickIn()`, or item was deleted without clearing the stuck item relationship.
+
+**Diagnostic approach:** Verify both `body_parts[slot].stuckIn` and `item->stuckIn` pointers are valid. Check if item was deleted without calling `pulloutObj()`. Verify `item->eq_stuck` matches the slot index.
+
+**Fix:** Always use `stickIn()` to establish stuck item relationships. Never delete stuck items without first calling `pulloutObj()` to clear the bidirectional pointers.
+
+### Multiple Items Stuck in Same Limb
+
+**Symptom:** Multiple items appear to be embedded in the same body part, but only one is retrievable.
+
+**Likely cause:** `stickIn()` validation was bypassed, allowing overwrite of existing `stuckIn` pointer.
+
+**Diagnostic approach:** Check if `stickIn()` properly validated for existing stuck items. Trace how multiple items were stuck to find where validation failed.
+
+**Fix:** Ensure `stickIn()` checks for non-null `body_parts[slot].stuckIn` before allowing new stuck items.

@@ -1,7 +1,6 @@
 ---
 title: Economy System
 category: important
-created_by_model: opus
 keywords: [shops, banking, corporations, pricing, transactions, currency, taxes, accounting]
 related: [faction-system.md, object-system.md]
 primary_symbols:
@@ -38,7 +37,28 @@ The system supports four currency types associated with different factions: tale
 
 **Always save both parties after money transfers.** The `giveMoney()` function transfers money between beings, but if a crash occurs before saving, the money is duplicated (given but not deducted from source) or lost (deducted but not given to target). Call `saveItems()` for shopkeepers and `doQueueSave()` for players immediately after transfers.
 
+```cpp
+// CORRECT: Both parties save
+keeper->giveMoney(ch, amount, GOLD_SHOP);
+keeper->saveItems(shop_nr);
+ch->doQueueSave();
+
+// WRONG: Missing save - crash here duplicates money
+keeper->giveMoney(ch, amount, GOLD_SHOP);
+```
+
 **Always check keeper balance before player sells.** Before calling `giveMoney()` to pay a player, verify the shopkeeper has sufficient funds. Use `getMoney() < amount` check and display `missing_cash1` message if insufficient.
+
+```cpp
+// CORRECT: Check before transfer
+if (keeper->getMoney() < amount) {
+  keeper->doTell(ch->getName(), shop_index[shop_nr].missing_cash1);
+  return false;
+}
+keeper->giveMoney(ch, amount, GOLD_SHOP);
+```
+
+**Always check DELETE flags after money transfers.** `giveMoney()` can trigger DELETE_THIS or DELETE_VICT if one party dies during the transfer (e.g., from a spec proc or trigger). Check return codes and stop execution if deletion flags are set.
 
 ### Shop Configuration
 
@@ -66,6 +86,14 @@ When calculating prices for player-owned shops, the system checks in this order:
 
 Later checks override earlier ones. If you set both a vnum price and a player price for the same item/player combination, the player price wins.
 
+### Common Mistakes
+
+**Forgetting to deduct expenses before paying dividends.** Expenses must be deducted first, then dividends calculated on net revenue. Paying dividends on gross revenue causes the shop to lose money on every transaction.
+
+**Accessing desc->autobits without checking desc exists.** Mobs do not have descriptors. Before checking AUTO_SPLIT or other descriptor flags, verify desc is not null.
+
+**Using %r format specifier with user-provided shop names.** User input in shop names or item descriptions must use %s format with proper SQL escaping. The %r specifier bypasses escaping and allows SQL injection.
+
 ---
 
 ## Reference
@@ -91,6 +119,17 @@ Later checks override earlier ones. If you set both a vnum price and a player pr
 | `journalize()` | function | Record double-entry journal entry |
 | `shoplog()` | function | Log transaction to shoplog table |
 
+### Key Constants
+
+| Constant | Value | Purpose |
+|----------|-------|---------|
+| `MAX_SHOP_INVENTORY` | 2500 | Hard limit on shop item count |
+| `SHOP_PURCHASE_FEE` | 1000000 | Flat fee for buying a shop |
+| `SHOP_PURCHASE_MARKUP` | 1.15 | Multiplier on (cash + inventory value) |
+| `GRIMHAVEN_TAX_OFFICE` | 14 | Default tax office shop_nr |
+| `RESERVE_MIN_SPREAD` | 100000 | Minimum gap between reserve min/max |
+| `Obj::GENERIC_TALEN` | 13 | Template vnum for money objects |
+
 ### Profit Multipliers
 
 | Multiplier | Direction | Typical Range | Effect |
@@ -100,51 +139,51 @@ Later checks override earlier ones. If you set both a vnum price and a player pr
 
 ### Currency Types
 
-| Enum | Name | Faction |
-|------|------|---------|
-| `CURRENCY_GRIMHAVEN` | talen | FACT_NONE (default) |
-| `CURRENCY_LOGRUS` | dinar | FACT_CULT |
-| `CURRENCY_BRIGHTMOON` | kroner | FACT_BROTHERHOOD |
-| `CURRENCY_AMBER` | guilder | FACT_SNAKE |
+| Enum | Name | Faction | Vnum |
+|------|------|---------|------|
+| `CURRENCY_GRIMHAVEN` | talen | FACT_NONE (default) | 13 |
+| `CURRENCY_LOGRUS` | dinar | FACT_CULT | 13 |
+| `CURRENCY_BRIGHTMOON` | kroner | FACT_BROTHERHOOD | 13 |
+| `CURRENCY_AMBER` | guilder | FACT_SNAKE | 13 |
 
 ### Shop Access Flags
 
-| Flag | Permission |
-|------|------------|
-| `SHOPACCESS_OWNER` | Full access |
-| `SHOPACCESS_INFO` | View shop info |
-| `SHOPACCESS_RATES` | Change prices |
-| `SHOPACCESS_GIVE` | Withdraw money |
-| `SHOPACCESS_SELL` | Sell the shop |
-| `SHOPACCESS_ACCESS` | Manage permissions |
-| `SHOPACCESS_LOGS` | View transaction logs |
-| `SHOPACCESS_DIVIDEND` | Set dividend rate |
+| Flag | Bit | Permission |
+|------|-----|------------|
+| `SHOPACCESS_OWNER` | 0 | Full access |
+| `SHOPACCESS_INFO` | 1 | View shop info |
+| `SHOPACCESS_RATES` | 2 | Change prices |
+| `SHOPACCESS_GIVE` | 3 | Withdraw money |
+| `SHOPACCESS_SELL` | 4 | Sell the shop |
+| `SHOPACCESS_ACCESS` | 5 | Manage permissions |
+| `SHOPACCESS_LOGS` | 6 | View transaction logs |
+| `SHOPACCESS_DIVIDEND` | 7 | Set dividend rate |
 
 ### Corporation Access Flags
 
-| Flag | Permission |
-|------|------------|
-| `CORPACCESS_PARTNER` | Full partner access |
-| `CORPACCESS_INFO` | View corp info |
-| `CORPACCESS_GIVE` | Withdraw money |
-| `CORPACCESS_ACCESS` | Manage permissions |
-| `CORPACCESS_LOGS` | View logs |
+| Flag | Bit | Permission |
+|------|-----|------------|
+| `CORPACCESS_PARTNER` | 0 | Full partner access |
+| `CORPACCESS_INFO` | 1 | View corp info |
+| `CORPACCESS_GIVE` | 3 | Withdraw money |
+| `CORPACCESS_ACCESS` | 5 | Manage permissions |
+| `CORPACCESS_LOGS` | 6 | View logs |
 
 ### Transaction Types
 
-| Enum | Use Case |
-|------|----------|
-| `TX_BUYING` | Player buying item (tracks COGS) |
-| `TX_BUYING_SERVICE` | Player buying service (no COGS) |
-| `TX_RECYCLING` | Scrap value transaction |
-| `TX_SELLING` | Player selling item |
-| `TX_PRODUCING` | Shop producing item |
-| `TX_GIVING_TALENS` | Owner depositing money |
-| `TX_RECEIVING_TALENS` | Owner withdrawing money |
-| `TX_PAYING_INTEREST` | Bank interest payment |
-| `TX_WITHDRAWAL` | Bank withdrawal |
-| `TX_DEPOSIT` | Bank deposit |
-| `TX_FACTORY` | Factory production |
+| Enum | Use Case | Affects |
+|------|----------|---------|
+| `TX_BUYING` | Player buying item | Cash, Sales, COGS |
+| `TX_BUYING_SERVICE` | Player buying service | Cash, Sales (no COGS) |
+| `TX_RECYCLING` | Scrap value transaction | Cash, Recycling revenue |
+| `TX_SELLING` | Player selling item | Cash, Inventory |
+| `TX_PRODUCING` | Shop producing item | Inventory, Production cost |
+| `TX_GIVING_TALENS` | Owner depositing money | Cash, Paid-in Capital |
+| `TX_RECEIVING_TALENS` | Owner withdrawing money | Cash, Dividends |
+| `TX_PAYING_INTEREST` | Bank interest payment | Cash, Interest Expense |
+| `TX_WITHDRAWAL` | Bank withdrawal | Cash, Deposits liability |
+| `TX_DEPOSIT` | Bank deposit | Cash, Deposits liability |
+| `TX_FACTORY` | Factory production | Inventory, Production cost |
 
 ### Money Statistics Types
 
@@ -182,6 +221,12 @@ Later checks override earlier ones. If you set both a vnum price and a player pr
 | Owner buying from own shop | Self-transaction |
 | Casino transactions | Gambling separate system |
 | Commodity purchases | Raw materials |
+
+### Special Shop Ranges
+
+| Range | Purpose |
+|-------|---------|
+| 127-134 | Repair shops |
 
 ### Database Tables
 
@@ -266,13 +311,15 @@ The charisma modifier combines `getChaShopPenalty()` (charisma-based penalty) mi
 
 Shops with corporate ownership automatically balance cash via `doReserve()`. If shop money falls below `reserve_min`, the shop withdraws from the corporation to reach the midpoint between min and max. If money exceeds `reserve_max`, the shop deposits to the corporation to reach the midpoint. This uses `giveMoney()` between keeper and the corporation's banker mob.
 
+Reserve limits must be at least 100,000 talens apart. If both are zero, reserve balancing is disabled. The corporation must have sufficient funds for withdrawals; if the corporation balance is less than the withdrawal amount, the withdrawal is skipped and the shop remains below minimum reserves.
+
 ### Banking System
 
 Banks are shops with the `SPEC_BANKER` spec proc. Player accounts are stored in `shopownedbank` with shop_nr, player_id, talens, and earned_interest. Corporate accounts use `shopownedcorpbank`.
 
 Interest is calculated daily by `procBankInterest()`: earned_interest accumulates as talens times profit_sell divided by 365 (daily compound). The integer portion is added to talens and subtracted from earned_interest, preserving fractional accumulation.
 
-Central banks (`SPEC_CENTRAL_BANKER`) set reserve requirements via `shopownedcentralbank`. Regular banks must maintain total deposits times the central bank's profit_buy as reserves.
+Central banks (`SPEC_CENTRAL_BANKER`) set reserve requirements via `shopownedcentralbank`. Regular banks must maintain total deposits times the central bank's profit_buy as reserves. When a player attempts to withdraw, the bank checks if the withdrawal would violate reserve requirements and rejects it if so.
 
 ### Tax System
 
@@ -300,7 +347,11 @@ When TMoney objects are placed in the same container, `willMerge()` checks if th
 
 ### Money Pickup
 
-`TMoney::getMe()` handles pickup, calling `moneyMeMoney()` which: removes the object from its container, notifies the player of the amount, logs large pickups, alerts greedy mobs in the room (increasing their greed urgency and targeting the player), adds money to the player via `addToMoney()`, triggers auto-split if enabled, and returns `DELETE_THIS` to signal the object should be deleted. The money object is consumed and converted to the player's money counter.
+`TMoney::getMe()` handles pickup, calling `moneyMeMoney()` which: removes the object from its container, notifies the player of the amount, logs large pickups, alerts greedy mobs in the room (increasing their urgency and targeting the player), adds money to the player via `addToMoney()`, triggers auto-split if enabled, and returns `DELETE_THIS` to signal the object should be deleted. The money object is consumed and converted to the player's money counter.
+
+### Greedy Mob Interaction
+
+When a player picks up money, `moneyMeMoney()` iterates through all beings in the room checking for greedy mobs. Greedy mobs have their urgency increased by 1 plus the money amount divided by 1000. Higher urgency makes the mob more likely to act on its greed by attacking the player or demanding money. This creates emergent gameplay where picking up large amounts of money in the presence of greedy mobs is dangerous.
 
 ### Money Commands
 
@@ -322,9 +373,9 @@ When `AUTO_SPLIT` is enabled via toggle, money is automatically split with the g
 
 **Repair Shops** (shop_nr 127-134, checked by `isRepairShop()`) use `shopownedrepair` for quality and speed settings. Speed divides the repair time, quality multiplies the restoration amount, both affect price via profit_buy.
 
-**Loan Sharks** (`SPEC_LOAN_SHARK`) manage player loans via `shopownedloans` (active loans) and `shopownedloanrate` (terms).
+**Loan Sharks** (`SPEC_LOAN_SHARK`) manage player loans via `shopownedloans` (active loans) and `shopownedloanrate` (terms). When a player takes a loan, a row is inserted with amount, interest rate, and due date. The spec proc checks for overdue loans and applies penalties.
 
-**Auctioneers** (`SPEC_AUCTIONEER`) manage auctions via `shopownedauction`.
+**Auctioneers** (`SPEC_AUCTIONEER`) manage auctions via `shopownedauction`. Players can list items for auction with a minimum bid and duration. Other players bid via commands handled by the spec proc. When the auction expires, the highest bidder receives the item and the seller receives payment minus commission.
 
 ### TMoney Special Behaviors
 
@@ -393,3 +444,43 @@ Money objects are always carryable regardless of weight/volume limits (`canCarry
 **Diagnostic approach:** Check if the item has ITEM_STRUNG flag. If so, the count query should match on short_desc with the strung flag check.
 
 **Fix:** The counting code must check `isObjStat(ITEM_STRUNG)` and use short_desc matching for strung items, vnum matching for regular items.
+
+### Tax Not Collected
+
+**Symptom:** No tax entries in shoplog despite transactions occurring.
+
+**Likely cause:** Tax office shop_nr is invalid, or transaction type is exempt.
+
+**Diagnostic approach:** Check tax_nr in shopowned table. Verify tax office shop exists and has a keeper. Check if buyer is shop owner (exempt). Check if transaction is commodity or casino type (exempt).
+
+**Fix:** Set valid tax_nr in shopowned. Ensure tax office keeper exists and has SPEC_TAXMAN. If intentionally exempt, verify exemption logic is correct.
+
+### Money Pile Does Not Merge
+
+**Symptom:** Multiple separate money piles in same location when they should combine.
+
+**Likely cause:** Currency types differ, or merge code is bypassed.
+
+**Diagnostic approach:** Check currency type of both piles. Verify both are in same container (same room or same inventory). Enable debug logging in TMergeable to trace willMerge and doMerge calls.
+
+**Fix:** Ensure both piles are same currency. If they are same currency and still not merging, check that operator+= in container management is correctly invoking merge logic.
+
+### Bank Interest Not Accruing
+
+**Symptom:** Player account balance does not increase despite deposits and time passing.
+
+**Likely cause:** procBankInterest scheduler not running, or profit_sell is zero.
+
+**Diagnostic approach:** Check if procBankInterest is in active scheduler tasks. Verify bank shop has non-zero profit_sell. Check shopownedbank earned_interest column for fractional accumulation.
+
+**Fix:** Verify scheduler is running and procBankInterest is registered. Set appropriate profit_sell annual rate (typical 0.03 to 0.10). If earned_interest is accumulating but not transferring, check that integer conversion and update logic is correct.
+
+### Central Bank Reserve Violation
+
+**Symptom:** Regular bank allows withdrawal that should be blocked by reserve requirements.
+
+**Likely cause:** Central bank link not configured, or reserve calculation is wrong.
+
+**Diagnostic approach:** Check shopownedcentralbank for entry linking bank to central bank. Calculate required reserves as total deposits times central bank profit_buy. Compare to bank's actual reserves at central bank.
+
+**Fix:** Add shopownedcentralbank entry linking the banks. Verify central bank has appropriate profit_buy reserve ratio (typical 0.10 to 0.20). Ensure withdrawal code checks reserve requirement before allowing transaction.

@@ -5,7 +5,6 @@ keywords: [sstring, string handling, NULL-safe, convertTo, word parsing, boost f
 category: Understanding Systems
 related: [parse-system.md, command-system.md, database-system.md]
 last_updated: 2026-02-01
-created_by_model: opus
 source_files: [code/code/sys/sstring.h, code/code/sys/sstring.cc, code/code/misc/parse.h]
 ---
 
@@ -35,6 +34,8 @@ Treat database columns defensively. Missing or misspelled column names return em
 
 For critical database values, consider checking if the column actually exists before conversion rather than trusting that zero is a valid result.
 
+NULL database values are also returned as empty strings. Use an empty check to distinguish between NULL and zero-length string storage if the distinction matters for application logic.
+
 ### NULL Safety Boundaries
 
 Use sstring at NULL boundaries where C strings enter the system. Database results, C library functions, and optional parameters may return NULL. Let sstring's constructor handle the conversion rather than scattering NULL checks throughout the code.
@@ -54,6 +55,22 @@ Use words() when you need to iterate over all arguments or check the total argum
 Use cap() rather than manual capitalization when the string may contain color codes. The method skips over color code sequences of the form `<X>` before finding and capitalizing the first actual letter.
 
 Use upper() and lower() for full case conversion. These methods transform the entire string regardless of color codes.
+
+### Whitespace Trimming
+
+Use trim() to remove both leading and trailing whitespace before parsing. This prevents empty word results from user input with excess spacing.
+
+Use trimLeft() when processing line-oriented input where trailing whitespace may be significant. Use trimRight() when appending formatted strings to avoid double-spacing.
+
+Apply trim() before isNumber() validation to handle user input with surrounding spaces, since isNumber() requires all characters to be digits and rejects strings with leading or trailing whitespace.
+
+### Migration From C Strings
+
+Replace const char* parameters with std::string_view for modern code while maintaining NULL-safety at system boundaries. Use sstring for storage when interfacing with database queries and legacy functions that may return NULL.
+
+When receiving char* from C libraries, construct sstring to safely handle NULL then convert to std::string_view for function parameters if needed. This preserves NULL-safety while enabling modern string handling patterns.
+
+Avoid passing sstring.c_str() to std::string constructors. Use sstring directly since it inherits from std::string and implicit conversion applies.
 
 ## Reference
 
@@ -94,7 +111,7 @@ Use upper() and lower() for full case conversion. These methods transform the en
 | `trim()` | Remove leading and trailing whitespace |
 | `trimLeft()` | Remove leading whitespace |
 | `trimRight()` | Remove trailing whitespace |
-| `comify()` | Insert commas in number strings |
+| `comify()` | Insert commas in number strings; handles negative sign |
 | `replaceString(find, replace)` | Return copy with all occurrences replaced |
 | `inlineReplaceString(find, replace)` | In-place replacement |
 | `lengthNoColor()` | Length excluding color codes |
@@ -228,3 +245,43 @@ A std::formatter specialization for sstring delegates to the std::string formatt
 **Diagnostic:** Print all column names from the query result. Check spelling of column access.
 
 **Fix:** Verify column names match the database schema. Consider logging when convertTo produces zero from a database value during development.
+
+### Word Index Off By One
+
+**Symptom:** Extracting arguments by word index produces wrong argument or empty string.
+
+**Cause:** word() uses zero-based indexing. First word is word(0) not word(1). Off-by-one errors produce empty string for out-of-range access.
+
+**Diagnostic:** Test boundary cases with single-word input to verify indexing.
+
+**Fix:** Remember zero-based indexing. word(0) is command verb, word(1) is first argument.
+
+### Boost Format Argument Mismatch
+
+**Symptom:** Format string has different placeholder count than arguments provided but no error reported.
+
+**Cause:** Config::ThrowFormatExceptions() controls whether boost::format throws on argument mismatch. Production mode suppresses exceptions.
+
+**Diagnostic:** Enable ThrowFormatExceptions during development.
+
+**Fix:** Test format strings with various argument counts. Consider moving to std::format which has compile-time validation for literal format strings.
+
+### Color Code Length Calculation
+
+**Symptom:** Display formatting assumes wrong string length when string contains color codes.
+
+**Cause:** length() counts color code characters while display rendering does not show them. Width calculations for padding or alignment produce wrong results.
+
+**Diagnostic:** Compare length() and lengthNoColor() values.
+
+**Fix:** Use lengthNoColor() instead of length() when calculating display width. Color codes like `<r>` occupy three characters in storage but zero display width.
+
+### Whitespace Fails isNumber Validation
+
+**Symptom:** isNumber() rejects numeric strings that should be valid.
+
+**Cause:** isNumber() requires all characters to be digits. Leading or trailing whitespace fails validation.
+
+**Diagnostic:** Check if string has surrounding whitespace.
+
+**Fix:** Apply trim() before isNumber() check. Note that strtol accepts leading whitespace but isNumber() does not.
