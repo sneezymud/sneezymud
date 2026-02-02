@@ -3,7 +3,6 @@ title: Character Foundation
 description: Core character mechanics including class system, race system, and stats/attributes with multiclass mechanics and stat calculations
 keywords: [CLASS_MAGE, CLASS_CLERIC, CLASS_WARRIOR, CLASS_THIEF, CLASS_SHAMAN, CLASS_DEIKHAN, CLASS_MONK, classIndT, race_t, Race, statTypeT, plotStat, getStat, hasClass, getLevel, body_t, baseStats, multiclass, mana, piety, lifeforce, stat layers, power law, racial modifiers]
 category: Important Systems
-created_by_model: opus
 last_updated: 2026-02-01
 source_files: [code/code/misc/being.cc, code/code/misc/race.cc, code/code/misc/stats.cc, code/code/misc/multiclass.cc]
 related: [class-hierarchy.md, spell-skill-framework.md, experience-leveling.md, combat-formulas.md, equipment-wear.md]
@@ -91,17 +90,19 @@ Never bypass racial immunities for balance reasons. They are intentional racial 
 
 ### The 9 Playable Classes
 
-| Class | Constant | Bit | Value | Primary Discipline | HP/Level | Abbr |
-|-------|----------|-----|-------|-------------------|----------|------|
-| Mage | `CLASS_MAGE` | 0 | 1 | `DISC_MAGE` | 5.25 | M |
-| Cleric | `CLASS_CLERIC` | 1 | 2 | `DISC_CLERIC` | 5.6 | C |
-| Warrior | `CLASS_WARRIOR` | 2 | 4 | `DISC_WARRIOR` | 8.5 | W |
-| Thief | `CLASS_THIEF` | 3 | 8 | `DISC_THIEF` | 5.6 | T |
-| Shaman | `CLASS_SHAMAN` | 4 | 16 | `DISC_SHAMAN` | 5.25 | S |
-| Deikhan | `CLASS_DEIKHAN` | 5 | 32 | `DISC_DEIKHAN` | 7.5 | D |
-| Monk | `CLASS_MONK` | 6 | 64 | `DISC_MONK` | 5.25 | K |
-| Ranger | `CLASS_RANGER` | 7 | 128 | `DISC_RANGER` | 4.9 | R |
-| Commoner | `CLASS_COMMONER` | 8 | 256 | `DISC_ADVENTURING` | 5.0 | O |
+| Class | Constant | Hex | Bit | Value | Primary Discipline | HP/Level | Abbr |
+|-------|----------|-----|-----|-------|-------------------|----------|------|
+| Mage | `CLASS_MAGE` | 0x0001 | 0 | 1 | `DISC_MAGE` | 5.25 | M |
+| Cleric | `CLASS_CLERIC` | 0x0002 | 1 | 2 | `DISC_CLERIC` | 5.6 | C |
+| Warrior | `CLASS_WARRIOR` | 0x0004 | 2 | 4 | `DISC_WARRIOR` | 8.5 | W |
+| Thief | `CLASS_THIEF` | 0x0008 | 3 | 8 | `DISC_THIEF` | 5.6 | T |
+| Shaman | `CLASS_SHAMAN` | 0x0010 | 4 | 16 | `DISC_SHAMAN` | 5.25 | S |
+| Deikhan | `CLASS_DEIKHAN` | 0x0020 | 5 | 32 | `DISC_DEIKHAN` | 7.5 | D |
+| Monk | `CLASS_MONK` | 0x0040 | 6 | 64 | `DISC_MONK` | 5.25 | K |
+| Ranger | `CLASS_RANGER` | 0x0080 | 7 | 128 | `DISC_RANGER` | 4.9 | R |
+| Commoner | `CLASS_COMMONER` | 0x0100 | 8 | 256 | `DISC_ADVENTURING` | 5.0 | O |
+
+`CLASS_ALL` (0x01FF) combines all nine classes.
 
 ### Level Constants
 
@@ -112,6 +113,18 @@ Never bypass racial immunities for balance reasons. They are intentional racial 
 | `MAX_IMMORT` | 60 | Maximum level (administrator) |
 | `MAX_CLASSES` | 9 | Number of class slots |
 | `MAX_SAVED_CLASSES` | 11 | Array size for level storage |
+
+### classInfo Array Fields
+
+The `classInfo` global array stores class characteristics indexed by `classIndT`:
+- `enabled` flag
+- `class_lev_num` for level array index
+- `class_num` bitmask value
+- display name
+- primary and secondary disciplines
+- practice point multiplier
+- HP per level
+- single-character abbreviation
 
 ### Playable Races Base Stats
 
@@ -142,6 +155,18 @@ Never bypass racial immunities for balance reasons. They are intentional racial 
 | Gnome | 0 | 0 | 0 |
 | Ogre | +4 | +40 | -1 |
 
+### Additional Race Data Members
+
+| Member | Purpose |
+|--------|---------|
+| `searchMod` | Flat search bonus |
+| `lineOfSightMod` | Extended scan range |
+| `visionBonus` | Detail improvement |
+| `foodMod` | Fullness scaling from eating |
+| `drinkMod` | Satiation scaling from drinking |
+| `corpse_const` | Corpse size/weight multiplier |
+| `tDissectItem[2]` | Item drops from dissection |
+
 ### The 13 Primary Stats
 
 | Stat | Enum | Primary Use | Combat Effect |
@@ -160,6 +185,8 @@ Never bypass racial immunities for balance reasons. They are intentional racial 
 | SPE | `STAT_SPE` | Attack frequency | Urban +20 bonus |
 | LUC | `STAT_LUC` | Random events | Critical outcomes |
 
+Stat range: 5 (minimum/crippled) to 205 (maximum/superhuman), with 105 as neutral baseline. `STAT_EXT` (index 13) is reserved and always zero.
+
 ### Stat Layers (statSetT)
 
 | Layer | Source | Persistence |
@@ -173,16 +200,16 @@ Never bypass racial immunities for balance reasons. They are intentional racial 
 
 ### Territory Stat Adjustments
 
-| Territory | STR | BRA | CON | INT | WIS | CHA | KAR | SPE |
-|-----------|-----|-----|-----|-----|-----|-----|-----|-----|
-| Urban | - | - | -20 | +20 | +20 | +20 | -20 | +20 |
-| Villager | - | -10 | -10 | +10 | +10 | +10 | -10 | - |
-| Plains | - | +5 | +5 | -10 | - | -5 | +5 | -5 |
-| Recluse | - | +15 | +25 | -25 | -15 | -30 | +30 | - |
-| Hill | - | +10 | +10 | -15 | -5 | -10 | +10 | - |
-| Mountain | - | +15 | +20 | -20 | -15 | -20 | +20 | - |
-| Forest | - | +15 | +15 | -15 | -15 | -15 | +15 | - |
-| Mariner | - | +5 | +5 | -5 | -5 | -5 | +5 | - |
+| Territory | STR | BRA | CON | INT | WIS | FOC | CHA | KAR | SPE |
+|-----------|-----|-----|-----|-----|-----|-----|-----|-----|-----|
+| Urban | - | - | -20 | +20 | +20 | -10 | +20 | -20 | +20 |
+| Villager | - | -10 | -10 | +10 | +10 | - | +10 | -10 | - |
+| Plains | - | +5 | +5 | -10 | - | - | -5 | +5 | -5 |
+| Recluse | - | +15 | +25 | -25 | -15 | - | -30 | +30 | - |
+| Hill | - | +10 | +10 | -15 | -5 | - | -10 | +10 | - |
+| Mountain | - | +15 | +20 | -20 | -15 | -15 | -20 | +20 | - |
+| Forest | - | +15 | +15 | -15 | -15 | - | -15 | +15 | - |
+| Mariner | - | +5 | +5 | -5 | -5 | - | -5 | +5 | - |
 
 ### Racial Characteristic Flags
 
@@ -197,7 +224,7 @@ Never bypass racial immunities for balance reasons. They are intentional racial 
 | `FOURLEGGED` | Four-legged anatomy | Horse, Dog, Lion |
 | `COLDBLOODED` | Temperature-dependent | Snake, Lizard |
 | `RIDABLE` | Can be mounted | Horse, Pegasus |
-| `MAGICFLY` | Magical flight | Djinni, Efreet |
+| `MAGICFLY` | Magical flight (dispellable) | Djinni, Efreet |
 | `FEATHERED` | Bird-like | Bird, Griffon, Phoenix |
 
 ### Racial Talents
@@ -239,6 +266,12 @@ Never bypass racial immunities for balance reasons. They are intentional racial 
 | `IMMUNE_ELECTRICITY` | Lightning | `IMMUNE_DISEASE` | Disease |
 | `IMMUNE_DRAIN` | Life drain | `IMMUNE_FEAR` | Fear effects |
 | `IMMUNE_HOLY` | Holy damage | `IMMUNE_SUMMON` | Summoning |
+| `IMMUNE_AIR` | Air damage | `IMMUNE_EARTH` | Earth damage |
+| `IMMUNE_WATER` | Water damage | `IMMUNE_ENERGY` | Energy damage |
+| `IMMUNE_NONMAGIC` | Non-magical weapons | `IMMUNE_PLUS1` | +1 weapons |
+| `IMMUNE_PLUS2` | +2 weapons | `IMMUNE_PLUS3` | +3 weapons |
+| `IMMUNE_SUFFOCATION` | Suffocation | `IMMUNE_BLEED` | Bleeding |
+| `IMMUNE_SKIN_COND` | Skin conditions | `IMMUNE_BONE_COND` | Bone conditions |
 
 ### Body Type Categories
 
@@ -281,6 +314,10 @@ Never bypass racial immunities for balance reasons. They are intentional racial 
 | `getStatMod(stat, mult)` | `double` | Scaled stat modifier |
 | `statSelfCheck(stat, bonus)` | `bool` | Percentage-based stat check |
 
+Specialized stat accessors: `getStrDamModifier()`, `getConHealthModifier()`, `getDexReaction()`, `getAgiReaction()`, `getWisDamModifier()`, `getIntModForPracs()`, `getChaShopPenalty()`.
+
+Convenience predicates: `isStrong()`, `isDextrous()`, `isAgile()`, `isTough()`, `isBrawny()`, `isIntelligent()`, `isWise()`, `isFast()`, `isFocused()`, `isPerceptive()`, `isCharismatic()`, `isLucky()`.
+
 ### Race Query Methods
 
 | Method | Returns | Purpose |
@@ -294,6 +331,8 @@ Never bypass racial immunities for balance reasons. They are intentional racial 
 | `isFourLegged()` | `bool` | Quadruped |
 | `isDumbAnimal()` | `bool` | Non-intelligent |
 | `hasNoBones()` | `bool` | Boneless (slime etc) |
+| `isLycanthrope()` | `bool` | Lycanthrope type |
+| `isColdBlooded()` | `bool` | Cold-blooded |
 
 ### Resource Methods
 
@@ -335,6 +374,8 @@ The `playerData` structure in `TBeing` stores class information: `level[MAX_SAVE
 
 The `NumClasses()` function counts set bits to determine multiclass count. This count drives XP penalties (squared division) and practice point division.
 
+Display methods distinguish single versus multiclass: single classes show first four characters capitalized, multiclass shows slash-separated abbreviations from classInfo array.
+
 ### Class-Specific Resources
 
 Mages use mana, an integer pool scaling with Intelligence. The `manaLimit()` method calculates maximum capacity, `manaGain()` handles regeneration per combat round. Resting and sleeping increase regeneration rate.
@@ -349,9 +390,11 @@ Hit points do not regenerate naturally, distinguishing them from other resources
 
 ### Class Combat AI
 
-The `classStuff()` method in `TMonster` dispatches to class-specific AI functions based on `bestClass()`. Each function selects appropriate attacks based on situation, HP percentage, and available resources.
+The `classStuff()` method in `TMonster` dispatches to class-specific AI functions based on `bestClass()`. Each function selects appropriate attacks based on situation, HP percentage, and available resources. Functions return TRUE if action taken, FALSE to allow fallback to basic attacks.
 
 Warriors use `fighterMove()` for bash, bodyslam, spin kick, and disarm. Monks use `monkMove()` for springleap, hurl, bonebreak, and chi abilities. Thieves use `thiefMove()` for backstab and stab. Casters use their respective functions to select offensive or defensive spells.
+
+Multiclass characters resolve via highest level class not combined tactics. A level 25 mage / level 10 warrior uses `mageMove()` exclusively. This simplifies AI while rewarding specialization.
 
 ### Race Flyweight Pattern
 
@@ -360,6 +403,8 @@ The `Races[MAX_RACIAL_TYPES]` global array holds 127 Race instances, one per rac
 Each `TBeing` stores only a `Race*` pointer to the shared instance. Query methods on TBeing delegate to the race: `isHumanoid()` calls `race->isHumanoid()`. This pattern minimizes memory with thousands of beings active.
 
 Race instances are immutable at runtime. All racial properties (base stats, immunities, talents, body type) are fixed at load.
+
+The `Stats` class constructor initializes all stats to 150 (above baseline) except `STAT_EXT` which remains 0.
 
 ### Body Type and Equipment
 
@@ -387,6 +432,8 @@ The midpoint (stat 105) always returns the average parameter. Below midpoint, ou
 
 The `plotStat()` method wraps `plotValue()` with the stat access layer. Common parameter sets: (0.8, 1.25, 1.0) for damage/regen multipliers, (5, 95, 25) for percentage-based skill checks.
 
+The `getStatMod()` helper extracts deviation from baseline, multiplies by parameter, adds back 1.0. Formula: `((plotStat - 1) * multiplier) + 1`. This allows amplifying stat effects where raw plotStat range proves insufficient.
+
 ### Age Modifier Curve
 
 Physical stats peak in youth (ages 16-30) with +5 to +10 bonuses, then decline after 40. By age 80, STR/CON/AGI show -8 to -10 penalties. Mental stats (INT, WIS, FOC) remain stable longer, only declining slightly after 50.
@@ -395,7 +442,7 @@ Vampires bypass age modifiers entirely, receiving instead flat +25 bonuses to ST
 
 ### Territory System
 
-Character homeland selection at creation applies permanent stat modifiers. Urban backgrounds gain +20 INT/WIS/CHA/SPE but -20 CON/KAR. Recluse backgrounds gain +25 CON and +30 KAR but suffer -30 CHA. Mountain and forest backgrounds provide outdoor survival bonuses at the cost of social stats.
+Character homeland selection at creation applies permanent stat modifiers. Urban backgrounds gain +20 INT/WIS/CHA/SPE but -20 CON/KAR and -10 FOC. Recluse backgrounds gain +25 CON and +30 KAR but suffer -30 CHA. Mountain and forest backgrounds provide outdoor survival bonuses at the cost of social stats.
 
 Territory modifiers stack with racial baselines and player allocations, calculated once and stored permanently.
 
@@ -404,6 +451,8 @@ Territory modifiers stack with racial baselines and player allocations, calculat
 Racial immunities define percentage resistance (0-100%) to 28 damage/effect types. Equipment immunities add to racial. Spell immunities add to the sum. Total is capped at 100%.
 
 Negative values indicate vulnerabilities. A vampire with IMMUNE_HOLY -50 takes 50% extra damage from holy sources. Vulnerabilities are not capped and can exceed -100%.
+
+Weapon magical status determines which immunity tier applies: non-magical weapons check IMMUNE_NONMAGIC, +1 weapons check IMMUNE_PLUS1, +2 check IMMUNE_PLUS2, +3 check IMMUNE_PLUS3. Higher-magic weapons bypass lower-tier immunity.
 
 ### Multiclass Integration
 
@@ -435,7 +484,7 @@ Convenience wrappers (`isStrong()`, `isPerceptive()`, `isDextrous()`, etc.) call
 
 **Diagnostic:** Log `getClass()` value and compare against expected bitmask. Check if EXACT_YES was used when EXACT_NO was intended.
 
-**Fix:** Use `hasClass(CLASS_MAGE)` for "has any mage component" checks. Use `hasClass(CLASS_MAGE | CLASS_CLERIC, EXACT_YES)` only when requiring both classes.
+**Fix:** Use `hasClass(CLASS_MAGE)` for "has any mage component" checks. Use `hasClass(CLASS_MAGE | CLASS_CLERIC, EXACT_YES)` only when requiring both classes. Use `howManyClasses()` for multiclass counting instead of comparing against multiple CLASS constants.
 
 ### Stat Modifier Returning Wrong Value
 
@@ -457,6 +506,16 @@ Convenience wrappers (`isStrong()`, `isPerceptive()`, `isDextrous()`, etc.) call
 
 **Fix:** Ensure `equipChar()` calls `affectModify(loc, mod, bitv, true)` for each item affect. Verify removal calls with `false`.
 
+### Orphaned Equipment Affects
+
+**Symptom:** Stats remain high after equipment removal.
+
+**Cause:** `affectModify()` with add true has no matching add false call. Equipment stacking bug.
+
+**Diagnostic:** Compare expected STAT_NATURAL against STAT_CURRENT after all equipment removed.
+
+**Fix:** Ensure every `affectModify(..., true)` has corresponding `affectModify(..., false)` on unequip.
+
 ### Racial Immunity Not Working
 
 **Symptom:** Character taking full damage despite racial resistance.
@@ -473,9 +532,9 @@ Convenience wrappers (`isStrong()`, `isPerceptive()`, `isDextrous()`, etc.) call
 
 **Cause:** Not applying squared division, or applying it inconsistently.
 
-**Diagnostic:** Log `howManyClasses()` result and verify division applied twice.
+**Diagnostic:** Log `howManyClasses()` result and verify division applied twice in `gain_exp()`.
 
-**Fix:** In `gain_exp()`, ensure `gain /= howManyClasses()` appears twice consecutively.
+**Fix:** Ensure `gain /= howManyClasses()` appears twice consecutively.
 
 ### Age Modifiers Not Changing
 
@@ -497,6 +556,16 @@ Convenience wrappers (`isStrong()`, `isPerceptive()`, `isDextrous()`, etc.) call
 
 **Fix:** Always check `resource >= cost` before deducting. Ensure `addToMana()` clamps to 0 minimum and `manaLimit()` maximum.
 
+### Piety Costs Seem Wrong
+
+**Symptom:** Piety costs appearing 4x higher than expected.
+
+**Cause:** Missing division by 4. Spell costs in spellInfo divide by 4 for fine granularity.
+
+**Diagnostic:** Compare raw spellInfo cost against actual deduction. PRAY_100 (20) should become 5.0.
+
+**Fix:** Verify piety cost calculation includes the /4 division.
+
 ### Body Type Equipment Mismatch
 
 **Symptom:** Character unable to wear valid equipment, or wearing invalid slots.
@@ -516,3 +585,23 @@ Convenience wrappers (`isStrong()`, `isPerceptive()`, `isDextrous()`, etc.) call
 **Diagnostic:** Log `player.hometerrain` value. Trace `getStat(STAT_NATURAL, ...)` to verify territory term included.
 
 **Fix:** Ensure character creation sets `hometerrain`. Verify `STAT_NATURAL` calculation includes territory adjustment term.
+
+### plotStat Returns Unexpected Values
+
+**Symptom:** Stat modifiers seem inverted or wrong.
+
+**Cause:** Parameter order incorrect.
+
+**Diagnostic:** Verify order is (minValue, maxValue, average) where min is for stat 5, max for stat 205, average for stat 105.
+
+**Fix:** Use (0.8, 1.25, 1.0) not (1.25, 0.8, 1.0). Stat values outside 5-205 are clamped, not extrapolated.
+
+### Combat AI Using Wrong Tactics
+
+**Symptom:** NPC using unexpected class abilities.
+
+**Cause:** `bestClass()` returning unexpected result for multiclass NPCs.
+
+**Diagnostic:** Log `bestClass()` return value. Verify it matches highest-level class.
+
+**Fix:** Multiclass NPCs use only their highest-level class's AI. Check level array values.

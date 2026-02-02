@@ -1,11 +1,10 @@
 ---
 title: Movement and Terrain Navigation
 category: important
-created_by_model: opus
 keywords: [movement, terrain, flying, climbing, falling, swimming, drowning, portals, teleportation, DELETE_THIS]
 related: [position-stance.md, room-environment.md, combat-rounds.md]
 primary_symbols:
-  functions: [doMove, rawMove, validMove, checkFalling, crashLanding, checkDrowning, riverFlow, canClimb, canFly, isFlying, doFly, doLand, genericTeleport, enterMe, rawOpenDoor, has_key]
+  functions: [doMove, rawMove, validMove, checkFalling, crashLanding, checkDrowning, riverFlow, canClimb, canFly, isFlying, doFly, doLand, genericTeleport, enterMe, rawOpenDoor, has_key, fallKill]
   classes: [TBeing, TRoom, TPortal, roomDirData]
   files: [code/code/misc/movement.cc, code/code/misc/physics.cc, code/code/misc/being.cc, code/code/obj/obj_portal.cc, code/code/misc/magicutils.cc, code/code/disc/disc_cleric_hand_of_god.cc]
 ---
@@ -32,6 +31,8 @@ The movement system's most dangerous aspect is its death potential. Falling, dro
 
 **Always propagate DELETE_THIS through mount falling chains.** When a rider falls off a mount, the subsequent crash landing can also return DELETE_THIS. Each level in the chain must check and propagate.
 
+**Scheduler adapters convert DELETE_THIS flags to bool.** Adapters like `procCharDrowning` check `IS_SET_DELETE(rc, DELETE_THIS)` and return `true` to signal deletion, `false` to keep the object.
+
 ### Iterator Safety
 
 **Always cache the next pointer before modifying linked structures.** River flow, rider chains, and follower processing can modify list linkage. Cache `t2 = t->nextRider` before any operations on `t`.
@@ -42,11 +43,15 @@ The movement system's most dangerous aspect is its death potential. Falling, dro
 
 **Handle portcullis and drawbridge inversion.** Portcullis opens with "raise" and closes with "lower". Drawbridge opens with "lower" and closes with "raise". This inversion catches many developers.
 
+**Validate reverse exit existence.** The back exit may not exist for one-way exits. Check that back is non-null before updating `back->condition` flags.
+
 ### Flight State Transitions
 
 **Check actual flight ability when leaving flying sectors.** Characters in SECT_MAKE_FLY sectors receive automatic flight. When leaving, verify they have real flight capability (spell, racial, or affect) or they cannot proceed to air/vertical sectors.
 
 **Never assume flight persists across sector boundaries.** The sector may grant or remove flight status automatically based on its type.
+
+**Winged races require AFF_FLIGHTWORTHY.** The `doFly()` command checks that feathered races have been preened before allowing takeoff.
 
 ### Teleportation Safety
 
@@ -59,6 +64,10 @@ The movement system's most dangerous aspect is its death potential. Falling, dro
 **Only the horse master can direct mounted movement.** Check via `riding->horseMaster()` before allowing the character to choose direction.
 
 **Mount pays movement points, not rider.** The mount's movement pool is depleted; the rider pays only a fraction (0-33%).
+
+### Water Mechanics
+
+**Swimming success depends on character density.** Characters denser than water (weight/volume ratio) must actively swim. AFF_SWIM reduces movement costs; dwarf racial penalties add significant costs due to their density.
 
 ## Reference
 
@@ -146,7 +155,7 @@ The movement system's most dangerous aspect is its death potential. Falling, dro
 | 10-19 rooms | Lethal | Damage |
 | 20+ rooms | Instant death | Instant death |
 
-Fall damage: `count * number(40, 80)`, halved by skills, halved again by water landing.
+Fall damage: `count * number(40, 80)`, halved by skills, halved again by water landing. The `fallKill()` function handles instant death at 20+ rooms regardless of skills or landing surface.
 
 ### Climbing Modifiers
 
@@ -180,6 +189,16 @@ Fall damage: `count * number(40, 80)`, halved by skills, halved again by water l
 | SPELL_WATERBREATH | Shaman spell |
 | SPELL_AQUALUNG | Mage spell |
 | Equipment enchantment | Item-based |
+
+### Portal Configuration
+
+| Property | Values | Notes |
+|----------|--------|-------|
+| Charges | -1 = infinite, 0 = depleted, positive = count | Decrements on use |
+| Portal type | 0-13 | Controls entry/exit messages |
+| Trap type | doorTrapT enum | Trap damage as unsigned short |
+| Portal state | EXIT_* flags | Closed, locked, trapped states |
+| Portal key | vnum | Required for locked portals |
 
 ### Teleportation Methods
 
@@ -215,6 +234,7 @@ Fall damage: `count * number(40, 80)`, halved by skills, halved again by water l
 | `validMove()` | Movement validation checks |
 | `checkFalling()` | Fall detection and damage |
 | `crashLanding()` | Handle landing from fall/dismount |
+| `fallKill()` | Instant death for extreme falls |
 | `checkDrowning()` | Underwater breath check |
 | `riverFlow()` | Current-based involuntary movement |
 | `canClimb()` | Climbing skill check |
@@ -270,11 +290,13 @@ Fall thresholds depend on SKILL_CATFALL and SPELL_FEATHERY_DESCENT. Without thes
 
 The `procCharDrowning` scheduler process runs every 36 ticks (3.6 seconds). It calls `checkDrowning()` which affects only PCs in underwater sectors without AFF_WATERBREATH. Damage is 20-40 per tick, checked via `reconcileDamage()` which returns -1 on death (not a DELETE flag).
 
-River flow uses `procCharRiverFlow` to move characters with the current. The `riverFlow()` function checks room river properties, doubles flow chance for sitting characters, allows swimming skill to resist, and calls `doMove()` for the flow direction.
+River flow uses `procCharRiverFlow` to move characters with the current. The `riverFlow()` function checks room river properties, doubles flow chance for sitting characters, allows SKILL_SWIMMING to resist with a message, and calls `doMove()` for the flow direction.
 
 ### Portal Entry
 
-The `TPortal` class in `obj_portal.cc` inherits from `TSeeThru`. Portal entry via `enterMe()` validates state (not closed, not noenter), combat restrictions, destination room, mob limits, and traps. On successful transfer, it moves the character, handles follower chains (mounts first, then others), and decrements charges on both ends.
+The `TPortal` class in `obj_portal.cc` inherits from `TSeeThru`. Portal entry via `enterMe()` validates state (not closed, not noenter), combat restrictions (berserk characters cannot enter while fighting), destination room, mob limits, and traps. On successful transfer, it moves the character, handles follower chains (mounts first, then others), and decrements charges on both ends.
+
+Portal trap handling checks EXIT_TRAPPED and calls `triggerPortalTrap()`. The return flags combine: DELETE_ITEM and DELETE_THIS means both portal and character destroyed (return DELETE_THIS | DELETE_VICT); DELETE_THIS alone means character died (return DELETE_VICT); DELETE_ITEM alone means portal destroyed (return false).
 
 When a portal's charges reach zero, it returns DELETE_THIS. The caller must check both DELETE_THIS (portal deleted) and DELETE_VICT (character died to trap).
 
@@ -324,7 +346,7 @@ Spell-based teleportation (portal, word of recall, astral walk, summon) in the c
 
 **Diagnostic approach:** Check if both `exitp->condition` and `back->condition` are modified where `back = rp->dir_option[rev_dir(door)]`.
 
-**Fix:** Ensure both sides receive the flag modification.
+**Fix:** Ensure both sides receive the flag modification. Validate back is non-null first (may be a one-way exit).
 
 ### Portcullis Won't Open with "open" Command
 
@@ -352,9 +374,19 @@ Spell-based teleportation (portal, word of recall, astral walk, summon) in the c
 
 **Likely cause:** The affect expired, was dispelled, or the character lacks AFF_WATERBREATH specifically (spell may set different flags).
 
-**Diagnostic approach:** Verify `isAffected(AFF_WATERBREATH)` returns true. Check affect list for the water breathing spell and its remaining duration.
+**Diagnostic approach:** Verify `isAffected(AFF_WATERBREATH)` returns true. Check affect list for the water breathing spell and its remaining duration. Check both spell-granted and racial immunity.
 
 **Fix:** Recast water breathing spell or verify the spell properly sets AFF_WATERBREATH.
+
+### Drowning Damage Not Applying
+
+**Symptom:** Characters in underwater sectors take no drowning damage.
+
+**Likely cause:** `procCharDrowning` scheduler process not registered.
+
+**Diagnostic approach:** Verify the process is added to the character's process list during descriptor initialization.
+
+**Fix:** Ensure drowning process registration occurs in descriptor setup. The process short-circuits via sector check, so it should always be active.
 
 ### Teleport Always Fails or Loops
 
@@ -365,3 +397,13 @@ Spell-based teleportation (portal, word of recall, astral walk, summon) in the c
 **Diagnostic approach:** Check zone enable status. Verify room flags in the target zone. Count how many rooms pass the exclusion filters.
 
 **Fix:** Ensure target zone is enabled and has at least one room without ROOM_PRIVATE, ROOM_HAVE_TO_WALK, ROOM_DEATH, and non-flying sectors.
+
+### Portal Traversal Fails Silently
+
+**Symptom:** Character enters portal but nothing happens or unexpected behavior occurs.
+
+**Likely cause:** Trap handling altered state before traversal completed.
+
+**Diagnostic approach:** Check if portal trap teleported the character elsewhere. Verify DELETE flag handling covers all combinations from `triggerPortalTrap()`.
+
+**Fix:** After trap handling, check sameRoom status before proceeding with traversal. Handle all DELETE flag combinations: DELETE_ITEM, DELETE_THIS, and both together.

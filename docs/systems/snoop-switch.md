@@ -6,7 +6,6 @@ category: Critical Systems
 related: [memory-safety.md, network-architecture.md]
 source_files: [code/code/misc/immortal.cc, code/code/sys/connect.h, code/code/sys/connect.cc, code/code/misc/limits.cc]
 last_updated: 2026-02-01
-created_by_model: opus
 ---
 
 # Snoop, Switch, and Return System
@@ -39,6 +38,7 @@ These commands manipulate descriptor pointers to redirect game I/O and character
 - Always call `REMOVE_BIT(specials.act, ACT_POLYSELF)` before deleting polymorphed mobs
 - Always use `doReturn()` before deleting switched bodies directly
 - Never delete switched bodies without returning the descriptor first
+- Never allow manual return for forced transformations (check `hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)`)
 
 **Permission Checks**
 - Always verify `hasWizPower(POWER_SNOOP)` before snooping
@@ -100,6 +100,15 @@ These commands manipulate descriptor pointers to redirect game I/O and character
 | Not SPEC_SHOPKEEPER | Shopkeepers protected |
 | Not SPEC_NEWBIE_EQUIPPER | Newbie helpers protected |
 
+### doReturn() Parameters
+
+| Parameter | Purpose |
+|-----------|---------|
+| `argument` | Optional limb name for limb transformation return |
+| `limb` | Specific limb slot for transformation reversal |
+| `tell` | If true, display transformation messages |
+| `deleteMob` | If true, delete polymorph form; if false, move to POLY_STORAGE |
+
 ### Key Functions
 
 | Function | File | Purpose |
@@ -121,9 +130,13 @@ The `Descriptor` class uses three key pointers for this system:
 
 When switched, the original player loses their descriptor (`desc = NULL`), and the mob receives it with `original` pointing back to the player.
 
+The `Descriptor` destructor automatically breaks snoop chains by clearing both `snoop_by` and `snooping` pointers, preventing dangling pointers when either party disconnects.
+
 ### Snoop Output Flow
 
 When a snooped character receives output, `outputProcessing()` checks `snoop.snoop_by` and duplicates the text to the snooper's output queue via `SnoopComm`. Snoop links break automatically when either party logs off.
+
+Target lookup iterates `descriptor_list`, skipping entries with `desc->account` set (login screen state). The first matching descriptor with a valid character is selected.
 
 ### Switch Execution Sequence
 
@@ -134,14 +147,23 @@ When a snooped character receives output, `outputProcessing()` checks `snoop.sno
 5. Set `mob->desc = desc`
 6. Set `original->desc = NULL`
 
+For regular switch, `get_char_room()` searches the current room first. If not found, `get_char()` with `EXACT_YES` searches globally for exact name matches, then `EXACT_NO` for partial matches.
+
 ### Return Execution Sequence
 
 1. Validate `desc` and `desc->original` exist
-2. For polymorph (ACT_POLYSELF set): move original body, call `SwitchStuff()`, remove affects
-3. Restore descriptor: `original->desc = desc`, `desc->character = original`
-4. Clear both `desc->original` and local `desc` pointers
-5. Set `original->polyed = POLY_TYPE_NONE`
-6. For polymorph only: `REMOVE_BIT(specials.act, ACT_POLYSELF)` then delete or store mob
+2. Check for forced transformation (`TOG_TRANSFORMED_LYCANTHROPE`) and reject if set
+3. For polymorph (ACT_POLYSELF set): move original body, call `SwitchStuff()`, remove affects
+4. Restore descriptor: `original->desc = desc`, `desc->character = original`
+5. Clear both `desc->original` and local `desc` pointers
+6. Set `original->polyed = POLY_TYPE_NONE`
+7. For polymorph only: `REMOVE_BIT(specials.act, ACT_POLYSELF)` then delete or store mob
+
+### Switch Load
+
+For `switch load <name>`, the command searches `mob_index` by name, creates the mob with `read_mobile()`, and places it in the current room. The mob's `oldRoom` field stores the creation room.
+
+If `Config::LoadOnDeath` returns false, `createWealth()` generates starting equipment and money. If true, the mob spawns empty and only generates loot when killed.
 
 ### Special Object Switch
 
@@ -154,6 +176,8 @@ The idle timeout system handles switched characters specially. Admin switch does
 ### Death Handling
 
 When a switched mob dies, `doReturn()` is called automatically with `deleteMob=false`. The immortal survives and returns to their original body while the mob dies normally.
+
+For spell polymorph deaths, `ACT_POLYSELF` is set, so `doReturn()` performs stat transfer and returns the player to their original body before death processing.
 
 ## Troubleshooting
 
@@ -184,3 +208,7 @@ When a switched mob dies, `doReturn()` is called automatically with `deleteMob=f
 **Bug: Snoop output not appearing**
 - Cause: Target is in switched state (`desc->original` set)
 - Fix: Cannot snoop switched characters; wait for return
+
+**Bug: Immortal cannot switch into specific mob**
+- Cause: `limitPowerCheck()` rejects the vnum based on database configuration
+- Fix: Verify immortal's access level in database; check wizard power settings

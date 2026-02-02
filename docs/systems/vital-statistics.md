@@ -1,7 +1,6 @@
 ---
 title: Vital Statistics
 description: Hunger, thirst, and age systems that add survival elements and character progression through lifecycle stages.
-created_by_model: opus
 related: [character-foundation.md, race-system.md, scheduler-pulses.md]
 ---
 
@@ -66,12 +65,12 @@ SneezyMUD tracks five condition types: drunkenness, hunger (fullness), thirst, a
 
 ### MUD Time Conversions
 
-| Unit | Real Time |
-|------|-----------|
-| 1 MUD hour | ~2.4 minutes |
-| 1 MUD day | ~57.6 minutes |
-| 1 MUD month | ~26.9 hours |
-| 1 MUD year | ~13.4 days |
+| Unit | Real Time | Constant |
+|------|-----------|----------|
+| 1 MUD hour | ~2.4 minutes | `Pulse::SECS_PER_MUDHOUR` (144 seconds) |
+| 1 MUD day | ~57.6 minutes | `Pulse::SECS_PER_MUD_DAY` (3456 seconds) |
+| 1 MUD month | ~26.9 hours | `Pulse::SECS_PER_MUD_MONTH` (96768 seconds) |
+| 1 MUD year | ~13.4 days | `Pulse::SECS_PER_MUD_YEAR` (1161216 seconds) |
 
 ### Age Stat Modifiers (Physical - Decline)
 
@@ -101,6 +100,29 @@ SneezyMUD tracks five condition types: drunkenness, hunger (fullness), thirst, a
 | 17-60 | Linear decay to 0 | 0 |
 | 61+ | Linear decay to -10 | 0 |
 
+### HP Regeneration Graf Parameters
+
+| Age Bracket | Graf Value |
+|-------------|------------|
+| Under 15 | 2 |
+| 15-29 | 4 |
+| 30-44 | 5 |
+| 45-59 | 9 (peak) |
+| 60-79 | 4 |
+| 80+ | 3 |
+
+Called as `graf(age, 2, 4, 5, 9, 4, 3, 2)` in `hitGain()`. Without `TOG_REAL_AGING`, returns interpolated value for age 35 (in the 30-44 bracket).
+
+### Terrain Drain Base Values
+
+| Condition | Base Value |
+|-----------|------------|
+| FULL (hunger) | 11 |
+| THIRST | 9 |
+| DRUNK | 9 |
+
+Higher terrain factors in `TerrainInfo` mean slower drain (less harsh environment).
+
 ## Implementation
 
 ### Condition Storage
@@ -109,13 +131,17 @@ Conditions persist in `TBeing::specials.conditions[]` and save to `charFile.cond
 
 ### Nutrition Drain Flow
 
-The `foodNDrink()` function executes once per half-tick (~36 seconds) via `updateHalfTickStuff()`. Drain probability depends on terrain-specific hunger/thirst/drunk values from `TerrainInfo`. Higher terrain values mean slower drain. Desert and jungle sectors drain faster. When FULL decreases, POOP increases; when THIRST decreases, PEE increases.
+The `foodNDrink()` function executes once per half-tick (~36 seconds) via `updateHalfTickStuff()`. Drain probability depends on terrain-specific hunger/thirst/drunk values from `TerrainInfo`. Higher terrain values mean slower drain. Desert and jungle sectors drain faster.
+
+Drain calculation: `effective_modifier = base_value - (modifier * terrain_factor)`, clamped to minimum 0. Probability uses two-stage random: first check determines if category drains this tick, second check against effective_modifier determines actual drain.
+
+When FULL decreases, POOP increases; when THIRST decreases, PEE increases.
 
 ### Condition Gain Modifiers
 
 The `gainCondition()` function applies three modifier layers for positive gains:
 1. **Racial metabolism**: `Race::getFoodMod()` and `Race::getDrinkMod()`
-2. **Body mass**: Normalized to 180 lbs baseline - heavier characters need proportionally more
+2. **Body mass**: `adjusted_value = base_value * 180 / character_weight` (minimum 1). Heavier characters need proportionally more food.
 3. **Alcoholism skill**: Reduces drunkenness gain by up to ~5%
 
 All gains clamp to 0-24 range after modifiers.
@@ -131,11 +157,13 @@ Regeneration penalties while hungry/thirsty: mana and move gain divided by 4, HP
 
 ### Auto-Eat System
 
-When `AUTO_EAT` autobit is set and character is awake, reaching condition 0 triggers automatic consumption. Searches equipment and inventory for food closest to spoiling. Low-level players (<=3) at Center Square can pray to the statue instead. Does not activate during active tasks.
+When `AUTO_EAT` autobit is set and character is awake, reaching condition 0 triggers automatic consumption. Searches equipment first, then inventory (including container contents recursively), prioritizing food closest to spoiling. Uses `last_cont` pointer to track container location during search.
+
+Low-level players (<=3) at Center Square can pray to the statue instead. Does not activate during active tasks.
 
 ### Garbage Eater Penalty
 
-Characters with `TALENT_GARBAGEEATER` experience accelerated hunger drain when FULL < 19. At FULL 0: first drains movement points, then HP if movement exhausted.
+Characters with `TALENT_GARBAGEEATER` experience accelerated hunger drain when FULL < 19 (loses 1-5 FULL randomly each half-tick). At FULL 0: first drains movement points (4-8 damage), then HP (1 damage) if movement exhausted. This can create a damage loop if the character cannot find garbage items.
 
 ### Weight Tracking
 
@@ -157,9 +185,11 @@ Current age calculated via `mudTimePassed()` combining birth timestamp with elap
 
 ### Age Effects
 
-The `graf()` interpolation function handles all age-based value lookups, returning the age-35 constant when `TOG_REAL_AGING` is not set. The `age_mod_for_stat()` function converts character years to "human equivalent" before applying stat modifiers.
+The `graf()` interpolation function handles all age-based value lookups, returning the age-35 constant when `TOG_REAL_AGING` is not set. Interpolation formula: `low_value + ((age - range_start) * (high_value - low_value)) / (range_end - range_start)`.
 
-Movement costs increase with age: +1 move per 5 years over 30, plus additional +1 per 10 years over 50. Maximum move pool increases with age to partially compensate. Ranged combat suffers -3 range penalty above human-equivalent age 80.
+The `age_mod_for_stat()` function converts character years to "human equivalent" before applying stat modifiers.
+
+Movement costs increase with age: +1 move per 5 years over 30, plus additional +1 per 10 years over 50 (with probabilistic variance). Maximum move pool increases with age to partially compensate. Ranged combat suffers -3 range penalty above human-equivalent age 80.
 
 ### Key Files
 
@@ -183,7 +213,7 @@ Movement costs increase with age: +1 move per 5 years over 30, plus additional +
 
 **Cause:** Racial talent restricts valid food types (TALENT_FISHEATER only gains nutrition from fish).
 
-**Fix:** Verify food type matches racial dietary requirements. Check `getMyRace()->hasTalent()` for food-related talents.
+**Fix:** Verify food type matches racial dietary requirements. Check `getMyRace()->hasTalent()` for food-related talents. The 5% calculation divides nutrition by 20, so low-value non-specialty foods round to nearly zero benefit.
 
 ---
 
@@ -203,7 +233,7 @@ Movement costs increase with age: +1 move per 5 years over 30, plus additional +
 
 **Cause:** `TOG_REAL_AGING` quest bit not set (opt-in system).
 
-**Fix:** Verify `hasQuestBit(TOG_REAL_AGING)` returns true. This is set during character creation.
+**Fix:** Verify `hasQuestBit(TOG_REAL_AGING)` returns true. This is set during character creation. Characters created before the toggle existed do not have it set by default.
 
 ---
 
@@ -213,7 +243,7 @@ Movement costs increase with age: +1 move per 5 years over 30, plus additional +
 
 **Cause:** Condition set before immortality granted.
 
-**Fix:** Call `setCond()` again after level change - it auto-sets -1 for immortals.
+**Fix:** Call `setCond()` again after level change - it auto-sets -1 for immortals. Note that admins cannot test hunger systems on themselves without temporarily de-leveling.
 
 ---
 
@@ -223,7 +253,7 @@ Movement costs increase with age: +1 move per 5 years over 30, plus additional +
 
 **Cause:** Missing `isVampire()` check in code path.
 
-**Fix:** All age modifier code should bypass vampires. Verify the specific stat calculation checks vampire status.
+**Fix:** All age modifier code should bypass vampires. Verify the specific stat calculation checks vampire status. Vampires receive flat +25 to STR/SPE/CHA regardless of actual age.
 
 ---
 
@@ -233,7 +263,7 @@ Movement costs increase with age: +1 move per 5 years over 30, plus additional +
 
 **Cause:** Character in task state (combat, crafting) or not awake.
 
-**Fix:** Check `task` field and `awake()` status. Auto-eat only fires when both conditions pass.
+**Fix:** Check `task` field and `awake()` status. Auto-eat only fires when both conditions pass. Also note: auto-eat searches equipped items and inventory but not room objects. Food on the ground will not be considered.
 
 ---
 
@@ -243,4 +273,24 @@ Movement costs increase with age: +1 move per 5 years over 30, plus additional +
 
 **Cause:** Weight already at racial min/max limit.
 
-**Fix:** Check `getMyRace()->getMinWeight(getSex())` and `getMaxWeight()`. Weight clamps to these bounds.
+**Fix:** Check `getMyRace()->getMinWeight(getSex())` and `getMaxWeight()`. Weight clamps to these bounds. Note that heavier characters need more food to satisfy hunger, but the 5000 threshold for weight change remains constant regardless of weight.
+
+---
+
+### Safe Zone Nutrition State
+
+**Symptom:** Character leaves Imperia or Lethargica and immediately starts starving.
+
+**Cause:** Safe zones prevent drain but do not freeze conditions. Existing low conditions persist.
+
+**Fix:** Eat before leaving safe zones. Conditions resume draining immediately upon entering normal zones.
+
+---
+
+### Starting Age Variability
+
+**Symptom:** Two same-race characters have different stat modifiers at creation.
+
+**Cause:** Race age generation uses dice rolls (e.g., "age 15+2d4" produces 17-23).
+
+**Fix:** This is intentional. The older-starting character will reach elderly penalties earlier in real-world time. Both use their rolled starting age for all calculations.

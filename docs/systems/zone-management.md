@@ -4,15 +4,8 @@ description: Zone lifecycle from boot through runtime resets - discovery, aging,
 keywords: bootZones, resetZone, zoneData, resetCom, procZoneUpdate, lifespan, reset_mode, if_flag, load-on-death
 category: Critical Systems
 related: [admin-systems.md, scheduler-pulses.md]
-created_by_model: opus
 last_updated: 2026-02-01
-source_files:
-  - code/code/sys/db.cc
-  - code/code/sys/db.h
-  - code/code/sys/socket.cc
-  - code/code/misc/cmd_show.cc
-  - code/code/misc/cmd_stat.cc
-  - code/code/misc/low.h
+source_files: [code/code/sys/db.cc, code/code/sys/db.h, code/code/sys/socket.cc, code/code/misc/cmd_show.cc, code/code/misc/cmd_stat.cc, code/code/misc/low.h]
 ---
 
 # Zone Management System
@@ -183,7 +176,7 @@ The load-on-death system stores equipment commands for execution when mobs die, 
 
 **procZoneUpdate** runs every `Pulse::MUDHOUR` (144 seconds). First pass increments `age` for enabled zones below lifespan. When `age >= lifespan`, sets `age = ZO_DEAD` (9999) to mark as queued. Second pass processes queued zones: mode 2 resets immediately, mode 1 calls `isEmpty()` first.
 
-**isEmpty()** iterates `descriptor_list`, skipping non-playing connections. Returns false if any character's `in_room` falls within zone's room range (bottom*100 to top*100).
+**isEmpty()** iterates `descriptor_list`, skipping non-playing connections and characters at `Room::NOWHERE`. Returns false if any character's `in_room` falls within zone's room range (bottom*100 to top*100).
 
 ### Phase 3: Execution
 
@@ -193,7 +186,7 @@ The load-on-death system stores equipment commands for execution when mobs die, 
 
 **Load-on-death** stores G/E/?/Y/Z/J commands in `tmob->loadCom` when `resetFlagFindLoadPotential` is set. Execution occurs in `die()` when mob is killed.
 
-**Random room placement** uses `A` command to set range, then `-99` room vnum triggers `number(low, high)` selection.
+**Random room placement** uses `A` command to set range, then `-99` room vnum triggers `number(low, high)` selection. The `random_room` value persists across commands in the same reset, so multiple loads with `-99` use the same room from the most recent `A` command.
 
 ### Phase 4: Cleanup
 
@@ -265,17 +258,32 @@ S
 | Cause | Fix |
 |-------|-----|
 | Invalid vnum | Check LOG_LOW, verify with `show obj <vnum>` |
-| Container at capacity | Check container max capacity |
+| Container at capacity | Check container max_contain value |
 | Shop inventory full | MAX_SHOP_INVENTORY = 2500 |
 | Object decayed | Check decay timers, use B instead of O for persistent objects |
+| O command on runtime reset | O only executes at boot; use B for every-reset objects |
+| E command slot mismatch | Verify object wear flags allow the specified slot |
+
+### Random Room Placement Issues
+
+**Symptom:** Mobs or objects with `-99` room vnum not appearing.
+
+| Cause | Fix |
+|-------|-----|
+| No preceding A command | Add `A 0 low_room high_room` before the load command |
+| A command is conditional and failed | Check if_flag on A command; use `if_flag = 0` for unconditional |
+| Range contains invalid rooms | Verify all room vnums in the range exist |
+| Multiple A commands conflict | Each random-placement load needs its own A command, or intentionally share |
 
 ### Orphaned Database Entries
 
 **Symptom:** Database has zones not in filesystem.
 
-**Cause:** Zone file deleted without database cleanup.
+**Cause:** Zone file deleted without database cleanup, or incomplete boot.
 
 **Fix:** Automatic on next boot via util_flag system. Manual: `DELETE FROM zone WHERE util_flag = 0`
+
+**Note:** Adding or removing zones causes zone_nr sequence to shift. Database update uses zone_nr as primary key, so all subsequent zones get mismatched zone_nr values until next boot.
 
 ### Reset Lag Spikes
 
@@ -286,3 +294,22 @@ S
 | Too many zones resetting simultaneously | Vary lifespan values across zones |
 | Complex zonefiles | Split into smaller zones or simplify commands |
 | Many mode-2 zones | Convert to mode-1 where possible |
+| Many objects in zone rooms | Clean up unnecessary objects or move to containers |
+
+### Silent Failures
+
+**Symptom:** Commands fail without logging errors during runtime.
+
+Common causes of silent failures:
+- `zone_value = 0` from failed vnum validation at boot
+- max_exist limits reached for mobs or objects
+- Conditional execution chains broken by failed predecessor
+- Invalid room vnums that don't exist
+
+**Debug approach:**
+1. Check LOG_LOW and LOG_MISC at boot for validation warnings
+2. Use `stat mob/obj <vnum>` to check current vs maximum exist values
+3. Trace if_flag chains in zonefile for broken dependencies
+4. Test zones in isolation by disabling others temporarily
+5. Use `goto` to visit spawn locations immediately after reset
+6. Verify zonefile syntax: missing arguments, mismatched if_flag values, missing S terminator

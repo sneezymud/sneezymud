@@ -5,7 +5,6 @@ keywords: [spec procs, special procedures, mob_specials, objSpecials, roomSpecia
 category: Important Systems
 related: [mob-system.md, object-system.md, room-system.md, delete-flags.md, command-system.md]
 last_updated: 2026-01-29
-created_by_model: opus
 source_files: [code/code/spec/spec_mobs.h, code/code/spec/spec_mobs.cc, code/code/spec/spec_objs.h, code/code/spec/spec_objs.cc, code/code/spec/spec_rooms.h, code/code/spec/spec_rooms.cc, code/code/misc/parse.cc, code/code/misc/parse.h]
 ---
 
@@ -25,7 +24,7 @@ Spec procs bridge static zone data with dynamic runtime behavior. A shopkeeper m
 
 Always verify the command type before dereferencing the final pointer parameter. Some commands pass integers cast to pointers rather than actual object references. Treat the parameter as an opaque value until you confirm the command type expects a pointer.
 
-Never assume the victim or object parameter is valid for pulse commands. The parameter may be null, may have been deleted, or may represent something other than a pointer.
+Never assume the victim or object parameter is valid for pulse commands. The parameter may be null, may have been deleted, or may represent something other than a pointer. Use `reinterpret_cast` to convert back to the appropriate integer type when handling commands that pass integers as pointers.
 
 ### Deletion Protocol
 
@@ -39,7 +38,7 @@ Always free `act_ptr` memory in `CMD_GENERIC_DESTROYED`. Failing to do so causes
 
 Use `CMD_GENERIC_PULSE` for most periodic behavior. It fires every 3.6 seconds, sufficient for ambient actions, room scanning, and NPC activities.
 
-Reserve `CMD_GENERIC_QUICK_PULSE` for time-critical mechanics. It fires every 1.2 seconds but runs on all entities, so heavy processing impacts server performance.
+Reserve `CMD_GENERIC_QUICK_PULSE` for time-critical mechanics. It fires every 1.2 seconds but runs on all entities, so heavy processing impacts server performance. Move non-critical work to `CMD_GENERIC_PULSE` and limit quick pulse to truly time-critical logic.
 
 Check `myself->awake()` and `myself->fight()` before doing periodic work. Sleeping or fighting entities typically should not perform ambient actions.
 
@@ -47,13 +46,17 @@ Check `myself->awake()` and `myself->fight()` before doing periodic work. Sleepi
 
 Allocate persistent state on `CMD_GENERIC_CREATED` or the first pulse. Store the pointer in `act_ptr`. Always check for null before accessing state since creation hooks may not have fired.
 
-Use lazy initialization when entities might bypass `CMD_GENERIC_CREATED`. Some loading paths skip the creation event, leaving `act_ptr` null until the first pulse.
+Use lazy initialization when entities might bypass `CMD_GENERIC_CREATED`. Some loading paths (like rent file loading) skip the creation event, leaving `act_ptr` null until the first pulse.
 
 Call `swapToStrung()` before modifying entity strings. Without it, changes may affect the prototype or be lost on save.
+
+Common state machine patterns include patrol routes where a `cur_path` field selects which route to follow and `cur_pos` tracks progress along the route. Quest NPCs track conversation phase and target information. Timed events increment tick counters and transition states when thresholds are reached.
 
 ### Command Handling
 
 Return TRUE to consume a command and prevent further processing. Return FALSE to let the command continue to other handlers.
+
+Parse arguments using standard string manipulation or the `one_argument` helper function. Validate that required objects or targets exist before proceeding.
 
 For quick pulse initialization, wait until `CMD_GENERIC_QUICK_PULSE` to perform deferred setup. The entity may not be fully initialized during `CMD_GENERIC_CREATED`.
 
@@ -67,14 +70,24 @@ For quick pulse initialization, wait until `CMD_GENERIC_QUICK_PULSE` to perform 
 | Object | `objSpecials[]` | `TObjSpecs` | `int proc(TBeing*, cmdTypeT, const char*, TObj*, TObj*)` |
 | Room | `roomSpecials[]` | `TRoomSpecs` | `int proc(TBeing*, cmdTypeT, const char*, TRoom*)` |
 
+### Parameter Meanings
+
+| Parameter | Mob Procs | Object Procs | Room Procs |
+|-----------|-----------|--------------|------------|
+| `ch` | Being triggering the proc (or nullptr) | Being triggering the proc | Being triggering the proc |
+| `cmd` | Command type from `cmdTypeT` | Command type from `cmdTypeT` | Command type from `cmdTypeT` |
+| `arg` | Command arguments (or nullptr) | Command arguments | Command arguments |
+| `myself` | Mob instance owning the proc | Object instance owning the proc | Room instance owning the proc |
+| `obj`/`t2` | Context-dependent (may be integer cast) | Context-dependent (may be integer cast) | N/A |
+
 ### Command Types
 
 | Category | Commands | When Fired |
 |----------|----------|------------|
 | Periodic | `CMD_GENERIC_PULSE` | Every 3.6s via `Pulse::SPEC_PROCS` |
 | Periodic | `CMD_GENERIC_QUICK_PULSE` | Every 1.2s via `Pulse::COMBAT` |
-| Lifecycle | `CMD_GENERIC_INIT` | During zone file parsing |
-| Lifecycle | `CMD_GENERIC_CREATED` | After `read_mobile()` or `read_object()` |
+| Lifecycle | `CMD_GENERIC_INIT` | During zone file parsing (before full construction) |
+| Lifecycle | `CMD_GENERIC_CREATED` | After `read_mobile()` or `read_object()` (fully initialized) |
 | Lifecycle | `CMD_GENERIC_DESTROYED` | Before entity deletion |
 | Lifecycle | `CMD_GENERIC_RESET` | During zone reset |
 | Player | Positive `cmd` values | When player issues command |
@@ -128,13 +141,15 @@ For quick pulse initialization, wait until `CMD_GENERIC_QUICK_PULSE` to perform 
 
 ## Implementation
 
-### Trigger Flow
+### Registration and Invocation
 
-The `triggerSpecial()` function in `parse.cc` orchestrates spec proc invocation when processing player commands. It builds a safe snapshot of room contents before iteration to handle procs that modify the room.
+The registration arrays `mob_specials`, `objSpecials`, and `roomSpecials` map spec constant values to function pointers. When a mob, object, or room is loaded with a spec proc assigned, the corresponding function pointer is looked up and stored in the entity's structure.
+
+The `triggerSpecial()` function in `parse.cc` is the primary entry point for spec proc invocation. It builds a safe snapshot of room contents before iteration to handle procs that modify the room.
 
 The function first checks whether the current command should interrupt ongoing tasks or spells. It then invokes the room's spec proc if one exists. Next, it iterates through the player's equipment and inventory, invoking object spec procs.
 
-For room contents, the function copies all `TThing` pointers from the room's stuff list into a separate vector before iteration. This prevents iterator invalidation when procs add or remove entities. During iteration, it validates each pointer still references an entity in the same room before invoking its spec proc.
+For room contents, the function copies all `TThing` pointers from the room's stuff list into a separate vector before iteration using post-increment iteration (`*(it++)`) to safely advance before potential modifications. During iteration, it validates each pointer still references an entity in the same room (checking `in_room` matches) before invoking its spec proc via `checkSpec()`.
 
 After each spec proc call, the dispatcher checks return values for DELETE flags. If detected, it performs appropriate cleanup and may terminate iteration early.
 
@@ -146,6 +161,8 @@ The game's pulse scheduler drives periodic spec proc invocation through two dist
 
 `Pulse::COMBAT` fires every 1.2 seconds (1 combat round). It invokes `CMD_GENERIC_QUICK_PULSE` on all entities with spec procs. This pulse handles combat-related processing, moving vehicles, and other time-sensitive mechanics. The 3x higher frequency demands minimal per-call processing.
 
+Each scheduler maintains iteration safety by caching next pointers before calling spec procs to handle cases where procs delete entities or modify container membership.
+
 ### Persistent State with act_ptr
 
 Mobs, objects, and rooms each have an `act_ptr` member of type `void*`. Spec procs use this to store arbitrary persistent state between invocations.
@@ -156,7 +173,7 @@ Some procs use lazy initialization, allocating on the first `CMD_GENERIC_PULSE` 
 
 State machines commonly track a phase counter and tick counter. The proc advances through phases based on elapsed ticks or external triggers, implementing complex multi-step behaviors.
 
-Memory allocated to `act_ptr` must be freed in `CMD_GENERIC_DESTROYED`. The destructor does not automatically free this memory; the spec proc owns it and must clean it up explicitly. Failing to do so causes memory leaks proportional to entity creation and deletion rates.
+Memory allocated to `act_ptr` must be freed in `CMD_GENERIC_DESTROYED`. The destructor does not automatically free this memory; the spec proc owns it and must clean it up explicitly. Cast to the correct type, call delete, and set `act_ptr` to nullptr to avoid use-after-free. Failing to clean up causes memory leaks proportional to entity creation and deletion rates.
 
 Type safety depends on casting to the correct type. Casting to the wrong structure type causes undefined behavior. Each proc must use a consistent state type.
 
@@ -164,9 +181,9 @@ Type safety depends on casting to the correct type. Casting to the wrong structu
 
 The `swapToStrung()` function enables runtime customization of entity strings. By default, entities share string data with their prototype for memory efficiency. Calling this function copies prototype strings to instance-owned storage, allowing safe modification.
 
-For objects, `TObj::swapToStrung()` sets the `ITEM_STRUNG` flag and copies name, short description, and other strings from the `obj_index` prototype. Subsequent modifications to these fields affect only this instance.
+For objects, `TObj::swapToStrung()` checks `isObjStat(ITEM_STRUNG)` and returns early if already strung. Otherwise it sets the flag and copies name, short description, and other strings from the `obj_index` prototype. Subsequent modifications to these fields affect only this instance.
 
-For mobs, `TMonster::swapToStrung()` sets the `ACT_STRINGS_CHANGED` flag and copies from `mob_index`. This enables disguises, transformations, and dynamically named NPCs.
+For mobs, `TMonster::swapToStrung()` checks the `ACT_STRINGS_CHANGED` flag in `specials.act` and returns if set. Otherwise it sets the flag and copies from `mob_index`. This enables disguises, transformations, and dynamically named NPCs.
 
 When creating customized items like notes or signs, call `swapToStrung()` first, then modify the name, short description, and long description fields.
 
@@ -216,7 +233,7 @@ Object spec procs also participate in combat. `CMD_OBJ_HIT`, `CMD_OBJ_HITTING`, 
 
 **Diagnostic:** Add logging to `CMD_GENERIC_DESTROYED` handlers. Check if the cleanup branch executes when entities are deleted.
 
-**Fix:** Add cleanup code to free `act_ptr` and set it to null in the `CMD_GENERIC_DESTROYED` handler.
+**Fix:** Add cleanup code to cast `act_ptr` to the correct type, call delete, and set it to nullptr in the `CMD_GENERIC_DESTROYED` handler.
 
 ### Crash When Dereferencing obj/t2 Parameter
 
@@ -226,7 +243,7 @@ Object spec procs also participate in combat. `CMD_OBJ_HIT`, `CMD_OBJ_HITTING`, 
 
 **Diagnostic:** Check the command type being processed. Compare against the table of commands with non-pointer final parameters.
 
-**Fix:** Gate pointer dereference on specific command types known to pass valid pointers. For commands that pass integers, cast back to the appropriate integer type.
+**Fix:** Gate pointer dereference on specific command types known to pass valid pointers. For commands that pass integers, use `reinterpret_cast` to convert back to the appropriate integer type.
 
 ### IS_SET Fails to Detect DELETE Flags
 
@@ -264,6 +281,26 @@ Object spec procs also participate in combat. `CMD_OBJ_HIT`, `CMD_OBJ_HITTING`, 
 
 **Cause:** The spec proc is not registered in the appropriate specials array, or the constant does not match the zone file assignment.
 
-**Diagnostic:** Verify the spec constant value matches the zone file. Check that the function is in the specials array at the correct index.
+**Diagnostic:** Verify the spec constant value matches the zone file. Check that the function is in the specials array at the correct index. Confirm the entity has the correct spec constant assigned.
 
 **Fix:** Add the spec proc to the registry array at the index matching its constant. Ensure the zone file uses the correct spec number.
+
+### Command Not Suppressed Despite Returning TRUE
+
+**Symptom:** Spec proc returns TRUE but the command continues to execute normally.
+
+**Cause:** The return value was not propagated correctly, or the spec proc was not registered in the appropriate array.
+
+**Diagnostic:** Verify spec proc is registered in the correct specials array. Confirm all call sites propagate the return value correctly and respect TRUE as command-handled.
+
+**Fix:** Ensure the spec proc is properly registered and that callers check and respect the return value.
+
+### Performance Degradation from Quick Pulse
+
+**Symptom:** Server performance degrades as entity count increases, with profiling showing time spent in spec proc handlers.
+
+**Cause:** Heavy processing in `CMD_GENERIC_QUICK_PULSE` handlers. Quick pulse fires every 1.2 seconds on all entities, so expensive operations multiply across many procs.
+
+**Diagnostic:** Profile to identify expensive operations in quick pulse handlers.
+
+**Fix:** Move non-critical work to `CMD_GENERIC_PULSE` which fires every 3.6 seconds. Cache results and avoid repeated calculations. Limit quick pulse to truly time-critical logic.

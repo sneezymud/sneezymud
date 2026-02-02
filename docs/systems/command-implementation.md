@@ -3,7 +3,6 @@ title: Command System
 description: Player command flow through parsing, lookup, dispatch, and implementation patterns including DELETE flag ownership and target resolution.
 keywords: [parseCommand, doCommand, commandArray, cmdTypeT, triggerSpecial, DELETE_VICT, DELETE_THIS, three-tier resolution]
 category: Important Systems
-created_by_model: opus
 last_updated: 2026-02-01
 source_files: [code/code/misc/parse.cc, code/code/misc/parse.h, code/code/cmd/cmd_kick.cc, code/code/cmd/cmd_bash.cc, code/code/cmd/cmd_trip.cc, code/code/cmd/cmd_headbutt.cc, code/code/cmd/cmd_grapple.cc, code/code/cmd/cmd_slam.cc, code/code/cmd/cmd_disarm.cc, code/code/cmd/cmd_stomp.cc, code/code/cmd/cmd_deathstroke.cc, code/code/cmd/cmd_whirlwind.cc, code/code/cmd/cmd_steal.cc, code/code/cmd/cmd_rescue.cc, code/code/cmd/cmd_get.cc]
 related: [memory-safety.md, damage-pipeline.md, communication-system.md, spec-procs.md, delete-flags.md]
@@ -29,7 +28,7 @@ Always translate DELETE flags when calling helpers on targets. When calling a me
 
 Always check reconcileDamage return value against -1 for death, not with IS_SET_DELETE. The function returns -1 as a sentinel, not a flag bitmask.
 
-Always use IS_SET_DELETE instead of IS_SET when checking for DELETE flags. The DELETE flags use a special bit pattern that IS_SET cannot detect.
+Always use IS_SET_DELETE instead of IS_SET when checking for DELETE flags. The DELETE flags use a special bit pattern that IS_SET cannot detect. Similarly, use REM_DELETE instead of REMOVE_BIT to clear them.
 
 ### Execution Flow
 
@@ -39,6 +38,8 @@ Never delete the same entity twice. If you return a DELETE flag, do not also del
 
 Never forget to clear DELETE flags after deleting. Use REM_DELETE to prevent callers from double-deleting.
 
+When both DELETE_THIS and DELETE_VICT are set, check for both flags before individual flags and return both unchanged since both entities are dying.
+
 ### Adding Commands
 
 Always add the enum before MAX_CMD_LIST in parse.h. The enum value determines array placement.
@@ -46,6 +47,12 @@ Always add the enum before MAX_CMD_LIST in parse.h. The enum value determines ar
 Always add the array entry in buildCommandArray with appropriate position and level requirements.
 
 Always add the switch case in doCommand to route to your handler.
+
+### Area Effect Commands
+
+Commands affecting multiple targets must avoid iterator invalidation when deleting. Build a vector of valid targets before processing, then iterate the vector. Re-validate each target before processing since earlier iterations may cause movement or death.
+
+Do not return early when a target dies; other targets remain to process. Accumulate flags and return the combined result after all targets are handled.
 
 ## Reference
 
@@ -67,6 +74,8 @@ Always add the switch case in doCommand to route to your handler.
 | `%` | Replaced with remaining arguments |
 | `~` | Multiline separator (executes as separate commands) |
 
+Examples: `alias "att" = "attack %"` expands "att goblin" to "attack goblin". `alias "buff" = "cast armor~cast bless"` executes both casts. `alias "gl" = "get all.coin~look"` gets coins then looks.
+
 ### Single-Character Shortcuts
 
 | Character | Command |
@@ -83,6 +92,14 @@ Always add the switch case in doCommand to route to your handler.
 | `victim->helper(this)` | Our DELETE_VICT | Our DELETE_THIS |
 | `victim->helper(item)` | Our DELETE_VICT | Our DELETE_ITEM |
 | `item->helper(victim)` | Our DELETE_ITEM | Our DELETE_VICT |
+
+### Spec Proc Return Values
+
+| Return Value | Effect |
+|--------------|--------|
+| FALSE | Command processing continues |
+| TRUE | Command consumed, dispatch stops |
+| DELETE_THIS | Being died, caller must handle deletion |
 
 ### Hide-Preserving Commands
 
@@ -136,9 +153,15 @@ Flag translation handles calls where roles differ between caller and callee. Whe
 
 ### Command Structure Components
 
-Combat commands typically decompose into four functions. The public doXXX function handles target resolution and ownership-aware deletion. A static xxx function validates preconditions (via canXXX helpers), checks and consumes resources like movement points, performs skill checks, and branches to success or failure. The xxxSuccess function calculates damage, emits messages, and calls reconcileDamage. The xxxFail function handles failure messages and side effects like falling.
+Combat commands typically decompose into four functions. The public doXXX function handles target resolution and ownership-aware deletion. A static xxx function validates preconditions (via canXXX helpers), checks and consumes resources like movement points, performs skill checks, and branches to success or failure. The xxxSuccess function calculates damage, emits messages, and calls reconcileDamage. The xxxFail function handles failure messages and side effects like falling or position penalties on the attacker.
 
 The split between these functions localizes concerns: doXXX owns the deletion protocol, the static function owns resource checks and skill resolution, and success/fail functions own their specific outcomes.
+
+Validation helpers (canXXX methods) accept a SILENT_NO parameter to suppress error messages when called from AI or spec procs.
+
+### Combat Initiation
+
+Skills that miss but should provoke combat call reconcileDamage with zero damage to establish the fight relationship without inflicting harm. This triggers setCharFighting and setVictFighting to establish bidirectional combat state. Once fighting, commands access fight() to retrieve the current opponent for tier three resolution.
 
 ### Area Effects and Iteration Safety
 
@@ -176,7 +199,7 @@ Object commands use DELETE_ITEM analogously to DELETE_VICT. The same ownership r
 
 **Diagnostic:** Search for IS_SET calls with DELETE_* arguments.
 
-**Fix:** Replace IS_SET with IS_SET_DELETE for all DELETE flag checks.
+**Fix:** Replace IS_SET with IS_SET_DELETE for all DELETE flag checks. Similarly, use REM_DELETE instead of REMOVE_BIT to clear flags.
 
 ### Wrong Entity Deleted After Helper Call
 
@@ -188,6 +211,14 @@ Object commands use DELETE_ITEM analogously to DELETE_VICT. The same ownership r
 
 **Fix:** Apply flag translation per the Reference table. Helper's DELETE_THIS on victim means caller's DELETE_VICT.
 
+### Both Combatants Die
+
+**Symptom:** Both combatants die but only one deletion occurs, or crash from handling only one flag.
+
+**Cause:** Failing to handle both flags set simultaneously.
+
+**Fix:** Check for both flags before checking individual flags, return both unchanged when both are present.
+
 ### Command Not Found Despite Correct Spelling
 
 **Symptom:** Player types exact command name but receives "Unknown command" message.
@@ -197,3 +228,27 @@ Object commands use DELETE_ITEM analogously to DELETE_VICT. The same ownership r
 **Diagnostic:** Check that the CMD_XXX enum appears before MAX_CMD_LIST in parse.h. Verify buildCommandArray has a corresponding commandInfo allocation.
 
 **Fix:** Ensure enum placement and array initialization are both present and correctly ordered.
+
+### Iterator Invalidation in Area Effects
+
+**Symptom:** Crash during whirlwind or area effect when target dies.
+
+**Cause:** Deleting from stuff list while iterating it, or not caching next pointer.
+
+**Fix:** Build a vector of targets first, iterate the vector in a second pass, check room membership before processing each target. For combat lists, always set `gCombatNext = ch->next_fighting` before calling any function that might delete combatants.
+
+### Spec Proc Consumes Command
+
+**Symptom:** Command never reaches handler despite valid input.
+
+**Cause:** Spec proc returning TRUE and consuming the command.
+
+**Fix:** Check triggerSpecial in the calling stack, identify which spec is intercepting, verify the interception is intentional.
+
+### Alias Expansion Issues
+
+**Symptom:** Alias produces incorrect command or enters infinite loop.
+
+**Cause:** Percent sign not replaced, tilde not splitting properly, or circular alias chain.
+
+**Fix:** Verify alias definition syntax, ensure expansion produces valid command strings. Expansion happens once per call and should not loop, but verify alias definitions do not reference each other cyclically.

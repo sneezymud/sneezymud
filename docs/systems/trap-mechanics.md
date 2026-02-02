@@ -4,14 +4,8 @@ description: Dangerous obstacles on doors, containers, rooms, mines, grenades, a
 keywords: [trap, doorTrapT, TTrap, springTrap, disarm, detect, TRAP_EFF_ROOM]
 category: Important Systems
 related: [memory-safety.md, combat-formulas.md, spatial-relationships.md]
-source_files:
-  - code/code/misc/trap.h
-  - code/code/misc/trap.cc
-  - code/code/disc/disc_thief_looting.cc
-  - code/code/obj/obj_trap.h
-  - code/code/obj/obj_trap.cc
+source_files: [code/code/misc/trap.h, code/code/misc/trap.cc, code/code/disc/disc_thief_looting.cc, code/code/obj/obj_trap.h, code/code/obj/obj_trap.cc]
 last_updated: 2026-02-01
-created_by_model: opus
 ---
 
 ## Overview
@@ -42,6 +36,8 @@ Trap damage flows through `reconcileDamage()` which returns -1 on death. This di
 
 - Always check trap charges before processing; zero charges means already disarmed
 - Always apply type-specific effects (AFF_POISON, AFF_DISEASE, AFF_SLEEP) via standard `affectJoin()`
+- Always decrement trap charges after trigger to prevent multiple firings
+- Always check DELETE_ITEM return and delete grenade/mine objects after detonation
 - Never assume trap detection succeeds; detection rate is skill/10 + 1 percent
 
 ## Reference
@@ -110,10 +106,33 @@ Trap damage flows through `reconcileDamage()` which returns -1 on death. This di
 | triggerTrap | trap.cc | Character handler |
 | triggerDoorTrap | trap.cc | Door activation |
 | triggerContTrap | trap.cc | Container activation |
+| triggerPortalTrap | trap.cc | Portal activation |
+| triggerArrowTrap | trap.cc | Arrow impact |
+| triggerMineTrap | trap.cc | Mine explosion |
+| triggerGrenadeTrap | trap.cc | Grenade detonation |
 | checkForMoveTrap | trap.cc | Movement check |
 | checkForGetTrap | trap.cc | Pickup check |
+| checkForInsideTrap | trap.cc | Container-inside check |
+| checkForAnyTrap | trap.cc | Generic trap check |
+| checkForPortalTrap | trap.cc | Portal-specific check |
 | disarmMe | disc_thief_looting.cc | TTrap disarm |
 | detectMe | disc_thief_looting.cc | TTrap detect |
+| disarmTrapDoor | disc_thief_looting.cc | Door trap disarm |
+| disarmTrapObj | disc_thief_looting.cc | Object trap disarm |
+| detectTrapDoor | disc_thief_looting.cc | Door trap detect |
+| detectTrapObj | disc_thief_looting.cc | Object trap detect |
+| getDoorTrapDam | trap.cc | Base damage calculation |
+| trapDoorPoisonDamage | trap.cc | Poison-specific damage |
+| trapDoorTNTDamage | trap.cc | TNT-specific damage |
+
+### TTrap Member Functions
+
+| Method | Purpose |
+|--------|---------|
+| getTrapCharges() | Returns remaining trigger count |
+| setTrapCharges(int) | Sets trigger count |
+| getTrapDamType() | Returns trap type enum |
+| getTrapLevel() | Returns difficulty level |
 
 ### Thief Skill Mechanics
 
@@ -126,24 +145,24 @@ Trap damage flows through `reconcileDamage()` which returns -1 on death. This di
 
 ### Door Trap Storage
 
-Door traps use `roomDirData->trap_info` for type and `EXIT_TRAPPED` flag on exit condition. Detection requires checking `exitp->condition` for the trapped flag, then reading the trap type from `exitp->trap_info`.
+Door traps use `roomDirData->trap_info` for type and `EXIT_TRAPPED` flag on exit condition. Detection requires checking `exitp->condition` for the trapped flag, then reading the trap type from `exitp->trap_info`. The `trap_types` string array provides human-readable names for messaging.
 
 ### Container Trap Storage
 
-Container traps are `TTrap` objects (inheriting `TObj`) with `trap_type` and `trap_level` members. Triggers occur on container open or item extraction when `TRAP_EFF_OBJECT` is set.
+Container traps are `TTrap` objects (inheriting `TObj`) with `trap_type`, `trap_level`, and `trap_charges` members. Triggers occur on container open or item extraction when `TRAP_EFF_OBJECT` is set.
 
 ### Room-Wide Processing
 
-When `TRAP_EFF_ROOM` is set, the trap affects all beings in the room. Processing iterates `roomp->stuff` with post-increment to handle deletions. Each being receives damage via `reconcileDamage()`, checking for -1 returns.
+When `TRAP_EFF_ROOM` is set, the trap affects all beings in the room. Processing iterates `roomp->stuff` with post-increment to handle deletions. Each being receives damage via `reconcileDamage()`, checking for -1 returns. Continue iteration after DELETE_VICT to process remaining beings; only return early on DELETE_THIS when the triggerer dies.
 
 ### Disarm Mechanics
 
-`TTrap::disarmMe()` compares skill via `bSuccess()`. Success sets charges to 0. Failure calls `triggerTrap()` on the thief, potentially returning DELETE_VICT (translated from thief's DELETE_THIS).
+`TTrap::disarmMe()` checks `getTrapCharges()` returns greater than zero, then compares skill via `bSuccess()`. Success sets charges to 0 via `setTrapCharges()`. Failure calls `triggerTrap()` on the thief, potentially returning DELETE_VICT (translated from thief's DELETE_THIS).
 
 ### Damage Flow
 
 All trap damage routes through `reconcileDamage()`:
-1. Calculate base damage from trap level and class modifiers
+1. Calculate base damage from trap level and class modifiers via `getDoorTrapDam()`
 2. Apply type-specific multiplier
 3. Call `reconcileDamage(victim, damage, damageType)`
 4. Check return for -1 (death) or positive (damage dealt)
@@ -154,8 +173,9 @@ All trap damage routes through `reconcileDamage()`:
 - **Movement**: `checkForMoveTrap()` called during room transitions
 - **Containers**: `checkForGetTrap()` on item extraction
 - **Combat**: Damage through `reconcileDamage()` pipeline
-- **Affects**: Effects applied via `affectJoin()`
+- **Affects**: Effects applied via `affectJoin()` for sleep, poison, disease
 - **Exits**: Door data in `roomDirData` structure
+- **Scheduler**: `procObjSpecProcs` runs periodically for trap-specific code
 
 ## Troubleshooting
 
@@ -177,6 +197,12 @@ All trap damage routes through `reconcileDamage()`:
 **Cause**: Using `IS_SET_DELETE(rc, DELETE_VICT)` on `reconcileDamage()` return
 **Fix**: Check `rc == -1` for death from `reconcileDamage()`
 
+### Use-after-free in trap damage messaging
+
+**Symptom**: Heap-use-after-free in sendTo call after trap damage
+**Cause**: Calling victim methods after `reconcileDamage()` returned -1
+**Fix**: Check `rc == -1` immediately; if true, delete victim, null pointer, return DELETE_VICT
+
 ### Grenade crash with stale parent pointer
 
 **Symptom**: Crash when grenade detonates after movement
@@ -188,3 +214,27 @@ All trap damage routes through `reconcileDamage()`:
 **Symptom**: Crash when trap inside container triggers another trap
 **Cause**: Both iterators invalidated by nested deletion
 **Fix**: Build safe vector of contents first, then iterate and validate each item still in container before processing
+
+### Trap triggers multiple times
+
+**Symptom**: Trap fires repeatedly when it should fire once
+**Cause**: Trap charges not decremented or not checked before trigger
+**Fix**: Check `getTrapCharges()` before allowing trigger; call `setTrapCharges()` with decremented value after
+
+### Room-wide trap not affecting all beings
+
+**Symptom**: Some beings in room avoid damage from TRAP_EFF_ROOM trap
+**Cause**: Early return from iteration or missing TRAP_EFF_ROOM flag check
+**Fix**: Continue iteration after DELETE_VICT; only return early on DELETE_THIS
+
+### Door trap continues after triggerer death
+
+**Symptom**: Segfault in movement code after door trap
+**Cause**: Movement code did not check DELETE_THIS return from `triggerDoorTrap()`
+**Fix**: Add `if (IS_SET_DELETE(rc, DELETE_THIS)) return DELETE_THIS;` immediately after call
+
+### Memory leak from grenade detonation
+
+**Symptom**: Grenade objects accumulate in memory after explosions
+**Cause**: Not checking DELETE_ITEM return or not deleting grenade object
+**Fix**: Check `IS_SET_DELETE(rc, DELETE_ITEM)` after `springTrap()`; delete trap and null pointer

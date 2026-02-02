@@ -1,9 +1,8 @@
 ---
 title: Weapon System
 category: critical
-created_by_model: opus
 keywords: [TBaseWeapon, TGenWeapon, weaponT, sharpness, dual-wield]
-related: [combat-formulas.md, tohit-defense.md, equipment-wear.md]
+related: [combat-formulas.md, tohit-defense.md, equipment-wear.md, material-system.md]
 primary_symbols:
   functions: [getWeaponDam, swungObjectDamage, sharpenMe, dullMe, weaponLevel, specializationCheck]
   classes: [TBaseWeapon, TGenWeapon, TBow, TArrow, TGun, THandgonne]
@@ -63,6 +62,8 @@ Always apply the firearm damage penalty. Guns deal half damage compared to melee
 
 Check `GUN_FLAG_FOULED` before allowing reliable firing. Fouled guns have reduced accuracy and may misfire.
 
+Rate of fire affects combat frequency. The combat system queries `getROF()` and grants floor(rof) guaranteed attacks plus a fractional chance for an additional attack. A gun with rof 2.5 grants 2 attacks plus 50% chance for a third attack per combat round.
+
 ### Object Factory Usage
 
 Always use `makeNewObj()` with the correct `itemTypeT` to create weapons. Using the wrong type produces a weapon object that lacks the specialized members and methods its code will expect. Creating a `TGenWeapon` when you needed a `TBow` causes arrows to fail loading.
@@ -108,6 +109,7 @@ Always call `assignFourValues()` when loading from database and `getFourValues()
 | `isBluntWeapon()` | function | Check if 2/3 of attack types are blunt |
 | `isSlashWeapon()` | function | Check if 2/3 of attack types are slash |
 | `isPierceWeapon()` | function | Check if 2/3 of attack types are pierce |
+| `statObjInfo()` | method | Format weapon stats for display including sharpness terminology |
 
 ### Weapon Type Categories
 
@@ -126,6 +128,16 @@ Always call `assignFourValues()` when loading from database and `getFourValues()
 | Damage level | 60% | `damLevel / 4.0` |
 | Structure | 30% | `max(maxStructPoints - 10, 0) * 2.0 / 3.0` |
 | Sharpness | 10% | `max(maxSharp - 10, 0) * 2.0 / 3.0` |
+
+### Damage Multiplier Constants
+
+| Constant | Value | Purpose |
+|----------|-------|---------|
+| Two-handed multiplier | 1.75x | Damage boost for two-handed weapons |
+| Paired multiplier | 1.1x | Additional bonus for paired weapon sets |
+| Secondary hand min | 30% | Minimum secondary hand damage (0 skill) |
+| Secondary hand max | 60% | Maximum secondary hand damage (100 skill) |
+| Firearm penalty | 0.5x | Damage divisor for firearms |
 
 ### Dual Wield Scaling
 
@@ -163,6 +175,27 @@ Always call `assignFourValues()` when loading from database and `getFourValues()
 | `ITEM_SPIKED` | Has spikes/barbs for extra damage |
 | `ITEM_MAGIC` | Enchanted weapon |
 | `ITEM_NODROP` | Cannot be dropped (cursed) |
+| `ITEM_GLOW` | Emits light |
+| `ITEM_HUM` | Makes noise |
+| `ITEM_BLESS` | Blessed weapon |
+| `ITEM_NORENT` | Cannot be saved to rent |
+| `ITEM_BURNING` | Currently on fire |
+
+### Weapon Wear Flags
+
+| Flag | Purpose |
+|------|---------|
+| `ITEM_WEAR_TAKE` | Can be picked up |
+| `ITEM_WEAR_HOLD` | Can be held/wielded |
+| `ITEM_WEAR_THROW` | Can be thrown |
+
+### Anti-Class Restriction Flags
+
+| Flag | Purpose |
+|------|---------|
+| `ITEM_ANTI_MAGE` | Cannot be used by mages |
+| `ITEM_ANTI_CLERIC` | Cannot be used by clerics |
+| `ITEM_ANTI_WARRIOR` | Cannot be used by warriors |
 
 ### Bow Flags
 
@@ -253,7 +286,7 @@ The weapon system uses inheritance to share common functionality while allowing 
 
 Weapon data is packed into four integer values for efficient storage and database persistence.
 
-val0 stores sharpness as a 16-bit bitfield: bits 0-7 contain curSharp, bits 8-15 contain maxSharp.
+val0 stores sharpness as a 16-bit bitfield: bits 0-7 contain curSharp, bits 8-15 contain maxSharp. The `getCurSharp()` method extracts `val0 & 0xFF`. The `getMaxSharp()` method extracts `(val0 >> 8) & 0xFF`. Setters modify val0 through bitwise operations: clearing target bits and ORing in new values.
 
 val1 stores damage as a 16-bit bitfield: bits 0-7 contain damLevel, bits 8-15 contain damDev (deviation for randomization).
 
@@ -303,7 +336,7 @@ The sharpness system tracks weapon condition affecting damage output.
 
 The effect on damage flows through `weaponLevel()`. This function calculates overall weapon effectiveness as: (damageLevel * 0.6) + (structLevel * 0.3) + (sharpLevel * 0.1). Sharpness contributes only 10% of the total, making it a minor but noticeable factor.
 
-Display varies by weapon category: slash weapons show "sharpness", blunt weapons show "bluntness", pierce weapons show "pointiness".
+Display varies by weapon category: slash weapons show "sharpness", blunt weapons show "bluntness", pierce weapons show "pointiness". The `statObjInfo()` method formats this display along with damage level and structure points.
 
 ### Specialization System
 
@@ -364,6 +397,8 @@ THandgonne overrides these mechanics for historical accuracy: slower loading, hi
 The `makeNewObj()` function in db.cc instantiates the correct weapon subclass based on itemTypeT.
 
 ITEM_WEAPON creates TGenWeapon for melee weapons. ITEM_BOW creates TBow. ITEM_ARROW creates TArrow. ITEM_GUN creates TGun. ITEM_HANDGONNE creates THandgonne.
+
+Each constructor initializes the object with default values: maxSharp to 10-50 based on material, curSharp to maxSharp, damLevel to base value from vnum lookup, damDev to randomization range, and weapon_type arrays to WEAPON_TYPE_NONE.
 
 The `read_object()` function calls makeNewObj, then populates the weapon from database cache: assignFourValues restores packed data, extra descriptions are applied, affects/enchantments are added, and the weapon is registered in object_list.
 
@@ -442,3 +477,23 @@ The MariaDB obj table stores vnum, type, val0-val3, extra_flags, weight, cost, m
 **Diagnostic approach:** Compare curSharp to maxSharp. Check skill check results. Remember sharpness is only 10% of weaponLevel.
 
 **Fix:** If at maxSharp, weapon is fully maintained. Train SKILL_SHARPEN for better success rate. Set realistic expectations about sharpness impact on overall damage.
+
+### Sharpening Fails Consistently
+
+**Symptom:** Sharpen attempts keep failing despite having the skill.
+
+**Likely causes:** Low SKILL_SHARPEN learning, insufficient movement points, weapon material too difficult.
+
+**Diagnostic approach:** Check SKILL_SHARPEN learning value. Verify movement points exceed cost. Examine weapon material hardness.
+
+**Fix:** Train SKILL_SHARPEN on easier weapons first. Rest to restore movement points. Practice on common materials before exotic ones.
+
+### Value Fields Not Persisting
+
+**Symptom:** Weapon modifications disappear after rent or server restart.
+
+**Likely causes:** Missing swapToStrung() call, direct field modification bypassing setters, database write failure.
+
+**Diagnostic approach:** Confirm swapToStrung() was called before modifying string fields. Verify setter methods are used for value fields. Check database permissions and connection.
+
+**Fix:** Call swapToStrung() before name/description changes. Use setter methods for all value modifications. Verify database write succeeds.

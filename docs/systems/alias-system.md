@@ -1,7 +1,6 @@
 ---
 title: Alias System
 category: understanding
-created_by_model: opus
 keywords: [alias, parameter substitution, multi-command, macro, shortcut]
 related: [command-implementation.md, network-architecture.md]
 primary_symbols:
@@ -51,9 +50,13 @@ Use `~` to separate commands within a single alias. Commands execute in sequence
 
 When combining `%` with multi-command aliases, every occurrence of `%` is replaced. An alias like `alias h pray heal %~comf %` expands "h Bob" to execute "pray heal Bob" followed by "comf Bob".
 
+Be aware that multi-command aliases do not execute atomically. Other players' actions can interleave between commands in combat or busy rooms. DELETE flags and error handling apply to each command independently, so if one command causes death or deletion, remaining commands are aborted.
+
 ### Client Mode
 
 Never attempt to use in-game aliases when connected via the SneezyMUD client. The client disables in-game aliases to prevent conflicts. Use the client's `#alias` command instead.
+
+This separation exists because the client has its own alias system that expands client-side before transmission. The server receives already-expanded commands, so server-side aliases would never trigger anyway.
 
 ### Case Sensitivity
 
@@ -76,10 +79,14 @@ Aliases do not expand recursively. If alias "a" expands to text containing alias
 | `loadAliases()` | function | Load aliases from database at login |
 | `parseCommand()` | function | Command parsing including alias expansion |
 | `Descriptor` | class | Holds per-connection state including alias map |
+| `Descriptor::alias` | member | In-memory `std::map<sstring, sstring>` storing alias mappings |
+| `m_bIsClient` | flag | When true, in-game aliases disabled (use client aliases) |
 | `info.cc` | file | Alias and clear command implementations |
 | `player_data.cc` | file | Alias loading at login |
 | `parse.cc` | file | Alias expansion during command parsing |
 | `connect.h` | file | Descriptor class with alias map declaration |
+| `migrations.cc` | file | Database migration from legacy character file format |
+| `charfile.h` | file | Legacy aliasData structure (deprecated) |
 
 ### Alias Commands
 
@@ -103,6 +110,14 @@ Aliases do not expand recursively. If alias "a" expands to text containing alias
 |-------|---------|
 | Alias word | 50 characters |
 | Command expansion | 999 characters |
+
+### Legacy Limits (Pre-Migration)
+
+| Field | Old Limit | New Limit |
+|-------|-----------|-----------|
+| Alias count | 16 per character | Unlimited |
+| Alias word | 11 characters | 50 characters |
+| Command | 29 characters | 999 characters |
 
 ### Protected Words
 
@@ -148,7 +163,11 @@ Alias expansion occurs in `parseCommand()` in `parse.cc`, happening before comma
 6. If the expansion contains `~`, split into multiple commands
 7. For multi-command expansions, push commands onto a stack and prepend to the command queue
 
-The command queue processing ensures multi-command aliases execute in the order written, with normal game timing between commands.
+The command queue processing ensures multi-command aliases execute in the order written, with normal game timing between commands. Combat rounds and other timed events can occur between commands.
+
+### Protected Word Validation
+
+When creating an alias, `doAlias()` checks the alias word against protected words. These validations happen before database insertion - invalid aliases are rejected at creation time and never reach the database.
 
 ### Client Mode Handling
 
@@ -197,3 +216,41 @@ The database migration in `migrations.cc` transferred existing aliases from char
 **Likely cause:** Aliases do not expand recursively by design.
 
 **Fix:** Redefine alias "a" to contain the full expansion rather than relying on nested alias resolution.
+
+### Multi-Command Alias Executes Out of Order
+
+**Symptom:** Commands separated by `~` execute in unexpected order or some commands are skipped.
+
+**Likely cause:** Commands are queued through normal processing, so timing and DELETE flags can interrupt the sequence.
+
+**Diagnostic approach:** Check if combat is occurring - combat rounds can interleave with queued commands. Check if one command in the sequence causes death or deletion, which aborts remaining commands. Verify each command works independently by typing them one at a time.
+
+**Fix:** If timing is the issue, this is expected behavior - multi-command aliases don't execute atomically. If a command causes deletion, reorder the alias so critical commands execute first.
+
+### Parameters Don't Substitute Correctly in Multi-Command Alias
+
+**Symptom:** Arguments don't appear where expected in multi-command aliases.
+
+**Likely cause:** Each `%` is replaced with the full argument string, which may not distribute as expected.
+
+**Diagnostic approach:** Type the alias definition to see where each `%` appears. Consider what the expanded result looks like with your arguments.
+
+**Fix:** Adjust the alias definition to place `%` only where you want the full argument string. If you need different arguments for different commands, you'll need separate aliases or manual typing.
+
+### Alias Disappeared After Logout
+
+**Symptom:** Created an alias that was visible during the session but is gone after logging back in.
+
+**Likely cause:** Database save failed during creation.
+
+**Diagnostic approach:** Check database connectivity and error logs during the session when alias was created.
+
+**Fix:** Address any database connectivity issues and recreate the alias.
+
+### Cannot Create Alias for Protected Word
+
+**Symptom:** Trying to create an alias results in an error message about protected words.
+
+**Likely cause:** The word is in the protected word list to prevent conflicts with core commands.
+
+**Fix:** Choose a different alias word. Use "cl" instead of "clear", or add a prefix/suffix like "myclear".

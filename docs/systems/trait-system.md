@@ -5,7 +5,6 @@ keywords: [TTraits, traits, bonus_points, TOG_IS_*, hasQuestBit, character creat
 category: Understanding Systems
 related: [character-foundation.md, quest-system.md, experience-leveling.md]
 last_updated: 2026-02-01
-created_by_model: opus
 ---
 
 ## Overview
@@ -36,33 +35,33 @@ The trait system allows players to customize characters during creation by selec
 
 | Trait | Pts | Toggle | Effect | Req |
 |-------|-----|--------|--------|-----|
-| Cowardice | +10 | `TOG_IS_COWARD` | Auto-flee at 50% HP, wimpy locked | - |
-| Blindness | +10 | `TOG_IS_BLIND` | Permanent `AFF_BLIND` | 1 L50 |
-| Asthma | +8 | `TOG_IS_ASTHMATIC` | Max movement halved | - |
-| Narcolepsy | +8 | `TOG_IS_NARCOLEPTIC` | 1% sleep chance/tick | - |
-| Mute | +5 | `TOG_IS_MUTE` | Cannot speak/tell/shout/emote | 1 L50 |
-| Combustible | +5 | `TOG_IS_COMBUSTIBLE` | 1% fire damage/tick | - |
-| Hemophilia | +5 | `TOG_IS_HEMOPHILIAC` | 2x bleed duration; limb bleeds permanent | - |
-| Necrophobia | +5 | `TOG_IS_NECROPHOBIC` | Fear response to corpses/undead | - |
-| Alcoholism | +5 | `TOG_IS_ALCOHOLIC` | Only alcohol quenches thirst | - |
-| Tourettes | +1 | `TOG_HAS_TOURETTES` | 25% chance/tick to insult | 1 L50 |
+| Cowardice | +10 | `TOG_IS_COWARD` (278) | Auto-flee at 50% HP, wimpy locked | - |
+| Blindness | +10 | `TOG_IS_BLIND` (279) | Permanent `AFF_BLIND` | 1 L50 |
+| Asthma | +8 | `TOG_IS_ASTHMATIC` (280) | Max movement halved | - |
+| Narcolepsy | +8 | `TOG_IS_NARCOLEPTIC` (281) | 1% sleep chance/tick | - |
+| Mute | +5 | `TOG_IS_MUTE` (282) | Cannot speak/tell/shout/whisper/ask/order/emote | 1 L50 |
+| Combustible | +5 | `TOG_IS_COMBUSTIBLE` (283) | 1% fire damage/tick | - |
+| Hemophilia | +5 | `TOG_IS_HEMOPHILIAC` (284) | 2x bleed duration; limb bleeds permanent | - |
+| Necrophobia | +5 | `TOG_IS_NECROPHOBIC` (285) | Fear response to corpses/undead | - |
+| Alcoholism | +5 | `TOG_IS_ALCOHOLIC` (286) | Only alcohol quenches thirst | - |
+| Tourettes | +1 | `TOG_HAS_TOURETTES` (287) | 25% chance/tick to insult | 1 L50 |
 
 ### Neutral Traits
 
 | Trait | Pts | Toggle | Effect | Req |
 |-------|-----|--------|--------|-----|
-| Perma-Death | 0 | `TOG_PERMA_DEATH_CHAR` | Character deleted on death | 1 L50 |
-| Real Aging | 0 | `TOG_REAL_AGING` | Age affects gameplay | 1 L50 |
-| Fae-Touched | 0 | `TOG_FAE_TOUCHED` | Random bonus stats, 50% XP | 1 L50 same race |
+| Perma-Death | 0 | `TOG_PERMA_DEATH_CHAR` (288) | Character deleted on death | 1 L50 |
+| Real Aging | 0 | `TOG_REAL_AGING` (289) | Age affects gameplay | 1 L50 |
+| Fae-Touched | 0 | `TOG_FAE_TOUCHED` (290) | Random bonus stats, 50% XP | 1 L50 same race |
 
 ### Benefit Traits (Cost Stat Points)
 
 | Trait | Pts | Toggle | Effect | Req |
 |-------|-----|--------|--------|-----|
-| Healthy | -8 | `TOG_IS_HEALTHY` | +75% disease immunity | - |
-| Nightvision | -8 | `TOG_HAS_NIGHTVISION` | +2 vision bonus | - |
-| Ambidextrous | -10 | `TOG_IS_AMBIDEXTROUS` | Equal facility both hands | - |
-| Psionics | -100 | `TOG_PSIONICIST` | Innate psionic abilities | 1 L50 |
+| Healthy | -8 | `TOG_IS_HEALTHY` (291) | +75% disease immunity | - |
+| Nightvision | -8 | `TOG_HAS_NIGHTVISION` (292) | +2 vision bonus | - |
+| Ambidextrous | -10 | `TOG_IS_AMBIDEXTROUS` (293) | Equal facility both hands | - |
+| Psionics | -100 | `TOG_PSIONICIST` (299) | Innate psionic abilities | 1 L50 |
 
 ### Race Restrictions
 
@@ -79,6 +78,14 @@ The trait system allows players to customize characters during creation by selec
 | `CON_CREATION_TRAITS2` | 7-12 |
 | `CON_CREATION_TRAITS3` | 13-17 |
 
+### Display Notation
+
+| Symbol | Meaning |
+|--------|---------|
+| `[X]` | Selected |
+| `[*]` | Unavailable (race restriction or missing L50 req) |
+| `[ ]` | Available |
+
 ### Storage
 
 **Location:** `lib/mutable/player/{first_letter}/{name}.toggle`
@@ -89,7 +96,7 @@ The trait system allows players to customize characters during creation by selec
 
 ### TTraits Structure
 
-Defined in `connect.h`, the `TTraits` struct holds trait metadata:
+Defined in `connect.h` with `MAX_TRAITS` constant set to 17. The `TTraits` struct holds trait metadata:
 
 | Field | Purpose |
 |-------|---------|
@@ -129,7 +136,22 @@ Bonus points divide into four stat categories: `combat`, `combat2`, `learn`, `ut
 
 At creation, grants `50 + (num_fifties - 1) * 2` random stat points where `num_fifties` is capped at 26. The XP penalty applies once per kill regardless of multiclass (tracked via `fae_reduction_done` flag).
 
-The `num50race` check respects perma-death status: creating a perma-death fae-touched Elf requires an existing L50 perma-death Elf.
+The `num50race` check respects perma-death status: creating a perma-death fae-touched Elf requires an existing L50 perma-death Elf. For non-perma characters, only non-perma L50s count.
+
+### Selection Workflow
+
+The `nannyTraits_input` function handles trait toggling during character creation. Input parsing uses `convertTo<int>` to extract the trait index. When a player selects a trait number:
+
+1. If already selected: calls `remQuestBit` and subtracts point value
+2. If not selected: validates L50 requirements via `numFifties`, then calls `setQuestBit` and adds point value
+
+Race restrictions are checked during display generation via `TPlayerRace::disableTrait`.
+
+### Persistence
+
+The `saveToggles` function in `rent.cc` iterates through all `MAX_TOG_INDEX` values and writes each set quest bit to the toggle file. The `loadToggles` function reads numbers back and calls `setQuestBit` for each.
+
+Error handling is minimal: failed file opens are silently ignored in `loadToggles`, treating missing toggle files as having no quest bits set.
 
 ### Viewing Traits
 
@@ -147,3 +169,7 @@ The `num50race` check respects perma-death status: creating a perma-death fae-to
 | Combustible instant death | DELETE_THIS not checked | Verify caller checks return from tick processing |
 | Fae-touched no stat bonus | Zero L50s of race | Need at least one L50 of same race on account |
 | Wrong XP penalty (multiclass) | Multiple reductions | Check `fae_reduction_done` flag set correctly |
+| Trait effect not working | Toggle constant mismatch | Verify `hasQuestBit` uses correct constant from traits array |
+| Periodic trait not firing | Character not ticking | Sleeping/resting may not trigger periodic checks |
+| Traits lost on save | Disk/permission error | Check write permissions on `lib/mutable/player/` |
+| Trait toggle exceeds MAX_TOG_INDEX | Constant too small | Ensure MAX_TOG_INDEX includes all trait toggle numbers |

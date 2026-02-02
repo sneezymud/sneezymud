@@ -1,7 +1,6 @@
 ---
 title: Configuration Reference
 category: important
-created_by_model: opus
 keywords: [config, sneezy.cfg, port, gamePort, DataDir, TDatabase, CheckMultiplay, ItemDamageRate, LoadOnDeath, NukeInactiveMobs, AutoDeletion, RepoMobs, Boost.Program_Options]
 related: [persistence-storage.md]
 primary_symbols:
@@ -26,7 +25,7 @@ Configuration values are accessed through static accessor methods, providing a s
 
 ### Configuration File Format
 
-**Always use INI-style key = value syntax.** Comments start with `#`. Boolean values accept `0`/`false` or `1`/`true`. The file is parsed once at startup; changes require a server restart.
+**Always use INI-style key = value syntax.** Comments start with `#`. Boolean values accept `0`/`false` or `1`/`true` (case-insensitive). Values like "yes", "no", "on", "off" are rejected. The file is parsed once at startup; changes require a server restart.
 
 **Never include credentials in version control.** The example `sneezy.cfg` shows the format but should use placeholder passwords. Production credentials belong in deployment-specific configs outside the repository.
 
@@ -78,7 +77,7 @@ Configuration values are accessed through static accessor methods, providing a s
 | `--lib` | `-l` | Yes | Data directory path |
 | `--no_specials` | `-s` | Yes | Suppress special procedures |
 | `--trimmed` | `-t` | Yes | Load as trimmed port |
-| `--port` | `-p` | Yes | Network listen port |
+| `--port` | `-p` | Yes | Network listen port (also accepts positional: `./sneezy 7900`) |
 
 ### Network Settings
 
@@ -111,16 +110,16 @@ Configuration values are accessed through static accessor methods, providing a s
 
 ### Database Settings
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `sneezy_db` | string | `sneezy` | Game database name |
-| `sneezy_host` | string | `localhost` | Game database host |
-| `sneezy_user` | string | (system user) | Game database username |
-| `sneezy_password` | string | (none) | Game database password |
-| `immortal_db` | string | `immortal` | Immortal database name |
-| `immortal_host` | string | `localhost` | Immortal database host |
-| `immortal_user` | string | (system user) | Immortal database username |
-| `immortal_password` | string | (none) | Immortal database password |
+| Option | Type | Default | Accessor | Description |
+|--------|------|---------|----------|-------------|
+| `sneezy_db` | string | `sneezy` | `SneezySqlDb()` | Game database name |
+| `sneezy_host` | string | `localhost` | `SneezySqlHost()` | Game database host |
+| `sneezy_user` | string | (system user) | `SneezySqlUser()` | Game database username |
+| `sneezy_password` | string | (none) | `SneezySqlPassword()` | Game database password |
+| `immortal_db` | string | `immortal` | `ImmortalSqlDb()` | Immortal database name |
+| `immortal_host` | string | `localhost` | `ImmortalSqlHost()` | Immortal database host |
+| `immortal_user` | string | (system user) | `ImmortalSqlUser()` | Immortal database username |
+| `immortal_password` | string | (none) | `ImmortalSqlPassword()` | Immortal database password |
 
 ### Feature Toggles
 
@@ -183,7 +182,8 @@ Configuration values are accessed through static accessor methods, providing a s
 | `cmdline` | CLI only | `--help`, `--config` |
 | `config` | CLI + config file | `port`, `lib`, `trimmed` |
 | `configOnly` | Config file only | `item_damage_rate`, feature toggles |
-| `database_*` | CLI + config file | All database settings |
+| `database_sneezy` | CLI + config file | Sneezy database settings |
+| `database_immortal` | CLI + config file | Immortal database settings |
 
 ### Precedence
 
@@ -202,6 +202,8 @@ Configuration values are accessed through static accessor methods, providing a s
 At startup, `doConfiguration()` in configuration.cc defines all option groups using Boost.Program_Options. It first parses command-line arguments to find the config file path (defaulting to `sneezy.cfg`), then parses the config file, then applies defaults for any unspecified values.
 
 Options are stored in private static members of the `Config` class. Each option has a corresponding public static accessor method. The accessor pattern provides encapsulation while maintaining simple usage throughout the codebase.
+
+Positional argument handling allows the port to be specified without a flag: `./sneezy 7900` is equivalent to `./sneezy --port 7900`.
 
 ### Port Detection
 
@@ -253,6 +255,16 @@ The `nuke_inactive_mobs` toggle enables aggressive memory optimization. Mobs in 
 
 **Fix:** Create a config file in the working directory, or specify the correct path with `-c /path/to/config.cfg`.
 
+### Config File Parsing Error
+
+**Symptom:** Exception message during startup mentioning config file syntax.
+
+**Likely cause:** Syntax errors in config file: missing equals signs, invalid boolean values (only 0/1/false/true accepted), or unrecognized option names.
+
+**Diagnostic approach:** Check that option names exactly match registered identifiers including underscores. Verify boolean values use only 0, 1, false, or true.
+
+**Fix:** Correct the syntax error. Refer to the example config file or Reference section for valid option names and value formats.
+
 ### Database Connection Failed
 
 **Symptom:** Error at startup: `Could not connect to database 'sneezy'.`
@@ -262,6 +274,16 @@ The `nuke_inactive_mobs` toggle enables aggressive memory optimization. Mobs in 
 **Diagnostic approach:** Test connection manually with `mysql -h host -u user -p database`. Check that the database exists with `SHOW DATABASES`. Verify the service is running.
 
 **Fix:** Ensure the database server is running, the database exists, and credentials are correct. For local development, try removing explicit user/password to use Unix socket authentication.
+
+### Port Binding Failed
+
+**Symptom:** Error at startup: `Address already in use`
+
+**Likely cause:** Another process is already listening on the configured port.
+
+**Diagnostic approach:** Check for existing processes with `netstat -tlnp | grep <port>` or `ss -tlnp | grep <port>`.
+
+**Fix:** Stop the conflicting process, or change the port number in configuration.
 
 ### Feature Not Working On Test Port
 
@@ -302,3 +324,13 @@ The `nuke_inactive_mobs` toggle enables aggressive memory optimization. Mobs in 
 **Diagnostic approach:** Check the account's last_logon field in the database. Compare against the 90-day threshold.
 
 **Fix:** The 90-day threshold is hardcoded. To preserve accounts longer, disable `auto_deletion` or set `rent_only_deletion = 1` to only remove rent files while preserving character data.
+
+### Help Text Missing Some Options
+
+**Symptom:** Running `--help` doesn't show all configuration options.
+
+**Likely cause:** This is intentional. Config-file-only options (in the `configOnly` group) and database credentials are excluded from help output.
+
+**Diagnostic approach:** This is expected behavior, not an error.
+
+**Fix:** Refer to the example config file or this documentation for the complete option listing.

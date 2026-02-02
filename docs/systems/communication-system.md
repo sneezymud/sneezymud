@@ -1,11 +1,10 @@
 ---
 title: Communication System
 category: gameplay
-created_by_model: opus
 keywords: [doSay, doTell, doShout, doGrouptell, doWhisper, doSign, doEmote, doCommune, canSpeak, applySoundproof, ignoreList, socialMessg, garble, ROOM_SILENCE, TOG_IS_MUTE, AFF_SILENT]
 related: [group-party.md, affects-system.md, command-implementation.md]
 primary_symbols:
-  functions: [doSay, doTell, doShout, doGrouptell, doWhisper, doAsk, doSign, doEmote, doCommune, doAction, canSpeak, applySoundproof, checkSoundproof, bootSocialMessages, checkResponses]
+  functions: [doSay, doTell, doShout, doGrouptell, doWhisper, doAsk, doSign, doEmote, doCommune, doAction, doReply, canSpeak, applySoundproof, checkSoundproof, bootSocialMessages, checkResponses]
   classes: [ignoreList, socialMessg, TBeing, Descriptor]
   files: [code/code/misc/talk.cc, code/code/misc/actions.cc, code/code/misc/immortal.cc, code/code/misc/garble.cc, code/code/sys/sound.cc, code/code/sys/connect.h]
 ---
@@ -34,7 +33,7 @@ Tell is global and does not check soundproof on the sender's room. However, non-
 
 ### Always Check canSpeak() for Aggregate Validation
 
-The `canSpeak()` method checks all speech-blocking conditions in one call: AFF_SILENT, soundproof room, dumb animal form, TOG_IS_MUTE quest bit, and speech-blocking diseases (garrotte, suffocate, drowning). Use this when you need a comprehensive check.
+The `canSpeak()` method checks all speech-blocking conditions in one call: AFF_SILENT, soundproof room, dumb animal form, TOG_IS_MUTE quest bit, and speech-blocking diseases (DISEASE_GARROTTE, DISEASE_SUFFOCATE, DISEASE_DROWNING). Use this when you need a comprehensive check.
 
 ### Always Check Descriptor Before Sending Client Data
 
@@ -50,7 +49,7 @@ Recipients who are sleeping or stunned should not receive most communications. V
 
 ### Always Handle DELETE Flags from Mob Responses
 
-Communication commands can trigger mob AI via `checkResponses()`. This can return DELETE_THIS or DELETE_VICT if the mob response kills someone. Check return values and propagate deletion flags appropriately.
+Communication commands can trigger mob AI via `checkResponses()`. This can return DELETE_THIS or DELETE_VICT if the mob response kills someone. Check return values and propagate deletion flags appropriately. If speaker dies from mob reaction to say, `checkResponses` returns DELETE_VICT which `doSay` translates to DELETE_THIS for return to caller.
 
 ### Never Bypass Mute Check for Non-Immortal Targets
 
@@ -74,6 +73,7 @@ Mute characters (TOG_IS_MUTE) can only tell to immortal PCs. This is a deliberat
 | `doEmote()` | function | Free-form action descriptions |
 | `doCommune()` | function | Immortal wiznet channel |
 | `doAction()` | function | Predefined social execution |
+| `doReply()` | function | Responds to last_teller stored on descriptor |
 | `canSpeak()` | method | Aggregate speech validation |
 | `applySoundproof()` | method | Soundproof room check with message |
 | `checkSoundproof()` | method | Soundproof room check (bool only) |
@@ -111,11 +111,24 @@ Mute characters (TOG_IS_MUTE) can only tell to immortal PCs. This is a deliberat
 |-----------|-------------------|-------|
 | `ROOM_SILENCE` | say, whisper, ask, grouptell, emote, shout | Immortals bypass |
 | `TOG_IS_MUTE` | All except tell to immortals | Quest bit (permanent) |
-| `AFF_SILENT` | say, shout, grouptell, tell, whisper, ask | Magical effect |
+| `AFF_SILENT` | say, shout, grouptell, tell, whisper, ask | Magical effect with visual feedback |
 | `isDumbAnimal()` | say, shout, grouptell, tell, whisper, ask | Race/polymorph form |
 | `PLR_GODNOSHOUT` | tell, shout, emote | God-imposed ban |
 | `AUTO_NOTELL` | tell (except from last_told) | Player toggle |
 | `AUTO_NOSHOUT` | shout reception | Player toggle |
+
+### Speech Types
+
+| Type | Context |
+|------|---------|
+| `SPEECH_SAY` | Say command garble context |
+| `SPEECH_ASK` | Ask command garble context |
+| `SPEECH_WHISPER` | Whisper command garble context |
+| `SPEECH_SHOUT` | Shout command garble context |
+| `SPEECH_TELL` | Tell command garble context |
+| `SPEECH_GROUPTELL` | Grouptell command garble context |
+| `SPEECH_SIGN` | Sign command garble context |
+| `SPEECH_EMOTE` | Emote command garble context |
 
 ### Garble Types
 
@@ -147,6 +160,36 @@ Mute characters (TOG_IS_MUTE) can only tell to immortal PCs. This is a deliberat
 | `gtell` | Group tells |
 | `wiz` | Wiznet/commune |
 
+### ignoreList Methods
+
+| Method | Purpose |
+|--------|---------|
+| `isIgnored(Descriptor*)` | Check descriptor against ignore list |
+| `isIgnored(sstring)` | Check character name against ignore list |
+| `isMailIgnored(Descriptor*, sstring)` | Static mail-specific ignore check |
+| `add(Descriptor*)` | Add descriptor's character to ignore list |
+| `add(sstring)` | Add character by name to ignore list |
+| `add(TAccount&)` | Add entire account to ignore list |
+| `addAccount(sstring)` | Add account by name to ignore list |
+| `remove(Descriptor*)` | Remove descriptor's character from ignore list |
+| `remove(sstring)` | Remove character by name from ignore list |
+| `removeAccount(sstring)` | Remove account from ignore list |
+
+### socialMessg Structure
+
+| Field | Purpose |
+|-------|---------|
+| `hide` | Hides social from room observers when target present |
+| `minPos` | Minimum position required for target |
+| `char_no_arg` | Message to actor when no target |
+| `others_no_arg` | Message to room when no target |
+| `char_found` | Message to actor when target found |
+| `others_found` | Message to room when target found |
+| `vict_found` | Message to target |
+| `not_found` | Message when target not found |
+| `char_auto` | Message to actor for self-targeting |
+| `others_auto` | Message to room for self-targeting |
+
 ### Key Files
 
 | File | Contents |
@@ -174,7 +217,9 @@ Group communication iterates the group leader's follower list. Recipients must h
 
 `findTellTarget()` resolves tell recipients through multiple strategies: exact name match among visible characters, then account-based alternate character lookup for immortals. This allows immortals to reach players on different characters within the same account.
 
-The system tracks `desc->last_teller` for reply and `desc->last_told` for retelling. Tells are logged to the `tellhistory` database table.
+The system tracks `desc->last_teller` for reply and `desc->last_told` for retelling. Tells are logged to the `tellhistory` database table with fields: time (timestamp), teller (sender name), tellee (receiver name), message (garbled text as delivered).
+
+Descriptor state filtering prevents interrupting editing sessions, mail composition, or bug reporting. The checks examine `desc->connected` for CON_PLYNG state and `desc->str` for active string editing.
 
 ### Shout Distribution
 
@@ -184,7 +229,9 @@ Shouts cost 15 movement points, add 0.5 combat round wait, require level 2+, and
 
 ### Whisper Eavesdropping
 
-Characters with active SKILL_SPY can intercept whispers if their level equals or exceeds the speaker's level. Neither speaker, recipient, nor spy can be immortal. The spy sees the full whispered message directed to the original target.
+Characters with active SKILL_SPY can intercept whispers if their level equals or exceeds the speaker's level. Neither speaker, recipient, nor spy can be immortal. The spy sees the full whispered message directed to the original target with special eavesdrop formatting.
+
+The implementation walks `room->people`, skips speaker and target, checks spy skill activation, validates level requirements, and sends the whispered message. Spies must be awake and not ignoring the speaker.
 
 ### Sign Language Reception
 
@@ -200,9 +247,12 @@ Commune supports level-targeted messaging via `@<level>` prefix: `commune @60 <m
 
 ### Social Action System
 
-Socials are loaded from `lib/actions` at boot via `bootSocialMessages()`. Each `socialMessg` contains message templates for: no target (actor/room), target found (actor/room/victim), target not found, and self-target (actor/room).
+Socials are loaded from `lib/actions` at boot via `bootSocialMessages()`. The file format uses multi-line entries with tildes terminating each message string. The parser reads command name, hide flag, minimum position, then the eight message variants in order.
 
-`doAction()` parses target, validates position and combat restrictions, selects appropriate message templates, and sends via `act()`. Some socials are facial-only (allowed while fighting/riding), others require standing and no combat.
+`doAction()` parses target, validates position and combat restrictions, selects appropriate message templates, and sends via `act()`. Socials check fighting and riding states to determine allowed actions:
+- **Fighting:** Only facial expressions allowed (wink, boggle, nod, smile, grin, laugh, frown, etc.)
+- **Riding:** Intermediate set allowed (hug, comfort, pat, wave, point)
+- **Standing:** Full physical socials (dance, wiggle, bow, curtsey)
 
 ### Social AI Integration
 
@@ -217,6 +267,14 @@ Specific socials trigger MSP sound effects: yawn (random from 4), giggle, burp, 
 The `ignoreList` class manages per-player ignore lists. It supports ignoring by descriptor, character name, or entire account. The `isMailIgnored()` static method extends blocking to the mail system.
 
 Ignored communications fail silently for the sender (they see success) but never reach the target. This applies to say, tell, whisper, shout, grouptell, emote, and socials.
+
+Static ignored lists persist on descriptors, loaded from database on login and saved on logout. Account ignores block all characters on the account.
+
+### Garble Transformation Pipeline
+
+Each speech type (SPEECH_SAY, SPEECH_SHOUT, etc.) maps to a set of applicable garble transformations. The speaker's conditions (drunk level, underwater, polymorphed) and recipient's conditions (language skills, profanity filters) determine which garbles apply.
+
+SCOPE_EVERYONE garbles apply once with the result sent to all recipients. SCOPE_INDIVIDUAL garbles apply per recipient with different transformations for each. SCOPE_EVERYONEANDSELF garbles apply to everyone including what the speaker sees themselves saying.
 
 ---
 
@@ -238,7 +296,7 @@ Ignored communications fail silently for the sender (they see success) but never
 
 **Likely cause:** Target is linkdead, editing/mailing/bugging, sleeping, or invisible to sender without immortal powers.
 
-**Diagnostic approach:** Check target connection state, position, and visibility flags.
+**Diagnostic approach:** Check target connection state (`desc->connected` for CON_PLYNG), position, and visibility flags.
 
 **Fix:** Wait for target to return to playing state. Use immortal powers if appropriate to bypass visibility.
 
@@ -281,3 +339,43 @@ Ignored communications fail silently for the sender (they see success) but never
 **Diagnostic approach:** Check speaker condition flags (drunk level, AFF_GHOST, underwater sector). Verify garble type scope (SCOPE_INDIVIDUAL vs SCOPE_EVERYONE).
 
 **Fix:** Ensure condition flags are properly set. Some garbles only apply to specific speech types.
+
+### Social Restrictions During Combat
+
+**Symptom:** Physical socials blocked while fighting.
+
+**Likely cause:** Correct behavior. Fighting restricts socials to facial expressions only.
+
+**Diagnostic approach:** Verify which socials fail. Facial expressions (wink, nod, smile) should work. Physical actions (dance, bow) should fail.
+
+**Fix:** This is intentional. Use facial socials during combat.
+
+### Spy Not Overhearing Whispers
+
+**Symptom:** Character with SKILL_SPY cannot intercept whispers.
+
+**Likely cause:** Spy skill not active, spy level below speaker level, or an immortal participates.
+
+**Diagnostic approach:** Check spy skill activation status. Verify level comparison. Ensure speaker, target, and spy are not immortal.
+
+**Fix:** Activate spy skill. Level must equal or exceed speaker's level. No immortals allowed.
+
+### Group Communication Failing
+
+**Symptom:** Grouptell not reaching all group members.
+
+**Likely cause:** Missing AFF_GROUP on sender or recipients, inconsistent master pointers, or soundproof/ignore blocks.
+
+**Diagnostic approach:** Check each condition independently. Verify master pointer consistency across group. Confirm AFF_GROUP flag set, not just follower relationship.
+
+**Fix:** Ensure all participants have AFF_GROUP and share the same master pointer.
+
+### GMCP Messages Not Sending
+
+**Symptom:** Client not receiving GMCP communication notifications.
+
+**Likely cause:** Client GMCP support not negotiated, or descriptor check missing.
+
+**Diagnostic approach:** Check descriptor GMCP state. Verify sendGmcp call format matches comm.channel structure.
+
+**Fix:** Ensure GMCP protocol negotiation completed. Verify client parses GMCP messages correctly.

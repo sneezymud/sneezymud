@@ -5,15 +5,7 @@ keywords: [material, hardness, susceptibility, flammability, crafting, durabilit
 category: Understanding Systems
 related: [object-system.md, equipment-wear.md, combat-formulas.md, economy-system.md]
 last_updated: 2026-02-01
-created_by_model: opus
-source_files:
-  - code/code/misc/materials.h
-  - code/code/misc/constants.cc
-  - code/code/misc/thing.h
-  - code/code/misc/thing.cc
-  - code/code/obj/obj_base_weapon.cc
-  - code/code/obj/obj_base_corpse.cc
-  - code/code/obj/obj_armor_wand.cc
+source_files: [code/code/misc/materials.h, code/code/misc/constants.cc, code/code/misc/thing.h, code/code/misc/thing.cc, code/code/obj/obj_base_weapon.cc, code/code/obj/obj_base_corpse.cc, code/code/obj/obj_armor_wand.cc]
 ---
 
 # Material Property System
@@ -59,6 +51,8 @@ Every object has a material that determines its combat effectiveness, durability
 | Nature | 50-77 | 28 | `MAT_LEATHER`, `MAT_FUR`, `MAT_DRAGON_SCALE`, `MAT_ICE` |
 | Mineral | 100-126 | 27 | `MAT_STONE`, `MAT_DIAMOND`, `MAT_RUBY`, `MAT_BONE` |
 | Metal | 150-177 | 28 | `MAT_IRON`, `MAT_STEEL`, `MAT_MITHRIL`, `MAT_ADAMANTITE` |
+
+Category ranges leave intentional gaps for expansion: 20-49, 78-99, 127-149, 178-199 (117 unused slots).
 
 ### Property Ranges
 
@@ -150,6 +144,52 @@ Every object has a material that determines its combat effectiveness, durability
 | ITEM_CORPSE | `MAT_HUMAN_FLESH` (species-specific) |
 | ITEM_FOOD | `MAT_FOODSTUFF` |
 
+### Crafting Structure Fields
+
+| Field | Purpose |
+|-------|---------|
+| `matNum` | Material type constant (array index) |
+| `name` | Display name for crafting menus |
+| `tier` | Rarity classification (COMMON=0, UNCOMMON=1, RARE=2, LEGENDARY=3) |
+| `difficultyMod` | Added to crafting skill check difficulty |
+| `structureMod` | Added to finished item `max_struct` |
+| `levelMod` | Added to minimum crafter level requirement |
+| `statMod` | Bonus applied to finished item statistics |
+| `sharpnessMod` | Added to weapon sharpness (metals only) |
+| `matReq` | Object vnum for raw material requirement |
+
+### Tier Enumerations
+
+| Enum | Example Values |
+|------|----------------|
+| `MetalTierT` | METAL_TIER_COMMON (copper), METAL_TIER_LEGENDARY (adamantite) |
+| `HideTierT` | HIDE_TIER_COMMON (leather), HIDE_TIER_RARE (dragon scale) |
+| `WoodTierT` | WOOD_TIER_COMMON (generic), WOOD_TIER_RARE (ebony) |
+| `RockTierT` | ROCK_TIER_COMMON (stone), ROCK_TIER_LEGENDARY (diamond) |
+| `CrystalTierT` | CRYSTAL_TIER_COMMON (generic), CRYSTAL_TIER_RARE (special) |
+
+Also: `OrganicTierT`, `DeadTierT`, `MagicalTierT`, `SpiritualTierT`, `GenericTierT` follow the same four-tier pattern.
+
+### Material API
+
+| Function | Purpose |
+|----------|---------|
+| `getMaterial()` | Returns material type constant (unsigned short) |
+| `setMaterial(unsigned short)` | Assigns material; validates bounds |
+| `getMaterialTypeNumbers()` | Returns const pointer to property structure |
+| `findMetalMaterial(int matNum)` | Lookup crafting metal by material constant |
+| `findMetalMaterialByName(const sstring&)` | Lookup crafting metal by name (case-sensitive) |
+
+Category-specific lookup functions: `findHideMaterial()`, `findWoodMaterial()`, `findRockMaterial()`, etc.
+
+### Database Schema
+
+| Column | Type | Purpose |
+|--------|------|---------|
+| `obj.material` | int | Material type constant (not nullable, defaults to MAT_UNDEFINED) |
+| `obj.max_struct` | int | Maximum structure points (pristine condition) |
+| `obj.cur_struct` | int | Current structure points (breaks at 0) |
+
 ## Implementation
 
 ### Data Structures
@@ -170,13 +210,29 @@ Objects track `max_struct` and `cur_struct` in the database. Degradation formula
 
 Structure thresholds: 0% = broken (non-functional), 1-25% = badly damaged, 26-50% = damaged, 51-75% = worn, 76-100% = good.
 
+### Buoyancy System
+
+The `float_weight` property determines water behavior: 0 sinks immediately, 1-100 sinks slowly, 101-200 neutral buoyancy, 201+ floats. Metals use 0, wood typically 150-200.
+
+### Noise and Stealth
+
+The `noise` property affects stealth checks. Negative values provide bonuses (water -5), positive values penalize (metal armor 20-30). Total noise sums across all equipped items.
+
+### Conductivity
+
+Materials with `conductivity = 1` (all metals) transmit lightning damage through equipped items. Insulators (`conductivity = 0`) block transmission.
+
 ### Material API
 
-`TThing` provides `getMaterial()`, `setMaterial()`, and `getMaterialTypeNumbers()` methods. The `material_type` member stores the material constant. Weight calculations in `getCarriedWeight()` incorporate `vol_mult` for density scaling.
+`TThing` provides `getMaterial()`, `setMaterial()`, and `getMaterialTypeNumbers()` methods. The `material_type` member stores the material constant. Weight calculations in `getCarriedWeight()` incorporate `vol_mult` for density scaling. The `setMaterial()` function clamps values to valid ranges, defaulting to MAT_UNDEFINED for out-of-bounds values.
 
 ### Elemental Materials
 
-Water (`MAT_WATER`), Fire (`MAT_FIRE`), Ice (`MAT_ICE`), Lightning (`MAT_LIGHTNING`), and Chaos (`MAT_CHAOS`) have specialized properties: extreme susceptibilities or immunities, unique noise values, and `repairSpiritual()` for repair.
+Water (`MAT_WATER`), Fire (`MAT_FIRE`), Ice (`MAT_ICE`), Lightning (`MAT_LIGHTNING`), and Chaos (`MAT_CHAOS`) have specialized properties: extreme susceptibilities or immunities, unique noise values, and `repairSpiritual()` for repair. MAT_WATER has `water_susc = 249` (water affinity, not vulnerability). MAT_FIRE has `burned_susc = 0` (fire immunity).
+
+### Organic vs Inorganic Classification
+
+Materials 50-77 (nature range) undergo organic decay: rot, fungal growth, consumption. Materials 100-177 (mineral/metal) experience inorganic degradation: rust, corrosion, oxidation. General materials (0-19) split based on source.
 
 ## Troubleshooting
 
@@ -204,6 +260,14 @@ Water (`MAT_WATER`), Fire (`MAT_FIRE`), Ice (`MAT_ICE`), Lightning (`MAT_LIGHTNI
 
 **Fix:** Check `material_nums[mat].flammability`. Metals, glass, and stone must be 0. Verify object's material matches intended type.
 
+### Object Cannot Catch Fire
+
+**Symptom:** Wooden or cloth item won't ignite.
+
+**Cause:** Flammability set to zero.
+
+**Fix:** Paper should have 1000, cloth 900, wood 500. Zero flammability prevents ignition entirely.
+
 ### Item Rusts Instantly
 
 **Symptom:** Object loses structure rapidly in any water exposure.
@@ -211,6 +275,14 @@ Water (`MAT_WATER`), Fire (`MAT_FIRE`), Ice (`MAT_ICE`), Lightning (`MAT_LIGHTNI
 **Cause:** `water_susc` set too high (approaching 249).
 
 **Fix:** Standard rust-prone metals use 101. Values above 150 cause rapid corrosion. Rust-proof materials (mithril, adamantite) use 0.
+
+### Item Never Rusts
+
+**Symptom:** Metal object unaffected by water.
+
+**Cause:** `water_susc` at or below 100.
+
+**Fix:** Iron and steel should have 101. Only legendary metals (mithril, adamantite) should have 0.
 
 ### Crafted Item Has Wrong Stats
 
@@ -220,6 +292,14 @@ Water (`MAT_WATER`), Fire (`MAT_FIRE`), Ice (`MAT_ICE`), Lightning (`MAT_LIGHTNI
 
 **Fix:** Use `findMetalMaterial()` or equivalent lookup to get crafting-specific modifiers. Apply `structureMod`, `statMod`, and `sharpnessMod` from the crafting structure.
 
+### Crafting Fails Despite Sufficient Skill
+
+**Symptom:** Repeated crafting failures at high skill levels.
+
+**Cause:** Extreme `difficultyMod` (+40 or more) or `levelMod` exceeds character level.
+
+**Fix:** Check both modifiers. Effective difficulty is base + `difficultyMod`. Verify crafter level meets base requirement + `levelMod`.
+
 ### Material Name Displays Wrong
 
 **Symptom:** Object shows incorrect material adjective.
@@ -227,3 +307,43 @@ Water (`MAT_WATER`), Fire (`MAT_FIRE`), Ice (`MAT_ICE`), Lightning (`MAT_LIGHTNI
 **Cause:** Material constant doesn't match `mat_name` string, or wrong constant assigned.
 
 **Fix:** Verify material constant value matches intended entry in `material_nums`. Check `mat_name` field (20 char limit) in `constants.cc`.
+
+### Object Floats When It Should Sink
+
+**Symptom:** Metal or heavy object floats on water.
+
+**Cause:** `float_weight` set too high.
+
+**Fix:** Metals should have 0 (sinks immediately). Wood typically 150-200. Values above 100 provide buoyancy.
+
+### Lightning Damage Not Conducting
+
+**Symptom:** Lightning attacks don't transmit through metal armor.
+
+**Cause:** `conductivity` set to 0.
+
+**Fix:** All metals should have `conductivity = 1`. Check combat system queries conductivity for equipped items specifically.
+
+### Stealth Fails in Soft Materials
+
+**Symptom:** Stealth penalties despite cloth/leather armor.
+
+**Cause:** `noise` property too high.
+
+**Fix:** Leather should have noise 5-10, cloth near 0. Metal armor 20-30. Sum total noise across equipment.
+
+### Undefined Material Crash
+
+**Symptom:** Crash or assertion failure during property lookup.
+
+**Cause:** `getMaterial()` returns 0 (MAT_UNDEFINED) used as index without validation.
+
+**Fix:** Check `getMaterial()` result before array indexing. Assign appropriate default material if undefined.
+
+### Custom Material Assertion Failures
+
+**Symptom:** Assertions trigger when using new material.
+
+**Cause:** Property values outside valid ranges.
+
+**Fix:** Validate: susceptibility 0-100, hardness 0-100, float_weight 0-255, vol_mult 1-8, noise -5 to +10.

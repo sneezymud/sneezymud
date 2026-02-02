@@ -1,7 +1,12 @@
 ---
 title: Magical Items and Enchantment System
 description: Scrolls, wands, and staves store spells for on-demand casting without mana cost.
-created_by_model: opus
+keywords: [TMagicItem, TScroll, TWand, TStaff, reciteMe, useMe, doObjSpell, magic_level, charges, DELETE_VICT]
+related: [spell-skill-framework.md, object-system.md, affects-system.md, equipment-wear.md, memory-safety.md]
+primary_symbols:
+  functions: [reciteMe, useMe, doObjSpell, equipChar, unequip, affectModify, generic_find]
+  classes: [TMagicItem, TScroll, TWand, TStaff, affectedData]
+  files: [code/obj/obj_magic_item.cc, code/obj/obj_scroll.cc, code/obj/obj_wand.cc, code/obj/obj_staff.cc, code/misc/other.cc, code/sys/handler.cc]
 ---
 
 # Magical Items and Enchantment System
@@ -35,12 +40,24 @@ Magical items let any character use stored spells by consuming charges instead o
 
 - Always call `setLocked(true)` before spell execution and `setLocked(false)` after.
 - Never access scroll data after spell execution without checking if the scroll survived.
+- Scrolls are consumed whether recitation succeeds or fails; `reciteMe()` always returns `DELETE_THIS`.
 
 ### Spell Validation
 
 - Always verify `spell >= MIN_SPELL && spell < MAX_SKILL` before use.
 - Always check `discArray[spell] != nullptr` before accessing spell properties.
 - Always use `mapFileToSpellnum()` when loading and `mapSpellnumToFile()` when saving.
+
+### Wand Targeting
+
+- Always build a bitmask from the spell's `TAR_*` flags to pass to `generic_find()`.
+- Always reject `TAR_IGNORE` spells that cannot be targeted.
+- Always check `DELETE_ITEM` in addition to `DELETE_VICT` and `DELETE_THIS` after spell execution.
+
+### Staff Area Effects
+
+- For `TAR_AREA` spells, call `doObjSpell()` once with null victim and target parameters.
+- For non-area spells, iterate through `roomp->stuff`, skipping caster and group members for violent spells.
 
 ## Reference
 
@@ -88,6 +105,7 @@ Magical items let any character use stored spells by consuming charges instead o
 | `APPLY_ARMOR` | +/- to AC (negative is better) |
 | `APPLY_IMMUNITY` | Type in modifier, amount in modifier2 |
 | `APPLY_SPELL` | Spell ID in modifier, bonus in modifier2 |
+| `APPLY_NONE` | No modification |
 
 ### Bitvector Flags (AFF_*)
 
@@ -100,6 +118,70 @@ Magical items let any character use stored spells by consuming charges instead o
 | `AFF_INFRAVISION` | Darkvision |
 | `AFF_WATERBREATH` | Breathe underwater |
 | `AFF_SNEAK` | Move silently |
+| `AFF_DETECT_MAGIC` | Reveals magical auras |
+
+### DELETE Flag Types
+
+| Flag | Meaning |
+|------|---------|
+| `DELETE_THIS` | Magic item should be deleted |
+| `DELETE_VICT` | Spell victim died and should be deleted |
+| `DELETE_ITEM` | Target object should be deleted |
+
+Use `IS_SET_DELETE()` for these flags; standard `IS_SET()` will not detect the combined bit pattern.
+
+### Spell Targeting Flags (TAR_*)
+
+| Flag | Meaning |
+|------|---------|
+| `TAR_IGNORE` | No targeting requirements |
+| `TAR_CHAR_ROOM` | Target being in same room |
+| `TAR_OBJ_INV` | Target object in inventory |
+| `TAR_OBJ_ROOM` | Target object in room |
+| `TAR_OBJ_EQUIP` | Target equipped object |
+| `TAR_AREA` | Room-wide area effect |
+| `TAR_VIOLENT` | Triggers peaceful room check, skips group members |
+
+### Generic Find Bitmask (FIND_*)
+
+| Flag | Search Location |
+|------|-----------------|
+| `FIND_CHAR_ROOM` | Beings in room |
+| `FIND_OBJ_INV` | Objects in inventory |
+| `FIND_OBJ_ROOM` | Objects in room |
+| `FIND_OBJ_EQUIP` | Equipped objects |
+
+### spellNumT Range
+
+| Constant | Meaning |
+|----------|---------|
+| `TYPE_UNDEFINED` (-1) | Invalid spell |
+| `MIN_SPELL` (= `SPELL_GUST` = 0) | First valid spell |
+| `MAX_SPELL` | End of spells, start of skills |
+| `MAX_SKILL` | End of valid range |
+
+### Charge Functions
+
+| Function | Purpose |
+|----------|---------|
+| `getCurCharges()` | Current remaining charges |
+| `getMaxCharges()` | Maximum capacity |
+| `setMaxCharges(n)` | Set maximum (initialization only) |
+| `addToCurCharges(n)` | Add (positive) or consume (negative), clamped to valid range |
+
+### affectedData Structure
+
+| Field | Contents |
+|-------|----------|
+| `type` | Affect spell/skill ID |
+| `level` | Caster level or intensity |
+| `duration` | Remaining ticks; -9 = permanent |
+| `modifier` | Primary effect value |
+| `modifier2` | Secondary effect value |
+| `location` | `applyTypeT` enum value |
+| `bitvector` | Character `AFF_*` flags |
+| `be` | Associated being pointer |
+| `next` | Linked list chaining |
 
 ### Lag Tiers
 
@@ -152,9 +234,17 @@ When `equipChar()` places an item, it calls `affectModify()` for each affect wit
 
 Scrolls call `setLocked(true)` before spell execution to prevent the scroll from being deleted by side effects during the spell. After spell completion, `setLocked(false)` is called. The `reciteMe()` method checks `DELETE_VICT` after each spell and stops the loop early if the victim dies, but still returns `DELETE_THIS` since scrolls are always consumed.
 
+### Scroll Execution Flow
+
+`reciteMe()` first checks `ch->bSuccess(SKILL_READ_MAGIC)` to determine if the caster can successfully read the scroll. If the check fails, it sends a failure message and returns `DELETE_THIS`. If successful, it calls `generic_find()` to locate the target, then iterates through all three spell slots. It tracks the maximum spell lag from all executed spells and applies it once at the end via `ch->addToWait(combatRound(max_lag + 2))`.
+
 ### Staff Room Iteration
 
 Staff iteration uses the pattern `TThing* t = *(it++)` to cache the current element and advance the iterator in one operation. This allows safe deletion of `t` after spell execution since the iterator already points to the next element. The loop skips beings matching `tmp_char == ch` (the caster) or `tmp_char->inGroup(*ch)` for violent spells.
+
+### Spell Database Conversion
+
+`mapFileToSpellnum()` accepts an integer from the database and returns the corresponding `spellNumT` by indexing into a conversion table. `mapSpellnumToFile()` accepts a `spellNumT` and returns the integer for database storage. These functions handle the historical mismatch between file format spell numbering and the current enum order.
 
 ## Troubleshooting
 
@@ -199,3 +289,33 @@ Staff iteration uses the pattern `TThing* t = *(it++)` to cache the current elem
 **Cause:** `affectModify()` not called during equip, or affects stored in wrong array indices.
 
 **Fix:** Verify `equipChar()` iterates all `MAX_OBJ_AFFECT` slots and calls `affectModify()` with `TRUE`.
+
+### Symptom: Wand cannot be sold
+
+**Cause:** Shop code requires `getCurCharges() == getMaxCharges()` for wands and staves.
+
+**Fix:** Recharge the wand to full capacity before selling.
+
+### Symptom: DELETE_THIS not propagated
+
+**Cause:** Caller returns `TRUE` instead of `DELETE_THIS` after detecting the flag.
+
+**Fix:** Immediately return `DELETE_THIS` after detecting `IS_SET_DELETE(rc, DELETE_THIS)`. Never perform cleanup or message sending after this flag is set.
+
+### Symptom: Invalid spell array index crash
+
+**Cause:** Accessing `scroll->getSpell(i)` with `i >= 3` exceeds the three-element array bounds.
+
+**Fix:** Hardcode the loop limit to 3 for scrolls and validate the spell ID returned by `getSpell()`.
+
+### Symptom: Affects not removed on unequip
+
+**Cause:** `unequip()` fails to call `affectModify()` with `FALSE` for each affect.
+
+**Fix:** Ensure `unequip()` iterates through all `MAX_OBJ_AFFECT` slots and calls `affectModify()` to subtract modifiers and clear bitvector flags.
+
+### Symptom: Missing spell lag
+
+**Cause:** Magic item usage returns without calling `ch->addToWait()`.
+
+**Fix:** Call `ch->addToWait(combatRound(discArray[spell]->lag))` before every return path in `useMe()` and `reciteMe()`.

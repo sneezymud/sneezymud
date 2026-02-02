@@ -3,7 +3,6 @@ title: SneezyMUD Class Hierarchy
 description: Complete object hierarchy from TThing base class through TBeing, TMonster, TPerson, TRoom, and 40+ TObj subclasses with runtime type identification.
 keywords: [TThing, TBeing, TMonster, TPerson, TRoom, TObj, itemType, getKind, thingTypeT, TThingKind, virtual functions, dynamic_cast, opinionData, charList, hates, fears, makeNewObj, character_list, object_list, room_db, mob_index, obj_index]
 category: Critical Systems
-created_by_model: opus
 last_updated: 2026-02-01
 source_files: [code/code/misc/thing.h, code/code/misc/being.h, code/code/misc/monster.h, code/code/misc/person.h, code/code/misc/obj.h, code/code/misc/room.h, code/code/misc/db.cc]
 related: [character-foundation.md, memory-safety.md, memory-management.md]
@@ -28,12 +27,15 @@ Runtime type identification uses a dual enum system: coarse-grained identificati
 - Check `itemType()` against `itemTypeT` values for object subclass identification.
 - Use `getKind()` with `TThingKind` enum for broad category checks across the hierarchy.
 - Always use `dynamic_cast` when accessing subclass-specific methods after type identification.
+- Note: Multiple subclasses may return the same `itemTypeT` constant (e.g., `ITEM_WORN` for different worn item types). Use `dynamic_cast` for specific class identification when subtype matters.
 
 ### Container Operations
 
 - Use `*container += *thing` to add items to containers, rooms, or beings.
 - Use `--(*thing)` to remove an item from its current container before deletion or relocation.
 - Use `*room << *mob` and `*room >> *mob` for born list management in rooms.
+- Always remove items (`--(*thing)`) before adding to a new container. Objects must be orphaned (all location pointers null) before re-parenting.
+- Container operators perform validation and may trigger side effects like stat modification when equipping items.
 
 ### Opinion List Management
 
@@ -46,6 +48,7 @@ Runtime type identification uses a dual enum system: coarse-grained identificati
 
 - Use `makeNewObj(itemTypeT)` to create properly-typed object instances from the factory.
 - Use `read_mobile()` and `read_object()` to instantiate from prototype data.
+- Validate `itemTypeT` values against `MAX_OBJ_TYPES` when processing untrusted input. Invalid types return `TOtherObj` as a fallback.
 
 ### Modernization
 
@@ -152,7 +155,7 @@ TObj (abstract)
 |------|------|---------|
 | `character_list` | `TBeing*` | All beings (linked via `next`) |
 | `object_list` | `TObjList` | All objects |
-| `room_db[]` | `TRoom*[]` | Rooms by vnum |
+| `room_db[]` | `TRoom*[]` | Rooms by vnum (size: `WORLD_SIZE`) |
 | `mob_index` | `vector<mobIndexData>` | Mobile prototypes |
 | `obj_index` | `vector<objIndexData>` | Object prototypes |
 
@@ -167,6 +170,7 @@ TObj (abstract)
 | `code/code/misc/obj.h` | TObj base class, itemTypeT enum |
 | `code/code/misc/room.h` | TRoom class |
 | `code/code/misc/db.cc` | makeNewObj factory, prototype loading |
+| `code/code/misc/opinion.cc` | Hate/fear list manipulation functions |
 
 ## Implementation
 
@@ -178,11 +182,11 @@ The class defines 170+ virtual functions with default implementations. Identity 
 
 The only pure virtual is `exitDir(dirTypeT)` which returns exit data for rooms and nullptr for non-rooms.
 
-Container operations use operator overloads. Adding to containers uses `*container += *thing`. Removal uses the prefix decrement `--(*thing)` which clears the item from its current location.
+Container operations use operator overloads. Adding to containers uses `*container += *thing`. Removal uses the prefix decrement `--(*thing)` which clears the item from its current location. The `+=` operator dispatches to appropriate addition methods: `thingToRoom()` for room destinations, parent pointer updates for containers, and `equip()` for equipment slots. The `--` operator reverses these operations, calling `unequip()` with `affectModify()` for equipped items.
 
 ### TBeing Living Entities
 
-TBeing extends TThing for creatures with stats and actions. Core members include `points` (HP, mana, movement), `equipment[]` array for worn items, and `affected` linked list for spell effects. The `specials` structure tracks position and fighting state. Social structures use `master` and `followers` pointers. Action state lives in `spelltask` and `task` structures.
+TBeing extends TThing for creatures with stats and actions. Core members include `points` (HP, mana, movement, plus derived values like `max_hit` and `armor`), `equipment[]` array for worn items (slots like `WEAR_HEAD`, `WEAR_BODY` up to `WEAR_MAX`), and `affected` linked list for spell effects managed via `affectJoin()` and `affectModify()`. The `specials` structure tracks position (ranging from `POSITION_DEAD` through `POSITION_STANDING`) and fighting state. Social structures use `master` and `followers` pointers. Action state lives in `spelltask` and `task` structures.
 
 Pure virtual methods that subclasses must implement: `hitGain()`, `manaGain()`, `isDragonRideable()`, `failCharm()`, `learnFromDoing()`, `wizFileSave()`, `doQuit2()`, and various timer methods.
 
@@ -192,7 +196,7 @@ Type conversion helpers wrap `dynamic_cast`: `isTMonster()` and `isTPerson()` re
 
 TMonster implements NPC behavior through the `opinion` structure (greed, anger, malice, suspicion values) and `hates`/`fears` opinion data structures. Response scripts live in `resps`. Scaling factors include `hpLevel`, `damLevel`, and `acLevel`.
 
-Key methods: `mobileActivity()` drives the AI loop, `aggro()` checks aggression conditions, and `hunt()` handles target tracking. Over 100 social handler methods respond to player actions.
+Key methods: `mobileActivity()` drives the AI loop (respecting position, fighting state, and charmed status), `aggro()` checks aggression conditions, and `hunt()` handles target tracking. Over 100 social handler methods respond to player actions.
 
 The `opinionData` structure tracks hate and fear targets through multiple mechanisms. The `clist` member is a linked list of `charList` nodes for specific character targeting. Additional fields enable categorical targeting by `sex`, `race`, `Class` bitmask, or mob `vnum`. The `hatefield` and `fearfield` bitmasks indicate which targeting mechanisms are active.
 
@@ -210,23 +214,27 @@ Known bug: `remHated()` in `opinion.cc` does NOT delete removed nodes, causing a
 
 TPerson extends TBeing for player characters. The `title` field holds the player's custom title. The `wizPowers[]` array tracks immortal permissions. Persistence methods `saveRent()` and `loadRent()` handle equipment storage. Level advancement uses `advanceLevel()`.
 
+The `learnFromDoing()` method awards practice gains after successful skill/spell usage based on difficulty, failure rate, and current proficiency. Learning rates vary by class and specialization.
+
 ### TObj Items
 
-TObj extends TThing with `obj_flags` (extra flags, wear flags, cost), `affected[]` array for item enchantments, and `owners` for ownership tracking.
+TObj extends TThing with `obj_flags` (extra flags like `ITEM_GLOW`, wear flags like `ITEM_WEAR_BODY`, cost), `affected[]` array (`MAX_OBJ_AFFECT` entries) for item enchantments, and `owners` for ownership tracking.
 
-Pure virtuals that all subclasses implement: `itemType()` returns the `itemTypeT` enum value, `assignFourValues()` and `getFourValues()` handle DB persistence, `statObjInfo()` generates stat output.
+Pure virtuals that all subclasses implement: `itemType()` returns the `itemTypeT` enum value, `assignFourValues()` and `getFourValues()` handle DB persistence, `statObjInfo()` generates stat output. Additional virtuals include `lowCheck()` for condition tracking and `updateDesc()` for state-dependent descriptions.
 
 The subclass hierarchy organizes items through intermediate abstract classes: TBaseWeapon for all weapons, TBaseClothing for wearables, TBaseContainer for anything that holds items, TBaseCup for drinkables, TBaseLight for light sources, TMagicItem for castable items, TMergeable for stackable items, TSeeThru for things that can be looked through, and TFood for edibles.
 
 ### TRoom World Locations
 
-TRoom represents static world locations with `sectorType` for terrain, `dir_option[]` array for exits, `zone` for area membership, and `roomFlags` for room properties. River mechanics use `riverDir` and `riverSpeed`. Teleport rooms use `teleTarg` and `teleTime`.
+TRoom represents static world locations with `sectorType` for terrain (`SECT_CITY`, `SECT_FOREST`, `SECT_WATER_SWIM`, etc. affecting movement costs and drowning), `dir_option[]` array for exits, `zone` for area membership, and `roomFlags` for room properties (`ROOM_DEATH` for death traps, `ROOM_INDOORS` for weather protection, `ROOM_PEACEFUL` preventing combat). River mechanics use `riverDir` and `riverSpeed`. Teleport rooms use `teleTarg` and `teleTime`.
 
 Born list management uses stream operators: `*room << *mob` adds to the born list, `*room >> *mob` removes from it.
 
 ### Object Factory
 
-The `makeNewObj(itemTypeT)` function in `db.cc` creates properly-typed object instances. It uses an internal switch statement mapping each `itemTypeT` value to its corresponding class constructor. After creation, use `dynamic_cast` to access subclass-specific methods.
+The `makeNewObj(itemTypeT)` function in `db.cc` creates properly-typed object instances. It uses an internal switch statement mapping each `itemTypeT` value to its corresponding class constructor. Unrecognized types return `TOtherObj` as a safe fallback. After creation, use `dynamic_cast` to access subclass-specific methods.
+
+Room access validation uses `real_roomp()` which checks vnum bounds and null entries, returning nullptr for invalid values.
 
 ### Legacy Type System
 
@@ -248,7 +256,7 @@ The modern `TThingKind` enum class provides type-safe identification through the
 
 **Cause:** `remHated()` removes nodes from the list but does not delete them.
 
-**Diagnostic:** Use memory profiler to track `charList` allocations. Compare with `remFeared()` which correctly deletes.
+**Diagnostic:** Use memory profiler to track `charList` allocations. Compare with `remFeared()` which correctly deletes. Valgrind reports leaked charList nodes with allocation traces pointing to addHated.
 
 **Fix:** This is a known bug. Add `delete list` call in `remHated()` after unlinking the node.
 
@@ -256,7 +264,7 @@ The modern `TThingKind` enum class provides type-safe identification through the
 
 **Cause:** Incorrect `itemTypeT` passed to factory, or missing `dynamic_cast` after creation.
 
-**Diagnostic:** Check the `itemType()` return value matches expectations. Verify the switch in `makeNewObj()` maps to the correct class.
+**Diagnostic:** Check the `itemType()` return value matches expectations. Verify the switch in `makeNewObj()` maps to the correct class. Note that invalid types silently return `TOtherObj`.
 
 **Fix:** Use correct enum value and always `dynamic_cast` to the expected subclass before accessing subclass methods.
 
@@ -264,7 +272,7 @@ The modern `TThingKind` enum class provides type-safe identification through the
 
 **Cause:** Missing `override` keyword allowed signature mismatch, creating a new function instead of overriding.
 
-**Diagnostic:** Add `override` to the subclass method. Compiler error indicates signature mismatch.
+**Diagnostic:** Add `override` to the subclass method. Compiler error indicates signature mismatch. The function may work when called directly on the derived object but fail through base pointer (direct calls resolve statically, pointer calls use vtable).
 
 **Fix:** Correct the function signature to match the base class exactly. Add `override` to prevent future regressions.
 
@@ -280,6 +288,22 @@ The modern `TThingKind` enum class provides type-safe identification through the
 
 **Cause:** Object is not actually the expected subclass type.
 
-**Diagnostic:** Check `itemType()` or `getKind()` before casting. Use `isTMonster()`/`isTPerson()` for beings.
+**Diagnostic:** Check `itemType()` or `getKind()` before casting. Use `isTMonster()`/`isTPerson()` for beings. Note that `getKind()` returning unexpected values may indicate vtable corruption from use-after-free.
 
 **Fix:** Always verify type before casting. Handle nullptr case gracefully.
+
+### Symptom: Container operation crashes or creates inconsistent state
+
+**Cause:** Object added to container without first removing from previous location.
+
+**Diagnostic:** Object appears in multiple container lists, or room transition fails with assertion about existing `roomp`.
+
+**Fix:** Call `--(*object)` before adding to a new container. Objects must have null `parent`, `equippedBy`, `stuckIn`, and `roomp` pointers before addition.
+
+### Symptom: Room access crashes with null pointer
+
+**Cause:** Invalid vnum or unloaded zone.
+
+**Diagnostic:** `room_db[]` access with invalid index returns nullptr.
+
+**Fix:** Validate vnums through `real_roomp()` checking return for nullptr before dereference.

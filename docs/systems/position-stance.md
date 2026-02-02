@@ -1,11 +1,10 @@
 ---
 title: Position and Stance System
 category: important
-created_by_model: opus
 keywords: [position, stance, combat mode, movement, command gating]
 related: [rest-recovery.md, combat-formulas.md, task-system.md]
 primary_symbols:
-  functions: [getPosition, setPosition, updatePos, attackRound, defendRound, specAttackMod, getCombatMode, setCombatMode, isFlying]
+  functions: [getPosition, setPosition, updatePos, attackRound, defendRound, specAttackMod, getCombatMode, setCombatMode, isCombatMode, isFlying]
   classes: [TBeing, commandInfo]
   files: [code/code/misc/enum.h, code/code/misc/parse.h, code/code/misc/parse.cc, code/code/misc/combat.cc, code/code/misc/movement.cc, code/code/misc/being.h, code/code/misc/being.cc, code/code/misc/constants.cc]
 ---
@@ -32,19 +31,23 @@ The position system automatically responds to HP changes. When a character takes
 
 **Never assume a character can act after damage.** Call `updatePos()` or check the position explicitly after any HP modification. A character at 1 HP who takes 5 damage may now be stunned or worse.
 
+**Never set position without considering mount state.** If a character is riding, position must be `POSITION_MOUNTED`. Dismounting must restore the appropriate ground position. Use the mount/dismount functions rather than bypassing them.
+
 ### Combat Position Awareness
 
 **Check flying status before earth-based or grappling attacks.** Skills like Hurl, Shoulder Throw, Defenestrate, and Bone Break cannot target flying creatures. Earth-based spells like Earthmaw fail when the caster is flying.
 
 **Account for ground fighting skill when calculating penalties.** Characters with `SKILL_GROUNDFIGHTING` reduce position-based combat penalties proportionally to their skill level. The penalty formula scales from full penalty at 0% skill to zero penalty at max skill.
 
-**Flying and mounted characters have significant combat advantages.** Flying provides the largest attack/defense bonus; mounted provides a moderate bonus. Design encounters with this asymmetry in mind.
+**Flying and mounted characters have significant combat advantages.** Flying provides the largest attack/defense bonus; mounted provides a moderate bonus. Position advantage has double impact since modifiers apply symmetrically to both attacker and defender. A flying attacker versus a resting defender gains the sum of both modifiers. Design encounters with this asymmetry in mind.
 
 ### Stance Management
 
 **Never assume stance persists across combat sessions.** Berserk mode automatically exits when combat ends. Other stances may be reset by various game events.
 
 **Berserk mode restricts command access.** Characters cannot flee, enter portals while fighting, or use most non-combat commands. Code that bypasses normal command parsing must check for berserk restrictions explicitly.
+
+**Validate mode values before setting.** User input may provide out-of-range integers. Check against valid `attack_mode_t` enum range before casting to prevent undefined behavior.
 
 ### Movement and Position
 
@@ -125,13 +128,14 @@ The position system automatically responds to HP changes. When a character takes
 | `specAttackMod()` | function | Returns special attack modifier for position |
 | `getCombatMode()` | function | Returns current attack mode/stance |
 | `setCombatMode()` | function | Changes combat stance |
+| `isCombatMode()` | function | Checks if current mode matches a specific mode |
 | `isFlying()` | function | Checks if position is POSITION_FLYING |
 | `commandInfo` | class | Defines command properties including minPosition |
 | `TBeing` | class | Character base class, owns position/stance state |
 
 ### Position Display Names
 
-The `position_types[]` array in `constants.cc` provides human-readable names: Dead, Mortally wounded, Incapacitated, Stunned, Sleeping, Resting, Sitting, Engaged, Fighting, Crawling, Standing, Mounted, Flying.
+The `position_types[]` array in `constants.cc` provides human-readable names: Dead, Mortally wounded, Incapacitated, Stunned, Sleeping, Resting, Sitting, Engaged, Fighting, Crawling, Standing, Mounted, Flying. The array is null-terminated with a `"\n"` sentinel for iteration safety.
 
 ## Implementation
 
@@ -187,13 +191,13 @@ These modifiers stack multiplicatively where applicable.
 
 ### Attack Mode Implementation
 
-Attack mode is separate from physical position, stored on `TBeing` and accessed via `getCombatMode()`, `setCombatMode()`, and `isCombatMode()`. The mode affects attack frequency and defensive calculations in combat resolution.
+Attack mode is separate from physical position, stored per-character on `TBeing` and accessed via `getCombatMode()`, `setCombatMode()`, and `isCombatMode()`. The mode affects attack frequency and defensive calculations in combat resolution.
 
 Defense mode reduces attack opportunities while increasing defensive bonuses. Offense mode inverts this tradeoff. Berserk mode maximizes offense but imposes severe restrictions: the character cannot flee, cannot enter portals while fighting, and cannot use most non-combat commands. Berserk automatically ends when combat ends.
 
 ### Spell and Skill Position Requirements
 
-Spells and disciplines define minimum position via `discArray[which]->minPosition`. The casting system checks this before allowing execution, sending position-specific error messages on failure.
+Spells and disciplines define minimum position via `discArray[which]->minPosition`. The casting system checks this before allowing execution, sending position-specific error messages on failure. Position filtering occurs after command parsing but before resource consumption (mana, moves), ensuring players do not pay costs for actions they cannot complete.
 
 Flying imposes additional restrictions independent of minPosition. Earth-based spells (Earthmaw), certain nature abilities (Camp, Forage), and Feign Death cannot be cast while flying or in flying sectors. Some physical skills (Hurl, Shoulder Throw, Defenestrate, Bone Break) cannot target flying creatures.
 
@@ -238,3 +242,23 @@ Flying imposes additional restrictions independent of minPosition. Earth-based s
 **Diagnostic approach:** Check combat list membership and verify the combat-end code path executes.
 
 **Fix:** The automatic berserk exit depends on detecting combat end. Manual intervention may require direct `setCombatMode(ATTACK_NORMAL)` call.
+
+### Mounted Combat Bonuses Not Applied
+
+**Symptom:** Character on mount does not receive expected attack/defense bonuses.
+
+**Likely cause:** Position not set to `POSITION_MOUNTED` after mounting, or mount code sets wrong position.
+
+**Diagnostic approach:** Check position value while mounted. Should be exactly `POSITION_MOUNTED` (value 11), not `POSITION_STANDING`.
+
+**Fix:** Ensure mount/ride code sets position to `POSITION_MOUNTED` and dismount restores `POSITION_STANDING`. Both `attackRound()` and `defendRound()` explicitly check for mounted position value.
+
+### Spells Castable While Flying When They Should Not Be
+
+**Symptom:** Earth spells or ground-requiring abilities work while character is flying.
+
+**Likely cause:** Spell code does not check `isFlying()` before execution.
+
+**Diagnostic approach:** Add logging to spell code checking position. Flying should block earth/ground spells.
+
+**Fix:** Add explicit `isFlying()` check for terrain-dependent spells. Return failure with appropriate message before consuming mana.

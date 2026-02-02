@@ -3,7 +3,6 @@ title: Character Miscellaneous Systems
 description: Behavioral and social character subsystems covering alignment (moral positioning), pet/charm (followers from spells and purchases), and language (speech comprehension between races).
 keywords: [alignment, factionData, align_ge, align_lc, pets, charm, thrall, AFFECT_CHARM, AFFECT_PET, AFFECT_THRALL, garble, language, SKILL_COMMON, speech]
 category: Understanding Systems
-created_by_model: opus
 last_updated: 2026-02-01
 source_files: [code/code/misc/being.h, code/code/misc/faction.cc, code/code/misc/combat.cc, code/code/misc/damage.cc, code/code/misc/spell_info.cc, code/code/misc/alignment_deity.cc, code/code/misc/pets.cc, code/code/misc/offense.cc, code/code/misc/utility.cc, code/code/disc/disc_mage_spirit.cc, code/code/misc/spell_parser.cc, code/code/misc/garble.cc, code/code/misc/race.cc, code/code/misc/player_data.cc, code/code/misc/spell_num.cc]
 related: [affects-system.md, character-foundation.md, faction-system.md, monster-ai-behavior.md, spell-skill-framework.md]
@@ -148,7 +147,7 @@ Always check race garble flags with `getMyRace()->getGarbles()`. Zero means the 
 
 ### Alignment Storage
 
-Alignment values reside in the `factionData` structure attached to each being. Two fields track position: `align_ge` for the good/evil axis and `align_lc` for the lawful/chaotic axis. Both use identical scales from -1000 to 1000.
+Alignment values reside in the `factionData` structure attached to each being. Two fields track position: `align_ge` for the good/evil axis and `align_lc` for the lawful/chaotic axis. Both use identical scales from -1000 to 1000. Access occurs through direct field references on the being's faction data member.
 
 ### Alignment Shift Mechanics
 
@@ -172,25 +171,33 @@ The ensorcer spell performs multiple checks before establishing charm: immunity 
 
 Base duration scales with caster level multiplied by 3 and `Pulse::UPDATES_PER_MUDHOUR`. The victim's charm immunity percentage reduces this duration proportionally. Critical success on the spell doubles or triples the duration. A luck save by the victim halves it.
 
+The charm affect stores the caster's name in the `be` field for ownership tracking after the caster disconnects.
+
 ### Follower Limits
 
 Maximum followers derive from level plus charisma modifier, divided by 20. Each follower type consumes different weight against this limit. Zombies and thralls use 1 plus level/10. Charms use 2 plus level/10. Pets use 1 plus level/7.
+
+The `tooManyFollowers()` function iterates the followers linked list, summing each follower's weighted value based on type and level, then compares total weight against maximum.
 
 ### Order Processing
 
 The `doOrder()` function validates order eligibility. Charmed beings cannot issue orders. The target must be following the orderer and charmed by them. Pets undergo additional validation through `orderDenyCheck()` which rejects combat and suicidal commands. Thralls and charms obey all orders. Room flag `ROOM_NO_ORDER` blocks orders entirely.
 
+Valid commands are queued into the follower's command queue for execution on their next action pulse.
+
 ### Orphan System
 
-When a master logs out or dies, `stopFollower()` applies `AFFECT_ORPHAN_PET` with 80 mud hour duration. Orphans can be reclaimed by the original owner returning or by rangers using the `retrain` command. Retraining carries a 20% chance of permanent rejection, after which the mob goes fully wild.
+When a master logs out or dies, `stopFollower()` applies `AFFECT_ORPHAN_PET` with 80 mud hour duration. Orphans can be reclaimed by the original owner returning or by rangers using the `retrain` command. The `restorePetToPc()` function handles reclamation, checking for `AFFECT_ORPHAN_PET` and verifying ownership.
+
+Retraining carries a 20% chance of permanent rejection, after which the mob goes fully wild.
 
 ### Pet Persistence
 
-Pets with the `ACT_STRINGS_CHANGED` flag (indicating they were named) save to the database. The save captures player ID, mob vnum, name, experience, and level. Unnamed pets do not persist across sessions.
+Pets with the `ACT_STRINGS_CHANGED` flag (indicating they were named) save to the database. The `petSave()` function inserts a row into the pet table with player ID, mob vnum, name, experience, and level. Loading occurs during character login by querying the pet table and spawning mobs that match the owner ID. Unnamed pets do not persist across sessions.
 
 ### Garble Application Flow
 
-The `garble()` function retrieves active garbles via `getGarbles()`, then iterates through each garble type in `GarbleData[]` order. Each active garble that matches the speech type and scope applies its transformation function. Immortal listeners bypass all garbles.
+The `garble()` function retrieves active garbles via `getGarbles()`, then iterates through each garble type from zero to `TYPE_MAX`. Each active garble that matches the speech type and scope applies its transformation function. Immortal listeners bypass all garbles.
 
 ### Racial Garble Activation
 
@@ -198,7 +205,7 @@ Racial garbles activate when speaker and listener have different native garbles 
 
 ### Comprehension Calculation
 
-The `getLanguageChance()` function returns the percentage chance of garbling each word. It combines listener's language skill value (90% if skill check succeeds), perception bonus (0-16), speaker's Common skill (80% if check succeeds), and intelligence modifier (-10 to +10). Result clamps to 0-100 range where 0 is perfect understanding.
+The `getLanguageChance()` function returns the percentage chance of garbling each word. It combines listener's language skill value (90% if skill check succeeds), perception bonus via `plotStat()` (0-16), speaker's Common skill (80% if check succeeds), and intelligence modifier via `plotStat()` (-10 to +10). Result clamps to 0-100 range where 0 is perfect understanding.
 
 ### Common Skill Initialization
 
@@ -240,6 +247,16 @@ The `TYPE_GLUBGLUB` garble activates when speaking underwater without waterbreat
 
 **Fix:** Use thralls or charms for combat orders. Pets maintain self-preservation and reject dangerous commands.
 
+### Too many followers error
+
+**Symptom:** Player cannot charm or acquire new followers despite having few visible pets.
+
+**Cause:** High-level followers consume more weight slots than low-level ones.
+
+**Diagnostic:** Calculate total follower weight by summing each follower's contribution based on type and level. Compare against maximum followers from level plus charisma divided by 20.
+
+**Fix:** Dismiss high-level followers to free weight capacity, or increase character level and charisma.
+
 ### Orphan pet cannot be reclaimed
 
 **Symptom:** Player cannot reclaim their orphaned pet.
@@ -249,6 +266,16 @@ The `TYPE_GLUBGLUB` garble activates when speaking underwater without waterbreat
 **Diagnostic:** Check if `AFFECT_ORPHAN_PET` still exists on the mob. Verify the mob did not reject retraining.
 
 **Fix:** Orphan window cannot be extended. Rejected mobs become permanently wild. Prevent by returning before timeout.
+
+### Named pet not persisting
+
+**Symptom:** A named pet does not appear after login.
+
+**Cause:** The `ACT_STRINGS_CHANGED` flag may not be set, or the save did not complete.
+
+**Diagnostic:** Verify the flag is set on the mob. Check the pet table in the database for an entry with matching owner ID and mob vnum.
+
+**Fix:** Ensure the pet was properly named through game mechanics that set `ACT_STRINGS_CHANGED`. Verify `petSave()` is being called during appropriate save points.
 
 ### Speech completely unintelligible
 

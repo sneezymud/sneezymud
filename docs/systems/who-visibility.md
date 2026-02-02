@@ -1,11 +1,10 @@
 ---
 title: Who List and Visibility System
 description: Character visibility across who lists, rooms, and zones. Three systems interact to determine detection.
-keywords: [canSeeWho, canSee, invisLevel, PLR_ANONYMOUS, AFF_INVISIBLE, AFF_SHADOW_WALK, linkdead]
+keywords: [canSeeWho, canSee, canSeeMe, can_see_char_other_room, invisLevel, PLR_ANONYMOUS, AFF_INVISIBLE, AFF_SHADOW_WALK, linkdead, setInvisLevel, fixClientPlayerLists]
 category: Important Systems
 related: [affects-system, snoop-switch, class-hierarchy]
-source_files: [code/code/cmd/cmd_who.cc, code/code/misc/utility.cc, code/code/misc/being.cc, code/code/misc/toggle.cc, code/code/sys/client.cc]
-created_by_model: opus
+source_files: [code/code/cmd/cmd_who.cc, code/code/misc/utility.cc, code/code/misc/being.cc, code/code/misc/toggle.cc, code/code/misc/player_data.cc, code/code/sys/client.cc]
 last_updated: 2026-02-01
 ---
 
@@ -15,11 +14,11 @@ last_updated: 2026-02-01
 
 Three independent visibility systems determine whether one character can detect another. Each applies different rules, meaning a character visible in one context may be hidden in another.
 
-**Who List Visibility** governs the `who` command output. It checks invisibility levels, spell affects, and viewer permissions but ignores room-specific factors like lighting or hiding.
+**Who List Visibility** governs the `who` command output. It checks invisibility levels, spell affects, and viewer permissions but ignores room-specific factors like lighting or hiding. Implemented in `canSeeWho()`.
 
-**Room Visibility** handles in-room detection. Beyond invisibility, it considers lighting, infravision, sneak/hide states, and environmental modifiers.
+**Room Visibility** handles in-room detection. Beyond invisibility, it considers lighting, infravision, sneak/hide states, and environmental modifiers. Implemented in `canSee()` and `canSeeMe()`.
 
-**Remote Visibility** extends detection across rooms, used by spells and abilities that reveal distant characters.
+**Remote Visibility** extends detection across rooms, used by spells and abilities that reveal distant characters. Implemented in `can_see_char_other_room()`.
 
 A player might appear on the who list while remaining invisible in a room, or be detectable in-room but hidden from who. The systems share some mechanics but evaluate them independently.
 
@@ -38,6 +37,8 @@ Never assume shadow walk always conceals. `AFF_SHADOW_WALK` only provides concea
 Always set `invisLevel` to `GOD_LEVEL1` when a player becomes linkdead. This hides them from mortal who lists while remaining visible to immortals. Reset to 0 on reconnection.
 
 Always respect the visibility threshold for stealth immortals. When `PLR_STEALTH` is set, use `MAX_MORT` as the visibility threshold for action messages to prevent mortals from observing the immortal's activities.
+
+Always use `setInvisLevel()` rather than directly modifying `invisLevel`. The setter calls `fixClientPlayerLists()` automatically to maintain client synchronization.
 
 ## Reference
 
@@ -135,7 +136,7 @@ For immortal viewers, visibility depends solely on invisibility level comparison
 
 For mortal viewers examining immortal targets, if the target's `invisLevel` meets or exceeds `GOD_LEVEL1`, visibility fails. This covers linkdead players and invisible gods.
 
-Spell invisibility is then evaluated. If the target has `AFF_INVISIBLE`, or has `AFF_SHADOW_WALK` in a room with illumination below 14, and the target is immortal, visibility fails. For mortal targets under these conditions, the viewer needs `AFF_DETECT_INVISIBLE` to see them.
+Spell invisibility is then evaluated. If the target has `AFF_INVISIBLE`, or has `AFF_SHADOW_WALK` in a room with illumination below 14, and the target is immortal, visibility fails. For mortal targets under these conditions, the viewer needs `AFF_DETECT_INVISIBLE` to see them. Immortals with spell invisibility remain hidden from the who list even from other immortals unless the viewer has detection affects.
 
 Finally, blind viewers cannot see unless they have `AFF_TRUE_SIGHT` or `AFF_CLARITY`.
 
@@ -154,7 +155,7 @@ This makes room visibility more situational than who list visibility.
 
 ### Linkdead State Management
 
-A player becomes linkdead when their network connection drops while their character remains in the game world. The `isLinkdead()` function in `player_data.cc` checks three conditions: the character must be a PC, must lack a descriptor, and must not be polymorphed.
+A player becomes linkdead when their network connection drops while their character remains in the game world. The `isLinkdead()` function in `player_data.cc` checks three conditions: the character must be a PC (`isPc()` returns true), must lack a descriptor (`desc` is null), and must not be polymorphed (`polyed` equals `POLY_TYPE_NONE`).
 
 When linkdead state activates, `invisLevel` is set to `GOD_LEVEL1` to hide the character from mortal who lists. Immortals see linkdead players with bracketed names and can list them explicitly with `who -d`. Upon reconnection, `invisLevel` resets to 0.
 
@@ -162,13 +163,23 @@ When linkdead state activates, `invisLevel` is set to `GOD_LEVEL1` to hide the c
 
 The `invis` toggle in `toggle.cc` controls immortal invisibility. Without arguments, it toggles between 0 (visible) and 51 (invisible to mortals). With a level argument, it sets invisibility to that specific level, hiding the immortal from anyone below that level.
 
+### setInvisLevel Function
+
+The `setInvisLevel()` function in `being.cc` assigns the `invisLevel` field and calls `fixClientPlayerLists()` to synchronize client state. It accepts any short integer value but typical usage constrains values to 0 through `MAX_IMMORT`. Setting negative values is unsupported and may produce undefined behavior.
+
 ### Client Synchronization
 
-The `fixClientPlayerLists()` function in `client.cc` notifies graphical clients when visibility state changes. This function must be called when players log in or out, when invisibility level changes, and when linkdead state transitions occur. Failure to call this function leaves client-side player lists out of sync with the server.
+The `fixClientPlayerLists()` function in `client.cc` notifies graphical clients when visibility state changes. It accepts a boolean parameter indicating whether visibility was lost, determining whether to send remove-player or add-player messages.
+
+This function must be called when players log in or out, when invisibility level changes, and when linkdead state transitions occur. Failure to call this function leaves client-side player lists out of sync with the server.
 
 ### Whozone Implementation
 
 The `doWhozone()` function in `cmd_who.cc` is an immortal-only command (level 51+) that lists all players in the current zone along with their room locations. This provides spatial awareness beyond the standard who list.
+
+### doWho Implementation
+
+The `doWho()` function in `cmd_who.cc` parses command arguments to determine filtering flags, level ranges, and name searches. It builds filter criteria from dash-prefixed flags, then iterates all descriptors checking each connected character against the criteria. Characters matching all filters are accumulated into a display buffer. Output includes headers and footers with total player count, maximum players since reboot, and average player count.
 
 ## Troubleshooting
 
@@ -188,7 +199,7 @@ The `doWhozone()` function in `cmd_who.cc` is an immortal-only command (level 51
 
 **Diagnostic:** Verify visibility-changing code paths call the synchronization function.
 
-**Fix:** Add `fixClientPlayerLists()` call after any code that modifies `invisLevel` or causes login/logout/linkdead transitions.
+**Fix:** Add `fixClientPlayerLists()` call after any code that modifies `invisLevel` or causes login/logout/linkdead transitions. Reconnecting the client forces full resynchronization if server-side state is correct.
 
 ---
 
@@ -226,6 +237,26 @@ The `doWhozone()` function in `cmd_who.cc` is an immortal-only command (level 51
 
 **Cause:** `invisLevel` was not set to `GOD_LEVEL1` when linkdead state activated.
 
-**Diagnostic:** Check the character's `invisLevel` value and `isLinkdead()` return.
+**Diagnostic:** Check the character's `invisLevel` value and `isLinkdead()` return. Verify `desc` is null and `polyed` equals `POLY_TYPE_NONE`.
 
 **Fix:** Ensure linkdead transition code sets `invisLevel = GOD_LEVEL1`.
+
+---
+
+**Symptom:** Invisible player still appears on who list
+
+**Cause:** Either `invisLevel` is not set correctly, or spell invisibility is being countered.
+
+**Diagnostic:** Use `getInvisLevel()` to verify the invisLevel value. For spell invisibility, verify `AFF_INVISIBLE` is applied and check if viewer has `AFF_DETECT_INVISIBLE`.
+
+**Fix:** Ensure `setInvisLevel()` was called (not direct assignment) so client synchronization occurs. Confirm the viewer's level is below the target's `invisLevel`.
+
+---
+
+**Symptom:** Immortal cannot see another immortal on who list
+
+**Cause:** The target immortal has spell invisibility (`AFF_INVISIBLE`) applied.
+
+**Diagnostic:** Check if target has `AFF_INVISIBLE`. Verify viewer's level versus target's `invisLevel`.
+
+**Fix:** Immortals with spell invisibility remain hidden even from other immortals. The viewer needs `AFF_DETECT_INVISIBLE` to see them, or the target must remove the spell invisibility.

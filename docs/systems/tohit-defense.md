@@ -1,7 +1,6 @@
 ---
 title: To-Hit and Defense System
 category: critical
-created_by_model: opus
 keywords: [hits, attackRound, defendRound, specialAttack, combat resolution]
 related: [combat-formulas.md, combat-rounds.md, position-stance.md, equipment-wear.md]
 primary_symbols:
@@ -58,11 +57,13 @@ Apply blind penalties to both attacker and defender when appropriate. If attacke
 
 Check for `SKILL_BLINDFIGHTING` to mitigate blind penalties. At skill 100, the penalty is fully negated. Partial skill values produce proportional reduction.
 
+Note that blindness applies asymmetric penalties to regular versus special attacks. Regular attacks suffer `-my_lev-1` penalty through `attackRound()` while special attacks suffer only `-6` penalty through `specAttackMod()`. This means blind fighting skill investment has different effectiveness across attack types.
+
 ### Stealth and Surprise
 
 Remember that thief stealth bonuses only apply before combat starts. Once `fight()` returns true, SNEAK and HIDE bonuses to special attacks disappear. This affects backstab timing strategy.
 
-Apply the wary modifier to assassination attempts. After surviving backstab, cudgel, throatslit, or ranged snipe, targets gain wary status imposing -10 on subsequent surprise attacks. Check `isWary()` before calculating modifiers.
+Apply the wary modifier to assassination attempts. After surviving backstab, cudgel, throatslit, or ranged snipe, targets gain wary status imposing -10 on subsequent surprise attacks. Check `isWary()` before calculating modifiers. SKILL_SUBTERFUGE prevents wary state application entirely.
 
 ## Reference
 
@@ -76,7 +77,7 @@ Apply the wary modifier to assassination attempts. After surviving backstab, cud
 | `specialAttack()` | function | Ability-based hit resolution |
 | `specAttackMod()` | function | Situational modifier calculation |
 | `getStatMod()` | function | Stat to combat modifier conversion |
-| `plotStat()` | function | Power-law stat scaling |
+| `plotStat()` | function | Power-law stat scaling (exponent 1.4) |
 | `TBeing` | class | Base class for all combatants |
 | `GUARANTEED_SUCCESS` | return value | 5% auto-hit zone triggered |
 | `GUARANTEED_FAILURE` | return value | 5% auto-miss zone triggered |
@@ -104,6 +105,8 @@ Apply the wary modifier to assassination attempts. After surviving backstab, cud
 | MOUNTED | +(my_lev/4+1) | +2 |
 | FLYING | +(my_lev/3+1) | +3 |
 
+SKILL_GROUNDFIGHTING reduces penalties for positions below STANDING through `penalty * (100 - skill)/100` with minimum maintained at -1.
+
 ### Spell Effect Modifiers (Special Attacks)
 
 | Effect | On Self | On Target |
@@ -122,8 +125,11 @@ Apply the wary modifier to assassination attempts. After surviving backstab, cud
 | Mod Value | Factor | Hit Rate |
 |-----------|--------|----------|
 | -333 | 0 | 5% (floor) |
+| -222 | 200 | 20% |
 | -100 | 420 | 42% |
+| -56 | 500 | 55% |
 | 0 | 600 | 60% |
+| +56 | 700 | 75% |
 | +100 | 780 | 78% |
 | +222 | 1000 | 95% (ceiling) |
 
@@ -132,8 +138,29 @@ Apply the wary modifier to assassination attempts. After surviving backstab, cud
 | Stat Range | getStatMod() | Combat Bonus | Hit Rate Effect |
 |------------|--------------|--------------|-----------------|
 | 5 (minimum) | 0.8 | -67 | -12% |
+| 55 | 0.9 | -34 | -6% |
 | 105 (average) | 1.0 | 0 | 0% |
+| 155 | 1.12 | +42 | +8% |
 | 205 (maximum) | 1.25 | +84 | +15% |
+
+### Equipment Contribution
+
+| Total Hitroll | Attack Bonus | Hit Rate Effect |
+|---------------|--------------|-----------------|
+| -10 | -17 | -3% |
+| 0 | 0 | Baseline |
+| +10 | +17 | +3% |
+| +20 | +33 | +6% |
+| +30 | +50 | +9% |
+
+| AC Value | PC Bonus (before cap) | Mob Bonus |
+|----------|-----------------------|-----------|
+| -30 | 0 | 0 |
+| -10 | 0 | 0 |
+| 0 | 333 | 833 |
+| +10 | 667 | 1667 |
+
+PC AC cap formula: `GetMaxLevel * 1000/60 + my_lev` produces maximum defense bonus 1334 at level 70.
 
 ### Default Special Attack Stats
 
@@ -196,7 +223,7 @@ The `defendRound()` function mirrors attack calculation for the defender's contr
 
 PCs face an AC cap preventing gear from exceeding level-appropriate values: bonus = min(bonus, (GetMaxLevel() * 1000 / 60) + my_lev).
 
-SKILL_OOMLAT for PCs adds percentage bonus to armor value before the main calculation.
+SKILL_OOMLAT for PCs adds percentage bonus to armor value before the main calculation, multiplying armor by `1 + skill/250.0` before the 2/3 conversion.
 
 Combat mode applies inversely to attack. ATTACK_DEFENSE adds my_lev/4 plus SKILL_ADVANCED_DEFENSE/10. ATTACK_OFFENSE subtracts my_lev/4. ATTACK_BERSERK subtracts my_lev/4 plus an additional penalty: (8 * my_lev * factor) / 100, where factor depends on SKILL_BERSERK mastery. Factor starts at 100, subtracts skill value, and doubles if SKILL_ADVANCED_BERSERKING is known. Maxed berserk skill eliminates this penalty entirely.
 
@@ -214,7 +241,7 @@ Position modifiers mirror attack-side modifiers exactly.
 
 ### Special Attack Resolution Flow
 
-The `specialAttack()` function handles ability-based attacks with different success tiers. It receives stat type parameters for offense and defense, defaulting to FOC/KAR for offense and AGI/PER for defense.
+The `specialAttack()` function handles ability-based attacks with different success tiers. It receives stat type parameters for offense and defense, defaulting to FOC/KAR for offense and AGI/PER for defense when STAT_NONE sentinel values are passed.
 
 Situational modifiers come from `specAttackMod()` plus any caller-provided adjustment. The combined value is clamped to -20 to +20 range.
 
@@ -249,11 +276,11 @@ Surprise attacks (backstab, cudgel, throatslit, ranged snipe) check target wary 
 
 ### Stat Modifier Mechanics
 
-The `getStatMod()` function converts stat values to combat multipliers. It uses `plotStat()` with range 0.8-1.25, creating a power-law curve where high stats have increasing marginal returns.
+The `getStatMod()` function converts stat values to combat multipliers. It uses `plotStat()` with range 0.8-1.25, creating a power-law curve with exponent 1.4 where high stats have increasing marginal returns.
 
 Primary stats (DEX for attack, AGI for defense, FOC for special attack offense, AGI for special attack defense) use the full 0.8-1.25 range. Secondary stats (KAR for special attack offense, PER for special attack defense) use a narrower 0.92-1.08 range.
 
-The combat bonus formula: bonus = 335 * getStatMod(stat) - 335 produces -67 to +84 range. Each stat point above average contributes more than the previous point due to the power-law exponent of 1.4 in `plotStat()`. This rewards stat maximization over distribution.
+The combat bonus formula: bonus = 335 * getStatMod(stat) - 335 produces -67 to +84 range. Each stat point above average contributes more than the previous point due to the power-law exponent. This rewards stat maximization over distribution.
 
 ### Equipment Integration
 
@@ -262,6 +289,8 @@ Hitroll from equipment adds directly to attack calculation via `getHitroll()` an
 AC from equipment subtracts from the base 1000 in defense calculation. Lower AC numbers produce higher defense bonuses. The PC formula uses 2/3 multiplier while mobs use 5/6, making mob AC slightly more effective point-for-point.
 
 SKILL_IRON_FLESH (monks) provides AC when not wearing armor, integrated into the base `getArmor()` calculation.
+
+Equipment values cache until changes trigger recalculation through `affectModify()`.
 
 ### Performance Characteristics
 
@@ -291,7 +320,7 @@ Stat modifiers are pre-calculated in `curStats`. Equipment bonuses cache in `get
 
 **Likely cause:** Missing SKILL_BERSERK or SKILL_ADVANCED_BERSERKING.
 
-**Diagnostic approach:** Check skill values and calculate actual defense penalty. At low SKILL_BERSERK, penalty can exceed 400 points.
+**Diagnostic approach:** Check skill values and calculate actual defense penalty. At low SKILL_BERSERK, penalty can exceed 400 points. Factor calculation uses `(100 - skill)`, so 50 skill yields factor 50. SKILL_ADVANCED_BERSERKING doubles factor before penalty calculation, which paradoxically eliminates the penalty when SKILL_BERSERK is maxed since `(100-100)*2 = 0`.
 
 **Fix:** Train SKILL_BERSERK to high values before relying on berserk mode. SKILL_ADVANCED_BERSERKING further reduces penalty.
 
@@ -307,7 +336,7 @@ Stat modifiers are pre-calculated in `curStats`. Equipment bonuses cache in `get
 
 **Likely cause:** Wary state from previous assassination attempt or stat disadvantage.
 
-**Diagnostic approach:** Check target `isWary()` status. Calculate full situational modifier including stat ratios.
+**Diagnostic approach:** Check target `isWary()` status. Calculate full situational modifier including stat ratios. Remember situational modifier clamps to -20 to +20 before level difference application.
 
 **Fix:** Wait for wary state to expire or use different attack types. Consider stat-boosting effects.
 
@@ -315,6 +344,38 @@ Stat modifiers are pre-calculated in `curStats`. Equipment bonuses cache in `get
 
 **Likely cause:** Missing SKILL_CHIVALRY preventing bonus application.
 
-**Diagnostic approach:** Verify mounted position is properly set. Check SKILL_CHIVALRY presence and value.
+**Diagnostic approach:** Verify mounted position is properly set via `isRiding()`. Check SKILL_CHIVALRY presence and value.
 
 **Fix:** Mounted bonuses require SKILL_CHIVALRY for full effect. Train the skill before relying on mount positioning.
+
+### Symptom: Combat Mode Not Affecting Outcomes
+
+**Likely cause:** Not accounting for bidirectional effects.
+
+**Diagnostic approach:** Quantify expected modifier differences using my_lev calculations. Level 60 character switching from NORMAL to OFFENSE gains +42 attack and loses -42 defense. Against opponent in DEFENSE mode, total swings compound.
+
+**Fix:** Calculate full attack and defense modifier changes for both combatants.
+
+### Symptom: Position Penalties Persisting Despite Skill
+
+**Likely cause:** SKILL_GROUNDFIGHTING reduces but never eliminates penalties.
+
+**Diagnostic approach:** Verify position state via `getPosition()`. Skill value 100 reduces penalty to -1 minimum, not zero.
+
+**Fix:** Accept minimum -1 penalty when fighting from disadvantaged positions, even with maxed skill.
+
+### Symptom: Blind Fighting Skill Seems Ineffective
+
+**Likely cause:** Different penalty magnitudes for regular vs special attacks, or bidirectional blindness.
+
+**Diagnostic approach:** Vision penalties differ between regular attacks (my_lev+1) and special attacks (6). Bidirectional blindness applies penalties to attacker while granting bonuses from defender's blindness.
+
+**Fix:** Understand which attack type you're using and whether both combatants are blind. Higher skill investment needed for regular attack penalty elimination.
+
+### Symptom: Equipment Bonuses Not Scaling As Expected
+
+**Likely cause:** Hitroll truncation, AC caps, or expired spell effects.
+
+**Diagnostic approach:** Verify total hitroll includes both `getHitroll()` and `getSpellHitroll()`. Check if PC AC has hit level-based cap. Temporary spell effects may have expired.
+
+**Fix:** Account for integer truncation in hitroll calculation (5/3 per point). PCs at AC cap gain no benefit from additional AC reduction.

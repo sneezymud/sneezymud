@@ -1,11 +1,10 @@
 ---
 title: Crafting and Extraction Systems
 category: understanding
-created_by_model: opus
 keywords: [skinning, butchering, brewing, scribing, dissect, forage, repair, blacksmithing, sharpen, planting]
 related: [material-system.md, component-system.md, task-system.md, economy-system.md]
 primary_symbols:
-  functions: [determineSkinningItem, findSomeComponent, determineDissectionItem, objectRepair, forage, forage_insect, seed_to_plant]
+  functions: [determineSkinningItem, findSomeComponent, determineDissectionItem, objectRepair, forage, forage_insect, seed_to_plant, task_skinning, task_brew, task_scribe]
   classes: [TComponent, TPlant, TFood, TCorpse]
   files: [code/code/task/task_skin.cc, code/code/task/task_butcher.cc, code/code/task/task_brew.cc, code/code/task/task_scribe.cc, code/code/misc/repair.cc, code/code/task/task_blacksmithing.cc, code/code/cmd/cmd_dissect.cc, code/code/task/task_plant.cc]
 ---
@@ -40,7 +39,7 @@ Starting a task without these checks can cause double-extraction bugs or confusi
 
 Set the appropriate `CORPSE_PC_*` flag when starting an extraction task and clear it when the task completes or is interrupted. This prevents multiple players from simultaneously extracting from the same corpse.
 
-The `CORPSE_PC_SKINNING` and `CORPSE_PC_BUTCHERING` flags serve as mutex locks for corpse operations.
+The `CORPSE_PC_SKINNING` and `CORPSE_PC_BUTCHERING` flags serve as mutex locks for corpse operations. Clear these flags on all exit paths—task interruption (combat, movement, linkdead) without clearing the lock permanently blocks corpse processing.
 
 ### Handle Tool Breakage Immediately
 
@@ -52,11 +51,11 @@ Never access a tool after deletion. Store the deletion result and handle the tas
 
 Components have limited charges consumed by brewing and scribing. After consuming charges, check if the component is empty and delete it if so. Set the component pointer to NULL after deletion to prevent dangling pointer access.
 
-When batch-scribing multiple scrolls, calculate the maximum batch size as the minimum charges across all required components.
+When batch-scribing multiple scrolls, calculate the maximum batch size as the minimum charges across all required components. Never trust player-provided quantity—always limit to component availability.
 
 ### Handle Task Interruption from Combat
 
-Every task callback must handle `CMD_TASK_FIGHTING` by stopping the task and notifying the player. Combat interrupts all crafting operations.
+Every task callback must handle `CMD_TASK_FIGHTING` by stopping the task and notifying the player. Combat interrupts all crafting operations. Missing this handler allows tasks to continue during combat, creating animation inconsistencies.
 
 ### Validate Room and Position Continuously
 
@@ -64,11 +63,15 @@ Each task pulse should verify the player is still in the same room, is not linkd
 
 ### Check reconcileDamage Return for Death
 
-Tasks that can damage the player (critical skinning/butchering failures) must check if `reconcileDamage()` returns -1. On death, stop the task, save the character, and return `DELETE_THIS`.
+Tasks that can damage the player (critical skinning/butchering failures) must check if `reconcileDamage()` returns -1. On death, stop the task, save the character, and return `DELETE_THIS`. Note: `reconcileDamage()` returns -1 on death, not a DELETE flag.
 
 ### Use Half-Processed Flags Correctly
 
 When extraction partially completes (task interrupted, skill failure), set `CORPSE_HALF_SKIN` or `CORPSE_HALF_BUTCHERED` rather than `CORPSE_NO_SKIN` or `CORPSE_NO_BUTCHER`. Half-processed corpses can be processed again with reduced yields.
+
+### Consume Resources on Failure
+
+Always provide failure paths that consume resources. Failure without resource consumption enables infinite attempts until success, bypassing skill progression. Both success and failure should decrement component charges.
 
 ---
 
@@ -85,6 +88,9 @@ When extraction partially completes (task interrupted, skill failure), set `CORP
 | `forage()` | function | Wild food gathering by terrain |
 | `forage_insect()` | function | Insect gathering for insect-eating races |
 | `seed_to_plant()` | function | Map seed vnum to plant type index |
+| `task_skinning()` | function | Multi-pulse skinning task handler |
+| `task_brew()` | function | Multi-pulse brewing task handler |
+| `task_scribe()` | function | Multi-pulse scribing task handler |
 | `TComponent` | class | Component items with charges |
 | `TPlant` | class | Growing plants from seeds |
 | `TFood` | class | Edible items including butchered meat |
@@ -105,16 +111,16 @@ When extraction partially completes (task interrupted, skill failure), set `CORP
 
 ### Corpse Flags
 
-| Flag | Meaning |
-|------|---------|
-| `CORPSE_NO_SKIN` | Cannot be skinned |
-| `CORPSE_HALF_SKIN` | Partially skinned (halved yield) |
-| `CORPSE_PC_SKINNING` | Currently being skinned (mutex) |
-| `CORPSE_NO_BUTCHER` | Cannot be butchered |
-| `CORPSE_HALF_BUTCHERED` | Partially butchered (halved yield) |
-| `CORPSE_PC_BUTCHERING` | Currently being butchered (mutex) |
-| `CORPSE_NO_DISSECT` | Already dissected |
-| `CORPSE_NO_REGEN` | Body part, not full corpse |
+| Flag | Meaning | Effect |
+|------|---------|--------|
+| `CORPSE_NO_SKIN` | Cannot be skinned | Skinning blocked |
+| `CORPSE_HALF_SKIN` | Partially skinned | Halves maximum yield |
+| `CORPSE_PC_SKINNING` | Currently being skinned | Prevents concurrent skinning |
+| `CORPSE_NO_BUTCHER` | Cannot be butchered | Butchering blocked |
+| `CORPSE_HALF_BUTCHERED` | Partially butchered | Halves maximum yield |
+| `CORPSE_PC_BUTCHERING` | Currently being butchered | Prevents concurrent butchering |
+| `CORPSE_NO_DISSECT` | Already dissected | Dissection blocked |
+| `CORPSE_NO_REGEN` | Body part, not full corpse | Blocks skinning, butchering, dissection |
 
 ### Repair Skills by Material
 
@@ -124,6 +130,7 @@ When extraction partially completes (task interrupted, skill failure), set `CORP
 | Dead (bone, flesh, ivory) | `SKILL_REPAIR_SHAMAN` | Shaman | Operating table, scalpel, forceps |
 | Organic (coral, scales) | `SKILL_REPAIR_MONK` | Monk | Water sector, ladle, plant oil |
 | Wood (wood, ebony) | `SKILL_REPAIR_MONK` | Monk | Water sector, ladle, soil |
+| Rock/Stone | `SKILL_REPAIR_MAGE` or `SKILL_REPAIR_MONK` | Mage/Monk | Pentagram, chisel, silica |
 | Crystal/Gem | `SKILL_REPAIR_THIEF` or `SKILL_BLACKSMITHING_ADVANCED` | Thief/Warrior | Workbench, loupe, pliers |
 | Magical (plasma, runed) | `SKILL_REPAIR_MAGE` | Mage | Pentagram, runes, energy |
 | Leather/Hide | `SKILL_REPAIR_MONK` | Monk | Punch, cording |
@@ -171,7 +178,7 @@ Butchering produces edible meat from corpses.
 
 **Yield Calculation:** Maximum food units derive from corpse weight at 10% minus 1 (minimum 0). The actual food fill value clamps between 0 and 100 based on extraction efficiency.
 
-**Output:** Creates a generic steak object with a random cut type (rib-eye, chuck-eye, skirt, flank, t-bone, porterhouse, tenderloin, sirloin, tri-tip, chuck, ribs, short loin, or filet mignon). Steak weight is food units divided by 10, volume is food units times 10.
+**Output:** Creates a `Obj::GENERIC_STEAK` object with a random cut type (rib-eye, chuck-eye, skirt, flank, t-bone, porterhouse, tenderloin, sirloin, tri-tip, chuck, ribs, short loin, or filet mignon). Steak weight is food units divided by 10, volume is food units times 10.
 
 **Bare Hands:** Races with `TALENT_MEATEATER` can butcher without tools. Critical failure with bare hands inflicts 25 damage to the player.
 
@@ -185,7 +192,7 @@ Brewing creates potions containing spells.
 
 **Task Duration:** Brewing takes the batch size times 2 pulses, with each pulse being 7 times `Pulse::MOBACT`.
 
-**Success/Failure:** Success creates a potion containing the spell at full learnedness. Failure produces lemonade (0-5 random units of useless liquid).
+**Success/Failure:** Success creates a potion containing the spell at full learnedness. Failure produces lemonade (`LIQ_LEMONADE`, 0-5 random units of useless liquid). Components consumed regardless of success.
 
 ### Scribing Mechanics
 
@@ -197,13 +204,13 @@ Scribing creates scrolls containing spells.
 
 **Batch Scribing:** Players can scribe multiple scrolls with `scribe <number> <spell>`. Batch size is limited by the minimum charges across all three components.
 
-**Success Check:** Requires passing either a `SKILL_SCRIBE` check or a `SKILL_READ_MAGIC` check. Success gives the scroll proper spell learnedness; failure produces an unreadable scroll (learnedness 0).
+**Success Check:** Requires passing either a `SKILL_SCRIBE` check or a `SKILL_READ_MAGIC` check. Each scroll in a batch receives an independent skill check. Success gives the scroll proper spell learnedness; failure produces an unreadable scroll (learnedness 0).
 
 ### Component Location
 
 Both brewing and scribing use `findSomeComponent()` to search player inventory for required components. The function takes output pointers for generic, spell, and class components, plus the target spell and operation type (1 for brewing, 2 for scribing).
 
-Components track charges via `getComponentCharges()` and `addToComponentCharges()`. Component type flags distinguish spell, brew, and scribe classifications.
+Components track charges via `getComponentCharges()` and `addToComponentCharges()`. Component type flags distinguish spell, brew, and scribe classifications. Component type 1 (brewing) searches for generic brew component, then spell-specific brew component, then spell component. Type 2 (scribing) follows the same pattern for scribe components.
 
 ### Repair System
 
@@ -211,7 +218,9 @@ Components track charges via `getComponentCharges()` and `addToComponentCharges(
 
 **Quality Cap:** Maximum repair is 95% of max structure minus depreciation. Shop quality further limits this based on shop quality setting (0-1 multiplier).
 
-**Material Consumption:** Units needed scale with item weight divided by max structure, times 10, times the repair ratio (0.10). Monogrammed items use only 25% of normal materials.
+**Material Consumption:** Units needed scale with item weight divided by max structure, times 10, times the repair ratio (0.10). Monogrammed items use only 25% of normal materials (materials needed divided by 4).
+
+**Material Validation:** Always verify commodity charges are sufficient before consuming. Never allow negative charge values—this can create infinite materials when wrapping occurs.
 
 ### Sharpening Mechanics
 
@@ -232,21 +241,21 @@ Dissection extracts shaman components from corpses, distinct from skinning which
 
 **Data File Format:** Each entry has mob vnum, item vnum, amount (percentage chance), message to self, and message to others.
 
-**Success Check:** Must pass `SKILL_DISSECT` check (or have specific quest bit). Then a percentage roll against the amount field determines if the item appears.
+**Success Check:** Must pass `SKILL_DISSECT` check (or have `TOG_STARTED_MONK_BLUE` quest bit). Then a percentage roll against the amount field determines if the item appears. Failure calls the `CF` macro marking critical fail for skill tracking.
 
-After dissection, `CORPSE_NO_DISSECT` is set to prevent re-extraction.
+After dissection, `CORPSE_NO_DISSECT` is set to prevent re-extraction. Unlike skinning/butchering which allow partial extraction, dissection is one-time.
 
 ### Forage Mechanics
 
 Foraging gathers wild food based on terrain.
 
-**Valid Sectors:** Forest, beach, hills, mountains, nature, road, swamp, and arctic. Invalid in city, flying, vertical, underwater, air, ocean, river, flooded, or burning rooms.
+**Valid Sectors:** Forest, beach, hills, mountains, nature, road, swamp, and arctic. Invalid in city, flying, vertical, underwater, air, ocean, river, flooded, or burning rooms. Room flags `ROOM_FLOODED` and `ROOM_ON_FIRE` block foraging.
 
 **Cost and Cooldown:** Movement cost is 5-15 random. Success cooldown is 4 mud hours. Failure cooldown is 2 mud hours.
 
-**Multiple Items:** Initial 1000/1000 chance for first item, then chance divides by 3 for each additional item, creating diminishing returns.
+**Multiple Items:** Initial 1000/1000 chance for first item, then chance divides by 3 for each additional item, creating diminishing returns (most forages yield 1-2 items, rare cases yield 3-4).
 
-**Insect Foraging:** Races with `TALENT_INSECT_EATER` use specialized insect foraging. Food scales with terrain insect density times a base multiplier of 4. Having `SKILL_FORAGE` provides up to 50% bonus on successful check.
+**Insect Foraging:** Races with `TALENT_INSECT_EATER` use specialized insect foraging. Food scales with terrain insect density times a base multiplier (`FORAGE_INSECT_FOOD` constant, value 4). Having `SKILL_FORAGE` provides up to 50% bonus on successful check.
 
 ### Planting Mechanics
 
@@ -325,3 +334,43 @@ Planting grows crops from seed items.
 **Diagnostic approach:** Check room sector, verify plant age field is being updated by periodic processing.
 
 **Fix:** Plant in valid outdoor sector, verify plant update loop is running.
+
+### Task Continues During Combat
+
+**Symptom:** Crafting task doesn't stop when combat begins.
+
+**Likely cause:** `CMD_TASK_FIGHTING` case missing or not calling `stopTask()`.
+
+**Diagnostic approach:** Review task switch statement for `CMD_TASK_FIGHTING` case.
+
+**Fix:** Add `CMD_TASK_FIGHTING` case with message to player and `ch->stopTask()` call.
+
+### Death During Task Causes Crash
+
+**Symptom:** Crash during skinning/butchering critical failure that damages player.
+
+**Likely cause:** `reconcileDamage()` return value not checked, code continues accessing deleted player.
+
+**Diagnostic approach:** Enable ASan, check for use-after-free in critical failure path.
+
+**Fix:** Check if `reconcileDamage()` returns -1 (death). If so, call `stopTask()`, `doSave()`, and return `DELETE_THIS` immediately.
+
+### Batch Creates More Than Components Allow
+
+**Symptom:** Batch scribing creates more scrolls than component charges should permit.
+
+**Likely cause:** Batch size calculated from requested amount rather than minimum component charges.
+
+**Diagnostic approach:** Log component charge values and calculated batch size.
+
+**Fix:** Calculate batch size as minimum of all component charge counts. Never trust player-provided quantity.
+
+### Repair Creates Materials
+
+**Symptom:** Repair operation results in negative material consumption (creating materials).
+
+**Likely cause:** Material calculation not validated against available commodity charges.
+
+**Diagnostic approach:** Log calculated material needs and commodity charge count.
+
+**Fix:** Verify `commodity->getComponentCharges() >= mats_needed` before consuming. Never allow negative charge values.

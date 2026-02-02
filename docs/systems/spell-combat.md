@@ -1,6 +1,5 @@
 ---
 title: Offensive Spell System
-created_by_model: opus
 ---
 
 # Offensive Spell System
@@ -22,6 +21,10 @@ Spells return flag combinations indicating success/failure and death states. Whe
 **Always check immunity before calculating damage.** Complete immunity (100%+) should fail the spell entirely.
 
 **Always return immediately after detecting victim death.** Any access to the victim pointer after reconcileDamage returns -1 causes a crash.
+
+**Always filter group members and invisible targets in area spells.** Use inGroup() for group membership (checks same master AND AFF_GROUP flag). Use canSee() for visibility.
+
+**Always validate class access in player casting versions.** Call bPassClassChecks() before spell execution.
 
 **Never continue execution after setting a death flag.** The victim or caster is already deleted at that point.
 
@@ -48,6 +51,14 @@ Spells return flag combinations indicating success/failure and death states. Whe
 | CRIT_S_TRIPLE | 3x damage |
 | CRIT_S_KILL | 3x damage + special message |
 
+### Critical Failure Types
+
+| Type | Effect |
+|------|--------|
+| CRIT_F_NONE | Simple failure message via nothingHappens() |
+| CRIT_F_HITSELF | Backfire damages caster (check for CASTER_DEAD) |
+| CRIT_F_HITOTHER | Redirects spell to random room occupant |
+
 ### Key Immunity Types
 
 | Immunity | Damage Type |
@@ -73,6 +84,23 @@ Spells return flag combinations indicating success/failure and death states. Whe
 | Save successful | 50% damage |
 | Stat modifier | 80-125% based on relevant stat |
 | Skill difficulty | 35-110% |
+
+### Message Macros
+
+| Macro | Purpose |
+|-------|---------|
+| CS(spell) | Display critical success message |
+| CF(spell) | Display critical failure message |
+| SV(spell) | Display save message |
+
+### act() Display Targets
+
+| Target | Recipients |
+|--------|------------|
+| TO_CHAR | Caster only |
+| TO_VICT | Victim only |
+| TO_NOTVICT | Other room occupants |
+| TO_ROOM | All room occupants |
 
 ### Source Files
 
@@ -102,6 +130,8 @@ Every offensive spell requires three function versions.
 
 Base damage: `classAmt * lag_rounds * caster_level`
 
+Class amount ranges from 0.5 to 4.0 providing spell-specific damage scaling. Lag rounds come from lag_t enumeration (0 to 10.8 seconds of casting delay).
+
 Applied modifiers (multiplicative):
 1. Skill difficulty modifier via getSkillDiffModifier()
 2. Stat modifier via plotStat() for relevant stat (0.8-1.25x)
@@ -118,9 +148,13 @@ Applied modifiers (multiplicative):
 
 **Layer 3 - isLucky():** Victim save check using spellLuckModifier(). Success halves final damage.
 
+### Critical Failure Handling
+
+When critFail() returns CRIT_F_HITSELF, apply backfire damage (typically half calculated spell damage) to the caster. Check reconcileDamage() for -1 and return SPELL_CRIT_FAIL + CASTER_DEAD if the caster dies.
+
 ### Area Effect Implementation
 
-Iterate room contents with StuffIter, advancing before element access. Filter self, group members (inGroup()), immortals, and invisible targets. Apply 75% area damage penalty. On death (reconcileDamage returns -1), delete victim immediately and null the pointer. Return SPELL_SUCCESS without VICTIM_DEAD flag.
+Iterate room contents with StuffIter, advancing before element access. Filter self, group members (inGroup()), immortals, and invisible targets (canSee()). Apply 75% area damage penalty. On death (reconcileDamage returns -1), delete victim immediately and null the pointer. Return SPELL_SUCCESS without VICTIM_DEAD flag.
 
 ### Immunity Handling
 
@@ -167,3 +201,19 @@ Check getImmunity() before damage calculation. At 100%+, fail the spell with app
 **Cause:** Not returning CASTER_DEAD flag, or caller not checking for it.
 
 **Fix:** Return `SPELL_CRIT_FAIL + CASTER_DEAD` on self-damage death, translate to DELETE_THIS in wrapper.
+
+### Group member friendly fire
+
+**Symptom:** Area spells damage group members.
+
+**Cause:** Missing inGroup() check in target filtering.
+
+**Fix:** Skip any victim where `caster->inGroup(victim)` returns true before damage application.
+
+### Player casting bypasses class restrictions
+
+**Symptom:** Players cast spells their class shouldn't know.
+
+**Cause:** Missing bPassClassChecks() validation.
+
+**Fix:** Call bPassClassChecks(caster, spellNum) before spell execution; return FALSE with error message on failure.

@@ -3,7 +3,6 @@ title: Monster AI and Behavior
 description: NPC autonomous behavior systems including opinion mechanics, aggression targeting, pursuit/tracking, and memory management
 keywords: [opinionData, charList, Mobile_Attitude, ACT_AGGRESSIVE, ACT_HUNTING, hunt, aggroCheck, Hates, Fears]
 category: Important Systems
-created_by_model: opus
 last_updated: 2026-02-01
 source_files: [code/code/misc/monster.cc, code/code/misc/mobact.cc, code/code/misc/opinion.cc, code/code/misc/ai_utility.cc, code/code/disc/disc_thief_stealth.cc]
 related: [combat-rounds.md, memory-safety.md, movement-terrain-navigation.md, character-foundation.md]
@@ -47,6 +46,10 @@ Always validate targets exist, are visible, and share the same room before actin
 
 Never assume the Mobile_Attitude target pointer is valid. It tracks only PCs and must be validated before use.
 
+### Adding Fear
+
+When adding feared characters with `addFeared()`, the function automatically clears hunting state if the mob is currently hunting that target. This prevents paradoxical behavior where a mob simultaneously fears and pursues the same character.
+
 ## Reference
 
 ### Emotional Attributes (Mobile_Attitude)
@@ -58,7 +61,13 @@ Never assume the Mobile_Attitude target pointer is valid. It tracks only PCs and
 | malice | 0-100 | Intent to harm; combined with anger triggers aggression |
 | anger | 0-100 | Emotional volatility; combined with malice triggers aggression |
 
+Additional fields: `target` pointer (PC-only for opinion target), `random` pointer (scratch space for interaction logic), `last_cmd` (last witnessed command type).
+
+Randomized check methods (`isGreedy`, `isAngry`, `isMalice`, `isSusp`) return true if `::number(0, 100) < attribute`. Modifier methods (`US`/`DS`, `UG`/`DG`, `UA`/`DA`, `UM`/`DMal`) increase/decrease attributes by random amounts up to 2x the parameter.
+
 Aggression formula: Attack if `4*anger + 5*malice >= 450` OR if `ACT_AGGRESSIVE` flag is set.
+
+The `pissed()` function is a simpler check using only `isAngry()` and `isMalice()` without threshold, used for minor annoyances.
 
 ### Opinion Bitfields
 
@@ -69,6 +78,16 @@ Aggression formula: Attack if `4*anger + 5*malice >= 450` OR if `ACT_AGGRESSIVE`
 | HATE_CHAR | FEAR_CHAR | Individual characters (uses clist) |
 | HATE_CLASS | FEAR_CLASS | Specific class bitmask |
 | HATE_VNUM | FEAR_VNUM | Specific mob vnum |
+
+### charList Structure
+
+| Field | Purpose |
+|-------|---------|
+| name | Character name (mud_str_dup, requires delete[]) |
+| iHateStrength | Duration in game hours: `(combined_level + 5*focus) / 120`, yields 2-219 hours |
+| account_id | Account ID for multi-character detection |
+| player_id | Player ID for multi-character detection |
+| next | Singly-linked list pointer |
 
 ### ACT Flags Affecting AI
 
@@ -119,6 +138,14 @@ Aggression formula: Attack if `4*anger + 5*malice >= 450` OR if `ACT_AGGRESSIVE`
 | TOG_IS_VICIOUS | +25 rooms |
 | SPELL_TRAIL_SEEK | +50 rooms, enables cross-zone |
 
+### dirTrack Vision Requirements
+
+Tracking requires one of: `roomp->light + vision_bonus > 0`, `ROOM_ALWAYS_LIT` flag, `AFF_TRUE_SIGHT`, `AFF_CLARITY`, or `isImmortal()`. Without sufficient vision, tracking fails.
+
+SKILL_CONCEALMENT on target blocks tracking probabilistically: 150 modifier blocks 100%, 50 modifier blocks ~33%.
+
+Global pathfinding via `choose_exit_global` activates for level >= 30 (MIN_GLOB_TRACK_LEV), those with ACT_HUNTING, or those affected by SPELL_TRAIL_SEEK. Portal handling encodes index as `code - 9` for values > 9.
+
 ### Target Scoring (senseWimps)
 
 Base score: `HP + hitLimit + mana + (2000 - armor) + karma_scaled`. Lower score means more attractive target.
@@ -134,6 +161,8 @@ Base score: `HP + hitLimit + mana + (2000 - armor) + karma_scaled`. Lower score 
 | Fighting mob | -300 |
 | Hated | -350 |
 | Wounded (<30% HP) | -250 |
+
+Anti-tank detection: If mob has AFF_AGGRESSOR and is fighting a pet/zombie while a PC is not engaged, switches to the PC with flavor message.
 
 ### Class Combat AI Dispatch
 
@@ -178,11 +207,13 @@ Categorical hatred via `addHatred()` sets the appropriate bitfield flag and opin
 
 Adding fear clears hunting state if the feared target was the current hunt target. Global cleanup functions `DeleteHatreds()` and `DeleteFears()` iterate all mobs when characters are deleted to remove stale references.
 
+When removing hatred via `remHated()`, the function iterates clist to find the matching node, unlinks it, deletes the name array, deletes the node, and clears HATE_CHAR if clist becomes empty.
+
 ### Aggression Targeting
 
 The `aggro()` function determines combat readiness through emotional thresholds or the ACT_AGGRESSIVE flag, after filtering out utility mobs, guild mobs, and charmed pets.
 
-The `aggroCheck()` function called from `mobileActivity()` iterates room occupants seeking valid targets. It first checks faction-based aggression for Cult/Brotherhood territorial combat. Wandered mobs outside their home zone have reduced aggression against low-level players. The karma check allows high-karma players to avoid aggression from intelligent, calm mobs.
+The `aggroCheck()` function called from `mobileActivity()` iterates room occupants seeking valid targets. It first checks faction-based aggression for Cult/Brotherhood territorial combat. It skips polymorphed players. Wandered mobs outside their home zone have reduced aggression against low-level players. The karma check allows high-karma players to avoid aggression from intelligent, calm mobs (karma scaled 0-100 vs mob intelligence scaled 0-200 plus anger).
 
 Target selection uses `takeFirstHit()` which dispatches to class-specific openers: thieves attempt backstab or throat slit, while others use `classStuff()` or direct attacks.
 
@@ -192,13 +223,15 @@ The `senseWimps()` function provides intelligent target switching for level 15+ 
 
 Hunting initialization via `setHunting()` calculates tracking distance as 50 plus mob level, doubled if the target is hated. Persistence starts at mob level and decrements per tracking attempt. The old room is cached for return navigation.
 
-The `hunt()` function processes each pulse: if persistence is exhausted, the mob returns home or stops hunting. If the target is visible in the room, `targetFound()` initiates combat. Otherwise, `dirTrack()` provides pathfinding direction and the mob moves toward the target.
+The `hunt()` function processes each pulse: if persistence is exhausted, the mob returns home or stops hunting. If the target is visible in the room, `targetFound()` initiates combat. Otherwise, `dirTrack()` provides pathfinding direction and the mob moves toward the target. Musk gas in rooms costs extra persistence.
 
 Movement distance per tick scales with cube root of level, using probabilistic rounding for the fractional component. Level 10 mobs move 2 rooms per hunt tick with 15.4% chance for a third.
 
-Cleric mobs level 30+ have 20% chance to use SPELL_SUMMON (same zone) or SPELL_ASTRAL_WALK (cross-zone) instead of walking when hunting targets level 15+.
+Cleric mobs level 30+ have 20% chance to use SPELL_SUMMON (same zone) or SPELL_ASTRAL_WALK (cross-zone) instead of walking when hunting targets level 15+. Archer mobs with SPEC_ARCHER shoot at visible targets before moving.
 
 The `dirTrack()` function requires adequate light or magical vision. Targets with SKILL_CONCEALMENT can probabilistically block tracking based on skill level. Global pathfinding via `choose_exit_global` activates for high-level characters, those with ACT_HUNTING, or those affected by SPELL_TRAIL_SEEK.
+
+Player tracking via `doTrack` applies the class distance formula, race modifier, quest bit adjustment, and SPELL_TRAIL_SEEK bonus. With AUTO_HUNT autobit, the command is queued automatically for seamless pursuit.
 
 ### Activity Loop
 
@@ -208,7 +241,7 @@ Different behaviors trigger at different intervals to spread computational load 
 
 ### Response System
 
-Mobs can have scripted responses loaded from the mobresponses database table. The Responses class maintains a linked list of triggers matching command types and argument patterns to command sequences. The `checkResponses()` function is called from `triggerSpecial()` when players act near mobs, and `modifiedDoCommand()` executes responses with special handling for message routing, item/mob spawning, and quest flag manipulation.
+Mobs can have scripted responses loaded from the mobresponses database table. The Responses class maintains a linked list of triggers (respList with respCount entries and respMemory for interaction history) matching command types and argument patterns to command sequences. The `checkResponses()` function is called from `triggerSpecial()` when players act near mobs, and `modifiedDoCommand()` executes responses with special handling for message routing (CMD_RESP_TOROOM, CMD_RESP_TOVICT, CMD_RESP_TONOTVICT), item/mob spawning (CMD_LOAD, CMD_RESP_LOADMOB), and quest flag manipulation (CMD_FLAG, CMD_RESP_UNFLAG).
 
 ### Friend/Foe Logic
 
@@ -285,3 +318,73 @@ The `isFriend()` function returns true for group members, identical vnum mobs, o
 **Diagnostic:** Verify mob's faction flags and current zone. Check for trade pass item (vnum 8879) on Snake faction players in Logrus.
 
 **Fix:** Ensure factionAggroCheck() correctly identifies mob's faction and territory, and respects trade pass immunity.
+
+### Mob Not Attacking Players
+
+**Symptom:** Mob with seemingly aggressive settings ignores valid targets.
+
+**Cause:** Multiple possible causes in the aggression chain.
+
+**Diagnostic:** Check anger and malice values (4*anger + 5*malice must exceed 450 without ACT_AGGRESSIVE). Verify not utility/guild mob. Check karma (high player karma may exceed mob intelligence + anger threshold). Check level difference guards. For wimpy mobs, verify target is sleeping.
+
+**Fix:** Adjust emotional attributes, verify mob type flags, or adjust karma/level thresholds as appropriate.
+
+### Hunting Target Lost
+
+**Symptom:** Mob stops pursuing before reaching target.
+
+**Cause:** Multiple conditions can terminate hunting prematurely.
+
+**Diagnostic:** Check persistence value (zero triggers return home). Verify hunt_dist not exhausted. Check if target entered peaceful room. Verify vision requirements met. Check target's SKILL_CONCEALMENT level. Verify target still in world.
+
+**Fix:** Address the specific condition: adjust persistence, ensure vision, reduce concealment, or validate target existence.
+
+### Mob Not Developing Hatred
+
+**Symptom:** Mob never adds attacker to hate list despite taking damage.
+
+**Cause:** developHatred() conditions not met.
+
+**Diagnostic:** Verify developHatred() called from damage handlers. Check patience formula vs HP percentage. Check level difference impact. Verify ACT_IMMORTAL not set.
+
+**Fix:** Adjust mob level or patience thresholds, or remove ACT_IMMORTAL flag.
+
+### Target Selection Ignoring Wounded
+
+**Symptom:** senseWimps() doesn't prioritize low-HP targets.
+
+**Cause:** Mob not meeting requirements or scoring overridden.
+
+**Diagnostic:** Verify mob level >= 15. Check wounded threshold (<30% HP). Verify canSee() succeeds for target.
+
+**Fix:** Ensure mob meets level requirement and visibility conditions.
+
+### Response Not Executing
+
+**Symptom:** Mob doesn't react to player actions despite having responses.
+
+**Cause:** Response system not properly initialized or matched.
+
+**Diagnostic:** Verify loadResponses() called during mob creation. Check mobresponses database table for vnum. Verify cmd type matches. Check args pattern matching.
+
+**Fix:** Ensure database entries exist and patterns match triggering actions.
+
+### Cleric Not Using Hunting Magic
+
+**Symptom:** High-level cleric mob walks instead of teleporting.
+
+**Cause:** Requirements not met for spell-based pursuit.
+
+**Diagnostic:** Verify CLASS_CLERIC and level >= 30. Check 20% probability (may just be unlucky). Verify target level >= 15. Check mana availability.
+
+**Fix:** Ensure class, level, and mana requirements are met; probability is working as designed.
+
+### Mob Returning Home Instead of Hunting
+
+**Symptom:** Mob abandons pursuit and navigates back to birth room.
+
+**Cause:** Hunting conditions exhausted.
+
+**Diagnostic:** Check persistence (zero or negative triggers return). Verify hunt_dist not exhausted. Ensure oldRoom is valid and pathable. Check ACT_SENTINEL not blocking return movement.
+
+**Fix:** Increase initial persistence/distance or remove blocking conditions.

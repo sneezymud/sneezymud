@@ -5,8 +5,10 @@ keywords: [riding, mount, horse, POSITION_MOUNTED, rideCheck, fallOffMount, Deik
 category: Important Systems
 related: [combat-rounds, position-stance, movement-terrain-navigation, spell-skill-framework]
 last_updated: 2026-02-01
-created_by_model: opus
-source_files: [code/code/misc/riding.cc, code/code/misc/combat.cc, code/code/disc/disc_deikhan_mounted.cc, code/code/misc/movement.cc]
+source_files: [code/code/misc/riding.cc, code/code/misc/combat.cc, code/code/disc/disc_deikhan_mounted.cc, code/code/misc/movement.cc, code/code/task/task_ride.cc]
+primary_symbols:
+  functions: [doMount, dismount, fallOffMount, rideCheck, horseMaster, advancedRidingBonus, calmMount, mount, isRideable, canRide, lookForHorse, aiHorse]
+  classes: [TBeing, TMonster, TThing]
 ---
 
 # Mount and Riding System
@@ -17,7 +19,7 @@ Characters can mount rideable creatures to gain combat advantages at the cost of
 
 Mounts and riders maintain independent HP pools with no damage transfer between them. When either takes damage, the rider must pass stability checks or fall. Deikhans receive significant bonuses and bypasses through the Chivalry skill and mounted discipline.
 
-The mounting relationship creates a follower bond where the mount follows the primary rider. Mount AI is suppressed while ridden, but the creature may become hostile if the rider falls off or fails to mount.
+The mounting relationship creates a follower bond where the mount follows the primary rider. Mount AI is suppressed while ridden (wandering, aggression, scavenging, hunting, and fear reactions are blocked), but spec procs still fire and spell effects continue. The creature may become hostile if the rider falls off or fails to mount.
 
 ## Patterns
 
@@ -61,6 +63,15 @@ The mounting relationship creates a follower bond where the mount follows the pr
 | Rider slots per mount | 4 | Fixed maximum |
 | Large rider threshold | rider > mount * 66% | Consumes 2 slots instead of 1 |
 
+### Saddle Types
+
+| Type | Value | Effect |
+|------|-------|--------|
+| Riding saddle | 1 | +8 rideCheck bonus to primary rider |
+| Pack saddle | 2 | Prevents mounting ("You cannot ride $N when it is saddled with a pack") |
+
+Saddle detection checks WEAR_BACK equipment slot for TBaseClothing or TBaseContainer with isSaddle flag.
+
 ### rideCheck Modifiers
 
 | Modifier | Value | Effective Skill Change |
@@ -95,12 +106,14 @@ Attack frequency penalty: 0.67x (lose 1/3 of attacks)
 
 ### Mount Type Skills (Deikhan)
 
-| Skill | Start Level | Mount Types |
-|-------|-------------|-------------|
-| SKILL_RIDE_DOMESTIC | 5 | Horse, bovine, ox, pig, sheep, baanta, canine, goat |
-| SKILL_RIDE_NONDOMESTIC | 36 | Rhino, tiger, giraffe, bear, boar, elephant, deer |
-| SKILL_RIDE_WINGED | 66 | Griffon, hippogriff, wyvern, dragon, dragonne, lammasu, shedu, sphinx |
-| SKILL_RIDE_EXOTIC | 85 | Feline, basilisk, centaur, chimera, frog, lamia, manticore, turtle, lion, leopard, cougar, wyvelin |
+| Skill | Start Level | Learn Rate | Mount Types |
+|-------|-------------|------------|-------------|
+| SKILL_RIDE_DOMESTIC | 5 | 2 | Horse, bovine, ox, pig, sheep, baanta, canine, goat |
+| SKILL_RIDE_NONDOMESTIC | 36 | 2 | Rhino, tiger, giraffe, bear, boar, elephant, deer |
+| SKILL_RIDE_WINGED | 66 | 3 | Griffon, hippogriff, wyvern, dragon, dragonne, lammasu, shedu, sphinx |
+| SKILL_RIDE_EXOTIC | 85 | 7 | Feline, basilisk, centaur, chimera, frog, lamia, manticore, turtle, lion, leopard, cougar, wyvelin |
+
+Additional Deikhan skills: SKILL_CALM_MOUNT (level 1, rate 2), SKILL_TRAIN_MOUNT (level 26, rate 2), SKILL_ADVANCED_RIDING (level 46, rate 2).
 
 ### Dismount Restrictions
 
@@ -110,6 +123,13 @@ Attack frequency penalty: 0.67x (lose 1/3 of attacks)
 | Berserking | None |
 | Room at mob limit | Immortal |
 | Flying mount, cannot fly | SKILL_RIDE_WINGED coax to land |
+
+### aiHorse Hostility Values
+
+When mount attempts fail or riders fall off involuntarily, aiHorse is called:
+- Anger: +3
+- Malice: +1
+- Suspicion: +4
 
 ### Key Constants
 
@@ -150,6 +170,10 @@ Movement point costs use the mount's movement pool for full cost, while the ride
 
 Movement failures (mount exhaustion, rider exhaustion, weight collapse, drunkenness) trigger `fallOffMount()` with appropriate messaging.
 
+### Continuous Riding Task
+
+The `ride <direction>` command starts TASK_RIDE which continues movement in the initial direction while a path exists. At two-way intersections, it follows the non-backtrack exit. The task stops at multi-way intersections or dead ends, and interrupts on combat or other commands.
+
 ### Deikhan Advanced System
 
 The `advancedRidingBonus()` function combines SKILL_ADVANCED_RIDING with the mount-type-specific skill (domestic, nondomestic, winged, exotic) and returns half their sum. This bonus feeds into rideCheck modifiers and calm mount effectiveness.
@@ -166,7 +190,7 @@ Dismounting flying mounts requires either: natural flight ability (dismount to P
 
 ### NPC Mount Seeking
 
-The `lookForHorse()` function allows NPCs to automatically find and mount horses in their room. It checks: the NPC is not a utility mob, sentinel, or shopkeeper; the horse has no AFFECT_HORSEOWNED; the horse level is at least 4 below NPC level; the horse is not already following someone.
+The `lookForHorse()` function allows NPCs to automatically find and mount horses in their room. It checks: the NPC is not a utility mob, sentinel, or shopkeeper; the NPC is not at low health, already mounted, fighting, or rideable itself; the horse has no AFFECT_HORSEOWNED; the horse is at full health; the horse level is at least 4 below NPC level; the horse is not already following someone.
 
 ## Troubleshooting
 
@@ -239,3 +263,33 @@ The `lookForHorse()` function allows NPCs to automatically find and mount horses
 **Diagnostic:** Trace dismount path for flying mount + flying rider case.
 
 **Fix:** Check canFly() before checking SKILL_RIDE_WINGED in dismount logic.
+
+### Bug: Saddle bonus not applying
+
+**Symptom:** Primary rider with saddled mount not receiving +8 rideCheck bonus.
+
+**Cause:** Missing horseMaster check in saddle bonus logic.
+
+**Diagnostic:** Verify rideCheck adds 8 to mod only if `tbt && tbt->hasSaddle() && tbt->horseMaster() == this`.
+
+**Fix:** Ensure saddle bonus requires being primary rider, not just having a saddle present.
+
+### Bug: Chivalry bonus missing
+
+**Symptom:** Mounted Deikhan with Chivalry skill not receiving combat bonuses.
+
+**Cause:** Missing position check or skill check in bonus calculation.
+
+**Diagnostic:** Verify combat bonus checks `doesKnowSkill(SKILL_CHIVALRY) && getPosition() == POSITION_MOUNTED`.
+
+**Fix:** Require both skill knowledge and mounted position for Chivalry bonuses.
+
+### Bug: Mount AI still active while ridden
+
+**Symptom:** Mounted creature wanders, attacks, or behaves autonomously despite having a rider.
+
+**Cause:** Missing rider check in mobileActivity.
+
+**Diagnostic:** Verify mobileActivity returns FALSE when rider pointer exists.
+
+**Fix:** Add early return when rider pointer is non-null to suppress autonomous behavior.

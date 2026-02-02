@@ -1,7 +1,6 @@
 ---
 title: Quest System
 category: important
-created_by_model: opus
 keywords: [toggles, quest bits, hasQuestBit, setQuestBit, quest progression]
 related: [spec-procs.md, experience-leveling.md, persistence-storage.md]
 primary_symbols:
@@ -21,6 +20,8 @@ This approach trades flexibility for simplicity. You cannot store "killed 3 of 1
 Quest progression flows through predictable stages. A player might start with bit 1 (eligible), then bit 2 (rules read), then bit 3 (started), through various intermediate bits (components collected, stages cleared), to bit N (finished). Major quests include dedicated cheat detection bits that get set when players skip required steps.
 
 When a player types `quest`, the system scans their toggle array for set bits that have corresponding help files in `lib/mobdata/responses/help/`, showing them what they're currently working on.
+
+Some quest bits are mirrored to the `playertoggle` database table for web interface access.
 
 ---
 
@@ -47,6 +48,14 @@ Always set cheat bits when detecting sequence violations. If a player has STAGE_
 Never rely solely on cheat bits for enforcement. Cheat detection is a secondary defense. The primary defense is validating prerequisites before advancing state. Cheat bits catch what slips through.
 
 Always log cheat detections via `LOG_CHEAT`. This creates an audit trail for investigating player reports and identifying exploits.
+
+### Solo Kill Tracking
+
+Quests requiring solo mob kills use combat affects to detect group assistance. An `AFFECT_COMBAT` affect with `COMBAT_SOLO_KILL` modifier is attached to the mob when combat begins, storing a pointer to the initial attacker. The damage pipeline checks this affect and sets cheat bits if any other player participates. This ensures quest credit only goes to solo kills.
+
+### Component Turn-In
+
+Collection quests verify the player possesses required items by searching equipment with `getObjFromEquipment()`. Upon successful verification, the component bit is set, the item is removed with `extract_obj()`, and the mob provides dialogue about the next step. All component bits must be set before the quest can complete.
 
 ### Quest Rewards
 
@@ -80,6 +89,8 @@ Always check `hasQuestBit()` early in spec procedures. If the player isn't at th
 | `setQuestBit()` | function | Set a quest bit to 1 |
 | `remQuestBit()` | function | Clear a quest bit to 0 |
 | `doMortalQuest()` | function | Handle the `quest` command |
+| `file_to_sstring()` | function | Load help file content for paging |
+| `page_string()` | function | Page content to player's descriptor |
 | `TBeing` | class | Base class with quest bit interface |
 | `TPerson` | class | Player class with quest bit storage |
 | `toggles[]` | array | Per-character quest bit storage |
@@ -96,6 +107,24 @@ Always check `hasQuestBit()` early in spec procedures. If the player isn't at th
 | Monk Sashes | 56 | 75 | 20 |
 | Warrior Progression | 78 | 113 | 36 |
 | Thief Progression | 345 | 415+ | 70+ |
+
+### Spell Unlock Bits
+
+| Spell | Bit |
+|-------|-----|
+| Tornado | 50 |
+| Barkskin | 51 |
+| Earthquake | 52 |
+| Lava | 53 |
+| Flatulence | 54 |
+| Plasma Mirror | 55 |
+
+### Test Code Bits
+
+| Toggle | Bits |
+|--------|------|
+| `TOG_TESTCODE1-5` | 11-15 |
+| `TOG_QUESTCODE1-4` | 18-21 |
 
 ### Common Bit Suffixes
 
@@ -138,6 +167,8 @@ Each character maintains a `toggles[]` array as part of their persistent data. T
 
 The array is declared in `TBeing` and `TPerson`. Both classes implement identical quest bit methods. The array persists across sessions as part of the `charFile` struct written to player save files at `lib/mutable/player/{first_letter}/{charname}`.
 
+Some quest bits are mirrored to the `playertoggle` database table for web interface queries.
+
 ### Core Functions
 
 The three core functions provide the entire quest bit API.
@@ -156,17 +187,17 @@ The `quest` command is handled by `doMortalQuest()`. Without arguments, it count
 
 The function iterates backwards through all quest bits (from MAX_TOG_INDEX-1 down to 0). For each set bit, it checks if a help file exists at `lib/mobdata/responses/help/{bit_number}`. Only bits with help files count as "quests" for display purposes.
 
-When showing a specific quest, the function loads the help file into a string and pages it to the player via the descriptor's pager. This allows long quest descriptions without flooding the player's screen.
+When showing a specific quest, the function loads the help file into a string using `file_to_sstring()` and pages it to the player via `desc->page_string()`. This allows long quest descriptions without flooding the player's screen.
 
-Immortals have extended functionality: they can view quest help for any bit number directly, regardless of whether they have the bit set.
+Immortals (characters where `GetMaxLevel()` exceeds `MAX_MORT`) have extended functionality: they can view quest help for any bit number directly, regardless of whether they have the bit set.
 
 ### Quest Bit Constants
 
 All 454 quest bits are defined as `const int` values in `toggle.h`. The bits are organized by quest system:
 
-Equipment quests (Avenger, Vindicator, Silverclaw, Holy Devastator) occupy bits 1-77. Each follows a pattern: ELIGIBLE, RULES, STARTED, various stage bits, CHEAT bits, and FINISHED.
+Equipment quests (Avenger, Vindicator, Silverclaw, Holy Devastator) occupy bits 1-77. Each follows a pattern: ELIGIBLE, RULES, STARTED, various stage bits, CHEAT bits, and FINISHED. The Devastator quest implements the most sophisticated cheat detection with five separate cheat bits for different violation types.
 
-Monk sash quests occupy bits 56-75. Seven sashes (white through black) each have ELIGIBLE, STARTED, and FINISHED bits.
+Monk sash quests occupy bits 56-75. Seven sashes (white through black) each have ELIGIBLE, STARTED, and FINISHED bits. White sash is bits 56-58, progressing through yellow, purple, blue, green, red, and black.
 
 Spell/skill unlock bits occupy bits 50-55 and scattered higher ranges. These gate access to specific abilities.
 
@@ -249,9 +280,9 @@ No formal dependency system exists. Prerequisites are checked procedurally in sp
 
 **Likely cause:** Quest stage validation is too strict, or there's a race condition in multi-step interactions.
 
-**Diagnostic approach:** Review the spec procedure's cheat detection logic. Check if legitimate paths could trigger the detection.
+**Diagnostic approach:** Review the spec procedure's cheat detection logic. Check if legitimate paths could trigger the detection. Common causes include quest bits from previous versions not being cleared, teleportation bypassing required travel stages, or timing issues where prerequisite bits are checked before being set.
 
-**Fix:** Adjust validation to account for legitimate edge cases. Consider logging more context when setting cheat bits for future debugging.
+**Fix:** Adjust validation to account for legitimate edge cases. Consider logging more context when setting cheat bits for future debugging. Immortals can clear cheat bits manually with the set command: `set quest {player} {cheat_bit_number} 0`.
 
 ### Quest Bits Lost on Relog
 
@@ -263,12 +294,42 @@ No formal dependency system exists. Prerequisites are checked procedurally in sp
 
 **Fix:** Ensure quest bit modifications trigger or are followed by a save. Consider calling `doQueueSave()` after critical quest state changes.
 
+### Quest Cannot Be Restarted After Completion
+
+**Symptom:** Player wants to repeat a quest but cannot interact with the quest NPC.
+
+**Likely cause:** This is intentional design. The finished bit check causes early return in the spec procedure.
+
+**Diagnostic approach:** Verify the quest is not designed to be repeatable.
+
+**Fix:** If a quest should be repeatable, the spec procedure must clear the finished bit when giving the reward or provide explicit restart logic. If a player needs to restart a completed quest, an immortal must manually clear the finished bit with `remQuestBit` or the set command.
+
+### Quest Bit Lost After Polymorph or Switch
+
+**Symptom:** Quest progress disappears after polymorph or switch operation.
+
+**Likely cause:** The toggles array is not being copied correctly during character transfer.
+
+**Diagnostic approach:** Verify the toggles array is being copied during character transfer. Check that original pointers are being preserved correctly.
+
+**Fix:** Quest bits should persist across these operations as they are fundamental character data. If they're not persisting, examine the switch and polymorph code to ensure toggles array preservation.
+
 ### Invalid Quest Bit Logged
 
 **Symptom:** LOG_BUG shows "Bad check of hasQuestBit(X)" with unexpected bit number.
 
 **Likely cause:** Code is using an incorrect bit constant, or a negative/overflow value is being passed.
 
-**Diagnostic approach:** Search for the logged bit number to find where it originates. Check for integer overflow or variable corruption.
+**Diagnostic approach:** Search for the logged bit number to find where it originates. Check for integer overflow or variable corruption. Verify quest bit constants from toggle.h are being used, not hardcoded integers.
 
 **Fix:** Correct the bit constant usage. Add validation before calling quest bit functions if the value comes from player input or calculation.
+
+### Database Quest Bit Sync Issues
+
+**Symptom:** Web interface shows incorrect quest state compared to in-game.
+
+**Likely cause:** The database sync to `playertoggle` table failed or is out of date.
+
+**Diagnostic approach:** Verify the database sync code is calling appropriate insert or update statements after `setQuestBit()` and `remQuestBit()`. Check database connection and query execution.
+
+**Fix:** Ensure database sync occurs after quest bit changes. Check database table structure and web interface queries.

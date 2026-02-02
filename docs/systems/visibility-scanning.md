@@ -1,12 +1,11 @@
 ---
 title: Visibility and Scanning System
 category: important
-created_by_model: opus
 keywords: [eyeSight, visibility, canSee, doScan, infravision, AFF_BLIND, AFF_TRUE_SIGHT, SKILL_SEARCH, doConsider]
 related: [room-environment.md, affects-system.md, skill-combat.md]
 primary_symbols:
   functions: [eyeSight, visibility, canSee, canSeeMe, lookRoom, doScan, doInventory, doEquipment, doConsider, list_in_heap, clearpath, listExits]
-  classes: [TBeing, TRoom]
+  classes: [TBeing, TRoom, TObj]
   files: [code/code/cmd/cmd_look.cc, code/code/misc/show.cc, code/code/misc/range.cc, code/code/task/task_search.cc, code/code/cmd/cmd_consider.cc, code/code/misc/info.cc, code/code/misc/utility.cc, code/code/misc/doors.cc]
 ---
 
@@ -80,6 +79,7 @@ When you enter a room, the system evaluates each being and object present agains
 | `listExits()` | function | Display available exits with color coding |
 | `TBeing` | class | Base class for all characters |
 | `TRoom` | class | Room container with light level |
+| `TObj` | class | Base class for objects |
 
 ### Affects Impacting Vision
 
@@ -90,6 +90,7 @@ When you enter a room, the system evaluates each being and object present agains
 | `AFF_CLARITY` | +25 eyeSight, counters blindness |
 | `AFF_INVISIBLE` | Increases visibility (harder to see) |
 | `AFF_HIDE` | +5 + level/2 to visibility when not fighting |
+| `AFF_SANCTUARY` | Forces visibility (glow overrides concealment) |
 
 ### EyeSight Modifiers
 
@@ -157,6 +158,17 @@ When you enter a room, the system evaluates each being and object present agains
 | `DOOR_GRATE` | Yes |
 | `DOOR_SCREEN` | Yes |
 | Other door types | No (when closed) |
+
+### Exit Color Coding
+
+| Exit State | Brief Mode | Verbose Mode |
+|------------|------------|--------------|
+| Normal open | Purple | Purple |
+| Open door | Bold purple | Blue |
+| Closed door | Asterisk prefix | Red (immortal only) |
+| Fire sector | Red | Red |
+| Air sector | Cyan | Cyan |
+| Water sector | Blue | Blue |
 
 ### Consider Level Messages
 
@@ -238,7 +250,7 @@ When you enter a room, the system evaluates each being and object present agains
 
 ### EyeSight Calculation
 
-The `eyeSight()` function in utility.cc calculates an observer's ability to see. It starts with the character's base `visionBonus` and adds racial bonuses that vary by race. True sight and clarity affects each add +25 to the total.
+The `eyeSight()` function in utility.cc calculates an observer's ability to see. It starts with the character's base `visionBonus` (retrieved via `getVision()`) and adds racial bonuses that vary by race via `getRacialVisionBonus()`. True sight and clarity affects each add +25 to the total.
 
 Room lighting contributes a variable amount based on time of day and weather conditions, ranging from 0 to 25. Indoor rooms receive a penalty of half the light level to simulate reduced ambient light. Weather conditions apply further penalties: rain reduces eyeSight by 1, snow by 2, and lightning storms by 1.
 
@@ -246,7 +258,7 @@ Room lighting contributes a variable amount based on time of day and weather con
 
 The `visibility()` function in utility.cc determines how difficult a target is to see. Higher values mean harder to spot. The base is `canBeSeen`, which sneak skill manipulates.
 
-When a character is hiding (has `AFF_HIDE`) and not currently fighting, visibility increases by 5 plus half their level. Home terrain matching adds +5, as does having equipment with background bonuses. Shadowy equipment contributes proportionally to body coverage.
+When a character is hiding (has `AFF_HIDE`) and not currently fighting, visibility increases by 5 plus half their level. Home terrain matching adds +5, as does having equipment with background bonuses. Shadowy equipment contributes proportionally to body coverage via iteration over worn items checking `ITEM_SHADOWY` flags.
 
 Environmental factors matter: forest sectors add +2, rain adds +1 (easier to hide), but snow subtracts 2 (footprints visible) and lightning subtracts 1 (intermittent illumination).
 
@@ -268,9 +280,9 @@ Blindness without true sight or clarity fails immediately.
 
 Sanctuary glow makes the target always visible regardless of other factors.
 
-Personal light sources (carried lit objects) make the carrier visible.
+Personal light sources (carried lit objects via `hasLight()`) make the carrier visible.
 
-Rooms flagged as always lit bypass darkness checks.
+Rooms flagged as `ROOM_ALWAYS_LIT` bypass darkness checks.
 
 Infravision provides a bonus against warm-blooded creatures in darkness, but returns false for cold-blooded targets.
 
@@ -284,7 +296,7 @@ The room name appears via `sendRoomName()`, followed by the room description via
 
 Weather and ground conditions are described when relevant. Exit listing via `listExits()` shows available directions with color coding: normal exits in purple, doors in blue variants (open) or red (closed, immortal only), and special sectors (fire, air, water) in thematic colors.
 
-If the player is hunting, tracking updates occur. Finally, `list_thing_in_room()` populates the room with visible beings and objects.
+If the player is hunting, tracking updates occur. Finally, `list_thing_in_room()` populates the room with visible beings and objects. This function separates beings from objects, processing each through distinct display paths. Being visibility filters through `canSee()` before inclusion. Object display calls `showObjectsToChar()` which groups items via `list_in_heap()`. Being display calls `showMultTo()` for each visible character or creature.
 
 ### Darkness Handling
 
@@ -294,7 +306,7 @@ Dark rooms still reveal some information: beings visible via infravision or with
 
 ### Exit Listing and Secret Detection
 
-The `listExits()` function in info.cc displays available exits. Brief mode shows a compact bracketed list, while verbose mode uses prose descriptions.
+The `listExits()` function in info.cc displays available exits. Brief mode shows a compact bracketed list, while verbose mode uses prose descriptions. The function iterates through `MAX_DIR` directions, checking `dir_option` existence and applying ANSI color codes based on exit state.
 
 Secret door passive detection occurs during exit listing. Players with `SKILL_SEARCH` have a passive chance to notice something unusual. The base chance equals the skill value. Elves gain +25. Gnomes add perception plus half their level. Dwarves indoors add half their level plus 10.
 
@@ -302,9 +314,9 @@ If a random roll under 1000 succeeds against this chance, the player receives a 
 
 ### Active Search Task
 
-The `SKILL_SEARCH` task in task_search.cc provides active secret door detection. It costs 3 movement per direction searched and processes all 10 directions sequentially, skipping directions with existing visible exits and skipping ceiling if the room has no height.
+The `SKILL_SEARCH` task in task_search.cc provides active secret door detection. It costs 3 movement per direction searched and processes all 10 directions sequentially, skipping directions with existing visible exits (via `canSeeThruDoor()`) and skipping ceiling if the room has no height.
 
-A learning opportunity occurs every 3 directions searched. For success, the skill check must pass, the exit must have `EXIT_SECRET` set, be closed, have a keyword, and the keyword must not be `_unique_door_`. Meeting all conditions reveals the door with its exact name and location.
+A learning opportunity occurs every 3 directions searched. For success, the skill check must pass (via `bSuccess()` with `SKILL_SEARCH`), the exit must have `EXIT_SECRET` set, be closed (`EXIT_CLOSED`), have a keyword, and the keyword must not be `_unique_door_`. Meeting all conditions reveals the door with its exact name and location, and removes the `EXIT_SECRET` flag.
 
 ### Scan Command
 
@@ -318,11 +330,13 @@ Crowd hindrance stops scanning in a direction after spotting `5 + visionBonus/3`
 
 ### Door Transparency
 
-The `canSeeThruDoor()` function in doors.cc determines if you can see into the next room through an exit. Caved-in exits block vision. Destroyed exits, open exits, and specific door types (none, portcullis, grate, screen) allow vision. Other closed door types block vision.
+The `canSeeThruDoor()` function in doors.cc determines if you can see into the next room through an exit. The function performs ordered condition checks: `EXIT_CAVED_IN` immediately returns false. `EXIT_DESTROYED` returns true. Open exits (when `EXIT_CLOSED` is not set) and specific door types (none, portcullis, grate, screen) allow vision. Other closed door types block vision.
 
 ### Inventory Display
 
 The `doInventory()` function in info.cc shows carried items. It first checks for blindness (requires true sight, clarity, or not blind). Items are listed via `list_in_heap()`, which groups similar items using `isSimilar()` and displays counts in brackets.
+
+The `list_in_heap()` function creates a temporary item list, iterating through all provided objects. For each object, `isSimilar()` comparisons check against already-grouped items. Matches increment the group count. New unique items create new groups. Display generation formats item names with bracketed counts for quantities exceeding one. The `show_all` parameter triggers recursive descent into container contents.
 
 An optional argument filters items by name. At level 11 and above, capacity display shows volume and weight percentages relative to carry limits.
 
@@ -336,13 +350,13 @@ The `equipment damaged` variant filters to show only damaged items - those where
 
 ### Consider Command
 
-The `doConsider()` function in cmd_consider.cc evaluates combat readiness. Self-consider assesses armor (comparing actual armor to suggested armor for level), visibility (based on `visibility()` value), and noise.
+The `doConsider()` function in cmd_consider.cc evaluates combat readiness. Self-consider assesses armor (comparing actual armor to suggested armor for level via `suggestArmor()`), visibility (based on `visibility()` value), and noise.
 
 Monster consider compares the player's level to the monster's effective level using `getRealLevel()`, which includes spell effects. The level difference maps to messages ranging from dismissive ("Shall I tie both hands behind your back?") to dire ("There are better ways to suicide.").
 
-Characters with appropriate lore skills (animal, veggie, demon, reptile, undead, giant, people, other) gain race identification for matching creature types. Higher skill learning levels unlock additional information: HP ratio above 5, armor class above 20, attack count above 40, damage per attack above 60.
+Characters with appropriate lore skills (animal, veggie, demon, reptile, undead, giant, people, other) gain race identification for matching creature types. Higher skill learning levels unlock additional information: HP ratio above 5, armor class above 20, attack count above 40, damage per attack above 60. All estimates apply `GetApprox()` variance based on skill proficiency.
 
-Trophy integration shows experience modifier based on how many times the player has killed this mob type. Players who have never fought the creature receive different messaging than those with trophy counts.
+Trophy integration shows experience modifier based on how many times the player has killed this mob type (via `getCount()`). Players who have never fought the creature receive different messaging than those with trophy counts.
 
 ---
 
@@ -358,6 +372,16 @@ Trophy integration shows experience modifier based on how many times the player 
 
 **Fix:** If intended behavior, explain to player. If bug, ensure canSee is called before attack messages reference the attacker by name.
 
+### Invisibility Not Working as Expected
+
+**Symptom:** Character with `AFF_INVISIBLE` is still being seen.
+
+**Likely cause:** Observer has `AFF_TRUE_SIGHT` or `AFF_CLARITY`. Alternatively, target has `AFF_SANCTUARY` (glow overrides invisibility), is carrying a light source detectable via `hasLight()`, or shadow walk conditions require dim lighting that is not present.
+
+**Diagnostic approach:** Check observer for true sight/clarity affects. Check target for sanctuary, light sources. For shadow walk, verify lighting conditions.
+
+**Fix:** If intended behavior (counter-spells working), explain to player. Otherwise verify affect flags are set correctly.
+
 ### Scan Reports Wrong Distance
 
 **Symptom:** Scan distance descriptions do not match actual room count.
@@ -368,13 +392,23 @@ Trophy integration shows experience modifier based on how many times the player 
 
 **Fix:** Trace range calculation in doScan, verify all modifiers apply in correct order.
 
+### Scan Showing Nothing
+
+**Symptom:** Scan reports no beings in a direction where beings exist.
+
+**Likely cause:** Closed door blocking `clearpath()`, eyeSight below target visibility, or crowd hindrance already triggered.
+
+**Diagnostic approach:** Validate `clearpath()` returns true by checking door states. Manually calculate eyeSight vs visibility for targets. Count previously displayed beings against crowd threshold.
+
+**Fix:** Check maximum range calculation against actual room distance, considering terrain thickness and weather penalties.
+
 ### Search Never Finds Secret Door
 
 **Symptom:** Player with high search skill cannot find a door that exists.
 
 **Likely cause:** Door keyword is `_unique_door_` (programmatic door), door is not closed, or door lacks `EXIT_SECRET` flag.
 
-**Diagnostic approach:** Check door definition in zone file. Verify keyword, exit flags, and closed state.
+**Diagnostic approach:** Check door definition in zone file. Verify keyword, exit flags, and closed state. Ensure sufficient movement points (3 per direction).
 
 **Fix:** If door should be findable, ensure it has proper keyword and EXIT_SECRET. If programmatic, document that search cannot reveal it.
 
@@ -384,7 +418,7 @@ Trophy integration shows experience modifier based on how many times the player 
 
 **Likely cause:** Target is cold-blooded. Infravision only detects warm-blooded creatures.
 
-**Diagnostic approach:** Check target's creature type and warm-blooded flag.
+**Diagnostic approach:** Check target's creature type and warm-blooded flag. Verify observer has infravision via racial traits or equipment. Check that lighting conditions permit infravision bonuses.
 
 **Fix:** Infravision working as intended. Player needs light source or true sight to see cold-blooded targets in darkness.
 
@@ -398,6 +432,16 @@ Trophy integration shows experience modifier based on how many times the player 
 
 **Fix:** Consider is intentionally approximate. Special abilities, equipment, and skills create variance. This is design, not bug.
 
+### Consider Information Missing
+
+**Symptom:** Lore information not appearing for a creature.
+
+**Likely cause:** Character lacks appropriate lore skill for creature type, or skill learning level below thresholds.
+
+**Diagnostic approach:** Validate character has correct lore skill (animal, veggie, demon, etc.) for creature type. Check skill learning: 5 for health, 20 for armor, 40 for attacks, 60 for damage.
+
+**Fix:** Player needs to improve appropriate lore skill. Special proc creatures may bypass normal consider mechanics.
+
 ### Crowd Hindrance Triggering Too Early
 
 **Symptom:** Scan stops with crowd message after seeing few beings.
@@ -407,3 +451,23 @@ Trophy integration shows experience modifier based on how many times the player 
 **Diagnostic approach:** Check player's visionBonus. Threshold is `5 + visionBonus/3`.
 
 **Fix:** Working as intended - impaired vision means crowds obscure view more easily.
+
+### Darkness Not Blocking Vision
+
+**Symptom:** Player can see in a room that should be dark.
+
+**Likely cause:** Room has `ROOM_ALWAYS_LIT` flag, observer is immortal, observer has true sight/clarity, or room light level is above zero.
+
+**Diagnostic approach:** Verify room light level via `getRoomLight()`. Check for `ROOM_ALWAYS_LIT` flag. Check observer immortal status and affects.
+
+**Fix:** If room should be dark, remove `ROOM_ALWAYS_LIT` flag and verify time-of-day light calculation.
+
+### Exit Colors Not Displaying
+
+**Symptom:** Exits appear without color coding.
+
+**Likely cause:** Client lacks ANSI color support, or descriptor color mode disabled.
+
+**Diagnostic approach:** Validate ANSI support in client connection. Check descriptor color preferences. Verify `listExits()` ANSI sequence formatting.
+
+**Fix:** Enable color in client and/or player preferences.

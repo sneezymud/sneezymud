@@ -1,7 +1,6 @@
 ---
 title: Player Interface Systems
 category: understanding
-created_by_model: opus
 keywords: [prompt, score, toggle, help, GMCP, color, terminal, autobits, wimpy]
 related: [configuration-reference.md, combat-rounds.md]
 primary_symbols:
@@ -38,6 +37,8 @@ For clients supporting GMCP (Generic MUD Communication Protocol), the server als
 
 **Enable the VT100/ANSI status bar only after setting terminal type.** The status bar requires `toggle terminal ansi` (or `vt100`) first. Without proper terminal settings, the bar displays garbage characters or fails silently.
 
+**Display current settings when running `prompt` with no arguments.** This prevents players from forgetting what they've enabled and allows easy review of configuration.
+
 ### Toggle Management
 
 **Check `IS_SET(desc->autobits, AUTO_*)` for player preference toggles.** The autobits field stores player preferences as a bitmask. Never access these flags directly on the character - they're stored on the descriptor.
@@ -56,6 +57,8 @@ For clients supporting GMCP (Generic MUD Communication Protocol), the server als
 
 **Use `vt100()` for VT100-only features.** Some terminal features work on VT100 but not on dumb terminals.
 
+**Provide `color off` for players who need plain text.** Some players have medical conditions that make color distracting, and some terminals render colors poorly.
+
 ### Help System Usage
 
 **Be aware of abbreviation matching.** Help topics match by prefix, so `help arm` might match `armor` before `armadillo`. When writing code that programmatically queries help, use exact topic names.
@@ -67,6 +70,16 @@ For clients supporting GMCP (Generic MUD Communication Protocol), the server als
 **Send GMCP updates only to clients that negotiated GMCP.** Check that the descriptor supports GMCP before sending packets. GMCP-unaware clients will display the raw data as garbage.
 
 **Keep GMCP packets small and frequent rather than large and infrequent.** Send `char.vitals` after any HP/mana/move change. Send `room.info` on room entry. This allows clients to maintain responsive UIs.
+
+**Cache previous values to avoid redundant GMCP packets.** Only send updates when data actually changes. Sending the same `char.vitals` packet every combat round wastes bandwidth.
+
+**Include complete data in each packet.** Don't send partial updates. Each `char.vitals` packet should contain all vitals, not just the ones that changed. Clients don't maintain state across packets.
+
+### Score Display
+
+**Handle condition value -1 as immunity, not extreme hunger/thirst.** The value -1 indicates immunity (typically immortals). Check for -1 before displaying condition messages to avoid showing misleading "totally famished" to immortal characters.
+
+**Format large numbers with thousands separators.** Display experience as "1,234,567" not "1234567". Talens, bank balance, and skill totals should all use separators for readability.
 
 ## Reference
 
@@ -184,11 +197,13 @@ For clients supporting GMCP (Generic MUD Communication Protocol), the server als
 
 | Condition | Level | Message |
 |-----------|-------|---------|
+| Hunger | -1 | (immune - no message) |
 | Hunger | 0 | "You are totally famished." (red) |
 | Hunger | 1-5 | "Your stomach is growling loudly." |
 | Hunger | 6-10 | "You could use a little bite to eat." |
 | Hunger | 11-20 | "You are slightly hungry." |
 | Hunger | 21+ | "Your hunger is the least of your worries." |
+| Thirst | -1 | (immune - no message) |
 | Thirst | 0 | "You are totally parched." (red) |
 | Thirst | 1-5 | "Your throat is very dry." |
 | Thirst | 6-10 | "You could use a little drink." |
@@ -255,7 +270,7 @@ For each enabled flag, the corresponding data is retrieved from the character an
 
 Combat-related elements (opponent, tank) only appear when the character is fighting. The opponent display shows the target's name and health percentage. Tank display shows whoever is taking hits for the group.
 
-The VT100/ANSI status bar uses terminal escape sequences to create a persistent display area at the bottom of the screen. This reserves 3-4 lines that don't scroll with normal output. Line 1 shows vitals, line 2 shows room/affiliation/wealth, and line 3 (modern layout) shows additional info like TNL.
+The VT100/ANSI status bar uses terminal escape sequences to create a persistent display area at the bottom of the screen. This reserves 3-4 lines that don't scroll with normal output. Line 1 shows vitals, line 2 shows room/affiliation/wealth, and line 3 (modern layout) shows additional info like TNL. The bar requires `desc->screen_size` to match the actual terminal height - mismatches cause the bar to appear in the wrong location or overwrite normal output.
 
 Prompt colors are stored per-element. The `prompt color <stat> <color>` command updates the color for a specific prompt element. These colors are applied during prompt generation using ANSI escape codes (when the terminal supports them).
 
@@ -265,9 +280,9 @@ The `doScore()` function constructs a multi-section character summary. It querie
 
 Vitals display is class-aware - the function checks character class to determine whether to show mana, piety, or lifeforce. Movement is described using `DescMoves()` which converts the percentage of current/max moves to a descriptive string ranging from "totally exhausted" to "completely rested."
 
-Wealth shows current talens, bank balance, and experience. Session tracking shows XP earned since login and playtime for the current session and lifetime total.
+Wealth shows current talens, bank balance (queried from the database), and experience. Session tracking shows XP earned since login (computed from a baseline set at login) and playtime for the current session and lifetime total.
 
-Condition display uses threshold tables to convert numeric hunger/thirst/drunk values to descriptive messages. Zero values use red color codes to draw attention to critical states.
+Condition display uses threshold tables to convert numeric hunger/thirst/drunk values to descriptive messages. Zero values use red color codes to draw attention to critical states. The special value -1 indicates immunity and produces no condition message.
 
 Position and combat mode are shown at the bottom. Active affects are listed if any exist.
 
@@ -279,7 +294,7 @@ The `doToggle()` function parses the toggle name and maps it to the appropriate 
 
 Terminal settings (screensize, terminal type) are stored on the descriptor and persisted to the account. The screensize value is bounded to 1-128 lines.
 
-Wimpy is stored as an integer threshold. When checking wimpy, the system compares current HP to `desc->wimpy` and triggers automatic flee if HP drops below. The `maxWimpy()` function calculates the maximum allowed wimpy (typically half max HP).
+Wimpy is stored as an integer threshold. When checking wimpy, the system compares current HP to `desc->wimpy` and triggers automatic flee if HP drops below. The `maxWimpy()` function calculates the maximum allowed wimpy (typically half max HP). Wimpy handling validates trait restrictions through `hasQuestBit()` - `TOG_IS_COWARD` prevents disabling wimpy below a minimum, `TOG_IS_VICIOUS` prevents enabling wimpy at all, `TOG_IS_CRAVEN` enforces a minimum wimpy value.
 
 Global toggles require `POWER_TOGGLE` and affect server-wide state. These are stored in global variables and affect all players.
 
@@ -293,7 +308,7 @@ Abbreviation matching allows partial topic names. The system compares the query 
 
 For skill and spell help, additional metadata is injected before the help file content. This includes discipline, specialization, learning rate, modifier stat, spell component, difficulty, immunity type, casting requirements, and behavioral flags (offensive, area effect, etc.).
 
-Help files with corresponding `.ansi` versions are selected based on terminal capability. If the player has ANSI color enabled and an `.ansi` version exists, that version is displayed instead of the plain text version.
+Help files with corresponding `.ansi` versions are selected based on terminal capability. If the player has ANSI color enabled and an `.ansi` version exists, that version is displayed instead of the plain text version. Long help files automatically paginate based on `desc->screen_size`.
 
 ### Color System
 
@@ -311,7 +326,7 @@ The `char.vitals` package is sent after any change to HP, mana, moves, piety, or
 
 The `room.info` package is sent on room entry and includes room vnum, name, exits, and coordinates. This enables automap features in clients.
 
-GMCP packets are sent through a separate code path that checks for GMCP capability before transmitting. Non-GMCP clients never see this data.
+GMCP packets are sent through a separate code path that checks for GMCP capability before transmitting. Non-GMCP clients never see this data. The system caches previous values and compares current values before sending - only actual changes trigger transmission to avoid redundant packets.
 
 ## Troubleshooting
 
@@ -325,6 +340,16 @@ GMCP packets are sent through a separate code path that checks for GMCP capabili
 
 **Fix:** Have player run `toggle terminal ansi` before enabling the bar.
 
+### Status Bar Appears in Wrong Location
+
+**Symptom:** Status bar appears in the middle of the screen or overwrites normal output.
+
+**Likely cause:** Screen size mismatch between server setting and actual terminal height.
+
+**Diagnostic approach:** Check `desc->screen_size` versus actual terminal height. The status bar requires the bottom 3-4 lines.
+
+**Fix:** Set correct screen size with `toggle screensize <height>`. Disable status bar with `prompt bar` if sizing issues persist.
+
 ### Help Topic Returns Wrong Content
 
 **Symptom:** Player requests `help <topic>` and gets unexpected content.
@@ -334,6 +359,16 @@ GMCP packets are sent through a separate code path that checks for GMCP capabili
 **Diagnostic approach:** Check if the topic exists in multiple help directories. Check if the query is a prefix of multiple topics.
 
 **Fix:** Use the full topic name. For shadowed topics, consider renaming one of the files or documenting the ambiguity.
+
+### Help Returns "No Help Available"
+
+**Symptom:** Help command returns "No help available" for a topic that should exist.
+
+**Likely cause:** Help index not built at startup, or help file permissions prevent reading.
+
+**Diagnostic approach:** Verify `buildHelpIndex()` ran at startup. Check that help files exist and are readable by the server process.
+
+**Fix:** Restart server to rebuild help index. Verify help directory paths and file permissions.
 
 ### Wimpy Won't Enable/Disable
 
@@ -355,6 +390,16 @@ GMCP packets are sent through a separate code path that checks for GMCP capabili
 
 **Fix:** Anonymous requires level 5+. This is intentional to prevent newbie level hiding.
 
+### Anonymous Toggle Fails Despite Level 5+
+
+**Symptom:** Player is level 5 or higher but anonymous toggle is rejected.
+
+**Likely cause:** Level check uses current level, not base level. Polymorphed or level-drained characters may fail the check.
+
+**Diagnostic approach:** Verify actual character level versus displayed level. Check for polymorph, level drain, or temporary level modifications.
+
+**Fix:** Ensure character is in normal form with true level. Temporary level changes can prevent anonymous mode until reverted.
+
 ### Tank/Tank-Other Conflict
 
 **Symptom:** Player enables both tank options but only one appears in prompt.
@@ -364,3 +409,33 @@ GMCP packets are sent through a separate code path that checks for GMCP capabili
 **Diagnostic approach:** Check prompt settings.
 
 **Fix:** Choose one or the other. `tank` includes self in display, `tank-other` excludes self. For most group play, `tank-other` is more useful.
+
+### GMCP Data Not Received by Client
+
+**Symptom:** Modern client not receiving GMCP packets despite expecting them.
+
+**Likely cause:** GMCP negotiation failed during connection, or client doesn't have GMCP enabled.
+
+**Diagnostic approach:** Check telnet option negotiation logs. Verify client has GMCP enabled in its settings. Test with a known-good GMCP client.
+
+**Fix:** Ensure client has GMCP explicitly enabled. Some clients require manual GMCP activation. Verify server GMCP module is compiled and active.
+
+### Toggle Settings Don't Persist
+
+**Symptom:** Toggle settings reset to defaults on each login.
+
+**Likely cause:** Database save failure or descriptor not properly associated with character.
+
+**Diagnostic approach:** Check database write permissions. Verify `doQueueSave()` is called after toggle changes. Check for database errors in logs.
+
+**Fix:** Ensure database connectivity. Verify toggle changes trigger save functions. Check file system permissions for database files.
+
+### Color Replacement Not Working
+
+**Symptom:** Player set color replacement but specific color still appears unchanged.
+
+**Likely cause:** Replacement mapping not set correctly, or color name mismatch.
+
+**Diagnostic approach:** Check color replacement settings with `color` command. Verify exact color names match expected values. Use `color test` to see actual colors.
+
+**Fix:** Set both replacement and substitute colors explicitly using exact color names from the color command list.

@@ -1,7 +1,6 @@
 ---
 title: Combat Round Timing and Structure
 category: critical
-created_by_model: opus
 keywords: [combat, timing, attack scheduling, gCombatList, gCombatNext, DELETE flags, reconcileDamage, damage pipeline]
 related: [combat-formulas.md, position-stance.md, group-party.md]
 primary_symbols:
@@ -34,7 +33,7 @@ Damage flows through a three-function pipeline with different return value seman
 
 ### DELETE Flag Handling
 
-**Always use the DELETE-specific macro for flag checks.** DELETE flags use a special bit pattern that standard flag checks miss. The DELETE macro handles this combined bit pattern correctly.
+**Always use the DELETE-specific macro for flag checks.** DELETE flags use a special bit pattern (bit 29) that standard flag checks miss. The DELETE macro handles this combined bit pattern correctly.
 
 **Always call group cleanup before any combatant deletion.** Failing to break follower relationships leaves dangling pointers in group data structures, causing crashes when other group members access freed memory.
 
@@ -50,7 +49,7 @@ Damage flows through a three-function pipeline with different return value seman
 
 ### Combat List Management
 
-**Increment attacker count when adding to combat, decrement when removing.** The attacker count gates overcrowding checks. Mismatched increments cause false overcrowding or allow excessive attackers.
+**Increment attacker count when adding to combat, decrement when removing.** The attacker count gates overcrowding checks. Mismatched increments cause false overcrowding or allow excessive attackers. Characters with `AFF_ENGAGER` are exempt from the attacker count.
 
 **Check combat validity before each attack attempt.** Room changes, exhaustion, peaceful rooms, and mount failures can all invalidate combat between iterations.
 
@@ -113,9 +112,21 @@ Damage flows through a three-function pipeline with different return value seman
 | Different rooms | Yes |
 | Target dead | No |
 | Attacker stunned | No |
-| Shape transformation | No |
+| Shape transformation (falcon wings) | No |
 | Failed mount check | No |
 | Overcrowding (9999 attackers) | No |
+
+### Performance Characteristics
+
+| Operation | Complexity | Notes |
+|-----------|------------|-------|
+| Combat list add | O(1) | Prepend to head |
+| Combat list remove | O(n) | Linear search |
+| Combat list iteration | O(n) | 12 iterations per round |
+| Attack distribution | O(1) | Modulo arithmetic |
+| blowCount calculation | O(1) | Float operations |
+
+Typical combat list size: 10-50 characters, up to 200+ during large raids. Per-round cost with 50 combatants: 600 hit calls per 1.2 seconds.
 
 ### Symbol Quick Reference
 
@@ -140,7 +151,7 @@ Damage flows through a three-function pipeline with different return value seman
 
 ### Distributed Attack Scheduling
 
-The main combat loop executes 12 iterations per call, one for each pulse in a combat round. Each iteration walks the entire combat list, checking whether each character's attack fires at that pulse.
+The main combat loop executes 12 iterations per call, one for each pulse in a combat round. Each iteration walks the entire combat list, checking whether each character's attack fires at that pulse. The scheduler triggers `perform_violence` every `Pulse::COMBAT` via `procPerformViolence` in process.cc.
 
 Attack timing uses modulo arithmetic on float attack counts. For a character with 2.0 attacks per round, the system calculates a wait interval (round length divided by attack count) and checks whether the current pulse falls within the firing window. The formula `(pulse * 10) % hit_wait < 10` determines firing.
 
@@ -156,7 +167,7 @@ A local iterator would crash: after `delete ch`, the expression `ch->next_fighti
 
 When `stopFighting()` removes a character, it checks whether that character equals `gCombatNext`. If so, it advances `gCombatNext` to the removed character's next pointer before unlinking. This allows the main loop to continue correctly.
 
-List corruption (character not found during removal) triggers an abort with diagnostic logging. This catches bugs early rather than allowing silent corruption.
+List corruption (character not found during removal) triggers an abort with diagnostic logging ("Char fighting not found Error - ABORT"). This catches bugs early rather than allowing silent corruption.
 
 ### Damage Pipeline
 
@@ -176,9 +187,11 @@ PCs have complex calculation: monks get barehand attacks scaled by multiplier, w
 
 Equipment imposes penalties: shields and non-weapon items reduce attacks by 1 for that hand. Mounted characters multiply total attacks by 0.67.
 
+The attack loop uses a 0.999 threshold (rather than 1.0) to handle floating-point precision issues when checking whether attacks remain.
+
 ### Quest Solo-Kill Tracking
 
-Certain quest mobs require solo kills. The system applies a combat affect with a pointer to the quest-holder. When someone else damages the mob, the quest fails and sets a cheat flag. If combat ends for any reason other than mob death (flee, teleport, interruption), the quest also fails.
+Certain quest mobs require solo kills. The system applies a combat affect (`AFFECT_COMBAT` with `COMBAT_SOLO_KILL` modifier) with a pointer to the quest-holder. When someone else damages the mob, the quest fails and sets a cheat flag (`TOG_AVENGER_CHEAT`). If combat ends for any reason other than mob death (flee, teleport, interruption), the quest also fails.
 
 The enforcement happens in both the damage pipeline (detecting outside interference) and the stop-fighting function (detecting premature combat exit).
 
@@ -216,7 +229,7 @@ The enforcement happens in both the damage pipeline (detecting outside interfere
 
 ### Combat List Corruption Abort
 
-**Symptom:** Server aborts with "Char fighting not found" log message.
+**Symptom:** Server aborts with "Char fighting not found Error - ABORT" log message.
 
 **Likely cause:** Character's combat state inconsistent with list membership. May result from double-removal or removal of character that was never properly added.
 
@@ -233,3 +246,19 @@ The enforcement happens in both the damage pipeline (detecting outside interfere
 **Diagnostic approach:** Check canFight return value. Verify blowCount produces non-zero values. Check for blocking affects or position issues.
 
 **Fix:** Address the blocking condition. Common issues: exhaustion (move <= 0), different rooms, peaceful room flag, position below standing.
+
+### Weapon Destroyed Mid-Combat
+
+**Symptom:** Crash accessing weapon pointer after oneHit, use-after-free on weapon object.
+
+**Likely cause:** Not checking `IS_SET_DELETE(rc, DELETE_ITEM)` after oneHit. Weapon destroyed but still referenced.
+
+**Fix:** After oneHit call, check for DELETE_ITEM. If true, null the weapon pointer and break the attack loop. Never assume weapon survives oneHit call.
+
+### Attack Distribution Synchronization
+
+**Symptom:** All characters with same attack speed fire simultaneously, creating burst damage.
+
+**Likely cause:** Using round-relative pulse instead of absolute pulse in hit calculation, or not phase-shifting secondary hand.
+
+**Fix:** Pass `(pulse + tmp_pulse)` from perform_violence to hit, where pulse is absolute server uptime. Verify secondary hand formula adds `(hit_wait / 2)` to pulse value.
