@@ -461,7 +461,7 @@ TBeing* TMonster::findAHatee(void) {
   TThing* t = NULL;
 
   for (StuffIter it = roomp->stuff.begin();
-       it != roomp->stuff.end() && (t = *it); ++it) {
+    it != roomp->stuff.end() && (t = *it); ++it) {
     tmp_ch = dynamic_cast<TBeing*>(t);
     if (!tmp_ch)
       continue;
@@ -478,7 +478,7 @@ TBeing* TMonster::findAFearee(void) {
   TThing* t = NULL;
 
   for (StuffIter it = roomp->stuff.begin();
-       it != roomp->stuff.end() && (t = *it); ++it) {
+    it != roomp->stuff.end() && (t = *it); ++it) {
     tmp_ch = dynamic_cast<TBeing*>(t);
     if (!tmp_ch)
       continue;
@@ -510,6 +510,14 @@ void DeleteHatreds(const TBeing* ch, const char* s) {
       tmp->setAnger((tmp->anger() + tmp->defanger()) / 2);
       tmp->DMal(11);
       tmp->DS(5);
+    }
+
+    // Clearing hatred should stop active pursuit immediately; otherwise mobs
+    // continue tracking on stale intent even though hate was removed.
+    if (ch && tmp->specials.hunting == ch) {
+      tmp->specials.hunting = nullptr;
+      REMOVE_BIT(tmp->specials.act, ACT_HUNTING);
+      tmp->hunt_dist = 0;
     }
   }
 }
