@@ -171,12 +171,14 @@ bool loadsetCheck(TBeing* ch, int vnum, int chance, wearSlotT slot,
       return false;
   }
 
-  // Scale load chance from zonefile by loadrate tweak value from db.
-  const auto realChance = static_cast<int>(
-    min(max(chance * tweakInfo[TWEAK_LOADRATE]->current, 0.0), 100.0));
+  // Imm loads always succeed; zone loads are scaled by loadrate tweak.
+  if (!isImmLoad) {
+    const auto realChance = static_cast<int>(
+      min(max(chance * tweakInfo[TWEAK_LOADRATE]->current, 0.0), 100.0));
 
-  if (!percentChance(realChance))
-    return false;
+    if (!percentChance(realChance))
+      return false;
+  }
 
   TObj* obj = isImmLoad || isPropLoad ? read_object(index, REAL)
                                       : read_object_buy_build(ch, index, REAL);
