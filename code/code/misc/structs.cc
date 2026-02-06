@@ -17,6 +17,7 @@
 #include "charfile.h"
 #include "account.h"
 #include "combat.h"
+#include "CharacterList.h"
 #include "obj_board.h"
 #include "person.h"
 #include "statistics.h"
@@ -32,7 +33,6 @@
 #include "obj_tooth_necklace.h"
 #include "obj_potion.h"
 #include "obj_base_cup.h"
-//#include "liquids.h"
 #include "socket.h"
 #include "timing.h"
 #include "player_data.h"
@@ -206,40 +206,54 @@ TBeing::~TBeing() {
     }
   }
 
-  for (k = character_list; k; k = k->next) {
-    if (k->specials.hunting) {
-      if (k->specials.hunting == this) {
-        k->specials.hunting = NULL;
-        REMOVE_BIT(k->specials.act, ACT_HUNTING);
+  for (TBeing* other : CharacterList) {
+    if (other->specials.hunting && other->specials.hunting == this) {
+      other->specials.hunting = nullptr;
+      REMOVE_BIT(other->specials.act, ACT_HUNTING);
 
-        if (k->affectedBySpell(SKILL_TRACK)) {
-          k->sendTo(COLOR_MOBS,
-            format("You stop tracking %s.\n\r") % getName());
-          k->affectFrom(SKILL_TRACK);
-          k->stopTask();
+      if (other->affectedBySpell(SKILL_TRACK)) {
+        other->sendTo(COLOR_MOBS,
+          format("You stop tracking %s.\n\r") % getName());
+        other->affectFrom(SKILL_TRACK);
+        other->stopTask();
+      }
+    }
+
+    if (other != this) {
+      // Other beings can hold raw pointers to this via affects. Clear or remove
+      // those references here to prevent dangling access after delete.
+      for (affectedData *aff = other->affected, *next_aff = nullptr; aff;
+        aff = next_aff) {
+        next_aff = aff->next;
+        if (aff->be != this) {
+          continue;
+        }
+
+        // Concealment stores its caster in aff->be; null it to avoid
+        // use-after-free when trackers compare rooms against the caster.
+        if (aff->type == SKILL_CONCEALMENT) {
+          aff->be = nullptr;
+          continue;
+        }
+
+        // These affects rely on aff->be as a live being pointer for messaging
+        // or validation; remove the affect once the target is gone.
+        if ((aff->type == AFFECT_COMBAT && aff->modifier == COMBAT_SOLO_KILL) ||
+            aff->type == AFFECT_TEST_FIGHT_MOB) {
+          other->affectRemove(aff, SILENT_YES);
+          continue;
         }
       }
     }
-    TMonster* tmons = dynamic_cast<TMonster*>(k);
-    if (tmons) {
-#if 0
-// don't do this.
-// killing someone will clear hates/fears
-// but renting out should preserve hatreds toward me
 
-      // hates/fears on others need to be handled BEFORE my name is deleted
-      if (tmons->Hates(this, NULL))
-        tmons->remHated(this, NULL);
+    if (auto* tmons = dynamic_cast<TMonster*>(other)) {
+      if (tmons->targ() == this) {
+        tmons->setTarg(nullptr);
+      }
 
-      if (tmons->Fears(this, NULL))
-        tmons->remFeared(this, NULL);
-#endif
-
-      if (tmons->targ() == this)
-        tmons->setTarg(NULL);
-
-      if (tmons->opinion.random == this)
-        tmons->opinion.random = NULL;
+      if (tmons->opinion.random == this) {
+        tmons->opinion.random = nullptr;
+      }
     }
   }
 
@@ -751,7 +765,7 @@ TThing& TRoom::operator+=(TThing& t) {
 
       if ((tBeing = dynamic_cast<TBeing*>((tThing = &t)))) {
         for (wearSlotT wearIndex = MIN_WEAR; wearIndex < MAX_WEAR;
-             wearIndex++) {
+          wearIndex++) {
           if ((tObjTemp = dynamic_cast<TObj*>(tBeing->equipment[wearIndex]))) {
             if (tObjTemp->isObjStat(ITEM_PROTOTYPE)) {
               tBeing->unequip(wearIndex);
@@ -763,7 +777,7 @@ TThing& TRoom::operator+=(TThing& t) {
               continue;
 
             for (StuffIter it = tObjTemp->stuff.begin();
-                 it != tObjTemp->stuff.end();) {
+              it != tObjTemp->stuff.end();) {
               tObj = *(it++);
 
               if ((tObjTemp2 = dynamic_cast<TObj*>(tObj)) &&
@@ -791,7 +805,7 @@ TThing& TRoom::operator+=(TThing& t) {
           continue;
 
         for (StuffIter it = tObjTemp->stuff.begin();
-             it != tObjTemp->stuff.end();) {
+          it != tObjTemp->stuff.end();) {
           tThing = *(it++);
 
           if ((tObjTemp2 = dynamic_cast<TObj*>(tThing)) &&
@@ -884,7 +898,7 @@ TThing& TThing::operator--() {
     if (tst && tst->givesOutsideLight()) {
       int best = 0, curr = 0;
       for (StuffIter it = rp->stuff.begin();
-           it != rp->stuff.end() && (tmp = *it); ++it) {
+        it != rp->stuff.end() && (tmp = *it); ++it) {
         TSeeThru* tst2 = dynamic_cast<TSeeThru*>(tmp);
         if (tst2 && tst2->givesOutsideLight()) {
           curr = tst2->getLightFromOutside();
