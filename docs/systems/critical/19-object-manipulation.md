@@ -23,7 +23,7 @@ These operations interact with traps, capacity limits, and item flags. Misusing 
 - Always check trap trigger return values before continuing execution
 - Propagate DELETE_THIS and DELETE_ITEM flags up the call stack
 - Never access objects after functions that may have deleted them
-- checkForGetTrap and checkForInsideTrap return DELETE_THIS when character dies and DELETE_ITEM when item is destroyed
+- checkForGetTrap and checkForInsideTrap return DELETE_THIS (via DELETE_VICT) when the character dies; they never return DELETE_ITEM
 
 **Corpse Concurrency**
 
@@ -203,7 +203,7 @@ Junk returns 0.1% of item cost (minimum 1 talen). ITEM_NEWBIE and prop items yie
 
 Race-specific junk messages: Ogre/Giant/Troll/Golem/Minotaur rip corpses limb by limb; Dragon/Dinosaur/Lion/Bear/Tiger devour; Tytan crumples and throws; others trash and disintegrate.
 
-Donate sends items to Room::DONATION via genericTeleport. Items with no value, ITEM_NEWBIE, or ITEM_NORENT are junked instead. Personalized items and items containing NODROP or personalized items (detected through recursive container scan) are blocked.
+Donate sends items to Room::DONATION via `thing_to_room(t_o, Room::DONATION)`. Items with no value, ITEM_NEWBIE, or ITEM_NORENT are junked instead. Personalized items and items containing NODROP or personalized items (detected through recursive container scan) are blocked.
 
 ### Identify Mechanics
 

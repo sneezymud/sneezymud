@@ -67,7 +67,7 @@ Base unit: Pulse::ONE_SECOND = 10 ticks
 |-------|-----------|---------|
 | procObjFalling | COMBAT | Objects fall through air |
 | procObjBurning | SPEC_PROCS | Fire damage |
-| procObjRust | SPEC_PROCS | Rust damage |
+| procObjRust | UPDATE | Rust damage |
 | procObjSinking | SPEC_PROCS | Water submersion |
 | procObjTickUpdate | MUDHOUR | Decay, condition updates |
 
@@ -77,9 +77,9 @@ Base unit: Pulse::ONE_SECOND = 10 ticks
 |-------|-----------|---------|
 | procCharAffects | COMBAT | Spell duration updates |
 | procCharDrowning | SPEC_PROCS | Underwater breath checks |
-| procCharFalling | SPEC_PROCS | Fall damage |
+| procCharFalling | COMBAT | Fall damage |
 | procCharTickUpdate | MUDHOUR | Regen, hunger, aging |
-| procCharMobileActivity | SPEC_PROCS | NPC wandering, actions |
+| procCharMobileActivity | COMBAT | NPC wandering, actions |
 
 ### All Registered Procs
 

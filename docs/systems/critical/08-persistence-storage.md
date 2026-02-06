@@ -4,8 +4,8 @@ description: Hybrid persistence using binary charFile format and MariaDB for cha
 category: critical
 keywords: [SQL injection, database safety, binary file format, persistence]
 primary_symbols:
-  functions: [load_char, raw_save_char, storeToSt, loadFromSt, ItemSave, ItemLoad, ItemSaveDB, ItemLoadDB, handleCorrupted]
-  classes: [TDatabase, TTransaction, TObjectCache, TMobileCache, charFile]
+  functions: [load_char, raw_save_char, storeToSt, loadFromSt, handleCorrupted]
+  classes: [TDatabase, TTransaction, TObjectCache, TMobileCache, charFile, ItemSave, ItemLoad, ItemSaveDB, ItemLoadDB]
   enums: [DB_SNEEZY, DB_IMMORTAL, MAX_SAVED_CLASSES, MAX_HUMAN_WEAR, MAX_AFFECT, ABS_MAX_FACTION, MAX_SAVED_DISCS, ABSOLUTE_MAX_SKILL]
 ---
 
@@ -85,8 +85,8 @@ SneezyMUD uses hybrid storage: binary files for character data (stats, skills, a
 
 | Constant | Value | Used For |
 |----------|-------|----------|
-| `MAX_SAVED_CLASSES` | 12 | `level[]`, `doneBasic[]` |
-| `MAX_HUMAN_WEAR` | 22 | `body_flags[]`, `body_health[]` |
+| `MAX_SAVED_CLASSES` | 11 | `level[]`, `doneBasic[]` |
+| `MAX_HUMAN_WEAR` | 20 | `body_flags[]`, `body_health[]` |
 | `MAX_AFFECT` | 25 | `affected[]` |
 | `ABS_MAX_FACTION` | 6 | `f_percx[]` |
 | `MAX_SAVED_DISCS` | 90 | `disc_learning[]` |

@@ -5,7 +5,7 @@ keywords: [severity filtering, logging categories]
 category: informational
 primary_symbols:
   functions: [vlogf, vlogf_trace, mud_assert, getLogType, doSetsev, wizFileRead, wizFileWrite]
-  classes: [TDescriptor, SystemLogComm]
+  classes: [Descriptor, SystemLogComm]
   enums: [logTypeT, LOG_SILENT, LOG_NONE, LOG_MISC, LOG_LOW, LOG_FILE, LOG_BUG, LOG_PROC, LOG_PIO, LOG_IIO, LOG_CLIENT, LOG_COMBAT, LOG_CHEAT, LOG_FACT, LOG_DB, LOG_MOB, LOG_MOB_AI, LOG_MOB_RS, LOG_OBJ, LOG_EDIT, LOG_MAX]
 ---
 
@@ -150,7 +150,7 @@ if (isDebugMode) {
 
 ### Personal Developer Channels (23-31)
 
-Channels visible only to specific developers: LOG_JESUS (23), LOG_BATOPR (24), LOG_BRUTIUS (25), LOG_COSMO (26), LOG_MAROR (27), LOG_PEEL (28), LOG_LAPSOS (29), LOG_DASH (30), LOG_ANGUS (31). LOG_MAX (23) marks the boundary between standard and personal categories.
+Channels visible only to specific developers: LOG_JESUS (23), LOG_BATOPR (24), LOG_BRUTIUS (25), LOG_COSMO (26), LOG_MAROR (27), LOG_PEEL (28), LOG_LAPSOS (29), LOG_DASH (30), LOG_ANGUS (31). LOG_MAX = 23 = LOG_JESUS, meaning LOG_JESUS straddles the boundary between standard and personal categories (it shares its value with LOG_MAX).
 
 ### setsev Command
 
@@ -185,7 +185,7 @@ Settings persist in the wizdata database table and restore on login.
 
 Stderr format: `YYYY|MMDD|HH:MM:SS :: Category: Message`
 
-In-game format: `// Category: Message`
+In-game format: `/ Category: Message`
 
 ## Implementation
 
@@ -213,11 +213,11 @@ Unlike the standard assert macro, this mechanism is never disabled by build conf
 
 ### getLogType Function
 
-Maps logTypeT enum values to display strings used in log output. Called by vlogf to format the category prefix. Contains a switch statement with cases for all defined categories. Returns "UNKNOWN" for unrecognized values.
+Maps logTypeT enum values to display strings used in log output. Called by vlogf to format the category prefix. Contains a switch statement with cases for all defined categories. Returns an empty string for unrecognized values.
 
 ### Adding New Categories
 
-Add the enum value in log.h after the existing standard categories but before LOG_MOB. Update LOG_MAX if the new category falls within the standard range. Add the display name mapping in getLogType within utility.cc. Add the category to both the tFields and tHelp arrays in doSetsev within immortal.cc. Update severity bit handling if the category requires special permissions.
+Add the enum value in log.h. Note that existing categories are not contiguous (there are gaps, e.g., LOG_MOB = 15 but LOG_EDIT = 21), so place the new value where it logically fits. Update LOG_MAX if needed. Add the display name mapping in getLogType within utility.cc. Add the category to both the tFields and tHelp arrays in doSetsev within immortal.cc. Update severity bit handling if the category requires special permissions.
 
 ## Troubleshooting
 

@@ -49,7 +49,7 @@ MUD time runs approximately 24 times faster than real time. One real hour equals
 
 ### Time System Usage
 
-**Never confuse MUD time with real time.** One MUD hour equals approximately 4.8 real minutes. Use `GameTime::mudTimePassed()` for MUD-relative calculations and `GameTime::realTimePassed()` for real-time conversions.
+**Never confuse MUD time with real time.** One MUD hour equals approximately 2.4 real minutes. Use `GameTime::mudTimePassed()` for MUD-relative calculations and `GameTime::realTimePassed()` for real-time conversions.
 
 **Always use `is_daytime()` and `is_nighttime()` for light-dependent logic.** These functions account for seasonal variation in sunrise/sunset times.
 
@@ -157,11 +157,11 @@ MUD time runs approximately 24 times faster than real time. One real hour equals
 
 | MUD Unit | Real Time |
 |----------|-----------|
-| 15 MUD minutes | 1 tick (~72 seconds) |
-| 1 MUD hour | ~4.8 minutes |
-| 1 MUD day | ~115 minutes |
-| 1 MUD month | ~54 hours |
-| 1 MUD year | ~27 days |
+| 15 MUD minutes | 1 tick (~36 seconds) |
+| 1 MUD hour | ~2.4 minutes |
+| 1 MUD day | ~57.6 minutes |
+| 1 MUD month | ~27 hours |
+| 1 MUD year | ~13.4 days |
 
 ### Calendar Structure
 
@@ -219,7 +219,7 @@ When a player shouts, `doShout()` validates the sender meets requirements: minim
 
 Distribution via `sendShout()` iterates all descriptors. Recipients must satisfy all conditions: connection state `CON_PLYNG`, position above sleeping, not in a soundproof room, not ignoring the shouter, and not set `AUTO_NOSHOUT` (immortals and mobs bypass this last check).
 
-GMCP integration sends `comm.channel { "chan": "yell", ... }` for client applications. For immortals, the message includes the room vnum where the shout originated.
+GMCP integration sends `comm.channel { "chan": "yell", ... }` for client applications.
 
 Twitter integration posts shouts via `twitterShout()`, sending a garbled version to avoid spoiling puzzles or secret information. The integration runs asynchronously to avoid blocking the game.
 

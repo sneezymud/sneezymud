@@ -220,11 +220,11 @@ For clients supporting GMCP (Generic MUD Communication Protocol), the server als
 
 | Category | Path | Priority |
 |----------|------|----------|
-| Immortal | `lib/help_immortal/` | 1 (highest, requires `POWER_IMMORTAL_HELP`) |
-| Builder | `lib/help_builder/` | 2 (requires builder level) |
+| Immortal | `lib/help/_immortal` | 1 (highest, requires `POWER_IMMORTAL_HELP`) |
+| Builder | `lib/help/_builder` | 2 (requires builder level) |
 | General | `lib/help/` | 3 |
-| Spells | `lib/help_spells/` | 4 |
-| Skills | `lib/help_skills/` | 5 (lowest) |
+| Spells | `lib/help/_spells` | 4 |
+| Skills | `lib/help/_skills` | 5 (lowest) |
 
 ### GMCP Packages
 
@@ -258,7 +258,7 @@ For clients supporting GMCP (Generic MUD Communication Protocol), the server als
 | `code/code/misc/toggle.h` | Toggle constants and flags |
 | `code/code/cmd/cmd_help.cc` | `doHelp()`, help index building |
 | `code/code/misc/help.h` | Help system declarations |
-| `code/code/sys/comm.cc` | GMCP functions |
+| `code/code/sys/gmcphandlers.cc` | GMCP functions |
 
 ## Implementation
 

@@ -4,7 +4,7 @@ description: Player progression through XP accumulation, level advancement, prac
 keywords: [experience curve, level progression, multiclass penalty, trophy system, practice points, death penalty, soft-cap]
 category: important
 primary_symbols:
-  functions: [gain_exp, advanceLevel, getExpClassLevel, mob_exp, pracsPerLevel, deathExp, gainExpPerHit, getExpModVal]
+  functions: [gain_exp, advanceLevel, getExpClassLevel, mob_exp, pracsPerLevel, deathExp, gainExpPerHit, getExpModVal, doHPGainForLev]
   classes: [TBeing]
   enums: [DOUBLEEXP, TOG_NO_XP_GAIN, FAE_TOUCHED, FREE_DEATHS, MAX_SAVED_CLASSES, MIN_CLASS_IND, MAX_CLASSES]
 ---
@@ -34,7 +34,7 @@ Death carries an XP penalty capped at either 20% of current XP or a level-scaled
 
 ### Level Advancement
 
-- Always let `advanceLevel()` handle level-up processing; it updates `max_exp`, awards HP, and unlocks class features.
+- Always let `advanceLevel()` handle level-up processing; it awards HP and unlocks class features. The `max_exp` threshold is updated separately in `gain_exp()`.
 - Always check `getExp() >= getMaxExp()` to determine level eligibility; direct level manipulation breaks XP tracking.
 - Never assume practice points match levels; practices are awarded at XP intervals within each level, not at level boundaries.
 
@@ -89,10 +89,10 @@ Death carries an XP penalty capped at either 20% of current XP or a level-scaled
 | Kill Count | XP Modifier | Display Text |
 |------------|-------------|--------------|
 | 1-8 | 100% | "full" |
-| 9-14 | 70-90% | "much" |
-| 15-20 | 50-60% | "fair amount" |
-| 21-26 | 30-40% | "some" |
-| 27+ | 30% minimum | "little" |
+| 9 | ~96% | "much" |
+| 14 | ~79% | "fair amount" |
+| 22 | 50% | "some" |
+| 30+ | 30% (clamped) | "little" |
 
 ### Trophy Constants
 
@@ -126,8 +126,8 @@ Death carries an XP penalty capped at either 20% of current XP or a level-scaled
 
 | Boundary | Significance |
 |----------|--------------|
-| Level 30 | Multiclass specializations unlock; practice rate halves |
-| Level 50 | Mortal cap; Discord notification sent |
+| Level 30 | Practice rate halves |
+| Level 50 | Mortal cap; Discord notification sent; multiclass unlocks (single-class gets ALLOW_DOUBLECLASS, dual-class gets ALLOW_TRIPLECLASS) |
 | Level 50+ | Immortal territory; mob XP divided by 3 |
 
 ## Implementation
@@ -170,7 +170,7 @@ The `deathExp()` function in `combat.cc` calculates loss as the minimum of 20% o
 
 ### Level Advancement
 
-The `advanceLevel()` function increments the specified class level, recalculates `max_exp` using `getExpClassLevel()` for the new level, and invokes `gain_hp()` to award hit points (10 plus constitution modifier times 5). Level 50 advancement triggers Discord notification through configured webhooks. Level 30 advancement unlocks multiclass specialization options.
+The `advanceLevel()` function increments the specified class level and invokes `doHPGainForLev()` to award hit points. The HP formula uses a class-specific random range (e.g., warrior gets 6-11, mage gets 3-7) multiplied by a constitution modifier (0.8-1.25). The `max_exp` threshold is not set here; it is updated in `gain_exp()`. Level 50 advancement triggers Discord notification through configured webhooks and unlocks multiclass options (single-class gets ALLOW_DOUBLECLASS, dual-class gets ALLOW_TRIPLECLASS).
 
 ### Legacy Character Migration
 

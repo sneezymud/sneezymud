@@ -43,7 +43,7 @@ These commands manipulate descriptor pointers to redirect game I/O and character
 - Never allow manual return for forced transformations (check `hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)`)
 
 **Permission Checks**
-- Always verify `hasWizPower(POWER_SNOOP)` before snooping
+- Always verify `powerCheck(POWER_SNOOP)` before snooping
 - Always use `limitPowerCheck(CMD_SWITCH, mob_vnum)` before switching
 - Never snoop equal or higher level immortals
 
@@ -138,7 +138,7 @@ The `Descriptor` destructor automatically breaks snoop chains by clearing both `
 
 When a snooped character receives output, `outputProcessing()` checks `snoop.snoop_by` and duplicates the text to the snooper's output queue via `SnoopComm`. Snoop links break automatically when either party logs off.
 
-Target lookup iterates `descriptor_list`, skipping entries with `desc->account` set (login screen state). The first matching descriptor with a valid character is selected.
+Target lookup iterates `character_list` via `get_pc_world()` and `get_char_vis_world()` helper functions. The first matching character is selected.
 
 ### Switch Execution Sequence
 

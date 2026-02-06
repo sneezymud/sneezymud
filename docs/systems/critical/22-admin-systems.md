@@ -121,15 +121,15 @@ Document all power grants with who granted, to whom, timestamp, and reason. The 
 
 | Package | Command | Powers Granted |
 |---------|---------|----------------|
-| basic | `@set ... wizpower basic` | BUILDER, GOTO, BUG, IDEA, TYPO, AT |
-| rooms | `@set ... wizpower rooms` | ROOMFLAGS, REDIT, REDIT_IMP_POWER, LOAD, STAT_ROOMS, PURGE, VSTAT |
-| mobs | `@set ... wizpower mobs` | MEDIT, MEDIT_IMP_POWER, LOAD, STAT_MOBS, PURGE, VSTAT, RANGE, APPROVE |
-| objs | `@set ... wizpower objs` | OEDIT, OEDIT_IMP_POWER, LOAD, STAT_OBJS, PURGE, VSTAT |
-| quest | `@set ... wizpower quest` | QEDIT, QEDIT_IMP_POWER, LOAD, FORCE, TRANSFER, RESTORE, SWITCH, FOLLOW |
-| demi | `@set ... wizpower demi` | 14 powers including SHOUT, INVIS, ARREST, ECHO |
-| trust | `@set ... wizpower trust` | SNOOP, MUZZLE, BAN, FREEZE + 4 others |
-| god | `@set ... wizpower god` | 23 powers including GOD, TIME, SHUTDOWN, SYSTEM, IMMUNITY |
-| allpowers | `@set ... wizpower allpowers` | All 127 powers unrestricted |
+| basic | `@set ... wizpower basic` | BUILDER, WIZNET, POWERS, GOTO, IMMORTAL_HELP, SETSEV |
+| rooms | `@set ... wizpower rooms` | REDIT, RSAVE, EDIT, RLOAD, STAT, SHOW, PURGE |
+| mobs | `@set ... wizpower mobs` | MEDIT, STAT_MOBILES, SHOW_MOB, SEDIT, IMMORTAL_OUTFIT, WIZNET_ALWAYS, LOAD |
+| objs | `@set ... wizpower objs` | LOAD_SET, STAT_OBJECT, SHOW_OBJ, OEDIT, OEDIT_APPLYS, OEDIT_WEAPONS, OEDIT_COST |
+| quest | `@set ... wizpower quest` | SWITCH, NOSHOUT, STEALTH, QUEST, AT, WHERE, SYSTEM, LOAD_NOPROTOS |
+| demi | `@set ... wizpower demi` | 20 powers: COLOR_LOGS, LONGDESC, COMMENT, FINDEMAIL, CLIENTS, TRACEROUTE, HOSTLOG, DEATHCHECK, SNOWBALL, PEE, WIZLOCK, CUTLINK, SEE_COMMENTARY, ECHO, TRANSFER, TOGGLE, VISIBLE, HEAVEN, ZONEFILE_UTILITY, INFO |
+| trust | `@set ... wizpower trust` | INFO_TRUSTED, GAMESTATS, FLAG, SHOW_TRUSTED, RESTORE, ACCESS, USERS, ACCOUNT |
+| god | `@set ... wizpower god` | 19 powers: LOW, GOD, COMPARE, REDIT_ENABLED, STAT_SKILL, RESTORE_MORTAL, IMM_EVAL, FORCE, DISTRIBUTE, LOG, PURGE_PC, PURGE_ROOM, EGOTRIP, CHECKLOG, LOGLIST, REPLACE, RESIZE, NO_LIMITS, MAP_RECALC |
+| allpowers | `@set ... wizpower allpowers` | All powers unrestricted |
 
 ### Privilege Tiers
 

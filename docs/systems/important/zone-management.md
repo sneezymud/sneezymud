@@ -44,7 +44,7 @@ The load-on-death system stores equipment commands for execution when mobs die, 
 
 - Always check `LOG_LOW` for "resolving mobile/object number" errors after boot
 - Always verify vnums with `show mob <vnum>` or `show obj <vnum>` before adding to zonefile
-- Never trust that a spawn worked without verification - invalid vnums silently set zone_value to 0
+- Never trust that a spawn worked without verification - invalid vnums cause commands to be silently removed at boot
 
 ### Performance
 
@@ -161,7 +161,7 @@ The load-on-death system stores equipment commands for execution when mobs die, 
 
 **zoneData** holds zone metadata and reset commands: `zone_nr` (sequential runtime index), `bottom`/`top` (vnum range), `lifespan` (reset interval in minutes), `age` (minutes since last reset), `reset_mode`, `enabled`, `name`, and `cmd_table` (vector of resetCom).
 
-**resetCom** represents a single reset command: `command` (char type), `if_flag` (conditional execution), `arg1`-`arg4` (command-specific), `character` (for ? command), `zone_value` (resolved runtime index).
+**resetCom** represents a single reset command: `command` (char type), `if_flag` (conditional execution), `arg1`-`arg4` (command-specific), `character` (for ? command), `cmd_no` (command sequence number).
 
 ### Phase 1: Initialization
 
@@ -169,15 +169,15 @@ The load-on-death system stores equipment commands for execution when mobs die, 
 
 **bootOneZone()** calls `bootZone()` to parse the file, then `renumCmd()` to validate vnums. Performs database upsert (UPDATE, then INSERT if rowCount=0) with `util_flag = 1`. Appends zoneData to `zone_table` vector.
 
-**bootZone()** parses zonefile header (zone_number, name, top_room/lifespan/reset_mode/enabled), then iterates reset commands until `S` terminator. Skips comment lines (`*`) and gamma-mode lines (`$` on port 7900). Equipment commands require `if_flag = 1`.
+**bootZone()** parses zonefile header (zone_number, name, top_room/lifespan/reset_mode/enabled), then iterates reset commands until `S` terminator. Skips comment lines (starting with `*`) and skips ALL reset commands when running on the GAMMA port. Equipment commands require `if_flag = 1`.
 
-**renumCmd()** converts vnums to runtime indices via `real_mobile()` and `real_object()`. Invalid vnums log to LOG_LOW and set `zone_value = 0`, causing silent spawn failure during reset.
+**renumCmd()** converts vnums to runtime indices via `real_mobile()` and `real_object()`. Invalid vnums log to LOG_LOW and the command is skipped (via `continue`), removing it from `cmd_table` entirely rather than leaving a broken entry.
 
 ### Phase 2: Aging
 
 **procZoneUpdate** runs every `Pulse::MUDHOUR` (144 seconds). First pass increments `age` for enabled zones below lifespan. When `age >= lifespan`, sets `age = ZO_DEAD` (9999) to mark as queued. Second pass processes queued zones: mode 2 resets immediately, mode 1 calls `isEmpty()` first.
 
-**isEmpty()** iterates `descriptor_list`, skipping non-playing connections and characters at `Room::NOWHERE`. Returns false if any character's `in_room` falls within zone's room range (bottom*100 to top*100).
+**isEmpty()** iterates `descriptor_list`, skipping non-playing connections and characters without a room. Returns false if any character's `roomp->getZoneNum()` matches the zone's `zone_nr`.
 
 ### Phase 3: Execution
 
@@ -191,7 +191,7 @@ The load-on-death system stores equipment commands for execution when mobs die, 
 
 ### Phase 4: Cleanup
 
-**doGenericReset()** iterates all rooms in zone range (bottom*100 to top*100), sending `CMD_GENERIC_RESET` to each object's spec proc. Resets age counter to 0.
+**doGenericReset()** iterates the global `object_list` and checks if each object's vnum falls within the zone's vnum range (previous zone's top+1 to this zone's top), sending `CMD_GENERIC_RESET` to each matching object's spec proc. Age reset to 0 happens in the calling function `resetZone()`, not in `doGenericReset()` itself.
 
 ### Database Schema
 
@@ -302,7 +302,7 @@ S
 **Symptom:** Commands fail without logging errors during runtime.
 
 Common causes of silent failures:
-- `zone_value = 0` from failed vnum validation at boot
+- Commands removed from `cmd_table` due to failed vnum validation at boot
 - max_exist limits reached for mobs or objects
 - Conditional execution chains broken by failed predecessor
 - Invalid room vnums that don't exist

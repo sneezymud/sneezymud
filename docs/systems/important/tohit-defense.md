@@ -43,7 +43,7 @@ Use the correct stat mapping for each ability. Default mapping uses FOC/KAR for 
 
 Handle partial success returns when allowed. When `partialSuccessAllowed` is true, rolls between 50-80 return `PARTIAL_SUCCESS` instead of `FAILURE`. Skills like grapple may have reduced effects on partial success rather than binary outcomes.
 
-Check for `SKILL_INEVITABILITY` before rolling. Characters with this affect automatically succeed regardless of modifiers. The affect is consumed on use.
+Account for `SKILL_INEVITABILITY` in modifier calculation. Characters with this affect receive a bonus modifier through `specAttackMod()` (combat.cc:3016-3023), but normal roll and stat calculations still occur. The affect is removed after a successful hit (combat.cc:3192-3200), not on every use.
 
 ### Combat Mode Selection
 
@@ -256,7 +256,7 @@ The adjusted roll determines outcome:
 - Below 80 (if partial allowed): PARTIAL_SUCCESS
 - Otherwise: FAILURE
 
-SKILL_INEVITABILITY bypasses all calculation, automatically returning GUARANTEED_SUCCESS and removing the affect.
+SKILL_INEVITABILITY adds a bonus modifier via `specAttackMod()`. Normal roll and stat calculations still apply. The affect is removed after a successful hit, not on every attempt.
 
 ### Situational Modifier Details
 

@@ -6,7 +6,7 @@ category: important
 primary_symbols:
   functions: [getArmor, itemAC, defendRound, galvanizeMe, armorPercs, armorLevel, structLevel, suggestedPrice, getIronFleshArmor, affectShouldApply]
   classes: [TBaseClothing, TArmor, TArmorWand, TSaddle, THarness]
-  enums: [wearSlotT, WEAR_HEAD, WEAR_BODY, WEAR_LEGS, WEAR_FEET, WEAR_HANDS, WEAR_ARMS, WEAR_BACK, WEAR_WAIST, WEAR_NECK, WEAR_WRISTS, WEAR_FINGERS, HOLD_RIGHT, HOLD_LEFT, ITEM_WEAR_TAKE, ITEM_WEAR_BODY, ITEM_WEAR_HEAD, ITEM_STRUNG, ITEM_BURNING, ITEM_NODROP, ITEM_MAGIC, ITEM_BLESS, ITEM_NEWBIE]
+  enums: [wearSlotT, WEAR_HEAD, WEAR_BODY, WEAR_LEG_R, WEAR_LEG_L, WEAR_FOOT_R, WEAR_FOOT_L, WEAR_HAND_R, WEAR_HAND_L, WEAR_ARM_R, WEAR_ARM_L, WEAR_WRIST_R, WEAR_WRIST_L, WEAR_FINGER_R, WEAR_FINGER_L, WEAR_BACK, WEAR_WAIST, WEAR_NECK, HOLD_RIGHT, HOLD_LEFT, ITEM_WEAR_TAKE, ITEM_WEAR_BODY, ITEM_WEAR_HEAD, ITEM_STRUNG, ITEM_BURNING, ITEM_NODROP, ITEM_MAGIC, ITEM_BLESS, ITEM_NEWBIE]
 ---
 
 # Armor and Protection System
@@ -33,17 +33,17 @@ Never assume `getFourValues()` returns meaningful data for armor items. It retur
 
 Always check `affectShouldApply()` before counting equipment toward total AC. Some conditions prevent affects from applying.
 
-Always consider paired slot penalties when evaluating monk Iron Flesh. Wearing armor in one paired slot (e.g., left leg) removes Iron Flesh from its partner (right leg). Use `isPaired()` to check wear flag compatibility and `getSecondarySlot()` to retrieve the opposite slot position.
+Always consider paired slot penalties when evaluating monk Iron Flesh. Wearing armor in one paired slot (e.g., left leg) removes Iron Flesh from its partner (right leg). Use `isPaired()` to check wear flag compatibility.
 
 Never forget shields provide 25% of total AC contribution despite occupying a hold slot rather than a primary armor slot.
 
 ### Defense Calculation
 
-Always apply combat mode modifiers after base defense calculation. Defensive stance adds `level/4`, offensive subtracts the same.
+Always apply combat mode modifiers after base defense calculation. Defensive stance adds `my_lev / 4`, offensive subtracts the same.
 
 Always check skill knowledge before applying skill bonuses. Use `doesKnowSkill()` before `getSkillValue()`.
 
-Never ignore the level cap on PC defense: `level * 16.67 + level` maximum regardless of equipment quality.
+Never ignore the level cap on PC defense: `(GetMaxLevel() * 1000 / 60) + my_lev` maximum regardless of equipment quality.
 
 ### Galvanize Safety
 
@@ -70,15 +70,15 @@ Never chain multiple galvanize attempts on valuable items without accepting the 
 |------|------|-------------|
 | Hold (Shield) | 25% | 7% |
 | Body | 15% | 26% |
-| Head | 10% | 11% |
-| Legs (combined) | 10% | 14% |
-| Waist | 8% | 9% |
-| Arms (combined) | 8% | 10% |
-| Feet (combined) | 7% | 8% |
-| Back | 7% | 9% |
-| Wrists (combined) | 3% | 3% |
-| Fingers (combined) | 3% | 1% |
-| Neck | 2% | 2% |
+| Waist | 8% | 5% |
+| Head | 7% | 7% |
+| Back | 7% | 10% |
+| Leg (each) | 5% | 3% |
+| Neck | 4% | 4% |
+| Arm (each) | 4% | 5% |
+| Foot (each) | 2% | 2% |
+| Wrist (each) | 2% | 3% |
+| Finger (each) | 1% | 1% |
 
 ### Iron Flesh AC by Slot
 
@@ -97,19 +97,21 @@ Never chain multiple galvanize attempts on valuable items without accepting the 
 |-------|---------|-------|
 | Advanced Defense | `skillValue / 10` | +1 to +10 |
 | Chivalry (mounted) | `159 * skill / 100` | +16 to +159 |
-| Defense | `level * skill / 100` | 0 to +level |
+| Defense | `my_lev * skill / 100` | 0 to +my_lev |
 | Oomlat | `armor * skill / 250` | +0% to +40% armor |
 | Ground Fighting | Reduces position penalty | up to 100% reduction |
+
+Note: `my_lev` is a complex doubling-level calculation, not simply `GetMaxLevel()`. It accounts for level progression in a non-linear way.
 
 ### Position Modifiers
 
 | Position | Defense Modifier |
 |----------|-----------------|
-| Flying | +level/3 + 1 |
-| Mounted | +level/4 + 1 |
+| Flying | +my_lev/3 + 1 |
+| Mounted | +my_lev/4 + 1 |
 | Standing | 0 |
-| Sitting | -level/4 - 1 |
-| Resting | -level/3 - 1 |
+| Sitting | -my_lev/4 - 1 |
+| Resting | -my_lev/3 - 1 |
 
 ### Spell Defense Bonuses
 
@@ -205,13 +207,13 @@ Finally, character affects with `APPLY_ARMOR` location add their modifiers to th
 
 `TBeing::defendRound()` in `combat.cc` converts AC to defense bonus. PCs use formula `(armor - 500) * 2/3` capped at a level-based maximum. MOBs use `(armor - 400) * 5/6` with no explicit cap, giving them better AC-to-defense conversion.
 
-Combat mode applies additive modifiers: defensive stance adds `level/4`, offensive subtracts it, berserk subtracts `level * 8 * (100 - skill) / 100`.
+Combat mode applies additive modifiers: defensive stance adds `my_lev / 4`, offensive subtracts it, berserk subtracts `my_lev * 8 * (100 - skill) / 100`.
 
-Skill bonuses stack additively. Advanced Defense adds up to +10. Chivalry adds up to +159 when mounted. The general Defense skill adds up to +level. Oomlat uniquely modifies the armor value before conversion rather than adding to defense directly.
+Skill bonuses stack additively. Advanced Defense adds up to +10. Chivalry adds up to +159 when mounted. The general Defense skill adds up to +my_lev. Oomlat uniquely modifies the armor value before conversion rather than adding to defense directly.
 
 Agility contributes `335 * getStatMod(STAT_AGI) - 335`, ranging from -67 to +84.
 
-Position modifiers range from +level/3 (flying) to -level/3 (resting). Ground Fighting skill reduces negative position penalties proportionally.
+Position modifiers range from +my_lev/3 (flying) to -my_lev/3 (resting). Ground Fighting skill reduces negative position penalties proportionally.
 
 Spell bonuses add directly to defense, such as `SPELL_AURA_GUARDIAN` which adds +40.
 
@@ -235,7 +237,7 @@ Structure damage occurs from combat, decay over time, fire (`ITEM_BURNING` flag)
 
 ### Shield Mechanics
 
-`isShield()` checks for "shield" in the item name. Shields must equip in `HOLD_LEFT`. During combat, `shieldBlocks()` determines parry success, triggering shield spec procs via `checkSpec()` with `CMD_OBJ_BEEN_HIT`. Successful parries display distinct messages to all participants and return early from the attack.
+`isShield()` checks for "shield" in the item name. Shields must equip in the secondary hold slot (attempting to equip in the primary hold auto-redirects to secondary). During combat, shield parry checks `canUseArm(HAND_SECONDARY)` to verify the arm is usable, then triggers shield spec procs via `checkSpec()` with `CMD_OBJ_BEEN_HIT`. Successful parries display distinct messages to all participants and return early from the attack.
 
 ### Limb Interactions
 
@@ -275,7 +277,7 @@ Body part flags (`PART_MISSING`, `PART_PARALYZED`, `PART_INJURED`) affect armor 
 
 **Cause:** Level cap on PC defense, position penalties, or combat mode.
 
-**Diagnostic:** Calculate expected defense manually: `(armor - 500) * 2/3`. Compare to `level * 16.67 + level` cap. Check combat mode (ATTACK_OFFENSE and ATTACK_BERSERK apply penalties). Review agility stat as low values apply negative defense bonus.
+**Diagnostic:** Calculate expected defense manually: `(armor - 500) * 2/3`. Compare to `(GetMaxLevel() * 1000 / 60) + my_lev` cap. Check combat mode (ATTACK_OFFENSE and ATTACK_BERSERK apply penalties). Review agility stat as low values apply negative defense bonus.
 
 **Fix:** Higher level characters can utilize better armor. Check combat mode and position.
 
@@ -295,7 +297,7 @@ Body part flags (`PART_MISSING`, `PART_PARALYZED`, `PART_INJURED`) affect armor 
 
 **Cause:** Item not recognized as shield, wrong slot, or parry check failing.
 
-**Diagnostic:** Verify `isShield()` returns true (requires "shield" in name). Confirm equipped in `HOLD_LEFT`. Check shield has structure points remaining.
+**Diagnostic:** Verify `isShield()` returns true (requires "shield" in name). Confirm equipped in secondary hold slot. Check shield has structure points remaining.
 
 **Fix:** Ensure item name contains "shield" keyword and is in correct slot.
 
@@ -315,7 +317,7 @@ Body part flags (`PART_MISSING`, `PART_PARALYZED`, `PART_INJURED`) affect armor 
 
 **Cause:** Misunderstanding of paired slot mechanics.
 
-**Diagnostic:** Use `isPaired()` to check wear flag compatibility. Use `getSecondarySlot()` to retrieve opposite slot position. Verify penalty applies only when primary slot equipped but secondary slot empty.
+**Diagnostic:** Use `isPaired()` to check wear flag compatibility. Verify penalty applies only when primary slot equipped but secondary slot empty.
 
 **Fix:** Full armor sets (both slots equipped) avoid penalties. Mixed equipment (one equipped, one bare) triggers penalty as intended to discourage partial armor.
 

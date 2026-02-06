@@ -5,7 +5,7 @@ keywords: [trap mechanics, disarm, detect, thief skills]
 category: critical
 source_files: [code/code/misc/trap.h, code/code/misc/trap.cc, code/code/disc/disc_thief_looting.cc, code/code/obj/obj_trap.h, code/code/obj/obj_trap.cc]
 primary_symbols:
-  functions: [springTrap, triggerTrap, triggerDoorTrap, triggerContTrap, triggerMineTrap, triggerGrenadeTrap, checkForMoveTrap, checkForGetTrap, disarmMe, reconcileDamage]
+  functions: [springTrap, triggerTrap, triggerDoorTrap, triggerContTrap, triggerPortalTrap, triggerArrowTrap, checkForMoveTrap, checkForGetTrap, disarmMe, objDamage, trapDoorTntDamage, trapPoison, detonateGrenade]
   classes: [TTrap, roomDirData]
   enums: [doorTrapT, DOOR_TRAP_NONE, DOOR_TRAP_POISON, DOOR_TRAP_SPIKE, DOOR_TRAP_SLEEP, DOOR_TRAP_TNT, DOOR_TRAP_BLADE, DOOR_TRAP_FIRE, DOOR_TRAP_ACID, DOOR_TRAP_DISEASE, DOOR_TRAP_HAMMER, DOOR_TRAP_FROST, DOOR_TRAP_TELEPORT, DOOR_TRAP_ENERGY, DOOR_TRAP_BOLT, DOOR_TRAP_DISK, DOOR_TRAP_PEBBLE, trap_targ_t, TRAP_TARG_DOOR, TRAP_TARG_CONT, TRAP_TARG_MINE, TRAP_TARG_GRENADE, TRAP_TARG_ARROW, TRAP_EFF_MOVE, TRAP_EFF_OBJECT, TRAP_EFF_ROOM, TRAP_EFF_THROW, TRAP_EFF_ARMED1, TRAP_EFF_ARMED2, TRAP_EFF_ARMED3, EXIT_TRAPPED, AFF_POISON, AFF_DISEASE, AFF_SLEEP, AFF_COLD, SKILL_DISARM_TRAP, SKILL_DETECT_TRAP]
 ---
@@ -14,13 +14,13 @@ primary_symbols:
 
 Traps create environmental hazards that damage or affect characters when triggered. They attach to doors, containers, rooms, or exist as placeable objects (mines, grenades, arrows). Room-wide traps affect all occupants simultaneously. Thieves can detect and disarm traps using specialized skills, with failed disarms triggering the trap on the thief.
 
-Trap damage flows through `reconcileDamage()` which returns -1 on death. This differs from most combat functions that return DELETE flags. Room-wide trap processing requires post-increment iterators to handle character deaths during iteration.
+Trap damage flows through `objDamage()` which returns DELETE_THIS on death. Room-wide trap processing requires post-increment iterators to handle character deaths during iteration.
 
 ## Patterns
 
 ### DELETE Flag Handling
 
-- Always check `reconcileDamage()` return for `-1`, never use `IS_SET_DELETE()` on it
+- Always check `objDamage()` return for DELETE_THIS using `IS_SET_DELETE()`
 - Always check DELETE flags immediately after `springTrap()`, `triggerTrap()`, or `disarmMe()` calls
 - Always propagate DELETE flags to callers when function parameters die
 - Always translate DELETE_THIS to DELETE_VICT when the dying entity was a parameter
@@ -40,7 +40,7 @@ Trap damage flows through `reconcileDamage()` which returns -1 on death. This di
 - Always apply type-specific effects (AFF_POISON, AFF_DISEASE, AFF_SLEEP) via standard `affectJoin()`
 - Always decrement trap charges after trigger to prevent multiple firings
 - Always check DELETE_ITEM return and delete grenade/mine objects after detonation
-- Never assume trap detection succeeds; detection rate is skill/10 + 1 percent
+- Never assume trap detection succeeds; detection passes `bKnown / 10 + 1` to bSuccess() for a reduced skill check
 
 ## Reference
 
@@ -110,13 +110,10 @@ Trap damage flows through `reconcileDamage()` which returns -1 on death. This di
 | triggerContTrap | trap.cc | Container activation |
 | triggerPortalTrap | trap.cc | Portal activation |
 | triggerArrowTrap | trap.cc | Arrow impact |
-| triggerMineTrap | trap.cc | Mine explosion |
-| triggerGrenadeTrap | trap.cc | Grenade detonation |
 | checkForMoveTrap | trap.cc | Movement check |
 | checkForGetTrap | trap.cc | Pickup check |
 | checkForInsideTrap | trap.cc | Container-inside check |
 | checkForAnyTrap | trap.cc | Generic trap check |
-| checkForPortalTrap | trap.cc | Portal-specific check |
 | disarmMe | disc_thief_looting.cc | TTrap disarm |
 | detectMe | disc_thief_looting.cc | TTrap detect |
 | disarmTrapDoor | disc_thief_looting.cc | Door trap disarm |
@@ -124,8 +121,7 @@ Trap damage flows through `reconcileDamage()` which returns -1 on death. This di
 | detectTrapDoor | disc_thief_looting.cc | Door trap detect |
 | detectTrapObj | disc_thief_looting.cc | Object trap detect |
 | getDoorTrapDam | trap.cc | Base damage calculation |
-| trapDoorPoisonDamage | trap.cc | Poison-specific damage |
-| trapDoorTNTDamage | trap.cc | TNT-specific damage |
+| trapDoorTntDamage | trap.cc | TNT-specific damage |
 
 ### TTrap Member Functions
 
@@ -141,7 +137,7 @@ Trap damage flows through `reconcileDamage()` which returns -1 on death. This di
 | Skill | Check | Rate |
 |-------|-------|------|
 | SKILL_DISARM_TRAP | bSuccess(skillValue, skill) | Full skill value |
-| SKILL_DETECT_TRAP | bSuccess(skillValue/10 + 1, skill) | ~11% at max skill |
+| SKILL_DETECT_TRAP | bSuccess(bKnown/10 + 1, skill) | Passes reduced skill value to bSuccess() for complex skill check |
 
 ## Implementation
 
@@ -151,11 +147,11 @@ Door traps use `roomDirData->trap_info` for type and `EXIT_TRAPPED` flag on exit
 
 ### Container Trap Storage
 
-Container traps are `TTrap` objects (inheriting `TObj`) with `trap_type`, `trap_level`, and `trap_charges` members. Triggers occur on container open or item extraction when `TRAP_EFF_OBJECT` is set.
+Container traps are `TTrap` objects (inheriting `TObj`) with `trap_dam_type`, `trap_level`, and `trap_charges` members. Triggers occur on container open or item extraction when `TRAP_EFF_OBJECT` is set.
 
 ### Room-Wide Processing
 
-When `TRAP_EFF_ROOM` is set, the trap affects all beings in the room. Processing iterates `roomp->stuff` with post-increment to handle deletions. Each being receives damage via `reconcileDamage()`, checking for -1 returns. Continue iteration after DELETE_VICT to process remaining beings; only return early on DELETE_THIS when the triggerer dies.
+When `TRAP_EFF_ROOM` is set, the trap affects all beings in the room. Processing iterates `roomp->stuff` with post-increment to handle deletions. Each being receives damage via `objDamage()`, checking for DELETE_THIS returns. Continue iteration after DELETE_VICT to process remaining beings; only return early on DELETE_THIS when the triggerer dies.
 
 ### Disarm Mechanics
 
@@ -163,18 +159,18 @@ When `TRAP_EFF_ROOM` is set, the trap affects all beings in the room. Processing
 
 ### Damage Flow
 
-All trap damage routes through `reconcileDamage()`:
+All trap damage routes through `objDamage()`:
 1. Calculate base damage from trap level and class modifiers via `getDoorTrapDam()`
 2. Apply type-specific multiplier
-3. Call `reconcileDamage(victim, damage, damageType)`
-4. Check return for -1 (death) or positive (damage dealt)
+3. Call `objDamage(damageType, damage, trapObject)`
+4. Check return for `IS_SET_DELETE(rc, DELETE_THIS)` (death)
 5. Apply secondary effects (poison, disease, sleep) via `affectJoin()`
 
 ### Integration Points
 
 - **Movement**: `checkForMoveTrap()` called during room transitions
 - **Containers**: `checkForGetTrap()` on item extraction
-- **Combat**: Damage through `reconcileDamage()` pipeline
+- **Combat**: Damage through `objDamage()` pipeline
 - **Affects**: Effects applied via `affectJoin()` for sleep, poison, disease
 - **Exits**: Door data in `roomDirData` structure
 - **Scheduler**: `procObjSpecProcs` runs periodically for trap-specific code
@@ -196,14 +192,14 @@ All trap damage routes through `reconcileDamage()`:
 ### Deaths not detected from trap damage
 
 **Symptom**: Dead characters continue acting after trap damage
-**Cause**: Using `IS_SET_DELETE(rc, DELETE_VICT)` on `reconcileDamage()` return
-**Fix**: Check `rc == -1` for death from `reconcileDamage()`
+**Cause**: Not checking `objDamage()` return for DELETE_THIS
+**Fix**: Check `IS_SET_DELETE(rc, DELETE_THIS)` for death from `objDamage()`
 
 ### Use-after-free in trap damage messaging
 
 **Symptom**: Heap-use-after-free in sendTo call after trap damage
-**Cause**: Calling victim methods after `reconcileDamage()` returned -1
-**Fix**: Check `rc == -1` immediately; if true, delete victim, null pointer, return DELETE_VICT
+**Cause**: Calling victim methods after `objDamage()` returned DELETE_THIS
+**Fix**: Check `IS_SET_DELETE(rc, DELETE_THIS)` immediately; if true, delete victim, null pointer, return DELETE_VICT
 
 ### Grenade crash with stale parent pointer
 

@@ -4,9 +4,9 @@ description: World building tools including OLC editors (redit/medit/oedit), con
 keywords: [online creation, world building, content creation workflow, vnum ranges, dual database, immortal database, zone enablement]
 category: important
 primary_symbols:
-  functions: [RoomSave, RoomLoad, limitPowerCheck, doLowMvRoom, stripSpellAffects]
+  functions: [RoomSave, RoomLoad, limitPowerCheck, mvRoom, stripSpellAffects]
   classes: [TRoom]
-  enums: [POWER_REDIT, POWER_REDIT_ENABLED, POWER_MEDIT_ENABLED, POWER_OEDIT_ENABLED, POWER_LOW, POWER_OEDIT_IMP_POWER, DB_IMMORTAL, DB_SNEEZY, ROOM_ALWAYS_LIT, ROOM_DEATH, ROOM_NO_MOB, ROOM_INDOORS, ROOM_PEACEFUL, ROOM_NO_STEAL, ROOM_NO_ESCAPE, ROOM_NO_MAGIC, ROOM_NO_PORTAL, ROOM_PRIVATE, ROOM_SILENCE, ROOM_ARENA, ROOM_SAVE_ROOM, DIR_NORTH, DIR_EAST, DIR_SOUTH, DIR_WEST, DIR_UP, DIR_DOWN, EXIT_CLOSED, EXIT_LOCKED, EXIT_SECRET, EXIT_DESTROYED, EXIT_TRAPPED, EXIT_CAVED_IN, EXIT_WARDED]
+  enums: [POWER_REDIT, POWER_REDIT_ENABLED, POWER_NO_LIMITS, POWER_LOW, POWER_OEDIT_IMP_POWER, DB_IMMORTAL, DB_SNEEZY, ROOM_ALWAYS_LIT, ROOM_DEATH, ROOM_NO_MOB, ROOM_INDOORS, ROOM_PEACEFUL, ROOM_NO_STEAL, ROOM_NO_ESCAPE, ROOM_NO_MAGIC, ROOM_NO_PORTAL, ROOM_PRIVATE, ROOM_SILENCE, ROOM_ARENA, ROOM_SAVE_ROOM, DIR_NORTH, DIR_EAST, DIR_SOUTH, DIR_WEST, DIR_UP, DIR_DOWN, EXIT_CLOSED, EXIT_LOCKED, EXIT_SECRET, EXIT_DESTROYED, EXIT_TRAPPED, EXIT_CAVED_IN, EXIT_WARDED]
 ---
 
 # Builder Systems
@@ -73,8 +73,6 @@ Always connect new zones to the existing world after publishing. Identify an app
 |------------|-------|---------|
 | `POWER_REDIT` | 51 | Basic room editing |
 | `POWER_REDIT_ENABLED` | 51 | Unrestricted room vnum access |
-| `POWER_MEDIT_ENABLED` | 51 | Unrestricted mobile vnum access |
-| `POWER_OEDIT_ENABLED` | 51 | Unrestricted object vnum access |
 | `POWER_LOW` | 51 | Publishing access |
 | `POWER_OEDIT_IMP_POWER` | 60 | Object resave access |
 
@@ -109,7 +107,7 @@ Always connect new zones to the existing world after publishing. Identify an app
 | 8 | max_capacity | - |
 | 9 | name | 80 chars |
 | 10 | river | - |
-| 11 | sector_type | 58 options |
+| 11 | sector_type | 59 options |
 | 12 | teleport | 100 chars |
 | 13 | copy | - |
 | 14 | replace | - |
@@ -173,13 +171,13 @@ Always connect new zones to the existing world after publishing. Identify an app
 | 6 | affect_flags | 21 | sex |
 | 7 | faction | 22 | spec |
 | 8 | attacks | 23 | skin |
-| 9 | class | 24 | vision |
-| 10 | level | 25 | can_be_seen |
-| 11 | hitroll | 26 | max_exist |
-| 12 | ac | 27 | local_num |
-| 13 | hpbonus | 28 | intelligence |
-| 14 | damroll | 29 | immunities |
-| 15 | gold | 30 | extra_desc |
+| 9 | level | 24 | vision |
+| 10 | hitroll | 25 | can_be_seen |
+| 11 | ac | 26 | max_exist |
+| 12 | hpbonus | 27 | local_num |
+| 13 | damroll | 28 | intelligence |
+| 14 | gold | 29 | immunities |
+| 15 | class | 30 | extra_desc |
 
 ### Mobile Scaling Stats
 
@@ -262,7 +260,7 @@ Publishing copies from immortal to sneezy, stripping ownership metadata. The des
 
 ### Block Validation
 
-The `limitPowerCheck()` function gates every OLC operation. It first checks for `POWER_REDIT_ENABLED`, `POWER_MEDIT_ENABLED`, or `POWER_OEDIT_ENABLED` depending on the command type, which bypasses all restrictions. Otherwise it compares the target vnum against the builder's blockastart/blockaend and blockbstart/blockbend descriptor fields.
+The `limitPowerCheck()` function gates every OLC operation. It checks for `POWER_NO_LIMITS`, which bypasses all restrictions. Otherwise it compares the target vnum against the builder's blockastart/blockaend and blockbstart/blockbend descriptor fields.
 
 Block assignments are stored on the player's descriptor and saved with `save`. The `@set blocka` and `@set blockb` commands modify these fields.
 
@@ -280,7 +278,7 @@ Loading replaces the in-memory room state. Any unsaved changes to that room are 
 
 ### Mobile Save Implementation
 
-Before saving, `stripSpellAffects()` iterates the mobile's affect list using a cached next pointer pattern and removes any spell-based affects (those with type between 0 and MAX_SKILL). Permanent affects use negative type values or values above MAX_SKILL. This prevents testing-applied buffs and debuffs from persisting.
+Before saving, `stripSpellAffects()` iterates the mobile's affect list using a cached next pointer pattern and removes ALL affects unconditionally. This prevents testing-applied buffs and debuffs from persisting.
 
 The mobile then writes to immortal.mob with related data going to immortal.mob_extra and immortal.mob_imm tables.
 
@@ -292,7 +290,7 @@ The resave operation first deletes the existing row then inserts the new version
 
 ### Publishing Implementation
 
-The `doLowMvRoom()` function wraps its operations in a database transaction. It reads from immortal, transforms the data (stripping owner/block metadata), deletes any existing production row, and inserts the new content. Related tables follow the same pattern within the transaction.
+The `mvRoom()` function wraps its operations in a database transaction. It reads from immortal, transforms the data (stripping owner/block metadata), deletes any existing production row, and inserts the new content. Related tables follow the same pattern within the transaction.
 
 Mobile publishing additionally clears the `ACT_STRINGS_CHANGED` bit from action flags. This flag indicates that strings were modified during editing and is only relevant during development.
 

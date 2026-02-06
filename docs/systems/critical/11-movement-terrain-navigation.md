@@ -151,25 +151,24 @@ The movement system's most dangerous aspect is its death potential. Falling, dro
 | Distance | Without Skills | With Catfall/Feathery Descent |
 |----------|----------------|-------------------------------|
 | 0-4 rooms | Safe | Safe |
-| 5-9 rooms | Damage | Safe |
-| 10-19 rooms | Lethal | Damage |
-| 20+ rooms | Instant death | Instant death |
+| 5+ rooms | `fallKill()` instant death | Damage |
+| 10+ rooms | `fallKill()` instant death | `fallKill()` instant death |
 
-Fall damage: `count * number(40, 80)`, halved by skills, halved again by water landing. The `fallKill()` function handles instant death at 20+ rooms regardless of skills or landing surface.
+The death threshold is `num1 = 5` without skills or `num1 = 10` with catfall/feathery descent. Falls where `count > num1` trigger `fallKill()`.
+
+Fall damage uses separate formulas by landing type: water landing `count * ::number(5, 30)`, normal ground `count * ::number(15, 55)`, high falls `count * ::number(40, 80)`. Each formula is independently halved by catfall or feathery descent.
 
 ### Climbing Modifiers
 
 | Condition | Modifier |
 |-----------|----------|
-| High agility | +5 to +10 |
-| Low agility | -5 to -10 |
-| Weight > 75% capacity | -20 |
-| Weight > 50% capacity | -10 |
-| Fighting | -20 |
-| Broken right arm | -15 |
-| Broken left arm | -15 |
-| Broken right leg | -10 |
-| Broken left leg | -10 |
+| Agility | `plotStat(STAT_CURRENT, STAT_AGI, 15, 100, 65)` (ranges ~15 to ~100) |
+| Weight | Continuous `-getTotalWeight(FALSE) / 5.0` |
+| Fighting | -125 |
+| Unable to use primary arm | -65 |
+| Unable to use secondary arm | -65 |
+| Unable to use primary leg | -45 |
+| Unable to use secondary leg | -45 |
 
 ### Flight Sources
 
@@ -282,13 +281,13 @@ The `canClimb()` function in `physics.cc` performs a skill check modified by agi
 
 `checkFalling()` handles the fall loop. Immortals bounce harmlessly. Flying characters and flying mounts prevent falling. For each room of descent, the function validates the room below, moves the character, and checks landing conditions.
 
-Fall thresholds depend on SKILL_CATFALL and SPELL_FEATHERY_DESCENT. Without these, damage begins at 5 rooms; with them, damage begins at 10 rooms. Damage scales with distance (40-80 per room), halved by skills, halved again by water landing.
+Fall thresholds depend on SKILL_CATFALL and SPELL_FEATHERY_DESCENT. Without these, `fallKill()` triggers at 5+ rooms; with them, at 10+ rooms. Below the kill threshold, damage uses separate formulas by landing type: water `count * ::number(5, 30)`, ground `count * ::number(15, 55)`, high falls `count * ::number(40, 80)`. Each is halved by catfall or feathery descent.
 
 `crashLanding()` handles the position change and mount dismount. The force parameter bypasses skill checks for involuntary landings. Ground fighting skill can prevent position reduction. Mount falling returns DELETE_THIS if the rider dies, creating chains that must propagate.
 
 ### Drowning Mechanics
 
-The `procCharDrowning` scheduler process runs every 36 ticks (3.6 seconds). It calls `checkDrowning()` which affects only PCs in underwater sectors without AFF_WATERBREATH. Damage is 20-40 per tick, checked via `reconcileDamage()` which returns -1 on death (not a DELETE flag).
+The `procCharDrowning` scheduler process runs every 36 ticks (3.6 seconds). It calls `checkDrowning()` which affects only PCs in underwater sectors without AFF_WATERBREATH. Damage is `::number(1, 10)` to both hit points and movement per tick, checked via `reconcileDamage()` which returns -1 on death (not a DELETE flag).
 
 River flow uses `procCharRiverFlow` to move characters with the current. The `riverFlow()` function checks room river properties, doubles flow chance for sitting characters, allows SKILL_SWIMMING to resist with a message, and calls `doMove()` for the flow direction.
 

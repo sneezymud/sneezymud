@@ -4,7 +4,7 @@ description: Physical and economic properties for 83 materials affecting weapon 
 keywords: [hardness, susceptibility, flammability, crafting, durability]
 category: informational
 primary_symbols:
-  functions: [getMaterial, setMaterial, getMaterialTypeNumbers, getWeaponDamageBonus, findMetalMaterial, findHideMaterial]
+  functions: [getMaterial, setMaterial, getMaterialTypeNumbers, baseDamage, findMetalMaterial, findHideMaterial]
   classes: [material_type_numbers, TThing, MetalMaterial]
   enums: [materialTypeT, MAT_UNDEFINED, MAT_PAPER, MAT_CLOTH, MAT_WOOD, MAT_GLASS, MAT_LEATHER, MAT_FUR, MAT_DRAGON_SCALE, MAT_ICE, MAT_STONE, MAT_DIAMOND, MAT_RUBY, MAT_BONE, MAT_IRON, MAT_STEEL, MAT_MITHRIL, MAT_ADAMANTITE, MAT_WATER, MAT_FIRE, MAT_LIGHTNING, MAT_CHAOS, MetalTierT, HideTierT, WoodTierT, RockTierT, CrystalTierT, OrganicTierT, DeadTierT, MagicalTierT, SpiritualTierT, GenericTierT]
 ---
@@ -67,7 +67,7 @@ Category ranges leave intentional gaps for expansion: 20-49, 78-99, 127-149, 178
 | `water_susc` | unsigned short | 0-249 | Corrosion rate (>100 = rusts) |
 | `fall_susc` | unsigned short | 0-249 | Impact breakage chance |
 | `float_weight` | unsigned short | 0-255 | Buoyancy (0=sinks, 255=floats) |
-| `noise` | short | -5 to +10 | Sound generation (stealth impact) |
+| `noise` | short | -5 to 63 | Sound generation (stealth impact) |
 | `vol_mult` | unsigned short | 1-8 | Density / volume scaling |
 | `conductivity` | unsigned short | 0-1 | Electrical conductivity |
 | `flammability` | int | 0-1000 | Fire ignition rating |
@@ -107,10 +107,10 @@ Category ranges leave intentional gaps for expansion: 20-49, 78-99, 127-149, 178
 
 | Tier | Metals | Hides | Gems |
 |------|--------|-------|------|
-| COMMON | Copper, Bronze, Brass | Leather, Wool | Stone, Bone |
-| UNCOMMON | Iron, Steel | Tough Leather | Jade, Amber |
-| RARE | Mithril, Silver, Gold | Dragon Scale | Emerald, Ruby, Sapphire |
-| LEGENDARY | Adamantite, Eternium | Ogre Hide | Diamond |
+| COMMON | Copper, Bronze, Brass | Wool | Stone, Bone |
+| UNCOMMON | Silver, Gold | Leather, Tough Leather | Jade, Amber |
+| RARE | Iron, Steel | Dragon Scale | Emerald, Ruby, Sapphire |
+| LEGENDARY | Adamantite, Eternium, Mithril | Ogre Hide | Diamond |
 
 ### Price Tiers
 
@@ -152,7 +152,7 @@ Category ranges leave intentional gaps for expansion: 20-49, 78-99, 127-149, 178
 | `matNum` | Material type constant (array index) |
 | `name` | Display name for crafting menus |
 | `tier` | Rarity classification (COMMON=0, UNCOMMON=1, RARE=2, LEGENDARY=3) |
-| `difficultyMod` | Added to crafting skill check difficulty |
+| `difficultyMod` | Subtracted from skill check (higher = harder) |
 | `structureMod` | Added to finished item `max_struct` |
 | `levelMod` | Added to minimum crafter level requirement |
 | `statMod` | Bonus applied to finished item statistics |
@@ -179,7 +179,7 @@ Also: `OrganicTierT`, `DeadTierT`, `MagicalTierT`, `SpiritualTierT`, `GenericTie
 | `setMaterial(unsigned short)` | Assigns material; validates bounds |
 | `getMaterialTypeNumbers()` | Returns const pointer to property structure |
 | `findMetalMaterial(int matNum)` | Lookup crafting metal by material constant |
-| `findMetalMaterialByName(const sstring&)` | Lookup crafting metal by name (case-sensitive) |
+| `findMetalMaterialByName(const sstring&)` | Lookup crafting metal by name (case-insensitive) |
 
 Category-specific lookup functions: `findHideMaterial()`, `findWoodMaterial()`, `findRockMaterial()`, etc.
 
@@ -201,7 +201,7 @@ Crafting uses parallel structures (`MetalMaterial`, `HideMaterial`, etc.) that a
 
 ### Combat Calculations
 
-Weapon damage multiplies by `hardness / 60.0` (iron baseline). The `getWeaponDamageBonus()` function in `obj_base_weapon.cc` applies this scaling. Armor protection uses `hardness / 100.0` as an effectiveness multiplier.
+Weapon damage multiplies by `hardness / 60.0` (iron baseline). The `baseDamage()` function applies this by multiplying `damageLevel() * 1.75`. Armor protection uses `hardness / 100.0` as an effectiveness multiplier.
 
 Susceptibility values reduce incoming damage by damage type. A material with `cut_susc = 50` takes half damage from slash attacks compared to `cut_susc = 100`.
 
@@ -217,7 +217,7 @@ The `float_weight` property determines water behavior: 0 sinks immediately, 1-10
 
 ### Noise and Stealth
 
-The `noise` property affects stealth checks. Negative values provide bonuses (water -5), positive values penalize (metal armor 20-30). Total noise sums across all equipped items.
+The `noise` property affects stealth checks. Negative values provide bonuses, positive values penalize (metal armor 15-63). MAT_WATER has noise=3. Total noise sums across all equipped items.
 
 ### Conductivity
 
@@ -331,7 +331,7 @@ Materials 50-77 (nature range) undergo organic decay: rot, fungal growth, consum
 
 **Cause:** `noise` property too high.
 
-**Fix:** Leather should have noise 5-10, cloth near 0. Metal armor 20-30. Sum total noise across equipment.
+**Fix:** Leather should have noise 5-10, cloth near 0. Metal armor 15-63. Sum total noise across equipment.
 
 ### Undefined Material Crash
 
@@ -347,4 +347,4 @@ Materials 50-77 (nature range) undergo organic decay: rot, fungal growth, consum
 
 **Cause:** Property values outside valid ranges.
 
-**Fix:** Validate: susceptibility 0-100, hardness 0-100, float_weight 0-255, vol_mult 1-8, noise -5 to +10.
+**Fix:** Validate: susceptibility 0-100, hardness 0-100, float_weight 0-255, vol_mult 1-8, noise -5 to 63.

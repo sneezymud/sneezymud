@@ -64,8 +64,8 @@ The scheduler calls task functions every 1.2 seconds, passing control signals th
 
 ### Allowed Commands During Tasks
 
-- **nobrainerTaskCommand**: say, tell, shout, gossip, auction, holler, emote, semote, inventory, equipment, social emotes, sockets, wiznet, reply
-- **utilityTaskCommand**: look, exits, score, who, help, save, time, weather, toggle
+- **nobrainerTaskCommand**: say, say2, glance, tell, shout, weather, inventory, equipment, smile, shake, nod, gt, wiznet, reply
+- **utilityTaskCommand**: look, score, who, help, save, time, weather, toggle
 
 ### Task Type Categories
 
@@ -105,7 +105,7 @@ The `taskData` class stores all per-task state. Key fields:
 
 **Starting**: `start_task()` allocates taskData, stores object pointer, marks object with `setIsTaskObj(true)`, and attaches to character.
 
-**Processing**: `procCharTasks::run()` executes every Pulse::MOBACT. It checks `isLinkdead()` before invoking the task function. When `pulse >= task->nextUpdate`, it invokes the task function with CMD_TASK_CONTINUE and handles DELETE flag returns.
+**Processing**: `procCharTasks::run()` executes every Pulse::MOBACT. When `pulse >= task->nextUpdate`, it invokes the task function with CMD_TASK_CONTINUE and handles DELETE flag returns.
 
 **Stopping**: `TBeing::stopTask()` clears `isTaskObj` flag, frees `orig_arg`, deletes the taskData struct, and sets `task = NULL`.
 
@@ -120,11 +120,11 @@ The `tasks[]` array maps taskTypeT to TaskEntry structs containing:
 - `you_are_busy_msg` - message shown when blocking commands
 - `taskf` - function pointer to task handler
 
-51 task types exist (TASK_BOGUS through TASK_PREEN), covering repair, crafting, meditation, tracking, fishing, and other timed actions. Adding a new task requires defining the enum value, implementing the task function, and adding the corresponding TaskEntry to the table.
+52 task types exist (TASK_BOGUS through TASK_PREEN), covering repair, crafting, meditation, tracking, fishing, and other timed actions. Adding a new task requires defining the enum value, implementing the task function, and adding the corresponding TaskEntry to the table.
 
 ### Dangling Pointer Protection
 
-When an object marked with `isTaskObj` is deleted, the destructor iterates all descriptors to find characters whose `task->obj` matches the deleted object. For each match, it calls `stopTask()` to cleanly terminate the task before the object memory is freed. Rooms lack similar protection, so task functions must validate room pointers independently.
+When an object marked with `isTaskObj` is deleted, the destructor iterates `character_list` to find characters whose `task->obj` matches the deleted object. For each match, it calls `stopTask()` to cleanly terminate the task before the object memory is freed. Rooms lack similar protection, so task functions must validate room pointers independently.
 
 ### Command Dispatch
 

@@ -227,7 +227,8 @@ The high bit (1 << 29) distinguishes DELETE flags from damage integers.
 | `misc/periodic.cc` | updateAffects(), transformation removal |
 | `misc/limits.cc` | checkIdling() transformation handling |
 | `sys/process.cc` | TScheduler deletion handlers |
-| `sys/connect.cc` | parseCommand(), descriptor loop, preKillCheck() |
+| `sys/connect.cc` | parseCommand(), descriptor loop |
+| `misc/offense.cc` | preKillCheck() |
 | `sys/socket.cc` | proc*::run() adapter functions |
 
 ## Implementation

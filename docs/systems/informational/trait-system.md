@@ -39,38 +39,38 @@ The trait system allows players to customize characters during creation by selec
 |-------|-----|--------|--------|-----|
 | Cowardice | +10 | `TOG_IS_COWARD` (278) | Auto-flee at 50% HP, wimpy locked | - |
 | Blindness | +10 | `TOG_IS_BLIND` (279) | Permanent `AFF_BLIND` | 1 L50 |
-| Asthma | +8 | `TOG_IS_ASTHMATIC` (280) | Max movement halved | - |
-| Narcolepsy | +8 | `TOG_IS_NARCOLEPTIC` (281) | 1% sleep chance/tick | - |
-| Mute | +5 | `TOG_IS_MUTE` (282) | Cannot speak/tell/shout/whisper/ask/order/emote | 1 L50 |
-| Combustible | +5 | `TOG_IS_COMBUSTIBLE` (283) | 1% fire damage/tick | - |
-| Hemophilia | +5 | `TOG_IS_HEMOPHILIAC` (284) | 2x bleed duration; limb bleeds permanent | - |
-| Necrophobia | +5 | `TOG_IS_NECROPHOBIC` (285) | Fear response to corpses/undead | - |
-| Alcoholism | +5 | `TOG_IS_ALCOHOLIC` (286) | Only alcohol quenches thirst | - |
-| Tourettes | +1 | `TOG_HAS_TOURETTES` (287) | 25% chance/tick to insult | 1 L50 |
+| Asthma | +8 | `TOG_IS_ASTHMATIC` (282) | Max movement halved | - |
+| Narcolepsy | +8 | `TOG_IS_NARCOLEPTIC` (284) | 1% sleep chance/tick | - |
+| Mute | +5 | `TOG_IS_MUTE` (280) | Cannot speak/tell/shout/whisper/ask/order/emote | 1 L50 |
+| Combustible | +5 | `TOG_IS_COMBUSTIBLE` (285) | 1% fire damage/tick | - |
+| Hemophilia | +5 | `TOG_IS_HEMOPHILIAC` (286) | 2x bleed duration; limb bleeds permanent | - |
+| Necrophobia | +5 | `TOG_IS_NECROPHOBIC` (283) | Fear response to corpses/undead | - |
+| Alcoholism | +5 | `TOG_IS_ALCOHOLIC` (290) | Only alcohol quenches thirst | - |
+| Tourettes | +1 | `TOG_HAS_TOURETTES` (291) | 25% chance/tick to insult | 1 L50 |
 
 ### Neutral Traits
 
 | Trait | Pts | Toggle | Effect | Req |
 |-------|-----|--------|--------|-----|
-| Perma-Death | 0 | `TOG_PERMA_DEATH_CHAR` (288) | Character deleted on death | 1 L50 |
-| Real Aging | 0 | `TOG_REAL_AGING` (289) | Age affects gameplay | 1 L50 |
-| Fae-Touched | 0 | `TOG_FAE_TOUCHED` (290) | Random bonus stats, 50% XP | 1 L50 same race |
+| Perma-Death | 0 | `TOG_PERMA_DEATH_CHAR` (247) | Character deleted on death | 1 L50 |
+| Real Aging | 0 | `TOG_REAL_AGING` (299) | Age affects gameplay | 1 L50 |
+| Fae-Touched | 0 | `TOG_FAE_TOUCHED` (298) | Random bonus stats, 50% XP | 1 L50 same race |
 
 ### Benefit Traits (Cost Stat Points)
 
 | Trait | Pts | Toggle | Effect | Req |
 |-------|-----|--------|--------|-----|
-| Healthy | -8 | `TOG_IS_HEALTHY` (291) | +75% disease immunity | - |
-| Nightvision | -8 | `TOG_HAS_NIGHTVISION` (292) | +2 vision bonus | - |
-| Ambidextrous | -10 | `TOG_IS_AMBIDEXTROUS` (293) | Equal facility both hands | - |
-| Psionics | -100 | `TOG_PSIONICIST` (299) | Innate psionic abilities | 1 L50 |
+| Healthy | -8 | `TOG_IS_HEALTHY` (288) | +75% disease immunity | - |
+| Nightvision | -8 | `TOG_HAS_NIGHTVISION` (289) | +2 vision bonus | - |
+| Ambidextrous | -10 | `TOG_IS_AMBIDEXTROUS` (287) | Equal facility both hands | - |
+| Psionics | -100 | `TOG_PSIONICIST` (248) | Innate psionic abilities | 1 L50 |
 
 ### Race Restrictions
 
 | Race | Disabled Trait |
 |------|----------------|
-| Goblin | Blindness |
-| Orc | Blindness |
+| Goblin | Cowardice |
+| Orc | Cowardice |
 
 ### Connection States
 
@@ -167,7 +167,7 @@ Error handling is minimal: failed file opens are silently ignored in `loadToggle
 |---------|-------|-----|
 | Trait unavailable at creation | Missing L50 requirement | Check `num50race`/`num50any` against account |
 | Trait missing after relog | Toggle file not saved | Verify `saveToggles()` called in `storeToSt()` |
-| Blindness trait shows `[*]` for Orc | Race restriction | Intended behavior; Goblin/Orc cannot take blindness |
+| Cowardice trait shows `[*]` for Orc/Goblin | Race restriction | Intended behavior; Goblin/Orc cannot take cowardice |
 | Combustible instant death | DELETE_THIS not checked | Verify caller checks return from tick processing |
 | Fae-touched no stat bonus | Zero L50s of race | Need at least one L50 of same race on account |
 | Wrong XP penalty (multiclass) | Multiple reductions | Check `fae_reduction_done` flag set correctly |

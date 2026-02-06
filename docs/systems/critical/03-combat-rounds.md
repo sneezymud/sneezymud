@@ -4,9 +4,9 @@ description: Combat system timing with distributed attack scheduling, global ite
 category: critical
 keywords: [combat, timing, attack scheduling, damage pipeline]
 primary_symbols:
-  functions: [perform_violence, hit, oneHit, blowCount, reconcileDamage, applyDamage, damageEpilog, setVictFighting, stopFighting, canFight, reformGroup]
+  functions: [perform_violence, hit, oneHit, blowCount, reconcileDamage, applyDamage, damageEpilog, setVictFighting, stopFighting, canFight, reformGroup, IS_SET_DELETE]
   classes: [TBeing, procPerformViolence]
-  enums: [Pulse::COMBAT, DELETE_THIS, DELETE_VICT, DELETE_ITEM, IS_SET_DELETE, gCombatList, gCombatNext, AFF_ENGAGER, AFFECT_COMBAT, COMBAT_SOLO_KILL, TOG_AVENGER_CHEAT]
+  enums: [Pulse::COMBAT, DELETE_THIS, DELETE_VICT, DELETE_ITEM, gCombatList, gCombatNext, AFF_ENGAGER, AFFECT_COMBAT, COMBAT_SOLO_KILL, TOG_AVENGER_CHEAT]
 ---
 
 # Combat Round Timing and Structure

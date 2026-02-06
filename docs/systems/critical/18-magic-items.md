@@ -75,8 +75,8 @@ Magical items let any character use stored spells by consuming charges instead o
 
 | Bits | Field | Range |
 |------|-------|-------|
-| 0-7 | `magic_learnedness` | 0-100 |
-| 8-15 | `magic_level` | 0-250+ |
+| 0-7 | `magic_level` | 0-250+ |
+| 8-15 | `magic_learnedness` | 0-100 |
 
 **TScroll:**
 

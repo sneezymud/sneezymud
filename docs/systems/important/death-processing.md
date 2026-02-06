@@ -119,7 +119,7 @@ die()
   └─ Call rawKill()
 
 rawKill()
-  ├─ Call stopFighting() - removes berserk, vampire bite affects
+  ├─ Call stopFighting(), then separately remove berserk and vampire bite affects
   ├─ Call makeCorpse() - creates corpse, transfers equipment
   ├─ Call death cry
   ├─ Call genericKillFix() - group reform, dispel magic, cleanup

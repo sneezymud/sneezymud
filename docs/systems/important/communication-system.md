@@ -91,9 +91,9 @@ Mute characters (TOG_IS_MUTE) can only tell to immortal PCs. This is a deliberat
 | Ask | Room | Resting | Soundproof, mute, dumb animal |
 | Shout | Global | Resting | Soundproof, mute, silent, charm, level 2+, 15 move |
 | Group Tell | Group | Resting | Soundproof, mute, silent, AFF_GROUP required |
-| Sign | Room | Standing | Requires hands, SKILL_SIGN to understand |
+| Sign | Room | Resting | Requires hands, SKILL_SIGN to understand |
 | Emote | Room | Resting | Soundproof, mute, drunk level check |
-| Commune | Gods | Any | POWER_WIZNET required |
+| Commune | Gods | Resting | POWER_WIZNET required |
 
 ### Command Shortcuts
 
@@ -217,7 +217,7 @@ Group communication iterates the group leader's follower list. Recipients must h
 
 `findTellTarget()` resolves tell recipients through multiple strategies: exact name match among visible characters, then account-based alternate character lookup for immortals. This allows immortals to reach players on different characters within the same account.
 
-The system tracks `desc->last_teller` for reply and `desc->last_told` for retelling. Tells are logged to the `tellhistory` database table with fields: time (timestamp), teller (sender name), tellee (receiver name), message (garbled text as delivered).
+The system tracks `desc->last_teller` for reply and `desc->last_told` for retelling. Tells are logged to the `tellhistory` database table with fields: telltime (timestamp), tellfrom (sender name), tellto (receiver name), tell (garbled text as delivered).
 
 Descriptor state filtering prevents interrupting editing sessions, mail composition, or bug reporting. The checks examine `desc->connected` for CON_PLYNG state and `desc->str` for active string editing.
 

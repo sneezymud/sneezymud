@@ -58,7 +58,7 @@ if (keeper->getMoney() < amount) {
 keeper->giveMoney(ch, amount, GOLD_SHOP);
 ```
 
-**Always check DELETE flags after money transfers.** `giveMoney()` can trigger DELETE_THIS or DELETE_VICT if one party dies during the transfer (e.g., from a spec proc or trigger). Check return codes and stop execution if deletion flags are set.
+**Note that `giveMoney()` returns void.** It simply calls `addToMoney()` on both parties to transfer the amount. There are no DELETE flags to check after a money transfer.
 
 ### Shop Configuration
 

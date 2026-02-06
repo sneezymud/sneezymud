@@ -4,9 +4,9 @@ description: Material, gestural, and verbal requirements for spellcasting with d
 keywords: [component requirements, gestural requirements, verbal requirements, consumption timing, storage access]
 category: important
 primary_symbols:
-  functions: [findComponent, useComponent, missingComponent, enforceGestural, enforceVerbal, applyCompCheck, canMerge, doMerge]
+  functions: [findComponent, useComponent, missingComponent, enforceGestural, enforceVerbal, applyCompCheck, willMerge, doMerge]
   classes: [TComponent, TSpellBag, spellInfo]
-  enums: [COMP_GESTURAL, COMP_GESTURAL_INIT, COMP_GESTURAL_END, COMP_GESTURAL_ALWAYS, COMP_GESTURAL_RANDOM, COMP_VERBAL, COMP_VERBAL_INIT, COMP_VERBAL_END, COMP_VERBAL_ALWAYS, COMP_VERBAL_RANDOM, COMP_MATERIAL, COMP_MATERIAL_INIT, COMP_MATERIAL_END, COMP_MATERIAL_ALWAYS, COMP_MATERIAL_RANDOM, COMP_MATERIAL_ALMOST_END, SPELL_TASKED, COMP_DECAY, COMP_SPELL, COMP_POTION, COMP_SCRIBE, CACT_PLACE, CACT_REMOVE, CACT_UNIQUE, WIZ_LEV_COMP_PRIM_OTHER_FREE, WIZ_LEV_COMP_EITHER_OTHER_FREE, WIZ_LEV_COMP_EITHER, WIZ_LEV_COMP_INV, WIZ_LEV_COMP_NECK, WIZ_LEV_COMP_WRIST, WIZ_LEV_COMP_BELT, RIT_LEV_COMP_PRIM_OTHER_FREE, RIT_LEV_COMP_EITHER_OTHER_FREE, RIT_LEV_COMP_EITHER, RIT_LEV_COMP_INV, RIT_LEV_COMP_NECK, RIT_LEV_COMP_WRIST, RIT_LEV_COMP_BELT]
+  enums: [COMP_GESTURAL, COMP_GESTURAL_INIT, COMP_GESTURAL_END, COMP_GESTURAL_ALWAYS, COMP_GESTURAL_RANDOM, COMP_VERBAL, COMP_VERBAL_INIT, COMP_VERBAL_END, COMP_VERBAL_ALWAYS, COMP_VERBAL_RANDOM, COMP_MATERIAL, COMP_MATERIAL_INIT, COMP_MATERIAL_END, COMP_MATERIAL_ALWAYS, COMP_MATERIAL_RANDOM, COMP_MATERIAL_ALMOST_END, SPELL_TASKED, COMP_DECAY, COMP_SPELL, COMP_POTION, COMP_SCRIBE, CACT_PLACE, CACT_REMOVE, CACT_UNIQUE, WIZ_LEV_COMP_PRIM_OTHER_FREE, WIZ_LEV_COMP_EITHER_OTHER_FREE, WIZ_LEV_COMP_EITHER, WIZ_LEV_COMP_INV, WIZ_LEV_NO_GESTURES, WIZ_LEV_NO_MANTRA, WIZ_LEV_COMP_NECK, WIZ_LEV_COMP_WRIST, WIZ_LEV_COMP_BELT, RIT_LEV_COMP_PRIM_OTHER_FREE, RIT_LEV_COMP_EITHER_OTHER_FREE, RIT_LEV_COMP_EITHER, RIT_LEV_COMP_INV, RIT_LEV_NO_GESTURES, RIT_LEV_NO_MANTRA, RIT_LEV_COMP_NECK, RIT_LEV_COMP_WRIST, RIT_LEV_COMP_BELT, PLR_NOHASSLE]
 ---
 
 # Spell Component System
@@ -39,13 +39,13 @@ Always use `COMP_MATERIAL_END` with `SPELL_TASKED` for multi-round spells that c
 
 ### Component Merging
 
-Components automatically merge when picked up if they share the same vnum and spell association. The `canMerge` function validates type, vnum, and spell number match before allowing combination. Personalized components do not merge with non-personalized or differently-personalized components.
+Components automatically merge when picked up if they share the same vnum. The `willMerge` function validates type (must be TComponent), vnum match, both having cost > 0 (free components from leveling do not merge), and combined charges not exceeding 100 before allowing combination.
 
 ### Special Cases
 
-Never expect personalization failures to produce distinct error messages. Personalized components belonging to another player produce the same "missing materials" message as absent components.
+Personalized components belonging to another player are still found by `findComponent` but rejected by `useComponent` with a distinct message: "You can't use a component that is personalized for someone else!" This is logged as a potential exploit.
 
-Always remember that `isMonster()` returns early from component consumption. NPCs cast without needing component inventories.
+Always remember that `!isPc()` returns early from component consumption. NPCs cast without needing component inventories.
 
 ## Reference
 
@@ -85,17 +85,18 @@ Always remember that `isMonster()` returns early from component consumption. NPC
 
 ### Wizardry/Ritualism Access Levels
 
-| Level Constant | Access Granted |
-|----------------|----------------|
-| `WIZ_LEV_COMP_PRIM_OTHER_FREE` | Primary hand only |
-| `WIZ_LEV_COMP_EITHER_OTHER_FREE` | Either hand |
-| `WIZ_LEV_COMP_EITHER` | Either hand (full) |
-| `WIZ_LEV_COMP_INV` | Inventory |
-| `WIZ_LEV_COMP_NECK` | Neck slot |
-| `WIZ_LEV_COMP_WRIST` | Wrist pouches |
-| `WIZ_LEV_COMP_BELT` | Belt/full access |
+| Level Constant | Skill Threshold | Access Granted |
+|----------------|-----------------|----------------|
+| `WIZ_LEV_COMP_PRIM_OTHER_FREE` | 0+ (non-ambidextrous) | Primary hand only |
+| `WIZ_LEV_COMP_EITHER_OTHER_FREE` | 15+ | Either hand |
+| `WIZ_LEV_COMP_EITHER` | 30+ | Either hand (full) |
+| `WIZ_LEV_COMP_INV` | 40+ | Inventory |
+| `WIZ_LEV_NO_GESTURES` | 50+ | Gesture bypass |
+| `WIZ_LEV_NO_MANTRA` | 60+ | Verbal bypass |
+| `WIZ_LEV_COMP_NECK` | 75+ | Neck slot |
+| `WIZ_LEV_COMP_BELT` | 99+ | Belt/full access |
 
-Ritualism uses parallel `RIT_LEV_COMP_*` constants with identical slot progression for clerics and shamans.
+Ritualism uses parallel `RIT_LEV_*` constants with identical skill thresholds and slot progression for clerics and shamans. The enum also defines `WIZ_LEV_COMP_WRIST` and `RIT_LEV_COMP_WRIST` but these are never returned by `getWizardryLevel()` or `getRitualismLevel()`.
 
 ### TComponent Class API
 
@@ -107,7 +108,7 @@ Ritualism uses parallel `RIT_LEV_COMP_*` constants with identical slot progressi
 | `setComponentSpell()` | Sets associated spell |
 | `getComponentType()` | Returns component type flags |
 | `setComponentType()` | Sets component type flags |
-| `canMerge()` | Determines if component can merge with another object |
+| `willMerge()` | Determines if component can merge with another object |
 | `doMerge()` | Combines charges when merging components |
 | `itemType()` | Returns `ITEM_COMPONENT` for type identification |
 
@@ -155,8 +156,8 @@ Ritualism uses parallel `RIT_LEV_COMP_*` constants with identical slot progressi
 | Arms non-functional (mage) | "You cannot perform the ritual's gestures without arms and hands!" |
 | Arms non-functional (shaman) | "You cannot invoke the ritual without arms and hands!" |
 | Position penalty | "Restricted movement while [position] causes you to mess up the ritual's gestures." |
-| Silenced (mage) | "You are unable to chant the incantation!" |
-| Silenced (cleric/shaman) | "You are unable to recite the sacred words!" |
+| Silenced (mage/shaman) | "You are unable to chant the incantation!" |
+| Silenced (cleric/deikhan) | "You are unable to recite the sacred words!" |
 
 ### Source Files
 
@@ -187,15 +188,15 @@ The `applyCompCheck` function maps consumption flags to patterns (1=INIT, 2=END,
 
 ### Gestural Enforcement
 
-The `enforceGestural` method checks COMP_GESTURAL flag presence, then validates hand availability and arm functionality. Mages require at least one free hand (neither heldInPrimHand nor heldInSecHand may be occupied). Position penalties apply when not standing, with failure chance increasing as position decreases. High Wizardry (75+) bypasses verbal requirements but not gestural ones.
+The `enforceGestural` method checks COMP_GESTURAL flag presence, then validates hand availability and arm functionality. Mages require at least one free hand (neither heldInPrimHand nor heldInSecHand may be occupied). Position penalties apply when not standing, with failure chance increasing as position decreases. High Wizardry/Ritualism (`WIZ_LEV_NO_GESTURES`, skill 50+) bypasses gestural requirements entirely.
 
 ### Verbal Enforcement
 
-The `enforceVerbal` method checks for silence spell effects, paralysis, and head/mouth functionality. High Wizardry or Ritualism (75+ learnedness) grants immunity to verbal requirements, allowing silent casting. The method broadcasts mystical utterance messages to the room on success.
+The `enforceVerbal` method checks for silence spell effects, paralysis, and head/mouth functionality. High Wizardry or Ritualism (`WIZ_LEV_NO_MANTRA`/`RIT_LEV_NO_MANTRA`, skill 60+) grants immunity to verbal requirements, allowing silent casting. The method broadcasts mystical utterance messages to the room on success.
 
 ### Component Merging Mechanism
 
-The `canMerge` function inherited from TMergeable examines object type, vnum, and spell association. Both objects must be TComponent instances with identical component spell numbers and matching vnums. The `doMerge` function adds charges from the merged object to the target, then deletes the merged object. Merging occurs automatically during object acquisition through `operator+=` overloads, which scan existing contents for mergeable candidates before adding new objects.
+The `willMerge` function inherited from TMergeable examines object type, vnum, and cost. Both objects must be TComponent instances with matching vnums and cost > 0 (free components from leveling are excluded). Combined charges must not exceed 100. The `doMerge` function adds charges from the merged object to the target, then deletes the merged object. Merging occurs automatically during object acquisition through `operator+=` overloads, which scan existing contents for mergeable candidates before adding new objects.
 
 ### Component Placement System
 
@@ -207,11 +208,11 @@ Components can be awarded during spell practice through the `learnFromDoing` fun
 
 ### compInfo Message Dispatch
 
-The CompInfo vector stores per-spell consumption messages with separate strings for caster, room observers, victim, self-target, and object-target cases. The `useComponent` function indexes into this vector by spell number and dispatches appropriate `act()` calls based on target presence and type.
+The CompInfo vector stores per-spell consumption messages with separate strings for caster, room observers, victim, self-target, and object-target cases. The `useComponent` function performs a linear search through this vector matching the component's spell number, then dispatches appropriate `act()` calls based on target presence and type.
 
 ### Immortal and NPC Bypass
 
-The `useComponent` function checks `isImmunity(IMMU_NOHASSLE)` for immortals and `isMonster()` for NPCs, returning early without component consumption. This allows testing spells without gathering and prevents mobs from requiring component inventories.
+The `useComponent` function checks `isImmortal() && isPlayerAction(PLR_NOHASSLE)` for immortals and `!isPc()` for NPCs, returning early without component consumption. This allows testing spells without gathering and prevents mobs from requiring component inventories.
 
 ## Troubleshooting
 
@@ -265,11 +266,11 @@ The `useComponent` function checks `isImmunity(IMMU_NOHASSLE)` for immortals and
 
 ### Personalized component rejected
 
-**Symptom:** Component exists but caster receives "lack materials" message.
+**Symptom:** Component exists but caster receives "You can't use a component that is personalized for someone else!" message.
 
-**Cause:** Component personalized to different character name.
+**Cause:** Component personalized to different character name. This is logged as a potential exploit (`LOG_MISC`).
 
-**Diagnostic:** Examine component's personalization field. Compare against caster's name.
+**Diagnostic:** Examine component's personalization field via `isPersonalized()`. Compare against caster's name using `isname()`.
 
 **Fix:** Acquire non-personalized component or one personalized to correct character.
 
@@ -291,11 +292,11 @@ The `useComponent` function checks `isImmunity(IMMU_NOHASSLE)` for immortals and
 
 **Symptom:** Silenced caster cannot cast despite high Wizardry.
 
-**Cause:** Wizardry bypass only triggers at 75+ learnedness; caster below threshold.
+**Cause:** Wizardry bypass only triggers at `WIZ_LEV_NO_MANTRA` (skill 60+); caster below threshold.
 
-**Diagnostic:** Check getDiscipline(DISC_WIZARDRY)->getLearnedness() value.
+**Diagnostic:** Check `getWizardryLevel()` return value against `WIZ_LEV_NO_MANTRA`.
 
-**Fix:** Train Wizardry to 75+ for verbal requirement bypass.
+**Fix:** Train Wizardry to 60+ for verbal requirement bypass.
 
 ---
 
@@ -303,11 +304,11 @@ The `useComponent` function checks `isImmunity(IMMU_NOHASSLE)` for immortals and
 
 **Symptom:** Player has multiple stacks of the same component instead of merged charges.
 
-**Cause:** Components have different spell associations, different vnums, or mismatched personalization.
+**Cause:** Components have different vnums, one or both have cost <= 0 (free from leveling), or combined charges would exceed 100.
 
-**Diagnostic:** Compare `getComponentSpell()` values between components. Check personalization status on both.
+**Diagnostic:** Compare vnums between components. Check `obj_flags.cost` values (both must be > 0). Check if combined charges would exceed 100.
 
-**Fix:** Ensure components have identical spell associations and matching personalization status. Components with different spell numbers will not merge even if vnums match.
+**Fix:** Ensure components have identical vnums and both have cost > 0. Components with different vnums will not merge. Free components from leveling (cost 0) never merge.
 
 ---
 

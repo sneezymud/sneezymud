@@ -62,11 +62,11 @@ Do not return early when a target dies; other targets remain to process. Accumul
 | Position | Example Commands |
 |----------|------------------|
 | POSITION_DEAD | score, who, help |
-| POSITION_SLEEPING | list, wake |
-| POSITION_RESTING | look, say, get |
+| POSITION_SLEEPING | list, wake, attack |
+| POSITION_RESTING | look, say, get, equipment |
 | POSITION_SITTING | buy, sell |
 | POSITION_STANDING | dance, most actions |
-| POSITION_FIGHTING | kill, attack |
+| POSITION_FIGHTING | kill |
 
 ### Alias Expansion Syntax
 

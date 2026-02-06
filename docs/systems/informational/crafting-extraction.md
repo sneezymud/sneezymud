@@ -204,7 +204,7 @@ Scribing creates scrolls containing spells.
 
 **Batch Scribing:** Players can scribe multiple scrolls with `scribe <number> <spell>`. Batch size is limited by the minimum charges across all three components.
 
-**Success Check:** Requires passing either a `SKILL_SCRIBE` check or a `SKILL_READ_MAGIC` check. Each scroll in a batch receives an independent skill check. Success gives the scroll proper spell learnedness; failure produces an unreadable scroll (learnedness 0).
+**Success Check:** Requires passing either a `SKILL_SCRIBE` check or a `SKILL_READ_MAGIC` check. A single skill check is performed once for the batch, then the while loop creates additional scrolls by copying the learnedness value from the first scroll. All scrolls in a batch share the same success/failure result. Success gives scrolls proper spell learnedness; failure produces unreadable scrolls (learnedness 0).
 
 ### Component Location
 

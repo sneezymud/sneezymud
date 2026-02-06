@@ -32,7 +32,7 @@ The mounting relationship creates a follower bond where the mount follows the pr
 
 ### Stability System
 
-**Always use two consecutive rideCheck calls for fall-off determination.** A single failed check does not dismount the rider. Both checks must fail. The modifiers stack: -5 when mount takes damage, -10 when rider takes damage.
+**Always use two consecutive rideCheck calls for fall-off determination.** A single failed check does not dismount the rider. Both checks must fail. The modifiers stack: -10 when mount takes damage, -5 when rider takes damage.
 
 **Never assume damage transfers between rider and mount.** They maintain independent HP pools. Healing the mount does not heal the rider. A mount at 1 HP can carry a full-health rider; a full-health mount can carry a dying rider.
 
@@ -57,8 +57,7 @@ The mounting relationship creates a follower bond where the mount follows the pr
 | Creature rideability | SPEC_HORSE or RIDABLE racial flag | Two pathways to being mountable |
 | Rider form | Humanoid | Cannot mount if transformed to non-humanoid |
 | Min mount height | rider height * 60% | Mount too small below this |
-| Max mount height | rider height * 250% | Mount too large at or above |
-| Max rider height for mounting | mount height * 150% | Checked separately in mount() |
+| Max mount height | mount height >= rider height * 250% | Mount too large at or above |
 | Rider slots per mount | 4 | Fixed maximum |
 | Large rider threshold | rider > mount * 66% | Consumes 2 slots instead of 1 |
 
@@ -79,8 +78,8 @@ Saddle detection checks WEAR_BACK equipment slot for TBaseClothing or TBaseConta
 | Deikhan base | +5 | +15 skill |
 | Advanced riding bonus | +0 to +6 | +0 to +18 skill |
 | Secondary rider | -5 | -15 skill |
-| Mount damaged | -5 | -15 skill |
-| Rider damaged | -10 | -30 skill |
+| Mount damaged | -10 | -30 skill |
+| Rider damaged | -5 | -15 skill |
 
 Formula: effective_skill = base_skill + (3 * sum_of_modifiers)
 
@@ -159,7 +158,7 @@ POSITION_MOUNTED provides automatic bonuses through the position system in attac
 
 Attack frequency reduction happens in offense.cc where primary and secondary hand attack counts are multiplied by 0.67 for mounted characters. This penalty offsets the accuracy and defense gains.
 
-Fall-off checks occur in damage processing. When a mount takes damage, all riders must pass two rideCheck(-5) calls. When a rider takes damage, they must pass two rideCheck(-10) calls. These checks happen per-damage-instance, not per-round.
+Fall-off checks occur in damage processing. When a mount takes damage, all riders must pass two rideCheck(-10) calls. When a rider takes damage, they must pass two rideCheck(-5) calls. These checks happen per-damage-instance, not per-round.
 
 ### Movement Control Flow
 

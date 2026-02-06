@@ -4,7 +4,7 @@ description: Hunger, thirst, and age systems that add survival elements and char
 category: informational
 keywords: [starvation, nutrition, survival mechanics, lifecycle stages]
 primary_symbols:
-  functions: [gainCondition, getCond, setCond, foodNDrink, graf, age_mod_for_stat, calcNutrition, mudTimePassed]
+  functions: [gainCondition, getCond, setCond, foodNDrink, graf, age_mod_for_stat, calcNutrition, GameTime::mudTimePassed]
   classes: [TBeing]
   enums: [condTypeT, DRUNK, FULL, THIRST, PEE, POOP, TALENT_FISHEATER, TALENT_MEATEATER, TALENT_INSECT_EATER, TALENT_GARBAGEEATER, AUTO_EAT, TOG_REAL_AGING, DAMAGE_STARVATION]
 ---
@@ -194,7 +194,7 @@ The `graf()` interpolation function handles all age-based value lookups, returni
 
 The `age_mod_for_stat()` function converts character years to "human equivalent" before applying stat modifiers.
 
-Movement costs increase with age: +1 move per 5 years over 30, plus additional +1 per 10 years over 50 (with probabilistic variance). Maximum move pool increases with age to partially compensate. Ranged combat suffers -3 range penalty above human-equivalent age 80.
+Movement costs increase with age in two separate contexts: directional movement adds `(age - baseAge - 30) / 5` extra move cost when age >= 35 (movement.cc:668), while a different movement context adds `(age - baseAge - 50) / 10` extra cost when age >= 50 with probabilistic variance (movement.cc:824-826). These apply to different movement paths, not stacked. Maximum move pool increases with age to partially compensate.
 
 ### Key Files
 

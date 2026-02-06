@@ -30,7 +30,7 @@ A typical combat interaction flows through these stages:
 
 ### Weapon Type Classification
 
-Always use the category check methods rather than inspecting weapon types directly. The `isBluntWeapon()`, `isSlashWeapon()`, and `isPierceWeapon()` methods implement the 2/3 rule correctly: a weapon is classified into a category only if at least two-thirds of its attack types belong to that category. Direct inspection of weapon types can produce incorrect results for multi-type weapons.
+Always use the category check methods rather than inspecting weapon types directly. The `isBluntWeapon()`, `isSlashWeapon()`, and `isPierceWeapon()` methods implement the 2/3 rule using frequency-weighted comparison: a weapon is classified into a category when the sum of frequencies for matching attack types exceeds two-thirds of the total frequency (`count > (total / 3.0 * 2.0)`). A weapon with slash at frequency 70 and thrust at frequency 30 would be classified as slash because 70 > 66.7 (100 / 3 * 2). Direct inspection of weapon types can produce incorrect results for multi-type weapons.
 
 When determining strength modifier application, check weapon category first. Blunt weapons receive full strength bonus. Slash weapons receive half the bonus above baseline. Pierce weapons receive one-third the bonus. Applying the wrong modifier produces noticeably incorrect damage values.
 
@@ -46,9 +46,7 @@ Always use `sharpenMe()` rather than directly modifying sharpness values. The me
 
 Check `ITEM_PAIRED` flag to determine if weapons can be dual wielded together. Paired weapons are designed as matching sets and receive a 10% damage bonus. Non-paired weapons can still be dual wielded but miss this bonus.
 
-Always apply secondary hand penalty through the proper formula: base 30% plus 30% scaled by `SKILL_DUAL_WIELD` proficiency. Forgetting this penalty makes dual wielding overpowered at low skill levels.
-
-Never assume both hands attack equally. Primary hand receives 60% of attacks, secondary hand 40%. Code that distributes attacks evenly produces incorrect combat results.
+Always apply secondary hand penalty through the proper formula: `amt = amt * 3 / 5 + 10`, where `amt` is the `SKILL_DUAL_WIELD` skill value (0-100). This produces a damage percentage of 10% at skill 0 and 70% at skill 100. Forgetting this penalty makes dual wielding overpowered at low skill levels.
 
 ### Ranged Weapons
 
@@ -106,9 +104,9 @@ Always call `assignFourValues()` when loading from database and `getFourValues()
 | `weaponLevel()` | function | Calculate overall weapon effectiveness (60% damage, 30% structure, 10% sharp) |
 | `specializationCheck()` | function | Return decimal bonus from specialization skill |
 | `baseDamage()` | function | Return base damage with two-handed multipliers |
-| `isBluntWeapon()` | function | Check if 2/3 of attack types are blunt |
-| `isSlashWeapon()` | function | Check if 2/3 of attack types are slash |
-| `isPierceWeapon()` | function | Check if 2/3 of attack types are pierce |
+| `isBluntWeapon()` | function | Check if 2/3 of frequency-weighted attacks are blunt |
+| `isSlashWeapon()` | function | Check if 2/3 of frequency-weighted attacks are slash |
+| `isPierceWeapon()` | function | Check if 2/3 of frequency-weighted attacks are pierce |
 | `statObjInfo()` | method | Format weapon stats for display including sharpness terminology |
 
 ### Weapon Type Categories
@@ -133,19 +131,21 @@ Always call `assignFourValues()` when loading from database and `getFourValues()
 
 | Constant | Value | Purpose |
 |----------|-------|---------|
-| Two-handed multiplier | 1.75x | Damage boost for two-handed weapons |
-| Paired multiplier | 1.1x | Additional bonus for paired weapon sets |
-| Secondary hand min | 30% | Minimum secondary hand damage (0 skill) |
-| Secondary hand max | 60% | Maximum secondary hand damage (100 skill) |
+| PC base multiplier | 1.75x | Base damage balance multiplier for all PC weapons |
+| Paired multiplier | 1.1x | Additional bonus for paired weapon sets (ITEM_PAIRED) |
+| Secondary hand min | 10% | Minimum secondary hand damage (skill 0) |
+| Secondary hand max | 70% | Maximum secondary hand damage (skill 100) |
 | Firearm penalty | 0.5x | Damage divisor for firearms |
 
 ### Dual Wield Scaling
 
 | Skill Level | Secondary Hand Damage |
 |-------------|----------------------|
-| 0 | 30% of primary |
-| 50 | 45% of primary |
-| 100 | 60% of primary |
+| 0 | 10% of primary |
+| 25 | 25% of primary |
+| 50 | 40% of primary |
+| 75 | 55% of primary |
+| 100 | 70% of primary |
 
 ### Weapon Skills
 
@@ -298,9 +298,9 @@ The `assignFourValues()` and `getFourValues()` methods handle packing and unpack
 
 The `getWeaponDam()` function in combat.cc orchestrates damage calculation through multiple stages.
 
-First, it calls `swungObjectDamage()` to get the weapon's intrinsic damage. This method calls `baseDamage()` which applies a 1.75x multiplier for two-handed weapons and an additional 1.1x for paired weapons, then adds random deviation from damDev.
+First, it calls `swungObjectDamage()` to get the weapon's intrinsic damage. This method calls `baseDamage()` which applies a 1.75x base multiplier for all PC weapons and an additional 1.1x for paired weapons (ITEM_PAIRED), then adds random deviation from damDev.
 
-Second, it applies dual wield penalty for secondary hand weapons. The formula multiplies primary damage by (30 + 30 * SKILL_DUAL_WIELD / 100) / 100, producing a range from 30% to 60% of primary hand damage.
+Second, it applies dual wield penalty for secondary hand weapons. The formula is `amt = amt * 3 / 5 + 10` where amt is the SKILL_DUAL_WIELD value (0-100), producing a damage percentage from 10% (skill 0) to 70% (skill 100) of primary hand damage.
 
 Third, it applies character strength modifier based on weapon category. Blunt weapons and unarmed attacks receive the full strength modifier. Slash weapons receive (strDam - 1) / 2 + 1, roughly halving the bonus. Pierce weapons receive (strDam - 1) / 3 + 1, roughly one-third the bonus.
 
@@ -322,7 +322,7 @@ This allows a weapon like a bastard sword to deal different damage types with co
 
 The `isBluntWeapon()`, `isSlashWeapon()`, and `isPierceWeapon()` methods implement the 2/3 rule for classifying multi-type weapons.
 
-Each method iterates through all three weapon types, counting how many belong to its category. If at least two of the three types match the category, the weapon is classified as that type.
+Each method iterates through all three weapon types, summing the frequencies of types that belong to its category. If the summed frequency exceeds two-thirds of the total frequency (`count > (total / 3.0 * 2.0)`), the weapon is classified as that type. This frequency-weighted approach means a weapon with slash at frequency 70 and blunt at frequency 30 is classified as slash, while one with slash at frequency 40 and blunt at frequency 60 is classified as blunt.
 
 This matters because strength modifiers and certain special attacks depend on weapon category. A weapon with two slash types and one blunt type is classified as a slash weapon and receives the reduced strength bonus.
 
@@ -350,9 +350,9 @@ Skills are organized into discipline trees defined in spell_info.cc: DISC_COMBAT
 
 ### Two-Handed and Paired Weapons
 
-Two-handed weapons receive a 1.75x damage multiplier applied in `baseDamage()`. This compensates for not being able to dual wield or use a shield.
+All PC weapons receive a 1.75x base damage multiplier applied in `baseDamage()` as a balance formula for player character damage output.
 
-Paired weapons (identified by the ITEM_PAIRED flag) receive an additional 1.1x multiplier on top of any two-handed bonus. They're designed as matching sets that can be worn in both hands simultaneously.
+Paired weapons (identified by the ITEM_PAIRED flag) receive an additional 1.1x multiplier. This is the specific bonus for two-handed and paired weapon sets that can be worn in both hands simultaneously, compensating for not being able to dual wield or use a shield.
 
 Two-handed specialization skills (SKILL_2H_SPEC and SKILL_2H_SPEC_DEIKHAN) increase attack frequency rather than damage, providing a bonus of skillValue / 100.0 additional attacks per round.
 
