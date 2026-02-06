@@ -5,7 +5,7 @@ category: critical
 keywords: [decay timers, structure points, item durability, repair mechanics, damage system]
 primary_symbols:
   functions: [objectTickUpdate, decayMe, objectDecay, damageItem, makeScraps, repairPrice, repair_time, maxFix, willDent, willTear, willPuncture, genericDamCheck]
-  classes: [TObj, objFlagData, TBaseCorpse, TPlayerCorpse]
+  classes: [TObj, objFlagData, TBaseCorpse, TPCorpse]
   enums: [OBJ_NOTIMER, ITEM_BURNING, ITEM_RUSTY, ITEM_NOPURGE, ITEM_NODROP, ITEM_STRUNG, ITEM_PROTOTYPE, DELETE_THIS, ROOM_ARENA, SKILL_BLACKSMITHING, SKILL_REPAIR_SHAMAN, SKILL_REPAIR_MONK, SKILL_REPAIR_MAGE, SKILL_REPAIR_CLERIC, SKILL_REPAIR_THIEF, SKILL_REPAIR_DEIKHAN, GOLD_REPAIR]
 ---
 
@@ -69,9 +69,9 @@ Decay deletes objects completely. Structure damage creates salvageable scraps th
 | Type | Behavior |
 |------|----------|
 | TBaseCorpse | Message, logs player corpse info |
-| TPlayerCorpse | Extended logging, content relocation |
-| TLight | "Burns out" message |
-| TFood | Spoilage message |
+| TPCorpse | Extended logging, content relocation |
+| TLight | "flickers then fades into insignificance" message |
+| TFood | Sets FOOD_SPOILED flag and extends decay_time (no message) |
 | TPortal | Simple deletion |
 | TObj (default) | Relocate contents, delete |
 

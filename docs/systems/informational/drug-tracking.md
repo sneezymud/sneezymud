@@ -4,7 +4,7 @@ description: Drug consumption, addiction, and withdrawal tracking with ephemeral
 category: informational
 keywords: [addiction, withdrawal, session state, ephemeral state]
 primary_symbols:
-  functions: [doSmoke, saveDrugStats, loadDrugStats, applyDrugAffects, applyAddictionAffects, lightDecay]
+  functions: [doSmoke, saveDrugStats, loadDrugStats, applyDrugAffects, applyAddictionAffects, lightDecay, findDrugAffect, reapplyDrugAffect]
   classes: [drugData, TDrug, TDrugContainer, Descriptor]
   enums: [drugTypeT, DRUG_PIPEWEED, DRUG_OPIUM, DRUG_POT, DRUG_FROGSLIME, DRUG_NONE, MAX_DRUG, AFFECT_DRUG]
 ---
@@ -17,7 +17,7 @@ The drug tracking system manages consumption, effects, and addiction through a h
 
 The critical limitation is that `current_consumed` (how many doses this session) resets when the descriptor is destroyed at disconnect. This is intentional for the consumption counter but creates a bug: the value gets saved to the database and reloaded on reconnect, making stale data appear current.
 
-Drug effects stack independently. Each dose creates a separate affect with its own duration. Smoking three times produces three `AFFECT_DRUG` entries that expire at different times, creating a gradual comedown rather than an abrupt end.
+Drug effects consolidate rather than stacking separately. The `findDrugAffect()` function locates an existing `AFFECT_DRUG` entry for the same stat, and `reapplyDrugAffect()` modifies it in place (updating modifier and resetting duration) instead of creating a new one. Smoking multiple times updates existing affects rather than adding new entries.
 
 Withdrawal mechanics depend on time since last use compared to drug-specific thresholds. Opium triggers withdrawal after 6 game hours without use; pipeweed takes 24 hours. Severity scales with both addiction level (average consumption rate) and time overdue.
 
@@ -58,9 +58,9 @@ if (!ch->desc || !ch->isPc())
 
 Call `saveDrugStats()` after modifying drug data to ensure persistence. The current implementation saves on every smoke, which creates high database load during heavy use. No batching exists.
 
-### Effect Stacking Awareness
+### Effect Consolidation Awareness
 
-Drug effects do not consolidate. Each dose adds a separate `AFFECT_DRUG` with independent duration. Plan for cumulative stat penalties that decay at different times.
+Drug effects consolidate. `findDrugAffect()` and `reapplyDrugAffect()` locate and modify existing `AFFECT_DRUG` entries rather than creating new ones. Each dose updates the modifier and resets the duration of existing affects for the same stat.
 
 ### Addiction Rate Calculation
 
@@ -102,10 +102,10 @@ The `timeDiff()` function assumes the first argument is greater than the second.
 
 | Drug | Addiction Threshold | Withdrawal Onset | Primary Effects |
 |------|---------------------|------------------|-----------------|
-| Pipeweed | 2.0/hour | 24 hours | FOC +5 (hobbit), INT -5 (others) |
-| Opium | 0.5/hour | 6 hours | DEX/INT penalties scaling with dose |
-| Pot | 1.0/hour | 12 hours | PER -5 |
-| Frogslime | 0.8/hour | 18 hours | CHA +10, WIS -15 |
+| Pipeweed | 2.0/hour | 24 hours | FOC +9 (hobbit); SPE, KAR, CHA, FOC penalties (others) |
+| Opium | 0.5/hour | 6 hours | Buggy: checks KAR but sets SPE, checks CHA but sets KAR, checks DEX but sets CHA |
+| Pot | 1.0/hour | 12 hours | SPE, CHA (positive); INT, FOC (negative); modifier scales with consumed |
+| Frogslime | 0.8/hour | 18 hours | GARBLE (garbled speech), optional SENSE_LIFE bitvector, potential sleep |
 
 ### drugData Fields
 
@@ -122,8 +122,8 @@ The `timeDiff()` function assumes the first argument is greater than the second.
 |----------|--------------|---------|
 | `doSmoke()` | TRUE | Consumption succeeded |
 | `doSmoke()` | FALSE | Validation failed (not lit, wrong item type, etc.) |
-| `isAddicted()` | true | Player meets addiction criteria for drug type |
-| `isAddicted()` | false | Not addicted or insufficient usage history |
+
+Note: There is no `isAddicted()` function. Addiction severity is calculated directly in periodic.cc based on consumption rate and time since last use.
 
 ### Database Schema Fields
 
@@ -187,11 +187,11 @@ The final step calls `applyDrugAffects()` to apply stat modifications via the af
 
 ### Effect Application
 
-The `applyDrugAffects()` function creates `affectedData` structures with `type = AFFECT_DRUG` and drug-specific stat modifiers. Duration is one game hour (Pulse::UPDATES_PER_MUDHOUR).
+The `applyDrugAffects()` function creates `affectedData` structures with `type = AFFECT_DRUG` and drug-specific stat modifiers. Duration is half a mud hour (`drugTypes[drug].duration * Pulse::UPDATES_PER_MUDHOUR / 2`).
 
-Different drugs apply different combinations of stat changes. Pipeweed gives hobbits a FOC bonus but penalizes INT for other races. Opium applies DEX and INT penalties that scale with current consumption (e.g., `-(5 + current_consumed / 2)` for DEX, `-(10 + current_consumed)` for INT). Pot reduces PER. Frogslime boosts CHA while severely penalizing WIS.
+Different drugs apply different combinations of stat changes. Pipeweed gives hobbits a FOC +9 bonus but penalizes SPE, KAR, CHA, FOC for other races. Opium has buggy stat application (checks one stat but sets another: checks KAR/sets SPE, checks CHA/sets KAR, checks DEX/sets CHA). Pot affects SPE and CHA (positive) plus INT and FOC (negative), with modifiers scaling based on consumed count. Frogslime applies GARBLE (garbled speech) and optionally SENSE_LIFE bitvector, with potential sleep effect.
 
-Each call to `affectTo()` creates a separate affect entry. Multiple doses create multiple entries that expire independently, producing stacking penalties that gradually wear off.
+The `findDrugAffect()` function locates existing affects for the same stat, and `reapplyDrugAffect()` updates them in place rather than creating duplicates. Multiple doses modify existing affect entries, updating the modifier and resetting the duration.
 
 ### Withdrawal Mechanics
 
@@ -201,7 +201,7 @@ It first computes hours since last use by comparing current game time against th
 
 Each drug has a withdrawal threshold in hours. If time since last use exceeds the threshold and average consumption rate exceeds 0.5 per hour, withdrawal kicks in. Severity scales multiplicatively: average consumption rate times hours overdue beyond threshold. For example, a player smoking opium twice per hour who goes 10 hours without use faces severity of 2.0 * (10 - 6) = 8.0.
 
-Withdrawal applies STR and CON penalties via the affects system (STR loses severity/2, CON loses severity/3). The penalties persist for two game hours, double the duration of consumption effects.
+Withdrawal applies STR and CON penalties via the affects system (STR loses severity/2, CON loses severity/3). The penalties persist for one mud hour (`Pulse::MUDHOUR`).
 
 ### Race-Specific Handling
 
@@ -293,15 +293,15 @@ The field should either reset to zero on load (matching the ephemeral intent) or
 
 **Fix:** Implement save batching (e.g., save every N minutes rather than every smoke) or aggregate saves at disconnect. Requires careful handling of crash scenarios to avoid data loss.
 
-### Effect Stacking Confusion
+### Effect Intensity Confusion
 
-**Symptom:** Player reports drug effects lasting longer or being more intense than expected.
+**Symptom:** Player reports drug effects being more intense than expected.
 
-**Likely cause:** Multiple doses creating multiple independent affects. Each has its own expiration timer.
+**Likely cause:** Multiple doses consolidate into existing affects via `findDrugAffect()` and `reapplyDrugAffect()`, updating the modifier each time. The modifier may scale with `current_consumed`, which is inflated by the persistence bug.
 
-**Diagnostic approach:** Examine player's affect list. Count `AFFECT_DRUG` entries. Check their individual expirations.
+**Diagnostic approach:** Examine player's affect list. Check `AFFECT_DRUG` entry modifiers. Verify `current_consumed` value matches actual session usage.
 
-**Fix:** This is working as intended. Multiple affects stack and expire independently. If undesirable, would require consolidation logic in `applyDrugAffects()` to extend existing affects rather than adding new ones.
+**Fix:** If `current_consumed` is inflated from previous sessions (the persistence bug), the modifier will be larger than expected. Reset `current_consumed` to address the root cause.
 
 ### Pipe Won't Light
 

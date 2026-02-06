@@ -13,7 +13,7 @@ primary_symbols:
 
 How does a character wear armor on their right arm when that arm is broken, bleeding, and has an arrow stuck in it? The equipment and wear system manages this complexity by tracking three independent layers: equipment slots (what you're wearing), limb health (the condition of body parts), and stuck items (objects embedded in flesh).
 
-Equipment slots define the 24 possible locations where items can be worn or held. Humanoid characters use slots 1-20 covering head, body, arms, hands, fingers, legs, and feet. Non-humanoid creatures with additional appendages use slots 21-24 for extra legs and feet. Each slot operates independently, so losing one arm doesn't prevent wearing a bracer on the other.
+Equipment slots define the 24 possible locations where items can be worn or held. Humanoid characters use slots 1-20 covering head, body, arms, hands, fingers, legs, and feet. Non-humanoid creatures with additional appendages use slots 20-23 for extra legs and feet. Each slot operates independently, so losing one arm doesn't prevent wearing a bracer on the other.
 
 Limb health tracks the physical condition of each body part separately from what's equipped there. A character can wear gauntlets on paralyzed hands or boots on broken legs - the equipment remains in place even when the underlying limb is non-functional. Health points, status flags, and stuck item references are maintained per-limb.
 
@@ -25,7 +25,7 @@ When equipment is worn, the system applies any magical affects to the character'
 
 ### Equipment Slot Validation
 
-Always validate slot ranges before equipment operations. Valid humanoid slots are 1-20, with slots 21-24 reserved for non-humanoid extra limbs. Slot 0 (`WEAR_NOWHERE`) indicates an item is not worn.
+Always validate slot ranges before equipment operations. Valid humanoid slots are 1-20, with slots 20-23 reserved for non-humanoid extra limbs. Slot 0 (`WEAR_NOWHERE`) indicates an item is not worn.
 
 Always check item wear flags before attempting to equip. Items declare valid positions through `obj_flags.wear_flags`. An item without `ITEM_WEAR_HEAD` cannot be equipped to `WEAR_HEAD` even if the slot is empty.
 
@@ -78,7 +78,7 @@ Never hardcode `HOLD_RIGHT` or `HOLD_LEFT` for primary/secondary distinctions. L
 | Symbol | Type | Purpose |
 |--------|------|---------|
 | `wearSlotT` | enum | Defines 24 equipment slot constants |
-| `bodyPartsDamage` | struct | Per-limb health, flags, and stuck item data |
+| `bodyPartsDamage` | class | Per-limb health, flags, and stuck item data |
 | `equipChar` | function | Attach item to wear slot, apply affects |
 | `unequip` | function | Remove item from wear slot, reverse affects |
 | `affectModify` | function | Apply or remove item affects to character stats |
@@ -164,7 +164,7 @@ Range constants: `MIN_WEAR` = 1, `MAX_HUMAN_WEAR` = 20, `MAX_WEAR` = 24
 | `ITEM_WEAR_HOLD` | 14 | Can be held |
 | `ITEM_WEAR_THROW` | 15 | Can be thrown |
 
-### bodyPartsDamage Structure
+### bodyPartsDamage Class
 
 | Field | Type | Purpose |
 |-------|------|---------|
@@ -186,7 +186,7 @@ Range constants: `MIN_WEAR` = 1, `MAX_HUMAN_WEAR` = 20, `MAX_WEAR` = 24
 |------|----------|
 | `code/code/misc/limbs.h` | wearSlotT enum, limb function declarations |
 | `code/code/misc/limbs.cc` | Limb manipulation implementation |
-| `code/code/misc/being.h` | TBeing class, bodyPartsDamage struct |
+| `code/code/misc/being.h` | TBeing class, bodyPartsDamage class |
 | `code/code/misc/defs.h` | PART_* flag constants |
 | `code/code/misc/obj.h` | ITEM_WEAR_* flag constants |
 | `code/code/sys/handler.cc` | equipChar, unequip, affectModify |
@@ -196,7 +196,7 @@ Range constants: `MIN_WEAR` = 1, `MAX_HUMAN_WEAR` = 20, `MAX_WEAR` = 24
 
 ### Limb Health Data Structure
 
-Each body part's state is stored in the `bodyPartsDamage` structure, which contains three fields: `flags` (an unsigned short holding PART_* status bits), `stuckIn` (a pointer to any object embedded in the limb), and `health` (an unsigned short tracking current limb health points). The `TBeing` class maintains an array of these structures indexed by `wearSlotT`.
+Each body part's state is stored in the `bodyPartsDamage` class, which contains three fields: `flags` (an unsigned short holding PART_* status bits), `stuckIn` (a pointer to any object embedded in the limb), and `health` (an unsigned short tracking current limb health points). The `TBeing` class maintains an array of these instances indexed by `wearSlotT`.
 
 The limb health API provides accessors for querying and modifying this data. `getCurLimbHealth()` and `setCurLimbHealth()` handle health points. `getLimbFlags()`, `addToLimbFlags()`, `remLimbFlags()`, and `isLimbFlags()` manage status flags. `hasPart()` checks whether a creature has a given body part, and `canUseLimb()` determines if a limb is functional (has the part and isn't useless, paralyzed, or missing).
 

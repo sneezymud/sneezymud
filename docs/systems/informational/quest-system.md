@@ -98,33 +98,43 @@ Always check `hasQuestBit()` early in spec procedures. If the player isn't at th
 
 ### Major Quest Bit Ranges
 
-| Quest | Start Bit | End Bit | Bits Used |
-|-------|-----------|---------|-----------|
-| Avenger | 1 | 8 | 8 |
-| Vindicator | 9 | 26 | 18 |
-| Silverclaw | 28 | 43 | 16 |
-| Holy Devastator | 44 | 77 | 34 |
-| Monk Sashes | 56 | 75 | 20 |
-| Warrior Progression | 78 | 113 | 36 |
-| Thief Progression | 345 | 415+ | 70+ |
+| Quest | Bit Range | Notes |
+|-------|-----------|-------|
+| Avenger | 1-8 | 8 bits |
+| Vindicator | 9-26 | 18 bits |
+| Silverclaw | 30-45 | 16 bits |
+| Holy Devastator | 44-77 | 34 bits |
+| Monk Sashes (White) | 132-134 | |
+| Monk Sashes (Yellow) | 135-137 | |
+| Monk Sashes (Purple) | 138-145 | |
+| Monk Sashes (Blue) | 146-150 | |
+| Monk Sashes (Green) | 151-156 | |
+| Monk Sashes (Red) | 81-84 | |
+| Monk Sashes (Black) | 215-218 | |
+| Warrior Progression (L7) | 162-173 + 28 reused | |
+| Warrior Progression (L14) | 174-186 | |
+| Warrior Progression (L21) | 195-212 | |
+| Warrior Progression (L41) | 219-223 | |
+| Thief Progression | 374-432 | Starts at TOG_THIEF_L5_ELIGIBLE |
 
 ### Spell Unlock Bits
 
-| Spell | Bit |
-|-------|-----|
-| Tornado | 50 |
-| Barkskin | 51 |
-| Earthquake | 52 |
-| Lava | 53 |
-| Flatulence | 54 |
-| Plasma Mirror | 55 |
+| Spell | Bits | Notes |
+|-------|------|-------|
+| Tornado | 103-104 | TOG_TORNADO_ELIGIBLE / TOG_HAS_TORNADO |
+| Barkskin | 105-106 | Eligible / Has |
+| Earthquake | 107-108 | Eligible / Has |
+
+Note: Bits 50-55 are Holy Devastator quest bits, not spell unlocks.
 
 ### Test Code Bits
 
-| Toggle | Bits |
-|--------|------|
-| `TOG_TESTCODE1-5` | 11-15 |
-| `TOG_QUESTCODE1-4` | 18-21 |
+Note: These are `togTypeT` enum positions, not quest bit indices. The enum values define symbolic names used as indices into the `toggles[]` array.
+
+| Toggle | Enum Name |
+|--------|-----------|
+| `TOG_TESTCODE1-5` | Enum positions in togTypeT |
+| `TOG_QUESTCODE1-4` | Enum positions in togTypeT |
 
 ### Common Bit Suffixes
 
@@ -195,13 +205,13 @@ Immortals (characters where `GetMaxLevel()` exceeds `MAX_MORT`) have extended fu
 
 All 454 quest bits are defined as `const int` values in `toggle.h`. The bits are organized by quest system:
 
-Equipment quests (Avenger, Vindicator, Silverclaw, Holy Devastator) occupy bits 1-77. Each follows a pattern: ELIGIBLE, RULES, STARTED, various stage bits, CHEAT bits, and FINISHED. The Devastator quest implements the most sophisticated cheat detection with five separate cheat bits for different violation types.
+Equipment quests (Avenger, Vindicator, Silverclaw, Holy Devastator) occupy bits 1-77. Each follows a pattern: ELIGIBLE, RULES, STARTED, various stage bits, CHEAT bits, and FINISHED. The Devastator quest implements the most sophisticated cheat detection with seven cheat bits (73-79): MISER_BEN, SPARTAGUS, MARCUS, TAILLE, ABNOR, SULTRESS, NESMUM.
 
-Monk sash quests occupy bits 56-75. Seven sashes (white through black) each have ELIGIBLE, STARTED, and FINISHED bits. White sash is bits 56-58, progressing through yellow, purple, blue, green, red, and black.
+Monk sash quests span scattered ranges. Seven sashes (white through black) use varying numbers of bits: White (132-134), Yellow (135-137), Purple (138-145), Blue (146-150), Green (151-156), Red (81-84), Black (215-218).
 
-Spell/skill unlock bits occupy bits 50-55 and scattered higher ranges. These gate access to specific abilities.
+Spell/skill unlock bits occupy scattered higher ranges (e.g., Tornado at 103-104, Barkskin at 105-106, Earthquake at 107-108). Bits 50-55 are Holy Devastator quest bits, not spell unlocks.
 
-Warrior and thief progression quests occupy higher ranges (78-113 and 345+). These are level-gated quest chains.
+Warrior progression quests use scattered ranges across levels: L7 (162-173 + bit 28 reused), L14 (174-186), L21 (195-212), L41 (219-223). Thief progression starts at 374 (TOG_THIEF_L5_ELIGIBLE) through 432. These are level-gated quest chains.
 
 Global toggles (TOG_SHOUTING, TOG_DOUBLEEXP, etc.) are defined as an enum `togTypeT` separate from the quest bit constants. These control server behavior rather than quest state.
 

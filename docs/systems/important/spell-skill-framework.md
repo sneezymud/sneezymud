@@ -114,7 +114,7 @@ return SPELL_SUCCESS;  // No VICTIM_DEAD flag - deletion already handled
 | Monk | DISC_MONK | MEDITATION, LEVERAGE, MINDBODY, FOCUSED_ATTACKS |
 | Deikhan | DISC_DEIKHAN | MOUNTED, MARTIAL, GUARDIAN, ABSOLUTION, VENGEANCE |
 | Ranger | DISC_RANGER | ANIMAL, PLANTS, NATURE |
-| Shaman | DISC_SHAMAN | FROG, SPIDER, SKUNK, ARMADILLO, CONTROL, HEALING |
+| Shaman | DISC_SHAMAN | ARMADILLO, FROG, ALCHEMY, SKUNK, SPIDER, CONTROL, HEALING |
 
 ### Universal Disciplines
 
@@ -230,12 +230,12 @@ return SPELL_SUCCESS;  // No VICTIM_DEAD flag - deletion already handled
 | `spellInfo` | class | spell2.h | Single spell/skill definition |
 | `spellNumT` | enum | spells.h | Enumerates all spells and skills |
 | `CDiscipline` | class | discipline.h | Base class for discipline skill trees |
-| `CMasterDiscipline` | class | discipline.h | Contains pointers to all 71 discipline instances |
-| `discNumT` | enum | discipline.h | Enumerates 71 disciplines |
+| `CMasterDiscipline` | class | discipline.h | Contains pointers to all 69 discipline instances |
+| `discNumT` | enum | discipline.h | Enumerates 69 disciplines |
 | `getMaxSkillValue()` | function | discipline.cc | Calculates skill cap from discipline |
 | `learnFromDoing()` | function | discipline.cc | Passive skill improvement through use |
 | `reconcileDamage()` | function | combat.cc | Applies damage, returns -1 on death |
-| `getDisciplineNumber()` | function | spell_info.cc | Returns primary discipline for a spell |
+| `getDisciplineNumber()` | function | discipline.cc | Returns primary discipline for a spell |
 | `TrainerInfo` | array | gaining.cc | NPC trainers and specializations |
 
 ## Implementation
@@ -244,7 +244,7 @@ return SPELL_SUCCESS;  // No VICTIM_DEAD flag - deletion already handled
 
 The `discArray` global holds all spell/skill definitions, indexed by `spellNumT`. Negative indices are damage types, zero through `MAX_SPELL` are spells, `SKILL_SLAM` through `MAX_SKILL` are skills. Each entry is a `spellInfo` instance containing name, class type, disciplines, costs, targets, components, and learning parameters.
 
-Characters store discipline instances in `CDiscipline* disc[MAX_DISCS]`. Each concrete discipline class inherits from `CDiscipline` and contains `CSkill` members for its abilities. The three learnedness values (natural, trained, do) are private members with accessor methods. A `CMasterDiscipline` instance contains pointers to all 71 discipline instances, allowing efficient iteration and lookup.
+Characters store discipline instances in `CDiscipline* disc[MAX_DISCS]`. Each concrete discipline class inherits from `CDiscipline` and contains `CSkill` members for its abilities. The three learnedness values (natural, trained, do) are private members with accessor methods. A `CMasterDiscipline` instance contains pointers to all 69 discipline instances, allowing efficient iteration and lookup.
 
 ### Discipline Hierarchy
 

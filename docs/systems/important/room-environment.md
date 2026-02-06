@@ -195,10 +195,15 @@ Inherits from `TThing`. Key members:
 
 ### Exit Data Structure (roomDirData)
 
-- `general_description`: Text shown when examining direction
+- `description`: Text shown when examining direction
 - `keyword`: Command matching for doors
-- `exit_info`: 11-bit flag bitvector
+- `condition`: 11-bit flag bitvector
+- `door_type`: Door material/type classification
+- `lock_difficulty`: Difficulty rating for lock picking
+- `weight`: Door weight (affects bashing)
 - `key`: Vnum of object required to unlock
+- `trap_info`: Trap type data (if EXIT_TRAPPED)
+- `trap_dam`: Trap damage value (if EXIT_TRAPPED)
 - `to_room`: Destination room vnum (`Room::NOWHERE` if blocked)
 
 Null `dir_option` pointer means no exit in that direction. Non-null pointer with `to_room` set to `Room::NOWHERE` represents blocked or future passage.
@@ -212,7 +217,7 @@ Room volume calculated from `roomHeight` multiplied by horizontal dimensions.
 
 ### Sector System
 
-58 sector types organized by climate zone (arctic, temperate, tropical) plus special types. Each has `TTerrainInfo` with: movement cost multiplier, visibility thickness, hunger/thirst drain rates, heat effect, wetness modifier.
+61 sector types organized by climate zone (arctic, temperate, tropical) plus special types. Each has `TTerrainInfo` with: movement cost multiplier, visibility thickness, hunger/thirst drain rates, heat effect, wetness modifier.
 
 Winter mapping: During snowy weather (months 1-2, 11-12 in non-tropical sectors), `getArcticSectorType()` transforms temperate to arctic equivalents. Tropical sectors never receive SNOWY regardless of season.
 

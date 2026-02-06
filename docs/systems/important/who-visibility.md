@@ -40,7 +40,7 @@ Always set `invisLevel` to `GOD_LEVEL1` when a player becomes linkdead. This hid
 
 Always respect the visibility threshold for stealth immortals. When `PLR_STEALTH` is set, use `MAX_MORT` as the visibility threshold for action messages to prevent mortals from observing the immortal's activities.
 
-Always use `setInvisLevel()` rather than directly modifying `invisLevel`. The setter calls `fixClientPlayerLists()` automatically to maintain client synchronization.
+Always use `setInvisLevel()` rather than directly modifying `invisLevel`. The setter sends `CLIENT_INVIS` messages to the character's descriptor. Call `fixClientPlayerLists()` separately afterward to synchronize other clients' player lists.
 
 ## Reference
 
@@ -138,7 +138,7 @@ For immortal viewers, visibility depends solely on invisibility level comparison
 
 For mortal viewers examining immortal targets, if the target's `invisLevel` meets or exceeds `GOD_LEVEL1`, visibility fails. This covers linkdead players and invisible gods.
 
-Spell invisibility is then evaluated. If the target has `AFF_INVISIBLE`, or has `AFF_SHADOW_WALK` in a room with illumination below 14, and the target is immortal, visibility fails. For mortal targets under these conditions, the viewer needs `AFF_DETECT_INVISIBLE` to see them. Immortals with spell invisibility remain hidden from the who list even from other immortals unless the viewer has detection affects.
+Spell invisibility is then evaluated for mortal viewers. If the target has `AFF_INVISIBLE`, or has `AFF_SHADOW_WALK` in a room with illumination below 14, the viewer needs `AFF_DETECT_INVISIBLE` to see them. Immortal viewers never reach the spell invisibility check because they return early after the invisLevel comparison, so immortals with `AFF_INVISIBLE` or `AFF_SHADOW_WALK` are visible to other immortals on the who list regardless of detection affects.
 
 Finally, blind viewers cannot see unless they have `AFF_TRUE_SIGHT` or `AFF_CLARITY`.
 
@@ -167,7 +167,7 @@ The `invis` toggle in `toggle.cc` controls immortal invisibility. Without argume
 
 ### setInvisLevel Function
 
-The `setInvisLevel()` function in `being.cc` assigns the `invisLevel` field and calls `fixClientPlayerLists()` to synchronize client state. It accepts any short integer value but typical usage constrains values to 0 through `MAX_IMMORT`. Setting negative values is unsupported and may produce undefined behavior.
+The `setInvisLevel()` function in `being.cc` assigns the `invisLevel` field and sends `CLIENT_INVIS` messages to the character's own descriptor. It does not call `fixClientPlayerLists()` directly; the invis toggle command in `toggle.cc` calls `fixClientPlayerLists()` separately after calling `setInvisLevel()`. It accepts any short integer value but typical usage constrains values to 0 through `MAX_IMMORT`. Setting negative values is unsupported and may produce undefined behavior.
 
 ### Client Synchronization
 
@@ -257,8 +257,8 @@ The `doWho()` function in `cmd_who.cc` parses command arguments to determine fil
 
 **Symptom:** Immortal cannot see another immortal on who list
 
-**Cause:** The target immortal has spell invisibility (`AFF_INVISIBLE`) applied.
+**Cause:** The target immortal has a higher `invisLevel` than the viewer's level.
 
-**Diagnostic:** Check if target has `AFF_INVISIBLE`. Verify viewer's level versus target's `invisLevel`.
+**Diagnostic:** Verify viewer's level versus target's `invisLevel`. Note that spell invisibility (`AFF_INVISIBLE`, `AFF_SHADOW_WALK`) does not affect immortal-to-immortal who list visibility because immortal viewers return early after the invisLevel check.
 
-**Fix:** Immortals with spell invisibility remain hidden even from other immortals. The viewer needs `AFF_DETECT_INVISIBLE` to see them, or the target must remove the spell invisibility.
+**Fix:** The target must lower their `invisLevel` to be at or below the viewer's level, or the viewer must use a higher-level character.

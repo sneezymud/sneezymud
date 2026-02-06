@@ -81,7 +81,7 @@ Multiple `APPLY_PROTECTION` sources stack into a single value clamped to [-100, 
 
 ### Apply Locations
 
-39 apply types define what an affect modifies:
+38 apply types define what an affect modifies:
 
 | Category | Examples |
 |----------|----------|

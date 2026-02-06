@@ -28,7 +28,7 @@ Always check reconcileDamage return value against -1 for death detection. Never 
 
 Always account for position penalties when calculating defensive bonuses. Standing provides full defense; lower positions scale down significantly.
 
-Always apply strength modifier according to weapon damage type. Blunt weapons benefit fully from strength while piercing weapons receive only half the bonus.
+Always apply strength modifier according to weapon damage type. Blunt weapons benefit fully from strength while slash uses `(statDam - 1) / 2 + 1` and pierce uses `(statDam - 1) / 3 + 1`.
 
 Always consider NPC damage reduction when balancing skills. MOBs deal approximately half the damage of equivalent PC attacks.
 
@@ -56,12 +56,21 @@ Each modifier point changes hit probability by approximately 0.18%.
 
 ### Defense Contribution by Armor Class
 
-| AC Value | Defense Contribution |
-|----------|---------------------|
-| -10 | +1100 |
-| 0 | +550 |
-| +10 | 0 |
-| +20 | -550 |
+The armor contribution to defense differs between PCs and MOBs. The game computes `armor = 1000 - getArmor()`, then:
+- **PC:** `bonus = max((armor - 500), 0) * 2 / 3`
+- **MOB:** `bonus = max((armor - 400), 0) * 5 / 6`
+
+Both formulas floor at zero, so armor values below the threshold contribute nothing.
+
+| AC Value | armor (1000 - AC*10) | PC Bonus (2/3 above 500) | MOB Bonus (5/6 above 400) |
+|----------|----------------------|--------------------------|---------------------------|
+| -10 | 1100 | 400 | 583 |
+| 0 | 1000 | 333 | 500 |
+| +5 | 950 | 300 | 458 |
+| +10 | 900 | 266 | 416 |
+| +40 | 600 | 66 | 166 |
+| +50 | 500 | 0 | 83 |
+| +60 | 400 | 0 | 0 |
 
 ### Position Defense Multipliers
 
@@ -75,11 +84,13 @@ SKILL_GROUNDFIGHTING reduces these penalties proportionally to learning.
 
 ### Strength Effect by Weapon Type
 
-| Weapon Type | Strength Bonus |
-|-------------|----------------|
-| Blunt/Barehand | 100% |
-| Slash | 75% |
-| Pierce | 50% |
+| Weapon Type | Formula | Approximate Bonus |
+|-------------|---------|-------------------|
+| Blunt/Barehand | `statDam` (full) | 100% |
+| Slash | `(statDam - 1) / 2 + 1` | ~50% at low, approaches 50% |
+| Pierce | `(statDam - 1) / 3 + 1` | ~33% at low, approaches 33% |
+
+These are integer division formulas, not simple percentages. At low `statDam` values the `+1` floor matters more; at high values the divisor dominates.
 
 ### classAmt Values for Selected Spells/Skills
 
@@ -101,7 +112,7 @@ SKILL_GROUNDFIGHTING reduces these penalties proportionally to learning.
 | Chivalry (Mounted Deikhan) | 74 x skillValue / 100 | 0-74 |
 | Cintai | skillValue x 3 / 20 | 0-15 |
 | Advanced Offense | skillValue x 3 / 4 | 0-75 |
-| Dexterity | 335 x getStatMod(STAT_DEX) - 335 | -67 to +84 |
+| Dexterity | 335 x getStatMod(STAT_DEX) - 335 | -67 to +84 (attackRound only) |
 
 ### Attack Count Modifiers
 
@@ -113,7 +124,9 @@ SKILL_GROUNDFIGHTING reduces these penalties proportionally to learning.
 | Celerite | +0.5 per hand |
 | Mounted | x0.67 penalty |
 
-### Dexterity Combat Bonus
+### Dexterity Attack Bonus
+
+DEX affects attackRound only. Defense uses AGI instead (see defendRound).
 
 | DEX Level | Bonus | Hit Rate Effect |
 |-----------|-------|-----------------|
@@ -148,7 +161,8 @@ Failure roll: d300 vs (karma + drunkPenalty) x 10. Low karma and intoxication in
 
 | Purpose | minValue | maxValue | Stat |
 |---------|----------|----------|------|
-| Hit/Defense Modifier | 0.8 | 1.25 | DEX |
+| Attack Modifier | 0.8 | 1.25 | DEX |
+| Defense Modifier | 0.8 | 1.25 | AGI |
 | Damage Modifier | 0.8 | 1.25 | STR |
 | Crit Chance | 0.5 | 2.0 | KAR |
 | Spell Learning | 0.1 | 10.0 | INT/WIS |
@@ -159,8 +173,8 @@ Failure roll: d300 vs (karma + drunkPenalty) x 10. Low karma and intoxication in
 |--------|-------------|---------------|
 | Hit Probability | (600 + 9 x mod/5) / 1000 | 0-100% |
 | Attack Bonus | level x 50/3 + skills + dex | 0-1500+ |
-| Defense Bonus | (10-AC) x 55 + level x 50/3 | -500 to +1500 |
-| Weapon Damage | (base+roll) x str x learn/100 | 5-100+ |
+| Defense Bonus | max((armor-threshold),0) x factor | 0 to ~600 |
+| Weapon Damage | (base+roll) x strByType x learn/100 | 5-100+ |
 | Spell Damage | classAmt x lag x level x mods | 5-500+ |
 | Crit Chance | karma x 1000 + skills vs 1d100000 | 0.1-3%+ |
 | Attack Count | base + spec + haste + berserk | 1-12 |
@@ -185,21 +199,26 @@ Discipline scaling varies by character type. PCs use SKILL_OFFENSE learning to r
 **defendRound (combat.cc)** computes the defender's bonus with different formulas for PCs and MOBs:
 
 ```
-PC:  defendBonus = (10 - AC) x 55 + combatModeBonus + skillBonuses + dexModifier
-MOB: defendBonus = (10 - AC) x 55 + (level x 50/3) + skillBonuses + dexModifier
+armor = 1000 - getArmor()
+PC:  armorBonus = max((armor - 500), 0) * 2 / 3
+MOB: armorBonus = max((armor - 400), 0) * 5 / 6
+
+PC:  defendBonus = armorBonus + combatModeBonus + skillBonuses + agiModifier
+MOB: defendBonus = armorBonus + skillBonuses + agiModifier
 ```
 
-Armor class provides the primary contribution, with each point worth 55 defense. MOBs gain an additional level-scaled component that PCs lack. Position penalties reduce the final value significantly for non-standing combatants.
+Armor contribution floors at zero below the threshold (500 for PCs, 400 for MOBs). PCs scale at 2/3 above threshold while MOBs scale at 5/6. MOBs do NOT gain a level-scaled component. Defense uses AGI (STAT_AGI), not DEX. Position penalties reduce the final value significantly for non-standing combatants.
 
 **hits (combat.cc)** resolves the final probability:
 
 ```
 mod = attackRound(target) - defendRound(target)
 factor = clamp(600 + (9 x mod / 5), 0, 1000)
-hit = (roll(1, 1000) <= factor)
+roll = ::number(0, 999)
+hit = (roll < factor)
 ```
 
-The baseline hit rate is 60% when attack and defense are equal. Roll comparison uses less-than-or-equal so factor of 600 achieves exactly 60% probability. The formula clamps to guarantee that extremely mismatched combatants still have hit floors and ceilings.
+The baseline hit rate is 60% when attack and defense are equal. The roll generates a value in the 0-999 range and uses strict less-than comparison, so factor of 600 achieves exactly 60% probability. The formula clamps to guarantee that extremely mismatched combatants still have hit floors and ceilings.
 
 **specialAttack (combat.cc)** handles special attacks like bash and trip using a simpler model:
 
@@ -207,12 +226,17 @@ The baseline hit rate is 60% when attack and defense are equal. Roll comparison 
 roll = random(1, 100)
 situationalMod = clamp(modifier, -20, +20)
 
+roll = roll * attacker.getStatMod(primaryOffenseStat)
+           * attacker.plotStat(secondaryOffenseStat, 0.92, 1.08, 1.0)
+           / target.getStatMod(primaryDefenseStat)
+           / target.plotStat(secondaryDefenseStat, 0.92, 1.08, 1.0)
+
 if roll <= 50 - mod: SUCCESS
 if roll < 80 - mod: PARTIAL_SUCCESS
 else: FAILURE
 ```
 
-Situational modifiers are bounded to prevent extreme swings. Partial success typically means reduced effect rather than complete failure.
+The stat modifiers scale the roll before threshold comparison. The primary offensive and defensive stats use the standard getStatMod (0.8-1.25 range), while secondary stats use a narrower plotStat range (0.92-1.08). This means stat advantages can shift the effective roll substantially. Situational modifiers are bounded to prevent extreme swings. Partial success typically means reduced effect rather than complete failure.
 
 ### Damage Calculation
 
@@ -222,7 +246,7 @@ Situational modifiers are bounded to prevent extreme swings. Partial success typ
 weaponDamage = (baseDam + rollDam + bonusDam) x strModifier x weaponLearning / 100
 ```
 
-Base damage comes from the weapon's dice definition. Bonus damage includes enchantments and crafting bonuses. Strength modifier varies by damage type: blunt and barehand receive full strength bonus, slashing receives 75%, piercing only 50%. Weapon learning derives from skill value or level, whichever is higher, capped at 100.
+Base damage comes from the weapon's dice definition. Bonus damage includes enchantments and crafting bonuses. Strength modifier varies by damage type: blunt and barehand receive full strength bonus (`statDam`), slashing uses `(statDam - 1) / 2 + 1`, and piercing uses `(statDam - 1) / 3 + 1` (integer division). Weapon learning derives from skill value or level, whichever is higher, capped at 100.
 
 Dual wield applies a secondary hand penalty: (30 + 30 x SKILL_DUAL_WIELD / 100)% of primary damage. Two-handed specialization provides a multiplier: (100 + 50 x SKILL_2H_SPEC / 100) / 100.
 
@@ -312,13 +336,13 @@ modifier = ((plotStat(stat, 0.8, 1.25, 1.0) - 1) x multiplier) + 1
 
 This maps stat value 5 to 0.8 (-20%), stat value 105 to 1.0 (neutral), and stat value 205 to 1.25 (+25%).
 
-The dexterity combat bonus formula is:
+The dexterity attack bonus formula (used by attackRound) is:
 
 ```
 dexBonus = (int)(335 x getStatMod(STAT_DEX) - 335)
 ```
 
-This produces a range from -67 to +84, translating to approximately -12% to +15% hit rate effect.
+This produces a range from -67 to +84, translating to approximately -12% to +15% hit rate effect. The defendRound function uses the same formula but with STAT_AGI instead of STAT_DEX.
 
 ## Troubleshooting
 
@@ -358,7 +382,7 @@ This produces a range from -67 to +84, translating to approximately -12% to +15%
 
 **Cause:** Strength modifier not applying correctly for damage type, or weapon learning calculation incorrect.
 
-**Diagnostic:** Verify weapon damage type. Check that strength modifier is using correct percentage (100/75/50 based on type). Confirm weaponLearning calculation is returning expected values.
+**Diagnostic:** Verify weapon damage type. Check that strength modifier is using the correct formula: full `statDam` for blunt, `(statDam - 1) / 2 + 1` for slash, `(statDam - 1) / 3 + 1` for pierce. Confirm weaponLearning calculation is returning expected values.
 
 **Fix:** Ensure damage type is set correctly on weapon. Verify strength stat is being read properly. Check that skill learning values are in range.
 
@@ -422,12 +446,12 @@ This produces a range from -67 to +84, translating to approximately -12% to +15%
 
 **Fix:** Confirm stat retrieval path. Verify affects are being applied. Check that getStatMod result is actually multiplied into damage or added to hit bonus.
 
-### Dexterity bonus computed but not applied
+### Stat bonus computed but not applied
 
-**Symptom:** Dexterity changes don't affect hit rates.
+**Symptom:** DEX or AGI changes don't affect hit rates.
 
-**Cause:** attackRound or defendRound not adding dexterity result to accumulators.
+**Cause:** attackRound not adding DEX result or defendRound not adding AGI result to accumulators. Note that attackRound uses STAT_DEX while defendRound uses STAT_AGI.
 
-**Diagnostic:** Verify both functions add dexterity bonus. Check bonus is being added as integer, not truncated before casting.
+**Diagnostic:** Verify attackRound adds DEX bonus and defendRound adds AGI bonus. Check bonus is being added as integer, not truncated before casting.
 
-**Fix:** Ensure dexBonus calculation occurs and result is added to both offense and defense accumulators.
+**Fix:** Ensure dexBonus/agiBonus calculation occurs and result is added to the correct accumulator (DEX for offense, AGI for defense).

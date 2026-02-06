@@ -31,7 +31,7 @@ Spells return flag combinations indicating success/failure and death states. Whe
 
 **Always filter group members and invisible targets in area spells.** Use inGroup() for group membership (checks same master AND AFF_GROUP flag). Use canSee() for visibility.
 
-**Always validate class access in player casting versions.** Call bPassClassChecks() before spell execution.
+**Always validate class access in player casting versions.** Call the appropriate discipline-specific check before spell execution: `bPassMageChecks()`, `bPassShamanChecks()`, or `bPassClericChecks()`.
 
 **Never continue execution after setting a death flag.** The victim or caster is already deleted at that point.
 
@@ -92,10 +92,10 @@ Spells return flag combinations indicating success/failure and death states. Whe
 | Stat modifier | 80-125% based on relevant stat |
 | Skill difficulty | 35-110% |
 
-### Message Macros
+### Message Functions
 
-| Macro | Purpose |
-|-------|---------|
+| Function | Purpose |
+|----------|---------|
 | CS(spell) | Display critical success message |
 | CF(spell) | Display critical failure message |
 | SV(spell) | Display save message |
@@ -131,7 +131,7 @@ Every offensive spell requires three function versions.
 
 **Magic item version** takes a TMagicItem parameter. Calls core implementation with obj->getMagicLevel() and obj->getMagicLearnedness(). Translates returned spell flags to DELETE flags: VICTIM_DEAD becomes DELETE_VICT, CASTER_DEAD becomes DELETE_THIS.
 
-**Player casting version** takes only caster and victim. Validates class access with bPassClassChecks(), retrieves player statistics via getSkillLevel()/getSkillValue()/getAdvLearning(), calls core implementation, and propagates CASTER_DEAD to DELETE_THIS.
+**Player casting version** takes only caster and victim. Validates class access with the appropriate discipline-specific check (`bPassMageChecks()`, `bPassShamanChecks()`, or `bPassClericChecks()`), retrieves player statistics via getSkillLevel()/getSkillValue()/getAdvLearning(), calls core implementation, and propagates CASTER_DEAD to DELETE_THIS.
 
 ### genericDam() Formula
 
@@ -221,6 +221,6 @@ Check getImmunity() before damage calculation. At 100%+, fail the spell with app
 
 **Symptom:** Players cast spells their class shouldn't know.
 
-**Cause:** Missing bPassClassChecks() validation.
+**Cause:** Missing discipline-specific validation check.
 
-**Fix:** Call bPassClassChecks(caster, spellNum) before spell execution; return FALSE with error message on failure.
+**Fix:** Call the appropriate check (`bPassMageChecks()`, `bPassShamanChecks()`, or `bPassClericChecks()`) before spell execution; return FALSE with error message on failure.

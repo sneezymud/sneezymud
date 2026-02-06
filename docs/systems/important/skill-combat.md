@@ -142,9 +142,9 @@ After deleting an object locally and clearing the pointer to null, always call `
 
 | Return | Value | Meaning |
 |--------|-------|---------|
-| `GUARANTEED_SUCCESS` | 1000 | Critical hit, maximum effect |
-| `COMPLETE_SUCCESS` | 100 | Full success |
-| `PARTIAL_SUCCESS` | 50 | Reduced effectiveness |
+| `GUARANTEED_SUCCESS` | -2 | Critical hit, maximum effect |
+| `COMPLETE_SUCCESS` | 1 | Full success |
+| `PARTIAL_SUCCESS` | 2 | Reduced effectiveness |
 | `FAILURE` | 0 | Attack fails |
 | `GUARANTEED_FAILURE` | -1 | Critical failure |
 
@@ -254,13 +254,14 @@ A random roll from 0-99 is compared against the final percentage. Values below t
 
 After successful execution, `specialAttack()` determines if the technique connects. This compares the attacker's attack round against the defender's defense round, adding situational modifiers for position, stats, equipment, level difference, and combat mode.
 
-A random roll from 1-100 compares against threshold bands:
-- Roll <= 50 minus modifier: `GUARANTEED_SUCCESS`
-- Roll < 80 minus modifier: `PARTIAL_SUCCESS`
-- Roll == 100: `GUARANTEED_FAILURE`
+A random roll from 1-100 has the situational modifier subtracted, then compares against fixed threshold constants:
+- Roll <= 5: `GUARANTEED_SUCCESS` (absolute floor, unaffected by modifier)
+- Roll > 95: `GUARANTEED_FAILURE` (absolute ceiling, unaffected by modifier)
+- Roll < 50 (`SUCCESS_THRESHOLD`): `COMPLETE_SUCCESS`
+- Roll < 80 (`PARTIAL_SUCCESS_THRESHOLD`) and partial success allowed: `PARTIAL_SUCCESS`
 - Otherwise: `FAILURE`
 
-The return value indicates success level: `GUARANTEED_SUCCESS` (1000) means maximum effect, `COMPLETE_SUCCESS` (100) means full effect, `PARTIAL_SUCCESS` (50) means reduced effect (typically half damage), and failures mean the attack misses.
+The thresholds (5, 50, 80, 95) are fixed constants. The modifier shifts the roll, not the thresholds. The return value indicates success level: `GUARANTEED_SUCCESS` (-2) means maximum effect, `COMPLETE_SUCCESS` (1) means full effect, `PARTIAL_SUCCESS` (2) means reduced effect (typically half damage), and failures mean the attack misses.
 
 ### Damage Calculation (getSkillDam)
 

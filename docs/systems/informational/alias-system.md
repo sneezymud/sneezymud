@@ -195,7 +195,7 @@ The database migration in `migrations.cc` transferred existing aliases from char
 
 **Symptom:** Used `clear` and the wrong alias disappeared.
 
-**Likely cause:** Cleared by alias name instead of list number.
+**Likely cause:** Used the wrong index number. `doClear()` only accepts a numeric index or "all", not alias names.
 
 **Diagnostic approach:** Run `alias` to see the numbered list. The `clear` command takes a number from this list, not the alias word.
 

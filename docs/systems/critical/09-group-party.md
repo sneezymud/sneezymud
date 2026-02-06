@@ -158,7 +158,7 @@ Always call `dieFollower()` when a character dies or disconnects. This breaks al
 
 The `group_share` factor on the Descriptor affects only money distribution. It has no effect on XP. Leaders set this via `group share <player> <1-10>`.
 
-NPCs return 0 from `splitShares()` because they lack a descriptor. They receive no money from splits but do receive their level-based XP share.
+NPCs return 0 from `splitShares(ch, k)` because they lack a descriptor. They receive no money from splits but do receive their level-based XP share.
 
 Always validate descriptor existence before accessing group_share. NPCs have no descriptor.
 
@@ -167,7 +167,7 @@ Always validate descriptor existence before accessing group_share. NPCs have no 
 int share = ch->desc->session.group_share;  // Crash if NPC
 
 // CORRECT: Check descriptor first (or use splitShares() helper)
-int share = ch->splitShares();  // Returns 0 for NPCs
+int share = splitShares(ch, k);  // Returns 0 for NPCs
 ```
 
 ### Group Formation Validation
@@ -201,7 +201,7 @@ Never allow charmed followers to follow anyone except their master. Charmed char
 | `getExpSharePerc()` | function | Returns percentage of group XP for display |
 | `gainExpPerHit()` | function | Distributes combat XP to group members |
 | `doSplit()` | function | Distributes money to in-room group members |
-| `splitShares()` | function | Returns money share factor (0 for NPCs) |
+| `splitShares(ch, k)` | function | Returns money share factor (0 for NPCs); static function with signature `static int splitShares(const TBeing* ch, const TBeing* k)` |
 | `dieFollower()` | function | Breaks all follow relationships on death |
 
 ### Session Configuration Fields
@@ -319,9 +319,9 @@ The distribution calculates total shares from in-room group members with `AFF_GR
 
 ### Money Distribution
 
-The `splitShares()` function returns the character's money share factor. For characters with a descriptor (players), it returns `desc->session.group_share`. For NPCs without descriptors, it returns 0. This excludes NPCs from money splits entirely.
+The `splitShares()` static function takes two parameters `(const TBeing* ch, const TBeing* k)` and returns the character's money share factor. For characters with a descriptor (players), it returns `desc->session.group_share`. For NPCs without descriptors, it returns 0. This excludes NPCs from money splits entirely.
 
-The `doSplit()` function divides money among in-room group members. It sums total shares from all qualifying members, then distributes proportionally via `giveMoney()` with the `GOLD_SPLIT` flag. The calculation divides total amount by total shares, then multiplies by each member's individual share factor.
+The `doSplit()` function divides money among in-room group members. It sums total shares from all qualifying members, then distributes proportionally via `addToMoney()` with the `GOLD_XFER` flag. The calculation divides total amount by total shares, then multiplies by each member's individual share factor.
 
 ### Group Persistence
 

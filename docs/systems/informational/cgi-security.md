@@ -7,7 +7,7 @@ keywords: [session, authentication, SQL injection, CSRF, cookies]
 primary_symbols:
   functions: [generateSessionID, checkPasswd, hasWizPower, createSession, escape_html]
   classes: [TSession, TDatabase, Cgicc]
-  enums: [POWER_WIZNET, POWER_WIZNET_ALWAYS, POWER_ACCESS, POWER_ACCOUNT, POWER_BUILDER, POWER_LOAD]
+  enums: [POWER_WIZNET, POWER_WIZNET_ALWAYS, POWER_ACCESS, POWER_ACCOUNT, POWER_BUILDER, POWER_WIZARD, POWER_LOAD]
 ---
 
 ## Overview
@@ -113,8 +113,8 @@ Never allow year-long session durations. The auto-login feature creates sessions
 | `objeditor.cgi.cc` | Object editing | POWER_BUILDER | Medium |
 | `roomeditor.cgi.cc` | Room editing | POWER_BUILDER | Medium |
 | `respeditor.cgi.cc` | Response editing | POWER_BUILDER | Medium |
-| `objlog.cgi.cc` | Object load logging | POWER_BUILDER | High |
-| `eqcalc.cgi.cc` | Equipment calculator | Session | Low |
+| `objlog.cgi.cc` | Object load logging | POWER_WIZARD | High |
+| `eqcalc.cgi.cc` | Equipment calculator | POWER_BUILDER | Low |
 | `corpinfo.cgi.cc` | Corporation listings | **None** | Medium |
 | `limb_quest.cgi.cc` | Quest limb tracking | **None** | Medium |
 
@@ -122,7 +122,8 @@ Never allow year-long session durations. The auto-login feature creates sessions
 
 | Power | Purpose | Endpoints Requiring It |
 |-------|---------|------------------------|
-| `POWER_BUILDER` | Zone editing | objeditor, roomeditor, respeditor, objlog |
+| `POWER_BUILDER` | Zone editing | objeditor, roomeditor, respeditor, eqcalc |
+| `POWER_WIZARD` | Administrative access | objlog |
 | `POWER_LOAD` | Object spawning | (varies by tool) |
 
 ### TDatabase Format Specifiers

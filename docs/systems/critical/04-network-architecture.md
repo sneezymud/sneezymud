@@ -6,7 +6,7 @@ category: critical
 primary_symbols:
   functions: [gameLoop, handleTimeAndSockets, inputProcessing, processAllInput, outputProcessing, parseCommand, nanny, sendGmcp, handleTelnetOpts]
   classes: [Descriptor, TMainSocket, TSocket, Comm, GmcpComm]
-  enums: [CON_PLYNG, CON_NME, CON_NMECNF, CON_PWDNRM, CON_PWDCNF, CON_RMOTD, CON_REDITING, CON_OEDITING, CON_MEDITING, CON_CREATION_START, DELETE_THIS, IS_SET_DELETE, MAX_INPUT_LENGTH, TELNET_IAC, TELNET_WILL, TELNET_WONT, TELNET_DO, TELNET_DONT, TELNET_SB, TELNET_SE, TELNET_GMCP]
+  enums: [CON_PLYNG, CON_NME, CON_NMECNF, CON_PWDNRM, CON_PWDCNF, CON_RMOTD, CON_REDITING, CON_OEDITING, CON_MEDITING, CON_CREATION_START, DELETE_THIS, IS_SET_DELETE, MAX_INPUT_LENGTH, iac, dont, do_, wont, will, sb, GMCP]
 ---
 
 # Network and Protocol Architecture
@@ -75,19 +75,19 @@ The tick rate is 0.1 seconds. Each tick: accept new connections, close exception
 | `CON_EMAIL` | 14 | Getting email |
 | `CON_TERM` | 15 | Terminal type |
 | `CON_CONN` | 16 | Connecting character |
-| `CON_CREATION_START` | 84 | Character creation begins |
-| `CON_CREATION_NAME` | 85 | Character name entry |
-| `CON_CREATION_SEX` | 88 | Sex selection |
-| `CON_CREATION_RACE` | 89 | Race selection |
-| `CON_CREATION_CLASS` | 90 | Class selection |
-| `CON_CREATION_DONE` | 108 | Creation finalization |
-| `CON_REDITING` | 109 | Room editor |
-| `CON_OEDITING` | 110 | Object editor |
-| `CON_MEDITING` | 111 | Mobile editor |
-| `CON_HELP` | 114 | Help file editor |
-| `CON_WRITING` | 115 | String editor |
+| `CON_CREATION_START` | 27 | Character creation begins |
+| `CON_CREATION_NAME` | 27 | Character name entry (same as START) |
+| `CON_CREATION_SEX` | 30 | Sex selection |
+| `CON_CREATION_RACE` | 31 | Race selection |
+| `CON_CREATION_CLASS` | 32 | Class selection |
+| `CON_CREATION_DONE` | 50 | Creation finalization |
+| `CON_REDITING` | above MAX_CON_STATUS | Room editor |
+| `CON_OEDITING` | above MAX_CON_STATUS | Object editor |
+| `CON_MEDITING` | above MAX_CON_STATUS | Mobile editor |
+| `CON_HELP` | above MAX_CON_STATUS | Help file editor |
+| `CON_WRITING` | above MAX_CON_STATUS | String editor |
 
-Editor states are above MAX_CON_STATUS. Creation states span 84-108 with 26 distinct substates for disclaimers, trait selection, and stat customization.
+Editor states are above MAX_CON_STATUS. Creation states start at 27 and increment from there with distinct substates for disclaimers, trait selection, and stat customization.
 
 ### Telnet Constants
 
@@ -99,8 +99,9 @@ Editor states are above MAX_CON_STATUS. Creation states span 84-108 with 26 dist
 | `wont` | 252 (0xFC) | Won't option |
 | `will` | 251 (0xFB) | Will option |
 | `sb` | 250 (0xFA) | Subnegotiation Begin |
-| `se` | 240 (0xF0) | Subnegotiation End |
 | `GMCP` | 201 (0xC9) | GMCP option code |
+
+Note: `se` (Subnegotiation End, 240/0xF0) is commented out in the code and not defined as a constant. The raw value 0xF0 is used directly where needed.
 
 Telnet sequences use IAC as escape prefix. Negotiations are three bytes: IAC WILL/WONT/DO/DONT option. Subnegotiations are: IAC SB option data IAC SE.
 

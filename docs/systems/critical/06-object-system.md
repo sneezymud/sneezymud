@@ -6,7 +6,7 @@ keywords: [object types, containers, decay, traps, consumables]
 primary_symbols:
   functions: [makeNewObj, read_object, assignFourValues, getFourValues, objectDecay, lightDecay, eatMe, drinkMe, has_key, pickMe, triggerContTrap]
   classes: [TObj, TBaseContainer, TOpenContainer, TExpandableContainer, TBaseLight, TLight, TFood, TBaseCup, TDrinkCon, TVehicle, TAudio, TBook, TBed, TTable, TKey, TKeyring]
-  enums: [itemTypeT, ITEM_UNDEFINED, ITEM_LIGHT, ITEM_CHEST, ITEM_DRINKCON, ITEM_FOOD, ITEM_BAG, ITEM_CORPSE, ITEM_BED, ITEM_PCORPSE, ITEM_VEHICLE, CONT_CLOSEABLE, CONT_CLOSED, CONT_LOCKED, CONT_PICKPROOF, CONT_JAMMED, CONT_TRAPPED, CONT_GHOSTTRAP, CONT_EMPTYTRAP, CONT_WEIGHTLESS, DOOR_TRAP_TNT, DOOR_TRAP_POISON, DOOR_TRAP_SLEEP, DOOR_TRAP_FIRE, DOOR_TRAP_ACID, DOOR_TRAP_DISEASE, DRINK_POISON, DRINK_PERM, DRINK_SPILL, DRINK_FROZEN, FOOD_POISON, FOOD_SPOILED, FOOD_FISHED, FOOD_BUTCHERED, DELETE_THIS, DELETE_ITEM, IS_SET_DELETE, StuffIter]
+  enums: [itemTypeT, ITEM_UNDEFINED, ITEM_LIGHT, ITEM_CHEST, ITEM_DRINKCON, ITEM_FOOD, ITEM_BAG, ITEM_CORPSE, ITEM_BED, ITEM_PCORPSE, ITEM_VEHICLE, CONT_CLOSEABLE, CONT_PICKPROOF, CONT_CLOSED, CONT_LOCKED, CONT_TRAPPED, CONT_SECRET, CONT_EMPTYTRAP, CONT_GHOSTTRAP, CONT_WEIGHTLESS, CONT_JAMMED, DOOR_TRAP_TNT, DOOR_TRAP_POISON, DOOR_TRAP_SLEEP, DOOR_TRAP_FIRE, DOOR_TRAP_ACID, DOOR_TRAP_DISEASE, DRINK_POISON, DRINK_PERM, DRINK_SPILL, DRINK_FROZEN, FOOD_POISON, FOOD_SPOILED, FOOD_FISHED, FOOD_BUTCHERED, DELETE_THIS, DELETE_ITEM, IS_SET_DELETE, StuffIter]
 ---
 
 ## Overview
@@ -114,14 +114,15 @@ Frozen drinks (`DRINK_FROZEN` flag) cannot be consumed. Permanent containers (`D
 | Flag | Bit | Effect |
 |------|-----|--------|
 | `CONT_CLOSEABLE` | 0 | Can be opened/closed |
-| `CONT_CLOSED` | 1 | Currently closed |
-| `CONT_LOCKED` | 2 | Requires key |
-| `CONT_PICKPROOF` | 3 | Cannot be picked |
-| `CONT_JAMMED` | 4 | Lock is jammed |
-| `CONT_TRAPPED` | 5 | Has a trap |
-| `CONT_GHOSTTRAP` | 6 | False trap (0 damage) |
-| `CONT_EMPTYTRAP` | 7 | Trap was disarmed |
-| `CONT_WEIGHTLESS` | - | Contents weigh nothing |
+| `CONT_PICKPROOF` | 1 | Cannot be picked |
+| `CONT_CLOSED` | 2 | Currently closed |
+| `CONT_LOCKED` | 3 | Requires key |
+| `CONT_TRAPPED` | 4 | Has a trap |
+| `CONT_SECRET` | 5 | Hidden container |
+| `CONT_EMPTYTRAP` | 6 | Trap was disarmed |
+| `CONT_GHOSTTRAP` | 7 | False trap (0 damage) |
+| `CONT_WEIGHTLESS` | 8 | Contents weigh nothing |
+| `CONT_JAMMED` | 9 | Lock is jammed |
 
 ### Trap Types
 
@@ -228,11 +229,11 @@ Zero FULL or THIRST reduces HP and mana regeneration by 75%.
 
 ### Volume Reduction Multipliers
 
-| Material | vol_mult | Reduction |
-|----------|----------|-----------|
-| Cloth | 2 | 50% |
-| Metal | 1 | None |
-| Leather | 3 | 33% |
+| Material | vol_mult | Effect |
+|----------|----------|--------|
+| Cloth | 11 | Compresses to 1/11 volume |
+| Leather | 4 | Compresses to 1/4 volume |
+| Metal (Iron) | 1 | No compression |
 
 ### Key Files
 

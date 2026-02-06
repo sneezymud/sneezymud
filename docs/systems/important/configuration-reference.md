@@ -4,7 +4,7 @@ description: Runtime configuration system including sneezy.cfg parsing, port-bas
 category: important
 keywords: [config, runtime configuration, port-based behavior, feature toggles, database connection, sneezy.cfg]
 primary_symbols:
-  functions: [doConfiguration, initConfiguration]
+  functions: [doConfiguration]
   classes: [Config, TDatabase]
   enums: [Config::Port::PROD, Config::Port::ALPHA, Config::Port::GAMMA]
 ---
@@ -39,7 +39,7 @@ Configuration values are accessed through static accessor methods, providing a s
 
 **Always configure both databases.** The `sneezy` database holds game data while `immortal` holds builder/immortal data. Both must be accessible for full functionality.
 
-**Allow username fallback for local development.** When no username is configured, the server uses the current Unix user. This enables passwordless local development via MySQL socket authentication without storing credentials.
+**Allow username fallback for local development.** When no username is configured, the server passes NULL to the database connector. This enables passwordless local development via MySQL socket authentication without storing credentials.
 
 ### Feature Toggle Discipline
 
@@ -89,10 +89,10 @@ Configuration values are accessed through static accessor methods, providing a s
 
 | Port | Constant | Behaviors Enabled |
 |------|----------|-------------------|
-| 7900 | `PROD` | Multiplay enforcement, email notifications, Twitter posts, corpse dissection objects |
+| 7900 | `PROD` | Multiplay enforcement, email notifications, Twitter posts, ignore disabled zones |
 | 6969 | `ALPHA` | Relaxed multiplay restrictions |
-| 6961 | `GAMMA` | Skip zonefile comments, ignore disabled zones |
-| Other | - | Experimental weapon code, sleep tag, testfight command |
+| 6961 | `GAMMA` | Skip zonefile comments, load disabled zones |
+| Other | - | Experimental weapon code, sleep tag, testfight command, corpse dissection objects |
 
 ### Data Directory
 
@@ -110,16 +110,18 @@ Configuration values are accessed through static accessor methods, providing a s
 
 ### Database Settings
 
-| Option | Type | Default | Accessor | Description |
-|--------|------|---------|----------|-------------|
-| `sneezy_db` | string | `sneezy` | `SneezySqlDb()` | Game database name |
-| `sneezy_host` | string | `localhost` | `SneezySqlHost()` | Game database host |
-| `sneezy_user` | string | (system user) | `SneezySqlUser()` | Game database username |
-| `sneezy_password` | string | (none) | `SneezySqlPassword()` | Game database password |
-| `immortal_db` | string | `immortal` | `ImmortalSqlDb()` | Immortal database name |
-| `immortal_host` | string | `localhost` | `ImmortalSqlHost()` | Immortal database host |
-| `immortal_user` | string | (system user) | `ImmortalSqlUser()` | Immortal database username |
-| `immortal_password` | string | (none) | `ImmortalSqlPassword()` | Immortal database password |
+Database settings are stored in global vectors (`db_hosts`, `db_names`, `db_users`, `db_passwords`) indexed by database constant (`DB_SNEEZY`, `DB_IMMORTAL`).
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `sneezy_db` | string | `sneezy` | Game database name |
+| `sneezy_host` | string | (empty) | Game database host |
+| `sneezy_user` | string | (NULL) | Game database username |
+| `sneezy_password` | string | (none) | Game database password |
+| `immortal_db` | string | `immortal` | Immortal database name |
+| `immortal_host` | string | (empty) | Immortal database host |
+| `immortal_user` | string | (NULL) | Immortal database username |
+| `immortal_password` | string | (none) | Immortal database password |
 
 ### Feature Toggles
 
@@ -213,7 +215,7 @@ The trimmed flag (`-t` or `trimmed = 1`) forces port to GAMMA regardless of what
 
 ### Database Connection
 
-Database settings configure the `TDatabase` connection class. The username fallback uses the result of `getlogin()` when no explicit username is configured. This matches MySQL CLI behavior where omitting `-u` uses the current Unix user.
+Database settings configure the `TDatabase` connection class. The username defaults to NULL when no explicit username is configured via `getUser()`, which returns NULL when the stored value is empty.
 
 Both databases (`sneezy` and `immortal`) are configured independently. They can be on different hosts with different credentials, though in typical setups they share the same connection parameters.
 

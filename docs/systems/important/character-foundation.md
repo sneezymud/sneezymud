@@ -5,7 +5,7 @@ keywords: [multiclass mechanics, resource pools, stat scaling, power law curve, 
 category: important
 source_files: [code/code/misc/being.cc, code/code/misc/race.cc, code/code/misc/stats.cc, code/code/misc/multiclass.cc]
 primary_symbols:
-  functions: [hasClass, getLevel, getStat, plotStat, getStatMod, affectModify, howManyClasses, getMyRace, manaLimit, pietyLimit, lifeforceLimit]
+  functions: [hasClass, getLevel, getStat, plotStat, getStatMod, affectModify, howManyClasses, getMyRace, hitLimit, manaLimit, pietyLimit, lifeforceLimit]
   classes: [TBeing, Race, Stats]
   enums: [classIndT, CLASS_MAGE, CLASS_CLERIC, CLASS_WARRIOR, CLASS_THIEF, CLASS_SHAMAN, CLASS_DEIKHAN, CLASS_MONK, CLASS_RANGER, CLASS_COMMONER, CLASS_ALL, race_t, body_t, statTypeT, STAT_STR, STAT_BRA, STAT_CON, STAT_DEX, STAT_AGI, STAT_INT, STAT_WIS, STAT_FOC, STAT_PER, STAT_CHA, STAT_KAR, STAT_SPE, STAT_LUC, STAT_EXT, statSetT, STAT_RACE, STAT_CHOSEN, STAT_TERRITORY, STAT_AGE, STAT_NATURAL, STAT_CURRENT, immuneTypeT, IMMUNE_HEAT, IMMUNE_COLD, IMMUNE_ACID, IMMUNE_POISON, IMMUNE_SLEEP, IMMUNE_PARALYSIS, IMMUNE_CHARM, IMMUNE_PIERCE, IMMUNE_SLASH, IMMUNE_BLUNT, IMMUNE_ELECTRICITY, IMMUNE_DISEASE, IMMUNE_DRAIN, IMMUNE_FEAR, IMMUNE_HOLY, IMMUNE_SUMMON, IMMUNE_NONMAGIC, IMMUNE_PLUS1, IMMUNE_PLUS2, IMMUNE_PLUS3]
 ---
@@ -132,18 +132,18 @@ The `classInfo` global array stores class characteristics indexed by `classIndT`
 
 | Stat | Human | Elven | Dwarf | Hobbit | Gnome | Ogre |
 |------|-------|-------|-------|--------|-------|------|
-| STR | 105 | 80 | 130 | 55 | 115 | 165 |
-| BRA | 105 | 65 | 130 | 55 | 115 | 155 |
-| CON | 105 | 45 | 155 | 80 | 135 | 125 |
-| DEX | 105 | 130 | 85 | 155 | 105 | 80 |
-| AGI | 105 | 125 | 85 | 130 | 105 | 80 |
-| INT | 105 | 130 | 80 | 83 | 125 | 80 |
-| WIS | 105 | 155 | 95 | 83 | 110 | 80 |
-| FOC | 105 | 110 | 95 | 83 | 110 | 80 |
-| PER | 105 | 115 | 100 | 115 | 110 | 80 |
-| CHA | 105 | 125 | 85 | 105 | 100 | 75 |
-| KAR | 105 | 105 | 105 | 105 | 105 | 95 |
-| SPE | 105 | 125 | 55 | 155 | 95 | 80 |
+| STR | 105 | 80 | 130 | 55 | 77 | 165 |
+| BRA | 105 | 45 | 130 | 55 | 80 | 155 |
+| CON | 105 | 45 | 155 | 80 | 85 | 125 |
+| DEX | 105 | 130 | 85 | 155 | 80 | 80 |
+| AGI | 105 | 120 | 85 | 155 | 80 | 80 |
+| INT | 105 | 130 | 80 | 83 | 155 | 80 |
+| WIS | 105 | 155 | 95 | 83 | 130 | 80 |
+| FOC | 105 | 145 | 105 | 80 | 145 | 80 |
+| PER | 105 | 75 | 80 | 115 | 130 | 105 |
+| CHA | 105 | 100 | 80 | 110 | 130 | 55 |
+| KAR | 105 | 85 | 130 | 120 | 75 | 130 |
+| SPE | 105 | 125 | 55 | 155 | 60 | 80 |
 | LUC | 105 | 105 | 105 | 105 | 105 | 105 |
 
 ### Racial Point Modifiers
@@ -153,9 +153,9 @@ The `classInfo` global array stores class characteristics indexed by `classIndT`
 | Human | 0 | 0 | 0 |
 | Elven | 0 | +25 | +1 |
 | Dwarf | +1 | -20 | -1 |
-| Hobbit | -1 | +40 | 0 |
-| Gnome | 0 | 0 | 0 |
-| Ogre | +4 | +40 | -1 |
+| Hobbit | 0 | +40 | 0 |
+| Gnome | 0 | -35 | +2 |
+| Ogre | +4 | +40 | 0 |
 
 ### Additional Race Data Members
 
@@ -202,16 +202,16 @@ Stat range: 5 (minimum/crippled) to 205 (maximum/superhuman), with 105 as neutra
 
 ### Territory Stat Adjustments
 
-| Territory | STR | BRA | CON | INT | WIS | FOC | CHA | KAR | SPE |
-|-----------|-----|-----|-----|-----|-----|-----|-----|-----|-----|
-| Urban | - | - | -20 | +20 | +20 | -10 | +20 | -20 | +20 |
-| Villager | - | -10 | -10 | +10 | +10 | - | +10 | -10 | - |
-| Plains | - | +5 | +5 | -10 | - | - | -5 | +5 | -5 |
-| Recluse | - | +15 | +25 | -25 | -15 | - | -30 | +30 | - |
-| Hill | - | +10 | +10 | -15 | -5 | - | -10 | +10 | - |
-| Mountain | - | +15 | +20 | -20 | -15 | -15 | -20 | +20 | - |
-| Forest | - | +15 | +15 | -15 | -15 | - | -15 | +15 | - |
-| Mariner | - | +5 | +5 | -5 | -5 | - | -5 | +5 | - |
+| Territory | STR | BRA | CON | INT | WIS | FOC | PER | CHA | KAR | SPE |
+|-----------|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
+| Urban | - | - | -20 | +20 | +20 | -10 | - | +20 | -20 | +20 |
+| Villager | - | -10 | -10 | +10 | +10 | - | - | +10 | -10 | - |
+| Plains | - | +5 | +5 | -10 | - | -10 | +15 | -5 | +5 | -5 |
+| Recluse | - | +15 | +25 | -25 | -15 | +15 | -15 | -30 | +30 | - |
+| Hill | - | +10 | +10 | -15 | -5 | - | - | -10 | +10 | - |
+| Mountain | - | +15 | +20 | -20 | -15 | -15 | - | -20 | +20 | - |
+| Forest | - | +15 | +15 | -15 | -15 | - | - | -15 | +15 | - |
+| Mariner | - | +5 | +5 | -5 | -5 | - | - | -5 | +5 | - |
 
 ### Racial Characteristic Flags
 
@@ -340,10 +340,10 @@ Convenience predicates: `isStrong()`, `isDextrous()`, `isAgile()`, `isTough()`, 
 
 | Resource | Get | Max | Add | Check |
 |----------|-----|-----|-----|-------|
-| Hit Points | `getHit()` | `getMaxHit()` | `addToHit()` | - |
-| Mana | `getMana()` | `getMaxMana()` | `addToMana()` | `noMana()` |
+| Hit Points | `getHit()` | `hitLimit()` | `addToHit()` | - |
+| Mana | `getMana()` | `manaLimit()` | `addToMana()` | `noMana()` |
 | Piety | `getPiety()` | `pietyLimit()` | `addToPiety()` | `noPiety()` |
-| Lifeforce | `getLifeforce()` | `getMaxLifeforce()` | `addToLifeforce()` | `noLifeforce()` |
+| Lifeforce | `getLifeforce()` | `lifeforceLimit()` | `addToLifeforce()` | `noLifeforce()` |
 | Movement | `getMove()` | `getMaxMove()` | `addToMove()` | `tooTired()` |
 
 ### Source Files
@@ -554,7 +554,7 @@ Convenience wrappers (`isStrong()`, `isPerceptive()`, `isDextrous()`, etc.) call
 
 **Cause:** Resource modified without checking against negative, or limit calculation returning 0.
 
-**Diagnostic:** Log `getMaxMana()` and verify positive. Check `getMana()` after each modification.
+**Diagnostic:** Log `manaLimit()` and verify positive. Check `getMana()` after each modification.
 
 **Fix:** Always check `resource >= cost` before deducting. Ensure `addToMana()` clamps to 0 minimum and `manaLimit()` maximum.
 

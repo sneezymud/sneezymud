@@ -115,7 +115,7 @@ The `orig` field on the mob stores a backup pointer to the original for reconnec
 
 | Function | Used By | Transfers |
 |----------|---------|-----------|
-| `SwitchStuff()` | Polymorph, Shapeshift | HP, mana, move, piety, lifeforce, position, affects |
+| `SwitchStuff()` | Polymorph, Shapeshift | Equipment, inventory, money, exp, pracs, mana, move, piety, lifeforce, affects |
 | `DisguiseStuff()` | Disguise, Werewolf | Equipment, stats, skills |
 
 ### Key Scheduler Procs
@@ -124,7 +124,7 @@ The `orig` field on the mob stores a backup pointer to the original for reconnec
 |------|---------|
 | `procCharLycanthropy` | Werewolf transformation timer |
 | `procCharAffects` | Transformation affect expiration |
-| `procCharShapeshift` | Shapeshift environmental checks |
+
 
 ## Implementation
 
@@ -160,7 +160,7 @@ The `updateAffects()` function in periodic.cc removes transformation affects whe
 
 ### Shapeshift Indoor Restriction
 
-Shapeshift transformations cannot survive indoors. The `updateTickStuff()` function checks if a shapeshifted character is in a non-outdoor room and forcibly ends the transformation with a message about needing nature connection. It returns `ALREADY_DELETED` to signal deletion should happen at the scheduler level.
+Shapeshift transformations cannot be cast indoors. The indoor restriction is enforced at cast time only, in disc_shaman_frog.cc. Once a shapeshift is active, moving indoors does not end the transformation.
 
 ### Linkdeath During Transformation
 

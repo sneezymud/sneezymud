@@ -7,7 +7,7 @@ category: informational
 primary_symbols:
   functions: [reconcileHurt, reconcileHelp, isPet, tooManyFollowers, garble, getLanguageChance, orderDenyCheck, stopFollower, restorePetToPc]
   classes: [factionData, TBeing, affectedData]
-  enums: [AFFECT_CHARM, AFFECT_PET, AFFECT_THRALL, AFFECT_ORPHAN_PET, AFF_CHARM, PETTYPE_PET, PETTYPE_CHARM, PETTYPE_THRALL, SKILL_COMMON, SKILL_SIGN, SKILL_FISHBURBLE, SKILL_GNOLL_JARGON, SKILL_TROGLODYTE_PIDGIN, SKILL_TROLLISH, SKILL_BULLYWUGCROAK, SKILL_AVIAN, SKILL_GUTTER_CANT, TYPE_SIGN, TYPE_DRUNK, TYPE_GLUBGLUB, TYPE_PG13IN, TYPE_PG13OUT, TYPE_FISHTALK, TYPE_TROLLTALK, TYPE_FROGTALK, TYPE_BIRDTALK, TYPE_GUTTER, TYPE_TROGTALK, TYPE_LOLCATS, SPEECH_SAY, SPEECH_ASK, SPEECH_WHISPER, SPEECH_SHOUT, SPEECH_TELL, SPEECH_GROUPTELL, SPEECH_COMMUNE, SPEECH_SIGN, SPEECH_WRITE, SPEECH_EMOTE, SPEECH_ROOMDESC, SPEECH_FLAG_SAY, SPEECH_FLAG_ASK, SPEECH_FLAG_WHISPER, SPEECH_FLAG_SHOUT, SPEECH_FLAG_TELL, SPEECH_FLAG_GROUPTELL, SPEECH_FLAG_COMMUNE, SPEECH_FLAG_SIGN, SPEECH_FLAG_WRITE, SPEECH_FLAG_EMOTE, SPEECH_FLAG_ROOMDESC, ACT_STRINGS_CHANGED, TALENT_MEATEATER, IMMUNE_CHARM]
+  enums: [SPELL_ENSORCER, AFFECT_PET, AFFECT_THRALL, AFFECT_ORPHAN_PET, AFF_CHARM, PETTYPE_PET, PETTYPE_CHARM, PETTYPE_THRALL, SKILL_COMMON, SKILL_SIGN, SKILL_FISHBURBLE, SKILL_GNOLL_JARGON, SKILL_TROGLODYTE_PIDGIN, SKILL_TROLLISH, SKILL_BULLYWUGCROAK, SKILL_AVIAN, SKILL_GUTTER_CANT, TYPE_SIGN, TYPE_DRUNK, TYPE_GLUBGLUB, TYPE_PG13IN, TYPE_PG13OUT, TYPE_FISHTALK, TYPE_TROLLTALK, TYPE_FROGTALK, TYPE_BIRDTALK, TYPE_GUTTER, TYPE_TROGTALK, TYPE_LOLCATS, SPEECH_SAY, SPEECH_ASK, SPEECH_WHISPER, SPEECH_SHOUT, SPEECH_TELL, SPEECH_GROUPTELL, SPEECH_COMMUNE, SPEECH_SIGN, SPEECH_WRITE, SPEECH_EMOTE, SPEECH_ROOMDESC, SPEECH_FLAG_SAY, SPEECH_FLAG_ASK, SPEECH_FLAG_WHISPER, SPEECH_FLAG_SHOUT, SPEECH_FLAG_TELL, SPEECH_FLAG_GROUPTELL, SPEECH_FLAG_COMMUNE, SPEECH_FLAG_SIGN, SPEECH_FLAG_WRITE, SPEECH_FLAG_EMOTE, SPEECH_FLAG_ROOMDESC, ACT_STRINGS_CHANGED, TALENT_MEATEATER, IMMUNE_CHARM]
 ---
 
 # Character Miscellaneous Systems
@@ -81,7 +81,7 @@ Always check race garble flags with `getMyRace()->getGarbles()`. Zero means the 
 | Type | Affect | Self-Preservation | Order Compliance |
 |------|--------|-------------------|------------------|
 | Thrall | `AFFECT_THRALL` | None | Complete |
-| Charm | `AFFECT_CHARM` | Limited | High |
+| Charm | `SPELL_ENSORCER` | Limited | High |
 | Pet | `AFFECT_PET` | Full | Conditional |
 
 ### Follower Limit Weights
@@ -179,9 +179,9 @@ The charm affect stores the caster's name in the `be` field for ownership tracki
 
 ### Follower Limits
 
-Maximum followers derive from level plus charisma modifier, divided by 20. Each follower type consumes different weight against this limit. Zombies and thralls use 1 plus level/10. Charms use 2 plus level/10. Pets use 1 plus level/7.
+Maximum followers derive from level plus charisma modifier, divided by 30, plus 1, clamped to a minimum of 1 and maximum of 3. Each follower type has a different weight formula: zombies and thralls use 1 plus level/10, charms use 2 plus level/10, and pets use 1 plus level/7. However, the actual limit check at line 1330 compares the count of followers against max_followers, not total weight.
 
-The `tooManyFollowers()` function iterates the followers linked list, summing each follower's weighted value based on type and level, then compares total weight against maximum.
+The `tooManyFollowers()` function iterates the followers linked list, counting followers, then compares the count against the maximum (which is capped at 3).
 
 ### Order Processing
 
@@ -257,7 +257,7 @@ The `TYPE_GLUBGLUB` garble activates when speaking underwater without waterbreat
 
 **Cause:** High-level followers consume more weight slots than low-level ones.
 
-**Diagnostic:** Calculate total follower weight by summing each follower's contribution based on type and level. Compare against maximum followers from level plus charisma divided by 20.
+**Diagnostic:** Calculate total follower weight by summing each follower's contribution based on type and level. Compare against maximum followers from level plus charisma divided by 30, capped at 3.
 
 **Fix:** Dismiss high-level followers to free weight capacity, or increase character level and charisma.
 

@@ -49,7 +49,7 @@ Runtime type identification uses a dual enum system: coarse-grained identificati
 
 - Use `makeNewObj(itemTypeT)` to create properly-typed object instances from the factory.
 - Use `read_mobile()` and `read_object()` to instantiate from prototype data.
-- Validate `itemTypeT` values against `MAX_OBJ_TYPES` when processing untrusted input. Invalid types return `TOtherObj` as a fallback.
+- Validate `itemTypeT` values against `MAX_OBJ_TYPES` when processing untrusted input. `makeNewObj()` returns NULL for invalid types.
 
 ### Modernization
 
@@ -170,7 +170,7 @@ TObj (abstract)
 | `code/code/misc/person.h` | TPerson player class |
 | `code/code/misc/obj.h` | TObj base class, itemTypeT enum |
 | `code/code/misc/room.h` | TRoom class |
-| `code/code/misc/db.cc` | makeNewObj factory, prototype loading |
+| `code/code/sys/db.cc` | makeNewObj factory, prototype loading |
 | `code/code/misc/opinion.cc` | Hate/fear list manipulation functions |
 
 ## Implementation
@@ -233,7 +233,7 @@ Born list management uses stream operators: `*room << *mob` adds to the born lis
 
 ### Object Factory
 
-The `makeNewObj(itemTypeT)` function in `db.cc` creates properly-typed object instances. It uses an internal switch statement mapping each `itemTypeT` value to its corresponding class constructor. Unrecognized types return `TOtherObj` as a safe fallback. After creation, use `dynamic_cast` to access subclass-specific methods.
+The `makeNewObj(itemTypeT)` function in `db.cc` creates properly-typed object instances. It uses an internal switch statement mapping each `itemTypeT` value to its corresponding class constructor. Unrecognized types return NULL (nullptr). After creation, use `dynamic_cast` to access subclass-specific methods.
 
 Room access validation uses `real_roomp()` which checks vnum bounds and null entries, returning nullptr for invalid values.
 
@@ -265,7 +265,7 @@ The modern `TThingKind` enum class provides type-safe identification through the
 
 **Cause:** Incorrect `itemTypeT` passed to factory, or missing `dynamic_cast` after creation.
 
-**Diagnostic:** Check the `itemType()` return value matches expectations. Verify the switch in `makeNewObj()` maps to the correct class. Note that invalid types silently return `TOtherObj`.
+**Diagnostic:** Check the `itemType()` return value matches expectations. Verify the switch in `makeNewObj()` maps to the correct class. Note that invalid types return NULL (nullptr).
 
 **Fix:** Use correct enum value and always `dynamic_cast` to the expected subclass before accessing subclass methods.
 

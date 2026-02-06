@@ -86,7 +86,7 @@ The `pissed()` function is a simpler check using only `isAngry()` and `isMalice(
 | Field | Purpose |
 |-------|---------|
 | name | Character name (mud_str_dup, requires delete[]) |
-| iHateStrength | Duration in game hours: `(combined_level + 5*focus) / 120`, yields 2-219 hours |
+| iHateStrength | Duration in game hours: `(mob_level + player_level + 5) * (focus / 120.0)`, yields 2-219 hours |
 | account_id | Account ID for multi-character detection |
 | player_id | Player ID for multi-character detection |
 | next | Singly-linked list pointer |
@@ -146,7 +146,7 @@ Tracking requires one of: `roomp->light + vision_bonus > 0`, `ROOM_ALWAYS_LIT` f
 
 SKILL_CONCEALMENT on target blocks tracking probabilistically: 150 modifier blocks 100%, 50 modifier blocks ~33%.
 
-Global pathfinding via `choose_exit_global` activates for level >= 30 (MIN_GLOB_TRACK_LEV), those with ACT_HUNTING, or those affected by SPELL_TRAIL_SEEK. Portal handling encodes index as `code - 9` for values > 9.
+Global pathfinding via `choose_exit_global` activates for level >= 31 (MIN_GLOB_TRACK_LEV), those with ACT_HUNTING, or those affected by SPELL_TRAIL_SEEK. Portal handling encodes index as `code - 9` for values > 9.
 
 ### Target Scoring (senseWimps)
 
@@ -154,15 +154,11 @@ Base score: `HP + hitLimit + mana + (2000 - armor) + karma_scaled`. Lower score 
 
 | Condition | Modifier |
 |-----------|----------|
-| Mounted | +5000 |
-| NPC | +500 |
-| Newbie (level <5) | +750 |
-| Sitting | -400 |
-| Resting | -600 |
-| Sleeping | -800 |
-| Fighting mob | -300 |
-| Hated | -350 |
-| Wounded (<30% HP) | -250 |
+| Newbie (level < 10) | +500 - 50*level (protection scales down) |
+| Non-combatant (not grouped with victim) | +1000 |
+| Non-combatant (grouped with victim) | -2000 |
+| Mage or Shaman class | -200 |
+| Monk (fighting the mob) | -150 |
 
 Anti-tank detection: If mob has AFF_AGGRESSOR and is fighting a pet/zombie while a PC is not engaged, switches to the PC with flavor message.
 

@@ -101,7 +101,7 @@ Understand that TTable overrides `operator+=` to mount objects on the table surf
 | `equippedBy` | pointer | Being wearing this item |
 | `eq_pos` | wearSlotT | Equipment slot position |
 | `stuckIn` | pointer | Being this item is embedded in |
-| `eq_stuck` | int | Body part item is stuck in |
+| `eq_stuck` | wearSlotT | Body part item is stuck in |
 | `rider` | pointer | First thing riding on this |
 | `riding` | pointer | Thing this is riding on |
 | `nextRider` | pointer | Next rider in linked list |
@@ -187,7 +187,7 @@ The `operator+=` method varies by container class. All implementations validate 
 
 TThing's base implementation runs first, performing precondition checks. It also checks if the thing is TMergeable (stackable items like arrows or coins). If so, it attempts to merge with existing stuff in the container. Merging combines quantities and deletes the incoming thing, so the operator returns early.
 
-TRoom's implementation sets the thing's `in_room` to the room number, sets `roomp` to the room, adds the thing to the room's `stuff` list, and handles side effects like updating room lighting via `updateLight()` and marking the zone active if a player entered.
+TRoom's implementation sets the thing's `in_room` to the room number, sets `roomp` to the room, adds the thing to the room's `stuff` list, and handles side effects like updating room lighting via `addToLight()` and marking the zone active if a player entered.
 
 TBeing and TObj implementations add the thing to the `stuff` list and set the thing's `parent` pointer. TMergeable objects may be combined with existing identical objects rather than added separately.
 

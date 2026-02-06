@@ -138,12 +138,17 @@ When you enter a room, the system evaluates each being and object present agains
 | 3 | "a short ways" |
 | 4 | "not too far" |
 | 5 | "a ways" |
-| 6-7 | "quite a ways" |
-| 8-9 | "way off" |
-| 10-11 | "far" |
-| 12-14 | "way way off" |
-| 15-17 | "real far" |
-| 18-19 | "very far" |
+| 6 | "quite a ways" |
+| 7 | "way off" |
+| 8 | "way off" |
+| 9 | "far" |
+| 10 | "far" |
+| 11 | "way way off" |
+| 12 | "way way off" |
+| 13-14 | "real far" |
+| 15-16 | "very far" |
+| 17-18 | "extremely far" |
+| 19 | "on the horizon" |
 | 20+ | "on the horizon" |
 
 ### Door See-Through Types
@@ -174,20 +179,20 @@ When you enter a room, the system evaluates each being and object present agains
 
 | Level Difference | Message |
 |------------------|---------|
-| <= -15 | "Shall I tie both hands behind your back?" |
+| <= -15 | "Shall I tie both hands behind your back, or just one?" |
 | <= -10 | "Why bother???" |
 | <= -6 | "Don't strain yourself." |
 | <= -3 | "Piece of cake." |
 | <= -2 | "Odds are in your favor." |
 | <= -1 | "You have a slight advantage." |
 | 0 | "A fair fight." |
-| <= 1 | "Doesn't look that tough..." |
+| <= 1 | "$E doesn't look that tough..." |
 | <= 2 | "Cross your fingers." |
-| <= 3 | "Cross your fingers and hope..." |
+| <= 3 | "Cross your fingers and hope they don't get broken." |
 | <= 6 | "I hope you have a good plan!" |
 | <= 10 | "Bring friends." |
 | <= 15 | "You and what army??" |
-| <= 30 | "You'll win if they never hit you." |
+| <= 30 | "You'll win if $E never hits you." |
 | > 30 | "There are better ways to suicide." |
 
 ### Consider Armor Assessments
@@ -250,7 +255,7 @@ When you enter a room, the system evaluates each being and object present agains
 
 ### EyeSight Calculation
 
-The `eyeSight()` function in utility.cc calculates an observer's ability to see. It starts with the character's base `visionBonus` (retrieved via `getVision()`) and adds racial bonuses that vary by race via `getRacialVisionBonus()`. True sight and clarity affects each add +25 to the total.
+The `eyeSight()` function in utility.cc calculates an observer's ability to see. It starts with the character's base `visionBonus` (a direct member access) and adds racial bonuses that vary by race via `getMyRace()->visionBonus`. True sight and clarity affects each add +25 to the total.
 
 Room lighting contributes a variable amount based on time of day and weather conditions, ranging from 0 to 25. Indoor rooms receive a penalty of half the light level to simulate reduced ambient light. Weather conditions apply further penalties: rain reduces eyeSight by 1, snow by 2, and lightning storms by 1.
 
@@ -280,7 +285,7 @@ Blindness without true sight or clarity fails immediately.
 
 Sanctuary glow makes the target always visible regardless of other factors.
 
-Personal light sources (carried lit objects via `hasLight()`) make the carrier visible.
+Personal light sources (carried lit objects, detected via `getLight() > 0`) make the carrier visible.
 
 Rooms flagged as `ROOM_ALWAYS_LIT` bypass darkness checks.
 
@@ -376,7 +381,7 @@ Trophy integration shows experience modifier based on how many times the player 
 
 **Symptom:** Character with `AFF_INVISIBLE` is still being seen.
 
-**Likely cause:** Observer has `AFF_TRUE_SIGHT` or `AFF_CLARITY`. Alternatively, target has `AFF_SANCTUARY` (glow overrides invisibility), is carrying a light source detectable via `hasLight()`, or shadow walk conditions require dim lighting that is not present.
+**Likely cause:** Observer has `AFF_TRUE_SIGHT` or `AFF_CLARITY`. Alternatively, target has `AFF_SANCTUARY` (glow overrides invisibility), is carrying a light source (detectable via `getLight() > 0`), or shadow walk conditions require dim lighting that is not present.
 
 **Diagnostic approach:** Check observer for true sight/clarity affects. Check target for sanctuary, light sources. For shadow walk, verify lighting conditions.
 
