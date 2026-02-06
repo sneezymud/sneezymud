@@ -5,7 +5,7 @@ description: Political and religious organizations with membership, leadership h
 category: informational
 keywords: [faction-percentage, caravan, potency, tithe]
 primary_symbols:
-  functions: [factionNumber, reconcileHelp, reconcileHurt, percModifier, boot_factions, doNewMember]
+  functions: [factionNumber, reconcileHelp, reconcileHurt, percModifier, load_factions, doNewMember]
   classes: [TFactionInfo, TBeing, TPerson]
   enums: [factionTypeT, FACT_NONE, FACT_BROTHERHOOD, FACT_CULT, FACT_SNAKE, FACT_UNDEFINED, FACTIONS_IN_USE, ABS_MAX_FACTION, MAX_FACTIONS, MIN_FACTION, FACT_LEADER_SLOTS, OFF_HELP, OFF_HURT]
 ---
@@ -98,7 +98,7 @@ Always update the factionmembers database immediately when membership changes. D
 | `reconcileHelp()` | function | Update percentage for beneficial action |
 | `reconcileHurt()` | function | Update percentage for harmful action |
 | `percModifier()` | function | Calculate prayer power multiplier |
-| `boot_factions()` | function | Load faction data at startup |
+| `load_factions()` | function | Load faction data at startup |
 | `doNewMember()` | function | Add player to faction |
 | `FACTIONS_IN_USE` | constant | Compile-time feature toggle |
 | `ABS_MAX_FACTION` | constant | Binary format limit (frozen at 6) |
@@ -283,7 +283,7 @@ This enables faction rollcall displays and membership verification without loadi
 
 ### Persistence
 
-Faction data persists to `lib/faction/faction_info` in binary format, with a backup at `lib/faction/faction_info.bak`. The `boot_factions()` function loads this file at startup, populating the global `faction_data[]` array.
+Faction data persists to `lib/faction/faction_info` in binary format, with a backup at `lib/faction/faction_info.bak`. The `load_factions()` function loads this file at startup, populating the global `faction_data[]` array.
 
 Save triggers include: leadership changes, relationship modifications, caravan events, wealth transfers, and membership changes. Each save writes all faction data atomically to prevent partial state.
 

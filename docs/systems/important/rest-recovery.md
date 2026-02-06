@@ -39,7 +39,7 @@ Always check for shaman class when implementing HP recovery logic. Shamans above
 
 ### ROOM_NO_HEAL Behavior
 
-Never assume ROOM_NO_HEAL blocks all recovery. The flag stops task-based regeneration completely and reduces movement gain by two-thirds, but half-tick HP and mana recovery still function. Characters can still recover in these rooms, just more slowly and without position bonuses.
+ROOM_NO_HEAL blocks nearly all recovery. The flag stops task-based regeneration completely and blocks half-tick HP and mana recovery. Only movement recovery continues, reduced by two-thirds. Characters in these rooms cannot recover HP or mana through any passive mechanism.
 
 ### Camp Application
 
@@ -139,7 +139,7 @@ Common restrictions across doSleep, doRest, and doSit:
 | Spell/Affect | Effect |
 |--------------|--------|
 | `SPELL_ENLIVEN` | Doubles HP and move gain |
-| `AFFECT_WET` | Aquatic races gain 1.3x HP/mana/move; without this, aquatic races suffer 0.5x penalty |
+| `AFFECT_WET` | Aquatic races gain 1.3x HP, 1x mana, and 1.3x move; without this, aquatic races suffer 0.5x penalty on all resources |
 
 ### Meditation Skills
 

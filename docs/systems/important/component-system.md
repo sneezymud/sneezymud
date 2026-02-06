@@ -23,7 +23,7 @@ Always include both `COMP_MATERIAL` and a timing flag when requiring material co
 
 Never use only `COMP_MATERIAL_INIT` without `COMP_MATERIAL`. The spell will not check for the component at all.
 
-Always add a `CompInfo` entry when defining a new component vnum. Missing entries cause silent consumption with no player messages.
+Always add a `CompInfo` entry when defining a new component vnum. Missing entries prevent consumption and display a generic error ("Uh oh, something bogus happened.") to the player while logging a bug.
 
 ### Storage Access Enforcement
 
@@ -149,13 +149,14 @@ Ritualism uses parallel `RIT_LEV_COMP_*` constants with identical slot progressi
 | Condition | Message |
 |-----------|---------|
 | Missing component (non-ranger) | "You seem to lack the proper materials to complete your task." |
-| Missing component (ranger) | "You seem to lack the proper natural materials to complete your task." |
-| Hands occupied | "You need a free hand to cast this spell." |
-| Arms non-functional | "You cannot gesture properly." |
-| Position penalty | "You struggle to gesture from this position." |
-| Silenced | "You cannot speak!" |
-| Paralyzed | "You are paralyzed!" |
-| Mouth non-functional | "Your mouth doesn't work properly!" |
+| Missing component (ranger, non-combat) | "You seem to lack the proper materials to complete this magic skill." |
+| Missing component (ranger, in combat) | "You are unable to concentrate on casting while fighting without your components in hand." |
+| Hands occupied (mage/shaman) | "You must have one hand free and usable to perform the ritual's gestures!" |
+| Arms non-functional (mage) | "You cannot perform the ritual's gestures without arms and hands!" |
+| Arms non-functional (shaman) | "You cannot invoke the ritual without arms and hands!" |
+| Position penalty | "Restricted movement while [position] causes you to mess up the ritual's gestures." |
+| Silenced (mage) | "You are unable to chant the incantation!" |
+| Silenced (cleric/shaman) | "You are unable to recite the sacred words!" |
 
 ### Source Files
 
