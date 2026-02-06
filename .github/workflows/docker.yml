@@ -13,6 +13,7 @@ on:
 permissions:
   contents: read
   packages: write
+  pull-requests: read
 
 concurrency:
   group: docker-build-${{ github.ref_name }}
@@ -82,3 +83,12 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/sneezymud:${{ github.sha }}
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+
+      - name: Notify Discord
+        if: ${{ env.DISCORD_NEW_BUILD_WEBHOOK_URL != '' }}
+        continue-on-error: true
+        env:
+          DISCORD_NEW_BUILD_WEBHOOK_URL: ${{ secrets.DISCORD_NEW_BUILD_WEBHOOK_URL }}
+          DISCORD_ADMIN_ROLE_ID: ${{ vars.DISCORD_ADMIN_ROLE_ID }}
+          GH_TOKEN: ${{ github.token }}
+        run: python .github/scripts/notify_discord.py
