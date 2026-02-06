@@ -1492,7 +1492,7 @@ void TBeing::doBoot(const sstring& arg) {
     for (int r = zone_table[z].bottom; r <= zone_table[z].top; ++r) {
       if (real_roomp(r)) {
         for (StuffIter it = real_roomp(r)->stuff.begin();
-             it != real_roomp(r)->stuff.end();) {
+          it != real_roomp(r)->stuff.end();) {
           t = *(it++);
 
           if ((obj = dynamic_cast<TObj*>(t))) {
@@ -2887,6 +2887,7 @@ int armorSetLoad::getArmor(int set, int slot) {
 // If this command is executing, the load chance has already succeeded.
 void runResetCmdE(zoneData& zd, resetCom& rs, resetFlag flags, bool&,
   TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
+  obj = nullptr;
   const auto index = static_cast<size_t>(rs.arg1);
 
   if (index < 0 || index >= obj_index.size()) {
@@ -3495,30 +3496,24 @@ void runResetCmdZ(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
   }
 
   if (mob && mobload && rs.arg1 >= 0) {
-    const auto chance = static_cast<int>(
-      min(max(rs.arg2 * tweakInfo[TWEAK_LOADRATE]->current, 0.0), 100.0));
-
     for (wearSlotT i = MIN_WEAR; i < MAX_WEAR; i++)
       if (zone.armorSets.getArmor(rs.arg1, i) != 0)
-        loadsetCheck(mob, zone.armorSets.getArmor(rs.arg1, i), chance, i,
+        loadsetCheck(mob, zone.armorSets.getArmor(rs.arg1, i), rs.arg2, i,
           "(null... for now)");
   }
 }
 
 void runResetCmdY(zoneData&, resetCom& rs, resetFlag flags, bool& mobload,
   TMonster*& mob, bool&, TObj*&, bool& last_cmd) {
-  const auto chance = static_cast<int>(
-    min(max(rs.arg2 * tweakInfo[TWEAK_LOADRATE]->current, 0.0), 100.0));
-
   if (mob && IS_SET(flags, resetFlagFindLoadPotential)) {
-    mob->loadSetEquipment(rs.arg1, nullptr, chance, true);
+    mob->loadSetEquipment(rs.arg1, nullptr, rs.arg2, true);
     return;
   }
 
   if (!mob || !mobload)
     return;
 
-  mob->loadSetEquipment(rs.arg1, nullptr, chance);
+  mob->loadSetEquipment(rs.arg1, nullptr, rs.arg2);
   last_cmd = true;
 }
 
@@ -3612,14 +3607,9 @@ void runResetCmdJ(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
   if (mob && mobload && rs.arg1 >= 0) {
     for (wearSlotT slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
       const int armorVnum = zone.armorSets.getArmor(rs.arg1, slot);
-      const int chance =
-        rs.arg2 >= 99
-          ? rs.arg2
-          : static_cast<int>(min(
-              max(rs.arg2 * tweakInfo[TWEAK_LOADRATE]->current, 0.0), 100.0));
 
       if (armorVnum != 0 &&
-          loadsetCheck(mob, armorVnum, chance, slot, "(null... for now)",
+          loadsetCheck(mob, armorVnum, rs.arg2, slot, "(null... for now)",
             (flags | resetFlagPropLoad))) {}
     }
   }
