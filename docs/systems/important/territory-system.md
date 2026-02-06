@@ -13,7 +13,7 @@ primary_symbols:
 
 ## Overview
 
-Territories are permanent sub-races selected during character creation that modify base stats. Each race offers 4-8 homeland options representing different upbringings. Players choose immediately after race selection, receiving stat modifiers ranging from -30 to +30 per stat. Most territories are zero-sum (balanced), while Urban is intentionally -20 net as a beginner trap. Territories provide flavor without granting additional skills.
+Territories are permanent sub-races selected during character creation that modify base stats. Each race offers 4-8 homeland options representing different upbringings. Players choose immediately after race selection, receiving stat modifiers ranging from -30 to +30 per stat. All territories are zero-sum (balanced), though Urban trades physical stats (CON, BRA) for mental ones (INT, WIS, CHA), making it suboptimal for most combat builds. Territories provide flavor without granting additional skills.
 
 ## Patterns
 
@@ -38,7 +38,7 @@ Territories are permanent sub-races selected during character creation that modi
 
 | Category | Races | Net Modifier |
 |----------|-------|--------------|
-| Urban | Human, Elf, Dwarf, Gnome, Hobbit | -20 |
+| Urban | Human, Elf, Dwarf, Gnome, Hobbit | 0 |
 | Villager/Tribal | Human, Elf, Dwarf, Gnome, Ogre, Hobbit | 0 |
 | Plains/Grasslands | Human, Elf, Ogre, Hobbit | 0 |
 | Recluse/Hermit | Human, Elf, Dwarf | 0 |
