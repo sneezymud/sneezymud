@@ -184,7 +184,7 @@ The `findComponent` function determines access level from Wizardry or Ritualism 
 
 ### Consumption Timing Dispatch
 
-The `applyCompCheck` function maps consumption flags to patterns (1=INIT, 2=END, 3=ALWAYS, 4=RANDOM, 5=ALMOST_END) and dispatches based on current round and maximum rounds. INIT consumption occurs before the first round. END consumption triggers when `rounds == maxRounds - 1`. ALWAYS consumption occurs every round. RANDOM consumption has 50% chance per round. ALMOST_END triggers when `rounds == maxRounds - 2`.
+The `applyCompCheck` function maps consumption flags to patterns (1=INIT, 2=END, 3=ALWAYS, 4=RANDOM, 5=ALMOST_END) and dispatches based on the `round` parameter, which counts down from max to 0. INIT (`COMP_MATERIAL_INIT`) returns TRUE before reaching the switch — the component is verified but never consumed. END consumes on the final round (`round == 0`). ALWAYS consumes every round. ALMOST_END consumes on the second-to-last round (`round == 1`). RANDOM has a bug: `if ((round = 0))` is an assignment (always false), so the branch always falls through to check `roll`, which was pre-computed as `max(0, number(0, round) - 1)` using the original round value. This makes consumption probability roughly `2 / (round + 1)` — nearly certain on late rounds, rare on early ones — rather than a uniform 50%.
 
 ### Gestural Enforcement
 
