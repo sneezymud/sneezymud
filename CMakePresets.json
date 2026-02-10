@@ -94,20 +94,31 @@
     ],
     "buildPresets": [
         {
+            "name": "base-build",
+            "hidden": true,
+            "environment": {
+                "CCACHE_SLOPPINESS": "file_macro,time_macros,include_file_mtime,include_file_ctime"
+            }
+        },
+        {
             "name": "dev-gcc",
-            "configurePreset": "dev-gcc"
+            "configurePreset": "dev-gcc",
+            "inherits": "base-build"
         },
         {
             "name": "dev-clang",
-            "configurePreset": "dev-clang"
+            "configurePreset": "dev-clang",
+            "inherits": "base-build"
         },
         {
             "name": "release-gcc",
-            "configurePreset": "release-gcc"
+            "configurePreset": "release-gcc",
+            "inherits": "base-build"
         },
         {
             "name": "release-clang",
-            "configurePreset": "release-clang"
+            "configurePreset": "release-clang",
+            "inherits": "base-build"
         }
     ]
 }
