@@ -1,0 +1,80 @@
+name: SneezyMUD
+
+on:
+  # No workflow-level paths filters — see comments on individual steps for why.
+  push:
+    branches:
+      - master
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+  pull-requests: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-24.04
+    name: CI
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      # Categorize changed files so downstream steps can decide what to run.
+      # Infrastructure = build system/packaging; gameplay = game code/data.
+      #
+      # Fails open: workflow_dispatch and unknown events build everything.
+      #
+      # Pins to specific SHA for security - some third-party actions were compromised
+      # by a supply chain attack recently, which this protects against.
+      - name: Identify changed files
+        id: changes
+        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
+        with:
+          filters: |
+            infrastructure:
+              - '**/CMakeLists.txt'
+              - 'CMakePresets.json'
+              - 'cmake/**'
+              - 'Dockerfile'
+            gameplay:
+              - 'code/code/**/*.cc'
+              - 'code/code/**/*.h'
+              - 'code/sneezy.cfg'
+              - 'lib/**'
+
+      - name: Restore cache and build
+        if: >-
+          steps.changes.outputs.infrastructure == 'true' ||
+          steps.changes.outputs.gameplay == 'true'
+        uses: ./.github/actions/cached-build
+
+      # CI is a required status check, so the workflow must run on every PR.
+      # A workflow-level paths filter would prevent it from reporting a status
+      # at all, blocking merges for PRs that only touch non-build files.
+      - name: Validate PR
+        if: >-
+          github.event_name == 'pull_request' &&
+          steps.changes.outputs.gameplay == 'true'
+        uses: ./.github/actions/validate-pr
+
+      # A workflow-level paths filter can't distinguish which pushes need a new
+      # release — step-level filtering avoids publishing identical images when
+      # only non-build files (e.g. docs, CI config) changed.
+      - name: Publish new release
+        if: >-
+          github.ref == 'refs/heads/master' &&
+          (steps.changes.outputs.infrastructure == 'true' ||
+          steps.changes.outputs.gameplay == 'true')
+        uses: ./.github/actions/release
+        with:
+          discord-webhook-url: ${{ secrets.DISCORD_NEW_BUILD_WEBHOOK_URL }}
+          discord-admin-role-id: ${{ vars.DISCORD_ADMIN_ROLE_ID }}
+          gameplay-changed: ${{ steps.changes.outputs.gameplay }}

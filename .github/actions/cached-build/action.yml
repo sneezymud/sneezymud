@@ -1,0 +1,109 @@
+name: Restore cache and build
+description: |
+  Restore cached build artifacts or compile from source, with optional cache save.
+  Skips the CMake build (most importantly the very slow linking step) when the
+  cache key matches exactly, indicating no source changes since the last build.
+
+inputs:
+  build-preset:
+    description: CMake build preset to use
+    required: false
+    default: 'release-clang'
+
+runs:
+  using: composite
+  steps:
+    # Compute a cache key from every file that affects the compiled binary.
+    # An exact key match means nothing changed since the last build, so we
+    # can skip compilation entirely (especially the slow linking step).
+    # A prefix match restores the most recent cache as a ccache seed, then
+    # rebuilds only what changed.
+    - name: Configure cache key
+      shell: bash
+      env:
+        CACHE_KEY_PREFIX: ${{ runner.os }}-cmake-${{ inputs.build-preset }}-master
+        SOURCE_HASH: ${{ hashFiles(
+          '**/CMakeLists.txt',
+          'CMakePresets.json',
+          'cmake/**',
+          'code/code/**/*.cc',
+          'code/code/**/*.h'
+          ) }}
+      run: |
+        {
+          echo "CMAKE_CACHE_PATHS<<EOF"
+          echo "build/"
+          echo "$HOME/.cache/ccache"
+          echo "EOF"
+          echo "CACHE_KEY_PREFIX=${CACHE_KEY_PREFIX}"
+          echo "CACHE_KEY=${CACHE_KEY_PREFIX}-${SOURCE_HASH}"
+        } >> "$GITHUB_ENV"
+
+    # The actions/cache/restore action sets an output 'cache-hit' which is:
+    #   - 'true' (string) when the exact cache key matches
+    #   - 'false' (string) when only a restore-keys prefix matches
+    #   - unset (empty string) when no match is found at all
+    # We check != 'true' (not == 'false') so that both partial and no-match
+    # cases correctly fall through to the build steps.
+    - name: Restore cached build objects
+      id: cache
+      uses: actions/cache/restore@v5
+      with:
+        path: ${{ env.CMAKE_CACHE_PATHS }}
+        key: ${{ env.CACHE_KEY }}
+        restore-keys: |
+          ${{ env.CACHE_KEY_PREFIX }}-
+
+    # On exact cache hit, just copy the previously cached binary to
+    # where the Dockerfile expects it to avoid re-linking for no reason.
+    - name: Restore binary from cache
+      if: steps.cache.outputs.cache-hit == 'true'
+      shell: bash
+      run: |
+        mkdir -p code
+        cp "build/${{ inputs.build-preset }}/code/code/sneezy" code/sneezy
+        chmod +x code/sneezy
+
+    - name: Install build prerequisites
+      if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        packages=(
+          build-essential
+          ca-certificates
+          ccache
+          clang
+          cmake
+          git
+          libboost-atomic1.83-dev
+          libboost-filesystem1.83-dev
+          libboost-program-options1.83-dev
+          libboost-regex1.83-dev
+          libboost-system1.83-dev
+          libclang-rt-dev
+          libcurl4-openssl-dev
+          libmariadb-dev
+          lld
+          llvm
+          ninja-build
+          pkgconf
+        )
+        .github/scripts/install-packages.sh "${packages[@]}"
+
+    # Uses ccache to only rebuild files that changed. Still has to re-link
+    # when there are any changes at all, which is the most time-consuming step.
+    - name: Build from source
+      if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        ccache --zero-stats
+        cmake --preset "${{ inputs.build-preset }}"
+        cmake --build --preset "${{ inputs.build-preset }}"
+        ccache --show-stats
+
+    - name: Cache build artifacts
+      if: steps.cache.outputs.cache-hit != 'true' && github.ref == 'refs/heads/master'
+      uses: actions/cache/save@v5
+      with:
+        path: ${{ env.CMAKE_CACHE_PATHS }}
+        key: ${{ env.CACHE_KEY }}

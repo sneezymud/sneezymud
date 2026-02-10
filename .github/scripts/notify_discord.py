@@ -13,6 +13,7 @@ Environment variables (provided automatically by GitHub Actions runner):
 import json
 import os
 import subprocess
+import sys
 import urllib.request
 
 repo = os.environ["GITHUB_REPOSITORY"]
@@ -30,9 +31,9 @@ try:
     )
     if result.stdout.strip():
         pr = json.loads(result.stdout)
-        msg += f"\nSummary: {pr['title']} ({pr['html_url']})"
-except (subprocess.CalledProcessError, json.JSONDecodeError, KeyError):
-    pass
+        msg += f"\nSummary: {pr['title']} (<{pr['html_url']}>)"
+except (subprocess.CalledProcessError, json.JSONDecodeError, KeyError) as e:
+    print(f"Warning: could not fetch PR details: {e}", file=sys.stderr)
 
 req = urllib.request.Request(
     webhook_url,

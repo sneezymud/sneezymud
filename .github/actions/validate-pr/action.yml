@@ -1,0 +1,33 @@
+name: Validate PR
+description: |
+  Smoke test a PR by setting up a test database and verifying the game boots successfully.
+  Not as good as a full test suite, but at least ensures PRs don't prevent the game from booting at all.
+runs:
+  using: composite
+  steps:
+    - name: Install database server package
+      shell: bash
+      run: .github/scripts/install-packages.sh mariadb-server
+
+    - name: Set up test database
+      shell: bash
+      run: |
+        set -euo pipefail
+        sudo systemctl is-active --quiet mariadb || sudo systemctl start mariadb
+        sudo mariadb -e "create database sneezy; create database immortal;"
+        sudo mariadb -e "create user 'runner'@'localhost'; grant all on sneezy.* to 'runner'@'localhost'; grant all on immortal.* to 'runner'@'localhost';"
+        for db in immortal sneezy ; do
+          for phase in tables views data ; do
+            [ -d "_Setup-data/sql_$phase/$db" ] || continue
+            shopt -s nullglob
+            for sql in "_Setup-data/sql_$phase/$db"/*.sql ; do
+              echo "loading '$sql'"
+              mysql "$db" < "$sql"
+            done
+            shopt -u nullglob
+          done
+        done
+
+    - name: Verify the game boots successfully
+      shell: bash
+      run: make verify
