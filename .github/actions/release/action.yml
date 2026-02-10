@@ -1,0 +1,59 @@
+name: Publish new release
+description: |
+  Publish a new container image to GHCR, then notify Discord if the release
+  includes gameplay-affecting changes. Infrastructure-only releases
+  are published silently.
+
+# Have to pass these as inputs, as composite actions can't access secrets/variables directly
+inputs:
+  discord-webhook-url:
+    description: Discord webhook URL for new build notifications
+    required: false
+    default: ''
+  discord-admin-role-id:
+    description: Discord admin role ID for mentions in notifications
+    required: false
+    default: ''
+  gameplay-changed:
+    description: "'true' if gameplay-affecting files changed (from paths-filter)"
+    required: false
+    default: 'false'
+
+runs:
+  using: composite
+  steps:
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ github.token }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build & Push Docker image
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        file: Dockerfile
+        push: true
+        tags: |
+          ghcr.io/${{ github.repository_owner }}/sneezymud:latest
+          ghcr.io/${{ github.repository_owner }}/sneezymud:${{ github.sha }}
+        labels: |
+          org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+        cache-from: type=gha,scope=sneezymud
+        cache-to: type=gha,mode=max,scope=sneezymud
+
+    # Only notify when gameplay-affecting files changed, as the purpose of the notification
+    # is to make it obvious when new gameplay-related changes will be applied on next reboot.
+    - name: Notify Discord
+      if: inputs.discord-webhook-url != '' && inputs.gameplay-changed == 'true'
+      continue-on-error: true
+      shell: bash
+      env:
+        DISCORD_NEW_BUILD_WEBHOOK_URL: ${{ inputs.discord-webhook-url }}
+        DISCORD_ADMIN_ROLE_ID: ${{ inputs.discord-admin-role-id }}
+        GH_TOKEN: ${{ github.token }}
+      run: python .github/scripts/notify_discord.py
