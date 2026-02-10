@@ -40,6 +40,6 @@ req = urllib.request.Request(
         "content": msg,
         "allowed_mentions": {"roles": [admin_role_id]} if admin_role_id else {},
     }).encode(),
-    headers={"Content-Type": "application/json"},
+    headers={"Content-Type": "application/json", "User-Agent": "SneezyMUD-CI"},
 )
-urllib.request.urlopen(req)
+urllib.request.urlopen(req, timeout=10)
