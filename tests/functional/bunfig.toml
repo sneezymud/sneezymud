@@ -1,0 +1,13 @@
+# Bun provides the test runner, TypeScript execution, .env loading, and TCP
+# sockets natively. The only npm dependencies are the eslint ecosystem.
+# Vitest was considered but is unstable on the Bun runtime, and its advantages
+# (test isolation, fake timers, coverage) don't apply here - we intentionally
+# share MUD connections within describe blocks and use real network I/O.
+
+[test]
+preload = ["./harness/setup.ts"]
+timeout = 30000
+root = "."
+# Integration tests share a single MUD server - serialize to avoid
+# connection exhaustion and login races.
+maxConcurrency = 1
