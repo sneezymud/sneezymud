@@ -56,4 +56,4 @@ runs:
         DISCORD_NEW_BUILD_WEBHOOK_URL: ${{ inputs.discord-webhook-url }}
         DISCORD_ADMIN_ROLE_ID: ${{ inputs.discord-admin-role-id }}
         GH_TOKEN: ${{ github.token }}
-      run: python .github/scripts/notify_discord.py
+      run: python .github/scripts/notify_discord.py new-build

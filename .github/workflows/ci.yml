@@ -27,6 +27,13 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Notify Discord of new PR
+        if: github.event.action == 'opened' && env.DISCORD_PR_WEBHOOK_URL != ''
+        continue-on-error: true
+        env:
+          DISCORD_PR_WEBHOOK_URL: ${{ secrets.DISCORD_PR_WEBHOOK_URL }}
+        run: python .github/scripts/notify_discord.py new-pr
+
       # Categorize changed files so downstream steps can decide what to run.
       # Infrastructure = build system/packaging; gameplay = game code/data.
       #
