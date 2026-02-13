@@ -257,7 +257,9 @@ func-test/run_test.sh
 Pull requests run automated builds and tests via GitHub Actions. Merges to master are built and published automatically via GitHub Actions.
 
 > [!TIP]
-> On successful publish, a Discord notification is sent if the `DISCORD_NEW_BUILD_WEBHOOK_URL` repository secret is configured. The notification includes a link to the merged PR, useful for letting admins know when the game can be updated to a new version. Optionally set the `DISCORD_ADMIN_ROLE_ID` repository variable to mention a Discord role in the notification.
+> **Optional Discord notifications** can be enabled via repository secrets:
+> - **New PR opened:** Set `DISCORD_PR_WEBHOOK_URL` to notify when a pull request is first opened.
+> - **New build published:** Set `DISCORD_NEW_BUILD_WEBHOOK_URL` to notify when a new game image is available. Optionally set the `DISCORD_ADMIN_ROLE_ID` repository variable to mention a Discord role in the notification.
 
 ## Notable Directories
 
