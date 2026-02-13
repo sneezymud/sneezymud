@@ -206,6 +206,133 @@ void runMigrations() {
             convertTo<int>(sneezy["id"])));
       }
     },
+    [&]() {
+      vlogf(LOG_MISC, "Adding PKs, indexes, and FK cascades to shop tables");
+
+      // Indexes on parent tables
+      assert(
+        sneezy.query("ALTER TABLE shop ADD INDEX idx_shop_keeper (keeper)"));
+      assert(
+        sneezy.query("ALTER TABLE shop ADD INDEX idx_shop_in_room (in_room)"));
+      assert(sneezy.query(
+        "ALTER TABLE shopowned ADD INDEX idx_shopowned_corp_id (corp_id)"));
+      assert(sneezy.query(
+        "ALTER TABLE shopowned ADD INDEX idx_shopowned_tax_nr (tax_nr)"));
+
+      // Primary keys on direct shop children
+      assert(
+        sneezy.query("ALTER TABLE shoptype ADD PRIMARY KEY (shop_nr, type)"));
+      assert(sneezy.query(
+        "ALTER TABLE shopproducing ADD PRIMARY KEY (shop_nr, producing)"));
+      assert(sneezy.query(
+        "ALTER TABLE shopmaterial ADD PRIMARY KEY (shop_nr, mat_type)"));
+
+      // FK cascades: direct shop children -> shop
+      assert(
+        sneezy.query("ALTER TABLE shoptype ADD FOREIGN KEY (shop_nr) "
+                     "REFERENCES shop (shop_nr) ON DELETE CASCADE"));
+      assert(
+        sneezy.query("ALTER TABLE shopproducing ADD FOREIGN KEY (shop_nr) "
+                     "REFERENCES shop (shop_nr) ON DELETE CASCADE"));
+      assert(
+        sneezy.query("ALTER TABLE shopmaterial ADD FOREIGN KEY (shop_nr) "
+                     "REFERENCES shop (shop_nr) ON DELETE CASCADE"));
+      assert(
+        sneezy.query("ALTER TABLE shopowned ADD FOREIGN KEY (shop_nr) "
+                     "REFERENCES shop (shop_nr) ON DELETE CASCADE"));
+
+      // FK: shopowned.corp_id -> corporation (SET NULL on corp delete)
+      // corp_id must match corporation.corp_id's type (bigint unsigned)
+      assert(sneezy.query(
+        "ALTER TABLE shopowned "
+        "MODIFY corp_id bigint(20) unsigned NULL"));
+      assert(
+        sneezy.query("ALTER TABLE shopowned ADD FOREIGN KEY (corp_id) "
+                     "REFERENCES corporation (corp_id) ON DELETE SET NULL"));
+
+      // Fix nullable columns on shopowned children, then add PKs
+      // shopownedbank
+      assert(
+        sneezy.query("ALTER TABLE shopownedbank "
+                     "MODIFY shop_nr int NOT NULL, "
+                     "MODIFY player_id int NOT NULL, "
+                     "ADD PRIMARY KEY (shop_nr, player_id)"));
+      // shopownedcorpbank
+      assert(
+        sneezy.query("ALTER TABLE shopownedcorpbank "
+                     "MODIFY shop_nr int NOT NULL, "
+                     "MODIFY corp_id int NOT NULL, "
+                     "ADD PRIMARY KEY (shop_nr, corp_id)"));
+      // shopownedloanrate
+      assert(
+        sneezy.query("ALTER TABLE shopownedloanrate "
+                     "MODIFY shop_nr int NOT NULL, "
+                     "ADD PRIMARY KEY (shop_nr)"));
+      // shopownedmatch
+      assert(
+        sneezy.query("ALTER TABLE shopownedmatch "
+                     "MODIFY shop_nr int NOT NULL, "
+                     "MODIFY match_str varchar(255) NOT NULL, "
+                     "ADD PRIMARY KEY (shop_nr, match_str)"));
+      // shopownedplayer
+      assert(
+        sneezy.query("ALTER TABLE shopownedplayer "
+                     "MODIFY shop_nr int NOT NULL, "
+                     "MODIFY player varchar(80) NOT NULL, "
+                     "ADD PRIMARY KEY (shop_nr, player)"));
+      // shopownedrepair
+      assert(
+        sneezy.query("ALTER TABLE shopownedrepair "
+                     "MODIFY shop_nr int NOT NULL, "
+                     "ADD PRIMARY KEY (shop_nr)"));
+      // shopownedaccess and shopownedratios are already NOT NULL
+      assert(sneezy.query(
+        "ALTER TABLE shopownedaccess ADD PRIMARY KEY (shop_nr, name)"));
+      assert(sneezy.query(
+        "ALTER TABLE shopownedratios ADD PRIMARY KEY (shop_nr, obj_nr)"));
+
+      // shopownedauction and shopownedloans: index only (no clear natural key)
+      assert(
+        sneezy.query("ALTER TABLE shopownedauction "
+                     "MODIFY shop_nr int NOT NULL, "
+                     "ADD INDEX idx_shopownedauction_shop_nr (shop_nr)"));
+      assert(
+        sneezy.query("ALTER TABLE shopownedloans "
+                     "MODIFY shop_nr int NOT NULL, "
+                     "ADD INDEX idx_shopownedloans_shop_nr (shop_nr)"));
+
+      // FK cascades: all shopowned children -> shopowned (two-level cascade)
+      assert(
+        sneezy.query("ALTER TABLE shopownedaccess ADD FOREIGN KEY (shop_nr) "
+                     "REFERENCES shopowned (shop_nr) ON DELETE CASCADE"));
+      assert(
+        sneezy.query("ALTER TABLE shopownedauction ADD FOREIGN KEY (shop_nr) "
+                     "REFERENCES shopowned (shop_nr) ON DELETE CASCADE"));
+      assert(
+        sneezy.query("ALTER TABLE shopownedbank ADD FOREIGN KEY (shop_nr) "
+                     "REFERENCES shopowned (shop_nr) ON DELETE CASCADE"));
+      assert(
+        sneezy.query("ALTER TABLE shopownedcorpbank ADD FOREIGN KEY (shop_nr) "
+                     "REFERENCES shopowned (shop_nr) ON DELETE CASCADE"));
+      assert(
+        sneezy.query("ALTER TABLE shopownedloanrate ADD FOREIGN KEY (shop_nr) "
+                     "REFERENCES shopowned (shop_nr) ON DELETE CASCADE"));
+      assert(
+        sneezy.query("ALTER TABLE shopownedloans ADD FOREIGN KEY (shop_nr) "
+                     "REFERENCES shopowned (shop_nr) ON DELETE CASCADE"));
+      assert(
+        sneezy.query("ALTER TABLE shopownedmatch ADD FOREIGN KEY (shop_nr) "
+                     "REFERENCES shopowned (shop_nr) ON DELETE CASCADE"));
+      assert(
+        sneezy.query("ALTER TABLE shopownedplayer ADD FOREIGN KEY (shop_nr) "
+                     "REFERENCES shopowned (shop_nr) ON DELETE CASCADE"));
+      assert(
+        sneezy.query("ALTER TABLE shopownedratios ADD FOREIGN KEY (shop_nr) "
+                     "REFERENCES shopowned (shop_nr) ON DELETE CASCADE"));
+      assert(
+        sneezy.query("ALTER TABLE shopownedrepair ADD FOREIGN KEY (shop_nr) "
+                     "REFERENCES shopowned (shop_nr) ON DELETE CASCADE"));
+    },
   };
 
   int oldVersion = getVersion(sneezy);
