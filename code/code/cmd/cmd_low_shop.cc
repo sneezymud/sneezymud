@@ -79,10 +79,10 @@ namespace {
     std::optional<int> zoneFilter;
     if (!arg.empty()) {
       zoneFilter = convertTo<int>(arg);
-      static const size_t MAX_ZONES = zone_table.size();
-      if (*zoneFilter < 0 || std::cmp_greater_equal(*zoneFilter, MAX_ZONES)) {
+      const auto zoneCount = zone_table.size();
+      if (*zoneFilter < 0 || std::cmp_greater_equal(*zoneFilter, zoneCount)) {
         ch.sendTo(
-          std::format("Zone must be between 0 and {}.\n\r", MAX_ZONES - 1));
+          std::format("Zone must be between 0 and {}.\n\r", zoneCount - 1));
         return;
       }
     }
@@ -584,8 +584,8 @@ namespace {
           return std::nullopt;
         }
         TDatabase db(DB_SNEEZY);
-        db.query("SELECT shop_nr FROM shop WHERE keeper=%i", keeperVnum,
-          shopNr);
+        db.query("SELECT shop_nr FROM shop WHERE keeper=%i AND shop_nr!=%i",
+          keeperVnum, shopNr);
         if (db.fetchRow()) {
           ch.sendTo(std::format("Mob {} is already the keeper of shop {}.\n\r",
             keeperVnum, db["shop_nr"]));
@@ -602,7 +602,8 @@ namespace {
           return std::nullopt;
         }
         TDatabase db(DB_SNEEZY);
-        db.query("SELECT shop_nr FROM shop WHERE in_room=%i", roomVnum, shopNr);
+        db.query("SELECT shop_nr FROM shop WHERE in_room=%i AND shop_nr!=%i",
+          roomVnum, shopNr);
         if (db.fetchRow()) {
           ch.sendTo(
             std::format("Room {} is already the location of shop {}.\n\r",
