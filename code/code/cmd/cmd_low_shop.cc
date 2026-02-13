@@ -1115,17 +1115,11 @@ namespace {
       return;
     }
 
-    db.query("BEGIN");
-    if (!db.query("DELETE FROM shopowned WHERE shop_nr=%i", shopNr) ||
-        !db.query("DELETE FROM shopownedaccess WHERE shop_nr=%i", shopNr) ||
-        !db.query("DELETE FROM shopownedratios WHERE shop_nr=%i", shopNr) ||
-        !db.query("DELETE FROM shopownedmatch WHERE shop_nr=%i", shopNr) ||
-        !db.query("DELETE FROM shopownedplayer WHERE shop_nr=%i", shopNr)) {
-      db.query("ROLLBACK");
+    // FK cascades handle all shopowned child table cleanup automatically
+    if (!db.query("DELETE FROM shopowned WHERE shop_nr=%i", shopNr)) {
       ch.sendTo("Database error: failed to remove ownership.\n\r");
       return;
     }
-    db.query("COMMIT");
 
     if (shopNr >= 0 && std::cmp_less(shopNr, shop_index.size())) {
       shop_index[shopNr].owned = false;
@@ -1283,27 +1277,16 @@ namespace {
       return;
     }
 
-    TDatabase checkDb(DB_SNEEZY);
-    if (!requireShopExists(checkDb, ch, shopNr)) {
+    TDatabase db(DB_SNEEZY);
+    if (!requireShopExists(db, ch, shopNr)) {
       return;
     }
 
-    // Use transaction to ensure all deletes succeed or none do
-    // The TTransaction type doesn't work here because it commits on
-    // destruction, and we want to control when commit/rollback happens.
-    TDatabase db(DB_SNEEZY);
-    db.query("BEGIN");
-
-    if (!db.query("delete from shoptype where shop_nr=%i", shopNr) ||
-        !db.query("delete from shopproducing where shop_nr=%i", shopNr) ||
-        !db.query("delete from shopmaterial where shop_nr=%i", shopNr) ||
-        !db.query("delete from shop where shop_nr=%i", shopNr)) {
-      db.query("ROLLBACK");
+    // FK cascades handle all child table cleanup automatically
+    if (!db.query("DELETE FROM shop WHERE shop_nr=%i", shopNr)) {
       ch.sendTo("Database error: failed to delete shop.\n\r");
       return;
     }
-
-    db.query("COMMIT");
     ch.sendTo(std::format("Shop {} and all related data deleted.\n\r", shopNr));
     ch.sendTo("Changes take effect after 'boot zone' or server reboot.\n\r");
     vlogf(LOG_LOW, std::format("{} deleted shop {}", ch.getName(), shopNr));
