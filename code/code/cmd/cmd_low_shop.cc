@@ -776,8 +776,11 @@ namespace {
       return;
     }
 
-    db.query("delete from shoptype where shop_nr=%i and type=%i", shopNr,
-      mapItemTypeToFile(itemType));
+    if (!db.query("delete from shoptype where shop_nr=%i and type=%i", shopNr,
+          mapItemTypeToFile(itemType))) {
+      ch.sendTo("Database error: failed to remove item type.\n\r");
+      return;
+    }
 
     if (db.rowCount() > 0) {
       ch.sendTo(std::format("Removed item type {} ({}) from shop {}.\n\r",
@@ -858,8 +861,11 @@ namespace {
     }
 
     const int objVnum = convertTo<int>(objVnumArg);
-    db.query("delete from shopproducing where shop_nr=%i and producing=%i",
-      shopNr, objVnum);
+    if (!db.query("delete from shopproducing where shop_nr=%i and producing=%i",
+          shopNr, objVnum)) {
+      ch.sendTo("Database error: failed to remove product.\n\r");
+      return;
+    }
 
     if (db.rowCount() > 0) {
       ch.sendTo(std::format("Removed producing object {} from shop {}.\n\r",
@@ -960,8 +966,11 @@ namespace {
       return;
     }
 
-    db.query("delete from shopmaterial where shop_nr=%i and mat_type=%i",
-      shopNr, matType);
+    if (!db.query("delete from shopmaterial where shop_nr=%i and mat_type=%i",
+          shopNr, matType)) {
+      ch.sendTo("Database error: failed to remove material restriction.\n\r");
+      return;
+    }
 
     if (db.rowCount() > 0) {
       const sstring msg = std::format(
@@ -1233,10 +1242,12 @@ namespace {
       return;
     }
 
-    db.query(
-      "DELETE FROM shopownedaccess WHERE shop_nr=%i AND "
-      "UPPER(name)=UPPER('%s')",
-      shopNr, playerArg.c_str());
+    if (!db.query("DELETE FROM shopownedaccess WHERE shop_nr=%i AND "
+                  "UPPER(name)=UPPER('%s')",
+          shopNr, playerArg.c_str())) {
+      ch.sendTo("Database error: failed to update access.\n\r");
+      return;
+    }
 
     if (level > 0) {
       if (!db.query("INSERT INTO shopownedaccess (shop_nr, name, access) "
