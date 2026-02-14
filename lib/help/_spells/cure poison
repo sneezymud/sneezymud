@@ -1,2 +1,20 @@
-The cure poison prayer will purge toxins from the target's body.  It does not
-address secondary effects of the poison (like lost health or unconsciousness).
+Cure Poison is a clerical prayer that purges toxins from the target's body.
+Through divine intervention, the poison is neutralized and expelled, ending
+its harmful effects.
+
+Usage: cast 'cure poison' <target>
+
+This prayer removes poison afflictions including magical poisons and food
+poisoning. However, it only addresses the poison itself - any damage already
+suffered, unconsciousness, or other secondary effects must be healed through
+other means.
+
+The prayer is most effective when cast quickly after poisoning, before the
+toxin has time to cause extensive damage. Clerics often keep this prayer
+ready when exploring areas known to harbor venomous creatures.
+
+Class: Cleric
+Discipline: Aegis
+
+See Also: POISON, HEAL, CURE DISEASE
+Related Topics: CLERIC, HEALING

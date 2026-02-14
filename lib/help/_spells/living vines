@@ -1,2 +1,20 @@
-Living vine operates similarly to root control.  The summoned vines are of
-greater flexibility than roots and are able to bind the opponent.
+Living Vines summons animated plant tendrils that ensnare and bind the
+target. Unlike the rigid roots of Root Control, these vines are supple
+and flexible, wrapping around the victim to restrict their movement.
+
+Usage: cast 'living vines' <target>
+
+The conjured vines grasp at the target, potentially immobilizing them or
+at minimum hindering their combat effectiveness. Bound targets have
+difficulty attacking and defending, making this spell excellent for
+controlling dangerous opponents.
+
+The vines draw on the caster's magical energy to maintain their animation.
+Stronger targets may eventually break free, but even temporary restraint
+can turn the tide of battle.
+
+Class: Mage
+Discipline: Earth
+
+See Also: ROOT CONTROL, ENTANGLE
+Related Topics: MAGE, EARTH MAGIC, CROWD CONTROL

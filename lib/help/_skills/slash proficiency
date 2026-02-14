@@ -1,2 +1,17 @@
+Slash Proficiency represents your training with edged cutting weapons such
+as swords, axes, scimitars, and similar armaments. These weapons deal
+damage through sweeping cuts that slice through flesh and armor.
 
-/* bug Cosmo for details */
+Higher proficiency increases your accuracy and effectiveness with slashing
+weapons. As you advance, you learn proper edge alignment, footwork, and
+cutting angles that allow you to land devastating wounds more consistently.
+
+Slashing weapons excel against lightly armored or unarmored foes, where
+their cutting edges can inflict grievous wounds. They require regular
+maintenance with the "sharpen" skill to maintain their edge.
+
+Once you have achieved sufficient proficiency in slashing weapons, you may
+pursue Slash Specialization for additional attacks per round.
+
+See Also: SLASH SPECIALIZATION, SHARPEN, WEAPON PROFICIENCY
+Related Topics: COMBAT, WEAPONS

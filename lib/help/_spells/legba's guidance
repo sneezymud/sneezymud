@@ -1,3 +1,24 @@
-This ritual will help protect you from unwanted or enemy witchcraft.
-This is by no means a way to become supernatural to witchery's affects,
-however it will provide some minor immunity.
+Syntax: cast 'legba's guidance' <target>
+
+Legba's Guidance invokes the wise loa Legba to guide and protect the
+target from various forms of harm. Papa Legba, keeper of the crossroads
+between the mortal and spirit worlds, bestows his blessing to ward
+against dangers both physical and magical.
+
+The guidance grants resistance to:
+  - Bleeding wounds and blood loss
+  - Earth-based magical attacks and effects
+  - Charm and mental domination
+  - Disease and sickness
+
+The strength of protection scales with the caster's level, providing
+stronger resistance at higher skill. When cast on oneself, the protection
+is at full strength; when blessing others, the effect is halved. A
+critical success doubles the duration and greatly increases the immunity
+percentages.
+
+Legba's Guidance complements Djalla's Protection, which guards against
+different types of harm. Together they provide comprehensive spiritual
+defense against most magical and environmental threats.
+
+See Also: DJALLA'S PROTECTION, CHASE SPIRITS

@@ -1,9 +1,22 @@
-Dodge is the ability to anticipate your opponent's move in order to
-avoid being hit.  Everyone dodges to some extent, but thieves have
-taken this to a different level.  The best defense is to not be there.
+Dodge is the ability to anticipate your opponent's moves and avoid being
+hit entirely. While everyone dodges to some extent, thieves have elevated
+this to an art form. The best defense, after all, is simply not being
+where the attack lands.
 
-Under development but it does have some effects.
+This passive skill provides a chance to completely avoid incoming attacks.
+Higher skill levels increase both the frequency and reliability of
+successful dodges. Unlike armor which reduces damage taken, a successful
+dodge means taking no damage at all.
 
-Change:  4.1 dodge was reserved for Monks.  That ability differs from
-this concept of dodge and has been moved to a more advanced form of
-defense known as Jirin.
+Dodge is particularly valuable for lightly-armored characters who cannot
+rely on heavy protection. It complements other defensive abilities and
+can mean the difference between life and death against powerful foes.
+
+Note: The monk ability to avoid attacks through superior awareness has
+been separated into a more advanced discipline known as Jirin.
+
+Class: Thief
+Discipline: Stealth
+
+See Also: DEFENSE, JIRIN
+Related Topics: THIEF, COMBAT

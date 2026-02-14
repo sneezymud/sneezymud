@@ -1,3 +1,19 @@
-Heroes feast is an advanced form of the create food and water prayers,
-summoning forth vast quantities of food and drink.  The feast is somewhat
-flavorless and most connoisseurs prefer the real thing.
+Syntax: pray 'heroes feast'
+
+Heroes Feast is an advanced divine conjuration that summons a magnificent
+spread of food and drink sufficient to feed an entire party of adventurers.
+The prayer calls upon the deity's providence to materialize sustenance from
+nothing, ensuring that the faithful need not go hungry in the wilderness.
+
+The feast provides both food and water in generous quantities, making it
+far more efficient than casting separate create food and create water
+prayers. A single casting can satisfy the hunger and thirst of multiple
+people.
+
+While the divine provisions are perfectly nutritious and safe to consume,
+they lack the flavor and variety of properly prepared meals. The food
+appears somewhat bland and generic - functional sustenance rather than
+culinary art. Most adventurers agree that a good tavern meal is preferable
+when available.
+
+See Also: CREATE FOOD, CREATE WATER

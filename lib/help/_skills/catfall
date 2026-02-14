@@ -1,2 +1,19 @@
-Catfall is the monk skill of twisting in the air so that the minimal amount
-of damage is taken after a fall.
+Catfall is a monk technique that enables graceful recovery from falls that
+would injure or kill lesser individuals. Through training in body awareness
+and aerial maneuvering, monks learn to twist and position themselves during
+a fall to minimize or eliminate impact damage.
+
+This passive skill activates automatically when falling. A successful
+Catfall allows the monk to land gracefully on their feet, taking no damage
+and maintaining their standing position. Failed attempts result in a normal
+hard landing.
+
+The technique requires split-second adjustments and complete body control.
+Masters of Catfall can survive drops that would be fatal to others, making
+monks surprisingly difficult to kill through environmental hazards.
+
+Class: Monk
+Discipline: Monk
+
+See Also: CATLEAP, SPRINGLEAP
+Related Topics: MONK, MOVEMENT, FALLING

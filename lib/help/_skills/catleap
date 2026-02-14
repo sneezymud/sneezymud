@@ -1,3 +1,22 @@
-Catleap is the skill of taking giant leaps into the air.
+Syntax: leap <direction>
 
-Usage: leap <direction>
+Through rigorous training, monks learn to channel their inner energy into
+powerful leaps that carry them through the air to adjacent rooms. This
+technique, inspired by the effortless grace of cats, allows rapid movement
+that bypasses many obstacles.
+
+When executing a catleap, the monk springs into the air and soars in the
+specified direction. The leap requires solid ground to push off from and
+cannot be performed while in combat or when exhausted. Each leap consumes
+movement points.
+
+Success depends on the monk's mastery of the technique. A failed leap
+results in a short, embarrassing hop that leaves the monk sitting on
+the ground rather than arriving at their destination. Masters of catleap
+rarely fail, moving with fluid grace that seems almost supernatural.
+
+The catleap technique is related to catfall, which protects monks from
+falling damage. Together, these skills make monks remarkably mobile in
+vertical environments.
+
+See Also: CATFALL, SPRINGLEAP

@@ -1,2 +1,19 @@
-Fast load allows for the automatic reloading of a ranged weapon with a new
-arrow.
+Fast Load is a ranger technique that dramatically increases the rate of
+fire with ranged weapons. Through practiced movements and efficient arrow
+management, rangers with this skill can loose multiple arrows in the time
+it takes others to fire once.
+
+This passive skill automatically reloads your ranged weapon after firing,
+allowing for additional shots per combat round. The number of arrows you
+can fire increases based on both your Fast Load skill and your Ranged
+Specialization proficiency.
+
+Rangers who master Fast Load become devastating at range, capable of
+filling the air with arrows before enemies can close the distance. This
+skill is essential for any ranger who favors the bow over melee combat.
+
+Class: Warrior, Ranger
+Discipline: Ranged
+
+See Also: RANGED SPECIALIZATION, RANGED PROFICIENCY, SHOOT
+Related Topics: RANGER, ARCHERY, BOWS

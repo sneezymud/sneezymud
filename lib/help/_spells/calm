@@ -1,3 +1,18 @@
-The calm spell will radically reduce a creature's anger and malice, generally
-in the hopes that they will no longer be aggressive.  Note that it does not
-remove hatreds.
+Syntax: cast 'calm' <target>
+
+The Calm spell soothes an agitated creature's mind, dramatically reducing
+its anger and aggressive tendencies. A successful casting can transform a
+hostile creature into a peaceful one, preventing combat before it begins
+or allowing escape from a dangerous situation.
+
+The spell reduces the target's anger and malice scores, which determine
+how likely a creature is to attack. However, it does not remove deep-seated
+hatreds - creatures that hold a specific grudge against the caster or their
+allies may still attack despite being calmed.
+
+Calm is particularly useful when dealing with territorial or defensive
+creatures that attack out of instinct rather than malice. It has no effect
+on creatures already engaged in combat, as their battle fury overwhelms
+the spell's soothing influence.
+
+See Also: HYPNOSIS, SLUMBER

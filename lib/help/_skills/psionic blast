@@ -1,0 +1,27 @@
+Syntax: psiblast <victim>
+
+Psionic blast is a fundamental offensive power, projecting a raw surge
+of mental energy directly into an enemy's mind. The attack manifests
+as a violent disruption of the target's thoughts, causing immediate
+pain and potentially longer-lasting mental disorientation.
+
+When successful, the blast deals damage and may temporarily diminish
+the victim's mental faculties. Intelligence, wisdom, and focus can all
+be affected, leaving the target mentally weakened for a period of time.
+Each of these debilitating effects has an independent chance of taking
+hold based on the psionicist's skill.
+
+The power initiates combat if the psionicist is not already engaged with
+the target. If used in combat, it can be directed at the current opponent
+without specifying a target.
+
+Victims already suffering from a previous psionic blast cannot be
+further mentally degraded by additional blasts - the mind cannot be
+destabilized beyond a certain point. However, the damage from subsequent
+blasts still applies normally.
+
+This power cannot be used while focusing your mind, as the concentration
+required for mind focus precludes offensive projection.
+
+See Also: PSIONICS, MIND THRUST, PSYCHIC CRUSH, MIND FOCUS
+

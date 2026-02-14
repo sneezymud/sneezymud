@@ -1,2 +1,19 @@
-Summons forth a minor water elemental to send a stream of water at the
-opponent.
+Gusher summons a minor water elemental that blasts the target with a
+powerful stream of pressurized water. The elemental manifests briefly to
+deliver the attack before dissipating back to the elemental plane.
+
+Usage: cast 'gusher' <target>
+
+The high-pressure water stream deals damage through sheer force of impact.
+While not as destructive as fire or lightning, water magic has advantages
+in certain environments and against creatures vulnerable to its effects.
+
+Gusher represents the offensive application of water magic, using the
+primal force of water as a weapon. The summoned elemental requires no
+ongoing control - it attacks and vanishes in a single devastating burst.
+
+Class: Mage
+Discipline: Water
+
+See Also: GILLS OF FLESH, WATERY GRAVE, TSUNAMI
+Related Topics: MAGE, WATER MAGIC, ELEMENTALS

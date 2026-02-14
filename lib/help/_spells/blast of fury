@@ -1,3 +1,16 @@
-The blast of fury spell permits the caster to channel emotional negatives
-into one magical burst and direct it toward an enemy.  Damage is typically
-high.
+Syntax: cast 'blast of fury' <target>
+
+Blast of Fury channels the caster's anger and frustration into a devastating
+burst of magical energy directed at a single target. The spell transforms
+emotional negativity into raw destructive force, making it more potent when
+the caster is truly enraged.
+
+This single-target attack spell deals significant damage, drawing power from
+the caster's emotional state. Warriors who dabble in the arcane arts find
+this spell particularly satisfying, though pure mages can master it as well.
+
+The spell requires a clear target and direct line of sight. Unlike cold or
+fire-based attacks, the blast of fury has no elemental association and
+cannot be resisted through elemental protection spells.
+
+See Also: MYSTIC DARTS, STUNNING ARROW

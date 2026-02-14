@@ -1,3 +1,16 @@
-Clot allows the cleric to bring an end to a victim's bleeding.  It will cause
-a wound to close, but does not do so in a sterile manner - various infections
-may be left behind.
+Syntax: pray 'clot' <target>
+
+The Clot prayer halts bleeding from open wounds by accelerating the body's
+natural clotting process. The divine magic forces blood to coagulate
+rapidly, sealing wounds that might otherwise prove fatal from blood loss.
+
+While the prayer effectively stops bleeding, it does not sterilize the
+wound or promote proper healing. Debris and contaminants may become sealed
+within the injury, potentially leading to infection. For this reason, clot
+is often followed by sterilize and proper healing prayers when time permits.
+
+In emergency situations, clot can save lives by preventing death from
+blood loss. The prayer works on any bleeding wound regardless of cause,
+making it invaluable in combat where serious injuries are common.
+
+See Also: STERILIZE, SALVE, CURE DISEASE

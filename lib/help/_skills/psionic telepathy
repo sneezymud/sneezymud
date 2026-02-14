@@ -1,0 +1,28 @@
+Syntax: ptell <person> <message>
+Syntax: psay <message>
+Syntax: pshout <message>
+
+Psionic telepathy is the foundational power that first manifests in those
+born with the gift. It allows the psionicist to project their thoughts
+directly into the minds of others, communicating without words or sound.
+
+The ptell command sends a private telepathic message to a specific person
+anywhere in the world. The recipient perceives the message as a thought
+that simply appears in their consciousness, distinct from their own.
+
+The psay command broadcasts a thought to all minds within the immediate
+vicinity, allowing others in the same room to perceive your projected
+thoughts. Creatures in the room will see a message indicating you are
+thinking rather than speaking aloud.
+
+The pshout command is the most taxing form of telepathic communication,
+broadcasting a thought to all receptive minds throughout the world.
+This should be used sparingly, as flooding the world with mental noise
+is considered impolite among the gifted.
+
+All forms of telepathic communication consume mana. The power cannot be
+used while focusing your mind, as the concentration required for mind
+focus precludes external projection.
+
+See Also: PSIONICS, MIND FOCUS
+

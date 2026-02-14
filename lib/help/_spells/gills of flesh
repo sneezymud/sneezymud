@@ -1,2 +1,19 @@
-The target of the gills of flesh spell will be imbued with the power to
-breathe water.  The ability lasts up to 7 hours.
+Gills of Flesh transforms the target's respiratory system to breathe
+water as easily as air. The spell creates temporary gill-like structures
+that extract oxygen from water, allowing extended underwater exploration.
+
+Usage: cast 'gills of flesh' <target>
+
+The spell grants the water breathing ability for up to 8 hours, more than
+enough time for most underwater expeditions. The target can breathe both
+air and water while the spell is active.
+
+This spell is essential for exploring underwater areas, recovering items
+from bodies of water, or pursuing aquatic enemies into their domain.
+Without it, land-dwellers quickly drown in underwater environments.
+
+Class: Mage
+Discipline: Water
+
+See Also: AQUALUNG, SWIM
+Related Topics: MAGE, WATER MAGIC, UNDERWATER

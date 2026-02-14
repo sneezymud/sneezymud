@@ -1,3 +1,17 @@
-The dispel invisibility spell allows the caster to strip a victim or item
-of its invisible cloak of concealment.  Obviously, the caster needs to be
-able to see the target in order to be successful.
+Syntax: cast 'dispel invisible' <target>
+
+Dispel Invisible strips away magical concealment from a creature or object,
+revealing it to normal sight. The spell unravels the enchantment that bends
+light around the target, making the invisible visible once more.
+
+The caster must be able to perceive the target in some way to cast this
+spell - typically through detect invisible, true sight, or other magical
+means. Casting dispel invisible on a target that is already visible has
+no effect (and may elicit some confused looks from bystanders).
+
+The spell permanently removes the invisibility effect rather than merely
+suppressing it. The target must be made invisible again through another
+casting to regain concealment. This makes dispel invisible valuable for
+exposing sneaky opponents or revealing hidden objects.
+
+See Also: INVISIBILITY, DETECT INVISIBLE, FAERIE FOG

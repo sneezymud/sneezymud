@@ -1,3 +1,17 @@
-Acid blast causes a shower of caustic acid to bathe those in the immediate 
-vicinity of the spell caster.  Most exposed materials are extremely susceptible
-to corrosion, and exposed flesh will surely feel the burn.  
+Syntax: cast 'acid blast'
+
+Acid Blast conjures a shower of caustic acid that rains down upon all enemies
+in the caster's immediate vicinity. The corrosive liquid sears exposed flesh
+and damages equipment, making this spell particularly effective against lightly
+armored foes.
+
+This area effect spell damages all hostile creatures in the room. The acid is
+magically generated and dissipates quickly, but not before inflicting
+significant harm. Equipment struck by the acid may suffer corrosion damage
+over time.
+
+Acid Blast is commonly used when facing multiple opponents, as its area effect
+can strike several enemies simultaneously. The spell works best in enclosed
+spaces where victims cannot easily escape the acid rain.
+
+See Also: ICE STORM, ARCTIC BLAST, GUSHER
