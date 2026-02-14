@@ -1,3 +1,21 @@
-Detect trap permits the looter to discover a trap before they stumble into it.
-Detect trap operates automatically whenever a trap is present.  Success will 
-reveal the presence of the trap, failure will leave it concealed.
+A skilled looter develops an instinctive awareness of danger, detecting the
+subtle signs of hidden traps before blundering into them. This passive skill
+operates automatically whenever the thief encounters a trapped door, container,
+or other object.
+
+When a trap is present, the detect trap skill checks against the trap's
+concealment. Success reveals the trap's presence, allowing the thief to
+decide whether to disarm it or avoid triggering it. Failure leaves the
+trap hidden, potentially leading to a painful surprise.
+
+The effectiveness of detection depends on the thief's skill level versus
+the difficulty of the trap. More sophisticated traps are harder to detect,
+but a master looter can spot even the most cunningly concealed mechanisms.
+Note that failed detection on an untrapped item may create a "ghost trap"
+that appears real until disarmed.
+
+Detect trap is essential for any thief who wishes to survive encounters
+with trapped treasures. Even experienced looters sometimes miss traps, so
+caution is always advised.
+
+See Also: DISARM TRAP, SET TRAP

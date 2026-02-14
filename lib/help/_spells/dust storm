@@ -1,2 +1,19 @@
-The dust storm spell will cause a swirl of dust to engulf all opponents in
-the caster's vicinity.  Damage from the choking dust is modest.
+Dust Storm conjures a violent whirlwind of choking dust that engulfs all
+enemies in the area. The swirling particles tear at exposed flesh and fill
+the lungs of anyone caught in the maelstrom.
+
+Usage: cast 'dust storm'
+
+This area effect spell damages all non-group members in the room. While
+the damage from each individual particle is modest, the cumulative effect
+on multiple enemies makes it useful for crowd control situations.
+
+Dust Storm cannot be cast underwater, as there is no air to carry the
+dust. A critical success doubles the spell's damage as the storm becomes
+particularly intense.
+
+Class: Mage
+Discipline: Air
+
+See Also: TORNADO, GUST, SUFFOCATE
+Related Topics: MAGE, AREA SPELLS, AIR MAGIC

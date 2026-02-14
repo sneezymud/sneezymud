@@ -1,2 +1,22 @@
-The fumble spell will cause the victim to drop any item it is holding.  The
-spell is less likely to work on creatures of greater level than the caster.
+Fumble is a spirit magic spell that disrupts the victim's coordination,
+causing them to drop whatever they are holding. The spell creates a
+momentary disconnect between mind and body, making the target's grip
+fail at a critical moment.
+
+Usage: cast 'fumble' <target>
+
+This spell forces the victim to drop held items, potentially disarming
+dangerous opponents or causing them to lose important equipment. The
+spell becomes less effective against creatures of significantly higher
+level than the caster, as their greater mental fortitude resists the
+magical disruption.
+
+Fumble is a tasked spell requiring concentration to complete. It is
+particularly useful against weapon-wielding enemies, though it can
+affect any held item.
+
+Class: Mage
+Discipline: Spirit
+
+See Also: TELEKINESIS, DISARM
+Related Topics: MAGE, SPIRIT MAGIC

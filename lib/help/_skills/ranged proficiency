@@ -1,2 +1,18 @@
+Ranged Proficiency represents your training with missile weapons such as
+bows, crossbows, and thrown weapons. These weapons allow you to strike
+enemies from a distance before they can close to melee range.
 
-/* bug Cosmo for details */
+Higher proficiency increases your accuracy and effectiveness with ranged
+weapons. As you advance, you learn proper aiming techniques, breath
+control, and how to account for distance and movement when targeting foes.
+
+Ranged combat offers significant tactical advantages - you can soften up
+enemies before melee, attack from positions of safety, or pick off fleeing
+foes. However, ranged weapons typically require ammunition and cannot be
+used effectively in close quarters.
+
+Once you have achieved sufficient proficiency, you may pursue Ranged
+Specialization for additional shots per round.
+
+See Also: RANGED SPECIALIZATION, FAST LOAD, ARROWS, WEAPON PROFICIENCY
+Related Topics: COMBAT, WEAPONS, RANGER

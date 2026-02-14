@@ -1,3 +1,18 @@
-Expel safely removes an embedded item from a person without risk of causing
-additional damage (bleeding or infection).  Expel merely removes the item from
-the body, but does not repair damage the item may have caused already.
+Syntax: pray 'expel' <target>
+
+The Expel prayer safely removes embedded objects from a person's body using
+divine intervention. Arrows, spear tips, and other foreign objects are
+pushed out through the entry wound without causing the bleeding and tissue
+damage that normally accompanies removal.
+
+This prayer is invaluable for battlefield medicine. Manually removing
+embedded objects typically causes severe bleeding and risks infection, but
+expel extracts items cleanly through the power of faith. The object falls
+to the ground once removed.
+
+Important: Expel only removes the foreign object - it does not heal any
+damage the item caused when it struck the victim. Wounds, broken bones,
+and bleeding that existed before the prayer remain and require additional
+healing. The prayer also does not sterilize the wound.
+
+See Also: CLOT, STERILIZE, SALVE, KNIT BONE

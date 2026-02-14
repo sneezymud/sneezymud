@@ -1,3 +1,21 @@
-The knit-bone prayer will cause a broken or fractured bone to mend becoming as
-good as new.  While the bone will knit, ancillary damage such as bleeding or
-other disfigurement that may have resulted when the bone shattered is not fixed.
+Syntax: pray 'knit bone' <target>
+
+The Knit Bone prayer channels divine healing energy to mend broken and
+fractured bones, restoring them to their original state. The prayer causes
+bone fragments to realign and fuse together, healing in moments what would
+normally take weeks of rest and splinting.
+
+The prayer specifically targets bone damage - it does not heal the soft
+tissue injuries that typically accompany broken bones. Bleeding, bruising,
+torn muscles, and nerve damage from the original injury remain and must
+be addressed separately. For this reason, knit bone is often used in
+combination with other healing prayers.
+
+A successfully knit bone becomes as good as new, with no lingering weakness
+or deformity. The prayer works on any broken bone regardless of severity,
+from hairline fractures to compound breaks. However, it cannot regrow
+bones that have been completely destroyed or lost.
+
+The prayer requires the caster to specify which limb or body part to heal.
+
+See Also: RESTORE LIMB, SALVE, CLOT, EXPEL

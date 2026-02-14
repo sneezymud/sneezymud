@@ -1,0 +1,30 @@
+Syntax: psidrain <victim>
+
+Psionic drain allows the psionicist to siphon mental energy directly
+from a target's mind, replenishing their own reserves at the victim's
+expense. This vampiric power literally drains the victim's mana while
+simultaneously inflicting damage from the mental intrusion.
+
+A successful drain transfers a portion of the victim's mental energy
+to the psionicist, restoring their mana. The transfer also deals damage
+and temporarily affects the victim's agility as their mind struggles
+to compensate for the sudden loss of psychic energy.
+
+Victims cannot be drained repeatedly in quick succession - there is a
+recovery period during which the mind resists further draining attempts.
+Mindless creatures and dumb animals provide significantly less energy
+when drained, as their minds hold less to take.
+
+The power initiates combat if the psionicist is not already engaged
+with the target. If used in combat, it can be directed at the current
+opponent without specifying a target.
+
+Certain beings, particularly mindflayers, possess a more terrible form
+of this power. They can only drain incapacitated victims, but extract
+both life force and mental energy through their alien physiology.
+Their draining is far more intimate and horrifying to witness.
+
+This power cannot be used while focusing your mind.
+
+See Also: PSIONICS, MIND FOCUS
+

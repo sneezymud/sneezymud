@@ -1,2 +1,20 @@
-The caster launches a sharp stream of lava at the victim causing
-intense fire damage.
+Lava Lance conjures a spear of molten rock that streaks toward the target
+with deadly precision. The superheated magma burns through armor and flesh
+alike, dealing intense fire damage on impact.
+
+Usage: cast 'lava lance' <target>
+
+This spell combines earth and fire magic to create one of the most
+devastating single-target attacks available to mages. The molten lance
+burns at extreme temperatures, making it particularly effective against
+creatures vulnerable to fire.
+
+The spell requires precise aim and magical control to form the lava into
+a coherent projectile. Masters of this spell can punch through even
+heavily armored opponents.
+
+Class: Mage
+Discipline: Fire
+
+See Also: FIREBALL, INFERNO, FLAMESTRIKE
+Related Topics: MAGE, FIRE MAGIC

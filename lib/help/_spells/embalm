@@ -1,1 +1,19 @@
-This spell slows down the decay of any corpse.
+Embalm is a shaman ritual that preserves corpses from the natural process
+of decay. Through communion with the spirits of preservation, the shaman
+can extend the time a corpse remains intact.
+
+Usage: cast 'embalm' <corpse>
+
+This spell requires a corpse as the target. When successfully cast, the
+corpse's decay timer is significantly extended, giving more time to
+retrieve belongings, perform burial rites, or conduct other activities
+that require an intact body.
+
+Embalm is a tasked spell that requires concentration to complete. The
+spell has no effect on corpses that are already immune to decay.
+
+Class: Shaman
+Discipline: Shaman
+
+See Also: CORPSES, DEATH
+Related Topics: SHAMAN

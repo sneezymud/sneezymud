@@ -1,0 +1,20 @@
+Syntax: set trap arrow <container|door> <arrow>
+
+Set Arrow Trap allows a skilled thief to rig a container or door with a
+concealed arrow that will fire when the trap is triggered. The arrow must
+be in your inventory and will be consumed when setting the trap.
+
+When an unsuspecting victim opens the trapped container or door, the arrow
+fires at them, potentially causing significant damage. The quality of the
+arrow affects the damage dealt, and poisoned arrows retain their venom.
+
+More skilled trappers can set deadlier traps that are harder to detect and
+more likely to strike true. Failed attempts may trigger the trap prematurely,
+potentially injuring the trapper themselves.
+
+Class: Thief
+Discipline: Traps
+
+See Also: DETECT TRAP, DISARM TRAP, SET CONTAINER TRAP, SET DOOR TRAP
+Related Topics: THIEF
+

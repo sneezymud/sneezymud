@@ -1,2 +1,19 @@
+Blunt Proficiency represents your training with crushing weapons such as
+maces, hammers, clubs, flails, and similar armaments. These weapons rely
+on raw impact force rather than cutting edges to damage opponents.
 
-/* bug Cosmo for details */
+Higher proficiency increases your accuracy and effectiveness with blunt
+weapons. As you advance, you learn proper grip, stance, and swing
+techniques that allow you to land blows more consistently and with
+greater force.
+
+Blunt weapons are particularly effective against armored foes and
+skeletons, as crushing force transfers through armor better than slashing
+attacks. They are also required for the "smooth" skill, which restores
+weapon quality.
+
+Once you have achieved sufficient proficiency in blunt weapons, you may
+pursue Blunt Specialization for additional attacks per round.
+
+See Also: BLUNT SPECIALIZATION, SMOOTH, WEAPON PROFICIENCY
+Related Topics: COMBAT, WEAPONS

@@ -1,4 +1,17 @@
-The offensive ritual demands deep concentration from the shaman. The
-shaman will attempt to call upon the loa to boil the victims blood
-from within their bodies. This ritual can prove to be very damaging
-to both the victim as well as the shaman upon failure.
+Syntax: cast 'boiling blood' <target>
+
+Boiling Blood is a devastating offensive ritual that calls upon the loa to
+superheat the blood within a victim's body. The ritual requires deep
+concentration and communion with the spirits, channeling their dark power
+to cook the target from within.
+
+This attack deals significant internal damage that bypasses most physical
+armor. The victim experiences intense agony as their blood approaches the
+boiling point, potentially causing lasting harm even if they survive.
+
+The ritual carries considerable risk for the shaman. A failed casting may
+cause the dark energies to rebound, inflicting similar torment upon the
+caster. Only experienced houngans should attempt this ritual, and even
+then with caution.
+
+See Also: SOUL TWIST, LIFE LEECH, DISTORT

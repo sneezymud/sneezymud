@@ -1,3 +1,18 @@
-The color spray spell creates a clashing rainbow that leaps from the caster's
-outstretched arm enveloping everyone in the vicinity and inflicts damage
-on all touched by the various colors.
+Syntax: cast 'color spray'
+
+Color Spray unleashes a violent cascade of clashing chromatic energies
+that leap from the caster's outstretched hand. The rainbow of magical
+colors sweeps across the area, striking all enemies in the vicinity with
+disorienting and damaging bursts of light.
+
+This area effect spell damages all hostile creatures in the room. The
+chaotic nature of the colors makes the damage difficult to resist through
+conventional means, as no single elemental protection provides immunity.
+
+The spell is particularly disorienting to creatures with darkvision or
+those accustomed to darkness, as the brilliant display overwhelms their
+sensitive vision. Allies of the caster are not affected by the spray.
+
+Color Spray is a versatile combat spell useful against multiple opponents.
+
+See Also: ACID BLAST, MYSTIC DARTS

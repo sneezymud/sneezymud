@@ -1,2 +1,21 @@
-Bone break is the skill of grabbing an opponent and using leverage to break
-one of their limbs.
+Bonebreak is a devastating monk technique that uses leverage and precise
+force application to fracture an opponent's limbs. Unlike brute-force
+attacks, this skill relies on understanding anatomy and exploiting the
+natural weaknesses of skeletal structure.
+
+Usage: bonebreak <target>
+
+When successful, Bonebreak can inflict serious damage and potentially
+break one of the victim's limbs, causing lasting combat penalties until
+healed. Some creatures with unusual physiology or supernatural resilience
+may be immune to bone-breaking effects.
+
+This skill embodies the monk philosophy that technique and knowledge
+triumph over raw strength. A well-placed bonebreak can disable even
+the mightiest foe.
+
+Class: Monk
+Discipline: Leverage
+
+See Also: SHOULDER THROW, CHOP, SPRINGLEAP
+Related Topics: MONK, COMBAT

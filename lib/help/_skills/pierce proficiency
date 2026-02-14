@@ -1,2 +1,18 @@
+Pierce Proficiency represents your training with thrusting weapons such as
+daggers, rapiers, spears, and similar armaments. These weapons deal damage
+by puncturing armor and flesh with concentrated force at a single point.
 
-/* bug Cosmo for details */
+Higher proficiency increases your accuracy and effectiveness with piercing
+weapons. As you advance, you learn proper thrusting techniques, targeting
+of vital areas, and methods to slip your blade through gaps in armor.
+
+Piercing weapons are favored by thieves for their precision and their
+effectiveness in backstab attacks. They can be particularly deadly when
+targeting vital organs. Like slashing weapons, they require regular
+maintenance with the "sharpen" skill.
+
+Once you have achieved sufficient proficiency in piercing weapons, you may
+pursue Pierce Specialization for additional attacks per round.
+
+See Also: PIERCE SPECIALIZATION, SHARPEN, BACKSTAB, WEAPON PROFICIENCY
+Related Topics: COMBAT, WEAPONS

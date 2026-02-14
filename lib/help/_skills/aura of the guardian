@@ -1,3 +1,23 @@
-A deikhan focused on protecting his allies may project an aura of the guardian.
-This aura grants allies additional health as well as protecting them from all 
-types of damage and even making them harder to hit in combat.
+Syntax: aura guardian
+
+The Aura of the Guardian embodies the deikhan's sacred duty to protect those
+under their charge. By projecting this aura, the deikhan calls upon divine
+power to shield allies from harm and bolster their ability to withstand
+punishment.
+
+While projecting this aura, all group members in the room benefit from
+increased hit points, enhanced protection against all damage types, and
+improved ability to avoid attacks entirely. Deikhans themselves receive
+an additional bonus to protection, reflecting their special connection
+to this defensive blessing.
+
+The Guardian aura is particularly valuable when the party faces powerful
+enemies capable of dealing massive damage. The combination of extra health
+and damage mitigation can mean the difference between victory and defeat.
+
+Only one aura may be projected at a time. Activating a new aura replaces any
+currently active projection. The aura affects all group members in the same
+room as the deikhan.
+
+See Also: AURA OF MIGHT, AURA OF REGENERATION, AURA OF ABSOLUTION,
+          AURA OF VENGEANCE

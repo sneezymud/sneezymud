@@ -1,3 +1,22 @@
-Faerie fog is a thick, purplish vapor of magical origin.  It has the property
-that causes it to seek out invisible creatures and reveal them.  The fog tends
-to be of limited volume and is centered around the caster.
+Syntax: cast 'faerie fog'
+
+Faerie Fog summons a thick cloud of enchanted purple vapor that fills the
+immediate area around the caster. This mystical fog has the unique property
+of seeking out and clinging to invisible creatures, outlining their forms
+and revealing them to normal sight.
+
+The spell creates a billowing cloud that spreads throughout the room,
+penetrating magical concealment that would foil ordinary detection methods.
+Creatures hidden by invisibility spells, potions, or natural abilities are
+exposed when the fog touches them.
+
+Unlike dispel invisible, faerie fog does not permanently remove the
+invisibility enchantment - it merely makes the invisible visible for a
+time by coating them in luminescent particles. Once the fog dissipates,
+creatures may regain their concealment if the underlying magic persists.
+
+The fog is centered on the caster and affects all invisible creatures in
+the room regardless of allegiance, potentially revealing hidden allies as
+well as enemies.
+
+See Also: DETECT INVISIBLE, DISPEL INVISIBLE, TRUE SIGHT

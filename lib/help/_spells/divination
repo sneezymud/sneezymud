@@ -1,3 +1,18 @@
-Divination is an improved form of the identify spell, yielding more
-in depth information about a creature or object.  Accuracy of the
-information is dependent on the caster's level.
+Syntax: cast 'divination' <target>
+        cast 'divination' <object>
+
+Divination is an advanced form of the identify spell, revealing far more
+detailed information about creatures or objects. Through careful magical
+analysis, the caster perceives hidden properties, enchantments, and
+characteristics that the basic identify spell cannot detect.
+
+When cast on an object, divination reveals magical properties, charges,
+bonuses, and other significant attributes. When cast on a creature, it
+provides insight into their capabilities, resistances, and current status.
+
+The accuracy and depth of information gained depends on the caster's level
+and skill. Higher-level casters perceive more subtle details and are less
+likely to receive erroneous readings. Even master diviners may fail to
+pierce particularly powerful magical concealments.
+
+See Also: IDENTIFY, DETECT MAGIC

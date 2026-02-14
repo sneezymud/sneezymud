@@ -1,3 +1,24 @@
-This ritual will help protect you from unwanted or enemy witchcraft.
-This is by no means a way to become supernatural to witchery's affects,
-however it will provide some minor immunity.
+Syntax: cast 'djalla's protection' <target>
+
+Djalla's Protection invokes the guardian loa Djalla to shield the target
+from hostile witchcraft and dark magic. The blessing provides partial
+immunity to several dangerous effects commonly employed by enemy shamans
+and evil spellcasters.
+
+The protection grants resistance to:
+  - Summoning magic that would forcibly relocate the target
+  - Poison effects from magical and mundane sources
+  - Sleep and enchantment magic
+  - Charm and domination attempts
+
+The strength of protection scales with the caster's level, providing
+stronger resistance at higher skill. When cast on oneself, the protection
+is at full strength; when blessing others, the effect is halved. A
+critical success doubles the duration and greatly increases the immunity
+percentages.
+
+Djalla's Protection complements Legba's Guidance, which protects against
+different types of harm. Wise houngans employ both blessings for
+comprehensive spiritual defense.
+
+See Also: LEGBA'S GUIDANCE, CHASE SPIRITS

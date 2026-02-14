@@ -1,3 +1,22 @@
-A deikhan who projects an aura of absolution will seek the aid of the dieties to
-grant health and salving of damage incurred in battle. Absolution aura has also 
-been known to clot bleeding and cure poisons.
+Syntax: aura absolution
+
+The Aura of Absolution represents the highest calling of the divine warrior,
+channeling the healing power of the gods to protect and restore allies in
+battle. A deikhan projecting this aura becomes a beacon of restorative light.
+
+While projecting this aura, the deikhan periodically calls upon divine favor
+to heal wounds, salve damaged limbs, clot bleeding injuries, and purge poisons
+from affected party members. The aura emanates a gentle warmth as it works,
+providing comfort even in the darkest battles.
+
+The aura's effects are automatic and occur randomly during combat, prioritizing
+the most severely injured or afflicted party members. The healing provided
+rivals that of dedicated clerics, making the projecting deikhan invaluable
+for sustained combat operations.
+
+Only one aura may be projected at a time. Activating a new aura replaces any
+currently active projection. The aura affects all group members in the same
+room as the deikhan.
+
+See Also: AURA OF MIGHT, AURA OF REGENERATION, AURA OF THE GUARDIAN,
+          AURA OF VENGEANCE

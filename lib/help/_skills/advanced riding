@@ -1,2 +1,20 @@
-Advanced riding has many subtle affects on riding.  In general, it gives a
-deikhan more skill when riding any type of mount.
+Advanced Riding represents a deikhan's mastery of mounted combat techniques
+that transcend any particular type of mount. This foundational skill enhances
+all mounted activities and combines with mount-specific riding skills to
+determine overall effectiveness.
+
+When riding, your Advanced Riding skill combines with your proficiency in
+the specific mount type (domestic, nondomestic, winged, or exotic) to
+calculate your mounted combat bonus. The better you are at both general
+riding technique and the specific mount type, the more effective you become.
+
+This skill affects mounted movement, combat maneuvers, and your ability to
+maintain control during chaotic situations. It represents the universal
+principles of balance, communication with the mount, and tactical awareness
+that apply regardless of what creature you ride.
+
+Class: Deikhan
+Discipline: Mounted Combat
+
+See Also: RIDE, RIDE DOMESTIC, RIDE NONDOMESTIC, RIDE WINGED, RIDE EXOTIC
+Related Topics: DEIKHAN, MOUNTS, CHARGE

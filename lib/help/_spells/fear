@@ -1,3 +1,20 @@
-Victims affected by fear will instantly flee the caster and the caster's mere
-presence will induce great fear.  Potential victims get a save to avoid
-the effects.  The fear lasts a level dependent amount of time.
+Syntax: cast 'fear' <target>
+
+The Fear spell overwhelms the victim's mind with supernatural terror,
+causing them to instantly flee from the caster in blind panic. For the
+duration of the effect, the caster's mere presence induces paralyzing
+dread, preventing the victim from willingly approaching.
+
+Victims who fail their saving throw will:
+  - Immediately flee the room in a random direction
+  - Be unable to return to the caster's location while affected
+  - Panic and act erratically if cornered
+
+The fear effect lasts for a duration dependent on the caster's level.
+Strong-willed creatures have a chance to resist the initial spell and
+may shake off the effect more quickly.
+
+Fear cannot be cast on oneself. Creatures that recover from fear and
+survive often bear lasting grudges against those who terrorized them.
+
+See Also: HYPNOSIS, CALM, INTIMIDATE

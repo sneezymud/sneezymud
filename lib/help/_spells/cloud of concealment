@@ -1,3 +1,17 @@
-The cloud of concealment spell calls forth a thick, voluminous cloud around
-the caster's group.  When the cloud dissipates, the group remains invisible
-for a short duration.  The duration of the invisibility is typically 12 hours.
+Syntax: cast 'cloud of concealment'
+
+Cloud of Concealment summons a thick, mystical vapor that envelops the
+caster's entire group. As the cloud slowly dissipates, it leaves behind
+a residual invisibility effect on all group members present, concealing
+them from normal sight.
+
+The spell affects all grouped members in the same room as the caster,
+making it far more efficient than casting individual invisibility spells
+on each person. The invisibility typically lasts around 12 hours, though
+duration may vary based on the caster's skill.
+
+Group members must remain in the room until the cloud dissipates for the
+invisibility to take effect. The concealment breaks upon taking offensive
+action, as with normal invisibility.
+
+See Also: INVISIBILITY, DISPEL INVISIBLE

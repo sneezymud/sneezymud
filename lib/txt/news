@@ -1,6 +1,12 @@
-02-08-26: Added mobs to Kalysia and adjusted the level of a few existing 
+02-15-26: Help files have been expanded and improved across the board.
+          Many skills, spells, prayers, and rituals now have detailed help
+          entries where previously there were only brief placeholders. Psionic
+          powers are also now documented. Type 'help <skill>' or 'help <spell>'
+          to check them out.
+
+02-08-26: Added mobs to Kalysia and adjusted the level of a few existing
           mobs. Changed the sector type of the rooms in The Hospitality
-          Center to be underwater.  
+          Center to be underwater.
 
 01-25-26: Adjusted when the coronary spell is learned and becomes maxable.
 
