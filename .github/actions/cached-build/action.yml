@@ -13,15 +13,19 @@ inputs:
 runs:
   using: composite
   steps:
-    # Compute a cache key from every file that affects the compiled binary.
-    # An exact key match means nothing changed since the last build, so we
-    # can skip compilation entirely (especially the slow linking step).
-    # A prefix match restores the most recent cache as a ccache seed, then
-    # rebuilds only what changed.
+    # Cache key is derived from every file that affects the compiled binary.
+    # Exact match → skip build entirely, use cached binary.
+    # Prefix match → restore ccache for faster recompilation.
+    #
+    # Keys are branch-scoped with a master fallback, so PRs seed from
+    # master on first push and hit their own cache on subsequent pushes, which
+    # should significantly speed up re-runs of the PR validation workflow on
+    # successive pushes.
     - name: Configure cache key
       shell: bash
       env:
-        CACHE_KEY_PREFIX: ${{ runner.os }}-cmake-${{ inputs.build-preset }}-master
+        BRANCH_KEY: ${{ github.head_ref || github.ref_name }}
+        CACHE_BASE: ${{ runner.os }}-cmake-${{ inputs.build-preset }}
         SOURCE_HASH: ${{ hashFiles(
           '**/CMakeLists.txt',
           'CMakePresets.json',
@@ -32,19 +36,21 @@ runs:
       run: |
         {
           echo "CMAKE_CACHE_PATHS<<EOF"
-          echo "build/"
+          echo "code/sneezy"
           echo "$HOME/.cache/ccache"
           echo "EOF"
-          echo "CACHE_KEY_PREFIX=${CACHE_KEY_PREFIX}"
-          echo "CACHE_KEY=${CACHE_KEY_PREFIX}-${SOURCE_HASH}"
+          echo "CACHE_KEY_PREFIX=${CACHE_BASE}-${BRANCH_KEY}"
+          echo "CACHE_KEY=${CACHE_BASE}-${BRANCH_KEY}-${SOURCE_HASH}"
+          echo "CACHE_MASTER_PREFIX=${CACHE_BASE}-master"
         } >> "$GITHUB_ENV"
 
-    # The actions/cache/restore action sets an output 'cache-hit' which is:
-    #   - 'true' (string) when the exact cache key matches
-    #   - 'false' (string) when only a restore-keys prefix matches
-    #   - unset (empty string) when no match is found at all
-    # We check != 'true' (not == 'false') so that both partial and no-match
-    # cases correctly fall through to the build steps.
+    # cache-hit is 'true' on exact match, 'false' on prefix match, '' on miss.
+    # We check != 'true' so both partial and no-match fall through to build.
+    #
+    # Only code/sneezy and ccache are cached. On exact hit, code/sneezy is
+    # restored to where the Dockerfile expects it. On partial hit, ccache
+    # seeds recompilation. (Ninja .o files aren't cached because fresh
+    # checkout timestamps make them appear stale — ccache handles this.)
     - name: Restore cached build objects
       id: cache
       uses: actions/cache/restore@v5
@@ -53,16 +59,7 @@ runs:
         key: ${{ env.CACHE_KEY }}
         restore-keys: |
           ${{ env.CACHE_KEY_PREFIX }}-
-
-    # On exact cache hit, just copy the previously cached binary to
-    # where the Dockerfile expects it to avoid re-linking for no reason.
-    - name: Restore binary from cache
-      if: steps.cache.outputs.cache-hit == 'true'
-      shell: bash
-      run: |
-        mkdir -p code
-        cp "build/${{ inputs.build-preset }}/code/code/sneezy" code/sneezy
-        chmod +x code/sneezy
+          ${{ env.CACHE_MASTER_PREFIX }}-
 
     - name: Install build prerequisites
       if: steps.cache.outputs.cache-hit != 'true'
@@ -90,8 +87,8 @@ runs:
         )
         .github/scripts/install-packages.sh "${packages[@]}"
 
-    # Uses ccache to only rebuild files that changed. Still has to re-link
-    # when there are any changes at all, which is the most time-consuming step.
+    # ccache provides incremental compilation. Linking is the slowest step
+    # and always runs in full when any source changes.
     - name: Build from source
       if: steps.cache.outputs.cache-hit != 'true'
       shell: bash
@@ -102,7 +99,7 @@ runs:
         ccache --show-stats
 
     - name: Cache build artifacts
-      if: steps.cache.outputs.cache-hit != 'true' && github.ref == 'refs/heads/master'
+      if: steps.cache.outputs.cache-hit != 'true'
       uses: actions/cache/save@v5
       with:
         path: ${{ env.CMAKE_CACHE_PATHS }}
