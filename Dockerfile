@@ -25,11 +25,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   ca-certificates \
   gdb \
   llvm \
-  libboost-atomic1.83.0 \
-  libboost-filesystem1.83.0 \
-  libboost-program-options1.83.0 \
-  libboost-regex1.83.0 \
-  libboost-system1.83.0 \
   libcurl4 \
   libmariadb3 && \
   apt-get clean && \
