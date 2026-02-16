@@ -217,6 +217,7 @@ immuneTypeT getTypeImmunity(spellNumT type) {
 
   switch (type) {
     case DAMAGE_HOLY:
+    case TYPE_HOLY:
       bit = IMMUNE_HOLY;
       break;
     case SPELL_BLOOD_BOIL:

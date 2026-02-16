@@ -601,6 +601,8 @@ spellNumT getWtype_kluge(weaponT t) {
       return TYPE_CANNON;
     case WEAPON_TYPE_SHRED:
       return TYPE_SHRED;
+    case WEAPON_TYPE_HOLY:
+      return TYPE_HOLY;
     default:
       return TYPE_HIT;
   }
