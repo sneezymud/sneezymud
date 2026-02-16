@@ -1,3 +1,5 @@
+include_guard()
+
 # cmake/Sanitizers.cmake
 # AddressSanitizer and UndefinedBehaviorSanitizer configuration
 #

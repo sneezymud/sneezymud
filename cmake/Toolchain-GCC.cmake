@@ -1,3 +1,5 @@
+include_guard()
+
 # cmake/Toolchain-GCC.cmake
 # GCC-specific toolchain settings: LTO support with bfd linker
 #
@@ -17,7 +19,7 @@
 # ----------------------------------
 # We use static libraries instead of shared libraries:
 #   1. Zero configuration complexity - shared libs require RPATH, symbol visibility, etc.
-#   2. LTO compatibility - static linking enables LTO (10-20% performance gain)
+#   2. LTO compatibility - static linking enables LTO
 #   3. Single instance deployment - no memory sharing benefit with one production server
 #   4. Extensive global state - ~100+ extern declarations would need refactoring
 
@@ -39,8 +41,8 @@ if(SNEEZY_ENABLE_LTO)
         set(CMAKE_RANLIB "${GCC_RANLIB}" CACHE FILEPATH "Ranlib" FORCE)
 
         # Use -flto=auto for parallel LTO (uses all available cores)
-        add_compile_options(-flto=auto)
-        add_link_options(-flto=auto -fuse-linker-plugin)
+        target_compile_options(sneezy_toolchain INTERFACE -flto=auto)
+        target_link_options(sneezy_toolchain INTERFACE -flto=auto -fuse-linker-plugin)
         message(STATUS "GCC LTO enabled with bfd linker")
     else()
         message(WARNING "LTO requested but gcc-ar/gcc-ranlib not found. LTO disabled.")
@@ -48,11 +50,5 @@ if(SNEEZY_ENABLE_LTO)
     endif()
 endif()
 
-# GCC 10+ linker fix for crypt with ASan
-# Without this, libcrypt may not be found at runtime
-if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "10")
-    add_link_options(-Wl,--no-as-needed)
-endif()
-
 # Static linking: check for undefined symbols at link time
-add_link_options(-Wl,-z,defs)
+target_link_options(sneezy_toolchain INTERFACE -Wl,-z,defs)

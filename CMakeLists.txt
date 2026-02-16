@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.25)
 
 project(SneezyMUD
     VERSION 1.0.0
@@ -43,9 +43,9 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Build type" FORCE)
 endif()
 
-option(SNEEZY_ENABLE_ASAN "Enable AddressSanitizer (recommended for production)" ON)
-option(SNEEZY_ENABLE_UBSAN "Enable UndefinedBehaviorSanitizer (dev builds)" OFF)
-option(SNEEZY_ENABLE_LTO "Enable Link-Time Optimization (10-20% performance gain)" OFF)
+option(SNEEZY_ENABLE_ASAN "Enable AddressSanitizer" ON)
+option(SNEEZY_ENABLE_UBSAN "Enable UndefinedBehaviorSanitizer" ON)
+option(SNEEZY_ENABLE_LTO "Enable Link-Time Optimization" OFF)
 option(SNEEZY_BUILD_LOWTOOLS "Build LOW admin tools (deprecated)" OFF)
 option(SNEEZY_BUILD_CGI "Build CGI utilities (deprecated)" OFF)
 option(SNEEZY_BUILD_SHELL "Build shell utilities (deprecated)" OFF)
@@ -64,25 +64,20 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(CTest)
 
 include(CompilerOptions)
+
+# Toolchain target — populated by the compiler-specific toolchain module below.
+# Flags live here (not in add_compile_options) so they don't leak into FetchContent
+# targets like GoogleTest.
+add_library(sneezy_toolchain INTERFACE)
+add_library(sneezy::toolchain ALIAS sneezy_toolchain)
+
 include(Toolchain-GCC)
 include(Toolchain-Clang)
 include(Sanitizers)
 include(Dependencies)
 include(VersionInfo)
-find_package(Git QUIET)
-if(GIT_FOUND AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
-    message(STATUS "Checking git submodules...")
-    execute_process(
-        COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        RESULT_VARIABLE GIT_SUBMOD_RESULT
-    )
-    if(NOT GIT_SUBMOD_RESULT EQUAL "0")
-        message(WARNING "git submodule update failed. JSON library may not be available.")
-    endif()
-endif()
 
-if(CMAKE_EXPORT_COMPILE_COMMANDS AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+if(CMAKE_EXPORT_COMPILE_COMMANDS)
     file(RELATIVE_PATH COMPILE_COMMANDS_REL
         "${CMAKE_SOURCE_DIR}"
         "${CMAKE_BINARY_DIR}/compile_commands.json"
