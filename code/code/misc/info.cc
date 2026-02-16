@@ -2148,6 +2148,7 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme,
       case TYPE_CANNON:
       case TYPE_UNDEFINED:
       case TYPE_SHRED:
+      case TYPE_HOLY:
       case TYPE_MAX_HIT:
       case SKILL_ALCOHOLISM:
       case SKILL_FISHING:

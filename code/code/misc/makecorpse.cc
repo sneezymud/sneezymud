@@ -172,6 +172,7 @@ TThing* TBeing::makeCorpse(spellNumT dmg_type, TBeing* tKiller,
   } else if (!specialCorpse) {
     switch (dmg_type) {
       case DAMAGE_HOLY:
+      case TYPE_HOLY:
         sprintf(buf, "The corpse of %s lies here peacefully.", getName().c_str());
         break;
       case SPELL_GUST:

@@ -645,6 +645,7 @@ enum spellNumT {
   TYPE_SHOOT,
   TYPE_CANNON,
   TYPE_SHRED,
+  TYPE_HOLY,       // weap # : 32;
 
   // keep this as the last of the "weapon" damage types
   TYPE_MAX_HIT,

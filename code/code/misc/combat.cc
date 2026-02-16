@@ -94,11 +94,12 @@ struct attack_hit_type attack_hit_text[TYPE_MAX_HIT - TYPE_MIN_HIT] = {
   {"torch", "torches", "torching"},
   {"splash", "splashes", "splashing"},
   {"maul", "mauls", "mauling"},  // TYPE_BEAR_CLAW
-  {"kick", "kicks", "kicking"},
-  {"maul", "mauls", "mauling"},
-  {"shoot", "shoots", "shooting"},
-  {"fire", "fires", "firing"},
-  {"shred", "shreds", "shredding"},
+  {"kick", "kicks", "kicking"},  // TYPE_KICK
+  {"maul", "mauls", "mauling"},  // TYPE_MAUL
+  {"shoot", "shoots", "shooting"},  // TYPE_SHOOT
+  {"fire", "fires", "firing"},  // TYPE_CANNON
+  {"shred", "shreds", "shredding"},  // TYPE_SHRED
+  {"sear", "sears", "searing"},  // TYPE_HOLY
 };
 
 

@@ -1104,6 +1104,7 @@ const byte sharpness[TYPE_MAX_HIT - TYPE_MIN_HIT] = {
   50,  // TYPE_SHOOT
   50,  // TYPE_CANNON
   65,  // TYPE_SHRED
+  50,  // TYPE_HOLY
 };
 
 const char* const body_flags[] = {"bleeding", "infected", "paralyzed", "broken",
