@@ -69,6 +69,22 @@ cd sneezymud
 
 Pass a username to grant access to a different MariaDB user: `./scripts/setup_db.sh myuser`
 
+#### Restoring a Production Backup
+
+The seed data gets you a working server, but it's a curated subset of the game world - no player accounts, no accumulated game state, and none of the database changes that builders or admins may have made on the live server. If you have access to the [sneezymud/backups](https://github.com/sneezymud/backups) repo (requires membership in the SneezyMUD hackers team), you can replace your local data with a real nightly backup from production:
+
+```bash
+make restore-backup                        # Latest backup, local DB
+make restore-backup DATE=2025-12-28        # Specific date
+make restore-backup DOCKER=1               # Target a Docker dev environment
+```
+
+By default this targets a local MariaDB via socket auth and copies mutable files into `lib/mutable/`. With `DOCKER=1`, it targets the `sneezy-db` container and writes mutable files into the `sneezy-mutable` Docker volume instead.
+
+This is useful when you need real player accounts and characters to reproduce a reported issue, want to test against the full breadth of persisted game state (shops, corpses, rent files, player equipment), or need to pick up database changes that haven't been folded back into the seed data yet.
+
+Both databases are dropped and recreated, so a pre-restore snapshot is saved automatically in case something goes wrong.
+
 ## Build System
 
 The easiest way to build is with Make:
@@ -92,12 +108,12 @@ cmake --build --preset <preset-name> # Build
 
 ### Available Presets
 
-| Preset          | Compiler | Type    | ASan | UBSan | LTO     |
-| --------------- | -------- | ------- | ---- | ----- | ------- |
-| `dev-gcc`       | GCC      | Debug   | Yes  | Yes   | No      |
-| `dev-clang`     | Clang    | Debug   | Yes  | Yes   | No      |
-| `release-gcc`   | GCC      | Release | Yes  | Yes   | Yes     |
-| `release-clang` | Clang    | Release | Yes  | Yes   | ThinLTO |
+| Preset          | Compiler | Type    | ASan | UBSan |
+| --------------- | -------- | ------- | ---- | ----- |
+| `dev-gcc`       | GCC      | Debug   | Yes  | Yes   |
+| `dev-clang`     | Clang    | Debug   | Yes  | Yes   |
+| `release-gcc`   | GCC      | Release | Yes  | Yes   |
+| `release-clang` | Clang    | Release | Yes  | Yes   |
 
 ### Example Build Commands
 
@@ -108,7 +124,7 @@ make
 # Use a different preset
 make PRESET=dev-gcc
 
-# Production build with LTO
+# Production build
 make PRESET=release-clang
 
 # Clean current preset's build directory
