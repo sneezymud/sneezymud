@@ -234,8 +234,8 @@ M 0 24685 1 24676    Shaman Hut (shop 225)
 **
 * Fishing Shop
 **
-M 0 13746 9999 15345 - shopkeeper
-M 0 13747 9999 15345 - fishmaster
+M 0 13746 1 15345 - shopkeeper
+M 0 13747 1 15345 - fishmaster
 M 0 14249 1 14249       Ainx				(shop 37)
 M 0 14255 1 14255       Jank				(shop 38)
 M 0 23635 1 23663       Arenafood seller		(shop 39)
