@@ -20,6 +20,7 @@ export UBSAN_OPTIONS := print_stacktrace=1:halt_on_error=1
 .PHONY: analyze analyze-export analyze-ci
 .PHONY: check-bun check-python3
 .PHONY: test test-func test-all
+.PHONY: restore-backup
 
 all: build
 
@@ -62,6 +63,11 @@ test-func: check-bun
 
 # Run all tests (C++ unit + functional)
 test-all: test test-func
+
+# Restore a nightly backup to local dev environment
+# Usage: make restore-backup [DOCKER=1] [DATE=YYYY-MM-DD]
+restore-backup:
+	./scripts/restore-backup-dev.sh $(if $(DOCKER),--docker) $(if $(DATE),--date $(DATE))
 
 # Format C++ source files (all files, or specific file if FILE is set)
 # Edits in-place using the rules in the .clang-format file in the root folder
@@ -152,6 +158,7 @@ help:
 	@echo "  test            - Run C++ unit tests"
 	@echo "  test-func       - Run functional tests (requires running server, TEST=name)"
 	@echo "  test-all        - Run all tests"
+	@echo "  restore-backup  - Restore a nightly backup (DOCKER=1, DATE=YYYY-MM-DD)"
 	@echo "  format          - Run clang-format (all files, or FILE=path)"
 	@echo "  iwyu-check      - Run include-what-you-use analysis (dry run)"
 	@echo "  iwyu-fix        - Run include-what-you-use and apply fixes"
