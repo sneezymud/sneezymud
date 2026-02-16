@@ -1,3 +1,5 @@
+include_guard()
+
 # cmake/VersionInfo.cmake
 # Extract git version information and write to lib/version.txt
 

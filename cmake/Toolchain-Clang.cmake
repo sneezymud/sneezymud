@@ -1,3 +1,5 @@
+include_guard()
+
 # cmake/Toolchain-Clang.cmake
 # Clang-specific toolchain settings: lld linker and ThinLTO support
 #
@@ -19,7 +21,7 @@ message(STATUS "Configuring Clang toolchain")
 find_program(LLD_LINKER ld.lld)
 
 if(LLD_LINKER)
-    add_link_options(-fuse-ld=lld)
+    target_link_options(sneezy_toolchain INTERFACE -fuse-ld=lld)
     message(STATUS "Using lld linker")
 else()
     message(STATUS "lld not found, using default linker")
@@ -29,8 +31,8 @@ endif()
 # ThinLTO configuration for Clang
 # ThinLTO is faster than full LTO while providing most of the benefits
 if(SNEEZY_ENABLE_LTO)
-    add_compile_options(-flto=thin)
-    add_link_options(-flto=thin)
+    target_compile_options(sneezy_toolchain INTERFACE -flto=thin)
+    target_link_options(sneezy_toolchain INTERFACE -flto=thin)
 
     # Use LLVM ar/ranlib for LTO - system ar uses wrong plugin version
     find_program(LLVM_AR llvm-ar llvm-ar-20 llvm-ar-19 llvm-ar-18)
@@ -47,4 +49,4 @@ if(SNEEZY_ENABLE_LTO)
 endif()
 
 # Static linking: check for undefined symbols at link time
-add_link_options(-Wl,-z,defs)
+target_link_options(sneezy_toolchain INTERFACE -Wl,-z,defs)

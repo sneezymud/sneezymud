@@ -53,6 +53,7 @@ if(BUILD_TESTING)
         googletest
         GIT_REPOSITORY https://github.com/google/googletest.git
         GIT_TAG v1.17.0
+        GIT_SHALLOW TRUE
         DOWNLOAD_EXTRACT_TIMESTAMP TRUE
     )
     FetchContent_MakeAvailable(googletest)

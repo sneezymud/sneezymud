@@ -56,7 +56,7 @@
         {
             "name": "release-gcc",
             "displayName": "GCC Production",
-            "description": "Release build with GCC, -O2 + ASan + UBSan",
+            "description": "Release build with GCC, -O2 + ASan + UBSan. Overrides CMAKE_CXX_FLAGS_RELEASE to drop -DNDEBUG so assert() stays active in production.",
             "inherits": "base-gcc",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
@@ -68,7 +68,7 @@
         {
             "name": "release-clang",
             "displayName": "Clang Production",
-            "description": "Release build with Clang, -O2 + ASan + UBSan",
+            "description": "Release build with Clang, -O2 + ASan + UBSan. Overrides CMAKE_CXX_FLAGS_RELEASE to drop -DNDEBUG so assert() stays active in production.",
             "inherits": "base-clang",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",

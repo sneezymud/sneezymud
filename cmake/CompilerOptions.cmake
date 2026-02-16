@@ -1,3 +1,5 @@
+include_guard()
+
 # cmake/CompilerOptions.cmake
 # Compiler warning flags, debug options, ccache, PCH, and IWYU support
 
@@ -171,8 +173,6 @@ target_compile_options(sneezy_compiler_options INTERFACE
     >
     $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:
         -fno-common
-        -fno-optimize-sibling-calls
-        -fno-omit-frame-pointer
     >
     $<$<AND:$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>,$<CXX_COMPILER_ID:GNU>>:
         -ggdb3

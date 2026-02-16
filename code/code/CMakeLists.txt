@@ -3,10 +3,8 @@ set(LIBSNEEZY_DIRS sys misc cmd disc game obj spec task)
 set(LIBSNEEZY_SOURCES "")
 set(LIBSNEEZY_INCLUDE_DIRS "")
 
-# NOTE: file(GLOB) doesn't detect added/removed files automatically.
-# After adding or removing .cc files, re-run cmake configuration.
 foreach(dir ${LIBSNEEZY_DIRS})
-    file(GLOB dir_sources "${CMAKE_CURRENT_SOURCE_DIR}/${dir}/*.cc")
+    file(GLOB dir_sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${dir}/*.cc")
     list(APPEND LIBSNEEZY_SOURCES ${dir_sources})
     list(APPEND LIBSNEEZY_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/${dir}")
 endforeach()
@@ -24,6 +22,19 @@ target_include_directories(sneezy_lib
         ${LIBSNEEZY_INCLUDE_DIRS}
 )
 
+# GCC needs --no-as-needed for libcrypt when ASan is enabled, otherwise the
+# linker drops it as "unused" and crypt() calls fail at runtime. Scope it to
+# just this library using push-state/pop-state instead of the global flag.
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set(CRYPT_LINK_LIBRARY
+        -Wl,--push-state,--no-as-needed
+        ${CRYPT_LIBRARY}
+        -Wl,--pop-state
+    )
+else()
+    set(CRYPT_LINK_LIBRARY ${CRYPT_LIBRARY})
+endif()
+
 target_link_libraries(sneezy_lib
     PUBLIC
         Boost::program_options
@@ -32,10 +43,10 @@ target_link_libraries(sneezy_lib
         Boost::system
         PkgConfig::MARIADB
         CURL::libcurl
-        ${CRYPT_LIBRARY}
+        ${CRYPT_LINK_LIBRARY}
         nlohmann_json::nlohmann_json
-    PRIVATE
         sneezy::compiler_options
+        sneezy::toolchain
         sneezy::sanitizers
 )
 
@@ -44,8 +55,6 @@ add_executable(sneezy main.cc)
 target_link_libraries(sneezy
     PRIVATE
         sneezy::lib
-        sneezy::compiler_options
-        sneezy::sanitizers
 )
 
 add_custom_command(TARGET sneezy POST_BUILD
@@ -62,8 +71,6 @@ if(SNEEZY_BUILD_LOWTOOLS)
     target_link_libraries(lowtools_common
         PRIVATE
             sneezy::lib
-            sneezy::compiler_options
-            sneezy::sanitizers
     )
 
     set(LOWTOOL_NAMES
@@ -85,8 +92,6 @@ if(SNEEZY_BUILD_LOWTOOLS)
         target_link_libraries(${tool}
             PRIVATE
                 sneezy::lib
-                sneezy::compiler_options
-                sneezy::sanitizers
         )
     endforeach()
 
@@ -102,8 +107,6 @@ if(SNEEZY_BUILD_CGI)
     target_link_libraries(cgi_session
         PRIVATE
             sneezy::lib
-            sneezy::compiler_options
-            sneezy::sanitizers
     )
 
     add_executable(mudmail.cgi cgi/mudmail.cgi.cc $<TARGET_OBJECTS:cgi_session>)
@@ -112,8 +115,6 @@ if(SNEEZY_BUILD_CGI)
             sneezy::lib
             PkgConfig::CGICC
             OpenSSL::Crypto
-            sneezy::compiler_options
-            sneezy::sanitizers
     )
 
     install(TARGETS mudmail.cgi
@@ -128,8 +129,6 @@ if(SNEEZY_BUILD_SHELL)
     target_link_libraries(econ
         PRIVATE
             sneezy::lib
-            sneezy::compiler_options
-            sneezy::sanitizers
     )
 
     install(TARGETS econ
