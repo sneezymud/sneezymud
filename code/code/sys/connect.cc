@@ -971,8 +971,8 @@ int Descriptor::nanny(sstring arg) {
         break;
       }
 
-      if (load_char(tmp_name, &st)) {
-        dynamic_cast<TPerson*>(character)->loadFromDb(tmp_name);
+      if (load_char(tmp_name, &st) &&
+          dynamic_cast<TPerson*>(character)->loadFromDb(tmp_name)) {
         dynamic_cast<TPerson*>(character)->loadFromSt(&st);
       } else {
         writeToQ("No such character, please enter another name.\n\r");
@@ -3666,7 +3666,6 @@ int Descriptor::doAccountMenu(const char* arg) {
     case 'a':
       writeToQ("Enter the name for your character -> ");
       character = new TPerson(this);
-      mud_assert(character != NULL, "Mem alloc problem");
       connected = CON_CREATION_START;
       break;
     case 'C':

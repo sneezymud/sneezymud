@@ -59,7 +59,7 @@ class TPerson : public TBeing {
     void autoDeath();
     void resetChar();
     int genericLoadPC();
-    void loadFromDb(const std::string& name);
+    bool loadFromDb(const std::string& name);
     void loadFromSt(charFile*);
     void fixPracs();
     void initChar();

@@ -2619,7 +2619,12 @@ static bool parseFollowerRentEntry(FILE* fp, TBeing* ch, const char* arg,
 
     if (fscanf(fp, " %d ", &tmp) != 1)
       throw std::runtime_error("3");
-    mud_assert(tmp >= MIN_FACTION && tmp < MAX_FACTIONS, "bad value");
+    if (tmp < MIN_FACTION || tmp >= MAX_FACTIONS) {
+      vlogf(LOG_BUG, format("Bad faction value %d in rent file for mob %d, "
+                            "defaulting to FACT_NONE") %
+                       tmp % mob->getMobIndex());
+      tmp = FACT_NONE;
+    }
     mob->setFaction(factionTypeT(tmp));
 
     if (fscanf(fp, " %f ", &att) != 1)

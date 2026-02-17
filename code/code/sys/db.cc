@@ -2145,7 +2145,12 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing* ch) {
     }
 
     tmp = convertTo<int>(mob_cache[nr]->s["faction"]);
-    mud_assert(tmp >= MIN_FACTION && tmp < MAX_FACTIONS, "Bad faction value");
+    if (tmp < MIN_FACTION || tmp >= MAX_FACTIONS) {
+      vlogf(LOG_BUG,
+        format("Bad faction value %d for mob %d, defaulting to FACT_NONE") %
+          tmp % getMobIndex());
+      tmp = FACT_NONE;
+    }
     setFaction(factionTypeT(tmp));
 
     setPerc((double)convertTo<double>(mob_cache[nr]->s["fact_perc"]));
@@ -2314,7 +2319,12 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing* ch) {
     }
 
     tmp = convertTo<int>(db["faction"]);
-    mud_assert(tmp >= MIN_FACTION && tmp < MAX_FACTIONS, "Bad faction value");
+    if (tmp < MIN_FACTION || tmp >= MAX_FACTIONS) {
+      vlogf(LOG_BUG,
+        format("Bad faction value %d for mob %d, defaulting to FACT_NONE") %
+          tmp % getMobIndex());
+      tmp = FACT_NONE;
+    }
     setFaction(factionTypeT(tmp));
 
     setPerc((double)convertTo<double>(db["fact_perc"]));

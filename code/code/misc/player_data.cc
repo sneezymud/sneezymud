@@ -586,14 +586,18 @@ void TPerson::storeToSt(charFile* st) {
   affectTotal();
 } /* Char to store */
 
-void TPerson::loadFromDb(const std::string& name) {
+bool TPerson::loadFromDb(const std::string& name) {
   player.account_id = desc->account->account_id;
 
   TDatabase db(DB_SNEEZY);
   db.query("select * from player where lower(name) = lower('%s')",
     name.c_str());
-  mud_assert(db.fetchRow(), "can't find player in DB");
+  if (!db.fetchRow()) {
+    vlogf(LOG_BUG, format("loadFromDb: can't find player '%s' in DB") % name);
+    return false;
+  }
   desc->playerID = player.player_id = convertTo<int>(db["id"]);
+  return true;
 }
 
 // TODO: move the whole mess into DB
@@ -773,8 +777,12 @@ void TPerson::loadFromSt(charFile* st) {
   faction.align_lc = st->align_lc;
 #endif
 
-  mud_assert(st->f_type >= MIN_FACTION && st->f_type < MAX_FACTIONS,
-    "bad faction");
+  if (st->f_type < MIN_FACTION || st->f_type >= MAX_FACTIONS) {
+    vlogf(LOG_BUG,
+      format("Bad faction value %d for player %s, defaulting to FACT_NONE") %
+        st->f_type % getName());
+    st->f_type = FACT_NONE;
+  }
   setFaction(factionTypeT(st->f_type));
   setFactAct(st->f_actions);
 

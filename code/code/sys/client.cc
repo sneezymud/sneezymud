@@ -1085,8 +1085,8 @@ int Descriptor::client_nanny(char* arg) {
     outputProcessing();
     return FALSE;
   }
-  if (load_char(tmp_name, &st)) {
-    dynamic_cast<TPerson*>(character)->loadFromDb(tmp_name);
+  if (load_char(tmp_name, &st) &&
+      dynamic_cast<TPerson*>(character)->loadFromDb(tmp_name)) {
     dynamic_cast<TPerson*>(character)->loadFromSt(&st);
   } else {
     clientf(format("%d|No such character exists! Reenter character name or "
@@ -1459,7 +1459,6 @@ int Descriptor::clientCreateChar(char* arg) {
   strcpy(dummy, nextToken('|', 20, arg).c_str());
   // Create the actual TPerson
   ch = new TPerson(this);
-  mud_assert(ch != NULL, "Mem alloc problem");
 
   // Name
   if (_parse_name(dummy, tmp_name)) {
