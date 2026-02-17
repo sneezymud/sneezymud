@@ -102,6 +102,28 @@ TBeing::~TBeing() {
   TRoom* rp = NULL;
   int rc = 0;
 
+  // Invariant warnings: these states should have been cleaned up by callers
+  // before reaching the destructor. The destructor recovers via safety-net
+  // cleanup below, but the warnings surface bugs in deletion paths.
+  if (fight()) {
+    vlogf(LOG_BUG, format("~TBeing: %s still fighting %s at destruction") %
+                     getName() % fight()->getName());
+  }
+  for (auto* ck = gCombatList; ck; ck = ck->next_fighting) {
+    if (ck->fight() == this) {
+      vlogf(LOG_BUG,
+        format(
+          "~TBeing: %s still targeted by %s on combat list at destruction") %
+          getName() % ck->getName());
+      break;
+    }
+  }
+  if (followers && !master) {
+    vlogf(LOG_BUG,
+      format("~TBeing: %s destroyed as group leader with active followers") %
+        getName());
+  }
+
   if ((!roomp || in_room == Room::NOWHERE) &&
       (!desc || !desc->connected || desc->connected >= CON_REDITING)) {
     if (in_room != Room::NOWHERE || parent)
@@ -300,9 +322,8 @@ TBeing::~TBeing() {
 
       // this isn't a critical problem, but using it to figure out how it
       // happens
-      mud_assert(k != NULL, "Character not found in character_list");
-      if (k != NULL)
-        k->next = next;
+      mud_assert(k != nullptr, "Character not found in character_list");
+      k->next = next;
     }
   } else {  // has to have both a desc and a desc->connected
     for (k = character_list; (k); k = k->next) {

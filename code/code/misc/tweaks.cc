@@ -2,6 +2,7 @@
 #include "tweaks.h"
 #include "database.h"
 #include "being.h"
+#include "extern.h"
 
 tweakEntry::tweakEntry() {}
 
@@ -265,6 +266,6 @@ const sstring tweakInfoT::getTweakName(tweakTypeT tt) {
     case MAX_TWEAK_TYPES:
       return "";
   }
-  assert(("Overran gettweakname in tweaks.cc"));
+  mud_assert(0, "Overran gettweakname in tweaks.cc");
   return "";
 }

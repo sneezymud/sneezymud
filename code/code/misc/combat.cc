@@ -508,6 +508,9 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing* tKiller, float exp_lost) {
   deathCry();
   genericKillFix();
 
+  mud_assert(!followers, "rawKill: %s still has followers after genericKillFix",
+    getName().c_str());
+
   if (isPc()) {
     reformGroup();
 
@@ -6104,8 +6107,20 @@ void TBeing::reformGroup() {
 
 void TBeing::genericKillFix(void) {
   reformGroup();
-  DeleteHatreds(this, NULL);
-  DeleteFears(this, NULL);
+  DeleteHatreds(this, nullptr);
+  DeleteFears(this, nullptr);
+
+#ifndef NDEBUG
+  // Verify DeleteHatreds cleared all targ() pointers referencing this
+  // character. O(n) scan on character_list — debug builds only.
+  for (auto* ck = character_list; ck; ck = ck->next) {
+    if (auto* tmons = dynamic_cast<TMonster*>(ck)) {
+      mud_assert(tmons->targ() != this,
+        "genericKillFix: %s still targeted by %s after DeleteHatreds",
+        getName().c_str(), tmons->getName().c_str());
+    }
+  }
+#endif
 
   // we are basically already dead when this gets called.
   // But, because of the spellWearOff, we could die "again"

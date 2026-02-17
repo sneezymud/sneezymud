@@ -842,10 +842,7 @@ void roomDirData::wardDoor(dirTypeT dir, int room) {
 
 // this is a room-special proc
 int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
-  if (!rp) {
-    mud_assert(rp != NULL, "No room in SecretDoors");
-    return FALSE;
-  }
+  mud_assert(rp != nullptr, "No room in SecretDoors");
 
   if (!ch) {
     // some triggers (pulse) will pass in !ch, just ignore them
