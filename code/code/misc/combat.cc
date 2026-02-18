@@ -507,8 +507,10 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing* tKiller, float exp_lost) {
 
   deathCry();
   genericKillFix();
+  dieFollower();
 
   assert(!followers);
+  assert(!master);
 
   if (isPc()) {
     reformGroup();
@@ -1618,6 +1620,7 @@ void TBeing::setFighting(TThing* vict, int dam, bool inFight) {
   if (!isAffected(AFF_ENGAGER))
     tbv->attackers++;
 
+  assert(next_fighting == nullptr);
   next_fighting = gCombatList;
   gCombatList = this;
 
@@ -1871,11 +1874,7 @@ void TBeing::stopFighting() {
     for (tmp = gCombatList; tmp && (tmp->next_fighting != this);
          tmp = tmp->next_fighting)
       ;
-    if (!tmp) {
-      vlogf(LOG_COMBAT,
-        "Char fighting not found Error (combat.cc, stopGighting)");
-      abort();
-    }
+    assert(tmp);
     tmp->next_fighting = next_fighting;
   }
   if (desc && (cantHit > 0)) {

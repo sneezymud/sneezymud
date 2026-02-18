@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 
+#include <cassert>
 #include <csignal>
 #include <cstdarg>
 #include <errno.h>
@@ -2742,12 +2743,14 @@ void processAllInput() {
       d->wait = 1;
       if (d->character) {
         d->character->setTimer(0);
+        assert(d->connected || d->character->desc == d);
         if (d->character->isPlayerAction(PLR_AFK)) {
           d->character->sendTo("Your afk flag has been removed.\n\r");
           d->character->remPlayerAction(PLR_AFK);
         }
       }
       if (d->original) {
+        assert(d->original->desc == nullptr);
         d->original->setTimer(0);
         d->original->remPlayerAction(PLR_AFK);
       }

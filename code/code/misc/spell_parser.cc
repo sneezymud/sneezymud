@@ -240,18 +240,15 @@ void TBeing::dieFollower() {
     j = k->next;
     k->follower->stopFollower(TRUE);
   }
+
+  assert(!master && !followers);
 }
 
 void TBeing::addFollower(TBeing* foll, bool textLimits)  // default argument
 {
   followData *k, *followIndex;
 
-  if (foll->master) {
-    vlogf(LOG_BUG,
-      format("add_follower error: this: %s, leader %s, master %s.") %
-        foll->getName() % getName() % foll->master->getName());
-    foll->master = NULL;
-  }
+  assert(!foll->master);
   foll->master = this;
 
   k = new followData;

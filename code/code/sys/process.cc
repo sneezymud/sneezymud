@@ -182,6 +182,13 @@ void TScheduler::runChar(int pulseNum) {
         continue;
       }
 
+      {
+        int loc = (tmp_ch->roomp != nullptr) + (tmp_ch->parent != nullptr) +
+                  (tmp_ch->equippedBy != nullptr) +
+                  (tmp_ch->stuckIn != nullptr);
+        assert(loc == 1);
+      }
+
       if ((tmp_ch->getPosition() < POSITION_STUNNED) &&
           (tmp_ch->getHit() > 0)) {
         vlogf(LOG_BUG,

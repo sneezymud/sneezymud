@@ -1057,19 +1057,11 @@ void TBeing::equipChar(TThing* obj, wearSlotT pos, silentTypeT silent) {
         getName().c_str() % obj->name.c_str() % pos);
     return;
   }
-  if (obj->parent) {
-    vlogf(LOG_BUG, "EQUIP: Obj is in something when equip.");
-    obj->parent = NULL;
-  }
-  if (obj->in_room != Room::NOWHERE) {
-    vlogf(LOG_BUG, "EQUIP: Obj is in_room when equip.");
-    obj->in_room = Room::NOWHERE;
-    return;
-  }
-  if (obj->stuckIn) {
-    vlogf(LOG_BUG, "EQUIP: Obj is stuck in someone when equip.");
-    obj->stuckIn = NULL;
-  }
+  assert(!obj->parent);
+  assert(obj->in_room == Room::NOWHERE);
+  assert(!obj->roomp);
+  assert(!obj->stuckIn);
+  assert(!obj->equippedBy);
   TBaseClothing* tbc = dynamic_cast<TBaseClothing*>(obj);
   if (tbc && tbc->isShield() && (pos == getPrimaryHold())) {
     sendTo("You can't equip a shield in your primary hand.\n\r");
