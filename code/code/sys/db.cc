@@ -3707,23 +3707,19 @@ bool zoneData::doGenericReset(void) {
   top = zone_table[zone_nr].top;
 
   TObj* o;
-  //  TTrashPile *pile;
-  for (TObjIter iter = object_list.begin(); iter != object_list.end(); ++iter) {
+  for (TObjIter iter = object_list.begin(); iter != object_list.end();) {
     o = *iter;
     if (o->objVnum() >= bottom && o->objVnum() <= top) {
       if (o->spec) {
-        rc = o->checkSpec(NULL, CMD_GENERIC_RESET, "", NULL);
+        rc = o->checkSpec(nullptr, CMD_GENERIC_RESET, "", nullptr);
         if (IS_SET_DELETE(rc, DELETE_ITEM)) {
+          ++iter;  // advance before delete invalidates the current node
           delete o;
-          o = NULL;
           continue;
         }
       }
-
-      // disabled via mudadmin resolution 222, April 20th, 2005
-      //      if((pile=dynamic_cast<TTrashPile *>(o)))
-      //        pile->attractVermin();
     }
+    ++iter;
   }
   return TRUE;
 }
