@@ -130,11 +130,11 @@ TBeing::~TBeing() {
       --(*this);
     else if (stuckIn) {
       if (eq_stuck > WEAR_NOWHERE) {
-        stuckIn->setStuckIn(eq_stuck, NULL);
+        stuckIn->setStuckIn(eq_stuck, nullptr);
       } else {
         vlogf(LOG_BUG, format("Extract on stuck in items %s in slot -1 on %s") %
                          name % stuckIn->name);
-        return;
+        stuckIn = nullptr;
       }
     } else if (equippedBy) {
       if (eq_pos > WEAR_NOWHERE) {
@@ -142,7 +142,7 @@ TBeing::~TBeing() {
       } else {
         vlogf(LOG_BUG, format("Extract on equipped item %s in slot -1 on %s") %
                          name % equippedBy->name);
-        return;
+        equippedBy = nullptr;
       }
     } else if (riding)
       dismount(getPosition());
@@ -431,11 +431,11 @@ TObj::~TObj() {
     --(*this);
   else if (stuckIn) {
     if (eq_stuck > WEAR_NOWHERE) {
-      stuckIn->setStuckIn(eq_stuck, NULL);
+      stuckIn->setStuckIn(eq_stuck, nullptr);
     } else {
       vlogf(LOG_BUG, format("Extract on stuck in items %s in slot -1 on %s") %
                        name % stuckIn->name);
-      return;
+      stuckIn = nullptr;
     }
   } else if (equippedBy) {
     if (eq_pos > WEAR_NOWHERE) {
@@ -443,11 +443,11 @@ TObj::~TObj() {
     } else {
       vlogf(LOG_BUG, format("Extract on equipped item %s in slot -1 on %s") %
                        name % equippedBy->name);
-      return;
+      equippedBy = nullptr;
     }
   } else if (riding) {
     positionTypeT new_pos = POSITION_DEAD;
-    TBeing* tbt = dynamic_cast<TBeing*>(this);
+    auto* tbt = dynamic_cast<TBeing*>(this);
     if (tbt)
       new_pos = tbt->getPosition();
     dismount(new_pos);
