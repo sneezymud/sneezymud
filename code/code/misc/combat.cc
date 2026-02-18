@@ -508,8 +508,7 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing* tKiller, float exp_lost) {
   deathCry();
   genericKillFix();
 
-  mud_assert(!followers, "rawKill: %s still has followers after genericKillFix",
-    getName().c_str());
+  assert(!followers);
 
   if (isPc()) {
     reformGroup();
@@ -5862,7 +5861,7 @@ int TBeing::dislodgeWeapon(TBeing* v, TThing* weapon, wearSlotT part) {
   if (v->isAffected(AFF_STUNNED))
     return FALSE;
 
-  mud_assert(v->slotChance(part), "No slotChance in dislodgeWeapon");
+  assert(v->slotChance(part));
 
   if (weapon && !v->getStuckIn(part)) {
     sstring nameBuf = colorString(this, desc, pers(v), NULL, COLOR_MOBS, TRUE);
@@ -6115,9 +6114,7 @@ void TBeing::genericKillFix(void) {
   // character. O(n) scan on character_list — debug builds only.
   for (auto* ck = character_list; ck; ck = ck->next) {
     if (auto* tmons = dynamic_cast<TMonster*>(ck)) {
-      mud_assert(tmons->targ() != this,
-        "genericKillFix: %s still targeted by %s after DeleteHatreds",
-        getName().c_str(), tmons->getName().c_str());
+      assert(tmons->targ() != this);
     }
   }
 #endif

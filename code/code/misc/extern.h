@@ -14,6 +14,7 @@
 #include "race.h"
 #include "obj_drug.h"
 
+#include <cassert>
 #include <sys/select.h>  // for fd_set
 #include <cmath>         // for pow
 
@@ -256,7 +257,6 @@ extern const sstring describeTime();
 extern void assign_item_info();
 extern void assignTerrainInfo();
 extern int gamePort;  // the port we are running on
-extern void mud_assert(int, const char*, ...);
 extern int determineDissectionItem(TBaseCorpse*, int*, char*, char*, TBeing*);
 extern int determineSkinningItem(TBaseCorpse*, int*, char*, char*);
 extern struct attack_hit_type attack_hit_text[];

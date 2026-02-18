@@ -2112,16 +2112,12 @@ static bool fill_word(const char* argument) {
 
 void argument_interpreter(const char* argument, char* first_arg,
   unsigned int first_arg_size, char* second_arg, unsigned int second_arg_size) {
-  try {
-    sstring tf1, tf2;
-    argument_interpreter(argument, tf1, tf2);
-    strncpy(first_arg, tf1.c_str(), first_arg_size);
-    first_arg[first_arg_size - 1] = '\0';
-    strncpy(second_arg, tf2.c_str(), second_arg_size);
-    second_arg[second_arg_size - 1] = '\0';
-  } catch (...) {
-    mud_assert(0, "Failure in argument_interpreter");
-  }
+  sstring tf1, tf2;
+  argument_interpreter(argument, tf1, tf2);
+  strncpy(first_arg, tf1.c_str(), first_arg_size);
+  first_arg[first_arg_size - 1] = '\0';
+  strncpy(second_arg, tf2.c_str(), second_arg_size);
+  second_arg[second_arg_size - 1] = '\0';
 }
 
 void argument_interpreter(sstring argument, sstring& first_arg,
@@ -2150,20 +2146,16 @@ const char* one_argument(const char* argument, char* first_arg,
   // char * temp;
   sstring s;
   sstring tmp_fa;
-  try {
-    s = one_argument(sstring(argument), tmp_fa);
-    strncpy(first_arg, tmp_fa.c_str(), first_arg_size);
+  s = one_argument(sstring(argument), tmp_fa);
+  strncpy(first_arg, tmp_fa.c_str(), first_arg_size);
 
-    // we should return a pointer into argument equivalent to s.c_str
-    if (s.empty())
-      return &argument[strlen(argument)];  // return pointer to the NULL
-    else {
-      return strstr(argument + strlen(first_arg), s.c_str());
-    }
-  } catch (...) {
-    mud_assert(0, "Bat's expirimental code don't work - exception caught");
-    return NULL;
+  // we should return a pointer into argument equivalent to s.c_str
+  if (s.empty())
+    return &argument[strlen(argument)];  // return pointer to the NULL
+  else {
+    return strstr(argument + strlen(first_arg), s.c_str());
   }
+
   // COSMO STRING FIX
   return NULL;
 }
@@ -3526,11 +3518,8 @@ char* mud_str_dup(const sstring& buf) {
   char* tmp = NULL;
   unsigned int len = buf.length() + 1;
 
-  try {
-    tmp = new char[len];
-  } catch (...) {
-    mud_assert(0, "exception caught in mud_str_dup");
-  }
+  tmp = new char[len];
+
   strncpy(tmp, buf.c_str(), len);
   return tmp;
 }

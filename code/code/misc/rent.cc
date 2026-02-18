@@ -2973,7 +2973,7 @@ void updateRentFile(const char* who) {
   TAccount account;
   bool immortal;
 
-  mud_assert(who != NULL, "updateRentFile called with NULL player name!");
+  assert(who != nullptr);
 
   sprintf(fileName, "mutable/rent/%c/%s", who[0], who);
 

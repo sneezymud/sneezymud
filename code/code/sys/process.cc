@@ -92,8 +92,8 @@ TScheduler::TScheduler() {
   pulse.init(0);
   placeholder = read_object(42, VIRTUAL);
   // don't think we can recover from this
-  mud_assert(placeholder != NULL, "couldn't load placeholder object");
-  mud_assert(real_roomp(0) != NULL, "couldn't load room 0");
+  assert(placeholder != nullptr);
+  assert(real_roomp(0) != nullptr);
   *(real_roomp(0)) += *placeholder;
   objIter = find(object_list.begin(), object_list.end(), placeholder);
 }

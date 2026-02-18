@@ -234,7 +234,7 @@ void TPerson::startLevels() {
   // The first player automatically gets admin powers
   TDatabase db(DB_SNEEZY);
   db.query("select count(1) as num from player");
-  assert(db.fetchRow());
+  db.fetchRow();
   if (db["num"] == "1") {
     setLevel(MAGE_LEVEL_IND, MAX_IMMORT);
     setLevel(CLERIC_LEVEL_IND, MAX_IMMORT);

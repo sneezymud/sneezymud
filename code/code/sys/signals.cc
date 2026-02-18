@@ -49,10 +49,7 @@ void signalSetup(void) {
   signal(SIGVTALRM, checkpointing);
 }
 
-void checkpointing(int) {
-  mud_assert(tics, "CHECKPOINT shutdown: tics not updated. (%d)", tics);
-  tics = 0;
-}
+void checkpointing(int) { tics = 0; }
 
 void shutdownAndPurgeRequest(int num) {
   purgeRequest(num);

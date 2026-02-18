@@ -1988,7 +1988,7 @@ int TComponent::putSomethingIntoContainer(TBeing* ch, TOpenContainer* cont) {
     return rc;
 
   // put succeeded
-  mud_assert(parent == cont, "Bizarre situation in putSomethig int (%d)", rc);
+  assert(parent == cont);
 
   // Enable for !prod for re-introduction.
   if (false) {

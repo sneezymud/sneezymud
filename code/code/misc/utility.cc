@@ -830,8 +830,6 @@ void dirwalk_subs_fullname(const char* dir, void (*fcn)(const char*)) {
 }
 
 bool TBeing::canSee(const TThing* t, infraTypeT infra) const {
-  mud_assert(t != NULL, "canSee with NULL t");
-
   return t->canSeeMe(this, infra);
 }
 
@@ -1352,7 +1350,7 @@ int TThing::visibility() const {
       cbs += 5 + tbt->GetMaxLevel() / 2;
 
       if (tbt->homeTurf()) {
-        cbs += 5; 
+        cbs += 5;
       }
 
       if (tbt->backgroundBonus()) {
@@ -1872,7 +1870,7 @@ int TBeing::getVolume() const {
 
   int vol;
 
-  mud_assert(race != NULL, "No race in getVolume()");
+  assert(race != nullptr);
 
   vol = (int)((race->corpse_const) * (race->corpse_const) * M_PI * getHeight() *
               getHeight() * getHeight());
@@ -1905,7 +1903,7 @@ bool TBeing::checkBusy(const sstring& buf) const {
     sendTo("You are still busy orienting yourself.");
   }
 #if 0
-  int tmpnum = (hitsPerRound ? (int) (cantHit/hitsPerRound + 1) : 1000000); 
+  int tmpnum = (hitsPerRound ? (int) (cantHit/hitsPerRound + 1) : 1000000);
   sendTo(format(" (Roughly %d round%s to go)\n\r") % tmpnum % (tmpnum > 1) ? "s" : "");
 #else
   float tmpnum = (hitsPerRound ? (cantHit / hitsPerRound) : 1000000);

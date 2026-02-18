@@ -106,8 +106,7 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
     return NULL;
   }
 
-  mud_assert(skill > TYPE_UNDEFINED && skill < MAX_SKILL,
-    "Bad skill in getSkill()");
+  assert(skill > TYPE_UNDEFINED && skill < MAX_SKILL);
 
   CDiscipline* cd = getDiscipline(which);
   if (!cd)

@@ -2875,8 +2875,7 @@ armorSetLoad
 used in zoneflie load/etc to set and update sets of eq
 --------------------------- */
 armorSetLoad::armorSetLoad() {
-  mud_assert(cElements(local_armor[0].slots) == MAX_WEAR,
-    "slots not == MAX_WEAR in armorSetLoad ctor");
+  static_assert(std::size(armor_set_struct{}.slots) == MAX_WEAR);
   resetArmor();
 }
 
@@ -2925,7 +2924,7 @@ void runResetCmdE(zoneData& zd, resetCom& rs, resetFlag flags, bool&,
   }
 
   wearSlotT realslot = wearSlotT(rs.arg3);
-  mud_assert(realslot >= MIN_WEAR && realslot < MAX_WEAR, "bad slot");
+  assert(realslot >= MIN_WEAR && realslot < MAX_WEAR);
 
   // check for double-equip
   if (mob->equipment[realslot]) {

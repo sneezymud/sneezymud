@@ -385,7 +385,13 @@ void Race::initRace(const char* whichRace) {
     sprintf(aFilename, "races/RACE_HUMAN");
     raceFile = fopen(aFilename, "r");
   }
-  mud_assert(raceFile != NULL, "No default race file");
+  if (!raceFile) {
+    vlogf(LOG_BUG,
+      format(
+        "initRace: could not open race file for %s or RACE_HUMAN fallback") %
+        whichRace);
+    return;
+  }
 
   // Basically we just start looking for keywords and then assign values
   // into the appropriate data member.

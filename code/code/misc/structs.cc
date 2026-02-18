@@ -320,10 +320,13 @@ TBeing::~TBeing() {
       for (k = character_list; (k) && (k->next != this); k = k->next)
         ;
 
-      // this isn't a critical problem, but using it to figure out how it
-      // happens
-      mud_assert(k != nullptr, "Character not found in character_list");
-      k->next = next;
+#ifndef NDEBUG
+      // O(n) — the for-loop above walked character_list.
+      // Not a critical problem, but helps diagnose how it happens.
+      assert(k != nullptr);
+#endif
+      if (k)
+        k->next = next;
     }
   } else {  // has to have both a desc and a desc->connected
     for (k = character_list; (k); k = k->next) {
@@ -479,9 +482,7 @@ TObj::~TObj() {
   //  object_list.remove(this);
 
   if (number >= 0) {
-    mud_assert(number < (signed int)obj_index.size(),
-      "~TObj: range (%d) beyond obj_index size (%d).  obj=[%s]", number,
-      obj_index.size(), name.c_str());
+    assert(std::cmp_less(number, obj_index.size()));
     obj_index[number].addToNumber(-1);
   }
 
@@ -700,17 +701,12 @@ TThing& TThing::operator+=(TThing& t) {
   if (rp2)
     vlogf(LOG_BUG, "Operator += trying to put a room somewhere");
 
-  mud_assert(t.parent == NULL,
-    ((sstring)(format("TThing += : t.parent existed: %s") %
-               (!t.name.empty() ? t.name.c_str() : "null")))
-      .c_str());
-  mud_assert(t.equippedBy == NULL, "TThing += : t.equippedBy existed");
-  mud_assert(t.stuckIn == NULL, "TThing += : t.stuckIn existed");
-  mud_assert(t.roomp == NULL, "TThing += : t.roomp existed");
-  //
-  mud_assert(((t.inRoom() == Room::VOID) || (t.inRoom() == Room::NOWHERE) ||
-               (t.inRoom() == Room::AUTO_RENT)),
-    "TThing += with t.inRoom()");
+  assert(t.parent == nullptr);
+  assert(t.equippedBy == nullptr);
+  assert(t.stuckIn == nullptr);
+  assert(t.roomp == nullptr);
+  assert(t.inRoom() == Room::VOID || t.inRoom() == Room::NOWHERE ||
+         t.inRoom() == Room::AUTO_RENT);
 
   TMergeable* tm = dynamic_cast<TMergeable*>(&t);
   if (tm) {
@@ -859,17 +855,15 @@ TThing& TThing::operator--() {
   TRoom* rp = NULL;
   int light_mod = 0;
 
-  mud_assert(equippedBy == NULL, "TThing -- : equippedBy existed");
-  mud_assert(stuckIn == NULL, "TThing -- : stuckIn existed");
+  assert(equippedBy == nullptr);
+  assert(stuckIn == nullptr);
 
   if ((t_in = parent)) {
     // obj from char
     // obj from obj
-    mud_assert(!t_in->stuff.empty(), "TThing -- : parent had no stuff");
-    mud_assert(roomp == NULL,
-      "TThing -- : had roomp and parent simultaneously");
-    mud_assert(inRoom() == Room::NOWHERE || inRoom() == Room::AUTO_RENT,
-      "TThing -- : had parent and in room simultaneously");
+    assert(!t_in->stuff.empty());
+    assert(roomp == nullptr);
+    assert(inRoom() == Room::NOWHERE || inRoom() == Room::AUTO_RENT);
 
     if (t_in->stuff.front() == this)
       t_in->stuff.pop_front();

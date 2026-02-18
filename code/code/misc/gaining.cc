@@ -321,7 +321,7 @@ int TBeing::pracsBetween(discNumT which, int target) const {
 void TBeing::raiseDiscOnce(discNumT which) {
   CDiscipline* d;
   d = getDiscipline(which);
-  mud_assert(d != NULL, "Bad discipline in raiseDiscOnce");
+  assert(d != nullptr);
 
   int amount = d->getNatLearnedness();
 

@@ -35,7 +35,7 @@ bool hasColorStrings(const TBeing* mob, const sstring& arg, int field) {
   if (arg.empty())
     return FALSE;
 
-  mud_assert(field >= 1 && field <= 2, "Bad args");
+  assert(field >= 1 && field <= 2);
 
   switch (field) {
     case 1:

@@ -1047,9 +1047,6 @@ int chaseSpirits(TBeing* caster, TBeing* victim, int, short bKnown) {
 }
 
 int chaseSpirits(TBeing* caster, TBeing* victim, TMagicItem* obj) {
-  mud_assert(caster != NULL, "chaseSpirits(): no caster");
-  mud_assert(victim != NULL, "chaseSpirits(): no victim");
-
   int level = obj->getMagicLevel();
 
   int ret = chaseSpirits(caster, victim, level, obj->getMagicLearnedness());
@@ -1078,9 +1075,6 @@ int chaseSpirits(TBeing* caster, TBeing* victim) {
 }
 
 int castChaseSpirits(TBeing* caster, TBeing* victim) {
-  mud_assert(caster != NULL, "castChaseSpirits(): no caster");
-  mud_assert(victim != NULL, "castChaseSpirits(): no victim");
-
   int level = caster->getSkillLevel(SPELL_CHASE_SPIRIT);
   if (caster->isNotPowerful(victim, level, SPELL_CHASE_SPIRIT, SILENT_NO)) {
     return 0;
@@ -1112,8 +1106,6 @@ int castChaseSpirits(TBeing* caster, TBeing* victim) {
 // returns DELETE_VICT (vict)
 int genericChaseSpirits(TBeing* caster, TBeing* victim, int,
   immortalTypeT immortal, safeTypeT safe) {
-  mud_assert(victim != NULL, "genericChaseSpirits(): no victim");
-
   TMonster* tvm = dynamic_cast<TMonster*>(victim);
   spellNumT spell;
   int rc;

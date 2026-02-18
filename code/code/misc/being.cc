@@ -575,8 +575,7 @@ int TBeing::getPlayerID() const {
 }
 
 int TBeing::getAccountID() const {
-  mud_assert(desc->account->account_id,
-    (name + " has null account_id").c_str());
+  assert(desc->account->account_id);
   return desc->account->account_id;
 }
 

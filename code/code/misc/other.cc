@@ -4810,8 +4810,7 @@ void ignoreList::removeDB(int playerId, const sstring ignored) {
 // small ignore lists), convert to a non-static list when the list gets too
 // large
 void ignoreList::convertFromStatic() {
-  mud_assert(m_initialized,
-    "Bad codepath - only convert from static if you have initialized first!");
+  assert(m_initialized);
 
   if (!m_useStatic)
     return;

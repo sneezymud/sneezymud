@@ -532,8 +532,12 @@ void applyDrugAffects(TBeing* ch, drugTypeT drug, bool istick) {
         "room!"  // 5
       };
 
-      mud_assert(consumed >= 0 && (size_t)consumed < cElements(buzzes),
-        "consumed or potency of DRUG_FROGSLIME is set wrong!");
+      if (consumed < 0 || static_cast<size_t>(consumed) >= cElements(buzzes)) {
+        vlogf(LOG_BUG, format("applyDrugAffects: drug type %d has invalid "
+                              "consumed value %d for %s") %
+                         drug % consumed % ch->getName());
+        return;
+      }
 
       // we are using the drug right now
       if (!istick && consumed > 0) {

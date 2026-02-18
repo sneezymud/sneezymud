@@ -263,9 +263,7 @@ const sstring tweakInfoT::getTweakName(tweakTypeT tt) {
       return "BurnRate";
     case TWEAK_FREEZEDAMRATE:
       return "FreezeDamChance";
-    case MAX_TWEAK_TYPES:
+    default:
       return "";
   }
-  mud_assert(0, "Overran gettweakname in tweaks.cc");
-  return "";
 }

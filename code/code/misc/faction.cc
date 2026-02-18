@@ -228,10 +228,8 @@ static const sstring factionLeaderTitle(factionTypeT faction, int slot) {
   // display length for this is typically 30 chars
   char buf[64];
 
-  mud_assert(faction >= MIN_FACTION && faction < MAX_FACTIONS,
-    "factionLeaderTitle(): faction outside range %d", faction);
-  mud_assert(slot >= 0 && slot < FACT_LEADER_SLOTS,
-    "factionLeaderTitle(): slot outside range %d", slot);
+  assert(faction >= MIN_FACTION && faction < MAX_FACTIONS);
+  assert(slot >= 0 && slot < FACT_LEADER_SLOTS);
 
   if (faction == FACT_CULT) {
     if (slot == 0)

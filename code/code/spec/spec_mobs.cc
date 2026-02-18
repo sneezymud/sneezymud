@@ -7067,7 +7067,8 @@ int lagomorph(TBeing* victim, cmdTypeT cmd, const char*, TMonster* monster,
 
   if (cmd == CMD_MOB_COMBAT_STOPPING) {
     victim = monster->fight();
-    assert(victim);
+    if (!victim)
+      return false;
     victim->setWait(1);
     act("$n mercifully releases $N from the deathly lag.", TRUE, monster,
       nullptr, victim, TO_NOTVICT);

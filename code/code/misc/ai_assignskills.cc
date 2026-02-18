@@ -14,8 +14,7 @@ void TBeing::assignSkillsClass() {
   CDiscipline* cd;
   std::vector<discNumT> favorites;
 
-  mud_assert(discs != NULL,
-    "Somehow got to assignSkillsClass without a discs %s", getName().c_str());
+  assert(discs != nullptr);
 
   if ((cd = getDiscipline(DISC_ADVENTURING))) {
     value = min((3 * (GetMaxLevel())), 100);

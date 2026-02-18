@@ -173,9 +173,7 @@ TMoney* create_money(int amount, currencyTypeT currency) {
 
   obj = read_object(Obj::GENERIC_TALEN, VIRTUAL);
   money = dynamic_cast<TMoney*>(obj);
-  mud_assert(money != NULL,
-    "Obj::GENERIC_TALEN is not TMoney type.  obj was: %s",
-    obj ? obj->getName().c_str() : "NO OBJECT");
+  assert(money != nullptr);
 
   extraDescription* new_descr;
   sstring buf;

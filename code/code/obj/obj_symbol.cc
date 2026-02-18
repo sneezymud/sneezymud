@@ -50,7 +50,6 @@ void TSymbol::assignFourValues(int x1, int x2, int x3, int x4) {
     vlogf(LOG_LOW, format("symbol with bad faction (%s).") % getName());
     x3 = FACT_UNDEFINED;
   }
-  mud_assert(x3 >= FACT_UNDEFINED && x3 < MAX_FACTIONS, "bad val");
   setSymbolFaction(factionTypeT(x3));
 }
 

@@ -4,10 +4,8 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include <cstdarg>
 #include <cmath>
 #include <cstdio>
-#include <cassert>
 
 extern "C" {
 #include <unistd.h>
@@ -773,13 +771,11 @@ void TBeing::affectTotal() {
 }
 
 void TBeing::affectTo(affectedData* af, int renew, silentTypeT silent) {
-  mud_assert(af->type != TYPE_UNDEFINED, "applying undefined affect to %s",
-    getName().c_str());
+  assert(af->type != TYPE_UNDEFINED);
 
   affectedData* a;
   int origamt = specials.affectedBy;
 
-  // mud_assert(af->duration != 0, "affectTo() with 0 duration affect");
   a = new affectedData(*af);
 
   a->next = affected;
@@ -1053,9 +1049,7 @@ void TBeing::equipChar(TThing* obj, wearSlotT pos, silentTypeT silent) {
   // put it back on, it should be set to FALSE
   int j;
 
-  mud_assert(pos >= MIN_WEAR && pos < MAX_WEAR,
-    "pos in equip_char(%s %s %d) was out of range!!", getName().c_str(),
-    obj->name.c_str(), pos);
+  assert(pos >= MIN_WEAR && pos < MAX_WEAR);
 
   if (equipment[pos]) {
     vlogf(LOG_BUG,
@@ -2457,24 +2451,6 @@ void TBeing::remCaptive(TBeing* ch) {
   }
   t->setCaptiveOf(NULL);
   t->setNextCaptive(NULL);
-}
-
-// this duplicates functionality of the C assert() function
-// if parm is false, the mud will vlogf errorMsg and then drop a core.
-
-void mud_assert(int parm, const char* errorMsg, ...) {
-  char message[512];
-  va_list ap;
-
-  if (parm)
-    return;
-
-  va_start(ap, errorMsg);
-  vsnprintf(message, sizeof(message), errorMsg, ap);
-  va_end(ap);
-
-  vlogf(LOG_BUG, format("ASSERTION FAILED: %s") % message);
-  abort();  // force a crash
 }
 
 // provides "this"'s name, with no color as defined by ch

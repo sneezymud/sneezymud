@@ -561,8 +561,7 @@ bool TBeing::hasHands() const {
 }
 
 const sstring TBeing::describeTransBodySlot(wearSlotT i) const {
-  mud_assert(i >= MIN_WEAR && i < MAX_WEAR, "Bad limb slot, %s %d",
-    getName().c_str(), i);
+  assert(i >= MIN_WEAR && i < MAX_WEAR);
 
   if (!slotChance(i)) {
     vlogf(LOG_BUG, "There is a race problem in describeTransBodySlot");

@@ -106,9 +106,6 @@ int resize_personalize_object(TBeing* deity, TBeing* ch, int virt, int decay) {
 // returns DELETE_THIS if deity goes boom
 // returns DELETE_VICT if ch dies
 static int reward_or_punish(TBeing* deity, TBeing* ch) {
-  mud_assert(deity != NULL, "reward_or_punish(): no deity");
-  mud_assert(ch != NULL, "reward_or_punish(): no ch");
-
 #if FACTIONS_IN_USE
   int percent;
   sstring buf;

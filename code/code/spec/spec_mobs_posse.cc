@@ -408,7 +408,12 @@ int grimhavenPosse(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
             }
           }
           job->cur_pos++;
-          assert(job->cur_pos < 19);  // fails here.
+          if (job->cur_pos >= 19) {
+            vlogf(LOG_BUG, format("posse: cur_pos overflow (%d) for mob %s") %
+                             job->cur_pos % myself->getName());
+            job->cur_pos = 0;
+            job->state = STATE_FIND_CRIM;
+          }
         }
       }
       break;

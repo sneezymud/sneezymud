@@ -38,12 +38,9 @@ void TMonster::loadResponses(int virt, const sstring& immortal) {
     response = db["response"];
   }
 
-  mud_assert(resps == NULL, "Mob (%s) already had Responses.",
-    getName().c_str());
+  assert(resps == nullptr);
 
   resps = new Responses();
-  mud_assert(resps != NULL, "Mob (%s) failed initing Responses.",
-    getName().c_str());
 
   //
   //    Read the response.
@@ -570,8 +567,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
       return FALSE;
       break;
     default:
-      mud_assert(cmd >= 0,
-        "Unhandled special command in modifiedDoCommand array %d", cmd);
+      assert(cmd >= 0);
       //      rc = doCommand(cmd, arg, (TThing *) mob, FALSE);
       rc = doCommand(cmd, arg, NULL, FALSE);
       break;

@@ -632,7 +632,7 @@ int eyesOfFertuman(TBeing* caster, const char* tofind) {
   if (caster->GetMaxLevel() > MAX_MORT &&
       caster->GetMaxLevel() < commandArray[CMD_WHERE]->minLevel) {
     caster->sendTo("You are unable to locate things at your level.\n\r");
-    vlogf(LOG_CHEAT, format("%s using %s to locate '%s'") %  
+    vlogf(LOG_CHEAT, format("%s using %s to locate '%s'") %
       caster->getName() % discArray[SPELL_EYES_OF_FERTUMAN]->name % tofind);
     return FALSE;
   }
@@ -1274,9 +1274,6 @@ int dispelMagic(TBeing* caster, TBeing* victim, int, short bKnown) {
 }
 
 int dispelMagic(TBeing* caster, TBeing* victim, TMagicItem* obj) {
-  mud_assert(caster != NULL, "dispelMagic(): no caster");
-  mud_assert(victim != NULL, "dispelMagic(): no victim");
-
   int level = obj->getMagicLevel();
 
   int ret = dispelMagic(caster, victim, level, obj->getMagicLearnedness());
@@ -1305,9 +1302,6 @@ int dispelMagic(TBeing* caster, TBeing* victim) {
 }
 
 int castDispelMagic(TBeing* caster, TBeing* victim) {
-  mud_assert(caster != NULL, "castDispelMagic(): no caster");
-  mud_assert(victim != NULL, "castDispelMagic(): no victim");
-
   int level = caster->getSkillLevel(SPELL_DISPEL_MAGIC);
   if (caster->isNotPowerful(victim, level, SPELL_DISPEL_MAGIC, SILENT_NO)) {
     return 0;
@@ -1343,8 +1337,6 @@ int generic_dispel_magic(TBeing* caster, TBeing* victim, int,
   // caster might be NULL (death-time), however, in such cases immortal is
   // generally true.  Some of the logic that follows doesn't check for !caster,
   // but uses immortal==true instead.
-
-  mud_assert(victim != NULL, "generic_dispel_magic(): no victim");
 
   TMonster* tvm = dynamic_cast<TMonster*>(victim);
   spellNumT spell;

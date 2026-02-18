@@ -25,8 +25,6 @@
 #include "twitter.h"
 
 void TBeing::disturbMeditation(TBeing* vict) const {
-  mud_assert(vict != NULL, "No vict in disturbMeditation");
-
   if (vict->task && !isImmortal()) {
     if (vict->task->task == TASK_PENANCE) {
       act("$n disturbs your penance!", FALSE, this, NULL, vict, TO_VICT);

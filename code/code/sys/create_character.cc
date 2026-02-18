@@ -282,7 +282,7 @@ int Descriptor::getTerritoryStat(statTypeT stat) const {
 // allows a user to choose a character name
 connectStateT nannyName_input(Descriptor* desc, sstring& output,
   const sstring input) {
-  mud_assert(desc->character != NULL, "Character NULL where it shouldn't be");
+  assert(desc->character != nullptr);
 
   sstring name = input.word(0);
   sstring display;
@@ -668,8 +668,7 @@ bool nannyLaunchpad_allowdone(Descriptor* desc, sstring& output) {
   for (iRace = 0; iRace < (int)cElements(nannyRaces); iRace++)
     if (desc->character->getRace() == nannyRaces[iRace].race)
       break;
-  mud_assert(desc->character->getRace() == nannyRaces[iRace].race,
-    "Character race isnt set properly!");
+  assert(desc->character->getRace() == nannyRaces[iRace].race);
 
   // check for an illegal race
   if (nannyRaces[iRace].num50any > num50any) {
@@ -758,7 +757,15 @@ connectStateT nannyLaunchpad_input(Descriptor* desc, sstring& output,
       desc->character->getName().c_str());
     db.query("select id from player where lower(name)=('%s')",
       desc->character->getName().c_str());
-    assert(db.fetchRow());
+    if (!db.fetchRow()) {
+      vlogf(LOG_BUG,
+        format("nannyCreationDone: could not retrieve player ID for %s") %
+          desc->character->getName());
+      desc->writeToQ(
+        "An error occurred creating your character. Please try "
+        "again.\n\r");
+      return CON_CREATION_DONE;
+    }
     desc->playerID = desc->character->player.player_id =
       convertTo<int>(db["id"]);
     AccountStats::player_count++;
@@ -903,7 +910,7 @@ void nannyTraits_output(Descriptor* desc) {
 // adds/removes traits
 connectStateT nannyTraits_input(Descriptor* desc, sstring& output,
   const sstring input) {
-  mud_assert(desc->character != NULL, "Character NULL where it shouldn't be");
+  assert(desc->character != nullptr);
   int num50race = numFifties(desc->character->getRace(),
     desc->character->hasQuestBit(TOG_PERMA_DEATH_CHAR), desc->account->name);
   int num50any = numFifties(RACE_NORACE, false, desc->account->name);
@@ -958,10 +965,8 @@ void nannyStatRules_output(Descriptor* desc) {
 
 // customize stats
 void nannyStats_output(Descriptor* desc) {
-  mud_assert(desc->connected >= CON_CREATION_CUSTOMIZE_COMBAT,
-    "nannyStats_output desc->connected is unexpected value");
-  mud_assert(desc->connected <= CON_CREATION_CUSTOMIZE_UTIL,
-    "nannyStats_output desc->connected is unexpected value");
+  assert(desc->connected >= CON_CREATION_CUSTOMIZE_COMBAT);
+  assert(desc->connected <= CON_CREATION_CUSTOMIZE_UTIL);
 
   int bonusPoints[4] = {desc->bonus_points.combat, desc->bonus_points.combat2,
     desc->bonus_points.learn, desc->bonus_points.util};

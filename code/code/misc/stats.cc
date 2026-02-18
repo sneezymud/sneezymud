@@ -26,22 +26,19 @@ Stats Stats::operator-(const Stats& operand) {
 }
 
 short Stats::get(statTypeT stat) const {
-  mud_assert(((stat >= MIN_STAT) && (stat < MAX_STATS)),
-    "Something tried to access an invalid stat.");
+  assert(stat >= MIN_STAT && stat < MAX_STATS);
 
   return values[stat];
 }
 
 short Stats::set(statTypeT stat, short val) {
-  mud_assert(((stat >= MIN_STAT) && (stat < MAX_STATS)),
-    "Something tried to access an invalid stat.");
+  assert(stat >= MIN_STAT && stat < MAX_STATS);
 
   return values[stat] = val;
 }
 
 short Stats::add(statTypeT stat, short mod) {
-  mud_assert(((stat >= MIN_STAT) && (stat < MAX_STATS)),
-    "Something tried to access an invalid stat.");
+  assert(stat >= MIN_STAT && stat < MAX_STATS);
 
   return values[stat] += mod;
 }

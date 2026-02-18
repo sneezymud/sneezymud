@@ -3998,8 +3998,7 @@ bool TBeing::isColdBlooded() const {
 int TBeing::slotChance(wearSlotT slot) const {
   int old_slot;
 
-  mud_assert(slot >= MIN_WEAR && slot < MAX_WEAR,
-    "Bad slot in slotChance %s, %d", getName().c_str(), slot);
+  assert(slot >= MIN_WEAR && slot < MAX_WEAR);
 
   // the slot_chance struct uses an old-style ordering structure
   // Fortunately, the mapping function we have in place for writing files can

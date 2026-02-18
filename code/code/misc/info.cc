@@ -3751,7 +3751,6 @@ void TBeing::doAlias(const char* argument) {
     int i = 0;
     for (const auto& alias : desc->alias) {
       ++i;
-      assert(static_cast<int>(maxlen) - alias.first.length() >= 0);
       std::string padding(maxlen - alias.first.length(), ' ');
       sendTo(format("%2d) %s%s %s %s\n\r") % i % alias.first % padding %
              (ansi() ? ANSI_BLUE_BAR : "|") % alias.second);

@@ -885,7 +885,6 @@ void TPerson::rentAffectTo(saveAffectedData* af) {
   if ((snt == SKILL_BERSERK) || (snt == SPELL_SYNOSTODWEOMER)) {
     return;
   } else if ((att == APPLY_CURRENT_HIT) || (att == APPLY_HIT)) {
-    // mud_assert(af->duration != 0, "affectTo() with 0 duration affect");
     affectedData* a = new affectedData(*af);
     a->next = affected;
     affected = a;
@@ -977,7 +976,11 @@ void TBeing::saveChar(int load_room) {
     tmp ? tmp->desc->account->account_id : desc->account->account_id;
   const auto* prompt = &(tmp ? tmp->desc->prompt_d : desc->prompt_d);
 
-  assert(accountId);
+  if (!accountId) {
+    vlogf(LOG_BUG, format("saveChar: %s has zero account_id. Save aborted.") %
+                     (tmp ? tmp->getName() : getName()));
+    return;
+  }
 
   TTransaction db(DB_SNEEZY);
 
@@ -991,7 +994,7 @@ void TBeing::saveChar(int load_room) {
     chFile.load_room = 0;
   }
 
-  assert(getPlayerID());
+  // getPlayerID() == 0 is already handled by the early return above.
 
   db.query("select 1 from playerprompt where player_id = %i", getPlayerID());
   if (db.fetchRow()) {
@@ -1019,8 +1022,11 @@ void TBeing::saveChar(int load_room) {
   }
 
   FILE* file = fopen(accountFilePath.c_str(), "w");
-  mud_assert(file != nullptr, "Failed fopen in save char: %s",
-    accountFilePath.c_str());
+  if (!file) {
+    vlogf(LOG_BUG,
+      format("saveChar: failed to open %s for writing") % accountFilePath);
+    return;
+  }
   fwrite(&chFile, sizeof(charFile), 1, file);
   if (fclose(file) != 0)
     vlogf(LOG_BUG, format("Problem closing %s's charFile") % realName);

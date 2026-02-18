@@ -946,8 +946,7 @@ bool TBeing::isValidDiscClass(discNumT discNum, int classNum, int indNum) {
 }
 
 discNumT getDisciplineNumber(spellNumT spell_num, int class_num) {
-  mud_assert(spell_num >= MIN_SPELL && spell_num < MAX_SKILL,
-    "Bad skill in getDisciplineNumber: %d", spell_num);
+  assert(spell_num >= MIN_SPELL && spell_num < MAX_SKILL);
 
   if (!class_num) {
     if (discArray[spell_num]) {
@@ -1928,8 +1927,7 @@ void checkFactionHelp(TBeing* caster, TBeing* victim) {
 
 void TBeing::assignDisciplinesClass() {
   // verify that disciplines haven't already been initted
-  mud_assert(discs == NULL,
-    "assignDisc(): assignment when already initted (1)");
+  assert(discs == nullptr);
   discs = new CMasterDiscipline();
 
   if (isPc()) {
@@ -2157,17 +2155,14 @@ void TBeing::assignDisciplinesClass() {
   // assign mobs skills
   assignSkillsClass();
 
-  mud_assert(discs != NULL, "assignDisc(): discs was null after new (2)");
+  assert(discs != nullptr);
 }
 
 void TBeing::initSkillsBasedOnDiscLearning(discNumT disc_num) {
   int disc_learn = 0, boost = 0, max_amt = 0, value = 0;
   CDiscipline* cd;
 
-  mud_assert(discs != NULL,
-    "Somehow there was a call to initSkillsBasedOnDiscLearning without a discs "
-    "%s",
-    getName().c_str());
+  assert(discs != nullptr);
 
   // mob skills are always maxed for their disc-training
   if (!(cd = getDiscipline(disc_num))) {}
@@ -2569,14 +2564,9 @@ CDiscipline* TBeing::getDiscipline(discNumT n) const {
     return NULL;
   }
 
-  if (discs) {
-    return discs->disc[n];
-  } else {
-    mud_assert(0, "TBeing had no CMasterDiscipline. '%s'",
-      !getName().empty() ? getName().c_str() : "NoName");
+  assert(discs != nullptr);
 
-    return NULL;
-  }
+  return discs->disc[n];
 }
 
 void CS(const TBeing* caster, spellNumT spell) {

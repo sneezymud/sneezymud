@@ -144,12 +144,12 @@ bool TScroll::objectRepair(TBeing* ch, TMonster* repair, silentTypeT silent) {
 }
 
 spellNumT TScroll::getSpell(int num) const {
-  mud_assert(num >= 0 && num < 3, "Bad num");
+  assert(num >= 0 && num < 3);
   return spells[num];
 }
 
 void TScroll::setSpell(int num, spellNumT xx) {
-  mud_assert(num >= 0 && num < 3, "Bad num");
+  assert(num >= 0 && num < 3);
   spells[num] = xx;
 }
 

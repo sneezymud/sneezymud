@@ -133,9 +133,6 @@ void SwitchStuff(TBeing* giver, TBeing* taker, bool setStats) {
   TThing* t;
   classIndT cit;  // used as iterator to pass through classes
 
-  mud_assert(giver != NULL, "Something bogus in SwitchStuff()");
-  mud_assert(taker != NULL, "Something bogus in SwitchStuff()");
-
   // transfer toggles - do this first to avoid issues with skill swaps
   for (int tmpnum = 1; tmpnum < MAX_TOG_INDEX; tmpnum++) {
     if (giver->hasQuestBit(tmpnum) && !taker->hasQuestBit(tmpnum))
@@ -1601,23 +1598,23 @@ int TBeing::rawBleed(wearSlotT pos, int duration, silentTypeT silent,
 int TBeing::incrementBleedStack(wearSlotT limb, int newDuration) {
   int maxStacks = 5;
   // Check for an existing bleeding affect on this limb
-  affectedData* existingBleed = 
+  affectedData* existingBleed =
     affected ? affected->find_if([limb](affectedData* aff) {
       return aff->modifier == DISEASE_BLEEDING && aff->level == limb;
     })
              : nullptr;
-             
+
   if (!existingBleed) {
     // No existing bleed found. Not sure how this would happen, but just in case
     return false;
   }
-  
+
   //increment stack count if not at max, and increase duration
   if (existingBleed->modifier2 < maxStacks) {
     existingBleed->modifier2++;
-    act(format("The flesh on your %s is torn open!") % describeBodySlot(limb), 
+    act(format("The flesh on your %s is torn open!") % describeBodySlot(limb),
         false, this, nullptr, nullptr, TO_CHAR, ANSI_RED);
-    act(format("The flesh on $n's %s is torn open!") % describeBodySlot(limb), 
+    act(format("The flesh on $n's %s is torn open!") % describeBodySlot(limb),
         false, this, nullptr, nullptr, TO_ROOM, ANSI_RED);
     if (existingBleed->duration < newDuration) {
       existingBleed->duration = newDuration;
@@ -1628,23 +1625,23 @@ int TBeing::incrementBleedStack(wearSlotT limb, int newDuration) {
     const sstring limbName = describeBodySlot(limb);
     if (!isVitalPart(limb) && limb != WEAR_WAIST) {
       // For non-vital parts, sever the limb
-      act(format("The wound on your %s gushes blood violently as the limb is severed!") % 
+      act(format("The wound on your %s gushes blood violently as the limb is severed!") %
          limbName, false, this, nullptr, nullptr, TO_CHAR, ANSI_RED_BOLD);
 
-      act(format("The wound on $n's %s gushes blood violently as the limb is severed!") % 
+      act(format("The wound on $n's %s gushes blood violently as the limb is severed!") %
          limbName, false, this, nullptr, nullptr, TO_ROOM, ANSI_RED_BOLD);
-         
+
       makePartMissing(limb, isLimbFlags(limb, PART_LEPROSED | PART_GANGRENOUS), nullptr);
-         
+
       const wearSlotT newBleedLocation = findNextAttachedBodyPart(limb);
       const sstring bleedLocationDesc = describeBodySlot(newBleedLocation);
-     
+
       // Check if the next attached body part is already bleeding
-      affectedData* existingBleed = 
+      affectedData* existingBleed =
        affected ? affected->find_if([newBleedLocation](affectedData* aff) {
          return aff && aff->modifier == DISEASE_BLEEDING && aff->level == newBleedLocation;
        }) : nullptr;
-       
+
       if (existingBleed) {
         // If already bleeding, increment the stack
         if (existingBleed->modifier2 < maxStacks) {
@@ -1656,10 +1653,10 @@ int TBeing::incrementBleedStack(wearSlotT limb, int newDuration) {
         // If not already bleeding, start a new bleed
         rawBleed(newBleedLocation, PERMANENT_DURATION, SILENT_YES, CHECK_IMMUNITY_YES);
       }
-       
-      act(format("Blood gushes from your %s!") % bleedLocationDesc, 
+
+      act(format("Blood gushes from your %s!") % bleedLocationDesc,
          false, this, nullptr, nullptr, TO_CHAR, ANSI_RED);
-      act(format("Blood gushes from $n's %s!") % bleedLocationDesc, 
+      act(format("Blood gushes from $n's %s!") % bleedLocationDesc,
          false, this, nullptr, nullptr, TO_ROOM, ANSI_RED);
     } else {
       maxBleedVitalPart(limb, newDuration);
@@ -1672,25 +1669,25 @@ int TBeing::incrementBleedStack(wearSlotT limb, int newDuration) {
 int TBeing::incrementBruiseStack(wearSlotT limb, int newDuration) {
   int maxStacks = 5;
   // Check for an existing bruise affect on this limb
-  affectedData* existingBruise = 
+  affectedData* existingBruise =
     affected ? affected->find_if([limb](affectedData* aff) {
       return aff->modifier == DISEASE_BRUISED && aff->level == limb;
     })
              : nullptr;
-             
+
   if (!existingBruise) {
     // No existing bruise found. Not sure how this would happen, but just in case
     return false;
   }
-  
+
   // Increment stack count if not at max, and increase duration
   if (existingBruise->modifier2 < maxStacks) {
     existingBruise->modifier2++;
-    act(format("The bruising on your %s worsens.") % describeBodySlot(limb), 
+    act(format("The bruising on your %s worsens.") % describeBodySlot(limb),
         false, this, nullptr, nullptr, TO_CHAR, ANSI_PURPLE);
-    act(format("The bruising on $n's %s worsens.") % describeBodySlot(limb), 
+    act(format("The bruising on $n's %s worsens.") % describeBodySlot(limb),
         false, this, nullptr, nullptr, TO_ROOM, ANSI_PURPLE);
-    
+
     if (existingBruise->duration < newDuration) {
       existingBruise->duration = newDuration;
     }
@@ -1698,20 +1695,20 @@ int TBeing::incrementBruiseStack(wearSlotT limb, int newDuration) {
 
   if (existingBruise->modifier2 >= maxStacks && !isVitalPart(limb)) {
     const sstring limbName = describeBodySlot(limb);
-    
+
     // No need to manually pulverize the limb - that happens automatically in
     // the hurtLimb function once a limb is reduced to 0 HP. So for bruise
     // stacks, simply apply enough damage to instantly bring the limb to 0 HP.
-    act(format("Your severely bruised %s is utterly ruined!") % limbName, 
+    act(format("Your severely bruised %s is utterly ruined!") % limbName,
         false, this, nullptr, nullptr, TO_CHAR, ANSI_PURPLE_BOLD);
-    act(format("$n's severely bruised %s is utterly ruined!") % limbName, 
+    act(format("$n's severely bruised %s is utterly ruined!") % limbName,
         false, this, nullptr, nullptr, TO_ROOM, ANSI_PURPLE_BOLD);
-    
+
     int rc = hurtLimb(getCurLimbHealth(limb), limb);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
   }
-  
+
   return true;
 }
 
@@ -2336,9 +2333,9 @@ int lycanthropeTransform(TBeing* ch) {
 // Handle the effects when a vital body part reaches maximum bleeding stacks
 int TBeing::maxBleedVitalPart(wearSlotT limb, int duration) {
   // Show choking/aspiration messages
-  act(format("The blood from your %s makes it hard to draw breath!") % describeBodySlot(limb), 
+  act(format("The blood from your %s makes it hard to draw breath!") % describeBodySlot(limb),
      false, this, nullptr, nullptr, TO_CHAR, ANSI_RED_BOLD);
-  act(format("$n looks panicked as blood from their %s fills $s mouth!") % describeBodySlot(limb), 
+  act(format("$n looks panicked as blood from their %s fills $s mouth!") % describeBodySlot(limb),
      false, this, nullptr, nullptr, TO_ROOM, ANSI_RED_BOLD);
 
   return true;

@@ -57,7 +57,6 @@ std::vector<std::string> db_passwords(DB_MAX);
 IDatabase::~IDatabase() {}
 
 const char* TDatabaseConnection::getConnectParam(dbTypeT type) {
-  assert(type >= 0);
   assert(type < DB_MAX);
   if (db_names[type] != "")
     return db_names[type].c_str();

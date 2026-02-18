@@ -9,7 +9,6 @@
 #include <csignal>
 #include <cstdarg>
 #include <errno.h>
-#include <cassert>
 
 #include <boost/algorithm/string.hpp>
 
@@ -615,11 +614,11 @@ Descriptor::~Descriptor() {
     for (tmp = descriptor_list; tmp && (tmp->next != this); tmp = tmp->next)
       ;
 
-    mud_assert(tmp != NULL,
-      "~Descriptor : unable to find previous descriptor.");
-
-    if (tmp)
+    if (!tmp) {
+      vlogf(LOG_BUG, "~Descriptor: descriptor not found in descriptor_list");
+    } else {
       tmp->next = next;
+    }
   }
   delete[] showstr_head;
   showstr_head = NULL;
@@ -1662,7 +1661,6 @@ void Descriptor::page_string(const sstring& strs, showNowT shownow,
   allowReplaceT allowRep) {
   delete[] showstr_head;
   showstr_head = mud_str_dup(strs);
-  mud_assert(showstr_head != NULL, "Bad alloc in page_string");
 
   cur_page = 0;
   tot_pages = 0;
