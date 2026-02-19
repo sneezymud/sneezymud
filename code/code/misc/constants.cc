@@ -1171,7 +1171,7 @@ const char* const immunity_names[MAX_IMMUNES] = {
   "Drain",
   "Fear",
   "Earth",  // 25
-  "Summon",
+  "Summon/Teleport",
   "Holy",
 };
 

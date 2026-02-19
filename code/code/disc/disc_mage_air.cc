@@ -1053,10 +1053,19 @@ int tornado(TBeing* caster, int level, short bKnown, int adv_learn) {
               ROOM_HAVE_TO_WALK | ROOM_NO_FLEE | ROOM_NO_ESCAPE))
           continue;
 
+        // check for teleport immunity
+        if (tb->isImmune(IMMUNE_SUMMON, WEAR_BODY)) {
+          act("$n resists the tornado's teleportation!", FALSE, tb, nullptr,
+            nullptr, TO_ROOM);
+          act("You resist the tornado's teleportation!", FALSE, tb, nullptr,
+            nullptr, TO_CHAR);
+          continue;
+        }
+
         // teleport them away
         if (!caster->isNotPowerful(tb, level, SPELL_TORNADO, SILENT_YES)) {
-          act("Uhoh, Toto...", FALSE, tb, NULL, NULL, TO_CHAR);
-          act("$n is swept away...", FALSE, tb, NULL, NULL, TO_ROOM);
+          act("Uhoh, Toto...", FALSE, tb, nullptr, nullptr, TO_CHAR);
+          act("$n is swept away...", FALSE, tb, nullptr, nullptr, TO_ROOM);
 
           rc = tb->genericTeleport(SILENT_YES);
           tb->doLook("", CMD_LOOK);

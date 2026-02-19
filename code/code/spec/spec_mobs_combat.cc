@@ -683,10 +683,16 @@ int Teleporter(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   act("The Djinn looks in $n's direction and snaps his fingers.", TRUE, vict, 0,
     0, TO_ROOM);
 
+  if (vict->isImmune(IMMUNE_SUMMON, WEAR_BODY)) {
+    act("$n resists the Djinn's teleportation!", TRUE, vict, 0, 0, TO_ROOM);
+    act("You resist the Djinn's teleportation!", TRUE, vict, 0, 0, TO_CHAR);
+    return TRUE;
+  }
+
   rc = vict->genericTeleport(SILENT_NO);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete vict;
-    vict = NULL;
+    vict = nullptr;
   }
 
   return TRUE;

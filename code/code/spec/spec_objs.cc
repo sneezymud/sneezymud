@@ -496,10 +496,15 @@ int orbOfTeleportation(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o,
           if (!vict)
             continue;
           if (vict != ch) {
+            if (vict->isImmune(IMMUNE_SUMMON, WEAR_BODY)) {
+              act("$N resists the teleportation!", TRUE, ch, o, vict, TO_CHAR);
+              act("You resist the teleportation!", TRUE, ch, o, vict, TO_VICT);
+              continue;
+            }
             rc = vict->genericTeleport(SILENT_NO, TRUE);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               delete vict;
-              vict = NULL;
+              vict = nullptr;
             }
           }
         }
@@ -1833,17 +1838,23 @@ int teleportRing(TBeing*, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   if (cmd != CMD_GENERIC_PULSE || ::number(0, 100))
     return FALSE;
 
+  if (vict->isImmune(IMMUNE_SUMMON, WEAR_BODY)) {
+    act("Your $o flares up brightly but the effect fades.", TRUE, vict, o,
+      nullptr, TO_CHAR);
+    return FALSE;
+  }
+
   act(
     "Your $o flares up brightly and you suddenly feel very dizzy and "
     "disoriented.",
-    TRUE, vict, o, NULL, TO_CHAR);
-  act("$n's $o flares up brightly and $e disappears!", TRUE, vict, o, NULL,
+    TRUE, vict, o, nullptr, TO_CHAR);
+  act("$n's $o flares up brightly and $e disappears!", TRUE, vict, o, nullptr,
     TO_ROOM);
 
   rc = vict->genericTeleport(SILENT_NO, FALSE);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete vict;
-    vict = NULL;
+    vict = nullptr;
   }
 
   return TRUE;

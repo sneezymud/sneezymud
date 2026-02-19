@@ -1448,6 +1448,15 @@ int teleport(TBeing* caster, TBeing* victim, int, short bKnown) {
     }
 
     if (victim != caster) {
+      // check for teleport immunity on non-group targets
+      if (!caster->inGroup(*victim) &&
+          victim->isImmune(IMMUNE_SUMMON, WEAR_BODY)) {
+        act("$N resists your teleportation!", FALSE, caster, nullptr, victim,
+          TO_CHAR);
+        caster->nothingHappens(SILENT_YES);
+        return SPELL_FAIL;
+      }
+
       if (!victim->isLucky(caster->spellLuckModifier(SPELL_TELEPORT))) {
         rc = victim->genericTeleport(SILENT_NO);
         if (IS_SET_DELETE(rc, DELETE_THIS))
