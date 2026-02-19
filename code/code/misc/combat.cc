@@ -6161,6 +6161,13 @@ void TBeing::genericKillFix(void) {
                      getName() % inRoom());
   }
 
+  if (fight()) {
+    vlogf(LOG_BUG,
+      format("genericKillFix: %s re-entered combat during dispel, stopping") %
+        getName());
+    stopFighting();
+  }
+
   if (getCond(THIRST) >= 0)
     setCond(THIRST, 20);
   if (getCond(FULL) >= 0)
