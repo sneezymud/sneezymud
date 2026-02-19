@@ -519,6 +519,9 @@ void DeleteHatreds(const TBeing* ch, const char* s) {
       REMOVE_BIT(tmp->specials.act, ACT_HUNTING);
       tmp->hunt_dist = 0;
     }
+
+    if (ch && tmp->opinion.random == ch)
+      tmp->opinion.random = nullptr;
   }
 }
 
@@ -532,6 +535,9 @@ void DeleteFears(const TBeing* ch, const char* s) {
 
     if (tmp->Fears(ch, s))
       tmp->remFeared(ch, s);
+
+    if (ch && tmp->opinion.random == ch)
+      tmp->opinion.random = nullptr;
   }
 }
 
