@@ -5466,7 +5466,15 @@ void perform_violence(int pulse) {
         ch->stopFighting();
         continue;
       }
-      if (ch->awake() && ch->sameRoom(*vict)) {
+      if (!ch->sameRoom(*vict)) {
+        vlogf(LOG_BUG,
+          format("perform_violence: %s fighting %s but in different rooms "
+                 "(%d vs %d)") %
+            ch->getName() % vict->getName() % ch->inRoom() % vict->inRoom());
+        ch->stopFighting();
+        continue;
+      }
+      if (ch->awake()) {
         vict = ch->fight();
         if (vict) {
           // Adding a chance per round to gain a stack of bloodlust while
