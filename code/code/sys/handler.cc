@@ -1102,6 +1102,7 @@ void TBeing::equipChar(TThing* obj, wearSlotT pos, silentTypeT silent) {
   obj->equippedBy = this;
   obj->eq_pos = pos;
   equipment.wear(obj, pos);
+  assert(equipment[pos] == obj);
 
   int origamt = specials.affectedBy;
 
@@ -1178,7 +1179,13 @@ TThing* TBeing::unequip(wearSlotT pos) {
     return NULL;
 
   if (!equipment[pos])
-    return NULL;
+    return nullptr;
+
+  assert(equipment[pos]->equippedBy == this);
+  {
+    auto* eqObj = dynamic_cast<TObj*>(equipment[pos]);
+    assert(equipment[pos]->eq_pos == pos || (eqObj && eqObj->usedAsPaired()));
+  }
 
   o = equipment.remove(pos);
 
@@ -2396,18 +2403,8 @@ void TBeing::addCaptive(TBeing* ch) {
   if (!ch)
     return;
 
-  if (ch->getCaptiveOf()) {
-    vlogf(LOG_BUG, format("addCaptive : trying to add captive (%s) to (%s) "
-                          "when they were already captured.") %
-                     ch->getName() % getName());
-    return;
-  }
-  if (getCaptiveOf()) {
-    vlogf(LOG_BUG, format("addCaptive : trying to add captive (%s) to (%s) who "
-                          "is also captive.") %
-                     ch->getName() % getName());
-    return;
-  }
+  assert(!ch->getCaptiveOf());
+  assert(!getCaptiveOf());
 
   ch->setNextCaptive(getCaptive());
   setCaptive(ch);

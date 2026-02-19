@@ -6137,11 +6137,13 @@ void TBeing::genericKillFix(void) {
   DeleteFears(this, nullptr);
 
 #ifndef NDEBUG
-  // Verify DeleteHatreds cleared all targ() pointers referencing this
-  // character. O(n) scan on character_list — debug builds only.
+  // Verify DeleteHatreds cleared all targ() and opinion.random pointers
+  // referencing this character. O(n) scan on character_list — debug builds
+  // only.
   for (auto* ck = character_list; ck; ck = ck->next) {
     if (auto* tmons = dynamic_cast<TMonster*>(ck)) {
       assert(tmons->targ() != this);
+      assert(tmons->opinion.random != this);
     }
   }
 #endif
