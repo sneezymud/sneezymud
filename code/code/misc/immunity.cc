@@ -114,7 +114,7 @@ short TBeing::getImmunity(immuneTypeT type) const {
         imm += max(0, (amount - 25));
         break;
       case IMMUNE_SUMMON:
-        imm += max(0, (amount - 33));
+        imm += (amount / 2);
         break;
       case IMMUNE_HEAT:
         imm += max(0, (amount - 85));

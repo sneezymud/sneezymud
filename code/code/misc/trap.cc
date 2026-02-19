@@ -1792,6 +1792,12 @@ int TBeing::trapDoorAcidDamage(int amnt, dirTypeT door) {
 int TBeing::trapTeleport(int amt) {
   int rc;
 
+  if (isImmune(IMMUNE_SUMMON, WEAR_BODY)) {
+    sendTo("You resist the teleportation effect.\n\r");
+    act("$n resists the teleportation effect.", FALSE, this, 0, 0, TO_ROOM);
+    return FALSE;
+  }
+
   if (isLucky(levelLuckModifier(GetMaxLevel()))) {
     sendTo("You feel strange, but the effect fades.\n\r");
     act("Nothing seems to happen.", FALSE, this, 0, 0, TO_ROOM);

@@ -1,3 +1,15 @@
+02-19-26: Teleport Immunity Added
+          Creatures with summon immunity now also resist hostile teleportation
+          effects. This includes the teleport spell, teleportation traps,
+          tornado's teleport effect, and other forced-teleportation sources.
+
+          Existing sources of summon immunity (such as Djalla's Protection
+          and Divine Grace) now also provide teleport protection. The immunity
+          is displayed as "Summon/Teleport" on score and stat screens.
+
+          Friendly teleportation is unaffected - teleporting yourself or a
+          group member will always work normally.
+
 02-15-26: Help files have been expanded and improved across the board.
           Many skills, spells, prayers, and rituals now have detailed help
           entries where previously there were only brief placeholders. Psionic

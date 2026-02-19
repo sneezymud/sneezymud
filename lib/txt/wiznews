@@ -1,3 +1,15 @@
+02-19-26: IMMUNE_SUMMON now also blocks hostile teleportation effects and displays
+          as "Summon/Teleport". Immunity checks were added to: teleport spell
+          (with group member bypass), trapTeleport() (covers all trap types),
+          Teleporter mob spec, teleportRing, orbOfTeleportation, and tornado.
+
+          Room-based teleporters (teleportRoomFlow) are intentionally excluded
+          as they are zone design features, not hostile magic.
+
+          No new immunity type was added - IMMUNE_SUMMON is reused. Existing
+          sources (Djalla's Protection, Divine Grace, mob immunities) now
+          automatically provide teleport protection as well.
+
 01-14-26: Added 'shop' as a new option to the 'low' command, to allow configuration
           of shops in-game without needing direct database access.
 
