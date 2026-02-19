@@ -2432,6 +2432,8 @@ void TBeing::remCaptive(TBeing* ch) {
     vlogf(LOG_BUG,
       format("remCaptive could not find %s in captive list of %s.") %
         ch->getName() % getName());
+    ch->setCaptiveOf(nullptr);
+    ch->setNextCaptive(nullptr);
     return;
   }
   if (!last) {
@@ -2440,8 +2442,8 @@ void TBeing::remCaptive(TBeing* ch) {
   } else {
     last->setNextCaptive(t->getNextCaptive());
   }
-  t->setCaptiveOf(NULL);
-  t->setNextCaptive(NULL);
+  t->setCaptiveOf(nullptr);
+  t->setNextCaptive(nullptr);
 }
 
 // provides "this"'s name, with no color as defined by ch
