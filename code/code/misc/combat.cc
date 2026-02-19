@@ -1806,8 +1806,6 @@ void TBeing::stopFighting() {
 
   if (!fight()) {
     REMOVE_BIT(specials.affectedBy, AFF_ENGAGER);
-    // vlogf(LOG_COMBAT, format("Character (%s) not fighting at invocation of
-    // stopFighting") %  getName());
     vlogf(LOG_BUG,
       format("Character (%s) not fighting at invocation of stopFighting") %
         getName());
@@ -1816,6 +1814,21 @@ void TBeing::stopFighting() {
       cantHit = 0;
       addToWait(combatRound(1));
     }
+    // Remove from gCombatList if present despite null fight target (data
+    // inconsistency recovery). Without this, the character stays on the list
+    // forever, causing infinite log spam on every combat round.
+    if (gCombatNext == this)
+      gCombatNext = next_fighting;
+    if (gCombatList == this) {
+      gCombatList = next_fighting;
+    } else {
+      for (tmp = gCombatList; tmp && (tmp->next_fighting != this);
+        tmp = tmp->next_fighting)
+        ;
+      if (tmp)
+        tmp->next_fighting = next_fighting;
+    }
+    next_fighting = nullptr;
     return;
   }
   if (fight() == this) {
@@ -5442,9 +5455,11 @@ void perform_violence(int pulse) {
     for (ch = gCombatList; ch; ch = gCombatNext) {
       gCombatNext = ch->next_fighting;
       if (!(vict = ch->fight())) {
-        vlogf(LOG_COMBAT,
-          format("%s is not fighting in perform_violence!  *BUG BRUTIUS*") %
+        vlogf(LOG_BUG,
+          format("perform_violence: %s on gCombatList with null fight(), "
+                 "calling stopFighting") %
             ch->getName());
+        ch->stopFighting();
         continue;
       }
       if (!ch->roomp || ch == vict) {
