@@ -1801,7 +1801,6 @@ void TBeing::sendCheatMessage(char* cheater) {
 void TBeing::stopFighting() {
   TBeing* tmp;
   affectedData *af, *af2;
-  char nameBuf[MAX_NAME_LENGTH];
 
   stopmusic();
 
@@ -1841,10 +1840,16 @@ void TBeing::stopFighting() {
       // combat stopped for some other reason
       // ie, mob fled, got paralyzed, teleported, etc.
       if (awake()) {
-        vlogf(LOG_COMBAT,
-          format("Removing Solo Combat Affect from: %s") % getName());
-        sprintf(nameBuf, "%s", fname(af->be->name).c_str());
-        sendCheatMessage(nameBuf);
+        if (af->be) {
+          vlogf(LOG_COMBAT,
+            format("Removing Solo Combat Affect from: %s") % getName());
+          auto cheatName = fname(af->be->name);
+          sendCheatMessage(const_cast<char*>(cheatName.c_str()));
+        } else {
+          vlogf(LOG_BUG,
+            format("stopFighting: COMBAT_SOLO_KILL affect with null be on %s") %
+              getName());
+        }
         affectRemove(af);
       }
 #if 0
