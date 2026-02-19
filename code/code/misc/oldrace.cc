@@ -26,14 +26,20 @@ void TBeing::setRacialStuff() {
     // if they are both positive, use the most positive
     // if they oppose, add the two (so they can cancel eath other out)
     byte amt = getMyRace()->getImmunities().getImmunity(itt);
+
+    // Use raw immune_arr instead of getImmunity() to avoid baking dynamic
+    // skill bonuses (dufali, divine_grace, etc.) into the stored value.
+    // getImmunity() adds those bonuses on-the-fly and they would be
+    // double-counted when getImmunity() is called again later.
+    short rawImm = immunities.immune_arr[itt];
     if (amt == 0)
-      amt = getImmunity(itt);
-    else if (amt < 0 && getImmunity(itt) < 0)
-      amt = min(amt, (byte)getImmunity(itt));
-    else if (amt > 0 && getImmunity(itt) > 0)
-      amt = max(amt, (byte)getImmunity(itt));
+      amt = rawImm;
+    else if (amt < 0 && rawImm < 0)
+      amt = min(amt, static_cast<byte>(rawImm));
+    else if (amt > 0 && rawImm > 0)
+      amt = max(amt, static_cast<byte>(rawImm));
     else
-      amt = max(min(100, amt + getImmunity(itt)), -100);
+      amt = max(min(100, amt + rawImm), -100);
 
     setImmunity(itt, amt);
   }
