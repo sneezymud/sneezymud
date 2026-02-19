@@ -805,25 +805,24 @@ void TBeing::affectRemove(affectedData* af, silentTypeT silent) {
     vlogf(LOG_BUG, format("Location : %d, Modifier %d, Bitvector %llu") %
                      af->location % af->modifier % af->bitvector);
     return;
-  } else
-    affectModify(af->location, af->modifier, af->modifier2, af->bitvector,
-      FALSE, silent);
-
-  if (affected == af)
-    affected = af->next;
-  else {
-    for (af2 = affected; (af2->next) && (af2->next != af); af2 = af2->next)
-      ;
-    if (af2->next != af) {
-      vlogf(LOG_BUG,
-        "Could not locate affected_type in affected. (handler.c, "
-        "affectRemove)");
-      return;
-    }
-    af2->next = af->next; /* skip the af element */
   }
+
+  // Find and unlink FIRST, before reversing stats. The old code reversed stats
+  // before verifying list membership, corrupting stats if the affect wasn't
+  // found and leaking the affectedData node on early return.
+  if (affected == af) {
+    affected = af->next;
+  } else {
+    for (af2 = affected; af2->next && af2->next != af; af2 = af2->next)
+      ;
+    assert(af2->next == af);
+    af2->next = af->next;
+  }
+
+  // THEN reverse stats (now we know the affect was legitimately ours)
+  affectModify(af->location, af->modifier, af->modifier2, af->bitvector, false,
+    silent);
   delete af;
-  af = NULL;
   affectTotal();
 
   affectChange(origamt, silent);
