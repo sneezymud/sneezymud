@@ -1,6 +1,9 @@
 #include <stdio.h>
 
+#include <vector>
+
 #include "extern.h"
+#include "random.h"
 #include "room.h"
 #include "being.h"
 #include "low.h"
@@ -1285,7 +1288,7 @@ int dispelMagic(TBeing* caster, TBeing* victim, TMagicItem* obj) {
       NULL, TO_CHAR);
     act("$p dispels the magical forces affecting $n...", FALSE, victim, obj,
       NULL, TO_ROOM);
-    int rc = generic_dispel_magic(caster, victim, level, caster->isImmortal());
+    int rc = generic_dispel_magic(caster, victim, level, caster->isImmortal(), SAFE_NO);
     if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_VICT;
   }
@@ -1330,7 +1333,7 @@ int castDispelMagic(TBeing* caster, TBeing* victim) {
       act("$n dispels the magical forces affecting $m...", FALSE, caster, NULL,
         0, TO_ROOM);
     }
-    int rc = generic_dispel_magic(caster, victim, level, caster->isImmortal());
+    int rc = generic_dispel_magic(caster, victim, level, caster->isImmortal(), SAFE_NO);
     if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_VICT;
   }
@@ -1338,7 +1341,7 @@ int castDispelMagic(TBeing* caster, TBeing* victim) {
 }
 
 // returns DELETE_VICT (vict)
-int generic_dispel_magic(TBeing* caster, TBeing* victim, int,
+int generic_dispel_magic(TBeing* caster, TBeing* victim, int level,
   immortalTypeT immortal, safeTypeT safe) {
   // caster might be NULL (death-time), however, in such cases immortal is
   // generally true.  Some of the logic that follows doesn't check for !caster,
@@ -1347,8 +1350,6 @@ int generic_dispel_magic(TBeing* caster, TBeing* victim, int,
   mud_assert(victim != NULL, "generic_dispel_magic(): no victim");
 
   TMonster* tvm = dynamic_cast<TMonster*>(victim);
-  spellNumT spell;
-  int rc;
 
   struct dispelStruct {
       spellNumT spell;
@@ -1432,81 +1433,76 @@ int generic_dispel_magic(TBeing* caster, TBeing* victim, int,
     {SPELL_DANCING_BONES, true, true, false},
     {SPELL_VOODOO, true, true, false},
 
-#if 0
-    // these effects are on mobs
-    // death-time-only is silly to check for
-    { SPELL_STICKS_TO_SNAKES, false, false, true },
-    { SPELL_LIVING_VINES, false, false, true },
-    { SPELL_PLAGUE_LOCUSTS, false, false, true },
-#endif
-
-#if 0
-    // not yet implemented
-    { SPELL_DETECT_POISON, false, true, false },
-    { SPELL_DETECT_POISON_DEIKHAN, false, true, false },
-#endif
-
-#if 0
-    // skills that should be usable again if they die
-    // these use to have a check for ARENA-death
-    // not sure how to do this in new setup, so commented out for time being
-    { SKILL_TRANSFIX, false, false, true },
-    { SKILL_CHI, false, false, true },
-    { SKILL_DOORBASH, false, false, true },
-    { SKILL_TRANSFORM_LIMB, false, false, true },
-    { SKILL_BARKSKIN, false, false, true },
-    { SKILL_TRACK, false, false, true },
-    { SKILL_CONCEALMENT, false, false, true },
-    { SKILL_FORAGE, false, false, true },
-    { SKILL_SEEKWATER, false, false, true },
-    { SKILL_ENCAMP, false, false, true },
-    { SKILL_DIVINATION, false, false, true },
-    { SKILL_SPY, false, false, true },
-    { SKILL_DISGUISE, false, false, true },
-    { SKILL_BERSERK, false, false, true },
-    { SKILL_DEATHSTROKE, false, false, true },
-    { SKILL_DOORBASH, false, false, true },
-    { SKILL_QUIV_PALM, false, false, true },
-#endif
-
     {TYPE_UNDEFINED, false, false, false}  // this is final terminator
-    // spell, aggressive, saving throw, death_time_only
   };
 
-  int iter;
-  for (iter = 0; dispelArray[iter].spell != TYPE_UNDEFINED; iter++) {
-    spell = dispelArray[iter].spell;
+  // Determine max removals based on caster level:
+  // 1-30: 1, 31-60: 2, 61-90: 3, 91+: 4
+  // Immortals and death-time (no caster) bypass the cap.
+  int maxRemovals;
+  if (immortal || !caster) {
+    maxRemovals = 999;  // effectively uncapped
+  } else if (level <= 30) {
+    maxRemovals = 1;
+  } else if (level <= 60) {
+    maxRemovals = 2;
+  } else if (level <= 90) {
+    maxRemovals = 3;
+  } else {
+    maxRemovals = 4;
+  }
 
-    // check if they have the spell
+  // Build a list of candidate spells the victim actually has
+  std::vector<dispelStruct> candidates;
+  for (int i = 0; dispelArray[i].spell != TYPE_UNDEFINED; i++) {
     // should decay if !caster (death-time) or if set to decay all the time
-    if ((!caster || !dispelArray[iter].death_time_only) &&
-        victim->affectedBySpell(spell)) {
-      // immortals should always succeed
-      // make a save otherwise
-      // there is assumption that !caster (death-time) will have immortal=true
-      if (immortal || !dispelArray[iter].needs_saving_throw ||
-          !victim->isLucky(caster->spellLuckModifier(SPELL_DISPEL_MAGIC))) {
-        rc = victim->spellWearOff(spell, safe);
-        if (IS_SET_DELETE(rc, DELETE_THIS))
-          return DELETE_VICT;
-        victim->affectFrom(spell);
-      }
-      // aggressive Act
-      if (caster && !victim->fight() && tvm) {
-        caster->setCharFighting(victim);
-        caster->setVictFighting(victim);
-      }
+    if ((!caster || !dispelArray[i].death_time_only) &&
+        victim->affectedBySpell(dispelArray[i].spell)) {
+      candidates.push_back(dispelArray[i]);
     }
   }
 
-  if (caster && victim->isAffected(AFF_SANCTUARY)) {
-    if (immortal ||
+  // Include AFF_SANCTUARY as a candidate if applicable
+  bool sanctuaryCandidate = victim->isAffected(AFF_SANCTUARY) &&
+                            !victim->affectedBySpell(SPELL_SANCTUARY);
+
+  // Shuffle candidates so removal order is random
+  shuffleContainer(candidates);
+
+  int removals = 0;
+  for (const auto& entry : candidates) {
+    if (removals >= maxRemovals)
+      break;
+
+    // immortals should always succeed
+    // make a save otherwise
+    if (immortal || !caster || !entry.needs_saving_throw ||
+        !victim->isLucky(caster->spellLuckModifier(SPELL_DISPEL_MAGIC))) {
+      int rc = victim->spellWearOff(entry.spell, safe);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_VICT;
+      victim->affectFrom(entry.spell);
+      removals++;
+    }
+    // aggressive Act
+    if (entry.aggressive_act && caster && !victim->fight() && tvm) {
+      caster->setCharFighting(victim);
+      caster->setVictFighting(victim);
+    }
+  }
+
+  // Handle AFF_SANCTUARY (set directly on the being, not as a spell affect)
+  if (sanctuaryCandidate && removals < maxRemovals) {
+    if (immortal || !caster ||
         !victim->isLucky(caster->spellLuckModifier(SPELL_DISPEL_MAGIC))) {
       REMOVE_BIT(victim->specials.affectedBy, AFF_SANCTUARY);
-      victim->sendTo(
-        "You feel more vulnerable as your white aura slowly fades.\n\r");
-      act("The white glow around $n's body fades.", FALSE, victim, NULL, NULL,
-        TO_ROOM);
+      if (caster) {
+        victim->sendTo(
+          "You feel more vulnerable as your white aura slowly fades.\n\r");
+        act("The white glow around $n's body fades.", false, victim, nullptr,
+          nullptr, TO_ROOM);
+      }
+      removals++;
     }
     // aggressive Act
     if (caster && !victim->fight() && tvm) {
