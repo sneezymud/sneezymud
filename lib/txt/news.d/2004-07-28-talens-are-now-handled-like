@@ -1,0 +1,8 @@
+Talens are now handled like real objects, kept in your inventory,
+bags, etc.  You will still see a talen count in your prompt and
+in score, which is a tally of talens in your inventory.  This is
+a fairly complex change, so there may be some bugs.  In the future
+we may be able to have various denominations of talen, as well
+possibly adding other currencies.  As a result of this conversion,
+all of your talens have been moved to your bank account (in
+Grimhaven if you previously didn't have one).

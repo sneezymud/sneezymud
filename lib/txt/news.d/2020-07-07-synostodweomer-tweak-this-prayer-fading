@@ -1,0 +1,4 @@
+Synostodweomer tweak
+This prayer fading could potentially result in death so it's been
+tweaked to no longer give current hitpoints only max hitpoints.
+- It also provides enhanced regen now.

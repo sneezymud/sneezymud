@@ -1,0 +1,7 @@
+Totally rewrote the practice calculation formula.  I also
+fixed a huge bug with mob pracs in the process.  Mobs
+(particularly mages) will have a lot less pracs - in fact,
+they should have pracs appropriate for their levels.
+You may notice a slight change in the number of pracs you
+get as a player.  Also, intelligence now has a greater
+affect on practices.

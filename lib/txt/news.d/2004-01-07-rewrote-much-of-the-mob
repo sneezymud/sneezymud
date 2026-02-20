@@ -1,0 +1,3 @@
+Rewrote much of the mob pathfinding code.  Not entirely sure
+what affect this will have, but be wary.  Mobs may be tracking
+much more intelligently (but not any faster or slower).

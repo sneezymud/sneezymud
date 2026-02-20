@@ -1,0 +1,3 @@
+Added a "time" option to prompt.  I've also moved prompt
+information to database storage, so your prompts have been reset.
+Sorry.

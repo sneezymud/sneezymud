@@ -1,0 +1,3 @@
+Player corpses are no longer saved with special code, but now
+rely on the standard room saving code.  This means that you
+can now also rent player corpses.

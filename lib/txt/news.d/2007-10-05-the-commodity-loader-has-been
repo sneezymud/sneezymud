@@ -1,0 +1,5 @@
+The commodity loader has been completely rewritten.  You
+should find that mobs are loading a smaller amount of higher
+value commodities now.  You may also see that rough diamonds,
+emeralds and rubies of various sizes are also loading.  There
+may be more commodity types added in the future.

@@ -1,0 +1,5 @@
+Poisons have been converted to be true liquid types.
+Everything should work pretty much the same, except now you
+can move the poison around, hold it in a water skin, drink
+it, etc.  The company assumes no responsibility should you
+choose to drink poison.

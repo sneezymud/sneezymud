@@ -1,0 +1,4 @@
+Added 'shop' as a new option to the 'low' command, to allow configuration
+of shops in-game without needing direct database access.
+
+Type 'low shop' for full details on usage.

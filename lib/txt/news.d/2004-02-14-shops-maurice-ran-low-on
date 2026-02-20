@@ -1,0 +1,5 @@
+Shops:  Maurice ran low on funds, as no one ever purchased anything
+from him, and has lowered his buy prices.  Potions should now
+be sellable.  Changed some of the code involved in item values to
+make potions work - should all be fine, but bug Maror if anything
+seems odd.

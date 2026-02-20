@@ -1,0 +1,5 @@
+Shops have been completely overhauled to improve performance
+of the MUD.  Shop inventories are now in the database instead
+of shopkeeper's inventories.
+See http://forums.sneezymud.com/smf/index.php/topic,5603.0.html
+for more details.

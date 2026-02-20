@@ -1,0 +1,6 @@
+Maror was kind enough to point out that the global shop price
+modifier was still in place for owned shops - that is, your
+profit_sell modifier was being changed transparently by the
+mud.  This has been removed.  You may wish to re-examine the
+price of items in your shop as this will cause a global
+decrease in price of about 41%.

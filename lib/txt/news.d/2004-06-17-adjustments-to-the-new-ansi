@@ -1,0 +1,2 @@
+Adjustments to the new ansi/vt100 bar to better span the information
+across the screen area.  Also fixed the dangling tank in said bar.

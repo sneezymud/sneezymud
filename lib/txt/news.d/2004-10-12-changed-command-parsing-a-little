@@ -1,0 +1,7 @@
+Changed command parsing a little.  Say "me" now says "me" and not
+your name.  You can recite scrolls on "me" or "self" or "tank" now.
+Although the "tank" target only works if the tank is in your group
+and fighting.  Report bugs with command parsing to Angus.
+
+Monks will now see the effect of learning weapon specializations,
+just like all the other classes.

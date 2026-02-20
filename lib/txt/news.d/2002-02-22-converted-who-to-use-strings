@@ -1,0 +1,3 @@
+Converted 'who' to use strings instead of char pounters.  This
+will cut down on our crashes some.  Let me know if you see
+something funky with 'who'.

@@ -1,0 +1,7 @@
+Spell components that are added into something that already
+contains a similar component will now automatically be merged into
+a single component that is the sum of the two.  To split a
+component up, do: "split component #-of-charges" on a component
+that's in your inventory.  The new component will be inserted
+after the old one, so repeated split commands will work more
+conveniently.

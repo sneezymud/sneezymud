@@ -1,0 +1,4 @@
+A longstanding bug in brew has been fixed.  Essentially for some
+brew recipies, only one charge of the brew component was being
+used up, instead of the number of brewed charges.  Scribe was
+working correctly in this case, but brew was not.

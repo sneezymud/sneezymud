@@ -1,0 +1,2 @@
+Fixed an error in mob hp calculation.  Mobs between level 71
+and 82 will no longer be pre-chewed.

@@ -1,0 +1,8 @@
+Changed the way unlimited items work in shops.  From a customer
+point of view, it is pretty much the same.  For shop owners:
+You will no longer get "wholesale" prices for buying unlimited
+items.  You will also no longer have to pay to produce the
+items - unless you only have one left.  In other words,
+unlimited items are just like other items, except when you
+hit 1 item, in which case you pay to produce them so you
+don't run out.

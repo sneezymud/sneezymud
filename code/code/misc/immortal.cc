@@ -3268,17 +3268,6 @@ void TPerson::doStart() {
   }
 }
 
-void TBeing::doWiznews() {
-  if (!desc || desc->connected)
-    return;
-
-  if (isImmortal() || IS_SET(desc->account->flags, TAccount::IMMORTAL)) {
-    wiznews_used_num++;
-    desc->start_page_file(File::WIZNEWS, "No news for the immorts!\n\r");
-  } else
-    sendTo("This command is for immortals only.\n\r");
-}
-
 // returns DELETE_THIS
 int TBeing::genericRestore(restoreTypeT partial) {
   setCond(FULL, 24);

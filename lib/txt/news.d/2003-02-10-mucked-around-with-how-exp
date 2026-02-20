@@ -1,0 +1,3 @@
+Mucked around with how exp is represented internally.  You may
+find that exp values are shifted slightly.  It should be very
+minor.

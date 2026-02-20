@@ -1,0 +1,4 @@
+The disarm skill and fumble spell now make the target 'fumble'.
+This affect lowers your chance to hit.  These skills can still
+force a weapon drop, however it is more rare.  Also skills which
+counter disarm will now be learned easier.

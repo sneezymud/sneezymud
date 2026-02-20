@@ -1,0 +1,2 @@
+Shop logs now only contain the last 7 days of logs.  Older logs
+can be accessed via the shopinfo cgi utility.

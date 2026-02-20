@@ -1,0 +1,4 @@
+Monk changes.  Fixed a bug with iron body where an incorrect
+AC bonus was given to characters using paired items (e.g. pants).
+Slightly improved the ability to yoginsa without food and water
+for very skilled practitioners of wohlin.

@@ -1,0 +1,1 @@
+GCC 4.0.0 was causing crashes, so we're back to the old compiler.

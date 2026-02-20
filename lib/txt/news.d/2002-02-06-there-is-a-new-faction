@@ -1,0 +1,4 @@
+There is a new faction scoreboard in the Kindred Pub.  More
+scoring components will be added when it becomes feasible.
+Player files are NOT stored in the database, so it is difficult
+to use statistics based on player wealth etc.

@@ -1,0 +1,5 @@
+Added the ability to have multiple weapon types.  We have two
+builders working on actually setting weapons with multiple types,
+so you won't see any change as of yet.  This code move is to make
+sure that the supporting code functions correctly.  Please keep
+an eye out for odd weapon types, incorrect proficiency hones, etc.

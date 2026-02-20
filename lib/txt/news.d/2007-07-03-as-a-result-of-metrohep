@@ -1,0 +1,3 @@
+As a result of Metrohep being full of awesome, renting a mob
+with items in its inventory should no longer crash the MUD
+when you log back in and retrieve your follower.

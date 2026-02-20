@@ -1812,7 +1812,7 @@ class TBeing : public TThing {
     void doWizlock(const char*);
     void doFlag(const char*);
     void doSystem(const sstring&);
-    void doWiznews();
+    void doWiznews(const char*);
     void doNoshout(const sstring&);
     int doHide();
     int doSneak(const char*);

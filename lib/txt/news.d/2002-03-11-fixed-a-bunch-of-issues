@@ -1,0 +1,5 @@
+Fixed a bunch of issues with repo - including mobs attacking
+prematurely, mobs that can't speak repoing, etc.  Lowbies
+will also not be killed, as will afk people.  If you try and
+hide in a peaceful, mobs will also push you multiple rooms till
+you are in a non-peaceful room.

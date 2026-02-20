@@ -1,0 +1,3 @@
+Fixed a small bug with the permadeath monument.  Note that
+if you delete a dead permadeath and remake, you will lose your
+spot on the monument as soon as you gain to second level.

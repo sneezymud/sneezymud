@@ -1,0 +1,5 @@
+Evaluate has been integrated into look.  Whenever you look
+at something (except rooms) you will receive the additional
+evaluate information as well.  In most cases, it's only 3
+extra lines, but if it is too spammy, I can put in an
+auto-eval toggle.

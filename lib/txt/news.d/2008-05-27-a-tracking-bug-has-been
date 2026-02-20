@@ -1,0 +1,3 @@
+A tracking bug has been fixed.  Mobs now properly track when
+they otherwise would fail to track.  The speed of tracking may
+be too high, please keep an eye open and report on the forums.

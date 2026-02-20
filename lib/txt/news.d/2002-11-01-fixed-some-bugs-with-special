@@ -1,0 +1,3 @@
+Fixed some bugs with special attacks code.  Cudgel uses a
+different hitting mechanism now, I'm not sure how the hit
+rate will be affected.

@@ -1,0 +1,9 @@
+Tweaks to skill/spell difficulty.
+difficulty | Success | Damage
+- trivial      110%    105%
+- easy         100%    118%
+- normal        90%    133%
+- difficult     80%    154%
+- dangerous     70%    182%
+Additionally updated the difficulty of a lot of individual spells
+Mostly buffs, debuffs and utility spells. See helpfiles

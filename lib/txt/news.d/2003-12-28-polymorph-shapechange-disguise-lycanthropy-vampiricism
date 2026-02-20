@@ -1,0 +1,5 @@
+Polymorph/shapechange/disguise/lycanthropy/vampiricism changes: name
+retention, trophy retention, forced return when spell runs out,
+AC/hp/damage corrections, keep spells when switching, don't reset
+quest skills when switching, fixed moves, fixed riding bug, fixed
+experience reset bug, fixed a bunch of crash bugs

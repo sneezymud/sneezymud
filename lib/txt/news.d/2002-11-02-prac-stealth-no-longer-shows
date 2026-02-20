@@ -1,0 +1,3 @@
+"Prac stealth" no longer shows a list of valid disguises.
+Disguise with no arguments will show a list of valid
+disguises - and it's actually accurate now.

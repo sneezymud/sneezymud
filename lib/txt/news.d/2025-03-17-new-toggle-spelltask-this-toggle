@@ -1,0 +1,4 @@
+New Toggle: "spelltask"
+- This toggle will show the spell you are casting in the prompt
+along with the number of rounds remaining until the spell is
+complete. This toggle is off by default.

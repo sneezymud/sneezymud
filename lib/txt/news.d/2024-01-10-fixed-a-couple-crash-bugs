@@ -1,0 +1,11 @@
+Fixed a couple crash bugs
+
+-----------------------------------------------------------------------------
+
+NOTE: quite a few changes were pushed in this intervening period without
+updating the news file. Until we rectify that, looking through the commits
+in the Sneezy GitHub repo is the best way to see what's been changed:
+
+https://github.com/sneezymud/sneezymud/commits/master/
+
+-----------------------------------------------------------------------------

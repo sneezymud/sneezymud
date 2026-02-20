@@ -1,0 +1,3 @@
+Rewrote the cleric symbol loader, so there should be a lot
+more symbols loading.  I've also removed the unlimited symbols
+from the shop - it is up to players to stock them now.

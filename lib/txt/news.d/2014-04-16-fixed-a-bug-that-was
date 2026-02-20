@@ -1,0 +1,5 @@
+Fixed a bug that was causing the game to crash. However, this
+maybe a wider scale problem. Any mob description greater than
+10 lines is causing crashes. Either I will need to determine
+the cause or shorten the descriptions for those exceeding 10
+lines.

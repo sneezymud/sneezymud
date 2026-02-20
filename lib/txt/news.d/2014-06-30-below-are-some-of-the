@@ -1,0 +1,19 @@
+Below are some of the changes that have been recently made.
+
+- Portal usage for alts within the account has been fixed.
+- Chaos Plains Re-Enabled (other zones pending)
+- Wiki updated with updated content
+
+<Y>Load rates<z>
+- Rare Potions Drop Rates Enabled (<P>PoC<z>,<R>PoL<z>,<W>PoY<z>,<G>Mystery<z>)
+- Complete Armor Sets drop rates reduced
+- Single Item Drops (Clothing,Armor,Weapons) Increased
+
+Load Rates were subjected to two weeks of testing. Please be
+patient as we continue to review the code change.
+
+GrimhavenMUD is now on the GoogleFiber Network
+
+6-09-14  : Fixed item repair, any existing ticket from the prior mud will
+be invalid. Drop rates were also fixed at the same time. You
+should now see an increase in loads/drops off mobs.

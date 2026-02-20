@@ -1,0 +1,6 @@
+Added a 'ping' toggle.  It will be off by default.  If you want
+the mud to ping you to determine your network lag (as shown in
+the 'world' command), then you need to toggle this on.  If
+you've got a really slow connection or if you're playing in
+a "sensitive" environment (read: not allowed to mud at work)
+then you may wish to leave it off.

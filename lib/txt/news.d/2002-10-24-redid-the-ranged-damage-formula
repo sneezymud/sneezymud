@@ -1,0 +1,4 @@
+Redid the ranged damage formula slightly.  Previously, if
+you had a low ranged proficiency, you would get a damage
+penalty.  That penalty is gone, so lower level rangers
+should do more damage.

@@ -1,0 +1,3 @@
+Tweaked fastload for rangers.  Should be faster than it was
+before, but I slowed down normal loading for rangers, so the
+change sorta favors rangers.  As it should.

@@ -1,0 +1,5 @@
+Some updates have been made to the repair skills.  All skills
+can now repair objects to 100%, monogrammed items cannot drop
+below 0 struct, tool damage has been evened out, and some
+messages have been grammatically corrected.  Please report
+any bad messages or other repair issues you see.

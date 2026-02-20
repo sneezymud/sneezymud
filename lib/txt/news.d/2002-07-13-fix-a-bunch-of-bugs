@@ -1,0 +1,8 @@
+Fix a bunch of bugs.  See SneezyMUD forums for details
+(http://www.grimhaven.org/phpBB2/)
+Some of what was fixed: charmed clerics not healing masters,
+polymorph resetting quest skills, idle repo mobs, various
+sacrifice bugs, switching/rescuing mob bug, a really big
+ruler, flying/bash quirks, innkeepers pushing people around,
+and the room description of some whittled objects.
+Cheers.

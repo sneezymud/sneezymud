@@ -1,0 +1,3 @@
+Redid how the in-room object loader works.  There shouldn't be
+any change, but if you notice excess or missing in-room loads,
+you may want to bug it or let an imm know.

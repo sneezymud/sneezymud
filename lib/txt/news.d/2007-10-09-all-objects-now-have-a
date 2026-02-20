@@ -1,0 +1,4 @@
+All objects now have a value assigned that is based on the
+material type it is made of, in addition to the usual price.
+This has upsides and downsides; consider it to be an experimental
+change for the time being, we may want to roll it back.
