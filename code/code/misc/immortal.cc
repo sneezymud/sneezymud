@@ -3446,7 +3446,7 @@ void TBeing::doRestore(const char* argument) {
   }
 
   if (partial == RESTORE_FULL) {
-    rc = generic_dispel_magic(this, victim, GetMaxLevel(), isImmortal());
+    rc = generic_dispel_magic(this, victim, GetMaxLevel(), isImmortal(), SAFE_NO);
     if (IS_SET_DELETE(rc, DELETE_VICT)) {
       delete victim;
       victim = NULL;
@@ -3454,7 +3454,7 @@ void TBeing::doRestore(const char* argument) {
     }
   }
   if (partial == RESTORE_FULL) {
-    rc = genericChaseSpirits(this, victim, GetMaxLevel(), isImmortal());
+    rc = genericChaseSpirits(this, victim, GetMaxLevel(), isImmortal(), SAFE_NO);
     if (IS_SET_DELETE(rc, DELETE_VICT)) {
       delete victim;
       victim = NULL;
