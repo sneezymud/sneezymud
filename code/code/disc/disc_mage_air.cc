@@ -1003,15 +1003,15 @@ int tornado(TBeing* caster, int level, short bKnown, int adv_learn) {
   TBeing* tb;
   int rc;
 
-  int dam = caster->getSkillDam(NULL, SPELL_TORNADO, level, adv_learn);
+  int dam = caster->getSkillDam(nullptr, SPELL_TORNADO, level, adv_learn);
 
   if (caster->bSuccess(bKnown, SPELL_TORNADO)) {
     if (critSuccess(caster, SPELL_TORNADO) == CRIT_S_DOUBLE) {
       CS(SPELL_TORNADO);
       dam *= 2;
     }
-    act("You've created a tornado!", FALSE, caster, NULL, NULL, TO_CHAR);
-    act("$n has created a tornado!", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("You've created a tornado!", FALSE, caster, nullptr, nullptr, TO_CHAR);
+    act("$n has created a tornado!", FALSE, caster, nullptr, nullptr, TO_ROOM);
     for (StuffIter it = caster->roomp->stuff.begin();
          it != caster->roomp->stuff.end();) {
       t = *(it++);
@@ -1020,15 +1020,15 @@ int tornado(TBeing* caster, int level, short bKnown, int adv_learn) {
 
       if (!caster->inGroup(*tb) && !tb->isImmortal()) {
         caster->reconcileHurt(tb, discArray[SPELL_TORNADO]->alignMod);
-        act("$n is blasted by the force of the wind!", FALSE, t, NULL, 0,
-          TO_ROOM);
-        act("You are blasted by the force of the wind!", FALSE, tb, NULL, NULL,
-          TO_CHAR);
+        act("$n is blasted by the force of the wind!", FALSE, t, nullptr,
+          nullptr, TO_ROOM);
+        act("You are blasted by the force of the wind!", FALSE, tb, nullptr,
+          nullptr, TO_CHAR);
         if (tb->riding) {
           rc = tb->fallOffMount(t->riding, POSITION_STANDING);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete tb;
-            tb = NULL;
+            tb = nullptr;
             continue;
           }
         }
@@ -1036,13 +1036,13 @@ int tornado(TBeing* caster, int level, short bKnown, int adv_learn) {
           rc = ch->fallOffMount(tb, POSITION_STANDING);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete ch;
-            ch = NULL;
+            ch = nullptr;
           }
         }
         tb->setPosition(POSITION_SITTING);
         if (caster->reconcileDamage(tb, dam, SPELL_TORNADO) == -1) {
           delete tb;
-          tb = NULL;
+          tb = nullptr;
           continue;
         }
         caster->setCharFighting((TBeing*)tb);
@@ -1068,31 +1068,35 @@ int tornado(TBeing* caster, int level, short bKnown, int adv_learn) {
           act("$n is swept away...", FALSE, tb, nullptr, nullptr, TO_ROOM);
 
           rc = tb->genericTeleport(SILENT_YES);
-          tb->doLook("", CMD_LOOK);
-          act("A tiny vortex sweeps through the room, depositing $n.", FALSE,
-            tb, NULL, NULL, TO_ROOM);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete tb;
-            tb = NULL;
+            tb = nullptr;
+            continue;
           }
+          tb->doLook("", CMD_LOOK);
+          act("A tiny vortex sweeps through the room, depositing $n.", FALSE,
+            tb, nullptr, nullptr, TO_ROOM);
 
           rc = tb->genericMovedIntoRoom(tb->roomp, -1);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete tb;
-            tb = NULL;
+            tb = nullptr;
+            continue;
           }
         }
       } else {
-        act("$n manages to duck the tornado!", FALSE, tb, NULL, 0, TO_ROOM);
-        act("You duck the tornado!", FALSE, tb, NULL, NULL, TO_CHAR);
+        act("$n manages to duck the tornado!", FALSE, tb, nullptr, nullptr,
+          TO_ROOM);
+        act("You duck the tornado!", FALSE, tb, nullptr, nullptr, TO_CHAR);
       }
     }
     return SPELL_SUCCESS;
   } else {
     if (critFail(caster, SPELL_TORNADO)) {
-      act("You've managed to create some kind of tornado!", FALSE, caster, NULL,
-        NULL, TO_CHAR);
-      act("$n has created a tornado!", FALSE, caster, NULL, NULL, TO_ROOM);
+      act("You've managed to create some kind of tornado!", FALSE, caster,
+        nullptr, nullptr, TO_CHAR);
+      act("$n has created a tornado!", FALSE, caster, nullptr, nullptr,
+        TO_ROOM);
 
       CF(SPELL_TORNADO);
       for (StuffIter it = caster->roomp->stuff.begin();
@@ -1103,13 +1107,13 @@ int tornado(TBeing* caster, int level, short bKnown, int adv_learn) {
 
         if (caster->inGroup(*tb)) {
           caster->reconcileHurt(tb, discArray[SPELL_TORNADO]->alignMod);
-          act("$n chokes on the dust!", FALSE, tb, NULL, 0, TO_ROOM);
-          act("You choke on the dust!", FALSE, tb, NULL, NULL, TO_CHAR);
+          act("$n chokes on the dust!", FALSE, tb, nullptr, nullptr, TO_ROOM);
+          act("You choke on the dust!", FALSE, tb, nullptr, nullptr, TO_CHAR);
           if (tb->riding) {
             rc = tb->fallOffMount(tb->riding, POSITION_STANDING);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               delete tb;
-              tb = NULL;
+              tb = nullptr;
               continue;
             }
           }
@@ -1117,13 +1121,13 @@ int tornado(TBeing* caster, int level, short bKnown, int adv_learn) {
             rc = ch->fallOffMount(tb, POSITION_STANDING);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               delete ch;
-              ch = NULL;
+              ch = nullptr;
             }
           }
           tb->setPosition(POSITION_SITTING);
           if (caster->reconcileDamage((TBeing*)tb, dam, SPELL_TORNADO) == -1) {
             delete tb;
-            tb = NULL;
+            tb = nullptr;
             continue;
           }
 
@@ -1131,26 +1135,28 @@ int tornado(TBeing* caster, int level, short bKnown, int adv_learn) {
                 ROOM_HAVE_TO_WALK | ROOM_NO_FLEE | ROOM_NO_ESCAPE))
             continue;
 
-          act("Uhoh, Toto...", FALSE, tb, NULL, NULL, TO_CHAR);
-          act("$n is swept away...", FALSE, tb, NULL, NULL, TO_ROOM);
+          act("Uhoh, Toto...", FALSE, tb, nullptr, nullptr, TO_CHAR);
+          act("$n is swept away...", FALSE, tb, nullptr, nullptr, TO_ROOM);
 
           rc = tb->genericTeleport(SILENT_YES);
-          tb->doLook("", CMD_LOOK);
-          act("A tiny vortex sweeps through the room, depositing $n.", FALSE,
-            tb, NULL, NULL, TO_ROOM);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete tb;
-            tb = NULL;
+            tb = nullptr;
+            continue;
           }
+          tb->doLook("", CMD_LOOK);
+          act("A tiny vortex sweeps through the room, depositing $n.", FALSE,
+            tb, nullptr, nullptr, TO_ROOM);
 
           rc = tb->genericMovedIntoRoom(tb->roomp, -1);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete tb;
-            tb = NULL;
+            tb = nullptr;
+            continue;
           }
         } else {
           // act("$n dodges the vortex!", FALSE, t, NULL, 0, TO_ROOM);
-          act("You dodge the vortex!", FALSE, tb, NULL, NULL, TO_CHAR);
+          act("You dodge the vortex!", FALSE, tb, nullptr, nullptr, TO_CHAR);
         }
       }
       return SPELL_CRIT_FAIL;

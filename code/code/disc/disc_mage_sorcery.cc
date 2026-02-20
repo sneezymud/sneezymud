@@ -1453,6 +1453,10 @@ int teleport(TBeing* caster, TBeing* victim, int, short bKnown) {
           victim->isImmune(IMMUNE_SUMMON, WEAR_BODY)) {
         act("$N resists your teleportation!", FALSE, caster, nullptr, victim,
           TO_CHAR);
+        act("You resist $n's teleportation!", FALSE, caster, nullptr, victim,
+          TO_VICT);
+        act("$N resists $n's teleportation!", FALSE, caster, nullptr, victim,
+          TO_NOTVICT);
         caster->nothingHappens(SILENT_YES);
         return SPELL_FAIL;
       }
