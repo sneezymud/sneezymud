@@ -1,0 +1,5 @@
+Corporate bank accounts are now actually stored in the banks.
+This doesn't affect anything really, except the total talens in
+the banks.  All corporations were set to use the GH Bank as their
+corporate bank, let me know if you want to change yours.  You
+still access the bank account through the corporate assistant.

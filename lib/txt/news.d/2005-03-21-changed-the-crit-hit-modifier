@@ -1,0 +1,2 @@
+Changed the crit hit modifier to be a curve rather than linear.
+Mobs at much higher levels will be unlikely to suffer crit hits.

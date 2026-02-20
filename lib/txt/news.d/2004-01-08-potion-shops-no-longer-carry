@@ -1,0 +1,4 @@
+Potion shops no longer carry unlimited potions.  To offset
+this, mobs now load what were previously unlimited potions.
+This is a random load on all mobs based on level, much like
+commodities.

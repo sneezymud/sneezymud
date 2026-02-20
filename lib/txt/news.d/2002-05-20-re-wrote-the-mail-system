@@ -1,0 +1,5 @@
+Re-wrote the mail system to use the database.  I removed about 380
+lines of ancient file I/O routines and replaced them with about 10
+lines of database code.  Just thought you'd like to know.  Let's
+hope it actually works.  Any mail not received by the time this
+change goes in will be lost.  Sorry.

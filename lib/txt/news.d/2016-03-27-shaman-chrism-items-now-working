@@ -1,0 +1,9 @@
+Shaman chrism items now working without crashing the mud. Kudos
+to Jeren for helping identify the problem and providng a solution.
+
+- Changes to Load Rate. Fixed Rate was increased and SuitSet also
+saw a rise in their load rates. Please report any excessive
+load rates.
+- PoC have been reduced in frequency.
+- As we now have the Sneezymud domain, the MUD is no longer
+identified as Grimhavenmud.

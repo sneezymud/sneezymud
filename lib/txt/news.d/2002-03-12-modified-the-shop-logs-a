@@ -1,0 +1,7 @@
+Modified the shop logs a bit.  All negative cost logs will now
+actually be recorded as negative cost (shop sells an item, cost
+is positive, shop buys an item, cost is negative).  Added a
+balance sheet to logs summaries.  Added 3 additional shop logs:
+repo, producing (price paid for producing an unlimited item),
+and wholesale (price gained for buy a produced item).  Added
+the ability to see logs for particular players (eg logs peel).

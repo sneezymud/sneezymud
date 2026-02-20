@@ -56,6 +56,7 @@ extern "C" {
 #include "shop.h"
 #include "weather.h"
 #include "player_data.h"
+#include "cmd_news.h"
 
 const int DONT_SEND = -1;
 const int FORCE_LOW_INVSTE = 1;
@@ -785,122 +786,58 @@ bool MakeTimeT(int tMon, int tDay, int tYear, time_t tLast) {
   return (difftime(tCurrent, tLast) > 0.0);
 }
 
+namespace {
+
+  void showRecentEntries(TBeing* ch, const char* dir, const char* header,
+    const char* overflowMsg, time_t lastLogon) {
+    auto entries = scanNewsFilenames(dir);
+    int count = 0;
+    bool posted = false;
+
+    for (auto& entry : entries) {
+      if (!MakeTimeT(entry.month, entry.day, entry.year % 100, lastLogon))
+        break;
+
+      // Only load file content for entries we're actually displaying.
+      loadEntryContent(dir, entry);
+
+      if (!posted) {
+        posted = true;
+        ch->sendTo(header);
+      }
+
+      sstring line = formatDatePrefix(entry.year, entry.month, entry.day);
+      auto nlPos = entry.content.find('\n');
+      if (nlPos != sstring::npos)
+        line += entry.content.substr(0, nlPos);
+      else
+        line += entry.content;
+      line += "\n\r";
+
+      ch->sendTo(format("%s") % line.toCRLF());
+
+      if (++count == 10) {
+        ch->sendTo(overflowMsg);
+        break;
+      }
+    }
+
+    if (posted)
+      ch->sendTo("\n\r");
+  }
+
+}  // namespace
+
 void ShowNewNews(TBeing* tBeing) {
-  time_t tLast = tBeing->player.time->last_logon, tTime = time(0);
-  struct stat tData;
-  FILE* tFile;
-  char tString[256];
-  int tMon, tDay, tYear, tCount = 0;
-  bool tPosted = false;
-  sstring bufStr;
+  time_t tLast = tBeing->player.time->last_logon;
 
-  // Report for the NEWS file
-  if (!stat(File::NEWS, &tData))
-    if (tTime - tData.st_mtime <= (3 * SECS_PER_REAL_DAY))
-      if ((tFile = fopen(File::NEWS, "r"))) {
-        while (!feof(tFile)) {
-          if (!fgets(tString, 256, tFile))
-            vlogf(LOG_FILE, "Unexpected read error in ShowNewNews");
+  showRecentEntries(tBeing, File::NEWS_DIR, "NEWS File Changes:\n\r",
+    "...And there is more, type NEWS to see more.\n\r", tLast);
 
-          if (sscanf(tString, "%d-%d-%d : ", &tMon, &tDay, &tYear) != 3)
-            continue;
-
-          if (!MakeTimeT(tMon, tDay, tYear, tLast))
-            break;
-
-          if (!tPosted) {
-            tPosted = true;
-            tBeing->sendTo("NEWS File Changes:\n\r");
-          }
-
-          bufStr = tString;
-          tBeing->sendTo(format("%s") % bufStr.toCRLF());
-
-          if (++tCount == 10) {
-            tBeing->sendTo("...And there is more, type NEWS to see more.\n\r");
-            break;
-          }
-        }
-
-        fclose(tFile);
-      }
-
-  if (tPosted)
-    tBeing->sendTo("\n\r");
-
-  tPosted = false;
-  tCount = 0;
-
-  // Report for the NEWS.new file (help nexversion)
-  if (!stat("help/nextversion", &tData))
-    if (tTime - tData.st_mtime <= (3 * SECS_PER_REAL_DAY))
-      if ((tFile = fopen("help/nextversion", "r"))) {
-        while (!feof(tFile)) {
-          if (!fgets(tString, 256, tFile))
-            vlogf(LOG_FILE, "Unexpected read error in help/nextversion");
-
-          if (sscanf(tString, "%d-%d-%d : ", &tMon, &tDay, &tYear) != 3)
-            continue;
-
-          if (!MakeTimeT(tMon, tDay, tYear, tLast))
-            break;
-
-          if (!tPosted) {
-            tPosted = true;
-            tBeing->sendTo("Future NEWS File Changes:\n\r");
-          }
-
-          bufStr = tString;
-          tBeing->sendTo(format("%s") % bufStr.toCRLF());
-
-          if (++tCount == 10) {
-            tBeing->sendTo("...And there is more, type NEWS to see more.\n\r");
-            break;
-          }
-        }
-
-        fclose(tFile);
-      }
-
-  if (tPosted)
-    tBeing->sendTo("\n\r");
-
-  tPosted = false;
-  tCount = 0;
-
-  if (tBeing->isImmortal() && !stat(File::WIZNEWS, &tData))
-    if (tTime - tData.st_mtime <= (3 * SECS_PER_REAL_DAY))
-      if ((tFile = fopen(File::WIZNEWS, "r"))) {
-        while (!feof(tFile)) {
-          if (!fgets(tString, 256, tFile))
-            vlogf(LOG_FILE, "Unexpected read error in wiznews");
-
-          if (sscanf(tString, "%d-%d-%d : ", &tMon, &tDay, &tYear) != 3)
-            continue;
-
-          if (!MakeTimeT(tMon, tDay, tYear, tLast))
-            break;
-
-          if (!tPosted) {
-            tPosted = true;
-            tBeing->sendTo("WIZNEWS File Changes:\n\r");
-          }
-
-          bufStr = tString;
-          tBeing->sendTo(format("%s") % bufStr.toCRLF());
-
-          if (++tCount == 10) {
-            tBeing->sendTo(
-              "...And there is more, SEE WIZNEWS to see more.\n\r");
-            break;
-          }
-        }
-
-        fclose(tFile);
-      }
-
-  if (tPosted)
-    tBeing->sendTo("\n\r");
+  if (tBeing->isImmortal()) {
+    showRecentEntries(tBeing, File::WIZNEWS_DIR, "WIZNEWS File Changes:\n\r",
+      "...And there is more, SEE WIZNEWS to see more.\n\r", tLast);
+  }
 }
 
 // if descriptor is to be deleted, DELETE_THIS
@@ -2428,21 +2365,21 @@ void setPrompts(fd_set out) {
           d->green(), d->cur_page, d->tot_pages, d->norm(), d->green(),
           d->norm());
         d->output.push(CommPtr(new UncategorizedComm(promptbuf)));
+      } else if (d->showstr_head && (d->prompt_mode != DONT_SEND)) {
+        sprintf(promptbuf,
+          "\n\r[ %sReturn%s to continue, %s(r)%sefresh, %s(b)%sack, page "
+          "%s(%d/%d)%s, or %sany other key%s to quit ]\n\r",
+          d->green(), d->norm(), d->green(), d->norm(), d->green(), d->norm(),
+          d->green(), d->cur_page, d->tot_pages, d->norm(), d->green(),
+          d->norm());
+        d->output.push(CommPtr(new UncategorizedComm(promptbuf)));
       } else if (!d->connected) {
         if (!ch) {
           vlogf(LOG_BUG,
             "Descriptor in connected mode with NULL desc->character.");
           continue;
         }
-        if (d->showstr_head && (d->prompt_mode != DONT_SEND)) {
-          sprintf(promptbuf,
-            "\n\r[ %sReturn%s to continue, %s(r)%sefresh, %s(b)%sack, page "
-            "%s(%d/%d)%s, or %sany other key%s to quit ]\n\r",
-            d->green(), d->norm(), d->green(), d->norm(), d->green(), d->norm(),
-            d->green(), d->cur_page, d->tot_pages, d->norm(), d->green(),
-            d->norm());
-          d->output.push(CommPtr(new UncategorizedComm(promptbuf)));
-        } else {
+        {
           if (((d->m_bIsClient ||
                  IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) ||
                 (ch->isPlayerAction(PLR_VT100 | PLR_ANSI) &&
@@ -2784,6 +2721,9 @@ void processAllInput() {
         d->sstring_add(comm);
       else if (d->pagedfile)
         d->page_file(comm);
+      else if (d->showstr_head)
+        d->show_string(comm, SHOWNOW_NO,
+          d->character ? ALLOWREP_YES : ALLOWREP_NO);
       else if (!d->account) {  // NO ACCOUNT
         if (d->m_bIsClient) {
           rc = d->client_nanny(comm);
@@ -2807,9 +2747,7 @@ void processAllInput() {
           continue;
         }
       } else if (!d->connected) {
-        if (d->showstr_head) {
-          d->show_string(comm, SHOWNOW_NO, ALLOWREP_YES);
-        } else {
+        {
           rc = d->character->parseCommand(comm, TRUE);
           // the "if d" is here due to a core that showed d=0x0
           // after a purge ldead
@@ -2851,9 +2789,7 @@ void processAllInput() {
         obj_edit(d->character, comm);
       else if (d->connected == CON_MEDITING)
         mob_edit(d->character, comm);
-      else if (d->showstr_head) {
-        d->show_string(comm, SHOWNOW_YES, ALLOWREP_YES);
-      } else {
+      else {
         rc = d->nanny(comm);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete d;
@@ -3681,9 +3617,14 @@ int Descriptor::doAccountMenu(const char* arg) {
       writeToQ("[Press return to continue]\n\r");
       break;
     case 'N':
-    case 'n':
-      start_page_file(File::NEWS, "No news today\n\r");
+    case 'n': {
+      sstring newsContent = assembleNewsEntries(File::NEWS_DIR);
+      if (newsContent.empty())
+        writeToQ("No news today.\n\r");
+      else
+        page_string(newsContent.toCRLF());
       break;
+    }
     case 'L':
     case 'l':
       count = listAccount(account->name, lStr);
@@ -3971,25 +3912,15 @@ sstring Descriptor::assembleMotd(int wiz) {
     format("\n\r\n\r     Welcome to %s\n\r\n\r") % MUD_NAME_VERS;
 
   auto buildMotd = [](int wiz) {
-    struct stat timestat;
     const char* const motdPath = wiz ? File::WIZMOTD : File::MOTD;
-    const char* const newsFilePath = wiz ? File::WIZNEWS : File::NEWS;
 
     sstring motd;
     file_to_sstring(motdPath, motd, CONCAT_YES);
 
-    char* lastUpdated = nullptr;
-
-    if (stat(newsFilePath, &timestat)) {
-      vlogf(LOG_FILE,
-        format("Descriptor::sendMotd::buildMotd - Could not stat %snews file") %
-          (wiz ? "wiz" : ""));
-    } else {
-      lastUpdated = ctime(&(timestat.st_mtime));
-    }
-
+    sstring dateStr =
+      latestNewsDateString(wiz ? File::WIZNEWS_DIR : File::NEWS_DIR);
     motd += format("\n\rREAD the %sNEWS LAST UPDATED       : %s\n\r") %
-            (wiz ? "WIZ" : "") % (lastUpdated ? lastUpdated : "Unknown");
+            (wiz ? "WIZ" : "") % dateStr;
 
     return motd;
   };

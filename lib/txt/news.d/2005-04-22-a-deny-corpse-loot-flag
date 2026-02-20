@@ -1,0 +1,3 @@
+A deny corpse loot flag has been added to toggle.  When this flag
+is on, only you may loot your corpse.  When it is off, anyone
+may loot your corpse.

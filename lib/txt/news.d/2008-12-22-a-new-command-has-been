@@ -1,0 +1,6 @@
+A new command has been added called 'request'.  It is to be
+used to get assistance much like the 'contact us' page on the
+website.  It works exactly like the bug, idea, and typo commands
+however note that these commands now can take a parameter to
+better specify your issue.  Example: "request quest is broken"
+or Example: "bug this room exits to wrong spot".

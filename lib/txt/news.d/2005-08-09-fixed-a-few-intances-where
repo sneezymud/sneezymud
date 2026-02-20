@@ -1,0 +1,2 @@
+Fixed a few intances where dexterity was inappropriately used to
+measure defensive capability, and replaced it with agility.

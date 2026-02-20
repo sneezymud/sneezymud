@@ -1,0 +1,6 @@
+Two shop ownership changes: First, it is no longer allowed to set
+the profit_buy ratio lower than the profit_sell ratio.  We've had
+a few incidents of screwups costing people large sums of cash, and
+there's really no legitimate reason to do this on purpose.  Second,
+you can now set pricing ratios on a per player basis, so you can
+make things really expensive for Dyehead.  Just as an example.

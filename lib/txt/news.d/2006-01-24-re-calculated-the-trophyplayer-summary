@@ -1,0 +1,4 @@
+Re-calculated the trophyplayer summary table, which has resulted
+in some slight shifts on the trophy board in the morgue.  I believe
+this table got a little bit out of sync due to recent database
+restores and crashes.

@@ -1,0 +1,5 @@
+Fixed the periodic spell component loader.  Stuff should load now
+like it used to long ago.  The fertile soil in Brazzed-Dum has
+begun growing more mushrooms lately.  When components that decay
+merge together, the decay rate of the resulting component will be
+calculated using the weighted average of the charges.

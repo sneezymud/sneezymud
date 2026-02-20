@@ -1,0 +1,11 @@
+Added 'mvresponse' as a new option to the 'low' command, to allow
+moving mob responses from the imm database to production. It works
+just like mvroom/mvmob/etc.
+
+Currently the only way to actually add/edit mob responses is through
+the web-based builder tools at https://sneezy-mud.com/build. Once
+the response has been saved in that tool, the 'low mvresponse' command
+in-game will activate it.
+
+This is intentionally not part of mvmob, to allow better auditing of
+mob responses builders might add before putting them into production.

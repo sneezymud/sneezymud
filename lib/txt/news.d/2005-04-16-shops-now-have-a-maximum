@@ -1,0 +1,2 @@
+Shops now have a maximum inventory of 2500 items.  Shops that
+meet or exceed this limit will not be able to buy more items.

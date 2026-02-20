@@ -1,0 +1,5 @@
+Rewrote how the zones command calculates average level.  It
+should now be more accurate - input needed on this please!
+(It now displays the average level of mobs in the zone that
+are within 1 standard deviation of the overall average level
+of mobs in the zone, in case you were wondering).

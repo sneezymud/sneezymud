@@ -1,0 +1,3 @@
+Made many internal changes to the main game loop to help
+regulate CPU usage.  Hopefully we should be running smoother now,
+and with less overall lag.

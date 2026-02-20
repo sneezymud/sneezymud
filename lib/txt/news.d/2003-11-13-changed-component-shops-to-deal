@@ -1,0 +1,10 @@
+Changed component shops to deal in units of charges.  You can now
+buy 5*component to get a component with 5 charges on it.  Same with
+selling.  The shopkeepers will enforce inventory limits on the total
+number of charges of each component.
+Also, you can do: sell 25*all.comp to sell up to 25 charges of every
+component in your inventory, provided your comps have that many
+charges and the shopkeeper's inventory limit isn't reached.
+Scribe has been fixed.  You can now do: scribe 3*haste to get 3
+haste scrolls.  All 3 will be rentable because 3 charges from each
+of the required components will have been consumed.

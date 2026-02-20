@@ -1,0 +1,4 @@
+Added a utility to allow shop owners to download shop logs
+in comma delimited format.  Read "help shop own" to see
+how to set a password with the access command, then visit
+http://sneezy.saw.net/shoplog.cgi to download shop logs.

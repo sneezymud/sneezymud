@@ -1,0 +1,3 @@
+Rescue without any arguments will now default to the first person
+tanking in your current group.  You and the person tanking must
+both be grouped for this to work.

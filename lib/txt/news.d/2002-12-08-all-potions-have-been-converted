@@ -1,0 +1,5 @@
+All potions have been converted to true liquid types now.
+This means you can pour them out, fill up water skins with
+them, sip them, etc.  Brew has been temporarily disabled
+until I can rewrite it to use the new potion type.  There
+are probably some bugs to work out.

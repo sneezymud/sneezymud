@@ -1,0 +1,3 @@
+Rewrote the method for poisoning weapons to work better with
+liquid poisons.  You can now poison a weapon with any liquid
+type, although only poisons will have any actual affect.

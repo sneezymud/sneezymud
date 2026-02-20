@@ -1,0 +1,5 @@
+You can now use the setrates command to clear ratios for
+individual items or keywords.  See helpfile for examples.
+Also, setting max_num of 0 for an item or a keyword will
+cause no items of that type to be purchased (previously
+it was allowing 1 item to be purchased).

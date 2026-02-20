@@ -31,9 +31,9 @@ class File {
     static const char* const MOB;
     static const char* const ZONE;
     static const char* const CREDITS;
-    static const char* const NEWS;
+    static const char* const NEWS_DIR;
     static const char* const STORY;
-    static const char* const WIZNEWS;
+    static const char* const WIZNEWS_DIR;
     static const char* const MOTD;
     static const char* const WIZMOTD;
     static const char* const TIME;

@@ -1,0 +1,3 @@
+Lifeforce is now capped at 32000.  This should prevent the loop
+issue.  Report any strange reactions to your nearest coder if
+any unforeseen side effects spawn from this.

@@ -1,0 +1,2 @@
+Fixed up spell component loading so that it no longer attaches
+them to objects in a mob's inventory.

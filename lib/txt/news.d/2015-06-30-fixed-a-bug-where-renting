@@ -1,0 +1,2 @@
+Fixed a bug where renting with a persistent follower (pet)
+with a custom name would crash the mud.

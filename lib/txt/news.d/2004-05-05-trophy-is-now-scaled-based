@@ -1,0 +1,3 @@
+Trophy is now scaled based on the number of each mob that loads.
+In other words, you will trophy 10 times slower on a mob if
+there are 10 copies of that mob loading, rather than 1.

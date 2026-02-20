@@ -1,0 +1,21 @@
+Adjusted when the coronary spell is learned and becomes maxable.
+There's long been no reason for a shaman to invest practices in the
+skunk discipline past 80%, as the coronary spell was learned at 75%
+and became maxable at 80%.
+
+Because coronary is very powerful, is the capstone ability in an
+advanced discipline, and to make the final 20% in the skunk discipline
+meaningful, coronary has been updated to first unlock at 81%, becoming
+fully maxable at 100%. This will have the side effect of increasing its
+damage by around 8%.
+
+Shamans who had previously stopped their skunk learning at 80% will find
+they can no longer use coronary at all, though any previous hones will
+be retained as the spell's potential is increased by investing further
+practices in the skunk discipline.
+
+Characters without available practices can consider respeccing at their
+guildmaster to reallocate their existing learnedness.
+
+Note: A total of 20 practices is required to take an advanced discipline
+from 80% to 100%. This is standard across all advanced disciplines.

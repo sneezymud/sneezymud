@@ -1,0 +1,2 @@
+A bug with cudgel was fixed.  Using cudgel as it was intended,
+thieves shouldn't notice a difference.

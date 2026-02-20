@@ -1,0 +1,3 @@
+I added a smoove object caching trick to the boot time zone
+resetting.  This should give us a huge decrease in boot time, but
+we'll have to try it out and see.  It works pretty well on beta.

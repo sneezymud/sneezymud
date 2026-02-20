@@ -1,0 +1,3 @@
+'score' will now show what your maximum experience was since
+before your last death.  If your current exp is higher than it
+was it will not show it.

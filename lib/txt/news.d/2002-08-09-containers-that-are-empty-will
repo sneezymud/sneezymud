@@ -1,0 +1,2 @@
+Containers that are empty will display (empty), but only if they
+are currently open (so you can easily see the contents, or lack of).

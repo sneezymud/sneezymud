@@ -1,0 +1,5 @@
+Higher level mage mobs that can't fly and are hunting will now cast
+flight on themselves before they go looking for their quarry.
+Vampire mobs are now quite a bit less likely to perform their
+dreaded bloodsucking bite, and the victim gets a chance to save
+against the attack.

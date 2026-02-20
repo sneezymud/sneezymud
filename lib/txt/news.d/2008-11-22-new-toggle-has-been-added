@@ -1,0 +1,4 @@
+New toggle has been added "tells".  This keeps the player with
+the toggle on from receiving un-initiated tells.  They may still
+send tells and receive tells from players they last told to. The
+ability is mainly intended for builders but can be used by all.

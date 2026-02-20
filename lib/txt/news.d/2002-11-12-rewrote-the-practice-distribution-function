@@ -1,0 +1,7 @@
+Rewrote the practice distribution function for mobs.  Rather
+than just randomly practicing disciplines, they will now be
+a little bit smarter about it.  For example, the same mob
+may load as either a fire mage or a water mage, depending
+on what they "decide" when they load.  Also, fixed a dumb
+bug with toggle.  And I added something else, but it's a
+secret.

@@ -1,0 +1,4 @@
+Fixed an issue that was preventing the display of limb afflictions in
+various commands like 'score', 'look', 'glance', and 'att con'. You
+should now be able to see all limb afflictions properly in these
+commands, instead of only via the `limb` command.

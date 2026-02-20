@@ -848,7 +848,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring& argument, TThing* vict,
           doCutlink(newarg.c_str());
           break;
         case CMD_WIZNEWS:
-          doWiznews();
+          doWiznews(newarg.c_str());
           break;
         case CMD_NOSHOUT:
           doNoshout(argument.c_str());

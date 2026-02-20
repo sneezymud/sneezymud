@@ -1,0 +1,6 @@
+Re-enabled transform limb ritual in the shaman frog discipline. It
+currently has identical functionality to the old ranger version,
+but is now cast like any other ritual.
+
+Also disabled usage of the ranger version by mobs that still have
+the ranger class.

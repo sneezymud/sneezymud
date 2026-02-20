@@ -1,0 +1,3 @@
+Did some optimizing and re-design on the shop ownership database
+code.  The lag you get when you type "list" at big shops should
+be greatly reduced.

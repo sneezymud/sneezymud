@@ -1,0 +1,6 @@
+Fixed a bug that has been lurking in the damage code for a
+long time.  Dex was being factored in to damage under special
+circumstances when it should not have been.  The bug has been
+fixed, so you may notice a slight decrease in your combat
+damage, especially if you used pierce weapons.  Sorry for the
+belated news entry.

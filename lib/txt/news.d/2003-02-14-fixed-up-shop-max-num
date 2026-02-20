@@ -1,0 +1,3 @@
+Fixed up shop max_num stuff.  Many items weren't being restricted
+by the shop max, but they will be now.  Taloc, for example, has
+over 3000 ball pein hammers, which is incorrect.

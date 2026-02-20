@@ -368,20 +368,6 @@ void /*TBeing::*/ displayHelpFile(TBeing* ch, char* helppath, char* namebuf) {
     timebuf, ch->norm());
   str = buf2;
 
-  // special message for nextversion file
-  if (!strcmp(namebuf, "NEXTVERSION")) {
-    str +=
-      "THIS HELP FILE REFLECTS WHAT THE \"news\" COMMAND WILL SHOW NEXT TIME "
-      "THERE\n\r";
-    str +=
-      "IS A CHANGE IN CODE (PROBABLY IN THE NEXT FEW DAYS).  IT IS HERE TO "
-      "GIVE\n\r";
-    str +=
-      "YOU SOME IDEA OF WHAT THINGS HAVE BEEN FIXED ALREADY, OR WHAT FEATURES "
-      "ARE\n\r";
-    str += "FORTHCOMING...\n\r\n\r";
-  }
-
   // now print the file
   file_to_sstring(helppath, str, CONCAT_YES);
   str += "\n\r";

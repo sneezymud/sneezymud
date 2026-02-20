@@ -1,0 +1,4 @@
+Corrected an issue with the zones command that was preventing some
+zones to be viewable when used with an argument.  Also added an
+index value to each entry, shown to the left, that can be used to
+look at said zone without having to type the zonename.

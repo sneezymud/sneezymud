@@ -1,0 +1,4 @@
+Consolidated "set profit_buy" and "set profit_sell" into a new
+command, "setrates".  "shop owner" help file has been updated,
+read it for syntax. max_num and keyword matching are not currently
+functional.

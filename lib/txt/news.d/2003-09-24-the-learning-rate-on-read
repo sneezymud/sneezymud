@@ -1,0 +1,5 @@
+The learning rate on read magic has been adjusted.  Recite
+now consumes the scroll if you fail the read magic check.
+Recite now causes lag equal to the spell that the scroll
+cases.  Scribe now does a read magic check.  Mages now get
+a 50% bonus to read magic when reciting.

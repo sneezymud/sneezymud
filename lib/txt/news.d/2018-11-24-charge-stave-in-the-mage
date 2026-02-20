@@ -1,0 +1,3 @@
+Charge Stave in the Mage Alchemy disc has had a syntax update.
+Now recharge <object> instead of charge, to remove the conflict with
+Deikhans charge ability.

@@ -1,0 +1,5 @@
+Minor changes made to critical hitting.  You can no longer remove
+the hearts of Skeletons, sever the tendons of Skeletons/Ghosts or
+like critical hits.  This affects Ghosts, Zombies and Skeletons.
+Also zombie hearts will now have poison, not blood, so be wary
+you bloodlusters.

@@ -1,0 +1,3 @@
+The trophy board in the morgue no longer uses total mob count
+for percentages.  Instead, it compares everyone to the leader,
+currently Frobozz.

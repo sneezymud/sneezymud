@@ -1,0 +1,18 @@
+We have merged the MUD instances. If you had a previous account
+(@UNDO.IT) simply create your account as you had it before, and
+your alts will be present. When you log in your alt you will
+default to an immortal room. To exit: simply enter the toilet,
+and plop your in center square. Welcome back.
+
+- The codebase has been stablized and bug fixes will start
+happening. If you find bugs that are crashing the mud please
+let us know.
+
+Currently LD alts on the same account can cause a crash
+If you plan on running more than two alts at a time on the
+same account contact Erasmus and get details on how to move
+your alts onto another account.
+
+Shaman spell Chrism, the bead necklace when worn crashes the
+mud when it completes the affect cycle. This spell will be
+disabled until a fix is found.

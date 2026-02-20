@@ -1,0 +1,3 @@
+The message that is put on engraved equipment has been
+shortened to just two curly braces, eg "{Peel}".  Previously
+engraved equipment will stay as it is.

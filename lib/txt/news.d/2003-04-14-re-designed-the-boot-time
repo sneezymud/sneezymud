@@ -1,0 +1,3 @@
+Re-designed the boot time object caching routine to use the
+cache for more objects.  This should reduce the boot time
+considerably.  Also, welcome to the new server. :)

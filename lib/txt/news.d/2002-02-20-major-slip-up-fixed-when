@@ -1,0 +1,5 @@
+Major slip up fixed. When I added mage scribe to the game I
+never set the learning rate and start to what it was intended.
+This is fixed so you may want to check your skill level and
+re-evaluate the worth of the skill. The rate that was set was
+intended as a testing level. (so I could see increases etc.)

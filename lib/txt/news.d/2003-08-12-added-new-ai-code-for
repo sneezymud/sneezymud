@@ -1,0 +1,5 @@
+Added new AI code for monk and mage mobs.  They will now
+do some new things during combat, etc.  Also, critical hits
+will no longer necessarily scrap equipment.  When someone
+gets a tooth knocked out, others in the room will now see
+who made the hit.  Fixed a few miscellaneous typos.
