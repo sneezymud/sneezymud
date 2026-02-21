@@ -742,10 +742,10 @@ int TBeing::critSuccessChance(TBeing* victim, TThing* weapon,
     return critBlunt(victim, weapon, partHit, weaponDamageType, damage,
       critSeverity);
 
-  vlogf(LOG_BUG,
-    format("unknown weapon type in critSuccessChance (%i)") % weaponDamageType);
-
-  return 0;
+  // Generic crit for weapon types without a specific crit table (elemental,
+  // holy, etc). Provides double/triple damage without limb-specific effects.
+  return critGeneric(victim, weapon, partHit, weaponDamageType, damage,
+    critSeverity);
 }
 
 /* ------------------------------------------------------------
@@ -818,7 +818,7 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
     buf = format("$n strikes $N exceptionally well, %s $S %s with $s %s.") %
           attack_hit_text[new_wtype].hitting % v->describeBodySlot(*part_hit) %
           limbStr;
-    act(buf, TRUE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+    act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
     return (ONEHIT_MESS_CRIT_S);
   } else if (crit_num <= 66) {
@@ -833,12 +833,12 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
     buf = format("$n critically strikes you, %s your %s with $s %s.") %
           attack_hit_text[new_wtype].hitting % v->describeBodySlot(*part_hit) %
           limbStr;
-    act(buf, TRUE, this, 0, v, TO_VICT, ANSI_RED);
+    act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
 
     buf = format("$n critically strikes $N, %s $S %s with $s %s.") %
           attack_hit_text[new_wtype].hitting % v->describeBodySlot(*part_hit) %
           limbStr;
-    act(buf, TRUE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+    act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
     return (ONEHIT_MESS_CRIT_S);
   } else {
@@ -2749,4 +2749,71 @@ int TBeing::critPierce(TBeing* v, TThing* weapon, wearSlotT* part_hit,
     }
   }
   return 0;
+}
+
+/* ------------------------------------------------------------
+
+====Generic crit table====
+
+Generic crit for weapon types that don't have a specific crit table, such as
+elemental and holy damage types. Only provides damage multipliers without
+limb-specific effects.
+
+0-50: double damage
+51-100: triple damage
+
+------------------------------------------------------------ */
+int TBeing::critGeneric(TBeing* v, TThing* weapon, wearSlotT* part_hit,
+  spellNumT wtype, int* dam, int crit_num) {
+  int new_wtype = wtype - TYPE_HIT;
+  sstring limbStr = (weapon ? fname(weapon->name) : getMyRace()->getBodyLimbBlunt());
+
+  if (crit_num > 100) {
+    vlogf(LOG_BUG,
+      format("critGeneric called with crit_num>100 (%i)") % crit_num);
+    crit_num = 0;
+  }
+
+  if (crit_num <= 50) {
+    // double damage
+    *dam *= 2;
+
+    sstring buf =
+      format("You strike $N exceptionally well, %s $S %s with your %s!") %
+      attack_hit_text[new_wtype].hitting % v->describeBodySlot(*part_hit) %
+      limbStr;
+    act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
+
+    buf = format("$n strikes you exceptionally well, %s your %s with $s %s.") %
+          attack_hit_text[new_wtype].hitting % v->describeBodySlot(*part_hit) %
+          limbStr;
+    act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
+
+    buf = format("$n strikes $N exceptionally well, %s $S %s with $s %s.") %
+          attack_hit_text[new_wtype].hitting % v->describeBodySlot(*part_hit) %
+          limbStr;
+    act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+
+    return ONEHIT_MESS_CRIT_S;
+  }
+
+  // triple damage
+  *dam *= 3;
+
+  sstring buf = format("You critically strike $N, %s $S %s with your %s!") %
+                attack_hit_text[new_wtype].hitting %
+                v->describeBodySlot(*part_hit) % limbStr;
+  act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
+
+  buf = format("$n critically strikes you, %s your %s with $s %s.") %
+        attack_hit_text[new_wtype].hitting % v->describeBodySlot(*part_hit) %
+        limbStr;
+  act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
+
+  buf = format("$n critically strikes $N, %s $S %s with $s %s.") %
+        attack_hit_text[new_wtype].hitting % v->describeBodySlot(*part_hit) %
+        limbStr;
+  act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+
+  return ONEHIT_MESS_CRIT_S;
 }
