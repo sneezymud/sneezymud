@@ -1437,6 +1437,7 @@ class TBeing : public TThing {
     int critPierce(TBeing*, TThing*, wearSlotT*, spellNumT, int*, int);
     int critSlash(TBeing*, TThing*, wearSlotT*, spellNumT, int*, int);
     int critBlunt(TBeing*, TThing*, wearSlotT*, spellNumT, int*, int);
+    int critGeneric(TBeing*, TThing*, wearSlotT*, spellNumT, int*, int);
     int numValidSlots();
     int checkShield(TBeing*, TThing*, wearSlotT, spellNumT, int);
     int getWeaponDam(const TBeing*, const TThing*, primaryTypeT) const;
