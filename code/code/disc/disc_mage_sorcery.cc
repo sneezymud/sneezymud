@@ -1458,7 +1458,17 @@ int teleport(TBeing* caster, TBeing* victim, int, short bKnown) {
         act("$N resists $n's teleportation!", FALSE, caster, nullptr, victim,
           TO_NOTVICT);
         caster->nothingHappens(SILENT_YES);
-        return SPELL_FAIL;
+        if (tmons) {
+          caster->reconcileHurt(victim, discArray[SPELL_TELEPORT]->alignMod);
+          if (!victim->isPc()) {
+            // piss the mob off for shooting at it
+            if ((rc = victim->hit(caster)) == DELETE_VICT)
+              return SPELL_SUCCESS + CASTER_DEAD;
+            else if (rc == DELETE_THIS)
+              return SPELL_SUCCESS + VICTIM_DEAD;
+          }
+        }
+        return SPELL_SUCCESS;
       }
 
       if (!victim->isLucky(caster->spellLuckModifier(SPELL_TELEPORT))) {
