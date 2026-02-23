@@ -63,28 +63,11 @@ cd sneezymud
 #### Database Setup
 
 ```bash
-# Start MariaDB
-sudo systemctl start mariadb
-
-# Create databases
-sudo mariadb -e "CREATE DATABASE sneezy; CREATE DATABASE immortal;"
-
-# Create user (replace $USER with your username)
-sudo mariadb -e "CREATE USER '$USER'@'localhost'; \
-  GRANT ALL ON sneezy.* TO '$USER'@'localhost'; \
-  GRANT ALL ON immortal.* TO '$USER'@'localhost';"
-
-# Load initial data
-for db in immortal sneezy; do
-  for phase in tables views data; do
-    [ -d "_Setup-data/sql_$phase/$db" ] || continue
-    for sql in _Setup-data/sql_$phase/$db/*.sql; do
-      echo "Loading $sql"
-      mysql $db < $sql
-    done
-  done
-done
+# Creates databases, grants access to your OS user, and loads seed data
+./scripts/setup_db.sh
 ```
+
+Pass a username to grant access to a different MariaDB user: `./scripts/setup_db.sh myuser`
 
 ## Build System
 
@@ -252,9 +235,6 @@ The first character created in a new instance automatically becomes a level 60 i
 # C++ unit tests (builds automatically)
 make test
 
-# Boot smoke test (requires database and prior build)
-make verify
-
 # Functional tests (requires running server and .env config)
 make test-func
 
@@ -264,7 +244,7 @@ make test-all
 
 ### Continuous Integration
 
-Pull requests run automated builds and tests via GitHub Actions. Merges to master are built and published automatically via GitHub Actions.
+Pull requests run C++ builds, unit tests, and the functional test suite via GitHub Actions. Merges to master are built and published automatically.
 
 > [!TIP]
 > **Optional Discord notifications** can be enabled via repository secrets:
