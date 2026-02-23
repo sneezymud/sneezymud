@@ -4,7 +4,7 @@
 #include "room.h"
 #include "person.h"
 
-#include "json.hpp"
+#include <nlohmann/json.hpp>
 
 namespace {
   unsigned char GMCP = 201;

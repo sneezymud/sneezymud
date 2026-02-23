@@ -56,7 +56,7 @@ sudo apt install build-essential \
 #### Clone Repository
 
 ```bash
-git clone --recurse-submodules https://github.com/sneezymud/sneezymud
+git clone https://github.com/sneezymud/sneezymud
 cd sneezymud
 ```
 

@@ -1,5 +1,9 @@
+include_guard()
+
 # cmake/Dependencies.cmake
 # External library detection and configuration
+
+include(FetchContent)
 
 # Boost (required)
 # Version matches Ubuntu 24.04 LTS (production Docker image)
@@ -26,13 +30,16 @@ find_package(CURL REQUIRED)
 # crypt library (required for password hashing)
 find_library(CRYPT_LIBRARY crypt REQUIRED)
 
-# nlohmann/json (header-only, bundled as submodule)
-# Located at code/libs/json/src
-add_library(nlohmann_json INTERFACE)
-target_include_directories(nlohmann_json SYSTEM INTERFACE
-    ${CMAKE_SOURCE_DIR}/code/libs/json/src
+# nlohmann/json (header-only, fetched via FetchContent)
+FetchContent_Declare(
+    nlohmann_json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG v3.11.3
+    GIT_SHALLOW TRUE
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
-add_library(nlohmann_json::nlohmann_json ALIAS nlohmann_json)
+set(JSON_BuildTests OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(nlohmann_json)
 
 # Optional: CGI dependencies (only if building CGI tools)
 if(SNEEZY_BUILD_CGI)
@@ -42,13 +49,12 @@ endif()
 
 # Google Test (fetched on demand, only when testing is enabled)
 if(BUILD_TESTING)
-    include(FetchContent)
     FetchContent_Declare(
         googletest
         GIT_REPOSITORY https://github.com/google/googletest.git
         GIT_TAG v1.17.0
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
     )
-    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(googletest)
 endif()
 
