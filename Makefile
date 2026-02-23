@@ -15,7 +15,7 @@ BINARY := code/sneezy
 export ASAN_OPTIONS := strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1
 export UBSAN_OPTIONS := print_stacktrace=1:halt_on_error=1
 
-.PHONY: all build configure clean clean-all rebuild run debug verify format help
+.PHONY: all build configure clean clean-all rebuild run debug format help
 .PHONY: build-profile ninja-trace iwyu-check iwyu-fix
 .PHONY: analyze analyze-export analyze-ci
 .PHONY: check-bun check-python3
@@ -51,9 +51,6 @@ run: build
 debug: build
 	gdb -ex run ./$(BINARY)
 
-# Verify the game boots correctly (requires prior build)
-verify:
-	./scripts/verify_boot.sh
 
 # Run C++ unit tests via CTest
 test: build
@@ -152,7 +149,6 @@ help:
 	@echo "  rebuild         - Clean and rebuild current preset"
 	@echo "  run             - Build and run with sanitizer options"
 	@echo "  debug           - Build and run under gdb"
-	@echo "  verify          - Verify game boots correctly (requires build)"
 	@echo "  test            - Run C++ unit tests"
 	@echo "  test-func       - Run functional tests (requires running server, TEST=name)"
 	@echo "  test-all        - Run all tests"

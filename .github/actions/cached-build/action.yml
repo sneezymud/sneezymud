@@ -10,6 +10,11 @@ inputs:
     required: false
     default: 'release-clang'
 
+outputs:
+  built:
+    description: "'true' if a build ran (cache miss), 'false' on exact cache hit"
+    value: ${{ steps.cache.outputs.cache-hit != 'true' }}
+
 runs:
   using: composite
   steps:
@@ -31,7 +36,8 @@ runs:
           'CMakePresets.json',
           'cmake/**',
           'code/code/**/*.cc',
-          'code/code/**/*.h'
+          'code/code/**/*.h',
+          'tests/cpp/**'
           ) }}
       run: |
         {
