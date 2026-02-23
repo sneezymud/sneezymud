@@ -56,12 +56,23 @@ jobs:
               - 'code/code/**/*.h'
               - 'code/sneezy.cfg'
               - 'lib/**'
+            tests:
+              - 'tests/cpp/**'
 
       - name: Restore cache and build
         if: >-
           steps.changes.outputs.infrastructure == 'true' ||
-          steps.changes.outputs.gameplay == 'true'
+          steps.changes.outputs.gameplay == 'true' ||
+          steps.changes.outputs.tests == 'true'
         uses: ./.github/actions/cached-build
+
+      - name: Run C++ unit tests
+        if: >-
+          github.event_name == 'pull_request' &&
+          (steps.changes.outputs.infrastructure == 'true' ||
+          steps.changes.outputs.gameplay == 'true' ||
+          steps.changes.outputs.tests == 'true')
+        run: make test
 
       # CI is a required status check, so the workflow must run on every PR.
       # A workflow-level paths filter would prevent it from reporting a status

@@ -61,6 +61,8 @@ message(STATUS "")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
+include(CTest)
+
 include(CompilerOptions)
 include(Toolchain-GCC)
 include(Toolchain-Clang)
@@ -94,3 +96,7 @@ if(CMAKE_EXPORT_COMPILE_COMMANDS AND CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 
 add_subdirectory(code)
+
+if(BUILD_TESTING)
+    add_subdirectory(tests/cpp)
+endif()

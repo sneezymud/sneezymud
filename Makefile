@@ -18,7 +18,8 @@ export UBSAN_OPTIONS := print_stacktrace=1:halt_on_error=1
 .PHONY: all build configure clean clean-all rebuild run debug verify format help
 .PHONY: build-profile ninja-trace iwyu-check iwyu-fix
 .PHONY: analyze analyze-export analyze-ci
-.PHONY: check-python3
+.PHONY: check-bun check-python3
+.PHONY: test test-func test-all
 
 all: build
 
@@ -53,6 +54,17 @@ debug: build
 # Verify the game boots correctly (requires prior build)
 verify:
 	./scripts/verify_boot.sh
+
+# Run C++ unit tests via CTest
+test: build
+	ctest --test-dir $(BUILD_DIR) --output-on-failure
+
+# Run functional tests via bun (optionally: make test-func TEST=smoke)
+test-func: check-bun
+	cd tests/functional && bun test $(if $(TEST),tests/$(TEST).test.ts)
+
+# Run all tests (C++ unit + functional)
+test-all: test test-func
 
 # Format C++ source files (all files, or specific file if FILE is set)
 # Edits in-place using the rules in the .clang-format file in the root folder
@@ -96,6 +108,13 @@ ninja-trace:
 PYTHON := python3
 ANALYZE := $(PYTHON) scripts/analyze.py
 
+check-bun:
+	@command -v bun >/dev/null 2>&1 || { \
+		echo "Error: 'bun' not found."; \
+		echo "Install: https://bun.sh/docs/installation"; \
+		exit 1; \
+	}
+
 check-python3:
 	@command -v $(PYTHON) >/dev/null 2>&1 || { \
 		echo "Error: 'python3' not found."; \
@@ -134,6 +153,9 @@ help:
 	@echo "  run             - Build and run with sanitizer options"
 	@echo "  debug           - Build and run under gdb"
 	@echo "  verify          - Verify game boots correctly (requires build)"
+	@echo "  test            - Run C++ unit tests"
+	@echo "  test-func       - Run functional tests (requires running server, TEST=name)"
+	@echo "  test-all        - Run all tests"
 	@echo "  format          - Run clang-format (all files, or FILE=path)"
 	@echo "  iwyu-check      - Run include-what-you-use analysis (dry run)"
 	@echo "  iwyu-fix        - Run include-what-you-use and apply fixes"
@@ -145,6 +167,7 @@ help:
 	@echo ""
 	@echo "Variables:"
 	@echo "  PRESET          - CMake preset (default: dev-clang)"
+	@echo "  TEST            - Specific functional test name (e.g., smoke, gmcp)"
 	@echo "  FILE            - Specific file for format target"
 	@echo "  FMT             - Export format: html, text, or sqlite (default: html)"
 	@echo "  CRITICAL        - Set to 1 to filter to critical issues only"
