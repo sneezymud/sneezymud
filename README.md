@@ -248,14 +248,18 @@ The first character created in a new instance automatically becomes a level 60 i
 
 ## Testing
 
-Test setup is currently pretty minimal. Run the following from the project root:
-
 ```bash
-# Boot smoke test (requires database and prior build)
-make build verify
+# C++ unit tests (builds automatically)
+make test
 
-# Functional tests (requires running server)
-func-test/run_test.sh
+# Boot smoke test (requires database and prior build)
+make verify
+
+# Functional tests (requires running server and .env config)
+make test-func
+
+# All tests
+make test-all
 ```
 
 ### Continuous Integration
@@ -287,7 +291,7 @@ _Setup-data/   Database setup
 
 cmake/         CMake modules
 scripts/       Build and utility scripts
-func-test/     Functional tests
+tests/         Functional and C++ unit tests
 web/           Old but still useful info about the game
 ```
 

@@ -40,6 +40,18 @@ if(SNEEZY_BUILD_CGI)
     find_package(OpenSSL REQUIRED)
 endif()
 
+# Google Test (fetched on demand, only when testing is enabled)
+if(BUILD_TESTING)
+    include(FetchContent)
+    FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG v1.17.0
+    )
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+    FetchContent_MakeAvailable(googletest)
+endif()
+
 # Print dependency summary
 message(STATUS "Dependencies:")
 message(STATUS "  Boost: ${Boost_VERSION}")
