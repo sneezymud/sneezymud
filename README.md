@@ -11,6 +11,12 @@ The easiest way to run a production instance of SneezyMUD is with Docker. See th
 
 ## Development Setup
 
+### Dev Container (Recommended)
+
+The easiest way to get started. Open the repo in VS Code and it handles everything - toolchain, database, debugging, intellisense. See [`.devcontainer/README.md`](.devcontainer/README.md) for details.
+
+**Requirements:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) (or Docker Engine on Linux), [VS Code](https://code.visualstudio.com/), and the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
+
 ### Via Docker
 
 You can develop using the Docker setup as well, though it can introduce some extra complexity to the process. The sneezymud-docker repo also includes full instructions for setting up a development environment with Docker.
