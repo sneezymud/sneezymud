@@ -1,0 +1,26 @@
+{
+  "files.associations": {
+    ".clang-format": "yaml",
+    ".clangd": "yaml",
+    ".clang-tidy": "yaml"
+  },
+  "search.exclude": {
+    ".cache": true,
+    "build": true
+  },
+  "C_Cpp.intelliSenseEngine": "disabled",
+  "clangd.arguments": [
+    "--all-scopes-completion",
+    "--background-index-priority=normal",
+    "--background-index",
+    "--clang-tidy",
+    "--completion-style=detailed",
+    "--enable-config",
+    "--header-insertion=never",
+    "--limit-references=0",
+    "--limit-results=0",
+    "--malloc-trim",
+    "--pch-storage=memory",
+    "--function-arg-placeholders=false"
+  ]
+}

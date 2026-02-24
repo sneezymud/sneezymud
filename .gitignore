@@ -26,3 +26,6 @@ discord.cfg
 # Static analysis results
 .codechecker-results/
 codechecker-report/
+
+# clangd index cache
+.cache/

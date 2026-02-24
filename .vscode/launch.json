@@ -1,0 +1,58 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Sneezy",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/code/sneezy",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [
+        {
+          "name": "ASAN_OPTIONS",
+          "value": "strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1"
+        },
+        {
+          "name": "UBSAN_OPTIONS",
+          "value": "print_stacktrace=1:halt_on_error=1"
+        }
+      ],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Ignore SIGPIPE from disconnected clients",
+          "text": "handle SIGPIPE nostop noprint pass",
+          "ignoreFailures": true
+        }
+      ]
+    },
+    {
+      "name": "Attach to Sneezy",
+      "type": "cppdbg",
+      "request": "attach",
+      "program": "${workspaceFolder}/code/sneezy",
+      "processId": "${command:pickProcess}",
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Ignore SIGPIPE from disconnected clients",
+          "text": "handle SIGPIPE nostop noprint pass",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
+}

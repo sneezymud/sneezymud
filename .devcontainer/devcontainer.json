@@ -1,0 +1,38 @@
+{
+  "name": "SneezyMUD Development",
+  "build": {
+    "context": "..",
+    "dockerfile": "Dockerfile"
+  },
+  "remoteUser": "ubuntu",
+  "overrideCommand": false,
+  "workspaceFolder": "/workspaces/sneezymud",
+  "mounts": [
+    "source=sneezymud-db,target=/var/lib/mysql,type=volume,volume-nocopy",
+    "source=sneezymud-mutable,target=/workspaces/sneezymud/lib/mutable,type=volume,volume-nocopy",
+    "source=sneezymud-build,target=/workspaces/sneezymud/build,type=volume,volume-nocopy",
+    "source=sneezymud-ccache,target=/workspaces/sneezymud/.cache,type=volume,volume-nocopy",
+    "source=sneezymud-home,target=/home/ubuntu,type=volume"
+  ],
+  "forwardPorts": [7900],
+  "portsAttributes": {
+    "7900": {
+      "label": "SneezyMUD (telnet)",
+      "onAutoForward": "silent"
+    }
+  },
+  "containerEnv": {
+    "ASAN_OPTIONS": "strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1",
+    "UBSAN_OPTIONS": "print_stacktrace=1:halt_on_error=1"
+  },
+  "capAdd": ["SYS_PTRACE"],
+  "securityOpt": ["seccomp=unconfined"],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "llvm-vs-code-extensions.vscode-clangd",
+        "ms-vscode.cpptools"
+      ]
+    }
+  }
+}
