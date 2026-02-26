@@ -1,110 +1,117 @@
 # .clang-tidy - clang-tidy configuration for SneezyMUD
-# Run with: cmake --build --preset <preset_name> --target clang-tidy
 #
-# Comprehensive modern C++20 checks for refactoring and new code.
-# This is intentionally strict - use it to ensure touched code follows modern best practices.
-# Legacy code will have **many** warnings; fix them incrementally as you work on each file.
+# Compatible with clang-tidy 18+ (Ubuntu 24.04 default). Checks requiring
+# 19+ are included for forward-compatibility and silently ignored on 18.
 #
-# Requires: clang-tidy 17+ for misc-include-cleaner (Ubuntu 24.04 LTS provides 19 by default, has 20 available in apt)
+# Two tiers of checks:
 #
-# Disabled check explanations:
-#   - Platform/library-specific: abseil, altera, android, boost, darwin, fuchsia, linuxkernel, llvmlibc, mpi, objc, openmp, zircon
-#   - Style preferences: llvm-*
-#   - Would require major refactoring: cert-err58-cpp, cppcoreguidelines-avoid-non-const-global-variables,
-#       cppcoreguidelines-pro-bounds-constant-array-index, cppcoreguidelines-non-private-member-variables-in-classes,
-#       misc-non-private-member-variables-in-classes,
-#   - Purely stylistic or too noisy:
-#       modernize-use-trailing-return-type, readability-identifier-length, bugprone-easily-swappable-parameters,
-#       readability-function-size, readability-function-cognitive-complexity, misc-no-recursion,
-#       google-default-arguments, google-runtime-int, hicpp-named-parameter, hicpp-signed-bitwise,
-#       readability-avoid-nested-conditional-operator, readability-implicit-bool-conversion, readability-named-parameter
-#   - Requires GSL: cppcoreguidelines-owning-memory
-#   - C++23 only: modernize-use-std-print
+# Tier 1 - Bug-finding: Always enabled regardless of existing violation count.
+#   bugprone-*            Common bug patterns (with noisy checks excluded below)
+#   clang-analyzer-*      Clang Static Analyzer (null deref, leaks, UB).
+#                         Note: clangd does NOT run these during live editing -
+#                         only explicit clang-tidy invocation triggers them.
+#   cppcoreguidelines-*   Cherry-picked UB/correctness checks
+#   misc-*                Cherry-picked real-bug checks
 #
-# Specifically not disabled:
-#   - readability-braces-around-statements: Enforces consistent use of braces, improving readability and reducing errors
+# Tier 2 - Best practices: Enabled only when existing violations are low
+#   enough (~40 or fewer across the codebase) to avoid overwhelming noise.
+#   Prevents regressions in new code without drowning out real issues.
+#   modernize-*           Modern C++ idioms
+#   performance-*         Unnecessary copies, missed optimizations
+#   readability-*         Bug-adjacent clarity issues
 #
-# Now that we support C++20, we could fix warnings from cppcoreguidelines-pro-bounds-constant-array-index with judicious
-# use of std::to_array/std::span, but it's going to be a lot of work to fix existing code and generate a ton of noise in
-# the meantime, so we'll leave it disabled for now. Enabling and fixing it incrementally could be a future improvement.
+# Excluded bugprone checks (noisy in C-origin code):
+#   assignment-in-if-condition             Standard C idiom (if ((x = func())))
+#   branch-clone                           Often intentional in switch/if chains
+#   easily-swappable-parameters            Not a bug; flags most function signatures
+#   narrowing-conversions                  Ubiquitous int/unsigned/size_t conversions
+#   switch-missing-default-case            Adding default to exhaustive enum
+#                                          switches silences -Wswitch, making
+#                                          the code less safe
 
 ---
-# Ensure we see bugs in all files
 HeaderFilterRegex: 'code/code/.*'
 
 Checks: >
-  *,
-  misc-header-include-cycle,
-  misc-include-cleaner,
-  -abseil-*,
-  -altera-*,
-  -android-*,
-  -boost-*,
+  -*,
+  bugprone-*,
+  -bugprone-assignment-in-if-condition,
+  -bugprone-branch-clone,
   -bugprone-easily-swappable-parameters,
-  -cert-err58-cpp,
-  -cppcoreguidelines-avoid-non-const-global-variables,
-  -cppcoreguidelines-non-private-member-variables-in-classes,
-  -cppcoreguidelines-owning-memory,
-  -cppcoreguidelines-pro-bounds-constant-array-index,
-  -darwin-*,
-  -fuchsia-*,
-  -google-default-arguments,
-  -google-runtime-int,
-  -hicpp-named-parameter,
-  -hicpp-signed-bitwise,
-  -linuxkernel-*,
-  -llvm-header-guard,
-  -llvm-include-order,
-  -llvm-namespace-comment,
-  -llvmlibc-*,
-  -misc-no-recursion,
-  -misc-non-private-member-variables-in-classes,
-  -modernize-use-trailing-return-type,
-  -mpi-*,
-  -objc-*,
-  -openmp-*,
-  -readability-avoid-nested-conditional-operator,
-  -readability-function-cognitive-complexity,
-  -readability-function-size,
-  -readability-identifier-length,
-  -readability-implicit-bool-conversion,
-  -readability-named-parameter,
-  -zircon-*,
+  -bugprone-narrowing-conversions,
+  -bugprone-switch-missing-default-case,
+  clang-analyzer-*,
+  cppcoreguidelines-avoid-const-or-ref-data-members,
+  cppcoreguidelines-interfaces-global-init,
+  cppcoreguidelines-slicing,
+  cppcoreguidelines-virtual-class-destructor,
+  misc-anonymous-namespace-in-header,
+  misc-definitions-in-headers,
+  misc-header-include-cycle,
+  misc-misleading-bidirectional,
+  misc-misleading-identifier,
+  misc-new-delete-overloads,
+  misc-non-copyable-objects,
+  misc-redundant-expression,
+  misc-static-assert,
+  misc-throw-by-value-catch-by-reference,
+  misc-unconventional-assign-operator,
+  misc-unused-using-decls,
+  modernize-avoid-bind,
+  modernize-concat-nested-namespaces,
+  modernize-macro-to-enum,
+  modernize-min-max-use-initializer-list,
+  modernize-pass-by-value,
+  modernize-raw-string-literal,
+  modernize-return-braced-init-list,
+  modernize-use-equals-delete,
+  modernize-use-starts-ends-with,
+  modernize-use-transparent-functors,
+  modernize-use-using,
+  performance-avoid-endl,
+  performance-faster-string-find,
+  performance-for-range-copy,
+  performance-implicit-conversion-in-loop,
+  performance-inefficient-string-concatenation,
+  performance-inefficient-vector-operation,
+  performance-move-const-arg,
+  performance-move-constructor-init,
+  performance-no-automatic-move,
+  performance-no-int-to-ptr,
+  performance-noexcept-destructor,
+  performance-noexcept-move-constructor,
+  performance-noexcept-swap,
+  performance-trivially-destructible,
+  performance-type-promotion-in-math-fn,
+  performance-unnecessary-copy-initialization,
+  readability-avoid-return-with-void-value,
+  readability-container-contains,
+  readability-container-data-pointer,
+  readability-delete-null-pointer,
+  readability-duplicate-include,
+  readability-inconsistent-declaration-parameter-name,
+  readability-misleading-indentation,
+  readability-misplaced-array-index,
+  readability-non-const-parameter,
+  readability-qualified-auto,
+  readability-redundant-access-specifiers,
+  readability-redundant-control-flow,
+  readability-redundant-declaration,
+  readability-redundant-preprocessor,
+  readability-redundant-string-cstr,
+  readability-redundant-string-init,
+  readability-static-accessed-through-instance,
+  readability-string-compare,
+  readability-use-std-min-max,
 
 CheckOptions:
-  # Naming Conventions (match existing codebase patterns)
-  - key: readability-identifier-naming.ClassCase
-    value: CamelCase
-  - key: readability-identifier-naming.StructCase
-    value: CamelCase
-  - key: readability-identifier-naming.FunctionCase
-    value: camelBack
-  - key: readability-identifier-naming.MethodCase
-    value: camelBack
-  - key: readability-identifier-naming.VariableCase
-    value: camelBack
-  - key: readability-identifier-naming.ParameterCase
-    value: camelBack
-  - key: readability-identifier-naming.MemberCase
-    value: camelBack
-  - key: readability-identifier-naming.EnumConstantCase
-    value: UPPER_CASE
-  - key: readability-identifier-naming.GlobalConstantCase
-    value: UPPER_CASE
-  - key: readability-identifier-naming.StaticConstantCase
-    value: UPPER_CASE
-  - key: readability-identifier-naming.NamespaceCase
-    value: lower_case
-
-  # Performance Check Configuration
   - key: performance-for-range-copy.WarnOnAllAutoCopies
     value: true
   - key: performance-inefficient-string-concatenation.StrictMode
     value: true
 
-# Production-critical checks surfaced as errors in IDE
-# These are also the checks CodeChecker will run via clang-tidy analyzer for CI blocking
-# Criteria: issues likely to cause crashes, memory/data corruption, or invalid game state
+# Promoted to errors: nearly always real bugs or UB.
+# Surfaces as red (error) instead of yellow (warning) in the IDE.
 WarningsAsErrors: >
   bugprone-assert-side-effect,
   bugprone-bool-pointer-implicit-conversion,
@@ -115,7 +122,6 @@ WarningsAsErrors: >
   bugprone-misplaced-widening-cast,
   bugprone-not-null-terminated-result,
   bugprone-parent-virtual-call,
-  bugprone-signed-char-misuse,
   bugprone-sizeof-expression,
   bugprone-string-constructor,
   bugprone-suspicious-memset-usage,
@@ -128,3 +134,44 @@ WarningsAsErrors: >
   bugprone-unused-raii,
   bugprone-use-after-move,
   bugprone-virtual-near-miss
+
+# =========================================================================
+# Future cleanup projects
+# =========================================================================
+# Auto-fixable checks that are valuable but currently too noisy to enable.
+# Fix in bulk with `run-clang-tidy -checks='-*,CHECK' -fix` then enable.
+# Violation counts as of 2026-02:
+#
+#   16775  modernize-use-nullptr
+#   16370  readability-braces-around-statements
+#    5426  modernize-use-designated-initializers
+#    2600  misc-const-correctness
+#    1609  modernize-use-override
+#    1529  readability-isolate-declaration
+#    1271  readability-else-after-return
+#    1237  modernize-use-auto
+#     928  misc-use-internal-linkage                  (19+)
+#     717  modernize-use-nodiscard
+#     590  modernize-use-default-member-init
+#     563  cppcoreguidelines-pro-type-cstyle-cast
+#     530  modernize-use-bool-literals
+#     454  misc-unused-parameters
+#     370  modernize-use-emplace
+#     311  misc-use-anonymous-namespace               (19+)
+#     225  modernize-use-equals-default
+#     200  readability-redundant-casting
+#     197  modernize-use-integer-sign-comparison       (20+)
+#     175  modernize-loop-convert
+#     175  modernize-deprecated-headers
+#     162  readability-make-member-function-const
+#     146  performance-unnecessary-value-param
+#     134  cppcoreguidelines-prefer-member-initializer
+#     129  readability-redundant-member-init
+#     129  google-explicit-constructor
+#     122  readability-simplify-boolean-expr
+#     100  readability-const-return-type
+#      98  readability-math-missing-parentheses        (19+)
+#      91  readability-container-size-empty
+#      80  readability-convert-member-functions-to-static
+#      75  modernize-redundant-void-arg
+#      60  readability-avoid-const-params-in-decls
