@@ -5,9 +5,22 @@
 
 Diagnostics:
   ClangTidy:
+    # Set to None to run all rules regardless of speed
     FastCheckFilter: None
-  UnusedIncludes: Strict
-  MissingIncludes: Strict
+
+  # This codebase's includes are a total mess and many files rely heavily on
+  # transitive/implicit includes. Setting this to Strict can flag includes that
+  # appear unused but if removed will cause compilation errors due to other
+  # files relying on it implicitly. Once we do a full pass on the project and
+  # get the includes sorted, we can set this to Strict to prevent regressions.
+  UnusedIncludes: None
+
+  # Set this to None for now as well, for similar reasons to those outlined above.
+  # The risk here, however, is adding includes in the "include what you use" style
+  # can inadvertently lead to hard-to-debug infinite include loops. As with above,
+  # set this to Strict to prevent regressions once the project's includes are fixed
+  # all at once.
+  MissingIncludes: None
 Hover:
   ShowAKA: Yes
 InlayHints:
