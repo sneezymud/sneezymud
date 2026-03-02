@@ -2774,8 +2774,9 @@ int TPerson::learnFromDoingUnusual(learnUnusualTypeT type, spellNumT spell,
         spell = SKILL_PIERCE_PROF;
         spell2 = SKILL_PIERCE_SPEC;
       } else {
-        vlogf(LOG_BUG, format("Wierd case in learnFromDoingUnusual %s, %d") %
-                         getName() % w_type);
+        // Non standard weapon types don't currently have proficiency skills, so just ignore the learning attempt
+        // If we add proficiency skills for non standard weapon types, we'll need to update this
+        // This includes air, earth, fire, water and holy weapon damage types                 
         return FALSE;
       }
       if (amt && ::number(0, amt)) {
