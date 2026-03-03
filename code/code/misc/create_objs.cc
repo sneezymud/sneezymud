@@ -3316,7 +3316,7 @@ int TBeing::editAverageMe(TBeing* tBeing, const char* tString) {
   sstring tStString(""), tStBuffer(""), tStArg(tString);
 
   if (!tString || !*tString) {
-    tBeing->sendTo("Syntax: med average <level[1.0-60.0]> <class>\n\r");
+    tBeing->sendTo("Syntax: med average <level[1.0-120.0]> <class>\n\r");
     return FALSE;
   }
 
@@ -3327,8 +3327,8 @@ int TBeing::editAverageMe(TBeing* tBeing, const char* tString) {
   int tStr, tBra, tCon, tDex, tAgi, tInt, tWis, tFoc, tPer, tCha, tKar, tSpe;
   double tLevel = convertTo<float>(tStString);
 
-  if (tLevel <= 0 || tLevel > 60) {
-    tBeing->sendTo("Level must be between 1 and 60.\n\r");
+  if (tLevel <= 0 || tLevel > 120) {
+    tBeing->sendTo("Level must be between 1 and 120.\n\r");
     return FALSE;
   }
 
