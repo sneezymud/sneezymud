@@ -3,7 +3,8 @@
           level (1-30: 1, 31-60: 2, 61-90: 3, 91+: 4) instead of attempting
           to strip every eligible effect at once. The effects targeted are now
           chosen at random rather than in a fixed order. Saving throws still
-          apply per effect.
+          apply per effect. Fixed a bug where previously casting dispell was
+          always a hostile act. Now only stripping important buffs is hostile.
 
 02-19-26: Teleport Immunity Added
           Creatures with summon immunity now also resist hostile teleportation

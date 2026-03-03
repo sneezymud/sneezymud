@@ -1390,8 +1390,8 @@ int generic_dispel_magic(TBeing* caster, TBeing* victim, int level,
     {SPELL_HASTE, true, true, false},
     {SPELL_CALM, false, true, false},
     {SPELL_SENSE_LIFE, false, true, false},
-    {SPELL_DETECT_INVISIBLE, false, true, false},
-    {SPELL_TRUE_SIGHT, false, true, false},
+    {SPELL_DETECT_INVISIBLE, true, true, false},
+    {SPELL_TRUE_SIGHT, true, true, false},
     {SPELL_FEAR, false, false, false},
     {SPELL_SLUMBER, false, false, false},
     // water
@@ -1414,21 +1414,21 @@ int generic_dispel_magic(TBeing* caster, TBeing* victim, int level,
     {SPELL_CURSE, false, false, true},
     {SPELL_CURSE_DEIKHAN, false, false, true},
 
-    {SPELL_STUPIDITY, true, true, false},
+    {SPELL_STUPIDITY, false, true, false},
     {SPELL_CELERITE, true, true, false},
     {SPELL_LEGBA, true, true, false},
     {SPELL_DJALLA, true, true, false},
     {SPELL_SENSE_LIFE_SHAMAN, true, true, false},
     {SPELL_DETECT_SHADOW, true, true, false},
     {SPELL_SHADOW_WALK, false, true, false},
-    {SPELL_INTIMIDATE, true, true, false},
+    {SPELL_INTIMIDATE, false, true, false},
     {SPELL_CHEVAL, true, true, false},
-    {SPELL_HYPNOSIS, true, true, false},
+    {SPELL_HYPNOSIS, false, true, false},
     {SPELL_CLARITY, true, true, false},
     {SPELL_AQUALUNG, true, true, false},
     {SPELL_THORNFLESH, true, true, false},
     {SPELL_SHIELD_OF_MISTS, true, true, false},
-    {SPELL_CONTROL_UNDEAD, true, true, false},
+    {SPELL_CONTROL_UNDEAD, false, true, false},
     {SPELL_RESURRECTION, true, true, false},
     {SPELL_DANCING_BONES, true, true, false},
     {SPELL_VOODOO, true, true, false},
@@ -1462,10 +1462,6 @@ int generic_dispel_magic(TBeing* caster, TBeing* victim, int level,
     }
   }
 
-  // Include AFF_SANCTUARY as a candidate if applicable
-  bool sanctuaryCandidate = victim->isAffected(AFF_SANCTUARY) &&
-                            !victim->affectedBySpell(SPELL_SANCTUARY);
-
   // Shuffle candidates so removal order is random
   shuffleContainer(candidates);
 
@@ -1486,26 +1482,6 @@ int generic_dispel_magic(TBeing* caster, TBeing* victim, int level,
     }
     // aggressive Act
     if (entry.aggressive_act && caster && !victim->fight() && tvm) {
-      caster->setCharFighting(victim);
-      caster->setVictFighting(victim);
-    }
-  }
-
-  // Handle AFF_SANCTUARY (set directly on the being, not as a spell affect)
-  if (sanctuaryCandidate && removals < maxRemovals) {
-    if (immortal || !caster ||
-        !victim->isLucky(caster->spellLuckModifier(SPELL_DISPEL_MAGIC))) {
-      REMOVE_BIT(victim->specials.affectedBy, AFF_SANCTUARY);
-      if (caster) {
-        victim->sendTo(
-          "You feel more vulnerable as your white aura slowly fades.\n\r");
-        act("The white glow around $n's body fades.", false, victim, nullptr,
-          nullptr, TO_ROOM);
-      }
-      removals++;
-    }
-    // aggressive Act
-    if (caster && !victim->fight() && tvm) {
       caster->setCharFighting(victim);
       caster->setVictFighting(victim);
     }
