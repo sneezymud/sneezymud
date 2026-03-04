@@ -36,12 +36,16 @@ if ! [ -f /var/lib/mysql/.devcontainer-seeded ]; then
     exit 1
   fi
 
-  mariadb -e "CREATE DATABASE IF NOT EXISTS sneezy; CREATE DATABASE IF NOT EXISTS immortal;"
-  mariadb -e "CREATE USER IF NOT EXISTS 'ubuntu'@'localhost' IDENTIFIED VIA unix_socket;"
   # CREATE USER IF NOT EXISTS no-ops if the user exists with a different auth
   # method. ALTER USER ensures unix_socket auth regardless of prior state.
-  mariadb -e "ALTER USER 'ubuntu'@'localhost' IDENTIFIED VIA unix_socket;"
-  mariadb -e "GRANT ALL ON sneezy.* TO 'ubuntu'@'localhost'; GRANT ALL ON immortal.* TO 'ubuntu'@'localhost'; FLUSH PRIVILEGES;"
+  mariadb -e "
+    CREATE DATABASE IF NOT EXISTS sneezy;
+    CREATE DATABASE IF NOT EXISTS immortal;
+    CREATE USER IF NOT EXISTS 'ubuntu'@'localhost' IDENTIFIED VIA unix_socket;
+    ALTER USER 'ubuntu'@'localhost' IDENTIFIED VIA unix_socket;
+    GRANT ALL ON *.* TO 'ubuntu'@'localhost';
+    FLUSH PRIVILEGES;
+  "
 
   for db in immortal sneezy; do
     for phase in tables views data; do
