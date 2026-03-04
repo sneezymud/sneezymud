@@ -9,17 +9,22 @@ ARG DEBIAN_FRONTEND=noninteractive
 ENV PATH="/usr/games:${PATH}"
 ENV TZ=UTC
 
+# Add MariaDB 12 official repository before the main install. Ubuntu Noble
+# ships 10.11, but production runs 12.x which uses per-table FK constraint
+# names (MDEV-28933). Restoring production backups requires matching the
+# server major version.
 RUN --mount=type=cache,target=/var/cache/apt \
+  apt-get update && \
+  apt-get install --yes --no-install-recommends ca-certificates curl && \
+  curl -fsSL https://r.mariadb.com/downloads/mariadb_repo_setup | bash && \
   apt-get update && \
   apt-get install --yes --no-install-recommends \
   bash-completion \
   build-essential \
-  ca-certificates \
   ccache \
   clang \
   clangd \
   cmake \
-  curl \
   gdb \
   git \
   htop \
