@@ -1866,342 +1866,128 @@ static spellNumT get_mage_spell(TMonster& ch, TBeing& vict, bool& on_me) {
   return TYPE_UNDEFINED;
 }
 
-static bool stupidityCheck(TBeing& ch, TBeing& vict, spellNumT spell) {
-  if (!vict.affectedBySpell(spell) && !::number(0, 6) &&
-      ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-    act("$n utters the words, 'DUUHHHHHHHHHHH!!!!!!!!!'", TRUE, &ch, 0, 0,
-      TO_ROOM);
-    return true;
-  }
-  return false;
-}
-
 // SHAMAN
-static bool deathMistCheck(TBeing& ch, TBeing& vict, spellNumT spell) {
-  if (!vict.affectedBySpell(SPELL_DEATH_MIST) && !::number(0, 6) &&
-      ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-    act("$n utters the invokation, 'Chowe Kondiz Bub!'", TRUE, &ch, 0, 0,
-      TO_ROOM);
-    return true;
+
+enum ShamanSpellCategory { SHAMAN_OFFENSIVE, SHAMAN_SITUATIONAL };
+
+struct ShamanSpellEntry {
+  spellNumT spell;
+  int weight;
+  ShamanSpellCategory category;
+  const char* message;
+};
+
+static const int SHAMAN_MIN_SKILL = 60;
+
+static const ShamanSpellEntry shamanSpellTable[] = {
+  // SITUATIONAL spells — bypass tier filtering
+  {SPELL_CHASE_SPIRIT,    40, SHAMAN_SITUATIONAL, "$n utters the words, 'Spirits be gone from this pathetic one!'"},
+  {SPELL_INTIMIDATE,      40, SHAMAN_SITUATIONAL, "$n utters the invokation, 'Go Away! Leave me the Hell Alone!'"},
+  {SPELL_FLATULENCE,      20, SHAMAN_SITUATIONAL, "$n utters the invokation, 'He who smelt it, dealt it!'"},
+  {SPELL_STUPIDITY,       10, SHAMAN_SITUATIONAL, "$n utters the invokation, 'DUUHHHHHHHHHHH!!!!!!!!!'"},
+  {SPELL_DEATH_MIST,      10, SHAMAN_SITUATIONAL, "$n utters the invokation, 'Chowe Kondiz Bub!'"},
+
+  // OFFENSIVE spells — subject to tier filtering
+  {SPELL_LIFE_LEECH,      20, SHAMAN_OFFENSIVE, "$n utters the invokation, 'I'm gonna suck you dry!!!'"},
+  {SPELL_LICH_TOUCH,      70, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Lich me, SUCKAH!!!'"},
+  {SPELL_RAZE,            70, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Rubbem Ow!'"},
+  {SPELL_VAMPIRIC_TOUCH,  40, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Ahh!! The BLUUD!!!!!'"},
+  {SPELL_SOUL_TWIST,      30, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Internal Pretzel!'"},
+  {SPELL_SQUISH,          10, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Firsta you takka da dough like-a dis...'"},
+  {SPELL_DISTORT,         20, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Houngan\\'s Delight!'"},
+  {SPELL_STICKS_TO_SNAKES,10, SHAMAN_OFFENSIVE, "$n utters the invokation, 'I got a woody and I\\'m gonna use it!'"},
+  {SPELL_STORMY_SKIES,    20, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Weather! Do my deed!'"},
+  {SPELL_DEATHWAVE,       70, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Deadly Blackness!'"},
+  {SPELL_AQUATIC_BLAST,   50, SHAMAN_OFFENSIVE, "$n utters the invokation, 'River run DEEEEEEEEEEP!!!!'"},
+  {SPELL_BLOOD_BOIL,      50, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Bubble, bubble. BOILING BLOOD!!'"},
+  {SPELL_CARDIAC_STRESS,  70, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Don\\'t go breakin\\' my heart!'"},
+  {SPELL_HEALING_GRASP,   10, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Ahhh...that\\'s better...'"},
+};
+
+static bool checkShamanSituational(TMonster& ch, TBeing& vict, spellNumT spell) {
+  switch (spell) {
+    case SPELL_CHASE_SPIRIT:
+      return (vict.affectedBySpell(SPELL_HASTE) ||
+              vict.affectedBySpell(SPELL_CELERITE) ||
+              vict.affectedBySpell(SPELL_PLASMA_MIRROR) ||
+              vict.affectedBySpell(SPELL_THORNFLESH) ||
+              vict.affectedBySpell(SPELL_GILLS_OF_FLESH) ||
+              vict.affectedBySpell(SPELL_AQUALUNG)) &&
+             !(vict.affectedBySpell(SPELL_FAERIE_FIRE) ||
+               vict.affectedBySpell(SPELL_BIND));
+    case SPELL_INTIMIDATE:
+      return !ch.pissed() &&
+             (ch.getHit() < ch.hitLimit() / 8) &&
+             !ch.affectedBySpell(AFFECT_TEST_FIGHT_MOB);
+    case SPELL_FLATULENCE:
+      return ch.attackers >= 2;
+    case SPELL_STUPIDITY:
+      return !vict.affectedBySpell(SPELL_STUPIDITY);
+    case SPELL_DEATH_MIST:
+      return ch.attackers >= 2 &&
+             !vict.affectedBySpell(SPELL_DEATH_MIST);
+    default:
+      return true;
   }
-  return false;
 }
 
 static spellNumT get_shaman_spell(TMonster& ch, TBeing& vict, bool& on_me) {
-  spellNumT spell = TYPE_UNDEFINED;
-  int j;
-  discNumT i, best_disc;
-  discNumT good_discs[] = {DISC_SHAMAN, DISC_SHAMAN_ARMADILLO, DISC_SHAMAN_FROG,
-    DISC_SHAMAN_HEALING, DISC_SHAMAN_SPIDER, DISC_SHAMAN_SKUNK,
-    DISC_SHAMAN_CONTROL, DISC_NONE};
-
   on_me = FALSE;
 
-  best_disc = DISC_SHAMAN;
-  for (j = 0, i = good_discs[j]; i != DISC_NONE; ++j, i = good_discs[j]) {
-    CDiscipline* cdisc = ch.getDiscipline(i);
-    if (!(ch.isValidDiscClass(i, CLASS_SHAMAN, 0)) || !cdisc) {
-      continue;
-    }
+  static const int TIER_WINDOW = 30;
 
-    if ((cdisc->getLearnedness() >=
-          ch.getDiscipline(best_disc)->getLearnedness()) ||
-        (best_disc == DISC_SHAMAN && cdisc->getLearnedness() > 20)) {
-      if (!::number(0, 1))
-        best_disc = i;
+  // 1. Find the best offensive start value across all disciplines
+  int bestStart = 0;
+  for (const auto& entry : shamanSpellTable) {
+    if (entry.category != SHAMAN_OFFENSIVE)
+      continue;
+    if (!ch.doesKnowSkill(entry.spell))
+      continue;
+    if (ch.getSkillValue(entry.spell) <= SHAMAN_MIN_SKILL)
+      continue;
+    int start = discArray[entry.spell]->start;
+    if (start > bestStart)
+      bestStart = start;
+  }
+
+  // 2. Build candidate pool
+  struct Candidate { spellNumT spell; int weight; const char* message; };
+  std::vector<Candidate> candidates;
+
+  for (const auto& entry : shamanSpellTable) {
+    if (!ch.doesKnowSkill(entry.spell))
+      continue;
+    if (ch.getSkillValue(entry.spell) <= SHAMAN_MIN_SKILL)
+      continue;
+
+    if (entry.category == SHAMAN_SITUATIONAL) {
+      if (checkShamanSituational(ch, vict, entry.spell))
+        candidates.push_back({entry.spell, entry.weight, entry.message});
+    } else {
+      // Tier filter: only include if within TIER_WINDOW of best
+      int start = discArray[entry.spell]->start;
+      if (start >= bestStart - TIER_WINDOW)
+        candidates.push_back({entry.spell, entry.weight, entry.message});
     }
   }
 
-  if (!ch.getDiscipline(best_disc) ||
-      ch.getDiscipline(best_disc)->getLearnedness() <= 0)
+  if (candidates.empty())
     return TYPE_UNDEFINED;
 
-  int cutoff = min((int)ch.GetMaxLevel(), 50);
+  // 3. Weighted random selection
+  int totalWeight = 0;
+  for (const auto& c : candidates)
+    totalWeight += c.weight;
 
-  spell = SPELL_CHASE_SPIRIT;
-  if (!::number(0, 3) && ch.doesKnowSkill(SPELL_CHASE_SPIRIT) &&
-      (ch.getSkillValue(SPELL_CHASE_SPIRIT) > 66) &&
-      (vict.affectedBySpell(SPELL_HASTE) ||
-        vict.affectedBySpell(SPELL_CELERITE) ||
-        vict.affectedBySpell(SPELL_PLASMA_MIRROR) ||
-        vict.affectedBySpell(SPELL_THORNFLESH) ||
-        vict.affectedBySpell(SPELL_GILLS_OF_FLESH) ||
-        vict.affectedBySpell(SPELL_AQUALUNG)) &&
-      !(vict.affectedBySpell(SPELL_FAERIE_FIRE) ||
-        vict.affectedBySpell(SPELL_BIND)) &&
-      (cutoff < discArray[spell]->start)) {
-    act("$n utters the words, 'Spirits be gone from this pathetic one!'", TRUE,
-      &ch, 0, 0, TO_ROOM);
-    return spell;
+  int roll = ::number(1, totalWeight);
+  for (const auto& c : candidates) {
+    roll -= c.weight;
+    if (roll <= 0) {
+      act(c.message, TRUE, &ch, 0, 0, TO_ROOM);
+      return c.spell;
+    }
   }
 
-  // PANIC spells
-  spell = SPELL_INTIMIDATE;
-  if (ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-    if (!::number(0, 30) && !ch.pissed() && (ch.getHit() < ch.hitLimit() / 8) &&
-        !ch.affectedBySpell(AFFECT_TEST_FIGHT_MOB)) {
-      act("$n utters the invokation, 'Go Away! Leave me the Hell Alone!'",
-        FALSE, &ch, 0, 0, TO_ROOM);
-      on_me = FALSE;
-      return spell;
-    }
-  }
-  if (best_disc == DISC_SHAMAN) {
-    // AREA AFFECT HERE
-    if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {
-      spell = SPELL_FLATULENCE;
-      if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-          ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-        act("$n utters the invokation, 'He who smelt it, dealt it!'", TRUE, &ch,
-          0, 0, TO_ROOM);
-        return spell;
-      }
-      spell = SPELL_FLATULENCE;
-      if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-          ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-        act("$n utters the invokation, 'He who denied it, supplied it!'", TRUE,
-          &ch, 0, 0, TO_ROOM);
-        return spell;
-      }
-    }
-
-    // STANDARD OFFENSE
-    // hit um with the long-term effect ones first
-    // just plain damage spells here on
-    spell = SPELL_STUPIDITY;
-    if (stupidityCheck(ch, vict, spell))
-      return spell;
-    spell = SPELL_DISTORT;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'Houngan's Delight!'", TRUE, &ch, 0, 0,
-        TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_DISTORT;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'Houngan's Delight!'", TRUE, &ch, 0, 0,
-        TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_SOUL_TWIST;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'Internal Pretzel!'", TRUE, &ch, 0, 0,
-        TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_SOUL_TWIST;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'Internal Pretzel!'", TRUE, &ch, 0, 0,
-        TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_SQUISH;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'Firsta you takka da dough like-a dis...'",
-        TRUE, &ch, 0, 0, TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_SQUISH;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'Firsta you takka da dough like-a dis...'",
-        TRUE, &ch, 0, 0, TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_LIFE_LEECH;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell)) {
-      act("$n utters the invokation, 'I'm gonna suck you dry!!!'", TRUE, &ch, 0,
-        0, TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_VAMPIRIC_TOUCH;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'Ahh!! The BLUUD!!!!!'", TRUE, &ch, 0, 0,
-        TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_LIFE_LEECH;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell)) {
-      act("$n utters the invokation, 'I'm gonna suck you dry!!!'", TRUE, &ch, 0,
-        0, TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_VAMPIRIC_TOUCH;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'Ahh!! The BLUUD!!!!!'", TRUE, &ch, 0, 0,
-        TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_LIFE_LEECH;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell)) {
-      act("$n utters the invokation, 'I'm gonna suck you dry!!!'", TRUE, &ch, 0,
-        0, TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_LIFE_LEECH;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell)) {
-      act("$n utters the invokation, 'I'm gonna suck you dry!!!'", TRUE, &ch, 0,
-        0, TO_ROOM);
-      return spell;
-    }
-
-  } else if (best_disc == DISC_SHAMAN_SPIDER) {
-    // area affect
-    if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {}
-    spell = SPELL_STICKS_TO_SNAKES;
-    if (!::number(0, 6) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'I got a woody and I'm gonna use it!'",
-        TRUE, &ch, 0, 0, TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_RAZE;
-    if (!::number(0, 6) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'Rubbem Ow!'", TRUE, &ch, 0, 0, TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_STICKS_TO_SNAKES;
-    if (!::number(0, 6) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'I got a woody and I'm gonna use it!'",
-        TRUE, &ch, 0, 0, TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_RAZE;
-    if (!::number(0, 6) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'Rubbem Ow!'", TRUE, &ch, 0, 0, TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_RAZE;
-    if (!::number(0, 6) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'Rubbem Ow!'", TRUE, &ch, 0, 0, TO_ROOM);
-      return spell;
-    }
-
-  } else if (best_disc == DISC_SHAMAN_FROG) {
-    spell = SPELL_STORMY_SKIES;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'Weather! Do my deed!'", TRUE, &ch, 0, 0,
-        TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_DEATHWAVE;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'Deadly Blackness!'", TRUE, &ch, 0, 0,
-        TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_AQUATIC_BLAST;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'River run DEEEEEEEEEEP!!!!'", TRUE, &ch,
-        0, 0, TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_STORMY_SKIES;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'Weather! Do my deed!'", TRUE, &ch, 0, 0,
-        TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_AQUATIC_BLAST;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'River run DEEEEEEEEEEP!!!!'", TRUE, &ch,
-        0, 0, TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_DEATHWAVE;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'Deadly Blackness!'", TRUE, &ch, 0, 0,
-        TO_ROOM);
-      return spell;
-    }
-  } else if (best_disc == DISC_SHAMAN_SKUNK) {
-    // AREA AFFECT
-    if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {
-      spell = SPELL_DEATH_MIST;
-      if (deathMistCheck(ch, vict, spell))
-        return spell;
-    }
-    // REGULAR
-    spell = SPELL_BLOOD_BOIL;
-    if (!::number(0, 6) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'Bubble, bubble. BOILING BLOOD!!'", TRUE,
-        &ch, 0, 0, TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_CARDIAC_STRESS;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell)) {
-      act("$n utters the invokation, 'Don't go breakin' my heart!'", TRUE, &ch,
-        0, 0, TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_LICH_TOUCH;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'Lich me, SUCKAH!!!'", TRUE, &ch, 0, 0,
-        TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_LICH_TOUCH;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'Lich me, SUCKAH!!!'", TRUE, &ch, 0, 0,
-        TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_BLOOD_BOIL;
-    if (!::number(0, 6) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'Bubble, bubble. BOILING BLOOD!!'", TRUE,
-        &ch, 0, 0, TO_ROOM);
-      return spell;
-    }
-    spell = SPELL_LICH_TOUCH;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'Lich me, SUCKAH!!!'", TRUE, &ch, 0, 0,
-        TO_ROOM);
-      return spell;
-    }
-  } else if (best_disc == DISC_SHAMAN_ARMADILLO) {
-    // area affect
-    if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {}
-  } else if (best_disc == DISC_SHAMAN_HEALING) {
-    // area affect
-    if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {}
-    spell = SPELL_HEALING_GRASP;
-    if (!::number(0, 3) && (cutoff < discArray[spell]->start) &&
-        ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the invokation, 'Ahhh...that's better...'", TRUE, &ch, 0,
-        0, TO_ROOM);
-      return spell;
-    }
-  } else if (best_disc == DISC_SHAMAN_CONTROL) {
-    // area affect
-    if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {}
-  }
   return TYPE_UNDEFINED;
 }
 // END SHAMAN
@@ -2313,7 +2099,6 @@ int TMonster::mageMove(TBeing& vict) {
 int TMonster::shamanMove(TBeing& vict) {
   bool on_me;
   spellNumT spell = TYPE_UNDEFINED;
-  int i;
 
   if (!awake() || isPc() || cantHit > 0)
     return FALSE;
@@ -2341,14 +2126,7 @@ int TMonster::shamanMove(TBeing& vict) {
     return FALSE;
   }
 
-  for (i = 0; i < 10; i++) {
-    spell = get_shaman_spell(*this, vict, on_me);
-    if (spell != TYPE_UNDEFINED)
-      break;
-  }
-  if (i >= 10)
-    return FALSE;
-
+  spell = get_shaman_spell(*this, vict, on_me);
   if (spell == TYPE_UNDEFINED)
     return FALSE;
 
