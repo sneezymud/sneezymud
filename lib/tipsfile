@@ -1,7 +1,5 @@
 # This is the tips file used to send periodic tips to newbies.
 # Put each tip on its own line.  Limit tips to 256 chars each.
-SneezyMUD's official website is at <Y>https://sneezymud.org/<z>
-Sneezy's Wiki is a quickly growing encyclopedia of info about SneezyMUD: <Y>https://docs.google.com/spreadsheets/d/1_NeMHW77kQdKl9tyfzkvAmfwU9p65_jXino37unLXNg/edit?usp=sharing<z>
 The SneezyMUD Discord is a great place for discussion.  Come share your stories: <y>https://discord.gg/TMz8gMBDXA<z>
 Check out the Visual New User's Guide: <Y>https://www.youtube.com/watch?v=pukslQWRMTU<z>
 Check out the updated Newbie Guide.  If you lost yours, get another at the welfare office.
@@ -48,4 +46,5 @@ Looking for a mob about your level to fight? Use "<c>goto fairfight<z>"
 Still have a question you didn't see a tip for?  Try the "<c>newbie<z>" command.
 Want to stop seeing these tips?  Toggle tips off.  HELP TOGGLE
 Want to see all the tips?  HELP TIPS
+Want to make moving around the world easier? Type help map.
 
