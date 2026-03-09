@@ -223,7 +223,13 @@ void TBeing::assignSkills(classIndT Class, discNumT primDisc,
     shuffleContainer(favorites);
     bool raisedFavorite = false;
     for (unsigned int i = 0; i < favorites.size(); ++i) {
-      if (getDiscipline(favorites[i])->getLearnedness() < 70) {
+      CDiscipline* cd_fav = getDiscipline(favorites[i]);
+      if (!cd_fav) {
+        vlogf(LOG_BUG,
+          format("%s didn't have discipline %i.") % getName() % favorites[i]);
+        return;
+      }
+      if (cd_fav->getLearnedness() < 70) {
         raiseDiscOnce(favorites[i]);
         raisedFavorite = true;
         break;
