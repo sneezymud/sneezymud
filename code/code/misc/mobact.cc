@@ -1881,7 +1881,7 @@ static const int SHAMAN_MIN_SKILL = 60;
 
 static const ShamanSpellEntry shamanSpellTable[] = {
   // SITUATIONAL spells — bypass tier filtering
-  {SPELL_CHASE_SPIRIT,    40, SHAMAN_SITUATIONAL, "$n utters the words, 'Spirits be gone from this pathetic one!'"},
+  {SPELL_CHASE_SPIRIT,    70, SHAMAN_SITUATIONAL, "$n utters the words, 'Spirits be gone from this pathetic one!'"},
   {SPELL_INTIMIDATE,      40, SHAMAN_SITUATIONAL, "$n utters the invokation, 'Go Away! Leave me the Hell Alone!'"},
   {SPELL_FLATULENCE,      20, SHAMAN_SITUATIONAL, "$n utters the invokation, 'He who smelt it, dealt it!'"},
   {SPELL_STUPIDITY,       10, SHAMAN_SITUATIONAL, "$n utters the invokation, 'DUUHHHHHHHHHHH!!!!!!!!!'"},
@@ -1889,19 +1889,16 @@ static const ShamanSpellEntry shamanSpellTable[] = {
 
   // OFFENSIVE spells — subject to tier filtering
   {SPELL_LIFE_LEECH,      20, SHAMAN_OFFENSIVE, "$n utters the invokation, 'I'm gonna suck you dry!!!'"},
-  {SPELL_LICH_TOUCH,      70, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Lich me, SUCKAH!!!'"},
-  {SPELL_RAZE,            70, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Rubbem Ow!'"},
+  {SPELL_LICH_TOUCH,      80, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Lich me, SUCKAH!!!'"},
+  {SPELL_RAZE,            80, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Rubbem Ow!'"},
   {SPELL_VAMPIRIC_TOUCH,  40, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Ahh!! The BLUUD!!!!!'"},
   {SPELL_SOUL_TWIST,      30, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Internal Pretzel!'"},
   {SPELL_SQUISH,          10, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Firsta you takka da dough like-a dis...'"},
-  {SPELL_DISTORT,         20, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Houngan\\'s Delight!'"},
-  {SPELL_STICKS_TO_SNAKES,10, SHAMAN_OFFENSIVE, "$n utters the invokation, 'I got a woody and I\\'m gonna use it!'"},
-  {SPELL_STORMY_SKIES,    20, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Weather! Do my deed!'"},
-  {SPELL_DEATHWAVE,       70, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Deadly Blackness!'"},
-  {SPELL_AQUATIC_BLAST,   50, SHAMAN_OFFENSIVE, "$n utters the invokation, 'River run DEEEEEEEEEEP!!!!'"},
-  {SPELL_BLOOD_BOIL,      50, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Bubble, bubble. BOILING BLOOD!!'"},
-  {SPELL_CARDIAC_STRESS,  70, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Don\\'t go breakin\\' my heart!'"},
-  {SPELL_HEALING_GRASP,   10, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Ahhh...that\\'s better...'"},
+  {SPELL_DISTORT,         20, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Houngan's Delight!'"},
+  {SPELL_DEATHWAVE,       80, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Deadly Blackness!'"},
+  {SPELL_AQUATIC_BLAST,   60, SHAMAN_OFFENSIVE, "$n utters the invokation, 'River run DEEEEEEEEEEP!!!!'"},
+  {SPELL_BLOOD_BOIL,      60, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Bubble, bubble. BOILING BLOOD!!'"},
+  {SPELL_CARDIAC_STRESS,  80, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Don't go breakin' my heart!'"},
 };
 
 static bool checkShamanSituational(TMonster& ch, TBeing& vict, spellNumT spell) {
@@ -1927,27 +1924,34 @@ static bool checkShamanSituational(TMonster& ch, TBeing& vict, spellNumT spell) 
       return ch.attackers >= 2 &&
              !vict.affectedBySpell(SPELL_DEATH_MIST);
     default:
-      return true;
+      return false;
   }
 }
 
+// To add a self-targeting spell (e.g. a self-heal or buff):
+// 1. Add it to shamanSpellTable as SHAMAN_SITUATIONAL
+// 2. Add a case to checkShamanSituational with the appropriate condition
+// 3. In the candidate-building loop below, set on_me = TRUE when that spell
+//    is selected. The shamanMove caller already handles the on_me branch.
 static spellNumT get_shaman_spell(TMonster& ch, TBeing& vict, bool& on_me) {
   on_me = FALSE;
 
   static const int TIER_WINDOW = 30;
 
-  // 1. Find the best offensive start value across all disciplines
-  int bestStart = 0;
+  // 1. Find the best offensive start value in the basic shaman discipline
+  int bestBasicStart = 0;
   for (const auto& entry : shamanSpellTable) {
     if (entry.category != SHAMAN_OFFENSIVE)
       continue;
+    if (discArray[entry.spell]->disc != DISC_SHAMAN)
+      continue;
     if (!ch.doesKnowSkill(entry.spell))
       continue;
-    if (ch.getSkillValue(entry.spell) <= SHAMAN_MIN_SKILL)
+    if (ch.getSkillValue(entry.spell) < SHAMAN_MIN_SKILL)
       continue;
     int start = discArray[entry.spell]->start;
-    if (start > bestStart)
-      bestStart = start;
+    if (start > bestBasicStart)
+      bestBasicStart = start;
   }
 
   // 2. Build candidate pool
@@ -1957,17 +1961,42 @@ static spellNumT get_shaman_spell(TMonster& ch, TBeing& vict, bool& on_me) {
   for (const auto& entry : shamanSpellTable) {
     if (!ch.doesKnowSkill(entry.spell))
       continue;
-    if (ch.getSkillValue(entry.spell) <= SHAMAN_MIN_SKILL)
+    if (ch.getSkillValue(entry.spell) < SHAMAN_MIN_SKILL)
       continue;
 
     if (entry.category == SHAMAN_SITUATIONAL) {
       if (checkShamanSituational(ch, vict, entry.spell))
         candidates.push_back({entry.spell, entry.weight, entry.message});
     } else {
-      // Tier filter: only include if within TIER_WINDOW of best
-      int start = discArray[entry.spell]->start;
-      if (start >= bestStart - TIER_WINDOW)
-        candidates.push_back({entry.spell, entry.weight, entry.message});
+      // Tier filter: only apply to basic shaman disc spells
+      if (discArray[entry.spell]->disc == DISC_SHAMAN) {
+        int start = discArray[entry.spell]->start;
+        if (start < bestBasicStart - TIER_WINDOW)
+          continue;
+      }
+      candidates.push_back({entry.spell, entry.weight, entry.message});
+    }
+  }
+
+  // 2b. Life-drain boost: when hurt, add the best known drain spell again
+  //     to increase its selection weight (may duplicate an existing entry)
+  if (ch.getHit() < ch.hitLimit() * 3 / 4) {
+    static const spellNumT drainSpells[] = {
+      SPELL_LICH_TOUCH, SPELL_VAMPIRIC_TOUCH, SPELL_LIFE_LEECH
+    };
+    for (auto spell : drainSpells) {
+      if (!ch.doesKnowSkill(spell))
+        continue;
+      if (ch.getSkillValue(spell) < SHAMAN_MIN_SKILL)
+        continue;
+      // find matching table entry for the message
+      for (const auto& entry : shamanSpellTable) {
+        if (entry.spell == spell) {
+          candidates.push_back({entry.spell, entry.weight, entry.message});
+          break;
+        }
+      }
+      break;  // only add the best one we know
     }
   }
 
