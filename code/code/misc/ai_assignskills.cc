@@ -107,7 +107,7 @@ void TBeing::assignSkillsClass() {
     prim = DISC_DEIKHAN;
     favorites.clear();
     favorites.push_back(DISC_DEIKHAN_MARTIAL);
-    favorites.push_back(DISC_MOUNTED);
+    favorites.push_back(DISC_DEIKHAN_GUARDIAN);
     favorites.push_back(DISC_DEIKHAN_VENGEANCE);
     assignSkills(Class, prim, favorites);
   }
@@ -117,7 +117,7 @@ void TBeing::assignSkillsClass() {
     prim = DISC_MONK;
     favorites.clear();
     favorites.push_back(DISC_LEVERAGE);
-    favorites.push_back(DISC_MEDITATION_MONK);
+    favorites.push_back(DISC_BAREHAND);
     favorites.push_back(DISC_MINDBODY);
     favorites.push_back(DISC_FOCUSED_ATTACKS);
     favorites.push_back(DISC_IRON_BODY);
@@ -128,7 +128,7 @@ void TBeing::assignSkillsClass() {
     Class = SHAMAN_LEVEL_IND;
     prim = DISC_SHAMAN;
     favorites.clear();
-    favorites.push_back(DISC_SHAMAN_CONTROL);
+    favorites.push_back(DISC_SHAMAN_SKUNK);
     favorites.push_back(DISC_SHAMAN_ARMADILLO);
     favorites.push_back(DISC_SHAMAN_FROG);
     favorites.push_back(DISC_SHAMAN_SPIDER);
@@ -212,11 +212,25 @@ void TBeing::assignSkills(classIndT Class, discNumT primDisc,
       }
     }
 
-    // learn our favored disc up a bit
-    if (favored->getLearnedness() < 75) {
+    // learn our favored disc up fully before we learn any others
+    // A lot of the good stuff is right at the end of the disc, so this makes sure we get it
+    if (favored->getLearnedness() < MAX_DISC_LEARNEDNESS) {
       raiseDiscOnce(favoredNum);
       continue;
     }
+
+    // now we should weight learning some of the other favorites
+    shuffleContainer(favorites);
+    bool raisedFavorite = false;
+    for (unsigned int i = 0; i < favorites.size(); ++i) {
+      if (getDiscipline(favorites[i])->getLearnedness() < 70) {
+        raiseDiscOnce(favorites[i]);
+        raisedFavorite = true;
+        break;
+      }
+    }
+    if (raisedFavorite)
+      continue;
 
     // now let's learn some random discs
     // first, shuffle our list
