@@ -2661,8 +2661,9 @@ void TBeing::doEquipment(const sstring& arg) {
     sstring tattoos[MAX_WEAR];
 
     db.query(
-      "select location, tattoo from tattoos where name='%s' order by location",
-      getName().c_str());
+      "select location, tattoo from tattoos where player_id=%i order by "
+      "location",
+      getPlayerID());
     while (db.fetchRow()) {
       tattoos[convertTo<int>(db["location"])] = db["tattoo"];
     }
@@ -2709,9 +2710,9 @@ void TBeing::doEquipment(const sstring& arg) {
 
     if (victim) {
       db.query(
-        "select location, tattoo from tattoos where name='%s' order by "
+        "select location, tattoo from tattoos where player_id=%i order by "
         "location",
-        victim->getName().c_str());
+        victim->getPlayerID());
       while (db.fetchRow()) {
         tattoos[convertTo<int>(db["location"])] = db["tattoo"];
       }
