@@ -543,10 +543,10 @@ Descriptor::~Descriptor() {
       character->removeFollowers();
 
       for (StuffIter it = character->stuff.begin();
-           it != character->stuff.end() && (th = *it); ++it) {
+        it != character->stuff.end() && (th = *it); ++it) {
         if (th) {
           for (StuffIter it = th->stuff.begin();
-               it != th->stuff.end() && (th2 = *it); ++it)
+            it != th->stuff.end() && (th2 = *it); ++it)
             num++;
           num++;
         }
@@ -555,7 +555,7 @@ Descriptor::~Descriptor() {
       for (int i = MIN_WEAR; i < MAX_WEAR; i++) {
         if ((th = character->equipment[i])) {
           for (StuffIter it = th->stuff.begin();
-               it != th->stuff.end() && (th2 = *it); ++it)
+            it != th->stuff.end() && (th2 = *it); ++it)
             num++;
 
           num++;
@@ -1994,38 +1994,70 @@ void Descriptor::sstring_add(sstring s) {
   }
   if (terminator || t2) {
     if (character->isPlayerAction(PLR_MAILING)) {
+      bool mailSent = false;
       if (ignored.isMailIgnored(this, name)) {
         vlogf(LOG_OBJ, format("Mail: mail sent by %s was ignored by %s.") %
                          character->getName() % name);
+        mailSent = true;  // suppress "not sent" message for ignored mail
       } else if (terminator) {
-        int rent_id = 0;
-        if (obj && obj->canBeMailed(name)) {
-          ItemSaveDB is("mail", GH_MAIL_SHOP);
-          rent_id = is.raw_write_item(obj, -1, 0);
-          vlogf(LOG_OBJ,
-            format("Mail: %s mailing %s (vnum:%i) to %s rented as rent_id:%i") %
-              character->getName() % obj->getName() % obj->objVnum() % name %
-              rent_id);
+        if (sstring(name) == "faction") {
+          // Faction mail: send to all members of the sender's faction
+          TDatabase fm(DB_SNEEZY);
+          fm.query(
+            "SELECT player_id FROM factionmembers WHERE faction="
+            "(SELECT faction FROM factionmembers WHERE player_id=%i)",
+            character->getPlayerID());
+          while (fm.fetchRow()) {
+            store_mail(convertTo<int>(fm["player_id"]),
+              character->getName().c_str(), character->getPlayerID(),
+              str->c_str(), 0, 0);
+          }
           delete obj;
+          mailSent = true;
+        } else {
+          // Look up recipient player_id first, before committing items/talens
+          TDatabase lookup(DB_SNEEZY);
+          lookup.query("select id from player where name='%s'", name);
+          if (!lookup.fetchRow()) {
+            writeToQ("That player no longer exists! Mail not sent.\n\r");
+            delete obj;
+          } else {
+            int to_id = convertTo<int>(lookup["id"]);
+            int rent_id = 0;
+            if (obj && obj->canBeMailed(name)) {
+              ItemSaveDB is("mail", GH_MAIL_SHOP);
+              rent_id = is.raw_write_item(obj, -1, 0);
+              vlogf(LOG_OBJ,
+                format(
+                  "Mail: %s mailing %s (vnum:%i) to %s rented as rent_id:%i") %
+                  character->getName() % obj->getName() % obj->objVnum() %
+                  name % rent_id);
+              delete obj;
+            }
+            if (amount > 0) {
+              vlogf(LOG_OBJ, format("Mail: %s mailing %i talens to %s") %
+                               character->getName() % amount % name);
+              character->addToMoney(min(0, -amount), GOLD_XFER);
+            }
+            store_mail(to_id, character->getName().c_str(),
+              character->getPlayerID(), str->c_str(), amount, rent_id);
+            mailSent = true;
+          }
         }
-        if (amount > 0) {
-          vlogf(LOG_OBJ, format("Mail: %s mailing %i talens to %s") %
-                           character->getName() % amount % name);
-          character->addToMoney(min(0, -amount), GOLD_XFER);
-        }
-        store_mail(name, character->getName().c_str(), str->c_str(), amount,
-          rent_id);
       }
 
       *str = "";
-      str = NULL;
+      str = nullptr;
 
       // clear amount, object, name
-      obj = NULL;
+      obj = nullptr;
       *(name) = '\0';
       amount = 0;
 
-      writeToQ(terminator ? "Message sent!\n\r" : "Message deleted!\n\r");
+      if (mailSent)
+        writeToQ("Message sent!\n\r");
+      else if (!terminator)
+        writeToQ("Message deleted!\n\r");
       character->remPlayerAction(PLR_MAILING);
     } else if (character->isPlayerAction(PLR_BUGGING)) {
       if (terminator) {
@@ -2319,7 +2351,7 @@ void setPrompts(fd_set out) {
           TObj* tObj = NULL;
 
           for (StuffIter it = ch->stuff.begin();
-               it != ch->stuff.end() && (tThing = *it); ++it) {
+            it != ch->stuff.end() && (tThing = *it); ++it) {
             if ((tObj = dynamic_cast<TObj*>(tThing)) &&
                 isname(ch->task->orig_arg, tThing->name))
               break;
@@ -2344,7 +2376,8 @@ void setPrompts(fd_set out) {
         }
       } else {
         if (ch && ch->spelltask && IS_SET(ch->desc->autobits, AUTO_SPELLTASK)) {
-          sprintf(promptbuf, "\n\r%s : %2d > ", discArray[ch->spelltask->spell]->name, ch->spelltask->rounds);
+          sprintf(promptbuf, "\n\r%s : %2d > ",
+            discArray[ch->spelltask->spell]->name, ch->spelltask->rounds);
           d->output.push(
             CommPtr(new UncategorizedComm(sstring(promptbuf).cap())));
         }
@@ -2755,7 +2788,7 @@ void processAllInput() {
             // in another wierd core, d was no longer in the descriptor_list
             Descriptor* tempdesc;
             for (tempdesc = descriptor_list; tempdesc;
-                 tempdesc = tempdesc->next) {
+              tempdesc = tempdesc->next) {
               if (tempdesc == d || tempdesc == next_to_process)
                 break;
             }
@@ -3429,8 +3462,9 @@ int Descriptor::doAccountStuff(char* arg) {
       wipeRentFile(delname);
       wipeFollowersFile(delname);
 
+      // Mail is already deleted by FK CASCADE on player deletion above,
+      // but log for auditability
       vlogf(LOG_PIO, format("Deleting mail for character %s.") % delname);
-      db.query("delete from mail where lower(mailto)=lower('%s')", delname);
 
       sprintf(buf, "mutable/account/%c/%s/%s", LOWER(account->name[0]),
         sstring(account->name).lower().c_str(), delname);
@@ -3796,7 +3830,9 @@ int Descriptor::inputProcessing() {
           break;
 
       } else {
-        vlogf(LOG_PIO, format("EOF encountered on socket read from %s (state: %d).") % host % connected);
+        vlogf(LOG_PIO,
+          format("EOF encountered on socket read from %s (state: %d).") % host %
+            connected);
         return (-1);
       }
     }

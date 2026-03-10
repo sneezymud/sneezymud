@@ -81,7 +81,7 @@ void Descriptor::send_client_inventory() {
     return;
 
   for (StuffIter it = ch->stuff.begin(); it != ch->stuff.end() && (t = *it);
-       ++it) {
+    ++it) {
     TObj* tobj = dynamic_cast<TObj*>(t);
     if (!tobj)
       continue;
@@ -98,7 +98,7 @@ void Descriptor::send_client_room_people() {
     return;
 
   for (StuffIter it = ch->roomp->stuff.begin();
-       it != ch->roomp->stuff.end() && (folx = *it); ++it)
+    it != ch->roomp->stuff.end() && (folx = *it); ++it)
     clientf(format("%d|%d|%s") % CLIENT_ROOMFOLX % ADD % folx->getName());
 }
 
@@ -110,7 +110,7 @@ void Descriptor::send_client_room_objects() {
     return;
 
   for (StuffIter it = ch->roomp->stuff.begin();
-       it != ch->roomp->stuff.end() && (t = *it); ++it)
+    it != ch->roomp->stuff.end() && (t = *it); ++it)
     clientf(format("%d|%d|%s") % CLIENT_ROOMOBJS % ADD % t->getName());
 }
 
@@ -501,25 +501,54 @@ int Descriptor::read_client(char* str2) {
       }
       buffer[j] = '\0';
 
-      if (obj && obj->canBeMailed(sstring(name))) {
-        ItemSaveDB is("mail", GH_MAIL_SHOP);
-        rent_id = is.raw_write_item(obj, -1 /*NORMAL_SLOT*/, 0);
-        vlogf(LOG_OBJ,
-          format("Mail: %s mailing %s (vnum:%i) to %s rented as rent_id:%i") %
-            character->getName() % obj->getName() % obj->objVnum() % name %
-            rent_id);
+      // Look up recipient player_id first, before committing items/talens
+      if (sstring(name) == "faction") {
+        // Faction mail: send to all members of the sender's faction
+        TDatabase fm(DB_SNEEZY);
+        fm.query(
+          "SELECT player_id FROM factionmembers WHERE faction="
+          "(SELECT faction FROM factionmembers WHERE player_id=%i)",
+          character->getPlayerID());
+        while (fm.fetchRow()) {
+          store_mail(convertTo<int>(fm["player_id"]),
+            character->getName().c_str(), character->getPlayerID(), buffer, 0,
+            0);
+        }
         delete obj;
-      }
-      if (amount > 0) {
-        vlogf(LOG_OBJ, format("Mail: %s mailing %i talens to %s") %
-                         character->getName() % amount % name);
-        character->addToMoney(min(0, -amount), GOLD_XFER);
-      }
+      } else {
+        TDatabase lookup(DB_SNEEZY);
+        lookup.query("select id from player where name='%s'", name);
+        if (!lookup.fetchRow()) {
+          delete obj;
+          // clear and break - player deleted since compose started
+          obj = nullptr;
+          *(name) = '\0';
+          amount = 0;
+          break;
+        }
 
-      store_mail(name, character->getName().c_str(), buffer, amount, rent_id);
+        int to_id = convertTo<int>(lookup["id"]);
+
+        if (obj && obj->canBeMailed(sstring(name))) {
+          ItemSaveDB is("mail", GH_MAIL_SHOP);
+          rent_id = is.raw_write_item(obj, -1 /*NORMAL_SLOT*/, 0);
+          vlogf(LOG_OBJ,
+            format("Mail: %s mailing %s (vnum:%i) to %s rented as rent_id:%i") %
+              character->getName() % obj->getName() % obj->objVnum() % name %
+              rent_id);
+          delete obj;
+        }
+        if (amount > 0) {
+          vlogf(LOG_OBJ, format("Mail: %s mailing %i talens to %s") %
+                           character->getName() % amount % name);
+          character->addToMoney(min(0, -amount), GOLD_XFER);
+        }
+        store_mail(to_id, character->getName().c_str(),
+          character->getPlayerID(), buffer, amount, rent_id);
+      }
 
       // clear amount, object, name
-      obj = NULL;
+      obj = nullptr;
       *(name) = '\0';
       amount = 0;
 
