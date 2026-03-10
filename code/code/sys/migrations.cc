@@ -424,7 +424,7 @@ void runMigrations() {
         "CONSTRAINT fk_player_affect_player "
         "FOREIGN KEY (player_id) REFERENCES player(id) ON DELETE CASCADE)"));
     },
-    // Migration 11: Drop unused tables (cleanup for existing databases).
+    // Drop unused tables (cleanup for existing databases).
     // New instances never create these tables (seed files removed), but
     // databases predating this branch still have them.
     [&]() {
@@ -439,6 +439,212 @@ void runMigrations() {
       // Dead views: no code references, broken DEFINER prevents execution
       for (const auto* view : {"qts", "shop_overview"}) {
         assert(sneezy.query("DROP VIEW IF EXISTS %s", view));
+      }
+    },
+    // Convert UNIQUE KEY to PRIMARY KEY on identity tables
+    [&]() {
+      vlogf(LOG_MISC, "Fixing primary keys on identity tables");
+
+      if (!hasPrimaryKey(sneezy, "account")) {
+        assert(
+          sneezy.query("ALTER TABLE account ADD PRIMARY KEY (account_id), "
+                       "DROP KEY account_id"));
+      }
+
+      if (!hasPrimaryKey(sneezy, "player")) {
+        assert(
+          sneezy.query("ALTER TABLE player ADD PRIMARY KEY (id), DROP KEY id"));
+      }
+
+      if (!hasPrimaryKey(sneezy, "corporation")) {
+        assert(
+          sneezy.query("ALTER TABLE corporation ADD PRIMARY KEY (corp_id), "
+                       "DROP KEY corp_id"));
+      }
+
+      if (!hasPrimaryKey(sneezy, "mail")) {
+        assert(sneezy.query(
+          "ALTER TABLE mail ADD PRIMARY KEY (mailid), DROP KEY mailid"));
+      }
+
+      if (!hasPrimaryKey(sneezy, "immortal_exchange_coin")) {
+        assert(
+          sneezy.query("ALTER TABLE immortal_exchange_coin "
+                       "DROP KEY ix__immortal_exchange_coin__1, "
+                       "ADD PRIMARY KEY (k_coin)"));
+      }
+    },
+    // Add critical missing indexes, drop redundant ones
+    [&]() {
+      vlogf(LOG_MISC, "Adding missing indexes and dropping redundant ones");
+
+      // rent(owner_type, owner) - every item load does a full table scan
+      // without this
+      if (!hasIndex(sneezy, "rent", "idx_rent_owner")) {
+        assert(sneezy.query(
+          "ALTER TABLE rent ADD INDEX idx_rent_owner (owner_type, owner)"));
+      }
+
+      // objaffect(vnum) - 15K rows, queried by vnum, no index
+      if (!hasIndex(sneezy, "objaffect", "idx_objaffect_vnum")) {
+        assert(sneezy.query(
+          "ALTER TABLE objaffect ADD INDEX idx_objaffect_vnum (vnum)"));
+      }
+
+      // objextra(vnum) - 6.4K rows, queried by vnum, no index
+      if (!hasIndex(sneezy, "objextra", "idx_objextra_vnum")) {
+        assert(sneezy.query(
+          "ALTER TABLE objextra ADD INDEX idx_objextra_vnum (vnum)"));
+      }
+
+      // corplog(corp_id) - 3.6K rows, queried by corp_id, no index
+      if (!hasIndex(sneezy, "corplog", "idx_corplog_corp_id")) {
+        assert(sneezy.query(
+          "ALTER TABLE corplog ADD INDEX idx_corplog_corp_id (corp_id)"));
+      }
+
+      // mail(mailto) - has_mail queries WHERE mailto=? with no index
+      if (!hasIndex(sneezy, "mail", "idx_mail_mailto")) {
+        assert(
+          sneezy.query("ALTER TABLE mail ADD INDEX idx_mail_mailto (mailto)"));
+      }
+
+      // Drop duplicate index on configuration (both 'config' UNIQUE and
+      // 'idx_configuration_key' UNIQUE cover the same column)
+      if (hasIndex(sneezy, "configuration", "idx_configuration_key")) {
+        assert(sneezy.query(
+          "ALTER TABLE configuration DROP KEY idx_configuration_key"));
+      }
+
+      // Drop ix_player_name_account_id - it's fully covered by
+      // player_unq_name (UNIQUE on name) for name lookups, and account_id
+      // lookups go through other paths. Keep player_unq_name to preserve
+      // global name uniqueness (critical for a MUD where players are
+      // addressed by name).
+      if (hasIndex(sneezy, "player", "ix_player_name_account_id")) {
+        assert(sneezy.query(
+          "ALTER TABLE player DROP KEY ix_player_name_account_id"));
+      }
+    },
+    // Fix log table timestamps
+    [&]() {
+      vlogf(LOG_MISC, "Fixing log timestamps");
+
+      // Remove ON UPDATE current_timestamp() from audit/log tables - updates
+      // should not silently overwrite the original timestamp
+      assert(sneezy.query(
+        "ALTER TABLE shoplog "
+        "MODIFY logtime timestamp NOT null DEFAULT current_timestamp()"));
+      assert(sneezy.query(
+        "ALTER TABLE tellhistory "
+        "MODIFY telltime timestamp NOT null DEFAULT current_timestamp()"));
+      assert(sneezy.query(
+        "ALTER TABLE corplog "
+        "MODIFY logtime timestamp NOT null DEFAULT current_timestamp()"));
+    },
+    // Fix FK type mismatches (int -> bigint unsigned)
+    [&]() {
+      vlogf(LOG_MISC, "Fixing FK column type mismatches");
+
+      constexpr auto bigintU = "bigint(20) unsigned";
+
+      // player.account_id: int -> bigint unsigned (to match account.account_id)
+      modifyColumnType(sneezy, "player", "account_id", bigintU, false);
+      modifyColumnType(sneezy, "ship_master", "account_id", bigintU, false);
+
+      // player_id columns: int -> bigint unsigned (to match player.id)
+      for (auto [table, notNull] :
+        std::initializer_list<std::pair<const char*, bool>>{
+          {"blockedlist", false},
+          {"corpaccess", false},
+          {"drug_use", false},
+          {"gamblers", true},
+          {"pet", false},
+          {"playerprompt", false},
+          {"ship_master", false},
+          {"shopownedbank", true},
+          {"shopownedloans", false},
+          {"trophy", true},
+          {"trophyplayer", true},
+          {"wizpower", false},
+        }) {
+        modifyColumnType(sneezy, table, "player_id", bigintU, notNull);
+      }
+
+      // corp_id columns: int -> bigint unsigned (to match corporation.corp_id)
+      for (auto [table, notNull] :
+        std::initializer_list<std::pair<const char*, bool>>{
+          {"corpaccess", true},
+          {"corplog", false},
+          {"shopownedcorpbank", true},
+        }) {
+        modifyColumnType(sneezy, table, "corp_id", bigintU, notNull);
+      }
+    },
+    // Add primary keys to tables with clean natural keys
+    [&]() {
+      vlogf(LOG_MISC, "Adding primary keys to tables with natural keys");
+
+      // Tables with case-insensitive collation collisions (permadeath) or
+      // legitimately different data sharing the same natural key (tattoos)
+      // are excluded - they need manual data cleanup before PKs can be added.
+
+      // Combined DROP KEY + ADD PRIMARY KEY in single ALTER statements so
+      // either both succeed or neither does - no partial state where the
+      // old index is gone but the PK failed to add.
+      // Also MODIFY NULLable PK columns to NOT NULL in the same ALTER.
+      if (!hasPrimaryKey(sneezy, "trophy")) {
+        assert(
+          sneezy.query("ALTER TABLE trophy "
+                       "DROP KEY trophy_idx, "
+                       "ADD PRIMARY KEY (player_id, mobvnum)"));
+      }
+      if (!hasPrimaryKey(sneezy, "trophyplayer")) {
+        assert(
+          sneezy.query("ALTER TABLE trophyplayer "
+                       "DROP KEY ix_trophyplayer_player_id, "
+                       "ADD PRIMARY KEY (player_id)"));
+      }
+      if (!hasPrimaryKey(sneezy, "wizpower")) {
+        assert(
+          sneezy.query("ALTER TABLE wizpower "
+                       "DROP KEY wizpower_idx, "
+                       "MODIFY player_id bigint(20) unsigned NOT null, "
+                       "MODIFY wizpower int NOT null, "
+                       "ADD PRIMARY KEY (player_id, wizpower)"));
+      }
+      if (!hasPrimaryKey(sneezy, "drug_use")) {
+        assert(
+          sneezy.query("ALTER TABLE drug_use "
+                       "DROP KEY ix_drug_use_player_id, "
+                       "MODIFY player_id bigint(20) unsigned NOT null, "
+                       "MODIFY drug_id int NOT null, "
+                       "ADD PRIMARY KEY (player_id, drug_id)"));
+      }
+      if (!hasPrimaryKey(sneezy, "fishkeeper")) {
+        assert(
+          sneezy.query("ALTER TABLE fishkeeper "
+                       "DROP KEY ix_fishkeeper_name, "
+                       "MODIFY name varchar(80) NOT null, "
+                       "ADD PRIMARY KEY (name)"));
+      }
+
+      // Tables without redundant indexes to drop
+      if (!hasPrimaryKey(sneezy, "globaltoggles")) {
+        assert(
+          sneezy.query("ALTER TABLE globaltoggles "
+                       "MODIFY tog_id int NOT null, "
+                       "ADD PRIMARY KEY (tog_id)"));
+      }
+      if (!hasPrimaryKey(sneezy, "gamblers")) {
+        assert(
+          sneezy.query("ALTER TABLE gamblers ADD PRIMARY KEY (player_id)"));
+      }
+      if (!hasPrimaryKey(sneezy, "factionmembers")) {
+        assert(
+          sneezy.query("ALTER TABLE factionmembers "
+                       "MODIFY name varchar(80) NOT null, "
+                       "ADD PRIMARY KEY (name)"));
       }
     },
   };
