@@ -1610,6 +1610,38 @@ void runMigrations() {
       addForeignKey(sneezy, "mail", "to_id", "player", "id", "CASCADE");
       addForeignKey(sneezy, "mail", "from_id", "player", "id", "SET null");
     },
+    // Migrate shopownedaccess from name to player_id
+    [&]() {
+      vlogf(LOG_MISC, "Migrating shopownedaccess to player_id");
+
+      if (!hasColumn(sneezy, "shopownedaccess", "player_id")) {
+        assert(
+          sneezy.query("ALTER TABLE shopownedaccess "
+                       "ADD COLUMN player_id BIGINT UNSIGNED DEFAULT null"));
+        assert(
+          sneezy.query("UPDATE shopownedaccess soa "
+                       "JOIN player p ON soa.name = p.name "
+                       "SET soa.player_id = p.id"));
+        // Delete orphans (player no longer exists)
+        assert(
+          sneezy.query("DELETE FROM shopownedaccess WHERE player_id IS null"));
+      }
+
+      if (hasColumn(sneezy, "shopownedaccess", "name")) {
+        // Ensure orphan cleanup completed (idempotent if block 1 finished)
+        sneezy.query("DELETE FROM shopownedaccess WHERE player_id IS null");
+        // Swap PK from (shop_nr, name) to (shop_nr, player_id)
+        assert(
+          sneezy.query("ALTER TABLE shopownedaccess "
+                       "DROP PRIMARY KEY, "
+                       "DROP COLUMN name, "
+                       "MODIFY player_id BIGINT UNSIGNED NOT null, "
+                       "ADD PRIMARY KEY (shop_nr, player_id)"));
+      }
+
+      addForeignKey(sneezy, "shopownedaccess", "player_id", "player", "id",
+        "CASCADE");
+    },
   };
 
   int oldVersion = getVersion(sneezy);

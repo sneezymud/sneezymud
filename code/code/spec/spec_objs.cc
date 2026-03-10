@@ -4808,8 +4808,7 @@ int factionScoreBoard(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1,
     // shops
     db.query(
       "select count(distinct soa.shop_nr) as count from shopownedaccess soa "
-      "join player p on soa.name=p.name "
-      "join factionmembers fm on fm.player_id=p.id "
+      "join factionmembers fm on fm.player_id=soa.player_id "
       "where (soa.access & %i)>0 and fm.faction='%s'",
       SHOPACCESS_OWNER, factnames[i].c_str());
     score = 0;
