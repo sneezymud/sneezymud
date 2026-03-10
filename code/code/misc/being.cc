@@ -1595,14 +1595,15 @@ bool TBeing::applyTattoo(wearSlotT slot, const sstring& tat,
   TDatabase db(DB_SNEEZY);
   if (tat.length() == 0) {
     // removal
-    db.query("delete from tattoos where name = '%s' and location = %i",
-      getName().c_str(), int(slot));
+    db.query("delete from tattoos where player_id = %i and location = %i",
+      getPlayerID(), static_cast<int>(slot));
     if (db.rowCount() > 0)
       return TRUE;
   } else if (tat.length() <= 128) {
     // new tat
-    db.query("insert tattoos (name, tattoo, location) select '%s', '%s', %i",
-      getName().c_str(), tat.c_str(), int(slot));
+    db.query(
+      "insert into tattoos (player_id, tattoo, location) values (%i, '%s', %i)",
+      getPlayerID(), tat.c_str(), static_cast<int>(slot));
     if (db.rowCount() > 0)
       return TRUE;
   }

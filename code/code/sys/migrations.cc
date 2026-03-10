@@ -1377,6 +1377,35 @@ void runMigrations() {
       if (hasColumn(sneezy, "corpaccess", "name"))
         assert(sneezy.query("ALTER TABLE corpaccess DROP COLUMN name"));
     },
+    // Migrate tattoos from name to player_id
+    [&]() {
+      vlogf(LOG_MISC, "Migrating tattoos from name to player_id");
+
+      if (!hasColumn(sneezy, "tattoos", "player_id")) {
+        assert(
+          sneezy.query("ALTER TABLE tattoos "
+                       "ADD COLUMN player_id BIGINT UNSIGNED DEFAULT null"));
+        assert(
+          sneezy.query("UPDATE tattoos t JOIN player p ON t.name = p.name "
+                       "SET t.player_id = p.id"));
+        // Delete orphans (player no longer exists)
+        assert(sneezy.query("DELETE FROM tattoos WHERE player_id IS null"));
+      }
+
+      // Swap PK from (name, location) to (player_id, location)
+      if (hasColumn(sneezy, "tattoos", "name")) {
+        // Ensure orphan cleanup completed (idempotent if block 1 finished)
+        sneezy.query("DELETE FROM tattoos WHERE player_id IS null");
+        assert(
+          sneezy.query("ALTER TABLE tattoos "
+                       "DROP PRIMARY KEY, "
+                       "DROP COLUMN name, "
+                       "MODIFY player_id BIGINT UNSIGNED NOT null, "
+                       "ADD PRIMARY KEY (player_id, location)"));
+      }
+
+      addForeignKey(sneezy, "tattoos", "player_id", "player", "id", "CASCADE");
+    },
   };
 
   int oldVersion = getVersion(sneezy);

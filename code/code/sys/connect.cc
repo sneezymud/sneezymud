@@ -3425,9 +3425,6 @@ int Descriptor::doAccountStuff(char* arg) {
       // etc.)
       db.query("delete from player where id=%i", playerID);
 
-      // delete tats!
-      db.query("delete from tattoos where lower(name)=lower('%s')", delname);
-
       wipePlayerFile(delname);  // handles corpses too
       wipeRentFile(delname);
       wipeFollowersFile(delname);
