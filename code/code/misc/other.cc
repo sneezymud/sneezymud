@@ -3902,13 +3902,15 @@ void TBeing::doHistory() {
   sendTo("\n\rYour tell history :\n\r\n\r");
 
   db.query(
-    "select tellfrom, tell from tellhistory where tellto='%s' order by "
-    "telltime desc limit 25",
-    getName().c_str());
+    "select coalesce(p.name, 'someone') as sender, th.tell "
+    "from tellhistory th "
+    "left join player p on th.from_id=p.id "
+    "where th.to_id=%i order by th.telltime desc limit 25",
+    getPlayerID());
 
   for (i = 0; i < 25 && db.fetchRow(); i++) {
     sendTo(COLOR_BASIC, format("[%d] <p>%s<1> told you, \"<c>%s<1>\"\n\r") % i %
-                          db["tellfrom"] % db["tell"]);
+                          db["sender"] % db["tell"]);
   }
 }
 

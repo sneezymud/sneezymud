@@ -1497,6 +1497,70 @@ void runMigrations() {
       addForeignKey(sneezy, "factionmembers", "player_id", "player", "id",
         "CASCADE");
     },
+    // Migrate tellhistory from name to player_id
+    [&]() {
+      vlogf(LOG_MISC, "Migrating tellhistory to player_id");
+
+      if (hasColumn(sneezy, "tellhistory", "tellfrom")) {
+        // Step 1: Delete orphan rows where neither sender nor recipient
+        // matches an existing player
+        assert(
+          sneezy.query("DELETE th FROM tellhistory th "
+                       "LEFT JOIN player p1 ON th.tellfrom=p1.name "
+                       "LEFT JOIN player p2 ON th.tellto=p2.name "
+                       "WHERE p1.id IS null AND p2.id IS null"));
+
+        // Step 2: Keep only the most recent 25 per recipient.
+        // Use the existing `id` surrogate PK (from migration 24) to identify
+        // rows for deletion.
+        assert(
+          sneezy.query("DELETE FROM tellhistory WHERE id NOT IN ("
+                       "SELECT id FROM ("
+                       "SELECT id, ROW_NUMBER() OVER "
+                       "(PARTITION BY tellto ORDER BY telltime DESC) AS rn "
+                       "FROM tellhistory) ranked WHERE rn <= 25)"));
+
+        // Step 3: Add from_id/to_id and backfill
+        if (!hasColumn(sneezy, "tellhistory", "from_id"))
+          assert(
+            sneezy.query("ALTER TABLE tellhistory "
+                         "ADD COLUMN from_id BIGINT UNSIGNED DEFAULT null, "
+                         "ADD COLUMN to_id BIGINT UNSIGNED DEFAULT null"));
+
+        assert(
+          sneezy.query("UPDATE tellhistory th "
+                       "JOIN player p ON th.tellfrom=p.name "
+                       "SET th.from_id=p.id"));
+        assert(
+          sneezy.query("UPDATE tellhistory th "
+                       "JOIN player p ON th.tellto=p.name "
+                       "SET th.to_id=p.id"));
+
+        // Step 4: Drop old name columns
+        assert(
+          sneezy.query("ALTER TABLE tellhistory "
+                       "DROP COLUMN tellfrom, "
+                       "DROP COLUMN tellto"));
+
+        // Drop old indexes that referenced tellfrom/tellto
+        if (hasIndex(sneezy, "tellhistory", "tellhistory_idx"))
+          assert(
+            sneezy.query("ALTER TABLE tellhistory DROP INDEX tellhistory_idx"));
+        if (hasIndex(sneezy, "tellhistory", "tellfrom"))
+          assert(sneezy.query("ALTER TABLE tellhistory DROP INDEX tellfrom"));
+      }
+
+      // Add index for the read query pattern (outside hasColumn guard so it
+      // survives a crash between DROP COLUMN and this point)
+      if (!hasIndex(sneezy, "tellhistory", "idx_tellhistory_to"))
+        assert(
+          sneezy.query("ALTER TABLE tellhistory "
+                       "ADD INDEX idx_tellhistory_to (to_id, telltime)"));
+
+      addForeignKey(sneezy, "tellhistory", "to_id", "player", "id", "CASCADE");
+      addForeignKey(sneezy, "tellhistory", "from_id", "player", "id",
+        "SET null");
+    },
   };
 
   int oldVersion = getVersion(sneezy);
