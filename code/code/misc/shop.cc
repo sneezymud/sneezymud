@@ -2436,12 +2436,13 @@ void shoplog(int shop_nr, TBeing* ch, TMonster* keeper, const sstring& name,
   //  now(), %i)", shop_nr, ch?ch->getName():"unknown", action.c_str(),
   //  name.c_str(), cost, keeper->getMoney(), value, count);
 
-  queryqueue.push(format("insert into shoplog values (%i, '%s', '%s', '%s', "
-                         "%i, %i, %i, now(), %i)") %
-                  shop_nr %
-                  ((sstring)(ch ? ch->getName() : "unknown")).escape() %
-                  action.escape() % name.escape() % cost % keeper->getMoney() %
-                  value % count);
+  queryqueue.push(
+    format("insert into shoplog (shop_nr, name, action, item, talens, "
+           "shoptalens, shopvalue, logtime, itemcount) values "
+           "(%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)") %
+    shop_nr % ((sstring)(ch ? ch->getName() : "unknown")).escape() %
+    action.escape() % name.escape() % cost % keeper->getMoney() % value %
+    count);
 }
 
 void bootTheShops() {

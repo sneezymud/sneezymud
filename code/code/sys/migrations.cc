@@ -899,6 +899,432 @@ void runMigrations() {
       // property.owner -> player.id (property persists without owner)
       addForeignKey(sneezy, "property", "owner", "player", "id", "SET null");
     },
+    // Natural PKs on clean tables (~26 tables)
+    [&]() {
+      vlogf(LOG_MISC, "Adding natural primary keys to clean tables");
+
+      // property: UNIQUE KEY id -> PRIMARY KEY
+      if (!hasPrimaryKey(sneezy, "property")) {
+        assert(sneezy.query(
+          "ALTER TABLE property ADD PRIMARY KEY (id), DROP KEY id"));
+      }
+
+      // playerprompt: 1:1 with player
+      if (!hasPrimaryKey(sneezy, "playerprompt")) {
+        assert(
+          sneezy.query("ALTER TABLE playerprompt "
+                       "DROP KEY ix_playerprompt_player_id, "
+                       "MODIFY player_id bigint(20) unsigned NOT null, "
+                       "ADD PRIMARY KEY (player_id)"));
+      }
+
+      // fishlargest: one record per fish vnum
+      if (!hasPrimaryKey(sneezy, "fishlargest")) {
+        assert(
+          sneezy.query("ALTER TABLE fishlargest "
+                       "DROP KEY ix_fishlargest_vnum, "
+                       "MODIFY vnum int NOT null, "
+                       "ADD PRIMARY KEY (vnum)"));
+      }
+
+      if (!hasPrimaryKey(sneezy, "brickquest")) {
+        assert(sneezy.query("ALTER TABLE brickquest ADD PRIMARY KEY (name)"));
+      }
+
+      if (!hasPrimaryKey(sneezy, "poll")) {
+        assert(sneezy.query("ALTER TABLE poll ADD PRIMARY KEY (poll_id)"));
+      }
+
+      if (!hasPrimaryKey(sneezy, "poll_option")) {
+        assert(sneezy.query(
+          "ALTER TABLE poll_option ADD PRIMARY KEY (poll_id, option_id)"));
+      }
+
+      if (!hasPrimaryKey(sneezy, "poll_vote")) {
+        assert(sneezy.query(
+          "ALTER TABLE poll_vote ADD PRIMARY KEY (account, poll_id)"));
+      }
+
+      if (!hasPrimaryKey(sneezy, "lowtasks")) {
+        assert(
+          sneezy.query("ALTER TABLE lowtasks "
+                       "MODIFY id int NOT null, "
+                       "ADD PRIMARY KEY (id)"));
+      }
+
+      if (!hasPrimaryKey(sneezy, "quest_limbs_team")) {
+        assert(sneezy.query(
+          "ALTER TABLE quest_limbs_team ADD PRIMARY KEY (player)"));
+      }
+
+      // ship_destinations: drop redundant index, MODIFY NOT null
+      if (!hasPrimaryKey(sneezy, "ship_destinations")) {
+        assert(
+          sneezy.query("ALTER TABLE ship_destinations "
+                       "DROP KEY ix1__ship_destinations, "
+                       "MODIFY vnum int NOT null, "
+                       "MODIFY name varchar(32) NOT null, "
+                       "ADD PRIMARY KEY (vnum, name)"));
+      }
+
+      // Factory tables
+      if (!hasPrimaryKey(sneezy, "factoryblueprint")) {
+        assert(
+          sneezy.query("ALTER TABLE factoryblueprint "
+                       "MODIFY vnum int NOT null, "
+                       "MODIFY supplytype int NOT null, "
+                       "ADD PRIMARY KEY (vnum, supplytype)"));
+      }
+
+      if (!hasPrimaryKey(sneezy, "factoryproducing")) {
+        assert(
+          sneezy.query("ALTER TABLE factoryproducing "
+                       "MODIFY shop_nr int NOT null, "
+                       "MODIFY vnum int NOT null, "
+                       "ADD PRIMARY KEY (shop_nr, vnum)"));
+      }
+
+      if (!hasPrimaryKey(sneezy, "factorysupplies")) {
+        assert(
+          sneezy.query("ALTER TABLE factorysupplies "
+                       "MODIFY shop_nr int NOT null, "
+                       "MODIFY supplytype int NOT null, "
+                       "ADD PRIMARY KEY (shop_nr, supplytype)"));
+      }
+
+      if (!hasPrimaryKey(sneezy, "shoplogaccountchart")) {
+        assert(
+          sneezy.query("ALTER TABLE shoplogaccountchart "
+                       "MODIFY post_ref int NOT null, "
+                       "ADD PRIMARY KEY (post_ref)"));
+      }
+
+      if (!hasPrimaryKey(sneezy, "shopownedcentralbank")) {
+        assert(
+          sneezy.query("ALTER TABLE shopownedcentralbank "
+                       "MODIFY bank int NOT null, "
+                       "ADD PRIMARY KEY (bank)"));
+      }
+
+      // shopownedloans: player_id type already fixed by migration 14.
+      // Delete any rows with null player_id (orphaned loans with no borrower)
+      // before adding the NOT null constraint and PK.
+      if (!hasPrimaryKey(sneezy, "shopownedloans")) {
+        sneezy.query("DELETE FROM shopownedloans WHERE player_id IS null");
+        assert(
+          sneezy.query("ALTER TABLE shopownedloans "
+                       "MODIFY player_id bigint(20) unsigned NOT null, "
+                       "ADD PRIMARY KEY (shop_nr, player_id)"));
+      }
+
+      // PK (shop_nr, player_id) makes the single-column shop_nr index redundant
+      if (hasIndex(sneezy, "shopownedloans", "idx_shopownedloans_shop_nr"))
+        assert(
+          sneezy.query("ALTER TABLE shopownedloans "
+                       "DROP INDEX idx_shopownedloans_shop_nr"));
+
+      if (!hasPrimaryKey(sneezy, "pet")) {
+        assert(
+          sneezy.query("ALTER TABLE pet "
+                       "MODIFY player_id bigint(20) unsigned NOT null, "
+                       "MODIFY vnum int NOT null, "
+                       "ADD PRIMARY KEY (player_id, vnum)"));
+      }
+
+      if (!hasPrimaryKey(sneezy, "blockedlist")) {
+        assert(
+          sneezy.query("ALTER TABLE blockedlist "
+                       "MODIFY player_id bigint(20) unsigned NOT null, "
+                       "MODIFY blocked varchar(33) NOT null, "
+                       "ADD PRIMARY KEY (player_id, blocked)"));
+      }
+
+      // corpaccess: PK + unique index on (corp_id, name) for common query
+      if (!hasPrimaryKey(sneezy, "corpaccess")) {
+        assert(
+          sneezy.query("ALTER TABLE corpaccess "
+                       "MODIFY player_id bigint(20) unsigned NOT null, "
+                       "ADD PRIMARY KEY (corp_id, player_id)"));
+      }
+      if (!hasIndex(sneezy, "corpaccess", "idx_corpaccess_corp_name")) {
+        assert(sneezy.query(
+          "ALTER TABLE corpaccess "
+          "ADD UNIQUE INDEX idx_corpaccess_corp_name (corp_id, name)"));
+      }
+
+      if (!hasPrimaryKey(sneezy, "mobresponses")) {
+        assert(sneezy.query("ALTER TABLE mobresponses ADD PRIMARY KEY (vnum)"));
+      }
+      // mobresponses_idx(vnum) is now redundant with PRIMARY KEY(vnum)
+      if (hasIndex(sneezy, "mobresponses", "mobresponses_idx"))
+        assert(
+          sneezy.query("ALTER TABLE mobresponses DROP INDEX mobresponses_idx"));
+
+      // shopownedauction: ticket is the natural key
+      if (!hasPrimaryKey(sneezy, "shopownedauction")) {
+        assert(
+          sneezy.query("ALTER TABLE shopownedauction "
+                       "MODIFY ticket int NOT null, "
+                       "ADD PRIMARY KEY (ticket)"));
+      }
+
+      // shopownednpcloans: renamed from shopownednpcloan in migration 16
+      if (!hasPrimaryKey(sneezy, "shopownednpcloans")) {
+        assert(
+          sneezy.query("ALTER TABLE shopownednpcloans "
+                       "MODIFY loan_id int NOT null, "
+                       "ADD PRIMARY KEY (loan_id)"));
+      }
+    },
+    // Natural PKs with dedup
+    [&]() {
+      vlogf(LOG_MISC, "Deduplicating and adding natural primary keys");
+
+      // permadeath: 1 case-insensitive collision
+      if (!hasPrimaryKey(sneezy, "permadeath")) {
+        sneezy.query(
+          "DELETE p1 FROM permadeath p1 "
+          "INNER JOIN permadeath p2 "
+          "ON p1.name = p2.name "
+          "AND BINARY p1.name != BINARY p2.name "
+          "AND p1.level < p2.level");
+        assert(sneezy.query("ALTER TABLE permadeath ADD PRIMARY KEY (name)"));
+      }
+
+      // tattoos: 2 pairs of dupes
+      if (!hasPrimaryKey(sneezy, "tattoos")) {
+        // Drop stale temp table from a previous partial run before RENAME
+        assert(sneezy.query("DROP TABLE IF EXISTS tattoos_old"));
+        assert(
+          sneezy.query("CREATE TABLE IF NOT EXISTS tattoos_clean "
+                       "LIKE tattoos"));
+        sneezy.query("TRUNCATE TABLE tattoos_clean");
+        assert(
+          sneezy.query("INSERT INTO tattoos_clean "
+                       "SELECT name, MIN(tattoo), location "
+                       "FROM tattoos GROUP BY name, location"));
+        assert(sneezy.query(
+          "RENAME TABLE tattoos TO tattoos_old, tattoos_clean TO tattoos"));
+        assert(sneezy.query("DROP TABLE IF EXISTS tattoos_old"));
+        assert(
+          sneezy.query("ALTER TABLE tattoos ADD PRIMARY KEY (name, location)"));
+      }
+
+      // rent_strung: orphans already cleaned by migration 19, just add PK
+      if (!hasPrimaryKey(sneezy, "rent_strung")) {
+        assert(
+          sneezy.query("ALTER TABLE rent_strung "
+                       "DROP KEY rent_strung_idx, "
+                       "ADD PRIMARY KEY (rent_id)"));
+      }
+
+      // The following dedup blocks use DELETE + INSERT inside a transaction
+      // instead of TRUNCATE. TRUNCATE is DDL (auto-commits), so a crash
+      // between TRUNCATE and INSERT would lose data with no rollback.
+      // DELETE is DML and participates in the transaction, so a crash
+      // rolls back to the original data.
+
+      // objextra: 1 duplicate row
+      if (!hasPrimaryKey(sneezy, "objextra")) {
+        assert(
+          sneezy.query("CREATE TABLE IF NOT EXISTS objextra_dedup AS "
+                       "SELECT vnum, name, MIN(description) as description "
+                       "FROM objextra GROUP BY vnum, name"));
+        sneezy.query("BEGIN");
+        assert(sneezy.query("DELETE FROM objextra"));
+        assert(
+          sneezy.query("INSERT INTO objextra SELECT * FROM objextra_dedup"));
+        sneezy.query("COMMIT");
+        assert(sneezy.query("DROP TABLE IF EXISTS objextra_dedup"));
+        assert(
+          sneezy.query("ALTER TABLE objextra ADD PRIMARY KEY (vnum, name)"));
+      }
+
+      // PK (vnum, name) makes the single-column vnum index redundant
+      if (hasIndex(sneezy, "objextra", "idx_objextra_vnum"))
+        assert(
+          sneezy.query("ALTER TABLE objextra DROP INDEX idx_objextra_vnum"));
+
+      // shoplogcogs: ~3590 excess rows, aggregate duplicates
+      if (!hasPrimaryKey(sneezy, "shoplogcogs")) {
+        assert(
+          sneezy.query("CREATE TABLE IF NOT EXISTS shoplogcogs_dedup AS "
+                       "SELECT shop_nr, obj_name, "
+                       "SUM(count) as count, SUM(total_cost) as total_cost "
+                       "FROM shoplogcogs GROUP BY shop_nr, obj_name"));
+        sneezy.query("BEGIN");
+        assert(sneezy.query("DELETE FROM shoplogcogs"));
+        assert(sneezy.query(
+          "INSERT INTO shoplogcogs SELECT * FROM shoplogcogs_dedup"));
+        sneezy.query("COMMIT");
+        assert(sneezy.query("DROP TABLE IF EXISTS shoplogcogs_dedup"));
+        assert(
+          sneezy.query("ALTER TABLE shoplogcogs "
+                       "DROP KEY shoplogcogs_idx, "
+                       "MODIFY shop_nr int NOT null, "
+                       "MODIFY obj_name varchar(128) NOT null, "
+                       "ADD PRIMARY KEY (shop_nr, obj_name)"));
+      }
+
+      // roomexit: ~14485 excess rows, prefer door rows
+      if (!hasPrimaryKey(sneezy, "roomexit")) {
+        assert(sneezy.query(
+          "CREATE TABLE IF NOT EXISTS roomexit_clean AS "
+          "SELECT vnum, direction, name, description, type, "
+          "condition_flag, lock_difficulty, weight, key_num, destination "
+          "FROM ("
+          "  SELECT *, ROW_NUMBER() OVER ("
+          "    PARTITION BY vnum, direction "
+          "    ORDER BY type DESC, condition_flag DESC, "
+          "    lock_difficulty DESC"
+          "  ) as rn "
+          "  FROM roomexit"
+          ") ranked WHERE rn = 1"));
+        sneezy.query("BEGIN");
+        assert(sneezy.query("DELETE FROM roomexit"));
+        assert(
+          sneezy.query("INSERT INTO roomexit SELECT * FROM roomexit_clean"));
+        sneezy.query("COMMIT");
+        assert(sneezy.query("DROP TABLE IF EXISTS roomexit_clean"));
+        assert(
+          sneezy.query("ALTER TABLE roomexit "
+                       "DROP KEY roomexit_idx, "
+                       "ADD PRIMARY KEY (vnum, direction)"));
+      }
+
+      // roomextra: ~274 excess rows, TEXT->VARCHAR(255) for name
+      if (!hasPrimaryKey(sneezy, "roomextra")) {
+        assert(sneezy.query(
+          "CREATE TABLE IF NOT EXISTS roomextra_dedup AS "
+          "SELECT vnum, CAST(name AS CHAR(255)) as name, "
+          "MIN(description) as description "
+          "FROM roomextra GROUP BY vnum, CAST(name AS CHAR(255))"));
+        assert(sneezy.query(
+          "ALTER TABLE roomextra MODIFY name VARCHAR(255) NOT null"));
+        sneezy.query("BEGIN");
+        assert(sneezy.query("DELETE FROM roomextra"));
+        assert(
+          sneezy.query("INSERT INTO roomextra SELECT * FROM roomextra_dedup"));
+        sneezy.query("COMMIT");
+        assert(sneezy.query("DROP TABLE IF EXISTS roomextra_dedup"));
+        assert(
+          sneezy.query("ALTER TABLE roomextra "
+                       "DROP KEY roomextra_idx, "
+                       "ADD PRIMARY KEY (vnum, name)"));
+      }
+    },
+    // Surrogate PKs on small/empty tables
+    [&]() {
+      vlogf(LOG_MISC, "Adding surrogate primary keys to small tables");
+
+      for (const auto* table :
+        {"board_message", "corplog", "querytimes", "quest_limbs", "wholist"}) {
+        if (!hasPrimaryKey(sneezy, table)) {
+          if (!hasColumn(sneezy, table, "id"))
+            assert(sneezy.query(
+              "ALTER TABLE %s "
+              "ADD COLUMN id BIGINT UNSIGNED NOT null AUTO_INCREMENT "
+              "PRIMARY KEY FIRST",
+              table));
+        }
+      }
+
+      // ship_master: surrogate PK (player_id can be null due to SET null FK)
+      if (!hasPrimaryKey(sneezy, "ship_master")) {
+        if (!hasColumn(sneezy, "ship_master", "id"))
+          assert(sneezy.query(
+            "ALTER TABLE ship_master "
+            "ADD COLUMN id BIGINT UNSIGNED NOT null AUTO_INCREMENT "
+            "PRIMARY KEY FIRST"));
+      }
+    },
+    // Surrogate PKs on large tables
+    [&]() {
+      vlogf(LOG_MISC, "Adding surrogate primary keys to large tables");
+
+      for (const auto* table : {"rent_obj_aff", "shoplog", "tellhistory"}) {
+        if (!hasPrimaryKey(sneezy, table)) {
+          if (!hasColumn(sneezy, table, "id"))
+            assert(sneezy.query(
+              "ALTER TABLE %s "
+              "ADD COLUMN id BIGINT UNSIGNED NOT null AUTO_INCREMENT "
+              "PRIMARY KEY FIRST",
+              table));
+        }
+      }
+
+      // shoplogjournal: journal_id is AUTO_INCREMENT, so we must remove that
+      // attribute before dropping its key (MariaDB requires AUTO_INCREMENT
+      // columns to always be part of a key). Do it all in one ALTER.
+      if (!hasPrimaryKey(sneezy, "shoplogjournal")) {
+        if (!hasColumn(sneezy, "shoplogjournal", "id"))
+          assert(sneezy.query(
+            "ALTER TABLE shoplogjournal "
+            "MODIFY journal_id int NOT null, "
+            "DROP KEY journal_id, "
+            "ADD COLUMN id BIGINT UNSIGNED NOT null AUTO_INCREMENT "
+            "PRIMARY KEY FIRST"));
+      }
+
+      // shoplogjournalarchive: same pattern
+      if (!hasPrimaryKey(sneezy, "shoplogjournalarchive")) {
+        if (!hasColumn(sneezy, "shoplogjournalarchive", "id"))
+          assert(sneezy.query(
+            "ALTER TABLE shoplogjournalarchive "
+            "MODIFY journal_id int NOT null, "
+            "DROP KEY journal_id, "
+            "ADD COLUMN id BIGINT UNSIGNED NOT null AUTO_INCREMENT "
+            "PRIMARY KEY FIRST"));
+      }
+    },
+    // objaffect dedup + surrogate PK
+    [&]() {
+      vlogf(LOG_MISC, "Deduplicating objaffect and adding surrogate PK");
+
+      if (!hasPrimaryKey(sneezy, "objaffect")) {
+        assert(sneezy.query(
+          "CREATE TABLE IF NOT EXISTS objaffect_dedup AS "
+          "SELECT DISTINCT vnum, type, mod1, mod2 FROM objaffect"));
+        sneezy.query("BEGIN");
+        assert(sneezy.query("DELETE FROM objaffect"));
+        assert(
+          sneezy.query("INSERT INTO objaffect SELECT * FROM objaffect_dedup"));
+        sneezy.query("COMMIT");
+        assert(sneezy.query("DROP TABLE IF EXISTS objaffect_dedup"));
+        if (!hasColumn(sneezy, "objaffect", "id"))
+          assert(sneezy.query(
+            "ALTER TABLE objaffect "
+            "ADD COLUMN id BIGINT UNSIGNED NOT null AUTO_INCREMENT "
+            "PRIMARY KEY FIRST"));
+      }
+    },
+    // Immortal database PKs
+    [&]() {
+      vlogf(LOG_MISC, "Adding primary keys to immortal database tables");
+
+      // mobresponses: natural PK on (owner, vnum)
+      if (!hasPrimaryKey(immortal, "mobresponses")) {
+        assert(immortal.query(
+          "UPDATE mobresponses SET owner = '' WHERE owner IS null"));
+        assert(
+          immortal.query("ALTER TABLE mobresponses "
+                         "MODIFY owner VARCHAR(32) NOT null DEFAULT '', "
+                         "ADD PRIMARY KEY (owner, vnum)"));
+      }
+
+      // Surrogate PKs on tables with heavy duplication from builder saves
+      for (const auto* table :
+        {"objaffect", "objextra", "roomexit", "roomextra"}) {
+        if (!hasPrimaryKey(immortal, table)) {
+          if (!hasColumn(immortal, table, "id"))
+            assert(immortal.query(
+              "ALTER TABLE %s "
+              "ADD COLUMN id BIGINT UNSIGNED NOT null AUTO_INCREMENT "
+              "PRIMARY KEY FIRST",
+              table));
+        }
+      }
+    },
   };
 
   int oldVersion = getVersion(sneezy);

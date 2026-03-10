@@ -162,11 +162,15 @@ void TShopOwned::journalize_debit(int post_ref, const sstring& customer,
   //    (new_id?"NULL":"LAST_INSERT_ID()"), customer.c_str(), name.c_str(),
   //    GameTime::getYear(), post_ref, amt);
 
+  // LAST_INSERT_ID() returns the auto-increment `id` of the previous INSERT
+  // (not a journal_id value). This works for grouping: the first row of a
+  // transaction gets journal_id=0, subsequent rows get journal_id set to
+  // <id of first row>, linking them together.
   queryqueue.push(
     format("insert into shoplogjournal (shop_nr, journal_id, customer_name, "
            "obj_name, sneezy_year, logtime, post_ref, debit, credit) values "
            "(%i, %s, '%s', '%s', %i, now(), %i, %i, 0)") %
-    shop_nr % ((sstring)(new_id ? "NULL" : "LAST_INSERT_ID()")).escape() %
+    shop_nr % ((sstring)(new_id ? "0" : "LAST_INSERT_ID()")).escape() %
     customer.escape() % name.escape() % GameTime::getYear() % post_ref % amt);
 }
 
@@ -174,37 +178,23 @@ void TShopOwned::journalize_credit(int post_ref, const sstring& customer,
   const sstring& name, int amt, bool new_id) {
   TDatabase db(DB_SNEEZY);
 
+  // See comment in journalize_debit about LAST_INSERT_ID() behavior
   queryqueue.push(
     format("insert into shoplogjournal (shop_nr, journal_id, customer_name, "
-           "obj_name, sneezy_year, logtime, post_ref, debit, credit)values "
+           "obj_name, sneezy_year, logtime, post_ref, debit, credit) values "
            "(%i, %s, '%s', '%s', %i, now(), %i, 0, %i)") %
-    shop_nr % ((sstring)(new_id ? "NULL" : "LAST_INSERT_ID()")).escape() %
+    shop_nr % ((sstring)(new_id ? "0" : "LAST_INSERT_ID()")).escape() %
     customer.escape() % name.escape() % GameTime::getYear() % post_ref % amt);
 }
 
 void TShopOwned::COGS_add(const sstring& name, int amt, int num) {
   TDatabase db(DB_SNEEZY);
 
-  db.query("select 1 from shoplogcogs where obj_name='%s' and shop_nr=%i",
-    name.c_str(), shop_nr);
-
-  if (!db.fetchRow()) {
-    // this needs to be done immediately, otherwise there will be multiple
-    // inserts queued up the next time COGS_add() is called, if the queue
-    // hasn't been processed yet.
-    db.query(
-      "insert into shoplogcogs (shop_nr, obj_name, count, total_cost) values "
-      "(%i, '%s', %i, %i)",
-      shop_nr, name.escape().c_str(), num, amt);
-    //    queryqueue.push(format("insert into shoplogcogs (shop_nr, obj_name,
-    //    count, total_cost) values (%i, '%s', %i, %i)") % shop_nr %
-    //    name.escape() % num % amt);
-  } else {
-    queryqueue.push(
-      format("update shoplogcogs set count=count+%i, total_cost=total_cost+%i "
-             "where obj_name='%s' and shop_nr=%i") %
-      num % amt % name.escape() % shop_nr);
-  }
+  db.query(
+    "INSERT INTO shoplogcogs (shop_nr, obj_name, count, total_cost) "
+    "VALUES (%i, '%s', %i, %i) "
+    "ON DUPLICATE KEY UPDATE count=count+%i, total_cost=total_cost+%i",
+    shop_nr, name.escape().c_str(), num, amt, num, amt);
 }
 
 void TShopOwned::COGS_remove(const sstring& name, int num) {
