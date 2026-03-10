@@ -1561,6 +1561,55 @@ void runMigrations() {
       addForeignKey(sneezy, "tellhistory", "from_id", "player", "id",
         "SET null");
     },
+    // Migrate mail from name columns to player_id FKs
+    [&]() {
+      vlogf(LOG_MISC, "Migrating mail to player_id foreign keys");
+
+      // Add from_id and to_id columns
+      if (!hasColumn(sneezy, "mail", "to_id")) {
+        assert(
+          sneezy.query("ALTER TABLE mail "
+                       "ADD COLUMN to_id BIGINT UNSIGNED DEFAULT null, "
+                       "ADD COLUMN from_id BIGINT UNSIGNED DEFAULT null"));
+
+        // Backfill to_id from mailto
+        assert(
+          sneezy.query("UPDATE mail m JOIN player p ON m.mailto=p.name "
+                       "SET m.to_id=p.id"));
+        // Backfill from_id from mailfrom (only for player senders)
+        assert(
+          sneezy.query("UPDATE mail m JOIN player p ON m.mailfrom=p.name "
+                       "SET m.from_id=p.id"));
+
+        // Delete orphan mail where recipient no longer exists (nobody will
+        // check it). System/NPC senders with no player match keep from_id
+        // as null - that's correct.
+        assert(sneezy.query("DELETE FROM mail WHERE to_id IS null"));
+      }
+
+      // Drop mailto (replaced by to_id), keep mailfrom (display name for
+      // system/NPC senders like "SneezyMUD Administration")
+      if (hasColumn(sneezy, "mail", "mailto")) {
+        // Ensure orphan cleanup completed (idempotent if block 1 finished)
+        sneezy.query("DELETE FROM mail WHERE to_id IS null");
+        // Drop old index on mailto (created by migration 12)
+        if (hasIndex(sneezy, "mail", "idx_mail_mailto"))
+          assert(sneezy.query("ALTER TABLE mail DROP INDEX idx_mail_mailto"));
+
+        assert(
+          sneezy.query("ALTER TABLE mail "
+                       "DROP COLUMN mailto, "
+                       "MODIFY to_id BIGINT UNSIGNED NOT null"));
+
+        // Add index for the read query pattern (has_mail, read_delete)
+        assert(
+          sneezy.query("ALTER TABLE mail "
+                       "ADD INDEX idx_mail_to (to_id, port)"));
+      }
+
+      addForeignKey(sneezy, "mail", "to_id", "player", "id", "CASCADE");
+      addForeignKey(sneezy, "mail", "from_id", "player", "id", "SET null");
+    },
   };
 
   int oldVersion = getVersion(sneezy);

@@ -51,8 +51,7 @@ void endAuction(int ticket, int bidder, int seller) {
           obj->getName();
     msg += "You will have to come by to pick up your object.";
 
-    store_mail(getPlayerName(seller).c_str(), auctioneer.c_str(), msg.c_str(),
-      0, 0);
+    store_mail(seller, auctioneer.c_str(), 0, msg.c_str(), 0, 0);
 
     db.query("update shopownedauction set current_bid=0 where ticket=%i",
       ticket);
@@ -61,8 +60,7 @@ void endAuction(int ticket, int bidder, int seller) {
     msg +=
       "Your money will be deposited to your bank account as soon as the buyer "
       "pays.";
-    store_mail(getPlayerName(seller).c_str(), auctioneer.c_str(), msg.c_str(),
-      0, 0);
+    store_mail(seller, auctioneer.c_str(), 0, msg.c_str(), 0, 0);
   }
 }
 

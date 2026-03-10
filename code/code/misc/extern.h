@@ -191,7 +191,8 @@ extern void wipeRentFile(const char*);
 extern void wipeFollowersFile(const char*);
 extern void wipePlayerFile(const char*);
 extern void handleCorrupted(const char*, char*);
-extern void store_mail(const char*, const char*, const char*, int, int);
+extern void store_mail(int to_id, const char* from_name, int from_id,
+  const char* message, int talens, int rent_id);
 extern void setup_dir(FILE* fl, int room, dirTypeT dir, TRoom* = NULL);
 extern char hostLogList[MAX_BAN_HOSTS][40];
 extern int numberLogHosts;
@@ -232,7 +233,8 @@ extern TPCorpse* pc_corpse_list;
 extern const int spec_skill_array[50];
 unsigned int CountBits(unsigned int);
 extern bool exit_ok(roomDirData*, TRoom**);
-extern spellNumT searchForSpellNum(const sstring& arg, exactTypeT exact, bool unique = FALSE);
+extern spellNumT searchForSpellNum(const sstring& arg, exactTypeT exact,
+  bool unique = FALSE);
 extern bool thingsInRoomVis(TThing*, TRoom*);
 extern int get(TBeing*, TThing*, TThing*, getTypeT, bool);
 extern void portal_flag_change(TPortal*, unsigned int, const char*, setRemT);

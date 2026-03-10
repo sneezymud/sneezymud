@@ -77,7 +77,6 @@ void TBeing::resetEffectsChar() { return; }
 
 void TPerson::resetChar() {
   char* tmstr;
-  sstring recipient;
   affectedData* af;
 
   roomp = NULL;
@@ -243,11 +242,7 @@ void TPerson::resetChar() {
 #endif
   classSpecificStuff();
 
-  parse_name_sstring(getName(), recipient);
-
-  recipient = recipient.lower();
-
-  if (!Config::NoMail() && has_mail(recipient))
+  if (!Config::NoMail() && has_mail(getPlayerID()))
     sendTo(format("\n\rYou have %sMAIL%s.\n\r") % bold() % norm());
 
   time_t ct = player.time->last_logon ? player.time->last_logon : time(0);
@@ -963,7 +958,7 @@ void TBeing::saveChar(int load_room) {
       unsigned int shop_nr = 0;
       for (; (shop_nr < shop_index.size()) &&
              (shop_index[shop_nr].keeper != this->number);
-           shop_nr++)
+        shop_nr++)
         ;
 
       if (shop_nr >= shop_index.size()) {
@@ -1676,7 +1671,7 @@ void TBeing::doReset(sstring arg) {
     }
     // reset the practices of this character
     for (classIndT resetClass = MIN_CLASS_IND; resetClass < MAX_CLASSES;
-         resetClass++) {
+      resetClass++) {
       int practices = 0;
       if (player->resetPractices(resetClass, practices, true)) {
         sendTo(format("You have reset %ss %s practices.  %d practices were "
