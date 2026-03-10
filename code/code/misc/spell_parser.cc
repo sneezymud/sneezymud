@@ -573,7 +573,7 @@ spellNumT searchForSpellNum(const sstring& arg, exactTypeT exact, bool unique) {
         if (!unique)
           return i;
         matches++;
-        ret = i;        
+        ret = i;
       }
     }
   }
@@ -1730,12 +1730,12 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
     return FALSE;
   }
 
-  if (n1.empty())
-    vlogf(LOG_SILENT, format("doDiscipline: %s (%s): %s") % name % number %
-                        spellNumToName[which]);
-  else
-    vlogf(LOG_SILENT, format("doDiscipline: %s (%s): %s on %s") % name %
-                        number % spellNumToName[which] % n1);
+  // Don't log during boot, as it generates a ton of extra logs that aren't useful then.
+  if (!bootTime) {
+    vlogf(LOG_SILENT, format("doDiscipline: %s (%s): %s%s") % name % number %
+                        spellNumToName[which] %
+                        (n1.empty() ? n1 : format(" on %s") % n1));
+  }
 
   if (!discArray[which]) {
     vlogf(LOG_BUG,
