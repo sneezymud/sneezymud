@@ -1406,6 +1406,33 @@ void runMigrations() {
 
       addForeignKey(sneezy, "tattoos", "player_id", "player", "id", "CASCADE");
     },
+    // Add player_id to permadeath (keep name for display)
+    [&]() {
+      vlogf(LOG_MISC, "Adding player_id to permadeath");
+
+      if (!hasColumn(sneezy, "permadeath", "player_id")) {
+        assert(
+          sneezy.query("ALTER TABLE permadeath "
+                       "ADD COLUMN player_id BIGINT UNSIGNED DEFAULT null"));
+        assert(
+          sneezy.query("UPDATE permadeath pd JOIN player p ON pd.name = p.name "
+                       "SET pd.player_id = p.id"));
+        // Orphans kept with null player_id (historical memorial records)
+      }
+
+      // Swap PK from (name) to surrogate id - name stays for display,
+      // player_id may be null for deleted players
+      if (!hasColumn(sneezy, "permadeath", "id")) {
+        assert(
+          sneezy.query("ALTER TABLE permadeath "
+                       "DROP PRIMARY KEY, "
+                       "ADD COLUMN id BIGINT UNSIGNED NOT null AUTO_INCREMENT "
+                       "PRIMARY KEY FIRST"));
+      }
+
+      addForeignKey(sneezy, "permadeath", "player_id", "player", "id",
+        "SET null");
+    },
   };
 
   int oldVersion = getVersion(sneezy);

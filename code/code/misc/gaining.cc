@@ -1125,16 +1125,16 @@ void TPerson::advanceSelectDisciplines(classIndT Class, int numx,
 
 void logPermaDeathLevel(TBeing* ch) {
   TDatabase db(DB_SNEEZY);
-  db.query("delete from permadeath where name='%s'", ch->name.c_str());
+  db.query("delete from permadeath where player_id=%i", ch->getPlayerID());
   db.query(
-    "insert into permadeath (name, level, killer, died) values ('%s', %i, 'no "
-    "one', 0)",
-    ch->name.c_str(), ch->GetMaxLevel());
+    "insert into permadeath (player_id, name, level, killer, died) "
+    "values (%i, '%s', %i, 'no one', 0)",
+    ch->getPlayerID(), ch->name.c_str(), ch->GetMaxLevel());
 }
 
 void clearPermaDeathLevel(TBeing* ch) {
   TDatabase db(DB_SNEEZY);
-  db.query("delete from permadeath where name='%s'", ch->name.c_str());
+  db.query("delete from permadeath where player_id=%i", ch->getPlayerID());
 }
 
 void TBeing::raiseLevel(classIndT) {}
