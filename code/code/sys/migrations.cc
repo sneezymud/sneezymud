@@ -1642,6 +1642,50 @@ void runMigrations() {
       addForeignKey(sneezy, "shopownedaccess", "player_id", "player", "id",
         "CASCADE");
     },
+    // Rename numeric FK constraint names to fk_table_column.
+    // MariaDB 12 auto-generates short numeric names ("1", "2") that are
+    // only per-table unique.  MariaDB 10 requires per-database uniqueness,
+    // making dumps from 12 non-restorable on 10.
+    [&]() {
+      vlogf(LOG_MISC,
+        "Renaming numeric FK names for cross-version compatibility");
+
+      struct FKInfo {
+          sstring table, constraint, column, refTable, refColumn, deleteRule;
+      };
+      std::vector<FKInfo> fks;
+
+      sneezy.query(
+        "SELECT kcu.TABLE_NAME AS tbl, kcu.CONSTRAINT_NAME AS fk_name, "
+        "kcu.COLUMN_NAME AS col, "
+        "kcu.REFERENCED_TABLE_NAME AS ref_tbl, "
+        "kcu.REFERENCED_COLUMN_NAME AS ref_col, "
+        "rc.DELETE_RULE AS del_rule "
+        "FROM information_schema.KEY_COLUMN_USAGE kcu "
+        "JOIN information_schema.REFERENTIAL_CONSTRAINTS rc "
+        "ON rc.CONSTRAINT_SCHEMA = kcu.TABLE_SCHEMA "
+        "AND rc.CONSTRAINT_NAME = kcu.CONSTRAINT_NAME "
+        "AND rc.TABLE_NAME = kcu.TABLE_NAME "
+        "WHERE kcu.TABLE_SCHEMA = DATABASE() "
+        "AND kcu.REFERENCED_TABLE_NAME IS NOT null "
+        "AND kcu.CONSTRAINT_NAME REGEXP '^[0-9]+$'");
+
+      while (sneezy.fetchRow()) {
+        fks.push_back({sneezy["tbl"], sneezy["fk_name"], sneezy["col"],
+          sneezy["ref_tbl"], sneezy["ref_col"], sneezy["del_rule"]});
+      }
+
+      for (const auto& fk : fks) {
+        auto newName = "fk_" + fk.table + "_" + fk.column;
+        assert(
+          sneezy.query("ALTER TABLE %s DROP FOREIGN KEY `%s`, "
+                       "ADD CONSTRAINT %s FOREIGN KEY (%s) REFERENCES %s (%s) "
+                       "ON DELETE %s",
+            fk.table.c_str(), fk.constraint.c_str(), newName.c_str(),
+            fk.column.c_str(), fk.refTable.c_str(), fk.refColumn.c_str(),
+            fk.deleteRule.c_str()));
+      }
+    },
   };
 
   int oldVersion = getVersion(sneezy);
