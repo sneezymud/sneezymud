@@ -95,8 +95,9 @@ void procBankInterest::run(const TPulse&) const {
         tso.journalize(in["name"], "talens", TX_PAYING_INTEREST, amt, 0, 0, 0);
 
         out.query(
-          "insert into shoplog values (%i, '%s', 'interest', 'talens', %i, %i, "
-          "0, now(), 0)",
+          "insert into shoplog (shop_nr, name, action, item, talens, "
+          "shoptalens, shopvalue, logtime, itemcount) values "
+          "(%i, '%s', 'interest', 'talens', %i, %i, 0, now(), 0)",
           shop_nr, in["name"].c_str(), amt, convertTo<int>(in["talens"]));
       }
     }
@@ -115,8 +116,9 @@ void procBankInterest::run(const TPulse&) const {
         tso.journalize(in["name"], "talens", TX_PAYING_INTEREST, amt, 0, 0, 0);
 
         out.query(
-          "insert into shoplog values (%i, '%s', 'interest', 'talens', %i, %i, "
-          "0, now(), 0)",
+          "insert into shoplog (shop_nr, name, action, item, talens, "
+          "shoptalens, shopvalue, logtime, itemcount) values "
+          "(%i, '%s', 'interest', 'talens', %i, %i, 0, now(), 0)",
           shop_nr, in["name"].c_str(), amt, convertTo<int>(in["talens"]));
       }
     }

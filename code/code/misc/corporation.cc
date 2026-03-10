@@ -19,7 +19,9 @@ void TCorporation::corpLog(const sstring& name, const sstring& action,
   int talens) {
   TDatabase db(DB_SNEEZY);
 
-  db.query("insert into corplog values (%i, '%s', '%s', %i, %i, now())",
+  db.query(
+    "insert into corplog (corp_id, name, action, talens, corptalens, logtime) "
+    "values (%i, '%s', '%s', %i, %i, now())",
     corp_id, name.c_str(), action.c_str(), talens, getMoney());
 }
 
