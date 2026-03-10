@@ -219,7 +219,7 @@ unsigned int TBeing::numberInGroupInRoom() const {
   unsigned int count = 0;
 
   for (StuffIter it = roomp->stuff.begin();
-       it != roomp->stuff.end() && (t = *it); ++it) {
+    it != roomp->stuff.end() && (t = *it); ++it) {
     TBeing* tbt = dynamic_cast<TBeing*>(t);
     if (tbt && inGroup(*tbt))
       count++;
@@ -405,7 +405,7 @@ int RecCompObjNum(const TObj* o, int obj_num) {
     total = 1;
 
   for (StuffIter it = o->stuff.begin(); it != o->stuff.end() && (i = *it);
-       ++it) {
+    ++it) {
     TObj* to = dynamic_cast<TObj*>(i);
     if (to)
       total += RecCompObjNum(to, obj_num);
@@ -1145,7 +1145,7 @@ bool thingsInRoomVis(TThing* ch, TRoom* rp) {
     return FALSE;
   }
   for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (o = *it);
-       ++it) {
+    ++it) {
     if (ch->canSee(o))
       return TRUE;
   }
@@ -1352,7 +1352,7 @@ int TThing::visibility() const {
       cbs += 5 + tbt->GetMaxLevel() / 2;
 
       if (tbt->homeTurf()) {
-        cbs += 5; 
+        cbs += 5;
       }
 
       if (tbt->backgroundBonus()) {
@@ -1371,7 +1371,7 @@ int TThing::visibility() const {
       }
     }
     if (tbt->isAffected(AFF_SNEAK) || tbt->isAffected(AFF_HIDE))
-      cbs += max (1, (eqbonus / 2000));
+      cbs += max(1, (eqbonus / 2000));
     else
       cbs += (eqbonus / 6000);
   }
@@ -1696,16 +1696,13 @@ void TBeing::addToMoney(int money, moneyTypeT type, bool allowTithe) {
         reconcileHelp(NULL, -money * TITHE_FACTOR);
         break;
       case GOLD_GAMBLE:
-        db.query("select 1 from gamblers where getPlayerName(player_id)='%s'",
-          getName().c_str());
+        db.query("select 1 from gamblers where player_id=%i", getPlayerID());
         if (!db.fetchRow()) {
-          db.query("insert into gamblers values (getPlayerID('%s'), %i)",
-            getName().c_str(), money);
+          db.query("insert into gamblers values (%i, %i)", getPlayerID(),
+            money);
         } else {
-          db.query(
-            "update gamblers set money=money+%i where "
-            "getPlayerName(player_id)='%s'",
-            money, getName().c_str());
+          db.query("update gamblers set money=money+%i where player_id=%i",
+            money, getPlayerID());
         }
         // fall through
       case GOLD_REPAIR:
@@ -2036,81 +2033,95 @@ bool TBeing::homeTurf() const {
     case RACE_HUMAN:
       return (sector == SECT_ARCTIC_CITY || sector == SECT_TEMPERATE_CITY ||
               sector == SECT_TROPICAL_CITY || sector == SECT_ARCTIC_BUILDING ||
-              sector == SECT_TEMPERATE_BUILDING || sector == SECT_TROPICAL_BUILDING);
+              sector == SECT_TEMPERATE_BUILDING ||
+              sector == SECT_TROPICAL_BUILDING);
 
     case RACE_GOBLIN:
       return (sector == SECT_ARCTIC_CITY || sector == SECT_ARCTIC_ROAD ||
               sector == SECT_TEMPERATE_CITY || sector == SECT_TEMPERATE_ROAD ||
               sector == SECT_TROPICAL_CITY || sector == SECT_TROPICAL_ROAD ||
-              sector == SECT_ARCTIC_BUILDING || sector == SECT_TEMPERATE_BUILDING ||
+              sector == SECT_ARCTIC_BUILDING ||
+              sector == SECT_TEMPERATE_BUILDING ||
               sector == SECT_TROPICAL_BUILDING);
 
     case RACE_HOBBIT:
       return (sector == SECT_ARCTIC_ROAD || sector == SECT_PLAINS ||
               sector == SECT_TEMPERATE_ROAD || sector == SECT_GRASSLANDS ||
               sector == SECT_TEMPERATE_HILLS || sector == SECT_TROPICAL_ROAD ||
-              sector == SECT_TROPICAL_HILLS || sector == SECT_TEMPERATE_BUILDING ||
+              sector == SECT_TROPICAL_HILLS ||
+              sector == SECT_TEMPERATE_BUILDING ||
               sector == SECT_TROPICAL_BUILDING);
 
     case RACE_GNOME:
-      return (sector == SECT_TEMPERATE_HILLS || sector == SECT_TEMPERATE_FOREST ||
-              sector == SECT_TROPICAL_HILLS || sector == SECT_TEMPERATE_BUILDING ||
-              sector == SECT_TROPICAL_BUILDING);
+      return (
+        sector == SECT_TEMPERATE_HILLS || sector == SECT_TEMPERATE_FOREST ||
+        sector == SECT_TROPICAL_HILLS || sector == SECT_TEMPERATE_BUILDING ||
+        sector == SECT_TROPICAL_BUILDING);
 
     case RACE_ELVEN:
       return (sector == SECT_ARCTIC_FOREST || sector == SECT_TEMPERATE_FOREST ||
-              sector == SECT_ARCTIC_FOREST_ROAD || sector == SECT_TEMPERATE_FOREST_ROAD);
+              sector == SECT_ARCTIC_FOREST_ROAD ||
+              sector == SECT_TEMPERATE_FOREST_ROAD);
 
     case RACE_DWARF:
-      return (sector == SECT_ARCTIC_MOUNTAINS || sector == SECT_ARCTIC_CAVE ||
-              sector == SECT_ARCTIC_CLIMBING || sector == SECT_TEMPERATE_MOUNTAINS ||
-              sector == SECT_TEMPERATE_CAVE || sector == SECT_TEMPERATE_CLIMBING ||
-              sector == SECT_TROPICAL_MOUNTAINS || sector == SECT_VOLCANO_LAVA ||
-              sector == SECT_TROPICAL_CAVE || sector == SECT_TROPICAL_CLIMBING ||
-              sector == SECT_SOLID_ROCK);
+      return (
+        sector == SECT_ARCTIC_MOUNTAINS || sector == SECT_ARCTIC_CAVE ||
+        sector == SECT_ARCTIC_CLIMBING || sector == SECT_TEMPERATE_MOUNTAINS ||
+        sector == SECT_TEMPERATE_CAVE || sector == SECT_TEMPERATE_CLIMBING ||
+        sector == SECT_TROPICAL_MOUNTAINS || sector == SECT_VOLCANO_LAVA ||
+        sector == SECT_TROPICAL_CAVE || sector == SECT_TROPICAL_CLIMBING ||
+        sector == SECT_SOLID_ROCK);
 
     case RACE_OGRE:
-      return (sector == SECT_ARCTIC_MOUNTAINS || sector == SECT_TEMPERATE_MOUNTAINS ||
-              sector == SECT_TEMPERATE_SWAMP || sector == SECT_TROPICAL_MOUNTAINS ||
-              sector == SECT_VOLCANO_LAVA);
+      return (sector == SECT_ARCTIC_MOUNTAINS ||
+              sector == SECT_TEMPERATE_MOUNTAINS ||
+              sector == SECT_TEMPERATE_SWAMP ||
+              sector == SECT_TROPICAL_MOUNTAINS || sector == SECT_VOLCANO_LAVA);
 
     case RACE_TROLL:
-      return (sector == SECT_SUBARCTIC || sector == SECT_ARCTIC_WASTE ||
-              sector == SECT_ARCTIC_CITY || sector == SECT_ARCTIC_ROAD ||
-              sector == SECT_TUNDRA || sector == SECT_ARCTIC_MOUNTAINS ||
-              sector == SECT_ARCTIC_FOREST || sector == SECT_ARCTIC_MARSH ||
-              sector == SECT_ARCTIC_RIVER_SURFACE || sector == SECT_COLD_BEACH ||
-              sector == SECT_SOLID_ICE || sector == SECT_ARCTIC_BUILDING ||
-              sector == SECT_ARCTIC_CAVE || sector == SECT_ARCTIC_ATMOSPHERE ||
-              sector == SECT_ARCTIC_CLIMBING || sector == SECT_ARCTIC_FOREST_ROAD);
+      return (
+        sector == SECT_SUBARCTIC || sector == SECT_ARCTIC_WASTE ||
+        sector == SECT_ARCTIC_CITY || sector == SECT_ARCTIC_ROAD ||
+        sector == SECT_TUNDRA || sector == SECT_ARCTIC_MOUNTAINS ||
+        sector == SECT_ARCTIC_FOREST || sector == SECT_ARCTIC_MARSH ||
+        sector == SECT_ARCTIC_RIVER_SURFACE || sector == SECT_COLD_BEACH ||
+        sector == SECT_SOLID_ICE || sector == SECT_ARCTIC_BUILDING ||
+        sector == SECT_ARCTIC_CAVE || sector == SECT_ARCTIC_ATMOSPHERE ||
+        sector == SECT_ARCTIC_CLIMBING || sector == SECT_ARCTIC_FOREST_ROAD);
 
     case RACE_FISHMAN:
       return (sector == SECT_COLD_BEACH || sector == SECT_TEMPERATE_OCEAN ||
-              sector == SECT_TEMPERATE_RIVER_SURFACE || sector == SECT_TEMPERATE_UNDERWATER ||
+              sector == SECT_TEMPERATE_RIVER_SURFACE ||
+              sector == SECT_TEMPERATE_UNDERWATER ||
               sector == SECT_TEMPERATE_BEACH || sector == SECT_TROPICAL_OCEAN ||
-              sector == SECT_TROPICAL_RIVER_SURFACE || sector == SECT_TROPICAL_UNDERWATER ||
+              sector == SECT_TROPICAL_RIVER_SURFACE ||
+              sector == SECT_TROPICAL_UNDERWATER ||
               sector == SECT_TROPICAL_BEACH);
 
     case RACE_FROGMAN:
-      return (sector == SECT_ARCTIC_MARSH || sector == SECT_ARCTIC_RIVER_SURFACE ||
-              sector == SECT_TEMPERATE_RIVER_SURFACE || sector == SECT_TEMPERATE_SWAMP ||
-              sector == SECT_TROPICAL_SWAMP || sector == SECT_TROPICAL_RIVER_SURFACE);
+      return (sector == SECT_ARCTIC_MARSH ||
+              sector == SECT_ARCTIC_RIVER_SURFACE ||
+              sector == SECT_TEMPERATE_RIVER_SURFACE ||
+              sector == SECT_TEMPERATE_SWAMP || sector == SECT_TROPICAL_SWAMP ||
+              sector == SECT_TROPICAL_RIVER_SURFACE);
 
     case RACE_TROG:
       return (sector == SECT_JUNGLE || sector == SECT_RAINFOREST ||
               sector == SECT_TROPICAL_SWAMP || sector == SECT_TROPICAL_BEACH ||
-              sector == SECT_TROPICAL_CAVE || sector == SECT_TROPICAL_CLIMBING ||
+              sector == SECT_TROPICAL_CAVE ||
+              sector == SECT_TROPICAL_CLIMBING ||
               sector == SECT_RAINFOREST_ROAD);
 
     case RACE_ORC:
       return (sector == SECT_SUBARCTIC || sector == SECT_ARCTIC_WASTE ||
               sector == SECT_ARCTIC_ROAD || sector == SECT_TUNDRA ||
               sector == SECT_ARCTIC_CLIMBING || sector == SECT_PLAINS ||
-              sector == SECT_DESERT || sector == SECT_SAVANNAH || sector == SECT_VELDT ||
-              sector == SECT_DEAD_WOODS);
+              sector == SECT_DESERT || sector == SECT_SAVANNAH ||
+              sector == SECT_VELDT || sector == SECT_DEAD_WOODS);
 
     case RACE_BIRDMAN:
-      return (sector == SECT_ARCTIC_ATMOSPHERE || sector == SECT_TEMPERATE_ATMOSPHERE ||
+      return (sector == SECT_ARCTIC_ATMOSPHERE ||
+              sector == SECT_TEMPERATE_ATMOSPHERE ||
               sector == SECT_TROPICAL_ATMOSPHERE || sector == SECT_MAKE_FLY);
 
     default:
@@ -2118,7 +2129,8 @@ bool TBeing::homeTurf() const {
   }
 }
 
-// Check if a being's background provides a bonus in the current room's sector type
+// Check if a being's background provides a bonus in the current room's sector
+// type
 bool TBeing::backgroundBonus() const {
   if (!roomp)
     return FALSE;
@@ -2129,65 +2141,88 @@ bool TBeing::backgroundBonus() const {
   // Define background-to-sector mappings
   // Urban backgrounds: cities, buildings, roads
   if (background == HOME_TER_HUMAN_URBAN || background == HOME_TER_ELF_URBAN ||
-      background == HOME_TER_DWARF_URBAN || background == HOME_TER_GNOME_URBAN ||
-      background == HOME_TER_HOBBIT_URBAN || background == HOME_TER_GOBLIN_URBAN ||
+      background == HOME_TER_DWARF_URBAN ||
+      background == HOME_TER_GNOME_URBAN ||
+      background == HOME_TER_HOBBIT_URBAN ||
+      background == HOME_TER_GOBLIN_URBAN ||
       background == HOME_TER_GNOLL_URBAN || background == HOME_TER_TROG_URBAN ||
-      background == HOME_TER_ORC_URBAN || background == HOME_TER_FROGMAN_URBAN ||
-      background == HOME_TER_FISHMAN_URBAN || background == HOME_TER_BIRDMAN_URBAN ||
+      background == HOME_TER_ORC_URBAN ||
+      background == HOME_TER_FROGMAN_URBAN ||
+      background == HOME_TER_FISHMAN_URBAN ||
+      background == HOME_TER_BIRDMAN_URBAN ||
       background == HOME_TER_TROLL_URBAN) {
     return (sector == SECT_ARCTIC_CITY || sector == SECT_TEMPERATE_CITY ||
             sector == SECT_TROPICAL_CITY || sector == SECT_ARCTIC_BUILDING ||
-            sector == SECT_TEMPERATE_BUILDING || sector == SECT_TROPICAL_BUILDING ||
-            sector == SECT_ARCTIC_ROAD || sector == SECT_TEMPERATE_ROAD ||
-            sector == SECT_TROPICAL_ROAD);
+            sector == SECT_TEMPERATE_BUILDING ||
+            sector == SECT_TROPICAL_BUILDING || sector == SECT_ARCTIC_ROAD ||
+            sector == SECT_TEMPERATE_ROAD || sector == SECT_TROPICAL_ROAD);
   }
 
   // Mariner backgrounds: all waterways
   if (background == HOME_TER_HUMAN_MARINER || background == HOME_TER_ELF_SEA ||
-      background == HOME_TER_HOBBIT_MARITIME || background == HOME_TER_GOBLIN_MARINER ||
-      background == HOME_TER_GNOLL_MARINER || background == HOME_TER_TROG_MARINER ||
-      background == HOME_TER_ORC_MARINER || background == HOME_TER_FROGMAN_MARINER ||
-      background == HOME_TER_FISHMAN_MARINER || background == HOME_TER_BIRDMAN_MARINER) {
-    return (sector == SECT_COLD_BEACH || sector == SECT_TEMPERATE_OCEAN ||
-            sector == SECT_TEMPERATE_RIVER_SURFACE || sector == SECT_TEMPERATE_UNDERWATER ||
-            sector == SECT_TEMPERATE_BEACH || sector == SECT_TROPICAL_OCEAN ||
-            sector == SECT_TROPICAL_RIVER_SURFACE || sector == SECT_TROPICAL_UNDERWATER ||
-            sector == SECT_TROPICAL_BEACH || sector == SECT_ARCTIC_RIVER_SURFACE);
+      background == HOME_TER_HOBBIT_MARITIME ||
+      background == HOME_TER_GOBLIN_MARINER ||
+      background == HOME_TER_GNOLL_MARINER ||
+      background == HOME_TER_TROG_MARINER ||
+      background == HOME_TER_ORC_MARINER ||
+      background == HOME_TER_FROGMAN_MARINER ||
+      background == HOME_TER_FISHMAN_MARINER ||
+      background == HOME_TER_BIRDMAN_MARINER) {
+    return (
+      sector == SECT_COLD_BEACH || sector == SECT_TEMPERATE_OCEAN ||
+      sector == SECT_TEMPERATE_RIVER_SURFACE ||
+      sector == SECT_TEMPERATE_UNDERWATER || sector == SECT_TEMPERATE_BEACH ||
+      sector == SECT_TROPICAL_OCEAN || sector == SECT_TROPICAL_RIVER_SURFACE ||
+      sector == SECT_TROPICAL_UNDERWATER || sector == SECT_TROPICAL_BEACH ||
+      sector == SECT_ARCTIC_RIVER_SURFACE);
   }
 
   // Forest backgrounds: forests and forest roads
   if (background == HOME_TER_HUMAN_FOREST || background == HOME_TER_ELF_WOOD ||
-      background == HOME_TER_HOBBIT_WOODLAND || background == HOME_TER_GOBLIN_FOREST ||
-      background == HOME_TER_GNOLL_FOREST || background == HOME_TER_TROG_FOREST ||
-      background == HOME_TER_ORC_FOREST || background == HOME_TER_FROGMAN_FOREST ||
-      background == HOME_TER_FISHMAN_FOREST || background == HOME_TER_BIRDMAN_FOREST) {
+      background == HOME_TER_HOBBIT_WOODLAND ||
+      background == HOME_TER_GOBLIN_FOREST ||
+      background == HOME_TER_GNOLL_FOREST ||
+      background == HOME_TER_TROG_FOREST || background == HOME_TER_ORC_FOREST ||
+      background == HOME_TER_FROGMAN_FOREST ||
+      background == HOME_TER_FISHMAN_FOREST ||
+      background == HOME_TER_BIRDMAN_FOREST) {
     return (sector == SECT_ARCTIC_FOREST || sector == SECT_TEMPERATE_FOREST ||
             sector == SECT_JUNGLE || sector == SECT_RAINFOREST ||
-            sector == SECT_ARCTIC_FOREST_ROAD || sector == SECT_TEMPERATE_FOREST_ROAD ||
+            sector == SECT_ARCTIC_FOREST_ROAD ||
+            sector == SECT_TEMPERATE_FOREST_ROAD ||
             sector == SECT_RAINFOREST_ROAD);
   }
 
   // Mountain backgrounds: mountains, caves, climbing
-  if (background == HOME_TER_HUMAN_MOUNTAIN || background == HOME_TER_DWARF_MOUNTAIN ||
-      background == HOME_TER_GOBLIN_MOUNTAIN || background == HOME_TER_GNOLL_MOUNTAIN ||
-      background == HOME_TER_TROG_MOUNTAIN || background == HOME_TER_ORC_MOUNTAIN ||
-      background == HOME_TER_FROGMAN_MOUNTAIN || background == HOME_TER_FISHMAN_MOUNTAIN ||
-      background == HOME_TER_BIRDMAN_MOUNTAIN || background == HOME_TER_TROLL_MOUNTAIN) {
-    return (sector == SECT_ARCTIC_MOUNTAINS || sector == SECT_TEMPERATE_MOUNTAINS ||
-            sector == SECT_TROPICAL_MOUNTAINS || sector == SECT_ARCTIC_CAVE ||
-            sector == SECT_TEMPERATE_CAVE || sector == SECT_TROPICAL_CAVE ||
-            sector == SECT_ARCTIC_CLIMBING || sector == SECT_TEMPERATE_CLIMBING ||
-            sector == SECT_TROPICAL_CLIMBING || sector == SECT_VOLCANO_LAVA ||
-            sector == SECT_SOLID_ROCK);
+  if (background == HOME_TER_HUMAN_MOUNTAIN ||
+      background == HOME_TER_DWARF_MOUNTAIN ||
+      background == HOME_TER_GOBLIN_MOUNTAIN ||
+      background == HOME_TER_GNOLL_MOUNTAIN ||
+      background == HOME_TER_TROG_MOUNTAIN ||
+      background == HOME_TER_ORC_MOUNTAIN ||
+      background == HOME_TER_FROGMAN_MOUNTAIN ||
+      background == HOME_TER_FISHMAN_MOUNTAIN ||
+      background == HOME_TER_BIRDMAN_MOUNTAIN ||
+      background == HOME_TER_TROLL_MOUNTAIN) {
+    return (
+      sector == SECT_ARCTIC_MOUNTAINS || sector == SECT_TEMPERATE_MOUNTAINS ||
+      sector == SECT_TROPICAL_MOUNTAINS || sector == SECT_ARCTIC_CAVE ||
+      sector == SECT_TEMPERATE_CAVE || sector == SECT_TROPICAL_CAVE ||
+      sector == SECT_ARCTIC_CLIMBING || sector == SECT_TEMPERATE_CLIMBING ||
+      sector == SECT_TROPICAL_CLIMBING || sector == SECT_VOLCANO_LAVA ||
+      sector == SECT_SOLID_ROCK);
   }
 
   // Plains backgrounds: plains, grasslands, desert
-  if (background == HOME_TER_HUMAN_PLAINS || background == HOME_TER_ELF_PLAINS ||
-      background == HOME_TER_OGRE_PLAINS || background == HOME_TER_GOBLIN_PLAINS ||
-      background == HOME_TER_GNOLL_PLAINS || background == HOME_TER_TROG_PLAINS ||
-      background == HOME_TER_ORC_PLAINS || background == HOME_TER_FROGMAN_PLAINS) {
-    return (sector == SECT_PLAINS || sector == SECT_GRASSLANDS || sector == SECT_DESERT ||
-            sector == SECT_SAVANNAH || sector == SECT_VELDT);
+  if (background == HOME_TER_HUMAN_PLAINS ||
+      background == HOME_TER_ELF_PLAINS || background == HOME_TER_OGRE_PLAINS ||
+      background == HOME_TER_GOBLIN_PLAINS ||
+      background == HOME_TER_GNOLL_PLAINS ||
+      background == HOME_TER_TROG_PLAINS || background == HOME_TER_ORC_PLAINS ||
+      background == HOME_TER_FROGMAN_PLAINS) {
+    return (sector == SECT_PLAINS || sector == SECT_GRASSLANDS ||
+            sector == SECT_DESERT || sector == SECT_SAVANNAH ||
+            sector == SECT_VELDT);
   }
 
   // Hill backgrounds: hills
@@ -2196,53 +2231,69 @@ bool TBeing::backgroundBonus() const {
       background == HOME_TER_OGRE_HILL || background == HOME_TER_GOBLIN_HILL ||
       background == HOME_TER_GNOLL_HILL || background == HOME_TER_TROG_HILL ||
       background == HOME_TER_ORC_HILL || background == HOME_TER_FROGMAN_HILL ||
-      background == HOME_TER_FISHMAN_HILL || background == HOME_TER_BIRDMAN_HILL ||
+      background == HOME_TER_FISHMAN_HILL ||
+      background == HOME_TER_BIRDMAN_HILL ||
       background == HOME_TER_TROLL_HILL) {
     return (sector == SECT_TEMPERATE_HILLS || sector == SECT_TROPICAL_HILLS);
   }
 
   // Grasslands backgrounds: grasslands
   if (background == HOME_TER_HOBBIT_GRASSLANDS) {
-    return (sector == SECT_GRASSLANDS) || (sector == SECT_VELDT) || (sector == SECT_SAVANNAH) ||
-           (sector == SECT_PLAINS);
+    return (sector == SECT_GRASSLANDS) || (sector == SECT_VELDT) ||
+           (sector == SECT_SAVANNAH) || (sector == SECT_PLAINS);
   }
 
   // Snow/Arctic backgrounds: arctic sectors
   if (background == HOME_TER_ELF_SNOW) {
-    return (sector == SECT_SUBARCTIC || sector == SECT_ARCTIC_WASTE ||
-            sector == SECT_TUNDRA || sector == SECT_SOLID_ICE || sector == SECT_COLD_BEACH ||
-            sector == SECT_ICEFLOW || sector == SECT_ARCTIC_RIVER_SURFACE ||
-            sector == SECT_ARCTIC_MOUNTAINS || sector == SECT_ARCTIC_FOREST ||
-            sector == SECT_ARCTIC_MARSH || sector == SECT_ARCTIC_CAVE ||
-            sector == SECT_ARCTIC_BUILDING || sector == SECT_ARCTIC_ATMOSPHERE ||
-            sector == SECT_ARCTIC_CLIMBING || sector == SECT_ARCTIC_FOREST_ROAD);
+    return (
+      sector == SECT_SUBARCTIC || sector == SECT_ARCTIC_WASTE ||
+      sector == SECT_TUNDRA || sector == SECT_SOLID_ICE ||
+      sector == SECT_COLD_BEACH || sector == SECT_ICEFLOW ||
+      sector == SECT_ARCTIC_RIVER_SURFACE || sector == SECT_ARCTIC_MOUNTAINS ||
+      sector == SECT_ARCTIC_FOREST || sector == SECT_ARCTIC_MARSH ||
+      sector == SECT_ARCTIC_CAVE || sector == SECT_ARCTIC_BUILDING ||
+      sector == SECT_ARCTIC_ATMOSPHERE || sector == SECT_ARCTIC_CLIMBING ||
+      sector == SECT_ARCTIC_FOREST_ROAD);
   }
 
   // Recluse backgrounds: recluse areas (forests, mountains, caves)
-  if (background == HOME_TER_HUMAN_RECLUSE || background == HOME_TER_ELF_RECLUSE ||
-      background == HOME_TER_DWARF_RECLUSE || background == HOME_TER_GOBLIN_RECLUSE ||
-      background == HOME_TER_GNOLL_RECLUSE || background == HOME_TER_TROG_RECLUSE ||
-      background == HOME_TER_ORC_RECLUSE || background == HOME_TER_FROGMAN_RECLUSE ||
-      background == HOME_TER_FISHMAN_RECLUSE || background == HOME_TER_TROLL_RECLUSE) {
+  if (background == HOME_TER_HUMAN_RECLUSE ||
+      background == HOME_TER_ELF_RECLUSE ||
+      background == HOME_TER_DWARF_RECLUSE ||
+      background == HOME_TER_GOBLIN_RECLUSE ||
+      background == HOME_TER_GNOLL_RECLUSE ||
+      background == HOME_TER_TROG_RECLUSE ||
+      background == HOME_TER_ORC_RECLUSE ||
+      background == HOME_TER_FROGMAN_RECLUSE ||
+      background == HOME_TER_FISHMAN_RECLUSE ||
+      background == HOME_TER_TROLL_RECLUSE) {
     return (sector == SECT_ARCTIC_FOREST || sector == SECT_TEMPERATE_FOREST ||
             sector == SECT_JUNGLE || sector == SECT_RAINFOREST ||
-            sector == SECT_ARCTIC_MOUNTAINS || sector == SECT_TEMPERATE_MOUNTAINS ||
+            sector == SECT_ARCTIC_MOUNTAINS ||
+            sector == SECT_TEMPERATE_MOUNTAINS ||
             sector == SECT_TROPICAL_MOUNTAINS || sector == SECT_ARCTIC_CAVE ||
             sector == SECT_TEMPERATE_CAVE || sector == SECT_TROPICAL_CAVE ||
             sector == SECT_SOLID_ROCK || sector == SECT_DESERT);
   }
 
   // Villager backgrounds: villages (buildings, roads, plains)
-  if (background == HOME_TER_HUMAN_VILLAGER || background == HOME_TER_ELF_TRIBE ||
-      background == HOME_TER_DWARF_VILLAGER || background == HOME_TER_GNOME_VILLAGER ||
-      background == HOME_TER_HOBBIT_SHIRE || background == HOME_TER_GOBLIN_VILLAGER ||
-      background == HOME_TER_GNOLL_VILLAGER || background == HOME_TER_TROG_VILLAGER ||
-      background == HOME_TER_ORC_VILLAGER || background == HOME_TER_FROGMAN_VILLAGER ||
-      background == HOME_TER_FISHMAN_VILLAGER || background == HOME_TER_BIRDMAN_VILLAGER ||
+  if (background == HOME_TER_HUMAN_VILLAGER ||
+      background == HOME_TER_ELF_TRIBE ||
+      background == HOME_TER_DWARF_VILLAGER ||
+      background == HOME_TER_GNOME_VILLAGER ||
+      background == HOME_TER_HOBBIT_SHIRE ||
+      background == HOME_TER_GOBLIN_VILLAGER ||
+      background == HOME_TER_GNOLL_VILLAGER ||
+      background == HOME_TER_TROG_VILLAGER ||
+      background == HOME_TER_ORC_VILLAGER ||
+      background == HOME_TER_FROGMAN_VILLAGER ||
+      background == HOME_TER_FISHMAN_VILLAGER ||
+      background == HOME_TER_BIRDMAN_VILLAGER ||
       background == HOME_TER_TROLL_VILLAGER) {
-    return (sector == SECT_TEMPERATE_BUILDING || sector == SECT_TROPICAL_BUILDING ||
-            sector == SECT_TEMPERATE_ROAD || sector == SECT_TROPICAL_ROAD ||
-            sector == SECT_PLAINS || sector == SECT_GRASSLANDS);
+    return (sector == SECT_TEMPERATE_BUILDING ||
+            sector == SECT_TROPICAL_BUILDING || sector == SECT_TEMPERATE_ROAD ||
+            sector == SECT_TROPICAL_ROAD || sector == SECT_PLAINS ||
+            sector == SECT_GRASSLANDS);
   }
 
   return FALSE;
