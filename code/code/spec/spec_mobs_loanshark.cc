@@ -245,7 +245,7 @@ int loanShark(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
     if (sstring(arg).word(0) == "repo" && tso.hasAccess(SHOPACCESS_OWNER)) {
       db.query(
         "select amt, granted_time, term, rate, default_charge from "
-        "shopownedloans, player where player_id=id and lower(name)=lower('%s')",
+        "shopownedloans, player where player_id=id and name='%s'",
         sstring(arg).word(2).c_str());
 
       if (!db.fetchRow()) {

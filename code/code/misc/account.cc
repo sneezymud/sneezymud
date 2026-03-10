@@ -62,8 +62,7 @@ bool TAccount::write(const sstring& aname) {
       time_adjust, flags, last_logon);
 
     if (account_id == 0) {
-      db.query("select account_id from account where lower(name) = lower('%s')",
-        aname.c_str());
+      db.query("select account_id from account where name='%s'", aname.c_str());
       assert(db.fetchRow());
       account_id = convertTo<int>(db["account_id"]);
     }

@@ -323,7 +323,7 @@ bool raw_save_char(const char* name, charFile* char_element) {
   TDatabase db(DB_SNEEZY);
   db.query(
     "update player p, account a set p.talens=%i, p.account_id=a.account_id "
-    "where lower(p.name)=lower('%s') and a.name='%s'",
+    "where p.name='%s' and a.name='%s'",
     char_element->money, name, char_element->aname);
 
   return TRUE;
@@ -347,13 +347,13 @@ bool load_char(const sstring& name, charFile* char_element,
     dbase ? std::move(dbase)
           : std::move(std::unique_ptr<IDatabase>(new TDatabase(DB_SNEEZY))));
   db->query(
-    "select talens from player where lower(name)=lower('%s') and talens is not "
+    "select talens from player where name='%s' and talens is not "
     "null",
     name.c_str());
   if (db->fetchRow()) {
     char_element->money = convertTo<int>((*db)["talens"]);
   } else {
-    db->query("update player set talens=%i where lower(name)=lower('%s')",
+    db->query("update player set talens=%i where name='%s'",
       char_element->money, name.c_str());
   }
 
@@ -588,8 +588,7 @@ void TPerson::loadFromDb(const std::string& name) {
   player.account_id = desc->account->account_id;
 
   TDatabase db(DB_SNEEZY);
-  db.query("select * from player where lower(name) = lower('%s')",
-    name.c_str());
+  db.query("select * from player where name='%s'", name.c_str());
   mud_assert(db.fetchRow(), "can't find player in DB");
   desc->playerID = player.player_id = convertTo<int>(db["id"]);
 }

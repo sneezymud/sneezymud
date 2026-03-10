@@ -1325,6 +1325,47 @@ void runMigrations() {
         }
       }
     },
+    // Convert all tables to utf8mb4
+    [&]() {
+      vlogf(LOG_MISC, "Converting all tables to utf8mb4");
+
+      auto convertDatabase = [](TDatabase& db, const char* schema) {
+        // Collect table names first - can't interleave queries on the
+        // shared connection
+        std::vector<sstring> tables;
+        db.query(
+          "SELECT TABLE_NAME FROM information_schema.TABLES "
+          "WHERE TABLE_SCHEMA='%s' AND TABLE_TYPE='BASE TABLE' "
+          "AND TABLE_COLLATION <> 'utf8mb4_general_ci'",
+          schema);
+        while (db.fetchRow())
+          tables.push_back(db[0u]);
+
+        if (tables.empty())
+          return;
+
+        // Disable FK checks - parent/child tables will temporarily have
+        // mismatched charsets between individual ALTERs
+        assert(db.query("SET FOREIGN_KEY_CHECKS=0"));
+
+        for (const auto& table : tables)
+          assert(
+            db.query("ALTER TABLE %s CONVERT TO CHARACTER SET utf8mb4 "
+                     "COLLATE utf8mb4_general_ci",
+              table.c_str()));
+
+        assert(db.query("SET FOREIGN_KEY_CHECKS=1"));
+
+        // Update database default for new tables
+        assert(
+          db.query("ALTER DATABASE %s CHARACTER SET utf8mb4 "
+                   "COLLATE utf8mb4_general_ci",
+            schema));
+      };
+
+      convertDatabase(sneezy, "sneezy");
+      convertDatabase(immortal, "immortal");
+    },
   };
 
   int oldVersion = getVersion(sneezy);
