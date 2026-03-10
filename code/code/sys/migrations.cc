@@ -717,6 +717,188 @@ void runMigrations() {
         assert(sneezy.query(
           "ALTER TABLE account MODIFY passwd varchar(255) DEFAULT null"));
     },
+    // Clean orphaned rows before FK constraints
+    [&]() {
+      vlogf(LOG_MISC, "Cleaning orphaned rows for FK constraint preparation");
+
+      // Player orphans (CASCADE FKs) - delete rows referencing deleted players.
+      // The IS NOT null guard prevents deleting rows with intentionally null
+      // player_id (e.g. shopownedloans uses null to mean "no borrower").
+      for (const auto* table : {"playerprompt", "trophyplayer", "wizpower",
+             "shopownedbank", "trophy", "drug_use", "gamblers", "blockedlist",
+             "pet", "shopownedloans", "corpaccess"}) {
+        sneezy.query(
+          "DELETE t FROM %s t "
+          "LEFT JOIN player p ON t.player_id = p.id "
+          "WHERE t.player_id IS NOT null AND p.id IS null",
+          table);
+      }
+
+      // Player orphans (SET null FKs) - clear the reference, keep the row
+      sneezy.query(
+        "UPDATE ship_master SET player_id = null "
+        "WHERE player_id IS NOT null "
+        "AND player_id NOT IN (SELECT id FROM player)");
+      sneezy.query(
+        "UPDATE property SET owner = null "
+        "WHERE owner IS NOT null "
+        "AND owner NOT IN (SELECT id FROM player)");
+
+      // Account orphans - set to null rather than delete, since the players
+      // themselves may still be valid
+      sneezy.query(
+        "UPDATE player SET account_id = null "
+        "WHERE account_id IS NOT null "
+        "AND account_id NOT IN (SELECT account_id FROM account)");
+      sneezy.query(
+        "UPDATE ship_master SET account_id = null "
+        "WHERE account_id IS NOT null "
+        "AND account_id NOT IN (SELECT account_id FROM account)");
+
+      // Corporation orphans
+      for (const auto* table : {"corpaccess", "corplog", "shopownedcorpbank"}) {
+        sneezy.query(
+          "DELETE t FROM %s t "
+          "LEFT JOIN corporation c ON t.corp_id = c.corp_id "
+          "WHERE t.corp_id IS NOT null AND c.corp_id IS null",
+          table);
+      }
+
+      // Shop orphans
+      for (const auto* table : {"shoplog", "shoplogcogs", "shoplogjournal",
+             "shoplogjournalarchive", "factoryproducing", "factorysupplies"}) {
+        sneezy.query(
+          "DELETE t FROM %s t "
+          "LEFT JOIN shop s ON t.shop_nr = s.shop_nr "
+          "WHERE t.shop_nr IS NOT null AND s.shop_nr IS null",
+          table);
+      }
+
+      // Rent orphans - the rent_obj_aff delete is large (~443K rows) but
+      // runs against an indexed column.
+      sneezy.query(
+        "DELETE t FROM rent_obj_aff t "
+        "LEFT JOIN rent r ON t.rent_id = r.rent_id "
+        "WHERE t.rent_id IS NOT null AND r.rent_id IS null");
+      sneezy.query(
+        "DELETE t FROM rent_strung t "
+        "LEFT JOIN rent r ON t.rent_id = r.rent_id "
+        "WHERE t.rent_id IS NOT null AND r.rent_id IS null");
+      // Mail rent_id: convert sentinel 0 and stale references to null
+      sneezy.query(
+        "UPDATE mail SET rent_id = null "
+        "WHERE rent_id IS NOT null "
+        "AND rent_id NOT IN (SELECT rent_id FROM rent)");
+      assert(sneezy.query("ALTER TABLE mail MODIFY rent_id int DEFAULT null"));
+
+      // Obj orphans
+      for (const auto* table : {"objaffect", "objextra"}) {
+        sneezy.query(
+          "DELETE t FROM %s t "
+          "LEFT JOIN obj o ON t.vnum = o.vnum "
+          "WHERE t.vnum IS NOT null AND o.vnum IS null",
+          table);
+      }
+
+      // Mob orphans
+      for (const auto* table : {"mobresponses", "mob_extra", "mob_imm"}) {
+        sneezy.query(
+          "DELETE t FROM %s t "
+          "LEFT JOIN mob m ON t.vnum = m.vnum "
+          "WHERE t.vnum IS NOT null AND m.vnum IS null",
+          table);
+      }
+
+      // Room orphans
+      for (const auto* table : {"roomexit", "roomextra"}) {
+        sneezy.query(
+          "DELETE t FROM %s t "
+          "LEFT JOIN room r ON t.vnum = r.vnum "
+          "WHERE t.vnum IS NOT null AND r.vnum IS null",
+          table);
+      }
+
+      // Fix property.owner type to match player.id
+      modifyColumnType(sneezy, "property", "owner", "bigint(20) unsigned",
+        false);
+    },
+    // Add foreign key constraints
+    [&]() {
+      vlogf(LOG_MISC, "Adding foreign key constraints");
+
+      // player.id children - CASCADE (deletion should clean up all player
+      // data, fixing the incomplete cleanup in both self-delete and nuke paths)
+      addForeignKey(sneezy, "trophy", "player_id", "player", "id", "CASCADE");
+      addForeignKey(sneezy, "trophyplayer", "player_id", "player", "id",
+        "CASCADE");
+      addForeignKey(sneezy, "playerprompt", "player_id", "player", "id",
+        "CASCADE");
+      addForeignKey(sneezy, "wizpower", "player_id", "player", "id", "CASCADE");
+      addForeignKey(sneezy, "drug_use", "player_id", "player", "id", "CASCADE");
+      addForeignKey(sneezy, "gamblers", "player_id", "player", "id", "CASCADE");
+      addForeignKey(sneezy, "blockedlist", "player_id", "player", "id",
+        "CASCADE");
+      addForeignKey(sneezy, "pet", "player_id", "player", "id", "CASCADE");
+      addForeignKey(sneezy, "shopownedbank", "player_id", "player", "id",
+        "CASCADE");
+      addForeignKey(sneezy, "shopownedloans", "player_id", "player", "id",
+        "CASCADE");
+      addForeignKey(sneezy, "corpaccess", "player_id", "player", "id",
+        "CASCADE");
+      addForeignKey(sneezy, "ship_master", "player_id", "player", "id",
+        "SET null");
+
+      // account.account_id children - CASCADE for player (account deletion
+      // should delete all characters), SET null for ships (persist unclaimed)
+      addForeignKey(sneezy, "player", "account_id", "account", "account_id",
+        "CASCADE");
+      addForeignKey(sneezy, "ship_master", "account_id", "account",
+        "account_id", "SET null");
+
+      // corporation.corp_id children
+      addForeignKey(sneezy, "corpaccess", "corp_id", "corporation", "corp_id",
+        "CASCADE");
+      addForeignKey(sneezy, "corplog", "corp_id", "corporation", "corp_id",
+        "CASCADE");
+      addForeignKey(sneezy, "shopownedcorpbank", "corp_id", "corporation",
+        "corp_id", "CASCADE");
+
+      // shop.shop_nr children
+      addForeignKey(sneezy, "shoplog", "shop_nr", "shop", "shop_nr", "CASCADE");
+      addForeignKey(sneezy, "shoplogcogs", "shop_nr", "shop", "shop_nr",
+        "CASCADE");
+      addForeignKey(sneezy, "shoplogjournal", "shop_nr", "shop", "shop_nr",
+        "CASCADE");
+      addForeignKey(sneezy, "shoplogjournalarchive", "shop_nr", "shop",
+        "shop_nr", "CASCADE");
+      addForeignKey(sneezy, "factoryproducing", "shop_nr", "shop", "shop_nr",
+        "CASCADE");
+      addForeignKey(sneezy, "factorysupplies", "shop_nr", "shop", "shop_nr",
+        "CASCADE");
+
+      // rent.rent_id children
+      addForeignKey(sneezy, "rent_obj_aff", "rent_id", "rent", "rent_id",
+        "CASCADE");
+      addForeignKey(sneezy, "rent_strung", "rent_id", "rent", "rent_id",
+        "CASCADE");
+      addForeignKey(sneezy, "mail", "rent_id", "rent", "rent_id", "SET null");
+
+      // obj.vnum children
+      addForeignKey(sneezy, "objaffect", "vnum", "obj", "vnum", "CASCADE");
+      addForeignKey(sneezy, "objextra", "vnum", "obj", "vnum", "CASCADE");
+
+      // mob.vnum children
+      addForeignKey(sneezy, "mobresponses", "vnum", "mob", "vnum", "CASCADE");
+      addForeignKey(sneezy, "mob_extra", "vnum", "mob", "vnum", "CASCADE");
+      addForeignKey(sneezy, "mob_imm", "vnum", "mob", "vnum", "CASCADE");
+
+      // room.vnum children
+      addForeignKey(sneezy, "roomexit", "vnum", "room", "vnum", "CASCADE");
+      addForeignKey(sneezy, "roomextra", "vnum", "room", "vnum", "CASCADE");
+
+      // property.owner -> player.id (property persists without owner)
+      addForeignKey(sneezy, "property", "owner", "player", "id", "SET null");
+    },
   };
 
   int oldVersion = getVersion(sneezy);

@@ -1345,6 +1345,12 @@ void do_the_player_stuff(const char* name) {
           vsystem(buf);
           wipeRentFile(name);
           wipeCorpseFile(sstring(name).lower().c_str());
+
+          // Delete the player DB row (FK CASCADE handles child tables)
+          {
+            TDatabase db(DB_SNEEZY);
+            db.query("delete from player where name='%s'", name);
+          }
           return;
         } else {
           sprintf(buf, "mutable/rent/%c/%s", LOWER(name[0]),

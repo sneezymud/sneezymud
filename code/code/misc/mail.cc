@@ -64,24 +64,31 @@ void store_mail(const char* to, const char* from, const char* message_pointer,
   int talens, int rent_id) {
   TDatabase db(DB_SNEEZY);
 
-  if (!strcmp(to, "faction")) {
+  // When rent_id <= 0 there's no attachment - omit rent_id from INSERT so the
+  // column defaults to null (required by FK constraint on rent.rent_id).
+  auto insertMail = [&](const char* recipient, int mailTalens) {
+    if (rent_id > 0)
+      db.query(
+        "insert into mail (port, mailfrom, mailto, timesent, content, "
+        "talens, rent_id) values (%i, '%s', '%s', NOW(), '%s', %i, %i)",
+        gamePort, from, recipient, message_pointer, mailTalens, rent_id);
+    else
+      db.query(
+        "insert into mail (port, mailfrom, mailto, timesent, content, "
+        "talens) values (%i, '%s', '%s', NOW(), '%s', %i)",
+        gamePort, from, recipient, message_pointer, mailTalens);
+  };
+
+  if (std::string_view(to) == "faction") {
     TDatabase fm(DB_SNEEZY);
     fm.query(
       "select name from factionmembers where faction=(select faction from "
       "factionmembers where name='%s')",
       from);
-
-    while (fm.fetchRow()) {
-      db.query(
-        "insert into mail (port, mailfrom, mailto, timesent, content, talens, "
-        "rent_id) values (%i, '%s', '%s', NOW(), '%s', 0, 0)",
-        gamePort, from, fm["name"].c_str(), message_pointer);
-    }
+    while (fm.fetchRow())
+      insertMail(fm["name"].c_str(), 0);
   } else {
-    db.query(
-      "insert into mail (port, mailfrom, mailto, timesent, content, talens, "
-      "rent_id) values (%i, '%s', '%s', NOW(), '%s', %i, %i)",
-      gamePort, from, to, message_pointer, talens, rent_id);
+    insertMail(to, talens);
   }
 }
 
@@ -552,9 +559,8 @@ void TBeing::postmasterReceiveMail(TMonster* me) {
       TDatabase db(DB_SNEEZY);
 
       obj = il.raw_read_item(rent_id, slot);
+      // CASCADE FKs on rent_obj_aff and rent_strung handle child cleanup
       db.query("delete from rent where rent_id=%i", rent_id);
-      db.query("delete from rent_obj_aff where rent_id=%i", rent_id);
-      db.query("delete from rent_strung where rent_id=%i", rent_id);
 
       if (obj) {
         vlogf(LOG_OBJ, format("Mail: retrieved object %s from rent_id:%i from "

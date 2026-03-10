@@ -1273,17 +1273,8 @@ void ItemSaveDB::objsToStore(signed char slot, StuffList list, TBeing* ch,
 void ItemSaveDB::clearRent() {
   TDatabase db(DB_SNEEZY);
 
-  db.query(
-    "delete rof from rent_obj_aff rof, rent r where r.rent_id=rof.rent_id and "
-    "r.owner_type='%s' and r.owner=%i",
-    owner_type.c_str(), owner);
-
-  db.query(
-    "delete rs from rent r, rent_strung rs where r.owner=%i and "
-    "r.owner_type='%s' and r.rent_id=rs.rent_id",
-    owner, owner_type.c_str());
-
-  db.query("delete r from rent r where r.owner=%i and r.owner_type='%s'", owner,
+  // CASCADE FKs on rent_obj_aff and rent_strung handle child cleanup
+  db.query("delete from rent where owner=%i and owner_type='%s'", owner,
     owner_type.c_str());
 }
 
@@ -1313,9 +1304,8 @@ TObj* TMonster::loadItem(int shop_nr, int rent_id) {
 void TMonster::deleteItem(int shop_nr, int rent_id) {
   TDatabase db(DB_SNEEZY);
 
+  // CASCADE FKs on rent_obj_aff and rent_strung handle child cleanup
   db.query("delete from rent where rent_id=%i", rent_id);
-  db.query("delete from rent_obj_aff where rent_id=%i", rent_id);
-  db.query("delete from rent_strung where rent_id=%i", rent_id);
 
   shop_index[shop_nr].addToInventoryCount(-1);
 }
