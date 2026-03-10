@@ -16,6 +16,77 @@ namespace {
       return stoi(sneezy["value"]);
     return 0;
   }
+
+  bool hasPrimaryKey(TDatabase& db, const char* table) {
+    db.query(
+      "SELECT COUNT(*) AS cnt FROM information_schema.TABLE_CONSTRAINTS "
+      "WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='%s' "
+      "AND CONSTRAINT_TYPE='PRIMARY KEY'",
+      table);
+    return db.fetchRow() && convertTo<int>(db["cnt"]) > 0;
+  }
+
+  bool hasIndex(TDatabase& db, const char* table, const char* indexName) {
+    db.query(
+      "SELECT COUNT(*) AS cnt FROM information_schema.STATISTICS "
+      "WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='%s' "
+      "AND INDEX_NAME='%s'",
+      table, indexName);
+    return db.fetchRow() && convertTo<int>(db["cnt"]) > 0;
+  }
+
+  bool columnIsType(TDatabase& db, const char* table, const char* column,
+    const char* expectedType) {
+    db.query(
+      "SELECT COLUMN_TYPE FROM information_schema.COLUMNS "
+      "WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='%s' "
+      "AND COLUMN_NAME='%s'",
+      table, column);
+    return db.fetchRow() && sstring(db[0u]) == expectedType;
+  }
+
+  void modifyColumnType(TDatabase& db, const char* table, const char* column,
+    const char* type, bool notNull) {
+    if (!columnIsType(db, table, column, type)) {
+      if (notNull) {
+        assert(db.query("ALTER TABLE %s MODIFY %s %s NOT null", table, column,
+          type));
+      } else {
+        assert(db.query("ALTER TABLE %s MODIFY %s %s", table, column, type));
+      }
+    }
+  }
+  bool hasForeignKey(TDatabase& db, const char* table, const char* column,
+    const char* refTable) {
+    db.query(
+      "SELECT COUNT(*) AS cnt FROM information_schema.KEY_COLUMN_USAGE "
+      "WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='%s' "
+      "AND COLUMN_NAME='%s' AND REFERENCED_TABLE_NAME='%s'",
+      table, column, refTable);
+    return db.fetchRow() && convertTo<int>(db["cnt"]) > 0;
+  }
+
+  bool hasColumn(TDatabase& db, const char* table, const char* column) {
+    db.query(
+      "SELECT 1 FROM information_schema.COLUMNS "
+      "WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='%s' AND COLUMN_NAME='%s'",
+      table, column);
+    return db.fetchRow();
+  }
+
+  void addForeignKey(TDatabase& db, const char* table, const char* column,
+    const char* refTable, const char* refColumn, const char* onDelete) {
+    if (!hasForeignKey(db, table, column, refTable)) {
+      // Explicit constraint name (fk_table_column) ensures database-wide
+      // uniqueness, which MariaDB 10.x requires for InnoDB FKs.  MariaDB 12
+      // relaxed this to per-table, but auto-generates short names like "1"
+      // that produce non-portable dumps.
+      assert(
+        db.query("ALTER TABLE %s ADD CONSTRAINT fk_%s_%s "
+                 "FOREIGN KEY (%s) REFERENCES %s (%s) ON DELETE %s",
+          table, table, column, column, refTable, refColumn, onDelete));
+    }
+  }
 }  // namespace
 
 void runMigrations() {
@@ -210,128 +281,131 @@ void runMigrations() {
       vlogf(LOG_MISC, "Adding PKs, indexes, and FK cascades to shop tables");
 
       // Indexes on parent tables
-      assert(
-        sneezy.query("ALTER TABLE shop ADD INDEX idx_shop_keeper (keeper)"));
-      assert(
-        sneezy.query("ALTER TABLE shop ADD INDEX idx_shop_in_room (in_room)"));
-      assert(sneezy.query(
-        "ALTER TABLE shopowned ADD INDEX idx_shopowned_corp_id (corp_id)"));
-      assert(sneezy.query(
-        "ALTER TABLE shopowned ADD INDEX idx_shopowned_tax_nr (tax_nr)"));
+      if (!hasIndex(sneezy, "shop", "idx_shop_keeper"))
+        assert(
+          sneezy.query("ALTER TABLE shop ADD INDEX idx_shop_keeper (keeper)"));
+      if (!hasIndex(sneezy, "shop", "idx_shop_in_room"))
+        assert(sneezy.query(
+          "ALTER TABLE shop ADD INDEX idx_shop_in_room (in_room)"));
+      if (!hasIndex(sneezy, "shopowned", "idx_shopowned_corp_id"))
+        assert(sneezy.query(
+          "ALTER TABLE shopowned ADD INDEX idx_shopowned_corp_id (corp_id)"));
+      if (!hasIndex(sneezy, "shopowned", "idx_shopowned_tax_nr"))
+        assert(sneezy.query(
+          "ALTER TABLE shopowned ADD INDEX idx_shopowned_tax_nr (tax_nr)"));
 
       // Primary keys on direct shop children
-      assert(
-        sneezy.query("ALTER TABLE shoptype ADD PRIMARY KEY (shop_nr, type)"));
-      assert(sneezy.query(
-        "ALTER TABLE shopproducing ADD PRIMARY KEY (shop_nr, producing)"));
-      assert(sneezy.query(
-        "ALTER TABLE shopmaterial ADD PRIMARY KEY (shop_nr, mat_type)"));
+      // ALTER IGNORE discards duplicate rows during PK creation.
+      // ALGORITHM=COPY is required for IGNORE to work on InnoDB in
+      // MariaDB 10.x; INPLACE silently disregards IGNORE there.
+      if (!hasPrimaryKey(sneezy, "shoptype"))
+        assert(
+          sneezy.query("ALTER IGNORE TABLE shoptype "
+                       "ADD PRIMARY KEY (shop_nr, type), ALGORITHM=COPY"));
+      if (!hasPrimaryKey(sneezy, "shopproducing"))
+        assert(
+          sneezy.query("ALTER IGNORE TABLE shopproducing "
+                       "ADD PRIMARY KEY (shop_nr, producing), ALGORITHM=COPY"));
+      if (!hasPrimaryKey(sneezy, "shopmaterial"))
+        assert(
+          sneezy.query("ALTER IGNORE TABLE shopmaterial "
+                       "ADD PRIMARY KEY (shop_nr, mat_type), ALGORITHM=COPY"));
 
       // FK cascades: direct shop children -> shop
-      assert(
-        sneezy.query("ALTER TABLE shoptype ADD FOREIGN KEY (shop_nr) "
-                     "REFERENCES shop (shop_nr) ON DELETE CASCADE"));
-      assert(
-        sneezy.query("ALTER TABLE shopproducing ADD FOREIGN KEY (shop_nr) "
-                     "REFERENCES shop (shop_nr) ON DELETE CASCADE"));
-      assert(
-        sneezy.query("ALTER TABLE shopmaterial ADD FOREIGN KEY (shop_nr) "
-                     "REFERENCES shop (shop_nr) ON DELETE CASCADE"));
-      assert(
-        sneezy.query("ALTER TABLE shopowned ADD FOREIGN KEY (shop_nr) "
-                     "REFERENCES shop (shop_nr) ON DELETE CASCADE"));
+      addForeignKey(sneezy, "shoptype", "shop_nr", "shop", "shop_nr",
+        "CASCADE");
+      addForeignKey(sneezy, "shopproducing", "shop_nr", "shop", "shop_nr",
+        "CASCADE");
+      addForeignKey(sneezy, "shopmaterial", "shop_nr", "shop", "shop_nr",
+        "CASCADE");
+      addForeignKey(sneezy, "shopowned", "shop_nr", "shop", "shop_nr",
+        "CASCADE");
 
       // FK: shopowned.corp_id -> corporation (SET NULL on corp delete)
       // corp_id must match corporation.corp_id's type (bigint unsigned)
       assert(sneezy.query(
-        "ALTER TABLE shopowned "
-        "MODIFY corp_id bigint(20) unsigned NULL"));
-      assert(
-        sneezy.query("ALTER TABLE shopowned ADD FOREIGN KEY (corp_id) "
-                     "REFERENCES corporation (corp_id) ON DELETE SET NULL"));
+        "ALTER TABLE shopowned MODIFY corp_id bigint(20) unsigned null"));
+      addForeignKey(sneezy, "shopowned", "corp_id", "corporation", "corp_id",
+        "SET null");
 
-      // Fix nullable columns on shopowned children, then add PKs
-      // shopownedbank
-      assert(
-        sneezy.query("ALTER TABLE shopownedbank "
-                     "MODIFY shop_nr int NOT NULL, "
-                     "MODIFY player_id int NOT NULL, "
-                     "ADD PRIMARY KEY (shop_nr, player_id)"));
-      // shopownedcorpbank
-      assert(
-        sneezy.query("ALTER TABLE shopownedcorpbank "
-                     "MODIFY shop_nr int NOT NULL, "
-                     "MODIFY corp_id int NOT NULL, "
-                     "ADD PRIMARY KEY (shop_nr, corp_id)"));
-      // shopownedloanrate
-      assert(
-        sneezy.query("ALTER TABLE shopownedloanrate "
-                     "MODIFY shop_nr int NOT NULL, "
-                     "ADD PRIMARY KEY (shop_nr)"));
-      // shopownedmatch
-      assert(
-        sneezy.query("ALTER TABLE shopownedmatch "
-                     "MODIFY shop_nr int NOT NULL, "
-                     "MODIFY match_str varchar(255) NOT NULL, "
-                     "ADD PRIMARY KEY (shop_nr, match_str)"));
-      // shopownedplayer
-      assert(
-        sneezy.query("ALTER TABLE shopownedplayer "
-                     "MODIFY shop_nr int NOT NULL, "
-                     "MODIFY player varchar(80) NOT NULL, "
-                     "ADD PRIMARY KEY (shop_nr, player)"));
-      // shopownedrepair
-      assert(
-        sneezy.query("ALTER TABLE shopownedrepair "
-                     "MODIFY shop_nr int NOT NULL, "
-                     "ADD PRIMARY KEY (shop_nr)"));
-      // shopownedaccess and shopownedratios are already NOT NULL
-      assert(sneezy.query(
-        "ALTER TABLE shopownedaccess ADD PRIMARY KEY (shop_nr, name)"));
-      assert(sneezy.query(
-        "ALTER TABLE shopownedratios ADD PRIMARY KEY (shop_nr, obj_nr)"));
+      // Fix nullable columns on shopowned children, then add PKs.
+      // ALGORITHM=COPY: see comment above re MariaDB 10.x IGNORE handling.
+      if (!hasPrimaryKey(sneezy, "shopownedbank"))
+        assert(
+          sneezy.query("ALTER IGNORE TABLE shopownedbank "
+                       "MODIFY shop_nr int NOT null, "
+                       "MODIFY player_id int NOT null, "
+                       "ADD PRIMARY KEY (shop_nr, player_id), ALGORITHM=COPY"));
+      if (!hasPrimaryKey(sneezy, "shopownedcorpbank"))
+        assert(
+          sneezy.query("ALTER IGNORE TABLE shopownedcorpbank "
+                       "MODIFY shop_nr int NOT null, "
+                       "MODIFY corp_id int NOT null, "
+                       "ADD PRIMARY KEY (shop_nr, corp_id), ALGORITHM=COPY"));
+      if (!hasPrimaryKey(sneezy, "shopownedloanrate"))
+        assert(
+          sneezy.query("ALTER IGNORE TABLE shopownedloanrate "
+                       "MODIFY shop_nr int NOT null, "
+                       "ADD PRIMARY KEY (shop_nr), ALGORITHM=COPY"));
+      if (!hasPrimaryKey(sneezy, "shopownedmatch"))
+        assert(
+          sneezy.query("ALTER IGNORE TABLE shopownedmatch "
+                       "MODIFY shop_nr int NOT null, "
+                       "MODIFY match_str varchar(255) NOT null, "
+                       "ADD PRIMARY KEY (shop_nr, match_str), ALGORITHM=COPY"));
+      if (!hasPrimaryKey(sneezy, "shopownedplayer"))
+        assert(
+          sneezy.query("ALTER IGNORE TABLE shopownedplayer "
+                       "MODIFY shop_nr int NOT null, "
+                       "MODIFY player varchar(80) NOT null, "
+                       "ADD PRIMARY KEY (shop_nr, player), ALGORITHM=COPY"));
+      if (!hasPrimaryKey(sneezy, "shopownedrepair"))
+        assert(
+          sneezy.query("ALTER IGNORE TABLE shopownedrepair "
+                       "MODIFY shop_nr int NOT null, "
+                       "ADD PRIMARY KEY (shop_nr), ALGORITHM=COPY"));
+      if (!hasPrimaryKey(sneezy, "shopownedaccess"))
+        assert(
+          sneezy.query("ALTER IGNORE TABLE shopownedaccess "
+                       "ADD PRIMARY KEY (shop_nr, name), ALGORITHM=COPY"));
+      if (!hasPrimaryKey(sneezy, "shopownedratios"))
+        assert(
+          sneezy.query("ALTER IGNORE TABLE shopownedratios "
+                       "ADD PRIMARY KEY (shop_nr, obj_nr), ALGORITHM=COPY"));
 
       // shopownedauction and shopownedloans: index only (no clear natural key)
-      assert(
-        sneezy.query("ALTER TABLE shopownedauction "
-                     "MODIFY shop_nr int NOT NULL, "
-                     "ADD INDEX idx_shopownedauction_shop_nr (shop_nr)"));
-      assert(
-        sneezy.query("ALTER TABLE shopownedloans "
-                     "MODIFY shop_nr int NOT NULL, "
-                     "ADD INDEX idx_shopownedloans_shop_nr (shop_nr)"));
+      if (!hasIndex(sneezy, "shopownedauction", "idx_shopownedauction_shop_nr"))
+        assert(
+          sneezy.query("ALTER TABLE shopownedauction "
+                       "MODIFY shop_nr int NOT null, "
+                       "ADD INDEX idx_shopownedauction_shop_nr (shop_nr)"));
+      if (!hasIndex(sneezy, "shopownedloans", "idx_shopownedloans_shop_nr"))
+        assert(
+          sneezy.query("ALTER TABLE shopownedloans "
+                       "MODIFY shop_nr int NOT null, "
+                       "ADD INDEX idx_shopownedloans_shop_nr (shop_nr)"));
 
       // FK cascades: all shopowned children -> shopowned (two-level cascade)
-      assert(
-        sneezy.query("ALTER TABLE shopownedaccess ADD FOREIGN KEY (shop_nr) "
-                     "REFERENCES shopowned (shop_nr) ON DELETE CASCADE"));
-      assert(
-        sneezy.query("ALTER TABLE shopownedauction ADD FOREIGN KEY (shop_nr) "
-                     "REFERENCES shopowned (shop_nr) ON DELETE CASCADE"));
-      assert(
-        sneezy.query("ALTER TABLE shopownedbank ADD FOREIGN KEY (shop_nr) "
-                     "REFERENCES shopowned (shop_nr) ON DELETE CASCADE"));
-      assert(
-        sneezy.query("ALTER TABLE shopownedcorpbank ADD FOREIGN KEY (shop_nr) "
-                     "REFERENCES shopowned (shop_nr) ON DELETE CASCADE"));
-      assert(
-        sneezy.query("ALTER TABLE shopownedloanrate ADD FOREIGN KEY (shop_nr) "
-                     "REFERENCES shopowned (shop_nr) ON DELETE CASCADE"));
-      assert(
-        sneezy.query("ALTER TABLE shopownedloans ADD FOREIGN KEY (shop_nr) "
-                     "REFERENCES shopowned (shop_nr) ON DELETE CASCADE"));
-      assert(
-        sneezy.query("ALTER TABLE shopownedmatch ADD FOREIGN KEY (shop_nr) "
-                     "REFERENCES shopowned (shop_nr) ON DELETE CASCADE"));
-      assert(
-        sneezy.query("ALTER TABLE shopownedplayer ADD FOREIGN KEY (shop_nr) "
-                     "REFERENCES shopowned (shop_nr) ON DELETE CASCADE"));
-      assert(
-        sneezy.query("ALTER TABLE shopownedratios ADD FOREIGN KEY (shop_nr) "
-                     "REFERENCES shopowned (shop_nr) ON DELETE CASCADE"));
-      assert(
-        sneezy.query("ALTER TABLE shopownedrepair ADD FOREIGN KEY (shop_nr) "
-                     "REFERENCES shopowned (shop_nr) ON DELETE CASCADE"));
+      addForeignKey(sneezy, "shopownedaccess", "shop_nr", "shopowned",
+        "shop_nr", "CASCADE");
+      addForeignKey(sneezy, "shopownedauction", "shop_nr", "shopowned",
+        "shop_nr", "CASCADE");
+      addForeignKey(sneezy, "shopownedbank", "shop_nr", "shopowned", "shop_nr",
+        "CASCADE");
+      addForeignKey(sneezy, "shopownedcorpbank", "shop_nr", "shopowned",
+        "shop_nr", "CASCADE");
+      addForeignKey(sneezy, "shopownedloanrate", "shop_nr", "shopowned",
+        "shop_nr", "CASCADE");
+      addForeignKey(sneezy, "shopownedloans", "shop_nr", "shopowned", "shop_nr",
+        "CASCADE");
+      addForeignKey(sneezy, "shopownedmatch", "shop_nr", "shopowned", "shop_nr",
+        "CASCADE");
+      addForeignKey(sneezy, "shopownedplayer", "shop_nr", "shopowned",
+        "shop_nr", "CASCADE");
+      addForeignKey(sneezy, "shopownedratios", "shop_nr", "shopowned",
+        "shop_nr", "CASCADE");
+      addForeignKey(sneezy, "shopownedrepair", "shop_nr", "shopowned",
+        "shop_nr", "CASCADE");
     },
     [&]() {
       vlogf(LOG_MISC, "Creating player_affect table");
