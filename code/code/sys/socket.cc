@@ -229,49 +229,13 @@ int updateWholist() {
   return count;
 }
 
-// updates the usagelogs table in the database
-// takes the count of players currently logged on
-void updateUsagelogs(int count) {
-  time_t ct = time(0);
-  static time_t logtime;
-
-  int TIME_BETWEEN_LOGS = 300;
-
-  // every 10 RL seconds
-  TDatabase db(DB_SNEEZY);
-
-  if (logtime / TIME_BETWEEN_LOGS < ct / TIME_BETWEEN_LOGS) {
-    //	vlogf(LOG_DASH, format("Webstuff: collecting game usage data - %d
-    // seconds since last log") %  ct-lastlog);
-    //        vlogf(LOG_DASH, format("Webstuff:  logtime = %d,  ct = %d, players
-    //        = %d") %  logtime % ct % count);
-
-    if (logtime != 0)
-      logtime += TIME_BETWEEN_LOGS;
-    else
-      logtime = ct;
-    db.query("insert into usagelogs (time, players, port) VALUES(%i, %i, %i)",
-      logtime, count, gamePort);
-    // delete logs older than two months
-    db.query(
-      "insert into usagelogsarchive select * from usagelogs where port=%i and "
-      "time>%i",
-      gamePort, logtime + 5184000);
-    db.query("delete from usagelogs where port=%i and time>%i", gamePort,
-      logtime + 5184000);
-  }
-}
-
-// procWholistAndUsageLogs
-procWholistAndUsageLogs::procWholistAndUsageLogs(const int& p) {
+// procWholist
+procWholist::procWholist(const int& p) {
   trigger_pulse = p;
-  name = "procWholistAndUsageLogs";
+  name = "procWholist";
 }
 
-void procWholistAndUsageLogs::run(const TPulse&) const {
-  int count = updateWholist();
-  updateUsagelogs(count);
-}
+void procWholist::run(const TPulse&) const { updateWholist(); }
 
 // procNukeInactiveMobs
 procNukeInactiveMobs::procNukeInactiveMobs(const int& p) {
@@ -1657,7 +1621,7 @@ int TMainSocket::gameLoop() {
   scheduler.add(new procSaveFactions(Pulse::UPDATE));
   scheduler.add(new procSaveNewFactions(Pulse::UPDATE));
   scheduler.add(new procWeatherAndTime(Pulse::UPDATE));
-  scheduler.add(new procWholistAndUsageLogs(Pulse::UPDATE));
+  scheduler.add(new procWholist(Pulse::UPDATE));
   scheduler.add(new procObjRust(Pulse::UPDATE));
   scheduler.add(new procObjFreezing(Pulse::UPDATE));
   scheduler.add(new procObjAutoPlant(Pulse::UPDATE));

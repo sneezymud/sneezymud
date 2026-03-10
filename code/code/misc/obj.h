@@ -30,7 +30,6 @@ extern int commod_index[200];
 
 extern TObj* read_object_buy_build(TBeing*, int nr, readFileTypeT type);
 extern TObj* read_object(int nr, readFileTypeT type);
-extern void log_object(TObj* obj);
 
 extern liqInfoT liquidInfo;
 extern currencyInfoT currencyInfo;

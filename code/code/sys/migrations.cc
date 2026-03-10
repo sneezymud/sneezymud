@@ -350,18 +350,36 @@ void runMigrations() {
         "CONSTRAINT fk_player_affect_player "
         "FOREIGN KEY (player_id) REFERENCES player(id) ON DELETE CASCADE)"));
     },
+    // Migration 11: Drop unused tables (cleanup for existing databases).
+    // New instances never create these tables (seed files removed), but
+    // databases predating this branch still have them.
+    [&]() {
+      vlogf(LOG_MISC, "Dropping unused tables");
+
+      for (const auto* table :
+        {"usagelogs", "usagelogsarchive", "objlog", "cgisession", "pings",
+          "shoplogarchive", "trophymob", "itemtypes", "material"}) {
+        assert(sneezy.query("DROP TABLE IF EXISTS %s", table));
+      }
+
+      // Dead views: no code references, broken DEFINER prevents execution
+      for (const auto* view : {"qts", "shop_overview"}) {
+        assert(sneezy.query("DROP VIEW IF EXISTS %s", view));
+      }
+    },
   };
 
   int oldVersion = getVersion(sneezy);
-  int newVersion = migrations.size();
+  int newVersion = static_cast<int>(migrations.size());
 
   vlogf(LOG_MISC,
     boost::format("Running migrations %d -> %d") % oldVersion % newVersion);
-  for (int i = oldVersion; i < newVersion; ++i)
+  for (int i = oldVersion; i < newVersion; ++i) {
     migrations.at(i)();
-
-  assert(sneezy.query(
-    "update configuration set value = '%i' where config = 'version'",
-    newVersion));
+    // Bump version after each migration so a crash mid-batch doesn't
+    // re-run already-completed migrations.
+    assert(sneezy.query(
+      "update configuration set value = '%i' where config = 'version'", i + 1));
+  }
   vlogf(LOG_MISC, "Migrations done");
 }
