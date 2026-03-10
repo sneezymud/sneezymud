@@ -1366,6 +1366,17 @@ void runMigrations() {
       convertDatabase(sneezy, "sneezy");
       convertDatabase(immortal, "immortal");
     },
+    // Drop corpaccess.name (queries now use player_id)
+    [&]() {
+      vlogf(LOG_MISC, "Dropping corpaccess.name column");
+
+      if (hasIndex(sneezy, "corpaccess", "idx_corpaccess_corp_name"))
+        assert(sneezy.query(
+          "ALTER TABLE corpaccess DROP INDEX idx_corpaccess_corp_name"));
+
+      if (hasColumn(sneezy, "corpaccess", "name"))
+        assert(sneezy.query("ALTER TABLE corpaccess DROP COLUMN name"));
+    },
   };
 
   int oldVersion = getVersion(sneezy);

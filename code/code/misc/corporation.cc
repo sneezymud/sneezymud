@@ -28,9 +28,8 @@ void TCorporation::corpLog(const sstring& name, const sstring& action,
 int TCorporation::getAccess(TBeing* ch) {
   TDatabase db(DB_SNEEZY);
 
-  db.query(
-    "select access from corpaccess where corp_id=%i and lower(name)='%s'",
-    corp_id, sstring(ch->getName()).lower().c_str());
+  db.query("select access from corpaccess where corp_id=%i and player_id=%i",
+    corp_id, ch->getPlayerID());
 
   if (db.fetchRow()) {
     return convertTo<int>(db["access"]);
@@ -43,9 +42,8 @@ bool TCorporation::hasAccess(TBeing* ch, int perm) {
   TDatabase db(DB_SNEEZY);
   int access;
 
-  db.query(
-    "select access from corpaccess where corp_id=%i and lower(name)='%s'",
-    corp_id, sstring(ch->getName()).lower().c_str());
+  db.query("select access from corpaccess where corp_id=%i and player_id=%i",
+    corp_id, ch->getPlayerID());
 
   if (db.fetchRow()) {
     access = convertTo<int>(db["access"]);
