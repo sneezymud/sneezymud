@@ -46,9 +46,7 @@ endif()
 option(SNEEZY_ENABLE_ASAN "Enable AddressSanitizer" ON)
 option(SNEEZY_ENABLE_UBSAN "Enable UndefinedBehaviorSanitizer" ON)
 option(SNEEZY_ENABLE_LTO "Enable Link-Time Optimization" OFF)
-option(SNEEZY_BUILD_LOWTOOLS "Build LOW admin tools (deprecated)" OFF)
-option(SNEEZY_BUILD_CGI "Build CGI utilities (deprecated)" OFF)
-option(SNEEZY_BUILD_SHELL "Build shell utilities (deprecated)" OFF)
+
 
 message(STATUS "")
 message(STATUS "SneezyMUD Build Configuration:")

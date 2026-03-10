@@ -486,10 +486,10 @@ class procWeatherAndTime : public TProcess {
     procWeatherAndTime(const int&);
 };
 
-class procWholistAndUsageLogs : public TProcess {
+class procWholist : public TProcess {
   public:
     void run(const TPulse&) const;
-    procWholistAndUsageLogs(const int&);
+    procWholist(const int&);
 };
 
 class procCheckForRepo : public TProcess {

@@ -168,7 +168,6 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
           }
         }
       }
-      log_object(obj);
       *this += *obj;
       return FALSE;
     case CMD_RESP_LOADMOB: {

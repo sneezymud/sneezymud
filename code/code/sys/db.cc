@@ -1838,41 +1838,6 @@ cached_object* TMobileCache::operator[](int nr) {
   return ret;
 }
 
-void log_object(TObj* obj) {
-  // Don't log objects that are flagged as newbie
-  if (obj->isObjStat(ITEM_NEWBIE)) {
-    return;
-  }
-  // Don't log tools
-  if (dynamic_cast<TTool*>(obj)) {
-    return;
-  }
-  // Don't log commodities
-  if (dynamic_cast<TCommodity*>(obj)) {
-    return;
-  }
-  // Don't log treasures
-  if (dynamic_cast<TTreasure*>(obj)) {
-    return;
-  }
-  // Don't log food
-  if (dynamic_cast<TFood*>(obj)) {
-    return;
-  }
-  // Don't log other
-  if (dynamic_cast<TOtherObj*>(obj)) {
-    return;
-  }
-  // Don't log trash
-  if (dynamic_cast<TTrash*>(obj)) {
-    return;
-  }
-  TDatabase db(DB_SNEEZY);
-  db.query("insert into objlog (vnum, objcount) values (%i, %i)",
-    obj_index[obj->getItemIndex()].virt,
-    obj_index[obj->getItemIndex()].getNumber());
-}
-
 void TObjectCache::preload() {
   TDatabase db(DB_SNEEZY);
 
@@ -3001,7 +2966,6 @@ void runResetCmdE(zoneData& zd, resetCom& rs, resetFlag flags, bool&,
   // No need to log prop items
   if (!isPropLoad) {
     mob->logItem(obj, CMD_LOAD);
-    log_object(obj);
   }
 
   // run some sanity checks after load
@@ -3389,7 +3353,6 @@ void runResetCmdP(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
 
   newobj->onObjLoad();
   last_cmd = true;
-  log_object(newobj);
 }
 
 // Change ONE value of the four values upon reset- Russ
