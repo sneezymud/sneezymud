@@ -647,6 +647,45 @@ void runMigrations() {
                        "ADD PRIMARY KEY (name)"));
       }
     },
+    // Seed shoplogaccountchart and rename shopownednpcloan
+    [&]() {
+      vlogf(LOG_MISC, "Seeding shoplogaccountchart and fixing table names");
+
+      // The shoplogaccountchart table is the chart of accounts for double-entry
+      // bookkeeping in shopaccounting.cc. It maps post_ref integers to account
+      // names used by TShopJournal. Without this data, all JOINs to this table
+      // return zero rows and financial statements are blank.
+      sneezy.query("SELECT 1 FROM shoplogaccountchart LIMIT 1");
+      if (!sneezy.fetchRow()) {
+        assert(sneezy.query(
+          "INSERT INTO shoplogaccountchart (post_ref, name) VALUES "
+          "(100, 'Cash'), "
+          "(101, 'Dividends'), "
+          "(130, 'Inventory'), "
+          "(300, 'Paid-in Capital'), "
+          "(310, 'Deposits'), "
+          "(500, 'Sales'), "
+          "(510, 'Recycling'), "
+          "(600, 'COGS'), "
+          "(610, 'Interest'), "
+          "(630, 'Expenses'), "
+          "(700, 'Tax'), "
+          "(800, 'Retained Earnings')"));
+      }
+
+      // Code in spec_mobs_loan_manager.cc queries "shopownednpcloans" (plural)
+      // but the table was created as "shopownednpcloan" (singular). The table
+      // is empty and has never worked. Rename to match the code and sibling
+      // table "shopownedloans".
+      sneezy.query(
+        "SELECT 1 FROM information_schema.TABLES "
+        "WHERE TABLE_SCHEMA=DATABASE() "
+        "AND TABLE_NAME='shopownednpcloan'");
+      if (sneezy.fetchRow()) {
+        assert(
+          sneezy.query("RENAME TABLE shopownednpcloan TO shopownednpcloans"));
+      }
+    },
   };
 
   int oldVersion = getVersion(sneezy);
