@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `account`;
 CREATE TABLE `account` (
   `account_id` bigint(20) unsigned NOT NULL auto_increment,
   `email` varchar(80) default NULL,
-  `passwd` varchar(13) default NULL,
+  `passwd` varchar(255) default NULL,
   `name` varchar(80) default NULL,
   `birth` int(11) default NULL,
   `term` int(11) default NULL,

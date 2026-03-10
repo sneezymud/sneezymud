@@ -25,7 +25,7 @@ CREATE TABLE `mail` (
   `port` int(11) default NULL,
   `mailfrom` varchar(80) default NULL,
   `mailto` varchar(80) default NULL,
-  `timesent` varchar(32) default NULL,
+  `timesent` timestamp NULL DEFAULT NULL,
   `content` varchar(4000) default NULL,
   `talens` int(11) default '0',
   `rent_id` int(11) default '0',
