@@ -4599,19 +4599,19 @@ int fishTracker(TBeing* ch, cmdTypeT cmd, const char* argument,
       }
 
       // update total weight caught for player
-      db.query("update fishkeeper set weight=weight+%f where name='%s'",
-        o->getWeight(), ch->name.c_str());
+      db.query("update fishkeeper set weight=weight+%f where player_id=%i",
+        o->getWeight(), ch->getPlayerID());
       if (db.rowCount() == 0) {
-        // probably no row for user (first fish!) so try an insert instead
-        db.query("insert into fishkeeper values ('%s', %f)", ch->name.c_str(),
-          o->getWeight());
+        db.query("insert into fishkeeper (player_id, weight) values (%i, %f)",
+          ch->getPlayerID(), o->getWeight());
       }
 
       // check for record
       db.query(
-        "update fishlargest set name = '%s', weight = %f where vnum = %i and "
-        "weight < %f",
-        ch->getName().c_str(), o->getWeight(), o->objVnum(), o->getWeight());
+        "update fishlargest set player_id = %i, name = '%s', weight = %f "
+        "where vnum = %i and weight < %f",
+        ch->getPlayerID(), ch->getName().c_str(), o->getWeight(), o->objVnum(),
+        o->getWeight());
 
       if (db.rowCount() > 0) {
         myself->doSay(
@@ -4674,13 +4674,14 @@ int fishTracker(TBeing* ch, cmdTypeT cmd, const char* argument,
         int iTotCount = 0, iPerCount = 0;
 
         db.query(
-          "select f1.name, o1.short_desc as type, f1.weight from fishlargest "
-          "f1 join obj o1 on f1.vnum = o1.vnum order by f1.weight desc");
+          "select f1.player_id, o1.short_desc as type, f1.weight "
+          "from fishlargest f1 join obj o1 on f1.vnum = o1.vnum "
+          "order by f1.weight desc");
 
         while (db.fetchRow()) {
-          if (db["name"] == ch->getName()) {
+          if (convertTo<int>(db["player_id"]) == ch->getPlayerID()) {
             buf = format("You caught %s weighing in at %i.") % db["type"] %
-                  (int)(convertTo<float>(db["weight"]));
+                  static_cast<int>(convertTo<float>(db["weight"]));
             myself->doSay(buf);
             iPerCount++;
           }
@@ -4703,23 +4704,32 @@ int fishTracker(TBeing* ch, cmdTypeT cmd, const char* argument,
         bool topten = false;
         if (buf == "topten") {
           db.query(
-            "select o.name, o.weight, count(l.name) as count from fishkeeper o "
-            "left join fishlargest l on o.name=l.name group by o.name, "
-            "o.weight order by weight desc limit 10");
+            "select p.name, fk.weight, count(fl.player_id) as count "
+            "from fishkeeper fk "
+            "join player p on fk.player_id=p.id "
+            "left join fishlargest fl on fk.player_id=fl.player_id "
+            "group by fk.player_id, p.name, fk.weight "
+            "order by fk.weight desc limit 10");
           topten = true;
         } else {
           db.query(
-            "select o.name, o.weight, count(l.name) as count from fishkeeper o "
-            "left join fishlargest l on o.name=l.name where o.name='%s' group "
-            "by o.name, o.weight order by weight desc limit 10",
+            "select p.name, fk.weight, count(fl.player_id) as count "
+            "from fishkeeper fk "
+            "join player p on fk.player_id=p.id "
+            "left join fishlargest fl on fk.player_id=fl.player_id "
+            "where p.name='%s' "
+            "group by fk.player_id, p.name, fk.weight "
+            "order by fk.weight desc limit 10",
             buf.c_str());
         }
 
         while (db.fetchRow()) {
           if (topten) {
-            weight = talenDisplay((int)(convertTo<float>(db["weight"])));
+            weight =
+              talenDisplay(static_cast<int>(convertTo<float>(db["weight"])));
           } else {
-            weight = format("%i") % (int)(convertTo<float>(db["weight"]));
+            weight =
+              format("%i") % static_cast<int>(convertTo<float>(db["weight"]));
           }
 
           buf = format("%s has %s pounds of fish and %i records.") %

@@ -1433,6 +1433,51 @@ void runMigrations() {
       addForeignKey(sneezy, "permadeath", "player_id", "player", "id",
         "SET null");
     },
+    // Migrate fishlargest + fishkeeper to player_id
+    [&]() {
+      vlogf(LOG_MISC, "Migrating fishlargest and fishkeeper to player_id");
+
+      // fishlargest: add player_id, keep name for historical display
+      if (!hasColumn(sneezy, "fishlargest", "player_id")) {
+        assert(
+          sneezy.query("ALTER TABLE fishlargest "
+                       "ADD COLUMN player_id BIGINT UNSIGNED DEFAULT null"));
+        assert(sneezy.query(
+          "UPDATE fishlargest fl JOIN player p ON fl.name = p.name "
+          "SET fl.player_id = p.id"));
+        // Rows with 'no one' or deleted players keep null player_id
+      }
+
+      addForeignKey(sneezy, "fishlargest", "player_id", "player", "id",
+        "SET null");
+
+      // fishkeeper: add player_id, drop name
+      if (!hasColumn(sneezy, "fishkeeper", "player_id")) {
+        assert(
+          sneezy.query("ALTER TABLE fishkeeper "
+                       "ADD COLUMN player_id BIGINT UNSIGNED DEFAULT null"));
+        assert(
+          sneezy.query("UPDATE fishkeeper fk JOIN player p ON fk.name = p.name "
+                       "SET fk.player_id = p.id"));
+        // Delete orphans (player no longer exists)
+        assert(sneezy.query("DELETE FROM fishkeeper WHERE player_id IS null"));
+      }
+
+      if (hasColumn(sneezy, "fishkeeper", "name")) {
+        // Ensure orphan cleanup completed (idempotent if block 1 finished)
+        sneezy.query("DELETE FROM fishkeeper WHERE player_id IS null");
+        // Swap PK from (name) to (player_id)
+        assert(
+          sneezy.query("ALTER TABLE fishkeeper "
+                       "DROP PRIMARY KEY, "
+                       "DROP COLUMN name, "
+                       "MODIFY player_id BIGINT UNSIGNED NOT null, "
+                       "ADD PRIMARY KEY (player_id)"));
+      }
+
+      addForeignKey(sneezy, "fishkeeper", "player_id", "player", "id",
+        "CASCADE");
+    },
   };
 
   int oldVersion = getVersion(sneezy);
