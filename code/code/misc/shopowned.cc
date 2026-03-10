@@ -20,27 +20,17 @@
 // behavior or not, so if it stops working, you need to put a timestamp value
 // into the table and sort by that
 bool sameAccount(sstring buf, int shop_nr) {
-  charFile st, stthis;
-
-  load_char(buf, &stthis);
-
   TDatabase db(DB_SNEEZY);
 
-  db.query("select name from shopownedaccess where shop_nr=%i", shop_nr);
-
-  while (db.fetchRow()) {
-    if (!load_char(db["name"], &st))
-      continue;
-
-    if (!strcmp(stthis.aname, st.aname)) {
-      if (buf.lower() == sstring(db["name"]).lower())
-        return FALSE;
-      else
-        return TRUE;
-    }
-  }
-
-  return FALSE;
+  // Check if a different character on the same account has shop access
+  db.query(
+    "select 1 from shopownedaccess soa "
+    "join player p on soa.player_id=p.id "
+    "join player me on me.name='%s' "
+    "where soa.shop_nr=%i and p.account_id=me.account_id and p.id!=me.id "
+    "limit 1",
+    buf.c_str(), shop_nr);
+  return db.fetchRow();
 }
 
 sstring transactionToString(transactionTypeT action) {
@@ -204,9 +194,8 @@ int getShopAccess(int shop_nr, TBeing* ch) {
     return 0;
 
   db.query(
-    "select access from shopownedaccess where shop_nr=%i and "
-    "upper(name)=upper('%s')",
-    shop_nr, ch->getName().c_str());
+    "select access from shopownedaccess where shop_nr=%i and player_id=%i",
+    shop_nr, ch->getPlayerID());
 
   if (db.fetchRow())
     access = convertTo<int>(db["access"]);
@@ -1226,16 +1215,23 @@ int TShopOwned::setAccess(sstring arg) {
   buf2 = arg.word(1);
 
   if (!buf2.empty()) {  // set value
-    db.query(
-      "delete from shopownedaccess where shop_nr=%i and "
-      "upper(name)=upper('%s')",
-      shop_nr, buf.c_str());
+    // Resolve player name to player_id
+    db.query("select id from player where name='%s'", buf.c_str());
+    if (!db.fetchRow()) {
+      keeper->doTell(ch->getName(),
+        format("I don't know anyone named %s.") % buf);
+      return false;
+    }
+    auto targetId = convertTo<int>(db["id"]);
+
+    db.query("delete from shopownedaccess where shop_nr=%i and player_id=%i",
+      shop_nr, targetId);
 
     if (convertTo<int>(buf2) != 0)
       db.query(
-        "insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', "
-        "%i)",
-        shop_nr, buf.c_str(), convertTo<int>(buf2));
+        "insert into shopownedaccess (shop_nr, player_id, access) values "
+        "(%i, %i, %i)",
+        shop_nr, targetId, convertTo<int>(buf2));
 
     shoplog(shop_nr, ch, keeper, format("%s: %s") % buf % buf2, 0,
       "set access");
@@ -1243,13 +1239,15 @@ int TShopOwned::setAccess(sstring arg) {
   } else {
     if (!buf.empty()) {
       db.query(
-        "select name, access from shopownedaccess where shop_nr=%i and "
-        "upper(name)=upper('%s')",
+        "select p.name, soa.access from shopownedaccess soa "
+        "join player p on soa.player_id=p.id "
+        "where soa.shop_nr=%i and p.name='%s'",
         shop_nr, buf.c_str());
     } else {
       db.query(
-        "select name, access from shopownedaccess where shop_nr=%i order by "
-        "access",
+        "select p.name, soa.access from shopownedaccess soa "
+        "join player p on soa.player_id=p.id "
+        "where soa.shop_nr=%i order by soa.access",
         shop_nr);
     }
     while (db.fetchRow()) {
