@@ -1317,8 +1317,10 @@ void do_the_player_stuff(const char* name) {
       }
 
       TDatabase db(DB_SNEEZY);
-      db.query("insert into factionmembers values ('%s', '%s', %i)", st.name,
-        factname, max_level);
+      db.query(
+        "insert into factionmembers (player_id, faction, level) "
+        "select id, '%s', %i from player where name='%s'",
+        factname, max_level, st.name);
     }
 
     // count active

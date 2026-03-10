@@ -82,8 +82,10 @@ void store_mail(const char* to, const char* from, const char* message_pointer,
   if (std::string_view(to) == "faction") {
     TDatabase fm(DB_SNEEZY);
     fm.query(
-      "select name from factionmembers where faction=(select faction from "
-      "factionmembers where name='%s')",
+      "select p.name from factionmembers fm "
+      "join player p on fm.player_id=p.id "
+      "where fm.faction=(select fm2.faction from factionmembers fm2 "
+      "join player p2 on fm2.player_id=p2.id where p2.name='%s')",
       from);
     while (fm.fetchRow())
       insertMail(fm["name"].c_str(), 0);

@@ -1478,6 +1478,25 @@ void runMigrations() {
       addForeignKey(sneezy, "fishkeeper", "player_id", "player", "id",
         "CASCADE");
     },
+    // Migrate factionmembers from name to player_id
+    [&]() {
+      vlogf(LOG_MISC, "Migrating factionmembers from name to player_id");
+
+      // Table is rebuilt from scratch on every rollcall (TRUNCATE + INSERT),
+      // so just restructure the schema. Next rollcall will populate with
+      // player_ids.
+      if (hasColumn(sneezy, "factionmembers", "name")) {
+        assert(sneezy.query("TRUNCATE TABLE factionmembers"));
+        assert(
+          sneezy.query("ALTER TABLE factionmembers "
+                       "DROP COLUMN name, "
+                       "ADD COLUMN player_id BIGINT UNSIGNED NOT null FIRST, "
+                       "ADD PRIMARY KEY (player_id)"));
+      }
+
+      addForeignKey(sneezy, "factionmembers", "player_id", "player", "id",
+        "CASCADE");
+    },
   };
 
   int oldVersion = getVersion(sneezy);
