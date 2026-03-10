@@ -28,7 +28,7 @@ CREATE TABLE `mail` (
   `timesent` timestamp NULL DEFAULT NULL,
   `content` varchar(4000) default NULL,
   `talens` int(11) default '0',
-  `rent_id` int(11) default '0',
+  `rent_id` int(11) default NULL,
   UNIQUE KEY `mailid` (`mailid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

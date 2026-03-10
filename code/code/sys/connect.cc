@@ -3421,11 +3421,9 @@ int Descriptor::doAccountStuff(char* arg) {
       trophy->wipe();
       delete trophy;
 
-      // delete ignore list
-      db.query("delete from blockedlist where player_id=%i", playerID);
-
-      // delete player entry
-      db.query("delete from player where lower(name)=lower('%s')", delname);
+      // delete player entry (FK CASCADE handles blockedlist, tattoos, mail,
+      // etc.)
+      db.query("delete from player where id=%i", playerID);
 
       // delete tats!
       db.query("delete from tattoos where lower(name)=lower('%s')", delname);
