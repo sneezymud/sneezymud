@@ -699,7 +699,7 @@ const char* const attr_player_bits[] = {"Brief", "Compact", "Wimpy",
   "Right-Handed", "AFK", "132 columns", "Solo quest", "Group quest", "",
   "Tell-an-immort-you-saw-this (unused1)", "God No-Shout",
   "Tell-an-immort-you-saw-this (NODIMD)",
-  "Tell-an-immort-you-saw-this (unused5)", "Killable", "Anonymous", "PG-13",
+  "", "Killable", "Anonymous", "PG-13",
   "\n"};
 
 const char* const prompt_mesg[] = {"near death", "horrid", "awful", "bad",
