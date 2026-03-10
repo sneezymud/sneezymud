@@ -880,7 +880,9 @@ void TBeing::doFactions(const sstring& arg) {
       sbuf += buf;
 
       TDatabase db(DB_SNEEZY);
-      db.query("select name, level from factionmembers where faction='%s'",
+      db.query(
+        "select p.name, fm.level from factionmembers fm "
+        "join player p on fm.player_id=p.id where fm.faction='%s'",
         factname);
 
       while (db.fetchRow()) {

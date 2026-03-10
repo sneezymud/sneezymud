@@ -4735,7 +4735,7 @@ int factionScoreBoard(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1,
     totalscore = 0;
 
     // number of members and total levels
-    db.query("select level from factionmembers where faction='%s'",
+    db.query("select fm.level from factionmembers fm where fm.faction='%s'",
       factnames[i].c_str());
     score = 0;
     float level = 0;
@@ -4753,8 +4753,9 @@ int factionScoreBoard(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1,
 
     // fishing
     db.query(
-      "select sum(fk.weight) as weight from fishkeeper fk, factionmembers fm "
-      "where fk.name=fm.name and fm.faction='%s'",
+      "select sum(fk.weight) as weight from fishkeeper fk "
+      "join factionmembers fm on fk.player_id=fm.player_id "
+      "where fm.faction='%s'",
       factnames[i].c_str());
     score = 0;
     if (db.fetchRow()) {
@@ -4767,8 +4768,9 @@ int factionScoreBoard(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1,
     }
 
     db.query(
-      "select count(*) as count from fishlargest fl, factionmembers fm where  "
-      "fl.name=fm.name and fm.faction='%s'",
+      "select count(*) as count from fishlargest fl "
+      "join factionmembers fm on fl.player_id=fm.player_id "
+      "where fm.faction='%s'",
       factnames[i].c_str());
     if (db.fetchRow()) {
       score += convertTo<int>(db["count"]);
@@ -4787,9 +4789,9 @@ int factionScoreBoard(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1,
     //    trophyplayer t, factionmembers fm where t.name=fm.name and
     //    fm.faction='%s' group by fm.level, t.count", factnames[i].c_str());
     db.query(
-      "select fm.level, t.count from trophyplayer t, factionmembers fm, player "
-      "p where p.name=fm.name and t.player_id=p.id and fm.faction='%s' group "
-      "by fm.level, t.count",
+      "select fm.level, t.count from trophyplayer t "
+      "join factionmembers fm on t.player_id=fm.player_id "
+      "where fm.faction='%s' group by fm.level, t.count",
       factnames[i].c_str());
 
     score = 0;
@@ -4805,9 +4807,10 @@ int factionScoreBoard(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1,
 
     // shops
     db.query(
-      "select count(distinct soa.shop_nr) as count from shopownedaccess soa, "
-      "factionmembers fm where (soa.access & %i)>0 and upper(fm.name) = "
-      "upper(soa.name) and fm.faction='%s'",
+      "select count(distinct soa.shop_nr) as count from shopownedaccess soa "
+      "join player p on soa.name=p.name "
+      "join factionmembers fm on fm.player_id=p.id "
+      "where (soa.access & %i)>0 and fm.faction='%s'",
       SHOPACCESS_OWNER, factnames[i].c_str());
     score = 0;
     if (db.fetchRow()) {
