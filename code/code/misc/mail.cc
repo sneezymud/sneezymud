@@ -63,12 +63,6 @@ bool has_mail(const sstring recipient) {
 void store_mail(const char* to, const char* from, const char* message_pointer,
   int talens, int rent_id) {
   TDatabase db(DB_SNEEZY);
-  time_t mail_time;
-  char* tmstr;
-
-  mail_time = time(0);
-  tmstr = asctime(localtime(&mail_time));
-  *(tmstr + strlen(tmstr) - 1) = '\0';
 
   if (!strcmp(to, "faction")) {
     TDatabase fm(DB_SNEEZY);
@@ -80,16 +74,16 @@ void store_mail(const char* to, const char* from, const char* message_pointer,
     while (fm.fetchRow()) {
       db.query(
         "insert into mail (port, mailfrom, mailto, timesent, content, talens, "
-        "rent_id) values (%i, '%s', '%s', '%s', '%s', 0, 0)",
-        gamePort, from, fm["name"].c_str(), tmstr, message_pointer);
+        "rent_id) values (%i, '%s', '%s', NOW(), '%s', 0, 0)",
+        gamePort, from, fm["name"].c_str(), message_pointer);
     }
   } else {
     db.query(
       "insert into mail (port, mailfrom, mailto, timesent, content, talens, "
-      "rent_id) values (%i, '%s', '%s', '%s', '%s', %i, %i)",
-      gamePort, from, to, tmstr, message_pointer, talens, rent_id);
+      "rent_id) values (%i, '%s', '%s', NOW(), '%s', %i, %i)",
+      gamePort, from, to, message_pointer, talens, rent_id);
   }
-} /* store mail */
+}
 
 sstring read_delete(const sstring recipient, const char* recipient_formatted,
   sstring& from, int& talens, int& rent_id) {
@@ -97,7 +91,8 @@ sstring read_delete(const sstring recipient, const char* recipient_formatted,
   sstring buf;
 
   db.query(
-    "select mailfrom, timesent, content, mailid, talens, rent_id from mail "
+    "select mailfrom, DATE_FORMAT(timesent, '%%a %%b %%e %%T %%Y') as "
+    "timesent, content, mailid, talens, rent_id from mail "
     "where port=%i and lower(mailto)=lower('%s')",
     gamePort, recipient.c_str());
   if (!db.fetchRow())

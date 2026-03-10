@@ -686,6 +686,37 @@ void runMigrations() {
           sneezy.query("RENAME TABLE shopownednpcloan TO shopownednpcloans"));
       }
     },
+    // Convert mail.timesent from varchar(32) to TIMESTAMP
+    [&]() {
+      vlogf(LOG_MISC, "Converting mail.timesent to TIMESTAMP");
+
+      if (!columnIsType(sneezy, "mail", "timesent", "timestamp")) {
+        // Convert existing asctime strings (e.g. "Tue May 18 18:22:18 2021")
+        // to TIMESTAMP via an intermediate column. STR_TO_DATE with the
+        // asctime format handles the conversion.
+        assert(
+          sneezy.query("ALTER TABLE mail ADD COLUMN IF NOT EXISTS timesent_new "
+                       "TIMESTAMP null"));
+        sneezy.query(
+          "UPDATE mail SET timesent_new = "
+          "STR_TO_DATE(timesent, '%%a %%b %%e %%T %%Y') "
+          "WHERE timesent IS NOT null");
+        assert(
+          sneezy.query("ALTER TABLE mail DROP COLUMN timesent, "
+                       "CHANGE COLUMN timesent_new timesent TIMESTAMP null "
+                       "AFTER mailto"));
+      }
+    },
+    // Widen passwd to varchar(255)
+    [&]() {
+      vlogf(LOG_MISC, "Widening passwd column");
+
+      // passwd is varchar(13) sized for DES crypt(3). Any modern hash
+      // algorithm (bcrypt=60, argon2=97) won't fit.
+      if (!columnIsType(sneezy, "account", "passwd", "varchar(255)"))
+        assert(sneezy.query(
+          "ALTER TABLE account MODIFY passwd varchar(255) DEFAULT null"));
+    },
   };
 
   int oldVersion = getVersion(sneezy);
