@@ -6852,20 +6852,23 @@ int brickCollector(TBeing* ch, cmdTypeT cmd, const char* argument,
         return FALSE;
       }
 
-      db.query("select 1 from brickquest where name='%s'", ch->name.c_str());
+      db.query("select 1 from brickquest where player_id=%i",
+        ch->getPlayerID());
       if (!db.fetchRow()) {
-        db.query("insert into brickquest values (1, '%s')", ch->name.c_str());
+        db.query("insert into brickquest (numbricks, player_id) values (1, %i)",
+          ch->getPlayerID());
       } else {
-        db.query("update brickquest set numbricks=numbricks+1 where name='%s'",
-          ch->name.c_str());
+        db.query(
+          "update brickquest set numbricks=numbricks+1 where player_id=%i",
+          ch->getPlayerID());
       }
-      db.query("select name, numbricks from brickquest where name='%s'",
-        ch->name.c_str());
+      db.query("select numbricks from brickquest where player_id=%i",
+        ch->getPlayerID());
       while (db.fetchRow()) {
         buf = format(
                 "Thanks %s! That makes your total %i bricks. I will update the "
                 "scores.") %
-              db["name"] % convertTo<int>(db["numbricks"]);
+              ch->getName() % convertTo<int>(db["numbricks"]);
         myself->doSay(buf);
         buf = format("Gauge has won the last brick quest on 7-1-2006. Yay!");
         myself->doSay(buf);
