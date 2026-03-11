@@ -1920,6 +1920,45 @@ void runMigrations() {
       addForeignKey(sneezy, "poll_vote", "account_id", "account", "account_id",
         "CASCADE");
     },
+    // Drop duplicate index, add shoplog index, change wholist
+    // engine
+    [&]() {
+      vlogf(LOG_MISC,
+        "Dropping duplicate index, adding shoplog index, "
+        "changing wholist to MEMORY engine");
+
+      // shoplogjournal has two identical indexes on (shop_nr, sneezy_year)
+      if (hasIndex(sneezy, "shoplogjournal", "shoplogjournal_report"))
+        assert(sneezy.query(
+          "ALTER TABLE shoplogjournal DROP INDEX shoplogjournal_report"));
+
+      // shoplog.name is queried but has no index
+      if (!hasIndex(sneezy, "shoplog", "idx_shoplog_shop_name"))
+        assert(
+          sneezy.query("ALTER TABLE shoplog "
+                       "ADD INDEX idx_shoplog_shop_name (shop_nr, name)"));
+
+      // The new composite index makes the old single-column index redundant
+      if (hasIndex(sneezy, "shoplog", "shoplog_idx"))
+        assert(sneezy.query("ALTER TABLE shoplog DROP INDEX shoplog_idx"));
+
+      // The most common query pattern is WHERE shop_nr=X ORDER BY logtime DESC.
+      // The (shop_nr, name) index can't provide logtime ordering, causing a
+      // full table scan with filesort. This composite serves both per-shop
+      // queries and time-range retention deletes.
+      if (!hasIndex(sneezy, "shoplog", "idx_shoplog_shop_logtime"))
+        assert(sneezy.query(
+          "ALTER TABLE shoplog "
+          "ADD INDEX idx_shoplog_shop_logtime (shop_nr, logtime)"));
+
+      // Drop redundant indexes already covered by primary keys
+      sneezy.query("DROP INDEX IF EXISTS mobresponses_idx ON mobresponses");
+      sneezy.query("DROP INDEX IF EXISTS player_id ON alias");
+
+      // wholist is truncated and rebuilt every 10 seconds; MEMORY engine
+      // avoids InnoDB redo log and buffer pool overhead
+      assert(sneezy.query("ALTER TABLE wholist ENGINE=MEMORY"));
+    },
   };
 
   int oldVersion = getVersion(sneezy);
