@@ -1686,6 +1686,107 @@ void runMigrations() {
             fk.deleteRule.c_str()));
       }
     },
+    // Add missing FK constraints
+    [&]() {
+      vlogf(LOG_MISC, "Adding missing FK constraints");
+
+      // shopownedcentralbank.bank -> shop.shop_nr
+      sneezy.query(
+        "DELETE FROM shopownedcentralbank "
+        "WHERE bank NOT IN (SELECT shop_nr FROM shop)");
+      addForeignKey(sneezy, "shopownedcentralbank", "bank", "shop", "shop_nr",
+        "CASCADE");
+
+      // shopownedcentralbank.centralbank -> shop.shop_nr
+      sneezy.query(
+        "DELETE FROM shopownedcentralbank "
+        "WHERE centralbank IS NOT null "
+        "AND centralbank NOT IN (SELECT shop_nr FROM shop)");
+      addForeignKey(sneezy, "shopownedcentralbank", "centralbank", "shop",
+        "shop_nr", "CASCADE");
+
+      // shopownednpcloans.owner -> player.id (owner stores player_id per code)
+      modifyColumnType(sneezy, "shopownednpcloans", "owner",
+        "bigint(20) unsigned", false);
+      sneezy.query(
+        "UPDATE shopownednpcloans SET owner=null "
+        "WHERE owner IS NOT null AND owner NOT IN (SELECT id FROM player)");
+      addForeignKey(sneezy, "shopownednpcloans", "owner", "player", "id",
+        "SET null");
+
+      // shopownedauction.shop_nr already references shopowned.shop_nr (from
+      // migration 20), which cascades through shopowned -> shop. No direct FK
+      // to shop needed.
+
+      // shopownedauction.seller -> player.id (widen first)
+      modifyColumnType(sneezy, "shopownedauction", "seller",
+        "bigint(20) unsigned", false);
+      sneezy.query(
+        "UPDATE shopownedauction SET seller=null "
+        "WHERE seller IS NOT null AND seller NOT IN (SELECT id FROM player)");
+      addForeignKey(sneezy, "shopownedauction", "seller", "player", "id",
+        "SET null");
+
+      // shopownedauction.bidder -> player.id (widen first)
+      modifyColumnType(sneezy, "shopownedauction", "bidder",
+        "bigint(20) unsigned", false);
+      sneezy.query(
+        "UPDATE shopownedauction SET bidder=null "
+        "WHERE bidder IS NOT null AND bidder NOT IN (SELECT id FROM player)");
+      addForeignKey(sneezy, "shopownedauction", "bidder", "player", "id",
+        "SET null");
+
+      // shoplogjournal.post_ref -> shoplogaccountchart.post_ref
+      sneezy.query(
+        "DELETE FROM shoplogjournal "
+        "WHERE post_ref IS NOT null "
+        "AND post_ref NOT IN (SELECT post_ref FROM shoplogaccountchart)");
+      addForeignKey(sneezy, "shoplogjournal", "post_ref", "shoplogaccountchart",
+        "post_ref", "CASCADE");
+
+      // shoplogjournalarchive.post_ref -> shoplogaccountchart.post_ref
+      // (same schema as shoplogjournal, populated by archiving)
+      sneezy.query(
+        "DELETE a FROM shoplogjournalarchive a "
+        "LEFT JOIN shoplogaccountchart c ON a.post_ref = c.post_ref "
+        "WHERE a.post_ref IS NOT null AND c.post_ref IS null");
+      addForeignKey(sneezy, "shoplogjournalarchive", "post_ref",
+        "shoplogaccountchart", "post_ref", "CASCADE");
+
+      // poll_option.poll_id -> poll.poll_id
+      sneezy.query(
+        "DELETE FROM poll_option "
+        "WHERE poll_id NOT IN (SELECT poll_id FROM poll)");
+      addForeignKey(sneezy, "poll_option", "poll_id", "poll", "poll_id",
+        "CASCADE");
+
+      // poll_vote.poll_id -> poll.poll_id
+      sneezy.query(
+        "DELETE FROM poll_vote "
+        "WHERE poll_id NOT IN (SELECT poll_id FROM poll)");
+      addForeignKey(sneezy, "poll_vote", "poll_id", "poll", "poll_id",
+        "CASCADE");
+
+      // board_message.board_vnum, factoryblueprint.vnum, and
+      // ship_destinations.room reference world-data tables (obj.vnum,
+      // room.vnum) but are NOT part of the world-data family that gets
+      // deleted and re-inserted together during `low mv*`. CASCADE would
+      // silently destroy these rows; RESTRICT would block the workflow.
+      // These FKs are deferred until `low mv*` is converted from
+      // DELETE+INSERT to UPSERT, at which point they become safe.
+
+      // shopowned.tax_nr -> shopowned.shop_nr (self-referential)
+      addForeignKey(sneezy, "shopowned", "tax_nr", "shopowned", "shop_nr",
+        "SET null");
+
+      // corporation.bank -> shop.shop_nr
+      sneezy.query(
+        "UPDATE corporation SET bank=null "
+        "WHERE bank IS NOT null "
+        "AND bank NOT IN (SELECT shop_nr FROM shop)");
+      addForeignKey(sneezy, "corporation", "bank", "shop", "shop_nr",
+        "SET null");
+    },
   };
 
   int oldVersion = getVersion(sneezy);
