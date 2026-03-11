@@ -1959,6 +1959,20 @@ void runMigrations() {
       // avoids InnoDB redo log and buffer pool overhead
       assert(sneezy.query("ALTER TABLE wholist ENGINE=MEMORY"));
     },
+    // Widen immortal_exchange_coin player ID columns
+    [&]() {
+      vlogf(LOG_MISC,
+        "Widening immortal_exchange_coin columns to match player.id type");
+
+      modifyColumnType(sneezy, "immortal_exchange_coin", "created_by",
+        "bigint(20) unsigned", false);
+      modifyColumnType(sneezy, "immortal_exchange_coin", "created_for",
+        "bigint(20) unsigned", false);
+      modifyColumnType(sneezy, "immortal_exchange_coin", "redeemed_by",
+        "bigint(20) unsigned", false);
+      modifyColumnType(sneezy, "immortal_exchange_coin", "redeemed_for",
+        "bigint(20) unsigned", false);
+    },
   };
 
   int oldVersion = getVersion(sneezy);
