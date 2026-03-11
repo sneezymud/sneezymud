@@ -1237,8 +1237,8 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
           // check to see if this should be a limb quest tooth
           int limb_quest = -1;
           TDatabase db(DB_SNEEZY);
-          db.query("select team from quest_limbs_team where player = '%s'",
-            getName().c_str());
+          db.query("select team from quest_limbs_team where player_id=%i",
+            getPlayerID());
           if (db.fetchRow())
             limb_quest = 0;
           buf = format("tooth lost limb %s [q] [tooth] [%d] [%d] [%s]") %

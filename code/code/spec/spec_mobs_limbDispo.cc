@@ -202,26 +202,33 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
 
     if (record_part) {
       TDatabase db(DB_SNEEZY);
+
+      // Resolve chopper name to player_id
+      db.query("select id from player where name='%s'", chopper.c_str());
+      int chopperId = db.fetchRow() ? convertTo<int>(db["id"]) : 0;
+
       // get team affiliation for cutesy message below
       sstring team;
-      bool samaritan = FALSE;
+      bool samaritan = false;
       db.query(
-        "select (select team from quest_limbs_team where player = '%s') as "
-        "chopper_team, (select team from quest_limbs_team where player = '%s') "
+        "select (select team from quest_limbs_team where player_id=%i) as "
+        "chopper_team, (select team from quest_limbs_team where player_id=%i) "
         "as caddy_team",
-        chopper.c_str(), ch->name.c_str());
+        chopperId, ch->getPlayerID());
       if (db.fetchRow()) {
         team = db["chopper_team"];
         if (chopper.compare(ch->name)) {
           // turning in someone else's limb
-          samaritan = TRUE;
+          samaritan = true;
         }
       } else
         team = "";
-      db.query(
-        "insert quest_limbs (player, team, mob_vnum, slot_num, slot_name) "
-        "select '%s', '%s', %i, %i, '%s'",
-        chopper.c_str(), team.c_str(), m_vnum, slot, mob_part.c_str());
+      if (chopperId > 0)
+        db.query(
+          "insert into quest_limbs "
+          "(player_id, team, mob_vnum, slot_num, slot_name) "
+          "values (%i, '%s', %i, %i, '%s')",
+          chopperId, team.c_str(), m_vnum, slot, mob_part.c_str());
       vlogf(LOG_MAROR, format("Chop shop: %s") % partname);
 
       if (!team.empty()) {
