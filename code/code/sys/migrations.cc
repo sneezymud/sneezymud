@@ -1843,6 +1843,56 @@ void runMigrations() {
       addForeignKey(sneezy, "brickquest", "player_id", "player", "id",
         "CASCADE");
     },
+    // Migrate quest_limbs tables from name to player_id
+    [&]() {
+      vlogf(LOG_MISC,
+        "Migrating quest_limbs and quest_limbs_team to player_id");
+
+      // quest_limbs_team: player varchar(80) PK -> player_id bigint unsigned
+      if (hasColumn(sneezy, "quest_limbs_team", "player")) {
+        if (!hasColumn(sneezy, "quest_limbs_team", "player_id"))
+          assert(
+            sneezy.query("ALTER TABLE quest_limbs_team "
+                         "ADD COLUMN player_id BIGINT(20) UNSIGNED"));
+
+        assert(
+          sneezy.query("UPDATE quest_limbs_team qlt "
+                       "JOIN player p ON p.name=qlt.player "
+                       "SET qlt.player_id=p.id"));
+
+        assert(
+          sneezy.query("DELETE FROM quest_limbs_team WHERE player_id IS null"));
+
+        assert(
+          sneezy.query("ALTER TABLE quest_limbs_team "
+                       "DROP PRIMARY KEY, "
+                       "DROP COLUMN player, "
+                       "ADD PRIMARY KEY (player_id)"));
+      }
+
+      addForeignKey(sneezy, "quest_limbs_team", "player_id", "player", "id",
+        "CASCADE");
+
+      // quest_limbs: player varchar(80) -> player_id bigint unsigned
+      if (hasColumn(sneezy, "quest_limbs", "player")) {
+        if (!hasColumn(sneezy, "quest_limbs", "player_id"))
+          assert(
+            sneezy.query("ALTER TABLE quest_limbs "
+                         "ADD COLUMN player_id BIGINT(20) UNSIGNED"));
+
+        assert(
+          sneezy.query("UPDATE quest_limbs ql "
+                       "JOIN player p ON p.name=ql.player "
+                       "SET ql.player_id=p.id"));
+
+        assert(sneezy.query("DELETE FROM quest_limbs WHERE player_id IS null"));
+
+        assert(sneezy.query("ALTER TABLE quest_limbs DROP COLUMN player"));
+      }
+
+      addForeignKey(sneezy, "quest_limbs", "player_id", "player", "id",
+        "CASCADE");
+    },
   };
 
   int oldVersion = getVersion(sneezy);
