@@ -47,20 +47,27 @@ void endAuction(int ticket, int bidder, int seller) {
   obj = il.raw_read_item();
 
   if (bidder == seller) {
-    msg = format("Your auction %i for %s did not sell.\n\r") % ticket %
-          obj->getName();
-    msg += "You will have to come by to pick up your object.";
-
-    store_mail(seller, auctioneer.c_str(), 0, msg.c_str(), 0, 0);
+    if (seller > 0)
+      store_mail(seller, auctioneer.c_str(), 0,
+        (format("Your auction %i for %s did not sell.\n\r"
+                "You will have to come by to pick up your object.") %
+          ticket % obj->getName())
+          .str()
+          .c_str(),
+        0, 0);
 
     db.query("update shopownedauction set current_bid=0 where ticket=%i",
       ticket);
   } else {
-    msg = format("Your auction %i for %s was sold.") % ticket % obj->getName();
-    msg +=
-      "Your money will be deposited to your bank account as soon as the buyer "
-      "pays.";
-    store_mail(seller, auctioneer.c_str(), 0, msg.c_str(), 0, 0);
+    if (seller > 0)
+      store_mail(seller, auctioneer.c_str(), 0,
+        (format("Your auction %i for %s was sold."
+                "Your money will be deposited to your bank account as soon as "
+                "the buyer pays.") %
+          ticket % obj->getName())
+          .str()
+          .c_str(),
+        0, 0);
   }
 }
 
