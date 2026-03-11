@@ -1260,7 +1260,8 @@ void TBeing::show_me_to_char(TBeing* ch, showModeT mode) const {
       // If spying on a mob and the observer knows Scrutiny, show possible gear.
       if (success) {
         const TMonster* mob = dynamic_cast<const TMonster*>(this);
-        if (mob && ch->doesKnowSkill(SKILL_SCRUTINY)) {
+        if (mob && ch->doesKnowSkill(SKILL_SCRUTINY) &&
+            real_mobile(mob->mobVnum()) >= 0) {
           ch->sendTo("\n\r");
           mobGearList(ch);
         }

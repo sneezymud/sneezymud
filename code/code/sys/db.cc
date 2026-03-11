@@ -315,6 +315,29 @@ static void addCheckgearGear(int mobRnum, int objRnum, wearSlotT slot,
   gearList.push_back(info);
 }
 
+static int normalizeCheckgearChance(int chance) {
+  if (chance < 0)
+    return 0;
+  if (chance >= 99)
+    return 100;
+  if (chance > 100)
+    return 100;
+  return chance;
+}
+
+static int getCheckgearEffectiveSetChance(int setChance, int pendingChance,
+  bool hasPendingChance) {
+  if (setChance < 0)
+    setChance = 0;
+  else if (setChance > 100)
+    setChance = 100;
+
+  if (!hasPendingChance)
+    return setChance;
+
+  return (setChance * normalizeCheckgearChance(pendingChance)) / 100;
+}
+
 void rebuildCheckgearCaches() {
   obj_load_sources_cache.clear();
   obj_load_sources_cache.resize(obj_index.size());
@@ -334,6 +357,7 @@ void rebuildCheckgearCaches() {
     int currentMobRnum = -1;
     sstring currentZoneName = "Unknown Zone";
     int currentChance = 100;
+    bool hasPendingChance = false;
 
     for (int cmd_no = 0; cmd_no < (int)zone.cmd_table.size(); ++cmd_no) {
       resetCom& cmd = zone.cmd_table[cmd_no];
@@ -341,33 +365,60 @@ void rebuildCheckgearCaches() {
       if (cmd.command == 'M' || cmd.command == 'C' || cmd.command == 'K' ||
           cmd.command == 'R') {
         currentMobRnum = cmd.arg1;
-        currentZoneName = getCheckgearZoneNameForRoom(cmd.arg3);
+        currentZoneName =
+          (cmd.arg3 == ZONE_ROOM_RANDOM) ? getCheckgearZoneNameOnly(zone.name)
+                                         : getCheckgearZoneNameForRoom(cmd.arg3);
         currentChance = 100;
+        hasPendingChance = false;
         continue;
       }
 
       if (currentMobRnum < 0 || currentMobRnum >= (int)mob_index.size())
         continue;
 
-      if (cmd.command == '?' && (cmd.character == 'E' || cmd.character == 'I')) {
+      if (cmd.command == '?') {
         currentChance = cmd.arg1;
+        hasPendingChance = true;
         continue;
       }
 
       if (cmd.command == 'E' || cmd.command == 'I') {
         addCheckgearSource(cmd.arg1, currentMobRnum, currentZoneName);
         addCheckgearGear(currentMobRnum, cmd.arg1, (wearSlotT)cmd.arg3,
-          currentChance);
+          hasPendingChance ? normalizeCheckgearChance(currentChance) : 100);
         currentChance = 100;
+        hasPendingChance = false;
         continue;
       }
 
       if (cmd.command == 'G') {
         addCheckgearSource(cmd.arg1, currentMobRnum, currentZoneName);
+        currentChance = 100;
+        hasPendingChance = false;
+        continue;
+      }
+
+      if (cmd.command == 'L') {
+        if (cmd.if_flag && cmd.arg4 == 0) {
+          for (TLootStructure* tTLoot = tLoot; tTLoot; tTLoot = tTLoot->tNext) {
+            if (!in_range(tTLoot->tLevel, cmd.arg1, cmd.arg2))
+              continue;
+            if (tTLoot->tRNum < 0 || tTLoot->tRNum >= (int)obj_index.size())
+              continue;
+
+            addCheckgearSource(tTLoot->tRNum, currentMobRnum, currentZoneName);
+          }
+        }
+
+        currentChance = 100;
+        hasPendingChance = false;
         continue;
       }
 
       if (cmd.command == 'Y') {
+        const int effectiveChance =
+          getCheckgearEffectiveSetChance(cmd.arg2, currentChance,
+            hasPendingChance);
         int sCount = cmd.arg1;
 
         for (unsigned int suitIndex = 0; suitIndex < suitSets.suits.size();
@@ -389,23 +440,29 @@ void rebuildCheckgearCaches() {
             addCheckgearSource(objRnum, currentMobRnum, currentZoneName);
             addCheckgearGear(currentMobRnum, objRnum,
               getCheckgearSlotFromLSTPiece((loadSetTypeT)pieceIndex, false),
-              cmd.arg2);
+              effectiveChance);
 
             if (pieceIndex == LST_SLEEVE || pieceIndex == LST_GLOVE ||
                 pieceIndex == LST_BRACELET || pieceIndex == LST_LEGGING ||
                 pieceIndex == LST_BOOT || pieceIndex == LST_RING) {
               addCheckgearGear(currentMobRnum, objRnum,
                 getCheckgearSlotFromLSTPiece((loadSetTypeT)pieceIndex, true),
-                cmd.arg2);
+                effectiveChance);
             }
           }
 
           break;
         }
+
+        currentChance = 100;
+        hasPendingChance = false;
         continue;
       }
 
       if (cmd.command == 'Z' || cmd.command == 'J') {
+        const int effectiveChance =
+          getCheckgearEffectiveSetChance(cmd.arg2, currentChance,
+            hasPendingChance);
         for (int slot = MIN_WEAR; slot < MAX_WEAR; ++slot) {
           int vnum = localSets.getArmor(cmd.arg1, slot);
           if (vnum <= 0)
@@ -417,9 +474,16 @@ void rebuildCheckgearCaches() {
 
           addCheckgearSource(objRnum, currentMobRnum, currentZoneName);
           addCheckgearGear(currentMobRnum, objRnum, (wearSlotT)slot,
-            cmd.arg2);
+            effectiveChance);
         }
+
+        currentChance = 100;
+        hasPendingChance = false;
+        continue;
       }
+
+      currentChance = 100;
+      hasPendingChance = false;
     }
   }
 }

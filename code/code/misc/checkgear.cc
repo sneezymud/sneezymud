@@ -20,9 +20,8 @@ static sstring getSlotName(int slot) {
 }
 
 void TObj::objLoadSource(TBeing* ch) const {
-  int objRnum = real_object(objVnum());
+  int objRnum = real_object(objVnum(), true);
   if (objRnum < 0 || objRnum >= (int)obj_index.size()) {
-    ch->sendTo("Invalid object.\n\r");
     return;
   }
 
@@ -33,8 +32,7 @@ void TObj::objLoadSource(TBeing* ch) const {
 
   // Display results
   if (!mobList || mobList->empty()) {
-    ch->sendTo(format("It doesn't seem like this object is frequently coveted by any known enemies.\n\r") %
-               sstring(objName).cap());
+    ch->sendTo("It doesn't seem like this object is frequently coveted by any known enemies.\n\r");
     return;
   }
 
