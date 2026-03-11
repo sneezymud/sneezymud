@@ -161,13 +161,15 @@ bool shopData::ensureCache() {
   }
 
   db.query(
-    "select player, profit_buy, profit_sell, max_num from shopownedplayer "
-    "where shop_nr=%i",
+    "select p.name, sop.profit_buy, sop.profit_sell, sop.max_num "
+    "from shopownedplayer sop "
+    "join player p on sop.player_id=p.id "
+    "where sop.shop_nr=%i",
     shop_nr);
   while (db.fetchRow()) {
-    buy_player_cache[db["player"]] = convertTo<float>(db["profit_buy"]);
-    sell_player_cache[db["player"]] = convertTo<float>(db["profit_sell"]);
-    max_player_cache[db["player"]] = convertTo<int>(db["max_num"]);
+    buy_player_cache[db["name"]] = convertTo<float>(db["profit_buy"]);
+    sell_player_cache[db["name"]] = convertTo<float>(db["profit_sell"]);
+    max_player_cache[db["name"]] = convertTo<int>(db["max_num"]);
   }
 
   // clear all regular shopowned values to defaults (set only if query returns)
