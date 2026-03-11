@@ -1893,6 +1893,33 @@ void runMigrations() {
       addForeignKey(sneezy, "quest_limbs", "player_id", "player", "id",
         "CASCADE");
     },
+    // Migrate poll_vote from account name to account_id
+    [&]() {
+      vlogf(LOG_MISC, "Migrating poll_vote from account name to account_id");
+
+      if (hasColumn(sneezy, "poll_vote", "account")) {
+        if (!hasColumn(sneezy, "poll_vote", "account_id"))
+          assert(
+            sneezy.query("ALTER TABLE poll_vote "
+                         "ADD COLUMN account_id BIGINT(20) UNSIGNED"));
+
+        assert(
+          sneezy.query("UPDATE poll_vote pv "
+                       "JOIN account a ON a.name=pv.account "
+                       "SET pv.account_id=a.account_id"));
+
+        assert(sneezy.query("DELETE FROM poll_vote WHERE account_id IS null"));
+
+        assert(
+          sneezy.query("ALTER TABLE poll_vote "
+                       "DROP PRIMARY KEY, "
+                       "DROP COLUMN account, "
+                       "ADD PRIMARY KEY (account_id, poll_id)"));
+      }
+
+      addForeignKey(sneezy, "poll_vote", "account_id", "account", "account_id",
+        "CASCADE");
+    },
   };
 
   int oldVersion = getVersion(sneezy);
