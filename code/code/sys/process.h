@@ -558,6 +558,12 @@ class procUpdateAuction : public TProcess {
     procUpdateAuction(const int&);
 };
 
+class procQuerytimesCleanup : public TProcess {
+  public:
+    void run(const TPulse&) const;
+    procQuerytimesCleanup(const int&);
+};
+
 class procBankInterest : public TProcess {
   public:
     void run(const TPulse&) const;

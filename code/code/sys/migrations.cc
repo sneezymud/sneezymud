@@ -1973,6 +1973,15 @@ void runMigrations() {
       modifyColumnType(sneezy, "immortal_exchange_coin", "redeemed_for",
         "bigint(20) unsigned", false);
     },
+    // Add index on querytimes.date_logged for retention cleanup
+    [&]() {
+      vlogf(LOG_MISC, "Adding index on querytimes.date_logged");
+
+      if (!hasIndex(sneezy, "querytimes", "idx_querytimes_date"))
+        assert(
+          sneezy.query("ALTER TABLE querytimes "
+                       "ADD INDEX idx_querytimes_date (date_logged)"));
+    },
   };
 
   int oldVersion = getVersion(sneezy);
