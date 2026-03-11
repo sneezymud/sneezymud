@@ -701,7 +701,9 @@ int TShopOwned::setRates(sstring arg) {
     } else if (buf == "player") {
       arg = one_argument(arg, buf);
 
-      db.query("delete from shopownedplayer where shop_nr=%i and player='%s'",
+      db.query(
+        "delete from shopownedplayer where shop_nr=%i "
+        "and player_id=(select id from player where name='%s')",
         shop_nr, buf.c_str());
 
       keeper->doTell(ch->getName(), "Done.");
@@ -799,15 +801,17 @@ int TShopOwned::setRates(sstring arg) {
     }
 
     db.query(
-      "select player, profit_buy, profit_sell, max_num from shopownedplayer "
-      "where shop_nr=%i",
+      "select p.name, sop.profit_buy, sop.profit_sell, sop.max_num "
+      "from shopownedplayer sop "
+      "join player p on sop.player_id=p.id "
+      "where sop.shop_nr=%i",
       shop_nr);
 
     while (db.fetchRow()) {
       keeper->doTell(ch->getName(),
         format("%f %f %i player %s") % convertTo<float>(db["profit_buy"]) %
           convertTo<float>(db["profit_sell"]) % convertTo<int>(db["max_num"]) %
-          db["player"]);
+          db["name"]);
     }
 
     return TRUE;
@@ -865,17 +869,29 @@ int TShopOwned::setRates(sstring arg) {
   } else if (buf == "player") {  ////////////////////////////////////////////
     arg = one_argument(arg, buf);
 
-    db.query("select 1 from shopownedplayer where shop_nr=%i and player='%s'",
-      shop_nr, buf.c_str());
+    // Resolve player name to ID
+    TDatabase lookup(DB_SNEEZY);
+    lookup.query("select id from player where name='%s'", buf.c_str());
+    if (!lookup.fetchRow()) {
+      keeper->doTell(ch->getName(),
+        format("I don't know anyone named %s.") % buf);
+      return true;
+    }
+    auto targetPlayerId = convertTo<int>(lookup["id"]);
+
+    db.query("select 1 from shopownedplayer where shop_nr=%i and player_id=%i",
+      shop_nr, targetPlayerId);
 
     if (!db.fetchRow()) {
-      db.query("insert into shopownedplayer values (%i, '%s', %f, %f, %i)",
-        shop_nr, buf.c_str(), profit_buy, profit_sell, max_num);
+      db.query(
+        "insert into shopownedplayer (shop_nr, player_id, profit_buy, "
+        "profit_sell, max_num) values (%i, %i, %f, %f, %i)",
+        shop_nr, targetPlayerId, profit_buy, profit_sell, max_num);
     } else {
       db.query(
         "update shopownedplayer set profit_buy=%f, profit_sell=%f, max_num=%i "
-        "where shop_nr=%i and player='%s'",
-        profit_buy, profit_sell, max_num, shop_nr, buf.c_str());
+        "where shop_nr=%i and player_id=%i",
+        profit_buy, profit_sell, max_num, shop_nr, targetPlayerId);
     }
 
     keeper->doTell(ch->getName(),

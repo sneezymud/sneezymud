@@ -1787,6 +1787,35 @@ void runMigrations() {
       addForeignKey(sneezy, "corporation", "bank", "shop", "shop_nr",
         "SET null");
     },
+    // Migrate shopownedplayer from name to player_id
+    [&]() {
+      vlogf(LOG_MISC, "Migrating shopownedplayer from name to player_id");
+
+      if (hasColumn(sneezy, "shopownedplayer", "player")) {
+        if (!hasColumn(sneezy, "shopownedplayer", "player_id"))
+          assert(sneezy.query(
+            "ALTER TABLE shopownedplayer "
+            "ADD COLUMN player_id BIGINT(20) UNSIGNED AFTER shop_nr"));
+
+        assert(
+          sneezy.query("UPDATE shopownedplayer sop "
+                       "JOIN player p ON p.name=sop.player "
+                       "SET sop.player_id=p.id"));
+
+        // Drop orphans (player no longer exists)
+        assert(
+          sneezy.query("DELETE FROM shopownedplayer WHERE player_id IS null"));
+
+        assert(
+          sneezy.query("ALTER TABLE shopownedplayer "
+                       "DROP PRIMARY KEY, "
+                       "DROP COLUMN player, "
+                       "ADD PRIMARY KEY (shop_nr, player_id)"));
+      }
+
+      addForeignKey(sneezy, "shopownedplayer", "player_id", "player", "id",
+        "CASCADE");
+    },
   };
 
   int oldVersion = getVersion(sneezy);
