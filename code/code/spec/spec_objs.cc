@@ -4253,16 +4253,14 @@ int brickScorecard(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1,
   ch->sendTo("+------------------------------------------------+\n\r\n\r");
 
   db_brickquest.query(
-    "select * from brickquest order by numbricks desc limit 25");
+    "select p.name, b.numbricks from brickquest b "
+    "join player p on b.player_id=p.id "
+    "order by b.numbricks desc limit 25");
 
-  int i = 1;
-  while (i <= 25) {
-    if (db_brickquest.fetchRow()) {
-      ch->sendTo(COLOR_BASIC, format("%s has %s bricks collected so far.\r\n") %
-                                db_brickquest["name"] %
-                                db_brickquest["numbricks"]);
-    }
-    ++i;
+  while (db_brickquest.fetchRow()) {
+    ch->sendTo(COLOR_BASIC, format("%s has %s bricks collected so far.\r\n") %
+                              db_brickquest["name"] %
+                              db_brickquest["numbricks"]);
   }
   return TRUE;
 }

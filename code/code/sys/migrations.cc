@@ -1816,6 +1816,33 @@ void runMigrations() {
       addForeignKey(sneezy, "shopownedplayer", "player_id", "player", "id",
         "CASCADE");
     },
+    // Migrate brickquest from name to player_id
+    [&]() {
+      vlogf(LOG_MISC, "Migrating brickquest from name to player_id");
+
+      if (hasColumn(sneezy, "brickquest", "name")) {
+        if (!hasColumn(sneezy, "brickquest", "player_id"))
+          assert(
+            sneezy.query("ALTER TABLE brickquest "
+                         "ADD COLUMN player_id BIGINT(20) UNSIGNED"));
+
+        assert(
+          sneezy.query("UPDATE brickquest b "
+                       "JOIN player p ON p.name=b.name "
+                       "SET b.player_id=p.id"));
+
+        assert(sneezy.query("DELETE FROM brickquest WHERE player_id IS null"));
+
+        assert(
+          sneezy.query("ALTER TABLE brickquest "
+                       "DROP PRIMARY KEY, "
+                       "DROP COLUMN name, "
+                       "ADD PRIMARY KEY (player_id)"));
+      }
+
+      addForeignKey(sneezy, "brickquest", "player_id", "player", "id",
+        "CASCADE");
+    },
   };
 
   int oldVersion = getVersion(sneezy);
