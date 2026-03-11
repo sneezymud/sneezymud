@@ -1954,6 +1954,8 @@ void TBeing::statBeing(TBeing* k) {
       case SKILL_AVIAN:
       case SKILL_FISHBURBLE:
       case SKILL_COMMON:
+      case SKILL_RESOURCEFULNESS:
+      case SKILL_SCRUTINY:
       case SPELL_EARTHMAW:
       case SPELL_CREEPING_DOOM:
       case SPELL_FERAL_WRATH:
@@ -2286,7 +2288,7 @@ void TBeing::statBeing(TBeing* k) {
       case AFFECT_HOLY_BEAM:
         str += "Holy Beam.\n\r";
         str += format("     Modifies %s to %s by %ld points\n\r") %
-               apply_types[aff->location].name % 
+               apply_types[aff->location].name %
                immunity_names[aff->modifier] % aff->modifier2;
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
         break;

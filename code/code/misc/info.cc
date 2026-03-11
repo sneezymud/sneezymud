@@ -2170,6 +2170,8 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme,
       case SKILL_IRON_MUSCLES:
       case SKILL_IRON_LEGS:
       case SKILL_IRON_WILL:
+      case SKILL_RESOURCEFULNESS:
+      case SKILL_SCRUTINY:
       case SKILL_PLANT:
       case ABSOLUTE_MAX_SKILL:
         vlogf(LOG_BUG,
@@ -4058,6 +4060,14 @@ void TBeing::genericEvaluateItem(const TThing* obj) {
   }
 
   describeObject(obj);
+
+  // If evaluating an object and the character knows Resourcefulness, show
+  // where it loads.
+  const TObj* tobj = dynamic_cast<const TObj*>(obj);
+  if (tobj && doesKnowSkill(SKILL_RESOURCEFULNESS)) {
+    sendTo("\n\r");
+    tobj->objLoadSource(this);
+  }
 }
 
 void TThing::evaluateMe(TBeing* ch) const {}

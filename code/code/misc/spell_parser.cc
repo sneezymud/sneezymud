@@ -573,7 +573,7 @@ spellNumT searchForSpellNum(const sstring& arg, exactTypeT exact, bool unique) {
         if (!unique)
           return i;
         matches++;
-        ret = i;        
+        ret = i;
       }
     }
   }
@@ -1525,6 +1525,8 @@ namespace {
     {SKILL_COUNTER_STEAL, "SKILL_COUNTER_STEAL"},
     {SKILL_REPAIR_THIEF, "SKILL_REPAIR_THIEF"},
     {SKILL_PLANT, "SKILL_PLANT"},
+    {SKILL_RESOURCEFULNESS, "SKILL_RESOURCEFULNESS"},
+    {SKILL_SCRUTINY, "SKILL_SCRUTINY"},
     {SKILL_CONCEALMENT, "SKILL_CONCEALMENT"},
     {SKILL_TRACK, "SKILL_TRACK"},
     {SKILL_RITUALISM, "SKILL_RITUALISM"},

@@ -106,3 +106,13 @@ TEST_F(SpellParserTest, MultiWordWithSurroundingWhitespace) {
   EXPECT_EQ(parse("  true sight  "), SPELL_TRUE_SIGHT)
     << "Leading/trailing whitespace should be tolerated";
 }
+
+TEST_F(SpellParserTest, ResourcefulnessSkillIsRegistered) {
+  EXPECT_EQ(parse("resourcefulness"), SKILL_RESOURCEFULNESS)
+    << "Newly added Looting skill should be parseable by name";
+}
+
+TEST_F(SpellParserTest, ScrutinySkillIsRegistered) {
+  EXPECT_EQ(parse("scrutiny"), SKILL_SCRUTINY)
+    << "Newly added Looting skill should be parseable by name";
+}

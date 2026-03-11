@@ -1256,6 +1256,15 @@ void TBeing::show_me_to_char(TBeing* ch, showModeT mode) const {
       else
         ch->sendTo(
           "Nothing.\n\r");  // this should be identical text as list_in_heap
+
+      // If spying on a mob and the observer knows Scrutiny, show possible gear.
+      if (success) {
+        const TMonster* mob = dynamic_cast<const TMonster*>(this);
+        if (mob && ch->doesKnowSkill(SKILL_SCRUTINY)) {
+          ch->sendTo("\n\r");
+          mobGearList(ch);
+        }
+      }
     } else if (ch->isImmortal()) {
       ch->sendTo("Inventory:\n\r");
 

@@ -1,0 +1,14 @@
+Syntax: evaluate <item>
+
+Resourcefulness lets a looter glean where a piece of equipment may be found.
+When evaluating an item, this skill can reveal enemies known to wear, wield or
+carry that object, along with the areas where those foes may be encountered.
+
+This information reflects potential sources only.  It does not guarantee that
+the item is present at that moment, nor does it promise that every possible
+source will currently have the item.
+
+To use this skill, you must first be able to evaluate the item in question.
+Resourcefulness is an enhancement to the evaluate skill, not a standalone ability.
+
+See Also: EVALUATE

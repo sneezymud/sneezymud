@@ -117,7 +117,7 @@ sstring TMonster::getStealLootNames() const {
   if (hasClass(CLASS_DEIKHAN | CLASS_CLERIC))
     loot += ", holy water, symbols";
   if (hasClass(CLASS_THIEF))
-    loot += "trap parts, poisons";
+    loot += ", trap parts, poisons";
   loot += " or tools";
   return loot;
 }

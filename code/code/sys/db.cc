@@ -217,6 +217,8 @@ class lag_data lag_info;
 
 // count of the number of mobs that can load an object
 std::map<int, int> obj_load_potential;
+std::vector<std::vector<CheckgearSourceInfo>> obj_load_sources_cache;
+std::vector<std::vector<CheckgearGearInfo>> mob_gear_cache;
 
 // local procedures
 static void bootZones(void);
@@ -229,6 +231,198 @@ struct reset_q_type {
     resetQElement* head;
     resetQElement* tail;
 } r_q;
+
+static sstring getCheckgearZoneNameOnly(const sstring& fullName) {
+  const char* dash = strchr(fullName.c_str(), '-');
+
+  if (dash) {
+    ++dash;
+    while (*dash == ' ')
+      ++dash;
+    return sstring(dash);
+  }
+
+  return fullName;
+}
+
+static wearSlotT getCheckgearSlotFromLSTPiece(loadSetTypeT piece,
+  bool isSecond) {
+  switch (piece) {
+    case LST_HELM: return WEAR_HEAD;
+    case LST_COLLAR: return WEAR_NECK;
+    case LST_JACKET: return WEAR_BODY;
+    case LST_SLEEVE: return isSecond ? WEAR_ARM_R : WEAR_ARM_L;
+    case LST_GLOVE: return isSecond ? WEAR_HAND_R : WEAR_HAND_L;
+    case LST_BELT: return WEAR_WAIST;
+    case LST_BRACELET: return isSecond ? WEAR_WRIST_R : WEAR_WRIST_L;
+    case LST_LEGGING: return isSecond ? WEAR_LEG_R : WEAR_LEG_L;
+    case LST_BOOT: return isSecond ? WEAR_FOOT_R : WEAR_FOOT_L;
+    case LST_RING: return isSecond ? WEAR_FINGER_R : WEAR_FINGER_L;
+    case LST_SHIELD: return HOLD_RIGHT;
+    case LST_CLOAK: return WEAR_BACK;
+    default: return WEAR_NOWHERE;
+  }
+}
+
+static sstring getCheckgearZoneNameForRoom(int roomVnum) {
+  for (unsigned int i = 0; i < zone_table.size(); ++i) {
+    if (roomVnum >= zone_table[i].bottom && roomVnum <= zone_table[i].top)
+      return getCheckgearZoneNameOnly(zone_table[i].name);
+  }
+
+  return "Unknown Zone";
+}
+
+static void addCheckgearSource(int objRnum, int mobRnum,
+  const sstring& zoneName) {
+  if (objRnum < 0 || objRnum >= (int)obj_load_sources_cache.size() ||
+      mobRnum < 0 || mobRnum >= (int)mob_index.size())
+    return;
+
+  CheckgearSourceInfo info;
+  info.mobVnum = mob_index[mobRnum].virt;
+  info.mobName = mob_index[mobRnum].short_desc;
+  info.zoneName = zoneName;
+
+  std::vector<CheckgearSourceInfo>& sources = obj_load_sources_cache[objRnum];
+  for (const auto& existing : sources) {
+    if (existing.mobVnum == info.mobVnum && existing.zoneName == info.zoneName)
+      return;
+  }
+
+  sources.push_back(info);
+}
+
+static void addCheckgearGear(int mobRnum, int objRnum, wearSlotT slot,
+  int chance) {
+  if (mobRnum < 0 || mobRnum >= (int)mob_gear_cache.size() ||
+      objRnum < 0 || objRnum >= (int)obj_index.size())
+    return;
+
+  CheckgearGearInfo info;
+  info.objVnum = obj_index[objRnum].virt;
+  info.objName = obj_index[objRnum].short_desc;
+  info.slot = slot;
+  info.chance = chance;
+
+  std::vector<CheckgearGearInfo>& gearList = mob_gear_cache[mobRnum];
+  for (const auto& existing : gearList) {
+    if (existing.objVnum == info.objVnum && existing.slot == info.slot &&
+        existing.chance == info.chance)
+      return;
+  }
+
+  gearList.push_back(info);
+}
+
+void rebuildCheckgearCaches() {
+  obj_load_sources_cache.clear();
+  obj_load_sources_cache.resize(obj_index.size());
+  mob_gear_cache.clear();
+  mob_gear_cache.resize(mob_index.size());
+
+  for (unsigned int zone_num = 0; zone_num < zone_table.size(); ++zone_num) {
+    zoneData& zone = zone_table[zone_num];
+    armorSetLoad localSets;
+
+    for (int cmd_no = 0; cmd_no < (int)zone.cmd_table.size(); ++cmd_no) {
+      resetCom& cmd = zone.cmd_table[cmd_no];
+      if (cmd.command == 'X')
+        localSets.setArmor(cmd.arg3, cmd.arg1, cmd.arg2);
+    }
+
+    int currentMobRnum = -1;
+    sstring currentZoneName = "Unknown Zone";
+    int currentChance = 100;
+
+    for (int cmd_no = 0; cmd_no < (int)zone.cmd_table.size(); ++cmd_no) {
+      resetCom& cmd = zone.cmd_table[cmd_no];
+
+      if (cmd.command == 'M' || cmd.command == 'C' || cmd.command == 'K' ||
+          cmd.command == 'R') {
+        currentMobRnum = cmd.arg1;
+        currentZoneName = getCheckgearZoneNameForRoom(cmd.arg3);
+        currentChance = 100;
+        continue;
+      }
+
+      if (currentMobRnum < 0 || currentMobRnum >= (int)mob_index.size())
+        continue;
+
+      if (cmd.command == '?' && (cmd.character == 'E' || cmd.character == 'I')) {
+        currentChance = cmd.arg1;
+        continue;
+      }
+
+      if (cmd.command == 'E' || cmd.command == 'I') {
+        addCheckgearSource(cmd.arg1, currentMobRnum, currentZoneName);
+        addCheckgearGear(currentMobRnum, cmd.arg1, (wearSlotT)cmd.arg3,
+          currentChance);
+        currentChance = 100;
+        continue;
+      }
+
+      if (cmd.command == 'G') {
+        addCheckgearSource(cmd.arg1, currentMobRnum, currentZoneName);
+        continue;
+      }
+
+      if (cmd.command == 'Y') {
+        int sCount = cmd.arg1;
+
+        for (unsigned int suitIndex = 0; suitIndex < suitSets.suits.size();
+             ++suitIndex) {
+          if (sCount-- != 1)
+            continue;
+
+          const loadSetStruct& suit = suitSets.suits[suitIndex];
+
+          for (int pieceIndex = 0; pieceIndex < LST_MAX; ++pieceIndex) {
+            int vnum = suit.equipment[pieceIndex];
+            if (vnum <= 0)
+              continue;
+
+            int objRnum = real_object(vnum, true);
+            if (objRnum < 0)
+              continue;
+
+            addCheckgearSource(objRnum, currentMobRnum, currentZoneName);
+            addCheckgearGear(currentMobRnum, objRnum,
+              getCheckgearSlotFromLSTPiece((loadSetTypeT)pieceIndex, false),
+              cmd.arg2);
+
+            if (pieceIndex == LST_SLEEVE || pieceIndex == LST_GLOVE ||
+                pieceIndex == LST_BRACELET || pieceIndex == LST_LEGGING ||
+                pieceIndex == LST_BOOT || pieceIndex == LST_RING) {
+              addCheckgearGear(currentMobRnum, objRnum,
+                getCheckgearSlotFromLSTPiece((loadSetTypeT)pieceIndex, true),
+                cmd.arg2);
+            }
+          }
+
+          break;
+        }
+        continue;
+      }
+
+      if (cmd.command == 'Z' || cmd.command == 'J') {
+        for (int slot = MIN_WEAR; slot < MAX_WEAR; ++slot) {
+          int vnum = localSets.getArmor(cmd.arg1, slot);
+          if (vnum <= 0)
+            continue;
+
+          int objRnum = real_object(vnum, true);
+          if (objRnum < 0)
+            continue;
+
+          addCheckgearSource(objRnum, currentMobRnum, currentZoneName);
+          addCheckgearGear(currentMobRnum, objRnum, (wearSlotT)slot,
+            cmd.arg2);
+        }
+      }
+    }
+  }
+}
 
 void update_commod_index() {
   TDatabase db(DB_SNEEZY);
@@ -468,6 +662,9 @@ void bootDb(void) {
 
   bootPulse("Loading zone table.");
   bootZones();
+
+  bootPulse("Building checkgear caches.");
+  rebuildCheckgearCaches();
 
   // must be done before loading objects
   bootPulse("Loading drug-type information.");
@@ -1486,6 +1683,8 @@ void TBeing::doBoot(const sstring& arg) {
   zone_table[z].bootZone(zone_table[z].bottom);
   sendTo("Renumbering loads (vnum->rnum).\n\r");
   zone_table[z].renumCmd();
+  sendTo("Rebuilding checkgear caches.\n\r");
+  rebuildCheckgearCaches();
 
   sendTo("Purging mobs and objects in zone.\n\r");
   while (found) {

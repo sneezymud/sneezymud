@@ -897,6 +897,10 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
       return &((CDLooting*)cd)->skCounterSteal;
     case SKILL_PLANT:
       return &((CDLooting*)cd)->skPlant;
+    case SKILL_RESOURCEFULNESS:
+      return &((CDLooting*)cd)->skResourcefulness;
+    case SKILL_SCRUTINY:
+      return &((CDLooting*)cd)->skScrutiny;
 
       // disc_murder
 

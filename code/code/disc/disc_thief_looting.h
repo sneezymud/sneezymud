@@ -7,6 +7,8 @@ class CDLooting : public CDiscipline {
   public:
     CSkill skCounterSteal;
     CSkill skPlant;
+    CSkill skResourcefulness;
+    CSkill skScrutiny;
 
     virtual CDLooting* cloneMe() { return new CDLooting(*this); }
 
