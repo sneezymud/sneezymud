@@ -626,6 +626,18 @@ void procCloseAccountingBooks::run(const TPulse&) const {
   }
 }
 
+procQuerytimesCleanup::procQuerytimesCleanup(const int& p) {
+  trigger_pulse = p;
+  name = "procQuerytimesCleanup";
+}
+
+void procQuerytimesCleanup::run(const TPulse&) const {
+  TDatabase db(DB_SNEEZY);
+  db.query(
+    "DELETE FROM querytimes "
+    "WHERE date_logged < DATE_SUB(NOW(), INTERVAL 30 DAY)");
+}
+
 procWeightVolumeFumble::procWeightVolumeFumble(const int& p) {
   trigger_pulse = p;
   name = "procWeightVolumeFumble";
@@ -1656,6 +1668,7 @@ int TMainSocket::gameLoop() {
   scheduler.add(new procUpdateAuction(Pulse::MUDDAY));
   scheduler.add(new procBankInterest(Pulse::MUDDAY));
   scheduler.add(new procCloseAccountingBooks(Pulse::MUDDAY));
+  scheduler.add(new procQuerytimesCleanup(Pulse::MUDDAY));
   scheduler.add(new procFactoryProduction(Pulse::MUDDAY));
 
   // pulse realhour
