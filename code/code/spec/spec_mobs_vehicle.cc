@@ -563,40 +563,24 @@ int shipCaptain(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
       } else {
         myself->doSay(
           format("Aye aye, settin' sail for <W>%s<1>.") % argument.word(2));
-        // parse list of destnations and add to buf in sql format
-        sstring buf;
-        for (int i = 2; i < 12; ++i) {
-          if (!argument.word(i).empty()) {
-            // use %q here to escape input because query() won't check with %r
-            if (buf.empty())
-              buf = format("'%s'") % argument.word(i).escape();
-            else
-              buf = format("%s, '%s'") % buf % argument.word(i).escape();
-          }
-        }
-        if (!buf.empty()) {
-          // %r should be safe here because we escaped in fmt above
+        // Clear existing route
+        for (int i = 0; i < 10; ++i)
+          job->room[i] = 0;
+
+        int roomCount = 0;
+        for (int i = 2; i < 12 && !argument.word(i).empty(); ++i) {
           db.query(
-            "select room from ship_destinations where vnum = %i and name in "
-            "(%r)",
-            myself->mobVnum(), buf.c_str());
+            "SELECT room FROM ship_destinations WHERE vnum=%i AND name='%s'",
+            myself->mobVnum(), argument.word(i).c_str());
           if (!db.fetchRow()) {
             myself->doSay("What the...?!  I've never 'eard of that!");
-            return TRUE;
+            return true;
           }
-          // first clear out existing route
-          for (int i = 0; i < 10; ++i)
-            job->room[i] = 0;
-
-          int i = 0;
-          do {
-            job->room[i++] = convertTo<int>(db["room"]);
-          } while (db.fetchRow());
+          job->room[roomCount++] = convertTo<int>(db["room"]);
+        }
+        if (roomCount > 0) {
           job->cur = 0;
-          if (argument.word(1) == "cruise" && db.rowCount() > 1)
-            job->cruise = true;
-          else
-            job->cruise = false;
+          job->cruise = (argument.word(1) == "cruise" && roomCount > 1);
         }
       }
     } else if (argument.word(1) == "stop") {
