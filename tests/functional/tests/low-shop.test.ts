@@ -208,21 +208,31 @@ describe("Low Shop", () => {
     it("sets access, describes bitmask, and removes via zero", async () => {
       await mud.command("low shop owner 999 set 1");
 
-      let output = await mud.command("low shop access 999 TestPlayer 1");
+      let output = await mud.command(
+        `low shop access 999 ${config.character} 1`,
+      );
       expect(output).toContainCaseInsensitive("access set to 1 (owner)");
 
-      output = await mud.command("low shop access 999 TestPlayer 7");
+      output = await mud.command(`low shop access 999 ${config.character} 7`);
       expect(output).toContainCaseInsensitive(
         "access set to 7 (owner, info, rates)",
       );
 
-      output = await mud.command("low shop access 999 TestPlayer 0");
+      output = await mud.command(`low shop access 999 ${config.character} 0`);
       expect(output).toContainCaseInsensitive("access removed");
+    });
+
+    it("rejects non-existent player", async () => {
+      await mud.command("low shop owner 999 set 1");
+      const output = await mud.command("low shop access 999 ZzzNobodyHere 1");
+      expect(output).toContainCaseInsensitive("not found");
     });
 
     it("rejects access level above 255", async () => {
       await mud.command("low shop owner 999 set 1");
-      const output = await mud.command("low shop access 999 TestPlayer 256");
+      const output = await mud.command(
+        `low shop access 999 ${config.character} 256`,
+      );
       expect(output).toContainCaseInsensitive("Access level must be 0-255");
     });
   });
