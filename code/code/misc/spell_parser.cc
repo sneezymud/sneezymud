@@ -623,6 +623,8 @@ static void badCastSyntax(const TBeing* ch, spellNumT which) {
 
   if (targets & (TAR_OBJ_INV | TAR_OBJ_ROOM | TAR_OBJ_WORLD | TAR_OBJ_EQUIP))
     tars += (tars.empty() ? "object" : " | object");
+  if (targets & TAR_GROUP)
+    tars += (tars.empty() ? "group" : " | group");
 
   if (tars.empty()) {
     vlogf(LOG_BUG, format("Unknown targets for spell %d") % which);
@@ -821,6 +823,11 @@ int TBeing::doCast(const char* argument) {
     return FALSE;
   }
 
+  if (discArray[spell]->targets & TAR_PASSIVE) {
+    sendTo("That ability is passive and cannot be cast directly.\n\r");
+    return false;
+  }
+
   return doDiscipline(spell, target);
 }
 
@@ -958,7 +965,15 @@ int TBeing::parseTarget(spellNumT which, char* n, TThing** ret) {
     if (!ok && (discArray[which]->targets & TAR_IGNORE))
       ok = TRUE;
   } else {
-    if ((discArray[which]->targets & TAR_FIGHT_SELF)) {
+    if ((discArray[which]->targets & TAR_GROUP)) {
+      // No target specified: signal group mode to the spell implementation.
+      // Both ch and *ret are explicitly set to nullptr; the spell iterates
+      // group members itself when it receives a null victim.
+      ch = nullptr;
+      *ret = nullptr;
+      ok = true;
+    }
+    if (!ok && (discArray[which]->targets & TAR_FIGHT_SELF)) {
       // if in a fight, cast this on caster
       // these are generally healing spells
       // just to be nice, if not in fight (and no args), also cast on caster
@@ -1108,7 +1123,7 @@ namespace {
     {DAMAGE_WHIRLPOOL, "DAMAGE_WHIRLPOOL"},
     {DAMAGE_ELECTRIC, "DAMAGE_ELECTRIC"},
     {DAMAGE_ACID, "DAMAGE_ACID"},
-    {DAMAGE_HOLY, "DAMAGE_HOLY" },
+    {DAMAGE_HOLY, "DAMAGE_HOLY"},
     {DAMAGE_GUST, "DAMAGE_GUST"},
     {DAMAGE_EATTEN, "DAMAGE_EATTEN"},
     {DAMAGE_KICK_HEAD, "DAMAGE_KICK_HEAD"},
@@ -1231,6 +1246,7 @@ namespace {
     {SPELL_ANIMATE, "SPELL_ANIMATE"},
     {SPELL_BIND, "SPELL_BIND"},
     {SPELL_FUMBLE, "SPELL_FUMBLE"},
+    {SPELL_MAGE_SIGHT, "SPELL_MAGE_SIGHT"},
     {SPELL_TRUE_SIGHT, "SPELL_TRUE_SIGHT"},
     {SPELL_CLOUD_OF_CONCEALMENT, "SPELL_CLOUD_OF_CONCEALMENT"},
     {SPELL_POLYMORPH, "SPELL_POLYMORPH"},
@@ -1896,9 +1912,6 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
     case SPELL_ILLUMINATE:
       rc = illuminate(this, o);
       break;
-    case SPELL_DETECT_MAGIC:
-      rc = detectMagic(this, ch);
-      break;
     case SPELL_DISPEL_MAGIC:
       if (!o) {
         rc = dispelMagic(this, ch);
@@ -1992,9 +2005,6 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
     case SPELL_FLARE:
       rc = flare(this);
       break;
-    case SPELL_INFRAVISION:
-      infravision(this, ch);
-      break;
     case SPELL_PROTECTION_FROM_FIRE:
       protectionFromFire(this);
       break;
@@ -2055,9 +2065,6 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
     case SPELL_PROTECTION_FROM_ENERGY:
       protectionFromEnergy(this);
       break;
-    case SPELL_SENSE_LIFE:
-      senseLife(this, ch);
-      break;
     case SPELL_SENSE_LIFE_SHAMAN:
       senseLifeShaman(this, ch);
       break;
@@ -2091,9 +2098,6 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
     case SPELL_CLOUD_OF_CONCEALMENT:
       rc = cloudOfConcealment(this);
       break;
-    case SPELL_DETECT_INVISIBLE:
-      detectInvisibility(this, ch);
-      break;
     case SPELL_DETECT_SHADOW:
       detectShadow(this, ch);
       break;
@@ -2112,8 +2116,8 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
     case SPELL_RAZE:
       rc = raze(this, ch);
       break;
-    case SPELL_TRUE_SIGHT:
-      trueSight(this, ch);
+    case SPELL_MAGE_SIGHT:
+      mageSight(this, ch);
       break;
     case SPELL_POLYMORPH:
       polymorph(this, n);

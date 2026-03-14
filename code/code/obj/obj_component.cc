@@ -1206,7 +1206,7 @@ void buildComponentArray() {
     "$n tosses $p at $N.", "$n tosses $p at you.", "You toss $p to the ground.",
     "$n tosses $p to the ground.", "", ""));
   CompInfo.push_back(
-    compInfo(SPELL_TRUE_SIGHT, "You nibble on $p and spit it upon $N.",
+    compInfo(SPELL_MAGE_SIGHT, "You nibble on $p and spit it upon $N.",
       "$n nibbles on $p and spits it at $N.",
       "$n nibbles on $p and spits it at you.",
       "You nibble on $p and swallow it down.",

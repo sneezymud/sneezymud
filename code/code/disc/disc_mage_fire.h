@@ -10,6 +10,7 @@ class CDFire : public CDiscipline {
     CSkill skHellFire;
     CSkill skFlamingFlesh;
     CSkill skProtectionFromFire;
+    CSkill skInfravision;
 
     virtual CDFire* cloneMe() { return new CDFire(*this); }
 
@@ -65,10 +66,8 @@ int flare(TBeing*);
 int flare(TBeing*, TMagicItem*);
 int flare(TBeing*, int, short);
 
-void infravision(TBeing*, TBeing*);
 void infravision(TBeing*, TBeing*, TMagicItem*);
 int infravision(TBeing*, TBeing*, int, short);
-int castInfravision(TBeing*, TBeing*);
 
 int protectionFromFire(TBeing*);
 void protectionFromFire(TBeing*, TMagicItem*);

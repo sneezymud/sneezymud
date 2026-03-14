@@ -1,0 +1,14 @@
+Mages now learn Mage Sight, a new sorcery spell that consolidates
+several vision buffs into a single cast.
+
+Mage sight provides a direct vision bonus and can passively grant
+infravision, detect invisible, true sight, detect magic, and sense
+life based on your skill in each. These passives are applied
+automatically when you cast mage sight -- no need to cast them
+individually. The passives rise and fall with the primary spell:
+dispelling or expiring mage sight removes all of its passives.
+
+Mage sight can also be cast on a group target to buff your entire 
+party at once by casting without a target specified.
+
+The individual vision spells still exist on potions and scrolls. 

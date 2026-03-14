@@ -773,12 +773,18 @@ int TBeing::updateAffects() {
       }
     }
 
+    // Mage sight passives (tagged with modifier2 == SPELL_MAGE_SIGHT) should
+    // not generate their own periodic messages — only the primary does.
+    // Independently sourced buffs (potions, scrolls) are untagged and get
+    // their normal messages.
+    bool isMageSightPassive = (af->modifier2 == SPELL_MAGE_SIGHT);
+
     if (af->duration >= 1) {
       af->duration--;
 
       // let user know if it can now be renewed
       if (!couldBeRenewed && af->canBeRenewed()) {
-        if (af->shouldGenerateText()) {
+        if (af->shouldGenerateText() && !isMageSightPassive) {
           if (af->type >= 0 && af->type < MAX_SKILL && discArray[af->type])
             sendTo(format("The effects of %s can now be renewed.\n\r") %
                    discArray[af->type]->name);
@@ -791,7 +797,7 @@ int TBeing::updateAffects() {
           return DELETE_THIS;
       } else if (af->duration == 1 * Pulse::UPDATES_PER_MUDHOUR) {
         // some spells have > 1 effect, do not show 2 messages
-        if (af->shouldGenerateText())
+        if (af->shouldGenerateText() && !isMageSightPassive)
           spellWearOffSoon(af->type);
       }
     } else {
@@ -803,7 +809,8 @@ int TBeing::updateAffects() {
             (af->type < LAST_BREATH_WEAPON)) ||
           ((af->type >= FIRST_ODDBALL_AFFECT) &&
             (af->type < LAST_ODDBALL_AFFECT))) {
-        if (af->shouldGenerateText() || (af->next->duration > 0)) {
+        if (!isMageSightPassive &&
+            (af->shouldGenerateText() || (af->next->duration > 0))) {
           rc = spellWearOff(af->type);
           if (IS_SET_DELETE(rc, DELETE_THIS))
             return DELETE_THIS;

@@ -1185,6 +1185,7 @@ class TBeing : public TThing {
     int fallKill();
     int mostPowerstoneMana() const;
     bool affectedBySpell(spellNumT) const;
+    bool hasStandaloneSpell(spellNumT) const;
     int checkForSkillAttempt(spellNumT);
     void removeSkillAttempt(spellNumT);
 

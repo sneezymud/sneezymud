@@ -1,6 +1,9 @@
-Magical detection is a rather simple ability and can be granted to others
-fairly easily by most alchemists.  Note that it only detects the presence
-or absence of magical powers, not what powers may be present.  Also, it
-is unable to detect invisible objects.  The ability typically lasts up to
-2 days. Note that this spell should be cast upon the person you wish to grant
-the power to detect magic; you should not cast it directly upon an item.
+Magical detection allows the user to detect the presence or absence of
+magical powers on items and creatures, though not what specific powers
+may be present.  It is unable to detect invisible objects.
+
+Detect magic is a passive enhancement granted by mage sight if your
+skill is high enough. It can also be found independently on some
+potions and scrolls throughout the realm.
+
+See also: MAGE SIGHT

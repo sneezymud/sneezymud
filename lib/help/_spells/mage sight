@@ -1,0 +1,16 @@
+Mage sight is a sorcery spell that enhances the caster's vision through
+a combination of magical effects. It provides a direct bonus to vision
+and can passively grant up to five additional vision buffs: infravision,
+detect invisible, true sight, detect magic, and sense life.
+
+Each passive is rolled independently based on the caster's skill in that
+spell. Higher skill means a better chance of each passive being included.
+The passives share the duration of the primary spell -- when mage sight
+expires or is dispelled, all of its passives are removed with it.
+
+Mage sight can be cast on yourself, on another character, or with no
+target to buff your entire group at once. It can also be found on
+scrolls and potions.
+
+See also: INFRAVISION, DETECT INVISIBILITY, TRUE SIGHT, DETECT MAGIC,
+          SENSE LIFE

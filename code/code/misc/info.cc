@@ -12,6 +12,7 @@
 #include "configuration.h"
 #include "handler.h"
 #include "extern.h"
+#include "disc_mage_spirit.h"
 #include "being.h"
 #include "low.h"
 #include "colorstring.h"
@@ -1237,7 +1238,6 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme,
       case SPELL_FAERIE_FIRE:
       case SPELL_STUPIDITY:
       case SPELL_ILLUMINATE:
-      case SPELL_DETECT_MAGIC:
       case SPELL_MATERIALIZE:
       case SPELL_CHRISM:
       case SPELL_BLOOD_BOIL:
@@ -1248,13 +1248,11 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme,
       case SPELL_PROTECTION_FROM_FIRE:
       case SPELL_PROTECTION_FROM_WATER:
       case SPELL_PROTECTION_FROM_ENERGY:
-      case SPELL_INFRAVISION:
       case SPELL_IDENTIFY:
       case SPELL_POWERSTONE:
       case SPELL_FAERIE_FOG:
       case SPELL_TELEPORT:
       case SPELL_KNOT:
-      case SPELL_SENSE_LIFE:
       case SPELL_SENSE_LIFE_SHAMAN:  // shaman
       case SPELL_CALM:
       case SPELL_ACCELERATE:
@@ -1287,7 +1285,6 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme,
       case SPELL_CHASE_SPIRIT:  // shaman
       case SPELL_ENHANCE_WEAPON:
       case SPELL_GALVANIZE:
-      case SPELL_DETECT_INVISIBLE:
       case SPELL_DISPEL_INVISIBLE:
       case SPELL_FARLOOK:
       case SPELL_FALCON_WINGS:
@@ -1309,7 +1306,60 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme,
       case SPELL_ATOMIZE:
       case SPELL_ANIMATE:
       case SPELL_BIND:
+      case SPELL_INFRAVISION:
+      case SPELL_DETECT_INVISIBLE:
+      case SPELL_DETECT_MAGIC:
+      case SPELL_SENSE_LIFE:
       case SPELL_TRUE_SIGHT:
+      case SPELL_MAGE_SIGHT: {
+        // When mage sight is active, consolidate all vision passives into one
+        // line: 'mage sight (IV/DI/TS/DM/SL)'. Passives are suppressed and
+        // shown as abbreviations. Without mage sight, fall through to normal.
+        // Passives applied by mage sight are tagged with modifier2 =
+        // SPELL_MAGE_SIGHT. Only suppress those — independently sourced
+        // buffs (potions, scrolls) should display normally.
+        if (aff->modifier2 == SPELL_MAGE_SIGHT) {
+          continue;
+        }
+        if (aff->type == SPELL_MAGE_SIGHT) {
+          if (!aff->shouldGenerateText())
+            continue;
+          if (!show)
+            break;
+
+          // Build abbreviation list for active passives
+          sstring label = "mage sight";
+          sstring passiveList;
+          for (const auto& [spell, bv, abbrev] : mageSightPassives) {
+            for (auto* af = ch->affected; af; af = af->next) {
+              if (af->type == spell && af->modifier2 == SPELL_MAGE_SIGHT) {
+                if (!passiveList.empty())
+                  passiveList += "/";
+                passiveList += abbrev;
+                break;
+              }
+            }
+          }
+          if (!passiveList.empty())
+            label += " (" + passiveList + ")";
+
+          if (aff->renew < 0) {
+            str += format("Affected : '%s' : Approx. Duration : %s\n\r") %
+                   label % describeDuration(this, aff->duration);
+          } else if (aff->canBeRenewed()) {
+            str += format("Affected : '%s' : Time Left : %s %s%s%s\n\r") %
+                   label % describeDuration(this, aff->duration) % red() %
+                   "(Renewable)" % norm();
+          } else {
+            str += format("Affected : '%s' : Time Left : %s %s%s%s\n\r") %
+                   label % describeDuration(this, aff->duration) % green() %
+                   "(Not Yet Renewable)" % norm();
+          }
+          break;
+        }
+        // No mage sight active — fall through to normal display
+        [[fallthrough]];
+      }
       case SPELL_CLOUD_OF_CONCEALMENT:
       case SPELL_POLYMORPH:
       case SPELL_SILENCE:
@@ -5704,7 +5754,8 @@ namespace {
 
       if (!spell || sstring(spell->name).empty() ||
           !isValidSpellType(spell->typ) ||
-          (getDisciplineNumber(indexEnum, false) == DISC_NONE))
+          (getDisciplineNumber(indexEnum, false) == DISC_NONE) ||
+          (spell->targets & TAR_PASSIVE))
         continue;
 
       output.emplace_back(skillSorter(character, indexEnum));
@@ -5740,8 +5791,9 @@ namespace {
     const bool isViolent = spell->targets & TAR_VIOLENT;
     const bool isAOE = spell->targets & TAR_AREA;
     const bool isTargeted =
-      spell->targets & (TAR_CHAR_ROOM | TAR_CHAR_WORLD | TAR_SELF_ONLY |
-                         TAR_OBJ_INV | TAR_OBJ_EQUIP | TAR_CHAR_VIS_WORLD);
+      spell->targets &
+      (TAR_CHAR_ROOM | TAR_CHAR_WORLD | TAR_SELF_ONLY | TAR_OBJ_INV |
+        TAR_OBJ_EQUIP | TAR_CHAR_VIS_WORLD | TAR_GROUP);
 
     return isViolent ? (isAOE ? NONTARGETED_OFFENSIVE : TARGETED_OFFENSIVE)
                      : (isTargeted ? TARGETED_UTILITY : NONTARGETED_UTILITY);

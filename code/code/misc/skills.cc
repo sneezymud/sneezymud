@@ -161,7 +161,7 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
     case SPELL_ILLUMINATE:  // 8
       return &((CDMage*)cd)->skIlluminate;
     case SPELL_DETECT_MAGIC:  // 9
-      return &((CDMage*)cd)->skDetectMagic;
+      return &((CDAlchemy*)cd)->skDetectMagic;
     case SPELL_STUNNING_ARROW:  // 10
       return &((CDMage*)cd)->skStunningArrow;
     case SPELL_MATERIALIZE:  // 11
@@ -173,7 +173,7 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
     case SPELL_COLOR_SPRAY:  // 19
       return &((CDMage*)cd)->skColorSpray;
     case SPELL_INFRAVISION:  // 20
-      return &((CDMage*)cd)->skInfravision;
+      return &((CDFire*)cd)->skInfravision;
     case SPELL_IDENTIFY:  // 21
       return &((CDMage*)cd)->skIdentify;
     case SPELL_POWERSTONE:  // 22
@@ -223,7 +223,7 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
     case SPELL_GALVANIZE:
       return &((CDMage*)cd)->skGalvanize;
     case SPELL_DETECT_INVISIBLE:
-      return &((CDMage*)cd)->skDetectInvisible;
+      return &((CDSpirit*)cd)->skDetectInvisible;
     case SPELL_DISPEL_INVISIBLE:
       return &((CDMage*)cd)->skDispelInvisible;
     case SPELL_TORNADO:
@@ -252,6 +252,8 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
       return &((CDMage*)cd)->skCopy;
     case SPELL_HASTE:
       return &((CDMage*)cd)->skHaste;
+    case SPELL_MAGE_SIGHT:
+      return &((CDMage*)cd)->skMageSight;
     case SKILL_REPAIR_MAGE:
       return &((CDMage*)cd)->skRepairMage;
 

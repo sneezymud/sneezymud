@@ -14,13 +14,11 @@ class CDMage : public CDiscipline {
     CSkill skSorcerersGlobe;
     CSkill skFaerieFire;
     CSkill skIlluminate;
-    CSkill skDetectMagic;
     CSkill skStunningArrow;
     CSkill skMaterialize;
     CSkill skPebbleSpray;
     CSkill skArcticBlast;
     CSkill skColorSpray;
-    CSkill skInfravision;
     CSkill skIdentify;
     CSkill skPowerstone;
     CSkill skFlamingSword;
@@ -46,7 +44,6 @@ class CDMage : public CDiscipline {
     CSkill skDispelMagic;
     CSkill skEnhanceWeapon;
     CSkill skGalvanize;
-    CSkill skDetectInvisible;
     CSkill skDispelInvisible;
     CSkill skTornado;
     CSkill skSandBlast;
@@ -60,6 +57,7 @@ class CDMage : public CDiscipline {
     CSkill skEyesOfFertuman;
     CSkill skCopy;
     CSkill skHaste;
+    CSkill skMageSight;
     CSkill skRepairMage;
 
     virtual CDMage* cloneMe() { return new CDMage(*this); }
