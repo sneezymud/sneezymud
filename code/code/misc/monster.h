@@ -441,7 +441,7 @@ class TMonster : public TBeing {
     int getMobIndex() const { return (number < 0 ? 0 : number); }
     bool isUnique() { return (!mob_index[getMobIndex()].getNumber()); }
     virtual void purgeMe(TBeing*);
-    void loadResponses(int, const sstring& = "");
+    void loadResponses(int, int playerId = 0);
     bool checkResponsesPossible(cmdTypeT, const sstring&, TBeing*);
     int checkResponses(TBeing*, TThing*, const sstring&, cmdTypeT);
     int checkResponsesReal(TBeing*, TThing*, const sstring&, cmdTypeT);

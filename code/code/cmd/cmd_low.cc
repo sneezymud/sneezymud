@@ -1164,8 +1164,7 @@ bool parse_num_args(TPerson& ch, sstring args, std::vector<int>& vnums) {
   return true;
 }
 
-void mvRoom(TPerson& ch, const sstring& immortal, int block,
-  const sstring& rooms) {
+void mvRoom(TPerson& ch, int playerId, int block, const sstring& rooms) {
   std::vector<int> vnums;
   if (!parse_num_args(ch, rooms, vnums)) {
     ch.sendTo(
@@ -1183,8 +1182,8 @@ void mvRoom(TPerson& ch, const sstring& immortal, int block,
     db_immo.query(
       "select vnum, x, y, z, name, description, zone, room_flag, sector, "
       "teletime, teletarg, telelook, river_speed, river_dir, capacity, height, "
-      "spec from room where owner='%s' and vnum=%i and block=%i",
-      immortal.c_str(), vnum, block);
+      "spec from room where player_id=%i and vnum=%i and block=%i",
+      playerId, vnum, block);
 
     if (db_immo.fetchRow()) {
       ch.sendTo(format("Adding %i ('%s')\n") % vnum % db_immo["name"]);
@@ -1208,9 +1207,9 @@ void mvRoom(TPerson& ch, const sstring& immortal, int block,
       db_beta.query("delete from roomextra where vnum=%i", vnum);
 
       db_immo.query(
-        "select vnum, name, description from roomextra where owner='%s' and "
+        "select vnum, name, description from roomextra where player_id=%i and "
         "vnum=%i and block=%i",
-        immortal.c_str(), vnum, block);
+        playerId, vnum, block);
 
       while (db_immo.fetchRow()) {
         db_beta.query(
@@ -1226,8 +1225,8 @@ void mvRoom(TPerson& ch, const sstring& immortal, int block,
       db_immo.query(
         "select vnum, direction, name, description, type, condition_flag, "
         "lock_difficulty, weight, key_num, destination from roomexit where "
-        "owner='%s' and vnum=%i and block=%i",
-        immortal.c_str(), vnum, block);
+        "player_id=%i and vnum=%i and block=%i",
+        playerId, vnum, block);
 
       while (db_immo.fetchRow()) {
         db_beta.query(
@@ -1249,7 +1248,7 @@ void mvRoom(TPerson& ch, const sstring& immortal, int block,
   db_beta.query("commit");
 }
 
-void mvObj(TPerson& ch, const sstring& immortal, const sstring& rooms) {
+void mvObj(TPerson& ch, int playerId, const sstring& rooms) {
   std::vector<int> vnums;
   if (!parse_num_args(ch, rooms, vnums)) {
     ch.sendTo(
@@ -1269,9 +1268,9 @@ void mvObj(TPerson& ch, const sstring& immortal, const sstring& rooms) {
       "select "
       "vnum,name,short_desc,long_desc,action_desc,type,action_flag,wear_flag,"
       "val0,val1,val2,val3,weight,price,can_be_seen,spec_proc,max_exist,max_"
-      "struct,cur_struct,decay,volume,material from obj where owner='%s' and "
+      "struct,cur_struct,decay,volume,material from obj where player_id=%i and "
       "vnum=%i",
-      immortal.c_str(), vnum);
+      playerId, vnum);
 
     if (db_immo.fetchRow()) {
       ch.sendTo(format("Adding %i ('%s')\n") % vnum % db_immo["short_desc"]);
@@ -1306,9 +1305,9 @@ void mvObj(TPerson& ch, const sstring& immortal, const sstring& rooms) {
       db_beta.query("delete from objaffect where vnum=%i", vnum);
 
       db_immo.query(
-        "select vnum, type, mod1, mod2 from objaffect where owner='%s' and "
+        "select vnum, type, mod1, mod2 from objaffect where player_id=%i and "
         "vnum=%i",
-        immortal.c_str(), vnum);
+        playerId, vnum);
 
       while (db_immo.fetchRow()) {
         db_beta.query("insert into objaffect values(%s, %s, %s, %s)",
@@ -1320,9 +1319,9 @@ void mvObj(TPerson& ch, const sstring& immortal, const sstring& rooms) {
       db_beta.query("delete from objextra where vnum=%i", vnum);
 
       db_immo.query(
-        "select vnum, name, description from objextra where owner='%s' and "
+        "select vnum, name, description from objextra where player_id=%i and "
         "vnum=%i",
-        immortal.c_str(), vnum);
+        playerId, vnum);
 
       while (db_immo.fetchRow()) {
         db_beta.query("insert into objextra values(%s, '%s', '%s')",
@@ -1338,7 +1337,7 @@ void mvObj(TPerson& ch, const sstring& immortal, const sstring& rooms) {
   db_beta.query("commit");
 }
 
-void mvMob(TPerson& ch, const sstring& immortal, const sstring& rooms) {
+void mvMob(TPerson& ch, int playerId, const sstring& rooms) {
   std::vector<int> vnums;
   if (!parse_num_args(ch, rooms, vnums)) {
     ch.sendTo(
@@ -1361,8 +1360,8 @@ void mvMob(TPerson& ch, const sstring& immortal, const sstring& rooms) {
       "hpbonus, damage_level, damage_precision, gold, race, weight, height, "
       "str, bra, con, dex, agi, intel, wis, foc, per, cha, kar, spe, pos, "
       "def_position, sex, spec_proc, skin, vision, can_be_seen, max_exist, "
-      "local_sound, adjacent_sound from mob where owner='%s' and vnum=%i",
-      immortal.c_str(), vnum);
+      "local_sound, adjacent_sound from mob where player_id=%i and vnum=%i",
+      playerId, vnum);
 
     if (db_immo.fetchRow()) {
       ch.sendTo(format("Adding %i ('%s')\n") % vnum % db_immo["short_desc"]);
@@ -1401,8 +1400,8 @@ void mvMob(TPerson& ch, const sstring& immortal, const sstring& rooms) {
       db_beta.query("delete from mob_imm where vnum=%i", vnum);
 
       db_immo.query(
-        "select vnum, type, amt from mob_imm where owner='%s' and vnum=%i",
-        immortal.c_str(), vnum);
+        "select vnum, type, amt from mob_imm where player_id=%i and vnum=%i",
+        playerId, vnum);
 
       while (db_immo.fetchRow()) {
         db_beta.query("insert into mob_imm values(%s, %s, %s)",
@@ -1414,9 +1413,9 @@ void mvMob(TPerson& ch, const sstring& immortal, const sstring& rooms) {
       db_beta.query("delete from mob_extra where vnum=%i", vnum);
 
       db_immo.query(
-        "select vnum, keyword, description from mob_extra where owner='%s' and "
-        "vnum=%i",
-        immortal.c_str(), vnum);
+        "select vnum, keyword, description from mob_extra where player_id=%i "
+        "and vnum=%i",
+        playerId, vnum);
 
       while (db_immo.fetchRow()) {
         db_beta.query("insert into mob_extra values(%s, '%s', '%s')",
@@ -1436,13 +1435,13 @@ void mvMob(TPerson& ch, const sstring& immortal, const sstring& rooms) {
   would often want to be able to move a builder's mobs over without moving
   any responses as well, to allow auditing of responses first.
 */
-void mvResponse(TPerson& ch, const sstring& immortal,
+void mvResponse(TPerson& ch, int playerId, const sstring& builderName,
   const sstring& vnumsString) {
   static constexpr const char* usage =
     "Syntax: low mvresponse <builder_name> [vnums]\n\rLeave vnums blank to "
     "list mob responses owned by the builder.\n\r";
 
-  if (immortal.empty()) {
+  if (playerId == 0) {
     ch.sendTo(
       "Must specify the name of the builder who owns the vnums being "
       "moved.\n\r");
@@ -1455,14 +1454,15 @@ void mvResponse(TPerson& ch, const sstring& immortal,
 
   if (vnumsString.empty()) {
     std::stringstream output;
-    output << "Mob responses owned by " << immortal << ":\n\r\n\r";
+    output << "Mob responses owned by " << builderName << ":\n\r\n\r";
     output << "  Vnum | Name\n\r";
     output << "-------|-------------------\n\r";
 
     immDb.query(
       "select mobresponses.vnum, mob.name from mobresponses join "
-      "mob on mob.vnum=mobresponses.vnum where mobresponses.owner='%s'",
-      immortal.c_str());
+      "mob on mob.player_id=mobresponses.player_id and "
+      "mob.vnum=mobresponses.vnum where mobresponses.player_id=%i",
+      playerId);
 
     while (immDb.fetchRow())
       output << format("%6i | %s\n\r") % immDb["vnum"] % immDb["name"];
@@ -1486,12 +1486,12 @@ void mvResponse(TPerson& ch, const sstring& immortal,
     format(
       "Copying mob responses for vnums '%s' owned by '%s' from immortal DB to "
       "live DB...\n\r") %
-    vnumsString % immortal);
+    vnumsString % builderName);
 
   for (auto vnum : vnums) {
     immDb.query(
-      "select vnum, response from mobresponses where owner='%s' and vnum=%i",
-      immortal.c_str(), vnum);
+      "select vnum, response from mobresponses where player_id=%i and vnum=%i",
+      playerId, vnum);
 
     if (immDb.fetchRow()) {
       prodDb.query("delete from mobresponses where vnum=%i", vnum);
@@ -1530,28 +1530,36 @@ void TPerson::doLow(const sstring& argument) {
     return;
   }
 
-  if (is_abbrev(command, "mvroom")) {
-    int block = convertTo<int>(argument.word(2));
-    if (block != 1 && block != 2) {
-      sendTo("Block must be either 1 or 2\n");
+  if (is_abbrev(command, "mvroom") || is_abbrev(command, "mvobj") ||
+      is_abbrev(command, "mvmob") || is_abbrev(command, "mvresponse")) {
+    sstring builderName = argument.word(1);
+    if (builderName.empty()) {
+      sendTo("Must specify a builder name.\n\r");
       return;
     }
-    mvRoom(*this, argument.word(1), block, argument.dropWords(3));
-    return;
-  }
+    TDatabase lookupDb(DB_SNEEZY);
+    lookupDb.query("SELECT id FROM player WHERE name='%s'",
+      builderName.c_str());
+    if (!lookupDb.fetchRow()) {
+      sendTo("Player not found.\n\r");
+      return;
+    }
+    int playerId = convertTo<int>(lookupDb["id"]);
 
-  if (is_abbrev(command, "mvobj")) {
-    mvObj(*this, argument.word(1), argument.dropWords(2));
-    return;
-  }
-
-  if (is_abbrev(command, "mvmob")) {
-    mvMob(*this, argument.word(1), argument.dropWords(2));
-    return;
-  }
-
-  if (is_abbrev(command, "mvresponse")) {
-    mvResponse(*this, argument.word(1), argument.dropWords(2));
+    if (is_abbrev(command, "mvroom")) {
+      int block = convertTo<int>(argument.word(2));
+      if (block != 1 && block != 2) {
+        sendTo("Block must be either 1 or 2\n");
+        return;
+      }
+      mvRoom(*this, playerId, block, argument.dropWords(3));
+    } else if (is_abbrev(command, "mvobj")) {
+      mvObj(*this, playerId, argument.dropWords(2));
+    } else if (is_abbrev(command, "mvmob")) {
+      mvMob(*this, playerId, argument.dropWords(2));
+    } else {
+      mvResponse(*this, playerId, builderName, argument.dropWords(2));
+    }
     return;
   }
 

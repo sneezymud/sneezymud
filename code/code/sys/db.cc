@@ -2230,8 +2230,8 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing* ch) {
   } else {
     TDatabase db(ch && should_alloc ? DB_IMMORTAL : DB_SNEEZY);
     if (ch && should_alloc) {
-      db.query("select * from mob where owner = '%s' and vnum = %i",
-        ch->name.c_str(), virt);
+      db.query("select * from mob where player_id=%i and vnum=%i",
+        ch->getPlayerID(), virt);
     } else {
       db.query("select * from mob where vnum = %i", virt);
     }
@@ -2380,13 +2380,21 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing* ch) {
       if (db["adjacent_sound"].length() > 0)
         distantSnds = db["adjacent_sound"];
     }
-    db.query("select * from mob_imm where vnum=%i", virt);
+    if (ch && should_alloc)
+      db.query("select * from mob_imm where player_id=%i and vnum=%i",
+        ch->getPlayerID(), virt);
+    else
+      db.query("select * from mob_imm where vnum=%i", virt);
     while (db.fetchRow()) {
-      setImmunity((immuneTypeT)convertTo<int>(db["type"]),
+      setImmunity(static_cast<immuneTypeT>(convertTo<int>(db["type"])),
         convertTo<int>(db["amt"]));
     }
 
-    db.query("select * from mob_extra where vnum=%i", virt);
+    if (ch && should_alloc)
+      db.query("select * from mob_extra where player_id=%i and vnum=%i",
+        ch->getPlayerID(), virt);
+    else
+      db.query("select * from mob_extra where vnum=%i", virt);
     extraDescription* tExDescr;
     while (db.fetchRow()) {
       tExDescr = new extraDescription();

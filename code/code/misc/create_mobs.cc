@@ -222,7 +222,7 @@ static void TBeingLoad(TBeing* ch, int vnum) {
   }
 
   // mod for imm
-  mob->loadResponses(vnum, ch->name);
+  mob->loadResponses(vnum, ch->getPlayerID());
 
   act(ch->msgVariables(MSG_MEDIT, mob), TRUE, ch, 0, 0, TO_ROOM);
 
@@ -280,24 +280,24 @@ static void TBeingSave(TBeing* ch, TMonster* mob, int vnum) {
 
   ch->sendTo("Saving.\n\r");
   TDatabase db(DB_IMMORTAL);
-  db.query("delete from mob where owner = '%s' and vnum = %i", ch->name.c_str(),
+  db.query("delete from mob where player_id=%i and vnum=%i", ch->getPlayerID(),
     vnum);
-  // (owner, vnum, name, short_desc, long_desc, description, actions, affects,
-  // faction, fact_perc, letter, attacks, class, level, tohit, ac, hpbonus,
-  // damage_level, damage_precision, gold, race, weight, height, str, bra, con,
-  // dex, agi, intel, wis, foc, per, cha, kar, spe, pos, def_position, sex,
-  // spec_proc, skin, vision, can_be_seen, max_exist, local_sound,
-  // adjacent_sound)
   db.query(
-    "insert into mob values ('%s', %i, '%s', '%s', '%s', '%s', %i, %i, %i, %i, "
-    "'%s', %f, %i, %i, %i, %f, %f, %f, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, "
-    "%i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, '%s', '%s')",
-    ch->name.c_str(), vnum, mob->name.c_str(), mob->shortDescr.c_str(),
+    "insert into mob (vnum, name, short_desc, long_desc, description, actions, "
+    "affects, faction, fact_perc, letter, attacks, class, level, tohit, ac, "
+    "hpbonus, damage_level, damage_precision, gold, race, weight, height, "
+    "str, bra, con, dex, agi, intel, wis, foc, per, cha, kar, spe, pos, "
+    "def_position, sex, spec_proc, skin, vision, can_be_seen, max_exist, "
+    "local_sound, adjacent_sound, player_id) values "
+    "(%i, '%s', '%s', '%s', '%s', %i, %i, %i, %i, '%s', %f, %i, %i, %i, "
+    "%f, %f, %f, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, "
+    "%i, %i, %i, %i, %i, %i, %i, %i, %i, %i, '%s', '%s', %i)",
+    vnum, mob->name.c_str(), mob->shortDescr.c_str(),
     mob->getLongDesc().c_str(), mob->getDescr().c_str(), actions,
     static_cast<unsigned long>(mob->specials.affectedBy), mob->getFaction(),
     static_cast<int>(mob->getPerc()),
     ((mob->sounds.empty() || !mob->distantSnds.empty()) ? "L" : "A"),
-    (float)mob->getMult(), mob->getClass(), mob->GetMaxLevel(),
+    static_cast<float>(mob->getMult()), mob->getClass(), mob->GetMaxLevel(),
     mob->getHitroll(), mob->getACLevel(), mob->getHPLevel(), mob->getDamLevel(),
     mob->getDamPrecision(), mob->moneyConst, mob->getRace(),
     static_cast<int>(mob->getWeight()), mob->getHeight(),
@@ -311,23 +311,24 @@ static void TBeingSave(TBeing* ch, TMonster* mob, int vnum) {
     mob->getSex(), mob->spec, mob->getMaterial(WEAR_BODY), mob->canBeSeen,
     mob->visionBonus, mob->max_exist,
     (!mob->sounds.empty() ? mob->sounds.c_str() : ""),
-    (!mob->distantSnds.empty() ? mob->distantSnds.c_str() : ""));
+    (!mob->distantSnds.empty() ? mob->distantSnds.c_str() : ""),
+    ch->getPlayerID());
 
   // immunties
-  db.query("delete from mob_imm where owner = '%s' and vnum = %i",
-    ch->name.c_str(), vnum);
+  db.query("delete from mob_imm where player_id=%i and vnum=%i",
+    ch->getPlayerID(), vnum);
   immuneTypeT ij;
   for (ij = MIN_IMMUNE; ij < MAX_IMMUNES; ij++) {
     if (mob->getImmunity(ij) != 0)
       db.query(
-        "insert into mob_imm (owner, vnum, type, amt) values ('%s', %i, %i, "
+        "insert into mob_imm (player_id, vnum, type, amt) values (%i, %i, %i, "
         "%i)",
-        ch->name.c_str(), vnum, (int)ij, mob->getImmunity(ij));
+        ch->getPlayerID(), vnum, static_cast<int>(ij), mob->getImmunity(ij));
   }
 
   // extra messages (repop, bamfout, etc)
-  db.query("delete from mob_extra where owner = '%s' and vnum = %i",
-    ch->name.c_str(), vnum);
+  db.query("delete from mob_extra where player_id=%i and vnum=%i",
+    ch->getPlayerID(), vnum);
   extraDescription* tExDescr;
   for (tExDescr = mob->ex_description; tExDescr; tExDescr = tExDescr->next) {
     if (tExDescr->description.empty()) {
@@ -339,9 +340,9 @@ static void TBeingSave(TBeing* ch, TMonster* mob, int vnum) {
       description[tMarker] = '\0';
       */
       db.query(
-        "insert into mob_extra (owner, vnum, keyword, description) values "
-        "('%s', %i, '%s', '%i')",
-        ch->name.c_str(), vnum, tExDescr->keyword.c_str(),
+        "insert into mob_extra (player_id, vnum, keyword, description) values "
+        "(%i, %i, '%s', '%s')",
+        ch->getPlayerID(), vnum, tExDescr->keyword.c_str(),
         tExDescr->description.c_str());
     }
   }
@@ -487,14 +488,14 @@ static void mlist(TPerson* ch, bool zone = false) {
 
   if (zone) {
     db.query(
-      "select vnum, name, short_desc from mob where owner='%s' and vnum>%i and "
-      "vnum<=%i order by vnum",
-      ch->name.c_str(), zone_table[ch->roomp->getZone()->zone_nr - 1].top,
+      "select vnum, name, short_desc from mob where player_id=%i and vnum>%i "
+      "and vnum<=%i order by vnum",
+      ch->getPlayerID(), zone_table[ch->roomp->getZone()->zone_nr - 1].top,
       ch->roomp->getZone()->top);
   } else {
     db.query(
-      "select vnum, name, short_desc from mob where owner = '%s' order by vnum",
-      ch->name.c_str());
+      "select vnum, name, short_desc from mob where player_id=%i order by vnum",
+      ch->getPlayerID());
   }
 
   if (!db.isResults()) {
@@ -514,20 +515,20 @@ static void mremove(TBeing* ch, int vnum) {
   // delete a mob from a player's immortal file
   TDatabase db(DB_IMMORTAL);
 
-  db.query("select vnum from mob where vnum=%i and owner='%s'", vnum,
-    ch->name.c_str());
+  db.query("select vnum from mob where vnum=%i and player_id=%i", vnum,
+    ch->getPlayerID());
 
   if (!db.isResults()) {
     ch->sendTo("Mob not found.\n\r");
     return;
   }
 
-  if (!db.query("delete from mob where vnum=%i and owner='%s'", vnum,
-        ch->name.c_str()) ||
-      !db.query("delete from mob_imm where vnum=%i and owner='%s'", vnum,
-        ch->name.c_str()) ||
-      !db.query("delete from mob_extra where vnum=%i and owner='%s'", vnum,
-        ch->name.c_str())) {
+  if (!db.query("delete from mob where vnum=%i and player_id=%i", vnum,
+        ch->getPlayerID()) ||
+      !db.query("delete from mob_imm where vnum=%i and player_id=%i", vnum,
+        ch->getPlayerID()) ||
+      !db.query("delete from mob_extra where vnum=%i and player_id=%i", vnum,
+        ch->getPlayerID())) {
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   } else
