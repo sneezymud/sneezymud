@@ -87,6 +87,57 @@ namespace {
           table, table, column, column, refTable, refColumn, onDelete));
     }
   }
+
+  void addCrossDbForeignKey(TDatabase& db, const char* table,
+    const char* column, const char* refSchema, const char* refTable,
+    const char* refColumn, const char* onDelete) {
+    db.query(
+      "SELECT COUNT(*) AS cnt FROM information_schema.KEY_COLUMN_USAGE "
+      "WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='%s' "
+      "AND COLUMN_NAME='%s' AND REFERENCED_TABLE_SCHEMA='%s' "
+      "AND REFERENCED_TABLE_NAME='%s'",
+      table, column, refSchema, refTable);
+    if (db.fetchRow() && convertTo<int>(db["cnt"]) > 0)
+      return;
+    assert(db.query(
+      "ALTER TABLE %s ADD CONSTRAINT fk_%s_%s "
+      "FOREIGN KEY (%s) REFERENCES %s.%s (%s) ON DELETE %s",
+      table, table, column, column, refSchema, refTable, refColumn, onDelete));
+  }
+
+  void addCompositeForeignKey(TDatabase& db, const char* table,
+    const char* col1, const char* col2, const char* refTable,
+    const char* refCol1, const char* refCol2, const char* onDelete) {
+    db.query(
+      "SELECT COUNT(*) AS cnt FROM information_schema.TABLE_CONSTRAINTS "
+      "WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='%s' "
+      "AND CONSTRAINT_NAME='fk_%s_%s_%s' AND CONSTRAINT_TYPE='FOREIGN KEY'",
+      table, table, col1, col2);
+    if (db.fetchRow() && convertTo<int>(db["cnt"]) > 0)
+      return;
+    assert(
+      db.query("ALTER TABLE %s ADD CONSTRAINT fk_%s_%s_%s "
+               "FOREIGN KEY (%s, %s) REFERENCES %s (%s, %s) ON DELETE %s",
+        table, table, col1, col2, col1, col2, refTable, refCol1, refCol2,
+        onDelete));
+  }
+
+  void dropForeignKeyIfExists(TDatabase& db, const char* table,
+    const char* column, const char* refTable) {
+    if (!hasForeignKey(db, table, column, refTable))
+      return;
+    db.query(
+      "SELECT CONSTRAINT_NAME AS fk_name "
+      "FROM information_schema.KEY_COLUMN_USAGE "
+      "WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='%s' "
+      "AND COLUMN_NAME='%s' AND REFERENCED_TABLE_NAME='%s'",
+      table, column, refTable);
+    if (db.fetchRow()) {
+      sstring name = db["fk_name"];
+      assert(
+        db.query("ALTER TABLE %s DROP FOREIGN KEY %s", table, name.c_str()));
+    }
+  }
 }  // namespace
 
 void runMigrations() {
@@ -1981,6 +2032,229 @@ void runMigrations() {
         assert(
           sneezy.query("ALTER TABLE querytimes "
                        "ADD INDEX idx_querytimes_date (date_logged)"));
+    },
+    // Immortal DB cleanup and restructure (owner -> player_id)
+    [&]() {
+      vlogf(LOG_MISC,
+        "Immortal DB cleanup and restructure (owner -> player_id)");
+
+      constexpr const char* allTables[] = {"mob", "mob_imm", "mob_extra",
+        "mobresponses", "obj", "objaffect", "objextra", "room", "roomexit",
+        "roomextra"};
+
+      // Phase 1: Delete dead data - rows not belonging to active builders.
+      // null NOT IN (...) evaluates to null (not true), so handle nulls first.
+      for (const auto* t : allTables) {
+        immortal.query("DELETE FROM %s WHERE owner IS null", t);
+        immortal.query(
+          "DELETE FROM %s WHERE owner NOT IN ("
+          "SELECT p.name FROM sneezy.player p "
+          "JOIN sneezy.wizdata w ON p.id = w.player_id)",
+          t);
+      }
+
+      // Phase 2: Deduplicate tables with auto-increment id.
+      // MariaDB can't DELETE from the same table used in a subquery,
+      // so materialize the keeper set into a temp table first.
+      if (hasColumn(immortal, "roomextra", "id")) {
+        immortal.query(
+          "CREATE TEMPORARY TABLE IF NOT EXISTS roomextra_keep AS "
+          "SELECT MIN(id) as id FROM roomextra "
+          "GROUP BY owner, vnum, name");
+        immortal.query(
+          "DELETE FROM roomextra "
+          "WHERE id NOT IN (SELECT id FROM roomextra_keep)");
+        immortal.query("DROP TEMPORARY TABLE IF EXISTS roomextra_keep");
+      }
+
+      if (hasColumn(immortal, "roomexit", "id")) {
+        immortal.query(
+          "CREATE TEMPORARY TABLE IF NOT EXISTS roomexit_keep AS "
+          "SELECT MIN(id) as id FROM roomexit "
+          "GROUP BY owner, vnum, direction");
+        immortal.query(
+          "DELETE FROM roomexit "
+          "WHERE id NOT IN (SELECT id FROM roomexit_keep)");
+        immortal.query("DROP TEMPORARY TABLE IF EXISTS roomexit_keep");
+      }
+
+      if (hasColumn(immortal, "objaffect", "id")) {
+        immortal.query(
+          "CREATE TEMPORARY TABLE IF NOT EXISTS objaffect_keep AS "
+          "SELECT MIN(id) as id FROM objaffect "
+          "GROUP BY owner, vnum, type, mod1, mod2");
+        immortal.query(
+          "DELETE FROM objaffect "
+          "WHERE id NOT IN (SELECT id FROM objaffect_keep)");
+        immortal.query("DROP TEMPORARY TABLE IF EXISTS objaffect_keep");
+      }
+
+      if (hasColumn(immortal, "objextra", "id")) {
+        immortal.query(
+          "CREATE TEMPORARY TABLE IF NOT EXISTS objextra_keep AS "
+          "SELECT MIN(id) as id FROM objextra "
+          "GROUP BY owner, vnum, name");
+        immortal.query(
+          "DELETE FROM objextra "
+          "WHERE id NOT IN (SELECT id FROM objextra_keep)");
+        immortal.query("DROP TEMPORARY TABLE IF EXISTS objextra_keep");
+      }
+
+      // Phase 3: Add player_id columns
+      for (const auto* t : allTables) {
+        if (!hasColumn(immortal, t, "player_id"))
+          assert(immortal.query(
+            "ALTER TABLE %s ADD COLUMN player_id BIGINT UNSIGNED", t));
+      }
+
+      // Phase 4: Populate player_id from owner name
+      for (const auto* t : allTables) {
+        immortal.query(
+          "UPDATE %s SET player_id = ("
+          "SELECT id FROM sneezy.player WHERE name = %s.owner"
+          ") WHERE player_id IS null OR player_id = 0",
+          t, t);
+      }
+
+      // Phase 5: Restructure tables - single atomic ALTER per table.
+      // Guard: only run if owner column still exists (idempotency).
+      if (hasColumn(immortal, "mob", "owner"))
+        assert(
+          immortal.query("ALTER TABLE mob "
+                         "DROP PRIMARY KEY, "
+                         "ADD PRIMARY KEY (player_id, vnum), "
+                         "DROP COLUMN owner, "
+                         "MODIFY name varchar(127) NOT null, "
+                         "MODIFY short_desc varchar(127) NOT null, "
+                         "MODIFY long_desc varchar(255) NOT null"));
+
+      if (hasColumn(immortal, "mob_imm", "owner"))
+        assert(
+          immortal.query("ALTER TABLE mob_imm "
+                         "DROP PRIMARY KEY, "
+                         "ADD PRIMARY KEY (player_id, vnum, type), "
+                         "DROP COLUMN owner"));
+
+      if (hasColumn(immortal, "mob_extra", "owner"))
+        assert(
+          immortal.query("ALTER TABLE mob_extra "
+                         "DROP PRIMARY KEY, "
+                         "ADD PRIMARY KEY (player_id, vnum, keyword), "
+                         "DROP COLUMN owner"));
+
+      if (hasColumn(immortal, "mobresponses", "owner"))
+        assert(
+          immortal.query("ALTER TABLE mobresponses "
+                         "DROP PRIMARY KEY, "
+                         "DROP INDEX mobresponses_idx, "
+                         "ADD PRIMARY KEY (player_id, vnum), "
+                         "ADD INDEX mobresponses_idx (vnum), "
+                         "DROP COLUMN owner"));
+
+      if (hasColumn(immortal, "obj", "owner"))
+        assert(
+          immortal.query("ALTER TABLE obj "
+                         "DROP PRIMARY KEY, "
+                         "ADD PRIMARY KEY (player_id, vnum), "
+                         "DROP COLUMN owner"));
+
+      if (hasColumn(immortal, "objaffect", "owner"))
+        assert(
+          immortal.query("ALTER TABLE objaffect "
+                         "DROP PRIMARY KEY, "
+                         "ADD PRIMARY KEY (player_id, vnum, type, mod1, mod2), "
+                         "DROP COLUMN id, "
+                         "DROP COLUMN owner"));
+
+      if (hasColumn(immortal, "objextra", "owner"))
+        assert(
+          immortal.query("ALTER TABLE objextra "
+                         "DROP PRIMARY KEY, "
+                         "ADD PRIMARY KEY (player_id, vnum, name), "
+                         "DROP COLUMN id, "
+                         "DROP COLUMN owner"));
+
+      if (hasColumn(immortal, "room", "owner"))
+        assert(
+          immortal.query("ALTER TABLE room "
+                         "DROP PRIMARY KEY, "
+                         "ADD PRIMARY KEY (player_id, vnum), "
+                         "DROP COLUMN owner"));
+
+      if (hasColumn(immortal, "roomexit", "owner"))
+        assert(
+          immortal.query("ALTER TABLE roomexit "
+                         "DROP PRIMARY KEY, "
+                         "DROP INDEX roomexit_idx, "
+                         "ADD PRIMARY KEY (player_id, vnum, direction), "
+                         "DROP COLUMN id, "
+                         "DROP COLUMN owner"));
+
+      if (hasColumn(immortal, "roomextra", "owner"))
+        assert(
+          immortal.query("ALTER TABLE roomextra "
+                         "DROP PRIMARY KEY, "
+                         "DROP INDEX roomextra_idx, "
+                         "ADD PRIMARY KEY (player_id, vnum, name), "
+                         "MODIFY name varchar(255) NOT null, "
+                         "DROP COLUMN id, "
+                         "DROP COLUMN owner"));
+
+      // Phase 6: Foreign keys
+      // Parent FKs (cross-database: immortal -> sneezy)
+      addCrossDbForeignKey(immortal, "mob", "player_id", "sneezy", "player",
+        "id", "CASCADE");
+      addCrossDbForeignKey(immortal, "obj", "player_id", "sneezy", "player",
+        "id", "CASCADE");
+      addCrossDbForeignKey(immortal, "room", "player_id", "sneezy", "player",
+        "id", "CASCADE");
+
+      // Delete orphaned child rows before adding composite FKs.
+      // Builders can have e.g. mob responses without a corresponding mob entry.
+      immortal.query(
+        "DELETE c FROM mob_imm c LEFT JOIN mob p "
+        "ON c.player_id=p.player_id AND c.vnum=p.vnum "
+        "WHERE p.player_id IS null");
+      immortal.query(
+        "DELETE c FROM mob_extra c LEFT JOIN mob p "
+        "ON c.player_id=p.player_id AND c.vnum=p.vnum "
+        "WHERE p.player_id IS null");
+      immortal.query(
+        "DELETE c FROM mobresponses c LEFT JOIN mob p "
+        "ON c.player_id=p.player_id AND c.vnum=p.vnum "
+        "WHERE p.player_id IS null");
+      immortal.query(
+        "DELETE c FROM objaffect c LEFT JOIN obj p "
+        "ON c.player_id=p.player_id AND c.vnum=p.vnum "
+        "WHERE p.player_id IS null");
+      immortal.query(
+        "DELETE c FROM objextra c LEFT JOIN obj p "
+        "ON c.player_id=p.player_id AND c.vnum=p.vnum "
+        "WHERE p.player_id IS null");
+      immortal.query(
+        "DELETE c FROM roomexit c LEFT JOIN room p "
+        "ON c.player_id=p.player_id AND c.vnum=p.vnum "
+        "WHERE p.player_id IS null");
+      immortal.query(
+        "DELETE c FROM roomextra c LEFT JOIN room p "
+        "ON c.player_id=p.player_id AND c.vnum=p.vnum "
+        "WHERE p.player_id IS null");
+
+      // Child composite FKs (within immortal)
+      addCompositeForeignKey(immortal, "mob_imm", "player_id", "vnum", "mob",
+        "player_id", "vnum", "CASCADE");
+      addCompositeForeignKey(immortal, "mob_extra", "player_id", "vnum", "mob",
+        "player_id", "vnum", "CASCADE");
+      addCompositeForeignKey(immortal, "mobresponses", "player_id", "vnum",
+        "mob", "player_id", "vnum", "CASCADE");
+      addCompositeForeignKey(immortal, "objaffect", "player_id", "vnum", "obj",
+        "player_id", "vnum", "CASCADE");
+      addCompositeForeignKey(immortal, "objextra", "player_id", "vnum", "obj",
+        "player_id", "vnum", "CASCADE");
+      addCompositeForeignKey(immortal, "roomexit", "player_id", "vnum", "room",
+        "player_id", "vnum", "CASCADE");
+      addCompositeForeignKey(immortal, "roomextra", "player_id", "vnum", "room",
+        "player_id", "vnum", "CASCADE");
     },
   };
 

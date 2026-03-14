@@ -2958,17 +2958,17 @@ static void RoomSave(TBeing* ch, int start, int end, int useSecond) {
 
   db.query("begin");
   db.query(
-    "delete from room where owner='%s' and (block=%i or vnum between %i and "
+    "delete from room where player_id=%i and (block=%i or vnum between %i and "
     "%i)",
-    ch->getName().c_str(), useSecond, start, end);
+    ch->getPlayerID(), useSecond, start, end);
   db.query(
-    "delete from roomexit where owner='%s' and (block=%i or vnum between %i "
+    "delete from roomexit where player_id=%i and (block=%i or vnum between %i "
     "and %i)",
-    ch->getName().c_str(), useSecond, start, end);
+    ch->getPlayerID(), useSecond, start, end);
   db.query(
-    "delete from roomextra where owner='%s' and (block=%i or vnum between %i "
-    "and %i)",
-    ch->getName().c_str(), useSecond, start, end);
+    "delete from roomextra where player_id=%i and (block=%i or vnum between "
+    "%i and %i)",
+    ch->getPlayerID(), useSecond, start, end);
 
   for (i = rstart; i <= rend; i++) {
     rp = real_roomp(i);
@@ -2989,11 +2989,11 @@ static void RoomSave(TBeing* ch, int start, int end, int useSecond) {
     temp[x] = '\0';
 
     db.query(
-      "insert into room (owner, block, "
+      "insert into room (player_id, block, "
       "vnum,x,y,z,name,description,room_flag,sector,teletime,teletarg,telelook,"
       "river_speed,river_dir,capacity,height,zone,spec) values "
-      "('%s',%i,%i,%i,%i,%i,'%s','%s',%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i)",
-      ch->getName().c_str(), useSecond, rp->number, rp->getXCoord(),
+      "(%i,%i,%i,%i,%i,%i,'%s','%s',%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i)",
+      ch->getPlayerID(), useSecond, rp->number, rp->getXCoord(),
       rp->getYCoord(), rp->getZCoord(), rp->name.c_str(), temp,
       rp->getRoomFlags(), mapSectorToFile(rp->getSectorType()),
       rp->getTeleTime(), rp->getTeleTarg(), rp->getTeleLook(),
@@ -3021,11 +3021,11 @@ static void RoomSave(TBeing* ch, int start, int end, int useSecond) {
         }
 
         db.query(
-          "insert into roomexit (owner,block, "
+          "insert into roomexit (player_id,block, "
           "vnum,direction,name,description,type,condition_flag,lock_difficulty,"
-          "weight,key_num,destination) values ('%s', %i, %i, "
+          "weight,key_num,destination) values (%i, %i, %i, "
           "%i,'%s','%s',%i,%i,%i,%i,%i,%i)",
-          ch->getName().c_str(), useSecond, rp->number, mapDirToFile(j),
+          ch->getPlayerID(), useSecond, rp->number, mapDirToFile(j),
           keyword.c_str(), descr.c_str(), rdd->door_type, rdd->condition,
           rdd->lock_difficulty, rdd->weight, rdd->key, rdd->to_room);
       }
@@ -3041,9 +3041,9 @@ static void RoomSave(TBeing* ch, int start, int end, int useSecond) {
         temp[x] = '\0';
 
         db.query(
-          "insert into roomextra (owner, block, vnum, name, description) "
-          "values ('%s',%i,%i,'%s','%s')",
-          ch->getName().c_str(), useSecond, rp->number, exptr->keyword.c_str(),
+          "insert into roomextra (player_id, block, vnum, name, description) "
+          "values (%i,%i,%i,'%s','%s')",
+          ch->getPlayerID(), useSecond, rp->number, exptr->keyword.c_str(),
           temp);
       }
     }
@@ -3070,21 +3070,21 @@ void RoomLoad(TBeing* ch, int start, int end, int useSecond) {
   db.query(
     "select vnum, x, y, z, name, description, room_flag, sector, teletime, "
     "teletarg, telelook, river_speed, river_dir, capacity, height from room "
-    "where owner='%s' and block=%i and vnum >= %i and vnum <= %i order by vnum "
-    "asc",
-    ch->getName().c_str(), useSecond, start, end);
+    "where player_id=%i and block=%i and vnum >= %i and vnum <= %i order by "
+    "vnum asc",
+    ch->getPlayerID(), useSecond, start, end);
 
   db_exits.query(
     "select vnum, direction, name, description, type, condition_flag, "
     "lock_difficulty, weight, key_num, destination from roomexit where "
-    "owner='%s' and block=%i and vnum >= %i and vnum <= %i order by vnum asc",
-    ch->getName().c_str(), useSecond, start, end);
+    "player_id=%i and block=%i and vnum >= %i and vnum <= %i order by vnum asc",
+    ch->getPlayerID(), useSecond, start, end);
   db_exits.fetchRow();
 
   db_extras.query(
-    "select vnum, name, description from roomextra where owner='%s' and "
+    "select vnum, name, description from roomextra where player_id=%i and "
     "block=%i and vnum >= %i and vnum <= %i order by vnum asc",
-    ch->getName().c_str(), useSecond, start, end);
+    ch->getPlayerID(), useSecond, start, end);
   db_extras.fetchRow();
 
   while (db.fetchRow()) {

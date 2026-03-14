@@ -18,12 +18,12 @@ static char responseFile[32];
 
 static int specificCode(TMonster*, TBeing*, int, const resp*);
 
-void TMonster::loadResponses(int virt, const sstring& immortal) {
-  resp* tmp = NULL;
+void TMonster::loadResponses(int virt, int playerId) {
+  resp* tmp = nullptr;
 
   std::string response;
 
-  if (immortal.empty()) {
+  if (playerId == 0) {
     TDatabase db(DB_SNEEZY);
     db.query("select response from mobresponses where vnum=%i", virt);
     if (!db.fetchRow())
@@ -31,8 +31,8 @@ void TMonster::loadResponses(int virt, const sstring& immortal) {
     response = db["response"];
   } else {
     TDatabase db(DB_IMMORTAL);
-    db.query("select response from mobresponses where vnum=%i and owner='%s'",
-      virt, immortal.c_str());
+    db.query("select response from mobresponses where vnum=%i and player_id=%i",
+      virt, playerId);
     if (!db.fetchRow())
       return;  // no responses
     response = db["response"];

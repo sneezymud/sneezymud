@@ -247,7 +247,8 @@ restore_database() {
 
   # The dump contains CREATE DATABASE statements, so we must DROP first.
   # Grants on db.* survive the DROP/recreate cycle.
-  db_cmd mariadb -e "DROP DATABASE IF EXISTS sneezy; DROP DATABASE IF EXISTS immortal;"
+  # Drop immortal first: it has cross-database FKs into sneezy.
+  db_cmd mariadb -e "DROP DATABASE IF EXISTS immortal; DROP DATABASE IF EXISTS sneezy;"
   db_cmd mariadb < "$TEMP_DIR/dbdump.sql"
 
   success "Databases restored (sneezy + immortal)"
