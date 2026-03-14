@@ -1674,6 +1674,7 @@ void TBeing::statBeing(TBeing* k) {
       case SPELL_BIND:
       case SPELL_ENLIVEN:
       case SPELL_TRUE_SIGHT:
+      case SPELL_MAGE_SIGHT:
       case SPELL_CLOUD_OF_CONCEALMENT:
       case SPELL_POLYMORPH:
       case SPELL_SILENCE:

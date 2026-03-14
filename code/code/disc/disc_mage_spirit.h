@@ -1,12 +1,30 @@
 #pragma once
 
+#include <array>
+
+#include "defs.h"
 #include "discipline.h"
 #include "skills.h"
+
+struct MageSightPassive {
+    spellNumT spell;
+    uint64_t bitvector;
+    const char* abbrev;
+};
+
+inline constexpr std::array mageSightPassives = {
+  MageSightPassive{SPELL_INFRAVISION, AFF_INFRAVISION, "IV"},
+  MageSightPassive{SPELL_DETECT_INVISIBLE, AFF_DETECT_INVISIBLE, "DI"},
+  MageSightPassive{SPELL_TRUE_SIGHT, AFF_TRUE_SIGHT, "TS"},
+  MageSightPassive{SPELL_DETECT_MAGIC, AFF_DETECT_MAGIC, "DM"},
+  MageSightPassive{SPELL_SENSE_LIFE, AFF_SENSE_LIFE, "SL"},
+};
 
 class CDSpirit : public CDiscipline {
   public:
     CSkill skSilence;
     CSkill skCloudOfConcealment;
+    CSkill skDetectInvisible;
     CSkill skTrueSight;
     CSkill skPolymorph;
     CSkill skFumble;
@@ -79,20 +97,18 @@ int castInvisibility(TBeing*, TObj*);
 void invisibility(TBeing*, TObj*, TMagicItem*);
 int invisibility(TBeing*, TObj*, int, short);
 
-int senseLife(TBeing*, TBeing*);
-int castSenseLife(TBeing*, TBeing*);
 void senseLife(TBeing*, TBeing*, TMagicItem*);
 int senseLife(TBeing*, TBeing*, int, short);
 
-int detectInvisibility(TBeing*, TBeing*);
-int castDetectInvisibility(TBeing*, TBeing*);
 void detectInvisibility(TBeing*, TBeing*, TMagicItem*);
 int detectInvisibility(TBeing*, TBeing*, int, short);
 
-int trueSight(TBeing*, TBeing*);
-int castTrueSight(TBeing*, TBeing*);
 void trueSight(TBeing*, TBeing*, TMagicItem*);
 int trueSight(TBeing*, TBeing*, int, short);
+
+int mageSight(TBeing*, TBeing*);
+void mageSight(TBeing*, TBeing*, TMagicItem*);
+int castMageSight(TBeing*, TBeing*);
 
 int castTelepathy(TBeing*);
 int telepathy(TBeing*, const char*);

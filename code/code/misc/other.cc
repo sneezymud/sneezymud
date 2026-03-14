@@ -3051,6 +3051,9 @@ int doObjSpell(TBeing* caster, TBeing* victim, TMagicItem* obj, TObj* target,
     case SPELL_TRUE_SIGHT:
       trueSight(caster, victim, obj);
       break;
+    case SPELL_MAGE_SIGHT:
+      mageSight(caster, victim, obj);
+      break;
     case SPELL_GARMULS_TAIL:
       garmulsTail(caster, victim, obj);
       break;
