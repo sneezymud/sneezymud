@@ -2256,6 +2256,119 @@ void runMigrations() {
       addCompositeForeignKey(immortal, "roomextra", "player_id", "vnum", "room",
         "player_id", "vnum", "CASCADE");
     },
+    // sneezy.objaffect natural composite PK
+    [&]() {
+      vlogf(LOG_MISC, "Converting sneezy.objaffect to natural composite PK");
+
+      if (hasColumn(sneezy, "objaffect", "id")) {
+        dropForeignKeyIfExists(sneezy, "objaffect", "vnum", "obj");
+        if (hasIndex(sneezy, "objaffect", "idx_objaffect_vnum"))
+          assert(sneezy.query(
+            "ALTER TABLE objaffect DROP INDEX idx_objaffect_vnum"));
+
+        assert(
+          sneezy.query("ALTER TABLE objaffect "
+                       "DROP PRIMARY KEY, "
+                       "DROP COLUMN id, "
+                       "ADD PRIMARY KEY (vnum, type, mod1, mod2)"));
+
+        addForeignKey(sneezy, "objaffect", "vnum", "obj", "vnum", "CASCADE");
+      }
+    },
+    // sneezy.alias dedup + natural composite PK
+    [&]() {
+      vlogf(LOG_MISC, "Converting sneezy.alias to natural composite PK");
+
+      if (hasColumn(sneezy, "alias", "id")) {
+        sneezy.query(
+          "CREATE TEMPORARY TABLE alias_keep AS "
+          "SELECT MAX(id) as id FROM alias GROUP BY player_id, word");
+        sneezy.query(
+          "DELETE FROM alias "
+          "WHERE id NOT IN (SELECT id FROM alias_keep)");
+        sneezy.query("DROP TEMPORARY TABLE alias_keep");
+
+        dropForeignKeyIfExists(sneezy, "alias", "player_id", "player");
+
+        assert(
+          sneezy.query("ALTER TABLE alias "
+                       "DROP PRIMARY KEY, "
+                       "DROP COLUMN id, "
+                       "ADD PRIMARY KEY (player_id, word)"));
+
+        addForeignKey(sneezy, "alias", "player_id", "player", "id", "CASCADE");
+
+        // The FK auto-creates a player_id index, but it's redundant with
+        // the PK's leftmost prefix. Drop it.
+        if (hasIndex(sneezy, "alias", "player_id"))
+          assert(sneezy.query("ALTER TABLE alias DROP INDEX player_id"));
+      }
+    },
+    // Remaining sneezy tables - natural composite PKs
+    [&]() {
+      vlogf(LOG_MISC,
+        "Converting remaining sneezy tables to natural composite PKs");
+
+      // playernotes
+      if (hasColumn(sneezy, "playernotes", "id")) {
+        dropForeignKeyIfExists(sneezy, "playernotes", "player_id", "player");
+        if (hasIndex(sneezy, "playernotes", "player_id"))
+          assert(sneezy.query("ALTER TABLE playernotes DROP INDEX player_id"));
+        assert(
+          sneezy.query("ALTER TABLE playernotes "
+                       "DROP PRIMARY KEY, "
+                       "DROP COLUMN id, "
+                       "ADD PRIMARY KEY (player_id, name)"));
+        addForeignKey(sneezy, "playernotes", "player_id", "player", "id",
+          "CASCADE");
+      }
+
+      // accountnotes
+      if (hasColumn(sneezy, "accountnotes", "id")) {
+        dropForeignKeyIfExists(sneezy, "accountnotes", "account_id", "account");
+        if (hasIndex(sneezy, "accountnotes", "account_id"))
+          assert(
+            sneezy.query("ALTER TABLE accountnotes DROP INDEX account_id"));
+        assert(
+          sneezy.query("ALTER TABLE accountnotes "
+                       "DROP PRIMARY KEY, "
+                       "DROP COLUMN id, "
+                       "ADD PRIMARY KEY (account_id, name)"));
+        addForeignKey(sneezy, "accountnotes", "account_id", "account",
+          "account_id", "CASCADE");
+      }
+
+      // savedroomsacct
+      if (hasColumn(sneezy, "savedroomsacct", "id")) {
+        dropForeignKeyIfExists(sneezy, "savedroomsacct", "account_id",
+          "account");
+        if (hasIndex(sneezy, "savedroomsacct", "account_id"))
+          assert(
+            sneezy.query("ALTER TABLE savedroomsacct DROP INDEX account_id"));
+        assert(
+          sneezy.query("ALTER TABLE savedroomsacct "
+                       "DROP PRIMARY KEY, "
+                       "DROP COLUMN id, "
+                       "ADD PRIMARY KEY (account_id, name)"));
+        addForeignKey(sneezy, "savedroomsacct", "account_id", "account",
+          "account_id", "CASCADE");
+      }
+
+      // configuration
+      if (hasColumn(sneezy, "configuration", "id")) {
+        assert(
+          sneezy.query("ALTER TABLE configuration "
+                       "DROP PRIMARY KEY, "
+                       "DROP COLUMN id"));
+        assert(
+          sneezy.query("ALTER TABLE configuration ADD PRIMARY KEY (config)"));
+        if (hasIndex(sneezy, "configuration", "config"))
+          assert(sneezy.query("ALTER TABLE configuration DROP INDEX config"));
+        if (hasIndex(sneezy, "configuration", "idx_configuration_key"))
+          assert(sneezy.query(
+            "ALTER TABLE configuration DROP INDEX idx_configuration_key"));
+      }
+    },
   };
 
   int oldVersion = getVersion(sneezy);
