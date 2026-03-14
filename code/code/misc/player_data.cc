@@ -1029,12 +1029,14 @@ void TBeing::saveChar(int load_room) {
 
   TTransaction db(DB_SNEEZY);
 
+  db.query("update player set account_id=%i where id=%i", accountId,
+    getPlayerID());
+
   if (!isImmortal()) {
     db.query(
-      "update player set talens=%i, account_id=%i, load_room=%i, "
+      "update player set talens=%i, load_room=%i, "
       "last_logon=%i, nutrition=%i where id=%i",
-      chFile.money, accountId, load_room, chFile.last_logon, nutrition,
-      getPlayerID());
+      chFile.money, load_room, chFile.last_logon, nutrition, getPlayerID());
 
     chFile.load_room = 0;
   }
