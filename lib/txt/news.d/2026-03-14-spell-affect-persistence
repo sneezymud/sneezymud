@@ -1,0 +1,4 @@
+Previously, if you had too many enchantments active at once, some could be
+mysteriously forgotten when renting in. This should
+no longer happen. All of your active spells and effects will now
+be properly preserved no matter how many you have.
