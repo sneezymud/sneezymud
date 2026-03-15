@@ -333,6 +333,23 @@ void runMigrations() {
         sneezy.query("ALTER TABLE shopownedrepair ADD FOREIGN KEY (shop_nr) "
                      "REFERENCES shopowned (shop_nr) ON DELETE CASCADE"));
     },
+    [&]() {
+      vlogf(LOG_MISC, "Creating player_affect table");
+      assert(sneezy.query(
+        "CREATE TABLE IF NOT EXISTS player_affect ("
+        "id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, "
+        "player_id BIGINT UNSIGNED NOT null, "
+        "type SMALLINT NOT null, "
+        "level TINYINT NOT null, "
+        "duration INT NOT null, "
+        "renew INT NOT null, "
+        "modifier BIGINT NOT null, "
+        "modifier2 BIGINT NOT null, "
+        "location TINYINT UNSIGNED NOT null, "
+        "bitvector BIGINT UNSIGNED NOT null, "
+        "CONSTRAINT fk_player_affect_player "
+        "FOREIGN KEY (player_id) REFERENCES player(id) ON DELETE CASCADE)"));
+    },
   };
 
   int oldVersion = getVersion(sneezy);

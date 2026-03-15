@@ -420,10 +420,8 @@ void TPerson::storeToSt(charFile* st) {
     }
   }
 
-  if ((j >= MAX_AFFECT) && af && af->next)
-    vlogf(LOG_SILENT,
-      format("WARNING: (%s) OUT OF STORE ROOM FOR AFFECTED TYPES!!!") %
-        getName());
+  // Charfile overflow is no longer a concern — affects are saved to DB
+  // without a cap by saveAffectsToDB()
 
   // Save the discipline learning
   // unused disc_learning values should be 0 from charFile ctor
@@ -838,9 +836,13 @@ void TPerson::loadFromSt(charFile* st) {
   // armor spell.  I left it this way cause although duplicative, I forsee
   // someone changing things around and seperating the functions of load and
   // reset char
-  for (i = 0; i < MAX_AFFECT; i++) {
-    if (st->affected[i].type) {
-      rentAffectTo(&st->affected[i]);
+  if (!loadAffectsFromDB()) {
+    // No DB rows yet — fall back to charfile affects for characters who
+    // haven't saved since the migration to DB-backed affects
+    for (i = 0; i < MAX_AFFECT; i++) {
+      if (st->affected[i].type) {
+        rentAffectTo(&st->affected[i]);
+      }
     }
   }
 
@@ -889,6 +891,66 @@ void TPerson::rentAffectTo(saveAffectedData* af) {
     affectTo(&a, af->renew);
     return;
   }
+}
+
+void TPerson::saveAffectsToDB() {
+  // Runs within saveChar's TTransaction scope - shares the same DB_SNEEZY
+  // connection, so the DELETE + INSERTs are atomic with the other saves.
+  TDatabase db(DB_SNEEZY);
+  db.query("DELETE FROM player_affect WHERE player_id = %i", getPlayerID());
+
+  for (auto* af = affected; af; af = af->next) {
+    if (af->type == SKILL_SEEKWATER || af->type == SKILL_TRACK ||
+        af->type == SPELL_TRAIL_SEEK)
+      continue;
+
+    int mappedType = mapSpellnumToFile(af->type);
+    if (mappedType == -1)
+      continue;
+
+    long mappedModifier = applyTypeShouldBeSpellnum(af->location)
+                            ? static_cast<long>(mapSpellnumToFile(
+                                static_cast<spellNumT>(af->modifier)))
+                            : af->modifier;
+
+    // Build full query via boost::format to preserve 64-bit bitvector values
+    // (TDatabase %i truncates to int via va_arg)
+    sstring query =
+      (format("INSERT INTO player_affect "
+              "(player_id, type, level, duration, renew, modifier, modifier2, "
+              "location, bitvector) "
+              "VALUES (%i, %i, %i, %i, %i, %ld, %ld, %i, %lu)") %
+        getPlayerID() % mappedType % static_cast<int>(af->level) %
+        af->duration % af->renew % mappedModifier % af->modifier2 %
+        mapApplyToFile(af->location) % af->bitvector)
+        .str();
+    db.query(query.c_str());
+  }
+}
+
+bool TPerson::loadAffectsFromDB() {
+  TDatabase db(DB_SNEEZY);
+  db.query(
+    "SELECT type, level, duration, renew, modifier, modifier2, "
+    "location, bitvector FROM player_affect WHERE player_id = %i",
+    getPlayerID());
+
+  bool found = false;
+  while (db.fetchRow()) {
+    found = true;
+    saveAffectedData af;
+    af.type = convertTo<short>(db["type"]);
+    af.level = convertTo<int>(db["level"]);
+    af.duration = convertTo<int>(db["duration"]);
+    af.renew = convertTo<int>(db["renew"]);
+    af.modifier = convertTo<long>(db["modifier"]);
+    af.modifier2 = convertTo<long>(db["modifier2"]);
+    af.location = convertTo<int>(db["location"]);
+    af.bitvector = convertTo<uint64_t>(db["bitvector"]);
+    rentAffectTo(&af);
+  }
+
+  return found;
 }
 
 void TBeing::convertAbilities() {}
@@ -1031,6 +1093,9 @@ void TBeing::saveChar(int load_room) {
     vlogf(LOG_BUG, format("link failed in saveChar for %s") % realName);
 
   // Call these on tmp if exists to allow full saving of shapeshifted chars
+  if (auto* person = dynamic_cast<TPerson*>(tmp ? tmp : this))
+    person->saveAffectsToDB();
+
   if (tmp) {
     // save mobile followers
     tmp->saveFollowers(

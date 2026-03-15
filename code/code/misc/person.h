@@ -67,6 +67,8 @@ class TPerson : public TBeing {
     void setDimensions();
     void setTitle(bool);
     void rentAffectTo(saveAffectedData*);
+    void saveAffectsToDB();
+    bool loadAffectsFromDB();
     void setSelectToggles(TBeing*, classIndT, silentTypeT);
     void advanceSelectDisciplines(classIndT, int, silentTypeT);
     void doLevelSkillsLearn(discNumT, int, int);
