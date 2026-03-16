@@ -417,10 +417,8 @@ void TBeing::statRoom(TRoom* rmp) {
   str += format("%sSector type:%s %s") % cyan() % norm() %
          TerrainInfo[rmp->getSectorType()]->name;
 
-  str += format("  %sSpecial procedure:%s ") % cyan() % norm();
-
-  str +=
-    format("%s\n\r") % ((rmp->spec) ? roomSpecials[rmp->spec].name : "None");
+  str += format("  %sSpecial procedure:%s %s\n\r") % cyan() % norm() %
+         getRoomSpecName(rmp->spec);
 
   str += format("%sRoom flags:%s ") % cyan() % norm();
 
@@ -2286,7 +2284,7 @@ void TBeing::statBeing(TBeing* k) {
       case AFFECT_HOLY_BEAM:
         str += "Holy Beam.\n\r";
         str += format("     Modifies %s to %s by %ld points\n\r") %
-               apply_types[aff->location].name % 
+               apply_types[aff->location].name %
                immunity_names[aff->modifier] % aff->modifier2;
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
         break;

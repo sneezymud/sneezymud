@@ -178,8 +178,7 @@ static void update_room_menu(const TBeing* ch) {
       ch->purple() % ch->norm() % ch->roomp->getRoomHeight() % ch->cyan() %
       ch->norm() % ch->purple() % ch->norm() % ch->cyan() % ch->norm() %
       ch->purple() % ch->norm() % ch->cyan() % ch->norm() % ch->purple() %
-      ch->norm() %
-      (ch->roomp->spec ? roomSpecials[ch->roomp->spec].name : "none"));
+      ch->norm() % getRoomSpecName(ch->roomp->spec));
   } else
     ch->sendTo(edit_menu_basic);
 
@@ -3550,50 +3549,58 @@ int mapDirToFile(dirTypeT dir) {
 
 static void change_room_spec(TRoom* rp, TBeing* ch, const char* arg,
   editorEnterTypeT type) {
-  char buf[256];
-  int row, j, i, new_spec;
-
   if (type != ENTER_CHECK) {
     if (!*arg || (*arg == '\n')) {
       ch->specials.edit = MAIN_MENU;
       update_room_menu(ch);
       return;
     }
-    new_spec = convertTo<int>(arg);
-    if (new_spec < 0 || new_spec > NUM_ROOM_SPECIALS) {
-      ch->sendTo(
-        format("Please enter a number from 0 to %d.\n\r") % NUM_ROOM_SPECIALS);
-      return;
-    } else if (!roomSpecials[new_spec].assignable &&
-               !ch->hasWizPower(POWER_REDIT_ENABLED)) {
-      ch->sendTo(
-        "That spec_proc has been deemed unassignable by builders sorry.\n\r");
-      return;
-    } else {
-      rp->spec = new_spec;
+
+    const auto new_spec = convertTo<int>(arg);
+
+    if (new_spec == 0) {
+      rp->spec = 0;
       ch->specials.edit = MAIN_MENU;
       update_room_menu(ch);
       return;
     }
-  }
-  ch->sendTo(VT_HOMECLR);
-  ch->sendTo(
-    format("Current room spec: %s\n\r\n\r") %
-    ((rp->spec) ? roomSpecials[rp->spec].name : "none"));
-  row = 0;
-  for (i = 1, j = 1; i <= NUM_ROOM_SPECIALS; i++) {
-    if (!roomSpecials[i].assignable && !ch->hasWizPower(POWER_REDIT_ENABLED))
-      continue;
-    sprintf(buf, VT_CURSPOS, row + 5, ((((j - 1) % 3) * 25) + 5));
-    if (!(j % 3))
-      row++;
-    ch->sendTo(buf);
-    ch->sendTo(format("%2d) %s") % i % roomSpecials[i].name);
-    j++;
-  }
-  ch->sendTo(format(VT_CURSPOS) % 22 % 1);
 
-  ch->sendTo("Select a new special procedure (0 = no procedure).\n\r--> ");
+    const auto* const specData = findRoomSpec(new_spec);
+
+    if (!specData ||
+        (!specData->assignable && !ch->hasWizPower(POWER_REDIT_ENABLED))) {
+      ch->sendTo(format("Invalid room spec ID (%d).") % new_spec);
+      return;
+    }
+
+    rp->spec = new_spec;
+    ch->specials.edit = MAIN_MENU;
+    update_room_menu(ch);
+    return;
+  }
+
+  const auto* const currentSpec = findRoomSpec(rp->spec);
+
+  if (currentSpec && !currentSpec->assignable &&
+      !ch->hasWizPower(POWER_REDIT_ENABLED)) {
+    ch->sendTo(
+      "You need the 'POWER_REDIT_ENABLED' wizpower to change this room's "
+      "special procedure.\n\r");
+    return;
+  }
+
+  ch->sendTo(
+    format("Current room spec: %s\n\r\n\r") % getRoomSpecName(rp->spec));
+
+  for (const auto& [id, assignable, name, _proc] : roomSpecials) {
+    if (!assignable && !ch->hasWizPower(POWER_REDIT_ENABLED)) {
+      continue;
+    }
+
+    ch->sendTo(format("%2d) %s\n\r") % id % name);
+  }
+
+  ch->sendTo("\n\rSelect a new special procedure (0 = no procedure).\n\r--> ");
 }
 
 void room_edit(TBeing* ch, const char* arg) {
