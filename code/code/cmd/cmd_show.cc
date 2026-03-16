@@ -1205,10 +1205,12 @@ void TPerson::doShow(const sstring& argument) {
     sb += "Room Specials\n\r";
     sb += "No.) Assignable  Name\n\r";
     sb += "------------------------------------\n\r";
-    for (int i = 1; i <= NUM_ROOM_SPECIALS; i++) {
-      if (!is_abbrev(my_arg, "assignable") || roomSpecials[i].assignable)
-        sb += format("%i) [%s] %s\n\r") % i %
-              (roomSpecials[i].assignable ? "X" : " ") % roomSpecials[i].name;
+    for (const auto& [id, assignable, name, _proc] : roomSpecials) {
+      if (is_abbrev(my_arg, "assignable") && !assignable) {
+        continue;
+      }
+
+      sb += format("%i) [%s] %s\n\r") % id % (assignable ? "X" : " ") % name;
     }
   } else if (is_abbrev(buf, "boobies")) {
     sb += "     (.Y.) <==== BOOBIES!!!\n\r";

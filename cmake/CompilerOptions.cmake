@@ -154,8 +154,8 @@ target_compile_options(sneezy_compiler_options INTERFACE
 target_compile_options(sneezy_compiler_options INTERFACE
     $<$<CXX_COMPILER_ID:Clang>:
         -ferror-limit=0
-        -Wc++20-compat-pedantic
-        -Wc++20-extensions
+        -Wc++23-compat
+        -Wc++23-extensions
         -Wctad-maybe-unsupported
         -Wformat-non-iso
         -Wformat-pedantic
