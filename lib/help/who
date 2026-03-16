@@ -1,39 +1,31 @@
-Syntax: who {-?}
-Syntax: who {-begolnpqrtuw} 
+Syntax: who
+Syntax: who --brief
+Syntax: who --admin
 Syntax: who <name>
-Syntax: who <level>
-Syntax: who <level1> <level2>
+Syntax: who --help
 
-The who command will display all players who are presently connected and
-active.  You must be able to see in order to view the who list (blindness,
-or darkness may prevent).
+The who command displays all players who are currently connected.
 
-With no parameters, it will list everyone.  The -? flag will list the
-available flags.  
+With no arguments, it lists everyone along with their level, class, race,
+and current area. Immortals are shown with their rank and title, colorized
+by their power level.
 
-Specifying, who <name> will list some info about <name> if they are active, 
-additionally, it will list anyone with <name> as an abbreviation.  Hence,
-"who joe" would display "Joe", "Joey" and "JoeBlow".
+who --brief    Shows only player names and titles, with no mechanical
+               information. Useful if you prefer a less spoilery view.
 
-Specifying, who <level> will list out all players at or above <level>.
-Specifying, who <level1> <level2> will list out all players between the two
-levels, inclusive.
+who <name>     Shows detailed information about a specific player including
+               their title, level, class, race, area, group members, and
+               how long they have been online. Also matches abbreviations,
+               so "who joe" would match "Joe", "Joey", and "JoeBlow".
 
-The flags are as follows, and may be combined:
-parameters:		b - builders (level 51s)	g - gods
-o - mortals		l - levels			q - questers
-p - groups              z - seeksgroup
+who --admin    (Immortal only) Shows detailed admin info for all players
+               including idle time, hit points, mana/piety/lifeforce,
+               movement, and account names.
 
-e - elves               u - humans                      r - ogres
-w - dwarves             t - hobbits                     n - gnomes
+who --help     Displays a quick summary of available options.
 
-For example :
-who -l		: lists out everyone by their levels
-who -el		: lists out all elves as well as their levels
-who -le 	: same as who -el
-
-A (Seeks Group) will be appended if that person has toggled that group option
-on.  See the group command help file to see how to set this option.
+Tags such as (Seeking Group), (Newbie-Helper), and (Newbie) will appear
+next to player names when applicable.
 
 
 See Also: TITLE, SCAN, GROUP, TOGGLE

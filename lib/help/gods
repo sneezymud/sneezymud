@@ -1,7 +1,8 @@
 Gods are the implementors and problem handlers of the mud.  If something
 drastic happens, they are the people who you will want to talk to about
 it. 
-The current gods on-line will show up by doing WHO -G.  
+The current gods on-line will show up in the WHO list with a colorized
+rank and title.
 
 Gods are much more responsive to polite tells, than incessant shouts for 
 immediate attention. Shouts tend to annoy the gods and chances are you will 

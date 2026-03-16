@@ -6,22 +6,18 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
-#include <stdio.h>
+#include <set>
 
 #include "extern.h"
 #include "room.h"
 #include "being.h"
 #include "colorstring.h"
 #include "statistics.h"
-#include "games.h"
 #include "database.h"
 #include "cmd_message.h"
 #include "account.h"
 #include "person.h"
 #include "monster.h"
-#include "guild.h"
-
-#include <set>
 
 sstring TBeing::parseTitle(Descriptor*) { return getName(); }
 
@@ -66,523 +62,367 @@ void Descriptor::menuWho() {
   writeToQ("[Press return to continue]\n\r");
 }
 
-static const sstring getWizDescriptLev(const TBeing* ch) {
-  if (ch->hasWizPower(POWER_WIZARD))
-    return "creator";
-  else if (ch->hasWizPower(POWER_GOD)) {
-    if (ch->getSex() == SEX_FEMALE)
-      return "godess ";
-    else
-      return "  god  ";
-  } else if (ch->hasWizPower(POWER_BUILDER))
-    return "demigod";
-  else
-    return "BUG ME!";
-}
+namespace {
 
-static const sstring getWhoLevel(const TBeing* ch, TBeing* p) {
-  sstring tempbuf;
-  char colorBuf[256] = "\0";
+  enum class WhoMode {
+    Default,
+    Brief,
+    Admin,
+    Name
+  };
 
-  if (p->hasWizPower(POWER_WIZARD))
-    strcpy(colorBuf, ch->purple());
-  else if (p->hasWizPower(POWER_GOD))
-    strcpy(colorBuf, ch->red());
-  else if (p->hasWizPower(POWER_BUILDER))
-    strcpy(colorBuf, ch->cyan());
+  sstring getZoneName(const TBeing* p) {
+    if (!p->roomp || !p->roomp->getZone())
+      return "Unknown";
 
-  // Do it this way so you get the default-titles also.
-  if (p && p->GetMaxLevel() > MAX_MORT) {
-    sstring str = stripColorCodes(p->msgVariables(MSG_IMM_TITLE));
-    unsigned int len = str.size();
-    unsigned int padding = 14 - len;
-    unsigned int frontpadding = padding / 2;
-    for (unsigned int iter = 0; iter < frontpadding; iter++)
-      str.insert(0, " ");
+    sstring name = p->roomp->getZone()->name;
+    // zone names often follow "Author - Zone Name" format; strip the author
+    auto sep = name.find(" - ");
+    if (sep != sstring::npos)
+      return name.substr(sep + 3);
+    return name;
+  }
 
-    tempbuf = format("%sLevel:[%-14s%s][%s] %s") % colorBuf % str % colorBuf %
-              getWizDescriptLev(p) % ch->norm();
-  } else {
-    sstring tmpstring;
+  sstring getClassDisplay(const TBeing* p) {
+    return TBeing::getProfAbbrevName(p->player.Class);
+  }
 
-    if (p->isPlayerAction(PLR_ANONYMOUS) && !ch->isImmortal()) {
-      tmpstring = "Anonymous";
-    } else {
-      tempbuf = format("%-5s Lev %2d") %
-                TBeing::getProfAbbrevName(p->player.Class) % p->GetMaxLevel();
-      tmpstring += tempbuf;
-    }
+  sstring getImmColor(const TBeing* viewer, const TBeing* p) {
+    if (p->hasWizPower(POWER_WIZARD))
+      return viewer->purple();
+    if (p->hasWizPower(POWER_GOD))
+      return viewer->red();
+    if (p->hasWizPower(POWER_BUILDER))
+      return viewer->cyan();
+    return "";
+  }
 
-    while (tmpstring.length() < 13)
-      tmpstring = " " + tmpstring + " ";
-    if (tmpstring.length() < 14)
-      tmpstring += " ";
+  sstring getImmRank(const TBeing* p) {
+    if (p->hasWizPower(POWER_WIZARD))
+      return "Creator";
+    if (p->hasWizPower(POWER_GOD))
+      return p->getSex() == SEX_FEMALE ? "Goddess" : "God";
+    if (p->hasWizPower(POWER_BUILDER))
+      return "Demigod";
+    return "Immortal";
+  }
 
-    tempbuf = format("Level:[%s] ") % tmpstring;
-    TGuild* f = NULL;
-    if ((f = p->newguild()) && toggleInfo[TOG_TESTCODE5]->toggle) {
-      if (f->ID &&
-          (IS_SET(f->flags, GUILD_ACTIVE) || ch->newguild() == p->newguild() ||
-            ch->isImmortal()) &&
-          (!IS_SET(f->flags, GUILD_HIDDEN) || ch->newguild() == p->newguild() ||
-            ch->isImmortal()) &&
-          (!p->isImmortal() || ch->isImmortal())) {
-        tempbuf +=
-          format(" %s[<1>%s%s]<1>") % heraldcodes[p->newguild()->colors[0]] %
-          p->newguild()->getName() % heraldcodes[p->newguild()->colors[0]];
-      }
+  sstring getRaceDisplay(const TBeing* p) {
+    auto* race = Races[p->getRace()];
+    if (race)
+      return race->getProperName();
+    return "Unknown";
+  }
+
+  sstring getResourceDisplay(const TBeing* p) {
+    if (p->hasClass(CLASS_CLERIC) || p->hasClass(CLASS_DEIKHAN))
+      return format("HP:%d Pty:%.0f Mv:%d") % p->getHit() % p->getPiety() %
+             p->getMove();
+    if (p->hasClass(CLASS_SHAMAN))
+      return format("HP:%d LF:%d Mv:%d") % p->getHit() % p->getLifeforce() %
+             p->getMove();
+    return format("HP:%d Mana:%d Mv:%d") % p->getHit() % p->getMana() %
+           p->getMove();
+  }
+
+  void appendTags(sstring& buf, const TBeing* viewer, const TBeing* p) {
+    if (p->isPlayerAction(PLR_SEEKSGROUP))
+      buf += "  (Seeking Group)";
+    if (p->isPlayerAction(PLR_NEWBIEHELP))
+      buf += "  (Newbie-Helper)";
+    if (p->desc && p->desc->account &&
+        (time(nullptr) - p->desc->account->birth) < NEWBIE_PURGATORY_LENGTH)
+      buf += "  (Newbie)";
+    if (!p->msgVariables(MSG_NOTE).empty())
+      buf += format("  (%s)") % p->msgVariables(MSG_NOTE);
+    if (viewer->isImmortal()) {
+      if (p->polyed == POLY_TYPE_SWITCH)
+        buf += "  (switched)";
+      if (p->getInvisLevel() > MAX_MORT)
+        buf += format("  (invis %d)") % p->getInvisLevel();
     }
   }
 
-  return tempbuf;
-}
+  sstring formatPlayerLine(const TBeing* viewer, const TBeing* p) {
+    sstring line;
+    if (p->GetMaxLevel() > MAX_MORT) {
+      sstring immTitle = stripColorCodes(p->msgVariables(MSG_IMM_TITLE));
+      line = format("%-14s %sL%-2d %-7s  %-7s  %s%s") %
+             sstring(viewer->pers(p)).cap() % getImmColor(viewer, p) %
+             p->GetMaxLevel() % getImmRank(p) % getRaceDisplay(p) % immTitle %
+             viewer->norm();
+    } else {
+      line = format("%-14s L%-2d %-7s  %-7s  %s") %
+             sstring(viewer->pers(p)).cap() % p->GetMaxLevel() %
+             getClassDisplay(p) % getRaceDisplay(p) % getZoneName(p);
+    }
+    appendTags(line, viewer, p);
+    line += "\n\r";
+    return line;
+  }
+
+}  // namespace
 
 void TBeing::doWho(const char* argument) {
-  TBeing *k, *p;
-  //  char buf[1024] = "\0\0\0";
-  sstring buf;
-  int listed = 0, lcount, l;
-  unsigned int count;
-  char arg[1024];
-  char tString[256];
-  sstring sb;
-  int which1 = 0;
-  int which2 = 0;
+  sstring args(argument);
 
-  sstring stmp;
-  for (; isspace(*argument); argument++)
-    ;
+  auto start = args.find_first_not_of(" \t");
+  if (start != sstring::npos)
+    args = args.substr(start);
+  else
+    args = "";
 
-  sb += "Players: (Add -? for online help)\n\r--------\n\r";
-  lcount = count = 0;
+  auto mode = WhoMode::Default;
+  sstring nameArg;
 
-  std::set<std::string> uniqueAccounts;
-
-  if (!*argument ||
-      ((sscanf(argument, "%d %d", &which1, &which2) == 2) && which1 > 0 &&
-        which2 > 0) ||
-      ((sscanf(argument, "%d %d", &which1, &which2) == 1) && which1 > 0 &&
-        (which2 = MAX_IMMORT))) {
-    // plain old 'who' command
-    // who <level>      level2 assigned to 60
-    // who <level> <level2>
-    for (p = character_list; p; p = p->next) {
-      if (p->isPc() && p->polyed == POLY_TYPE_NONE) {
-        if (dynamic_cast<TPerson*>(p)) {
-          if (canSeeWho(p) &&
-              (!*argument ||
-                ((!p->isPlayerAction(PLR_ANONYMOUS) || isImmortal()) &&
-                  p->GetMaxLevel() >= which1 && p->GetMaxLevel() <= which2))) {
-            if (p->desc && p->desc->account)
-              uniqueAccounts.insert(p->desc->account->name);
-            count++;
-
-            buf = p->parseTitle(desc);
-
-            if (*argument)
-              buf += "   " + getWhoLevel(this, p);
-            if (p->isPlayerAction(PLR_SEEKSGROUP))
-              buf += "   (Seeking Group)";
-            if (p->isPlayerAction(PLR_NEWBIEHELP))
-              buf += "   (Newbie-Helper)";
-            if (p->desc &&
-                (time(0) - p->desc->account->birth) < NEWBIE_PURGATORY_LENGTH)
-              buf += "   (Newbie)";
-            if (!p->msgVariables(MSG_NOTE).empty())
-              buf += format("   (%s)") % p->msgVariables(MSG_NOTE);
-            buf += "\n\r";
-
-            if (isImmortal() && p->isLinkdead()) {
-            } else {
-              sb += (p->polyed == POLY_TYPE_SWITCH ? "(switched) " : "") + buf;
-            }
-          }
-        } else if (isImmortal()) {
-          // only immortals will see this to provide them some concealment
-          if (canSeeWho(p) &&
-              (!*argument ||
-                (p->GetMaxLevel() >= which1 && p->GetMaxLevel() <= which2)) &&
-              IS_SET(p->specials.act, ACT_POLYSELF)) {
-            if (p->desc && p->desc->account)
-              uniqueAccounts.insert(p->desc->account->name);
-            count++;
-            buf = format("%s (polymorphed)\n\r") % sstring(pers(p)).cap();
-            sb += buf;
-          } else if (canSeeWho(p) &&
-                     (!*argument || (p->GetMaxLevel() >= which1 &&
-                                      p->GetMaxLevel() <= which2)) &&
-                     IS_SET(p->specials.act, ACT_DISGUISED)) {
-            if (p->desc && p->desc->account)
-              uniqueAccounts.insert(p->desc->account->name);
-            count++;
-            buf = format("%s (disguised thief)\n\r") % sstring(pers(p)).cap();
-            sb += buf;
-          }
-        }
-      }
-    }
-    AccountStats::max_player_since_reboot =
-      max(AccountStats::max_player_since_reboot, count);
-    buf =
-      format(
-        "\n\rTotal Players : [%d] Max since last reboot : [%d] Avg Players : "
-        "[%.1f] Unique Accounts : [%d]\n\r") %
-      count % AccountStats::max_player_since_reboot %
-      (stats.useage_iters ? (float)stats.num_users / stats.useage_iters : 0) %
-      uniqueAccounts.size();
-    sb += buf;
-    if (desc)
-      desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
-
-    return;
-  } else {
-    argument = one_argument(argument, arg, cElements(arg));
-    if (*arg == '-') {
-      if (strchr(arg, '?')) {
-        if (isImmortal()) {
-          sb += "[-] [i]idle [l]levels [q]quests [h]hit/mana/move/lf\n\r";
-          sb += "[-] [z]seeks-group [p]groups [y]currently-not-grouped\n\r";
-          sb +=
-            "[-] [d]linkdead [g]God [b]Builders [o]Mort [s]stats [f]action\n\r";
-          sb +=
-            "[-] "
-            "[1]Mage[2]Cleric[3]War[4]Thief[5]Deikhan[6]Monk[7]Ranger[8]"
-            "Shaman\n\r";
-          sb +=
-            "[-] [e]elf [t]hobbit [n]gnome [u]human [r]ogre [w]dwarven\n\r\n\r";
-          sb += "[-] [x]Perma Death [!]Fae-touched\n\r";
-
-          if (hasWizPower(POWER_WIZARD))
-            sb += "[-] [a]ccount\n\r";
-
-          sb += "\n\r";
-        } else {
-          sb += "[-] [q]quests [g]god [b]builder [o]mort [f]faction\n\r";
-          sb += "[-] [z]seeks-group [p]groups [y]currently-not-grouped\n\r";
-          sb +=
-            "[-] [e]elf [t]hobbit [n]gnome [u]human [r]ogre [w]dwarven\n\r\n\r";
-          sb +=
-            "[-] "
-            "[1]Mage[2]Cleric[3]War[4]Thief[5]Deikhan[6]Monk[7]Ranger[8]"
-            "Shaman\n\r";
-          sb += "[-] [x]Perma Death\n\r";
-        }
-        if (desc)
-          desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
-        return;
-      }
-
-      bool level, statsx, iPoints, quest, idle, align, group;
-      for (p = character_list; p; p = p->next) {
-        align = level = statsx = idle = iPoints = quest = group = FALSE;
-        if (dynamic_cast<TPerson*>(p) && canSeeWho(p)) {
-          count++;
-          if (p->isLinkdead())
-            lcount++;
-
-          if ((canSeeWho(p) &&
-                (!strchr(arg, 'g') || (p->GetMaxLevel() >= GOD_LEVEL1)) &&
-                (!strchr(arg, 'b') || (p->GetMaxLevel() >= GOD_LEVEL1)) &&
-                (!strchr(arg, 'q') || (p->inQuest())) &&
-                (!strchr(arg, 'o') || (p->GetMaxLevel() <= MAX_MORT)) &&
-                (!strchr(arg, 'z') || (p->isPlayerAction(PLR_SEEKSGROUP))) &&
-                (!strchr(arg, 'p') ||
-                  (p->isAffected(AFF_GROUP) && !p->master && p->followers)) &&
-                (!strchr(arg, 'y') ||
-                  (!p->isAffected(AFF_GROUP) && !p->isImmortal())) &&
-                (!strchr(arg, '1') ||
-                  (p->hasClass(CLASS_MAGE) &&
-                    (isImmortal() || !p->isPlayerAction(PLR_ANONYMOUS)))) &&
-                (!strchr(arg, '2') ||
-                  (p->hasClass(CLASS_CLERIC) &&
-                    (isImmortal() || !p->isPlayerAction(PLR_ANONYMOUS)))) &&
-                (!strchr(arg, '3') ||
-                  (p->hasClass(CLASS_WARRIOR) &&
-                    (isImmortal() || !p->isPlayerAction(PLR_ANONYMOUS)))) &&
-                (!strchr(arg, '4') ||
-                  (p->hasClass(CLASS_THIEF) &&
-                    (isImmortal() || !p->isPlayerAction(PLR_ANONYMOUS)))) &&
-                (!strchr(arg, '5') ||
-                  (p->hasClass(CLASS_DEIKHAN) &&
-                    (isImmortal() || !p->isPlayerAction(PLR_ANONYMOUS)))) &&
-                (!strchr(arg, '6') ||
-                  (p->hasClass(CLASS_MONK) &&
-                    (isImmortal() || !p->isPlayerAction(PLR_ANONYMOUS)))) &&
-                (!strchr(arg, '7') ||
-                  (p->hasClass(CLASS_RANGER) &&
-                    (isImmortal() || !p->isPlayerAction(PLR_ANONYMOUS)))) &&
-                (!strchr(arg, '8') ||
-                  (p->hasClass(CLASS_SHAMAN) &&
-                    (isImmortal() || !p->isPlayerAction(PLR_ANONYMOUS)))) &&
-                (!strchr(arg, 'd') || (p->isLinkdead() && isImmortal())) &&
-                (!strchr(arg, 'e') || p->getRace() == RACE_ELVEN) &&
-                (!strchr(arg, 'n') || p->getRace() == RACE_GNOME) &&
-                (!strchr(arg, 'u') || p->getRace() == RACE_HUMAN) &&
-                (!strchr(arg, 'w') || p->getRace() == RACE_DWARF) &&
-                (!strchr(arg, 'r') || p->getRace() == RACE_OGRE) &&
-                (!strchr(arg, 't') || p->getRace() == RACE_HOBBIT) &&
-                (!strchr(arg, '!') || p->hasQuestBit(TOG_FAE_TOUCHED)) &&
-                (!strchr(arg, 'x') || p->hasQuestBit(TOG_PERMA_DEATH_CHAR)))) {
-            if (p->isLinkdead() && isImmortal())
-              buf = format("[%-12s] ") % pers(p);
-            else if (p->polyed == POLY_TYPE_SWITCH && isImmortal())
-              buf = format("[%-12s] (switched) ") % pers(p);
-            else if (dynamic_cast<TMonster*>(p) &&
-                     (p->specials.act & ACT_POLYSELF))
-              buf = format("(%-14s) ") % pers(p);
-            else
-              buf = format("%-11s ") % pers(p);
-            listed++;
-            for (l = 1; l <= (int)strlen(arg); l++) {
-              switch (arg[l]) {
-                case 'p':
-                  // we trapped only group leaders above...
-                  if (!group) {
-                    TBeing* ch;
-                    followData* f;
-
-                    if (p->desc)
-                      buf = format("Group: %s\n\r%s") %
-                            p->desc->session.groupName % buf;
-
-                    for (f = p->followers; f; f = f->next) {
-                      ch = f->follower;
-                      if (!ch->isPc())
-                        continue;
-                      if (!canSeeWho(ch))
-                        continue;
-                      if (ch->isLinkdead() && isImmortal())
-                        buf = format("%s[%-12s] ") % buf % pers(ch);
-                      else if (ch->polyed == POLY_TYPE_SWITCH && isImmortal())
-                        buf = format("%s[%-12s] (switched) ") % buf % pers(ch);
-                      else if (dynamic_cast<TMonster*>(ch) &&
-                               (ch->specials.act & ACT_POLYSELF))
-                        buf = format("%s(%-14s) ") % buf % pers(ch);
-                      else if (ch->isPlayerAction(PLR_ANONYMOUS) &&
-                               !isImmortal())
-                        buf = format("%s%-11s (??\?) ") % buf % pers(ch);
-                      else
-                        buf = format("%s%-11s (L%d) ") % buf % pers(ch) %
-                              ch->GetMaxLevel();
-                    }
-
-                    group = true;
-                  }
-                  break;
-                case 'i':
-                  if (!idle) {
-                    if (isImmortal())
-                      buf = format("%sIdle:[%-3d] ") % buf % p->getTimer();
-                  }
-                  idle = TRUE;
-                  break;
-                case 'l':
-                case 'y':
-                  if (!level) {
-                    buf += getWhoLevel(this, p);
-                    if (p->isPlayerAction(PLR_SEEKSGROUP))
-                      buf += "   (Seeking Group)";
-                    if (p->isPlayerAction(PLR_NEWBIEHELP))
-                      buf += "   (Newbie-Helper)";
-                    if (p->desc && (time(0) - p->desc->account->birth) <
-                                     NEWBIE_PURGATORY_LENGTH)
-                      buf += "   (Newbie)";
-                    if (!p->msgVariables(MSG_NOTE).empty())
-                      buf += format("   (%s)") % p->msgVariables(MSG_NOTE);
-                  }
-                  level = TRUE;
-                  break;
-                case 'g':
-                case 'b':
-                  // canSeeWho already separated out invisLevel > my own
-                  // only a god can go invis, mortals technically have
-                  // invisLevel if they are linkdead, ignore that though
-                  if (p->getInvisLevel() > MAX_MORT)
-                    buf = format("%s  (invis %d)  ") % buf % p->getInvisLevel();
-                  break;
-                case 'h':
-                  if (!iPoints) {
-                    if (isImmortal()) {
-                      if (p->hasClass(CLASS_CLERIC) ||
-                          p->hasClass(CLASS_DEIKHAN))
-                        buf = format(
-                                "%sHit:[%-3d] Pty:[%-.2f] Move:[%-3d], "
-                                "Talens:[%-8d], Bank:[%-8d]") %
-                              buf % p->getHit() % p->getPiety() % p->getMove() %
-                              p->getMoney() % p->getBank();
-                      else if (p->hasClass(CLASS_SHAMAN))
-                        buf = format(
-                                "%sHit:[%-3d] LF:[%-4d] Move:[%-3d], "
-                                "Talens:[%-8d], Bank:[%-8d]") %
-                              buf % p->getHit() % p->getLifeforce() %
-                              p->getMove() % p->getMoney() % p->getBank();
-                      else
-                        buf = format(
-                                "%sHit:[%-3d] Mana:[%-3d] Move:[%-3d], "
-                                "Talens:[%-8d], Bank:[%-8d]") %
-                              buf % p->getHit() % p->getMana() % p->getMove() %
-                              p->getMoney() % p->getBank();
-                    }
-                  }
-                  iPoints = TRUE;
-                  break;
-                case 'f':
-                  if (!align) {
-                    // show factions of everyone to immorts
-                    // mortal version will show non-imms that are in same fact
-                    if (toggleInfo[TOG_TESTCODE5]->toggle) {
-                      TGuild* f = NULL;
-                      if ((f = p->newguild()) &&
-                          toggleInfo[TOG_TESTCODE5]->toggle) {
-                        if (f->ID &&
-                            (IS_SET(f->flags, GUILD_ACTIVE) ||
-                              newguild() == p->newguild() || isImmortal()) &&
-                            (!IS_SET(f->flags, GUILD_HIDDEN) ||
-                              newguild() == p->newguild() || isImmortal()) &&
-                            (!p->isImmortal() || isImmortal())) {
-                          buf = format("%s%s[<1>%s%s]<1>") % buf %
-                                heraldcodes[p->newguild()->colors[0]] %
-                                p->newguild()->getName() %
-                                heraldcodes[p->newguild()->colors[0]];
-                          if (!IS_SET(f->flags, GUILD_HIDE_RANKS) ||
-                              newguild() == p->newguild() || isImmortal())
-                            buf = format("%s %s[<1>%s%s]<1>") % buf %
-                                  heraldcodes[p->newguild()->colors[1]] %
-                                  p->rank() %
-                                  heraldcodes[p->newguild()->colors[1]];
-                        }
-                      }
-
-                    } else {
-                      if ((getFaction() == p->getFaction() &&
-                            p->GetMaxLevel() <= MAX_MORT) ||
-                          isImmortal()) {
-#if FACTIONS_IN_USE
-                        buf = format("%s[%s] %5.2f%c") % buf %
-                              FactionInfo[p->getFaction()].faction_name %
-                              p->getPerc() % '%';
-#else
-                        buf = format("%s[%s]") % buf %
-                              FactionInfo[p->getFaction()].faction_name;
-#endif
-                      }
-                    }
-                  }
-                  align = TRUE;
-                  break;
-                case 's':
-                  if (!statsx) {
-                    if (isImmortal())
-                      buf =
-                        format(
-                          "%s\n\r\t[St:%-3d Br:%-3d Co:%-3d De:%-3d Ag:%-3d "
-                          "In:%-3d Wi:%-3d Fo:%-3d Pe:%-3d Ch:%-3d Ka:%-3d "
-                          "Sp:%-3d]") %
-                        buf % p->curStats.get(STAT_STR) %
-                        p->curStats.get(STAT_BRA) % p->curStats.get(STAT_CON) %
-                        p->curStats.get(STAT_DEX) % p->curStats.get(STAT_AGI) %
-                        p->curStats.get(STAT_INT) % p->curStats.get(STAT_WIS) %
-                        p->curStats.get(STAT_FOC) % p->curStats.get(STAT_PER) %
-                        p->curStats.get(STAT_CHA) % p->curStats.get(STAT_KAR) %
-                        p->curStats.get(STAT_SPE);
-                  }
-                  statsx = TRUE;
-                  break;
-                case 'q':
-                  if (!quest) {
-                    if (p->isPlayerAction(PLR_SOLOQUEST))
-                      buf =
-                        format("%s (%sSOLO QUEST%s)") % buf % red() % norm();
-
-                    if (p->isPlayerAction(PLR_GRPQUEST))
-                      buf =
-                        format("%s (%sGROUP QUEST%s)") % buf % blue() % norm();
-                  }
-                  quest = TRUE;
-                  break;
-                case 'a':
-                  if (isImmortal() && hasWizPower(POWER_WIZARD)) {
-                    if (p->desc && p->desc->account)
-                      sprintf(tString, " Account[%s]",
-                        p->desc->account->name.c_str());
-                    else
-                      sprintf(tString, " Account[Unknown]");
-
-                    buf += tString;
-                  }
-                  break;
-                default:
-                  break;
-              }  // end of switch statement
-            }    // end of for-loop
-            buf += "\n\r";
-            sb += buf;
-          }  // end of 'should I skip this fool' if-statement
-        }    // end of !NPC(p) loop
-      }      // end of 'step through the character list loop
-    } else {
-      // 'who playername' command
-      int c = 0;
-      for (k = character_list; k; k = k->next) {
-        if (!k->isPc() || !isname(arg, k->name) || !canSee(k))
-          continue;
-
-        c++;
-        buf = k->parseTitle(desc);
-        buf += "    ";
-        buf += getWhoLevel(this, k);
-        if (k->isPlayerAction(PLR_SEEKSGROUP))
-          buf += "   (Seeking Group)";
-        if (k->isLinkdead() && isImmortal())
-          buf += "   (link-dead)";
-        if (k->polyed == POLY_TYPE_SWITCH && isImmortal())
-          buf += "   (switched)";
-        if (k->isPlayerAction(PLR_NEWBIEHELP))
-          buf += "   (Newbie-Helper)";
-        if (k->desc &&
-            (time(0) - k->desc->account->birth) < NEWBIE_PURGATORY_LENGTH)
-          buf += "   (Newbie)";
-        if (!k->msgVariables(MSG_NOTE).empty())
-          buf += format("   (%s)") % k->msgVariables(MSG_NOTE);
-        buf += "\n\r";
-        sb += buf;
-      }
-      if (!c)
-        sb += "No one logged in with that name.\n\r";
-
-      if (desc)
-        desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
+  if (args.empty()) {
+    mode = WhoMode::Default;
+  } else if (args == "--brief" || args == "-b") {
+    mode = WhoMode::Brief;
+  } else if (args == "--admin") {
+    if (!isImmortal()) {
+      sendTo("You don't have access to that option.\n\r");
       return;
     }
+    mode = WhoMode::Admin;
+  } else if (args == "--help" || args == "-?") {
+    sstring help = "Usage: who [option | name]\n\r";
+    help +=
+      "  who              Show all players with level, class, race, and "
+      "area\n\r";
+    help += "  who --brief      Show names and titles only\n\r";
+    if (isImmortal())
+      help +=
+        "  who --admin      Show detailed admin info (idle, HP, account)\n\r";
+    help += "  who <name>       Look up a specific player\n\r";
+    if (desc)
+      desc->page_string(help, SHOWNOW_NO, ALLOWREP_YES);
+    return;
+  } else if (args[0] == '-') {
+    sendTo("Unknown option. Try 'who --help'.\n\r");
+    return;
+  } else {
+    mode = WhoMode::Name;
+    nameArg = args;
   }
+
+  sstring sb;
+  unsigned int count = 0;
+  int lcount = 0;
+  std::set<std::string> uniqueAccounts;
+
+  // name lookup mode — detailed single-player view
+  if (mode == WhoMode::Name) {
+    sb = "";
+    int found = 0;
+    for (auto* p = character_list; p; p = p->next) {
+      // uses canSeeWho (not canSee) for consistency with list modes —
+      // room-level visibility (lighting, hide) shouldn't affect a global lookup
+      if (!p->isPc() || !isname(nameArg, p->name) || !canSeeWho(p))
+        continue;
+      if (!dynamic_cast<TPerson*>(p))
+        continue;
+
+      if (found > 0) sb += "--\n\r";
+      found++;
+
+      // line 1: title
+      sb += format("%s\n\r") % p->parseTitle(desc);
+
+      // line 2: level/class/race/zone (without tags — shown separately below)
+      if (p->GetMaxLevel() > MAX_MORT) {
+        sstring immTitle = stripColorCodes(p->msgVariables(MSG_IMM_TITLE));
+        sb += format("%sL%-2d %-7s  %-7s  %s%s\n\r") % getImmColor(this, p) %
+              p->GetMaxLevel() % getImmRank(p) % getRaceDisplay(p) % immTitle %
+              norm();
+      } else {
+        sb += format("L%-2d %-7s  %-7s  %s\n\r") % p->GetMaxLevel() %
+              getClassDisplay(p) % getRaceDisplay(p) % getZoneName(p);
+      }
+
+      // line 3: group status
+      if (p->isPlayerAction(PLR_SEEKSGROUP)) {
+        sb += "(Seeking Group)\n\r";
+      } else if (p->isAffected(AFF_GROUP)) {
+        // find the group leader
+        auto* leader = p;
+        while (leader->master && leader->master->isAffected(AFF_GROUP))
+          leader = leader->master;
+
+        sstring groupLine = "Grouped with: ";
+        bool first = true;
+
+        // add leader if it's not the target
+        if (leader != p && canSeeWho(leader)) {
+          groupLine += sstring(pers(leader)).cap();
+          first = false;
+        }
+
+        // add other group members
+        for (auto* f = leader->followers; f; f = f->next) {
+          auto* member = f->follower;
+          if (member == p || !member->isPc() || !member->isAffected(AFF_GROUP))
+            continue;
+          if (!canSeeWho(member))
+            continue;
+          if (!first)
+            groupLine += ", ";
+          groupLine += sstring(pers(member)).cap();
+          first = false;
+        }
+
+        if (!first)
+          sb += groupLine + "\n\r";
+      }
+
+      // line 4: online time, idle
+      if (p->desc) {
+        auto online = time(nullptr) - p->desc->session.connect;
+        auto hours = online / 3600;
+        auto mins = (online % 3600) / 60;
+        sstring timeLine = "Online: ";
+        if (hours > 0)
+          timeLine += format("%dh %dm") % hours % mins;
+        else
+          timeLine += format("%dm") % mins;
+
+        auto idle = p->getTimer();
+        if (idle > 0)
+          timeLine += format("  Idle: %dm") % idle;
+
+        sb += timeLine + "\n\r";
+      }
+
+      // extra tags on their own line
+      sstring tags;
+      if (p->isPlayerAction(PLR_NEWBIEHELP))
+        tags += "(Newbie-Helper) ";
+      if (p->desc && p->desc->account &&
+          (time(nullptr) - p->desc->account->birth) < NEWBIE_PURGATORY_LENGTH)
+        tags += "(Newbie) ";
+      if (!p->msgVariables(MSG_NOTE).empty())
+        tags += format("(%s) ") % p->msgVariables(MSG_NOTE);
+      if (isImmortal()) {
+        if (p->isLinkdead())
+          tags += "(link-dead) ";
+        if (p->polyed == POLY_TYPE_SWITCH)
+          tags += "(switched) ";
+        if (p->getInvisLevel() > MAX_MORT)
+          tags += format("(invis %d) ") % p->getInvisLevel();
+      }
+      if (!tags.empty())
+        sb += tags + "\n\r";
+    }
+    if (!found)
+      sb += "No one logged in with that name.\n\r";
+    if (desc)
+      desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
+    return;
+  }
+
+  // list modes: iterate all players once
+  sb = "Players:\n\r--------\n\r";
+
+  for (auto* p = character_list; p; p = p->next) {
+    if (!p->isPc())
+      continue;
+    if (!canSeeWho(p))
+      continue;
+
+    if (auto* person = dynamic_cast<TPerson*>(p); !person) {
+      // isPc() returns true for mobs with ACT_POLYSELF (polymorph spell) or
+      // ACT_DISGUISED (thief disguise). These are TMonster instances, not
+      // TPerson, so dynamic_cast fails. polyed == POLY_TYPE_NONE excludes
+      // immortals using the 'switch' command (POLY_TYPE_SWITCH), who appear
+      // as their switched-into mob and are handled in the TPerson branch.
+      if (isImmortal() && p->polyed == POLY_TYPE_NONE) {
+        if (IS_SET(p->specials.act, ACT_POLYSELF)) {
+          count++;
+          if (p->desc && p->desc->account)
+            uniqueAccounts.insert(p->desc->account->name);
+          sb += format("%s (polymorphed)\n\r") % sstring(pers(p)).cap();
+        } else if (IS_SET(p->specials.act, ACT_DISGUISED)) {
+          count++;
+          if (p->desc && p->desc->account)
+            uniqueAccounts.insert(p->desc->account->name);
+          sb += format("%s (disguised)\n\r") % sstring(pers(p)).cap();
+        }
+      }
+      continue;
+    }
+
+    if (p->desc && p->desc->account)
+      uniqueAccounts.insert(p->desc->account->name);
+    count++;
+    if (p->isLinkdead())
+      lcount++;
+
+    // skip link-dead from display unless admin mode
+    if (p->isLinkdead() && mode != WhoMode::Admin)
+      continue;
+
+    switch (mode) {
+      case WhoMode::Brief:
+        sb += format("%s\n\r") % p->parseTitle(desc);
+        break;
+
+      case WhoMode::Admin: {
+        sstring line;
+        if (p->isLinkdead())
+          line = format("[Linkdead] %-12s") % sstring(pers(p)).cap();
+        else
+          line = format("%-23s") % sstring(pers(p)).cap();
+
+        line += format(" L%-2d %-5s  %-7s  Idle:%-3d  %s") % p->GetMaxLevel() %
+                getClassDisplay(p) % getRaceDisplay(p) % p->getTimer() %
+                getResourceDisplay(p);
+
+        if (hasWizPower(POWER_WIZARD)) {
+          if (p->desc && p->desc->account)
+            line += format("  [%s]") % p->desc->account->name;
+          else
+            line += "  [Unknown]";
+        }
+
+        if (p->polyed == POLY_TYPE_SWITCH)
+          line += "  (switched)";
+        if (p->getInvisLevel() > MAX_MORT)
+          line += format("  (invis %d)") % p->getInvisLevel();
+        line += "\n\r";
+        sb += line;
+        break;
+      }
+
+      case WhoMode::Default:
+      default:
+        sb += formatPlayerLine(this, p);
+        break;
+    }
+  }
+
   AccountStats::max_player_since_reboot =
     max(AccountStats::max_player_since_reboot, count);
-  if (isImmortal()) {
-    if (!listed)
-      buf =
-        format(
-          "\n\rTotal players / Link dead [%d/%d] (%2.0f%c)\n\rMax since Reboot "
-          "[%d]  Avg Players : [%.1f]\n\r") %
-        count % lcount % (((double)lcount / (int)count) * 100) % '%' %
-        AccountStats::max_player_since_reboot %
-        (stats.useage_iters ? (float)stats.num_users / stats.useage_iters : 0);
-    else
-      buf =
-        format(
-          "\n\rTotal players / Link dead [%d/%d] (%2.0f%c)\n\rNumber Listed: "
-          "%d  Max since Reboot [%d]  Avg Players : [%.1f]\n\r") %
-        count % lcount % (((double)lcount / (int)count) * 100) % '%' % listed %
-        AccountStats::max_player_since_reboot %
-        (stats.useage_iters ? (float)stats.num_users / stats.useage_iters : 0);
+
+  auto avgPlayers = stats.useage_iters
+                      ? static_cast<float>(stats.num_users) / stats.useage_iters
+                      : 0.0f;
+
+  sb += "\n\r";
+  if (mode == WhoMode::Admin) {
+    sb += format(
+            "Total: %d  Linkdead: %d  Max since reboot: %d  Avg: %.1f  "
+            "Accounts: %d\n\r") %
+          count % lcount % AccountStats::max_player_since_reboot % avgPlayers %
+          uniqueAccounts.size();
+  } else if (mode == WhoMode::Brief) {
+    sb += format("Total: %d\n\r") % count;
   } else {
-    buf =
-      format(
-        "\n\rTotal Players : [%d] Max since last reboot : [%d] Avg Players : "
-        "[%.1f]\n\r") %
-      count % AccountStats::max_player_since_reboot %
-      (stats.useage_iters ? (float)stats.num_users / stats.useage_iters : 0);
+    sb +=
+      format("Total: %d  Max since reboot: %d  Avg: %.1f  Accounts: %d\n\r") %
+      count % AccountStats::max_player_since_reboot % avgPlayers %
+      uniqueAccounts.size();
   }
-  sb += buf;
+
   if (desc)
     desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
 }
