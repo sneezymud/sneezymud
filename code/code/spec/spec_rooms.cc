@@ -1427,12 +1427,20 @@ namespace {
 
   void damageRoomOccupants(TRoom& room,
     std::initializer_list<DamageEffect> effects) {
-    std::vector<TBeing*> toDelete;
+    std::vector<TBeing*> targets;
 
     for (TThing* thing : room.stuff) {
-      auto* tb = dynamic_cast<TBeing*>(thing);
+      if (auto* tb = dynamic_cast<TBeing*>(thing); tb && tb->isPc()) {
+        targets.push_back(tb);
+      }
+    }
 
-      if (!tb || !tb->isPc()) {
+    std::vector<TBeing*> toDelete;
+
+    for (auto* tb : targets) {
+      // Re-validate: earlier damage may have moved this PC out of the room
+      // (e.g. linkdead PCs get moved to Room::STORAGE during makeCorpse)
+      if (tb->roomp != &room) {
         continue;
       }
 
