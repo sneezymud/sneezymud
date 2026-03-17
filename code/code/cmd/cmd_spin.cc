@@ -85,8 +85,6 @@ bool TBeing::canSpin(TBeing* victim, silentTypeT silent) {
 }
 
 int TBeing::spinMiss(TBeing* victim, skillMissT type) {
-  int rc;
-
   if (type == TYPE_DEX) {
     act("$N deftly avoids your attempt at spinning $M.", FALSE, this, 0, victim,
       TO_CHAR);
@@ -116,27 +114,23 @@ int TBeing::spinMiss(TBeing* victim, skillMissT type) {
     act("$N sticks out $S foot tripping $n to the $g.", FALSE, this, 0, victim,
       TO_NOTVICT);
 
-    rc = crashLanding(POSITION_SITTING);
+    int rc = stumble(victim);
     if (IS_SET_DELETE(rc, DELETE_THIS))
-      return rc;
-
-    rc = trySpringleap(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   } else {
-    act("$n tries to spin $N, but ends up falling down.", FALSE, this, 0,
-      victim, TO_NOTVICT);
-    act("You try to spin $N, but end up falling on your face.", FALSE, this, 0,
-      victim, TO_CHAR);
-    act("$n fails to spin you, and tumbles to the $g.", FALSE, this, 0, victim,
+    act("$n tries to spin $N but loses $s footing.", false, this, 0, victim,
+      TO_NOTVICT);
+    act("You try to spin $N but lose your footing.", false, this, 0, victim,
+      TO_CHAR);
+    act("$n tries to spin you but loses $s footing.", false, this, 0, victim,
       TO_VICT);
 
-    rc = crashLanding(POSITION_SITTING);
+    int rc = stumble(victim);
     if (IS_SET_DELETE(rc, DELETE_THIS))
-      return rc;
-
-    rc = trySpringleap(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   }
 

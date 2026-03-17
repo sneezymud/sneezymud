@@ -82,8 +82,6 @@ bool TBeing::canBodyslam(TBeing* victim, silentTypeT silent) {
 }
 
 int TBeing::bodyslamMiss(TBeing* victim, skillMissT type) {
-  int rc;
-
   if (type == TYPE_DEX) {
     act("$N deftly avoids your bodyslam attempt.", FALSE, this, 0, victim,
       TO_CHAR);
@@ -99,45 +97,29 @@ int TBeing::bodyslamMiss(TBeing* victim, skillMissT type) {
     act("$N deftly counters $n's bodyslam attempt, and heaves $m to the $g.",
       FALSE, this, 0, victim, TO_NOTVICT);
 
-    rc = crashLanding(POSITION_SITTING);
+    int rc = stumble(victim);
     if (IS_SET_DELETE(rc, DELETE_THIS))
-      return rc;
-
-    rc = trySpringleap(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   } else if (type == TYPE_STR) {
-    act("$n collapses as $e fails to pick $N up.", FALSE, this, 0, victim,
+    act("$n tries to bodyslam $N but fails to lift $M.", false, this, 0, victim,
       TO_NOTVICT);
-    act("Your strength gives out as you try to pick $N up for bodyslamming.",
-      FALSE, this, 0, victim, TO_CHAR);
-    act("$n's strength gives out as $e tries to pick you up for bodyslamming.",
-      FALSE, this, 0, victim, TO_VICT);
-
-    rc = crashLanding(POSITION_SITTING);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return rc;
-
-    sendTo(format("%sYou fall to the %s.%s\n\r") % blue() %
-           roomp->describeGround() % norm());
-
-    rc = trySpringleap(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
-      return rc;
-  } else {
-    act("$n tries to bodyslam $N, but ends up falling down.", FALSE, this, 0,
-      victim, TO_NOTVICT);
-    act("You try to bodyslam $N, but end up falling on your face.", FALSE, this,
-      0, victim, TO_CHAR);
-    act("$n fails to bodyslam you, and tumbles to the $g.", FALSE, this, 0,
+    act("You try to bodyslam $N but fail to lift $M.", false, this, 0, victim,
+      TO_CHAR);
+    act("$n tries to bodyslam you but fails to lift you.", false, this, 0,
       victim, TO_VICT);
 
-    rc = crashLanding(POSITION_SITTING);
+    int rc = stumble(victim);
     if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
-
-    rc = trySpringleap(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+  } else {
+    int rc = stumble(victim);
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   }
 
