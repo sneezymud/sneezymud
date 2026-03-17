@@ -2369,6 +2369,19 @@ void runMigrations() {
             "ALTER TABLE configuration DROP INDEX idx_configuration_key"));
       }
     },
+    // Ensure every corporation has a bank entry. Production data may be
+    // missing rows for corps that never deposited - doReserve() silently
+    // fails without one, causing shops to accumulate gold indefinitely.
+    [&]() {
+      vlogf(LOG_MISC, "Inserting missing corp bank entries");
+      assert(
+        sneezy.query("INSERT IGNORE INTO shopownedcorpbank "
+                     "(shop_nr, corp_id, talens, earned_interest) "
+                     "SELECT c.bank, c.corp_id, 0, 0 FROM corporation c "
+                     "LEFT JOIN shopownedcorpbank cb "
+                     "ON c.corp_id = cb.corp_id AND c.bank = cb.shop_nr "
+                     "WHERE cb.corp_id IS null"));
+    },
   };
 
   int oldVersion = getVersion(sneezy);
