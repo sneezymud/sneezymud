@@ -165,6 +165,9 @@ bool TGenWeapon::canStab() const {
   return isPierceWeapon() && getVolume() <= 2000;
 }
 
+bool TGenWeapon::isSpear() const {
+  return isPierceWeapon() && isPaired();
+}
 
 int thornsHit(TBeing* victim, TBeing* ch, wearSlotT chLimb, wearSlotT vicLimb) {
   // Check for valid parameters
@@ -188,17 +191,17 @@ int thornsHit(TBeing* victim, TBeing* ch, wearSlotT chLimb, wearSlotT vicLimb) {
 
   // Calculate chance based on hardness difference
   int hardnessDiff = chLimbHardness - vicLimbHardness;
-  
+
   // Only proceed if attacker's hardness is higher AND random check passes
   if (hardnessDiff <= 0) {
     return dam;
   }
-  
+
   // Use hardness difference as percentage chance
   if (!::percentChance(hardnessDiff)) {
     return dam;
   }
-  
+
   if (victim->isLimbFlags(vicLimb, PART_BLEEDING)) {
     static constexpr const char* bleeding_msg =
       "Blood spatters as the thorns on %s %s sink into %s bleeding %s!";
@@ -244,11 +247,11 @@ int hardHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT vicLimb, wearSlotT 
   if (!weap) {
     weapHard = getHardnessSpec(ch, chLimb);
   }
-  
+
   if (!vicEq) {
     vicHard = getHardnessSpec(victim, vicLimb);
   }
-  
+
   int dam = ::number(1, 10);
 
   int hardChance = (weapHard - vicHard);
@@ -316,9 +319,9 @@ int hardHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT vicLimb, wearSlotT 
         victim->rawBruise(vicLimb, 100, SILENT_NO, CHECK_IMMUNITY_NO);
       }
     }
-    
+
   }
-  return dam;  
+  return dam;
 }
 int spikesBreak(TBeing* victim, TBeing* ch, TObj* obj) {
   int dam = ::number(1, 4);
@@ -389,7 +392,7 @@ int impactSpec(TBeing* ch, TBeing* victim, wearSlotT damSource, wearSlotT pos) {
     }
       // Equipment has no spikes - use hardHit
       return hardHit(victim, ch, obj, pos, damSource);
-    
+
   } else {
     // No equipment on damSource
     if (ch->affectedBySpell(SPELL_THORNFLESH)) {
@@ -398,7 +401,7 @@ int impactSpec(TBeing* ch, TBeing* victim, wearSlotT damSource, wearSlotT pos) {
     }
       // No thornflesh - use hardHit
       return hardHit(victim, ch, nullptr, pos, damSource);
-    
+
   }
 }
 
@@ -445,7 +448,7 @@ int spikesHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT limb) {
 
     victim->rawBleed(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
   }
-  
+
   spikesBreak(victim, ch, obj);
   return dam;
 }

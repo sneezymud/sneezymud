@@ -1,3 +1,4 @@
+#include "enum.h"
 #include "handler.h"
 #include "being.h"
 #include "monster.h"
@@ -181,7 +182,8 @@ int TBeing::backstabHit(TBeing* victim, TThing* obj, int modifier) {
   // Chain into stab if hit but didn't kill and high enough advanced learning
   if (victim && d > 0 && victim->getHit() > 0 &&
       getAdvLearning(SKILL_STABBING) >= 50) {
-    int rc = doStab("", victim);
+    // Call stab with isChain=true to skip move cost and skilllag
+    int rc = doStab("", victim, true);
     if (IS_SET_DELETE(rc, DELETE_VICT)) {
       return DELETE_VICT;
     }
@@ -255,11 +257,7 @@ int TBeing::doBackstab(const char* argument, TBeing* vict) {
     sendTo("Your backstab attempt has no effect on your immortal target.\n\r");
     return FALSE;
   }
-  if ((rc = backstab(this, victim))) {
-    if (!victim->isPc())
-      dynamic_cast<TMonster*>(victim)->US(25);
-    addSkillLag(SKILL_BACKSTAB, rc);
-  }
+  rc = backstab(this, victim);
 
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
@@ -268,7 +266,13 @@ int TBeing::doBackstab(const char* argument, TBeing* vict) {
     delete victim;
     victim = NULL;
     REM_DELETE(rc, DELETE_VICT);
+  } else if (rc && !victim->isPc()) {
+    // Only update suspicion if victim survived and is a mob
+    dynamic_cast<TMonster*>(victim)->US(25);
   }
+
+  if (rc)
+    addSkillLag(SKILL_BACKSTAB, rc);
 
   return rc;
 }
@@ -280,20 +284,22 @@ int backstab(TBeing* thief, TBeing* victim) {
     return FALSE;
 
   if (victim == thief) {
-    thief->sendTo("How can you sneak up on yourself?\n\r");
+    thief->sendTo("Your arms aren't long enough to stab your own back.\n\r");
     return FALSE;
   }
+
   TGenWeapon* obj = dynamic_cast<TGenWeapon*>(thief->heldInPrimHand());
   if (!obj) {
     thief->sendTo("You need to wield a weapon, to make it a success.\n\r");
     return FALSE;
   }
-  if (thief->riding) {
-    thief->sendTo("You cannot backstab while mounted!\n\r");
+  if (thief->riding && (thief->getSkillLevel(SKILL_RIDE)<80)) {
+    thief->sendTo("You aren't a skilled enough rider to backstab while mounted!\n\r");
     return FALSE;
   }
-  if (dynamic_cast<TBeing*>(victim->riding)) {
-    thief->sendTo("You cannot backstab while that person is mounted!\n\r");
+  TBeing* victimMount = dynamic_cast<TBeing*>(victim->riding);
+  if ((victim->isFlying() || (victimMount && victimMount->isFlying())) && (!thief->isFlying()) && thief->fight() != victim) {
+    thief->sendTo("You can't backstab a flying person with your feet on the ground!\n\r");
     return FALSE;
   }
   if (dynamic_cast<TBeing*>(victim->rider)) {
@@ -309,8 +315,17 @@ int backstab(TBeing* thief, TBeing* victim) {
       "There's no way to reach that back while you're fighting!\n\r");
     return FALSE;
   }
-  if (!obj->canBackstab()) {
+
+  int bKnown = thief->getSkillValue(SKILL_BACKSTAB);
+
+  if (!obj->canBackstab() && !obj->isSpear()) {
     act("You can't use $p to backstab.", false, thief, obj, NULL, TO_CHAR);
+    return FALSE;
+  }
+
+  if (obj->isSpear() && bKnown < 50) {
+    act("You are not yet skilled enough to backstab with a spear.", false,
+      thief, obj, NULL, TO_CHAR);
     return FALSE;
   }
 
@@ -348,12 +363,14 @@ int backstab(TBeing* thief, TBeing* victim) {
     act("You sense $m coming as $n attempts to murder you.", FALSE, thief, 0,
       victim, TO_VICT);
   }
-  int bKnown = thief->getSkillValue(SKILL_BACKSTAB);
+
 
   if ((thief->bSuccess(bKnown, SKILL_BACKSTAB) || !victim->awake())) {
     rc = thief->backstabHit(victim, obj, modifier);
     if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_VICT;
+
+    victim->addHated(thief);
   } else {
     act("$n makes a pathetic attempt at backstabbing $N.", FALSE, thief, 0,
       victim, TO_NOTVICT);
@@ -363,9 +380,10 @@ int backstab(TBeing* thief, TBeing* victim) {
       thief, 0, victim, TO_VICT);
     if (thief->reconcileDamage(victim, 0, SKILL_BACKSTAB) == -1)
       return DELETE_VICT;
+
+    victim->addHated(thief);
   }
-  victim->addHated(thief);
-  return TRUE;
+  return rc ? rc : TRUE;
 }
 
 //////////////////////////////////////////////////////////////////
@@ -587,11 +605,7 @@ int TBeing::doThroatSlit(const char* argument, TBeing* vict) {
     return FALSE;
   }
 
-  if ((rc = throatSlit(this, victim))) {
-    if (!victim->isPc())
-      dynamic_cast<TMonster*>(victim)->US(25);
-    addSkillLag(SKILL_THROATSLIT, rc);
-  }
+  rc = throatSlit(this, victim);
 
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
@@ -600,7 +614,13 @@ int TBeing::doThroatSlit(const char* argument, TBeing* vict) {
     delete victim;
     victim = NULL;
     REM_DELETE(rc, DELETE_VICT);
+  } else if (rc && !victim->isPc()) {
+    // Only update suspicion if victim survived and is a mob
+    dynamic_cast<TMonster*>(victim)->US(25);
   }
+
+  if (rc)
+    addSkillLag(SKILL_THROATSLIT, rc);
 
   return rc;
 }
@@ -621,7 +641,7 @@ int throatSlit(TBeing* thief, TBeing* victim) {
     return FALSE;
   }
   if (6 * thief->getHeight() < 3 * victim->getHeight() &&
-      !(thief->isFlying())) {
+      !(thief->isFlying() || victim->getPosition() < POSITION_STANDING)) {
     thief->sendTo("You don't stand a chance, that creature is too tall.\n\r");
     return FALSE;
   }
@@ -710,7 +730,7 @@ int throatSlit(TBeing* thief, TBeing* victim) {
 
     victim->addHated(thief);
   }
-  return TRUE;
+  return rc ? rc : TRUE;
 }
 
 //////////

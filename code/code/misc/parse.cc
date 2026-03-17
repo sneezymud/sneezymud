@@ -1612,7 +1612,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring& argument, TThing* vict,
           rc = doGarrotte(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_STAB:
-          rc = doStab(newarg.c_str(), dynamic_cast<TBeing*>(vict));
+          rc = doStab(newarg.c_str(), dynamic_cast<TBeing*>(vict), false);
           break;
         case CMD_CUDGEL:
           rc = doCudgel(newarg.c_str(), dynamic_cast<TBeing*>(vict));

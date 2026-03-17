@@ -600,7 +600,7 @@ class TBeing : public TThing {
     void checkGuardiansLight();
     int checkAdvDefense();
     int doAdvDefense(TBeing*, TThing*, int*, int, wearSlotT);
-    
+
 
     // Postmaster
     void postmasterSendMail(const char*, TMonster*);
@@ -1987,7 +1987,7 @@ class TBeing : public TThing {
     int doDisguise(const char*);
     int doPoisonWeapon(sstring);
     int doGarrotte(const char*, TBeing*);
-    int doStab(const char*, TBeing*);
+    int doStab(const char*, TBeing*, bool chain = false);
     int doCudgel(const char*, TBeing*);
     virtual int moneyMeBeing(TThing* mon, TThing* sub);
     virtual unsigned int getTimer() const = 0;
