@@ -323,15 +323,10 @@ int TBeing::bashFail(TBeing* victim, spellNumT skill,
   }
 
   if (hasLegs()) {
-    int rc = crashLanding(POSITION_SITTING);
+    int rc = stumble(victim);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-
-    sendTo(format("%sYou fall over.%s\n\r") % red() % norm());
-    act("$n falls over.", TRUE, this, 0, 0, TO_ROOM);
-
-    rc = trySpringleap(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+    if (IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   }
 

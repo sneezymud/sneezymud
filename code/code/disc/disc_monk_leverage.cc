@@ -50,18 +50,18 @@ int TBeing::doHurl(const char* argument, TBeing* vict) {
 }
 
 int hurlMiss(TBeing* caster, TBeing* victim) {
-  int rc;
-
-  act("$n misses $s attempt at hurling $N and falls on $s butt!", FALSE, caster,
-    0, victim, TO_NOTVICT);
-  act("You fall as you attempt to hurl $N!", FALSE, caster, 0, victim, TO_CHAR);
-  act("You manage to avoid $n as $e tries to hurl you!", FALSE, caster, 0,
+  act("$n fails to hurl $N correctly and loses $s balance.", false, caster, 0,
+    victim, TO_NOTVICT);
+  act("You fail to hurl $N correctly and lose your balance.", false, caster, 0,
+    victim, TO_CHAR);
+  act("$n fails to hurl you correctly and loses $s balance.", false, caster, 0,
     victim, TO_VICT);
 
-  rc = caster->crashLanding(POSITION_SITTING);
+  int rc = caster->stumble(victim);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
-
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    return rc;
   caster->reconcileDamage(victim, 0, SKILL_SHOULDER_THROW);
   return TRUE;
 }
@@ -365,19 +365,18 @@ int TBeing::doShoulderThrow(const char* argument, TBeing* vict) {
 }
 
 int shoulderThrowMiss(TBeing* caster, TBeing* victim) {
-  int rc;
-
-  act("$n misses $s attempt at shoulder throwing $N and falls on $s butt!",
-    FALSE, caster, 0, victim, TO_NOTVICT);
-  act("You fall as you attempt to shoulder throw $N!", FALSE, caster, 0, victim,
+  act("$n clumsily fails to shoulder throw $N.", false, caster, 0, victim,
+    TO_NOTVICT);
+  act("You clumsily fail to shoulder throw $N.", false, caster, 0, victim,
     TO_CHAR);
-  act("You manage to avoid $n as $e tries to shoulder throw you!", FALSE,
-    caster, 0, victim, TO_VICT);
+  act("$n clumsily fails to shoulder throw you.", false, caster, 0, victim,
+    TO_VICT);
 
-  rc = caster->crashLanding(POSITION_SITTING);
+  int rc = caster->stumble(victim);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
-
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    return rc;
   caster->reconcileDamage(victim, 0, SKILL_CHOP);
   return TRUE;
 }
@@ -573,19 +572,18 @@ int TBeing::doDefenestrate(const char* argument, TBeing* vict) {
 }
 
 int defenestrateMiss(TBeing* caster, TBeing* victim) {
-  int rc;
-
-  act("$n misses $s attempt at defenestrating $N and falls on $s butt!", FALSE,
-    caster, 0, victim, TO_NOTVICT);
-  act("You fall as you attempt to defenestrate $N!", FALSE, caster, 0, victim,
+  act("$n clumsily fails to throw $N out the window.", false, caster, 0, victim,
+    TO_NOTVICT);
+  act("You clumsily fail to throw $N out the window.", false, caster, 0, victim,
     TO_CHAR);
-  act("You manage to avoid $n as $e tries to defenestrate you!", FALSE, caster,
-    0, victim, TO_VICT);
+  act("$n clumsily fails to throw you out the window.", false, caster, 0,
+    victim, TO_VICT);
 
-  rc = caster->crashLanding(POSITION_SITTING);
+  int rc = caster->stumble(victim);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
-
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    return rc;
   caster->reconcileDamage(victim, 0, SKILL_SHOULDER_THROW);
   return TRUE;
 }

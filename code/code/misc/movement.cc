@@ -2725,7 +2725,7 @@ void TBeing::doSit(const sstring& argument) {
   }
 #if 0
   int rc = triggerSpecial(this, CMD_OBJ_SATON, arg);
-  if (IS_SET_DELETE(rc, DELETE_THIS)) 
+  if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
 
   if (rc)
@@ -3514,6 +3514,42 @@ int TBeing::crashLanding(positionTypeT pos, bool force, bool dam,
   }
 
   return TRUE;
+}
+
+int TBeing::stumble(TBeing* victim) {
+  if (!isAgile(0)) {
+    setPosition(POSITION_SITTING);
+    sendTo("You stumble and fall on your butt!\n\r");
+    act("$n stumbles and falls on $s butt!", true, this, nullptr, nullptr, TO_ROOM);
+    addToWait(combatRound(1));
+
+    int stumbleDam = dice(1, 4);
+
+    TBeing* springTarget = victim ? victim : fight();
+    if (springTarget) {
+      int rc = trySpringleap(springTarget);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      if (IS_SET_DELETE(rc, DELETE_VICT))
+        return DELETE_VICT;
+      if (rc)
+        stumbleDam /= 2;
+    }
+
+    if (reconcileDamage(this, stumbleDam, DAMAGE_FALL) == -1)
+      return DELETE_THIS;
+  } else {
+    setPosition(POSITION_STANDING);
+    if (isFlying()) {
+      sendTo("You stumble, but quickly recover your footing!\n\r");
+      act("$n stumbles, but quickly recovers!", true, this, nullptr, nullptr, TO_ROOM);
+    } else {
+      sendTo("You stumble, but catch yourself!\n\r");
+      act("$n stumbles, but catches $mself!", true, this, nullptr, nullptr, TO_ROOM);
+    }
+    addToWait(combatRound(1) / 2);
+  }
+  return FALSE;
 }
 
 int TBeing::doMortalGoto(const sstring& argument) {
