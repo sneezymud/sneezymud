@@ -183,7 +183,13 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
             act(
               "Your grasp on $p loosens, but you shift position for a firmer "
               "grip.",
-              FALSE, this, weapon, NULL, TO_CHAR);
+              false, this, weapon, nullptr, TO_CHAR);
+          } else if (doesKnowSkill(SKILL_TELEKINESIS) &&
+                     bSuccess(SKILL_TELEKINESIS)) {
+            act(
+              "Your grasp on $p loosens, but you catch it with the power of "
+              "your mind!",
+              false, this, weapon, nullptr, TO_CHAR);
           } else if ((::number(0, agi) < (30 + getCond(DRUNK))) &&
                      weapon->canDrop()) {
             sprintf(buf,
@@ -214,7 +220,13 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
             act(
               "Your grasp on $p loosens, but you shift position for a firmer "
               "grip.",
-              FALSE, this, weapon, NULL, TO_CHAR);
+              false, this, weapon, nullptr, TO_CHAR);
+          } else if (doesKnowSkill(SKILL_TELEKINESIS) &&
+                     bSuccess(SKILL_TELEKINESIS)) {
+            act(
+              "Your grasp on $p loosens, but you catch it with the power of "
+              "your mind!",
+              false, this, weapon, nullptr, TO_CHAR);
           } else {
             sprintf(buf,
               "You %slose%s your grip on $p and it %sfalls out of your "
