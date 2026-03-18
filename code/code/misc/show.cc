@@ -1184,13 +1184,15 @@ void TBeing::show_me_to_char(TBeing* ch, showModeT mode) const {
     TDatabase db(DB_SNEEZY);
     sstring tattoos[MAX_WEAR];
 
-    db.query(
-      "select location, tattoo from tattoos where player_id=%i order by "
-      "location",
-      getPlayerID());
-    while (db.fetchRow()) {
-      tattoos[convertTo<int>(db["location"])] = db["tattoo"];
-      found = true;
+    if (isPc()) {
+      db.query(
+        "select location, tattoo from tattoos where player_id=%i order by "
+        "location",
+        getPlayerID());
+      while (db.fetchRow()) {
+        tattoos[convertTo<int>(db["location"])] = db["tattoo"];
+        found = true;
+      }
     }
 
     if (found && ch->GetMaxLevel() != GOD_LEVEL1) {

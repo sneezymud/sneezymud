@@ -2660,12 +2660,14 @@ void TBeing::doEquipment(const sstring& arg) {
     TDatabase db(DB_SNEEZY);
     sstring tattoos[MAX_WEAR];
 
-    db.query(
-      "select location, tattoo from tattoos where player_id=%i order by "
-      "location",
-      getPlayerID());
-    while (db.fetchRow()) {
-      tattoos[convertTo<int>(db["location"])] = db["tattoo"];
+    if (isPc()) {
+      db.query(
+        "select location, tattoo from tattoos where player_id=%i order by "
+        "location",
+        getPlayerID());
+      while (db.fetchRow()) {
+        tattoos[convertTo<int>(db["location"])] = db["tattoo"];
+      }
     }
 
     sendTo(format("You are using %i pounds of equipment:\n\r") %
@@ -2709,12 +2711,14 @@ void TBeing::doEquipment(const sstring& arg) {
       victim = get_char_vis_world(this, argument, NULL, EXACT_NO);
 
     if (victim) {
-      db.query(
-        "select location, tattoo from tattoos where player_id=%i order by "
-        "location",
-        victim->getPlayerID());
-      while (db.fetchRow()) {
-        tattoos[convertTo<int>(db["location"])] = db["tattoo"];
+      if (victim->isPc()) {
+        db.query(
+          "select location, tattoo from tattoos where player_id=%i order by "
+          "location",
+          victim->getPlayerID());
+        while (db.fetchRow()) {
+          tattoos[convertTo<int>(db["location"])] = db["tattoo"];
+        }
       }
 
       act("$N is using.", FALSE, this, 0, victim, TO_CHAR);
