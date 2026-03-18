@@ -4732,6 +4732,9 @@ int fishTracker(TBeing* ch, cmdTypeT cmd, const char* argument,
               "group by fk.player_id, p.name, fk.weight "
               "order by fk.weight desc limit 10",
               convertTo<int>(lookup["id"]));
+          } else {
+            myself->doSay("I've never heard of that person.");
+            return true;
           }
         }
 

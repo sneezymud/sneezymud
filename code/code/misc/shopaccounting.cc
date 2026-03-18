@@ -154,14 +154,6 @@ void TShopJournal::closeTheBooks() {
 
 void TShopOwned::journalize_debit(int post_ref, const sstring& customer,
   const sstring& name, int amt, bool new_id) {
-  TDatabase db(DB_SNEEZY);
-
-  //    db.query("insert into shoplogjournal (shop_nr, journal_id,
-  //    customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit)
-  //    values (%i, %s, '%s', '%s', %i, now(), %i, %i, 0)", shop_nr,
-  //    (new_id?"NULL":"LAST_INSERT_ID()"), customer.c_str(), name.c_str(),
-  //    GameTime::getYear(), post_ref, amt);
-
   // LAST_INSERT_ID() returns the auto-increment `id` of the previous INSERT
   // (not a journal_id value). This works for grouping: the first row of a
   // transaction gets journal_id=0, subsequent rows get journal_id set to
@@ -176,8 +168,6 @@ void TShopOwned::journalize_debit(int post_ref, const sstring& customer,
 
 void TShopOwned::journalize_credit(int post_ref, const sstring& customer,
   const sstring& name, int amt, bool new_id) {
-  TDatabase db(DB_SNEEZY);
-
   // See comment in journalize_debit about LAST_INSERT_ID() behavior
   queryqueue.push(
     format("insert into shoplogjournal (shop_nr, journal_id, customer_name, "

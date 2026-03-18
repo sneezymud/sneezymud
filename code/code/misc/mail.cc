@@ -71,6 +71,7 @@ void store_mail(int to_id, const char* from_name, int from_id,
 void store_faction_mail(int sender_id, const char* sender_name,
   const char* message) {
   TDatabase fm(DB_SNEEZY);
+  // Deliberately includes the sender as a recipient (serves as confirmation)
   fm.query(
     "SELECT player_id FROM factionmembers WHERE faction="
     "(SELECT faction FROM factionmembers WHERE player_id=%i)",
