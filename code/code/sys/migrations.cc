@@ -1463,11 +1463,14 @@ void runMigrations() {
         assert(
           sneezy.query("ALTER TABLE permadeath "
                        "ADD COLUMN player_id BIGINT UNSIGNED DEFAULT null"));
-        assert(
-          sneezy.query("UPDATE permadeath pd JOIN player p ON pd.name = p.name "
-                       "SET pd.player_id = p.id"));
-        // Orphans kept with null player_id (historical memorial records)
       }
+
+      // Backfill outside hasColumn guard so it's crash-resumable -
+      // orphans kept with null player_id (historical memorial records)
+      assert(
+        sneezy.query("UPDATE permadeath pd JOIN player p ON pd.name = p.name "
+                     "SET pd.player_id = p.id "
+                     "WHERE pd.player_id IS null"));
 
       // Swap PK from (name) to surrogate id - name stays for display,
       // player_id may be null for deleted players
@@ -1491,11 +1494,14 @@ void runMigrations() {
         assert(
           sneezy.query("ALTER TABLE fishlargest "
                        "ADD COLUMN player_id BIGINT UNSIGNED DEFAULT null"));
-        assert(sneezy.query(
-          "UPDATE fishlargest fl JOIN player p ON fl.name = p.name "
-          "SET fl.player_id = p.id"));
-        // Rows with 'no one' or deleted players keep null player_id
       }
+
+      // Backfill outside hasColumn guard so it's crash-resumable -
+      // rows with 'no one' or deleted players keep null player_id
+      assert(
+        sneezy.query("UPDATE fishlargest fl JOIN player p ON fl.name = p.name "
+                     "SET fl.player_id = p.id "
+                     "WHERE fl.player_id IS null"));
 
       addForeignKey(sneezy, "fishlargest", "player_id", "player", "id",
         "SET null");
