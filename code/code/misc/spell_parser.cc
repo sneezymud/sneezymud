@@ -2402,7 +2402,7 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
       rootControl(this, ch);
       break;
     case SPELL_LIVING_VINES:
-      livingVines(this, ch);
+      rc = livingVines(this, ch);
       break;
     case SPELL_STORMY_SKIES:
       rc = stormySkies(this, ch);

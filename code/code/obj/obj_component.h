@@ -96,8 +96,10 @@ const int COMP_INFRAVISION = 273;
 const int COMP_ENHANCE_WEAPON = 274;
 const int COMP_FLIGHT = 275;
 const int COMP_STICKS_TO_SNAKES = 284;
+const int COMP_LIVING_VINES = 285;
 const int COMP_PROT_EARTH = 293;
 const int COMP_TRANSFORM_LIMB = 298;
+const int COMP_ROOT_CONTROL = 299;
 #if 1
 const int COMP_EARTHMAW = 343;
 const int COMP_CREEPING_DOOM = 344;

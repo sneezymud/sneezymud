@@ -241,20 +241,74 @@ bool TBeing::validMove(dirTypeT cmd) {
   affectedData* aff;
   for (aff = affected; aff; aff = aff->next) {
     if (aff->type == SPELL_BIND) {
-      if (!isLucky(levelLuckModifier(aff->level))) {
+      const int luckyBonus = isLucky(levelLuckModifier(aff->level))
+                               ? 5 + std::max(0, GetMaxLevel() - (int)aff->level)
+                               : 0;
+      if (!isStrong(luckyBonus)) {
         sendTo("You are entrapped in sticky webs!\n\r");
+        act("Sticky webs entangle $n!", TRUE, this, 0, 0, TO_ROOM);
         sendTo("Your struggles only entrap you further!\n\r");
         addToWait(combatRound(3));
         if (!isPc())
-          setMove(0);
+          setMove(getMove()/2);
         return FALSE;
       } else {
         addToWait(combatRound(1));
         addToMove(-50);
         sendTo("You briefly pull free from the sticky webbing!\n\r");
+        act("$n briefly pulls free from the sticky webbing!", TRUE, this, 0, 0, TO_ROOM);
       }
+      break;
+    }
+    if (aff->type == SPELL_LIVING_VINES) {
+      const int luckyBonus = isLucky(levelLuckModifier(aff->level))
+                               ? 5 + std::max(0, GetMaxLevel() - (int)aff->level)
+                               : 0;
+      if (!isAgile(luckyBonus)) {
+        sendTo("You are entangled in a mass of vines!\n\r");
+        act("A mass of vines entangles $n!", true, this, nullptr, nullptr, TO_ROOM);
+        addToWait(combatRound(3));
+
+        // Reduce duration with each failed escape attempt
+        aff->duration = std::max(0, aff->duration - 800);
+
+        wearSlotT foot = percentChance(50) ? getPrimaryFoot() : getSecondaryFoot();
+        if (isFourLegged()) {
+          if (percentChance(50)) {
+            foot = percentChance(50) ? WEAR_LEG_R : WEAR_LEG_L;
+          } else {
+            foot = percentChance(50) ? WEAR_EX_LEG_R : WEAR_EX_LEG_L;
+          }
+        }
+        if (!hasPart(foot))
+          foot = getRandomPart(PART_MISSING);
+
+        if (!isPc())
+          setMove(getMove() / 2);
+
+        if (foot != WEAR_NOWHERE && !isTough(luckyBonus) && !isUndead()) {
+          sendTo("The vines tear at your flesh!\n\r");
+          act("The vines tear at $n's flesh!", true, this, nullptr, nullptr, TO_ROOM);
+
+          if (isLimbFlags(foot, PART_BLEEDING)) {
+            incrementBleedStack(foot, 250);
+          } else {
+            rawBleed(foot, 50, SILENT_NO, CHECK_IMMUNITY_YES);
+          }
+        }
+
+        return false;
+      } else {
+        addToWait(combatRound(1));
+        addToMove(-50);
+        aff->duration = std::max(0, aff->duration - 400);
+        sendTo("You manage to slip free from the vines!\n\r");
+        act("$n manages to slip free from the vines!", true, this, nullptr, nullptr, TO_ROOM);
+      }
+      break;
     }
   }
+
   if (riding) {
     tbt = dynamic_cast<TBeing*>(riding);
     if (tbt && tbt->fight()) {
@@ -2617,6 +2671,8 @@ void TBeing::doStand() {
     return;
   }
 
+  const auto prevPos = getPosition();
+
   switch (getPosition()) {
     case POSITION_STANDING:
       act("You are already standing.", FALSE, this, 0, 0, TO_CHAR);
@@ -2649,6 +2705,36 @@ void TBeing::doStand() {
       act("$n stops floating around and puts $s feet on the $g.", TRUE, this, 0,
         0, TO_ROOM);
       break;
+  }
+
+  if (prevPos != POSITION_STANDING && getPosition() == POSITION_STANDING) {
+    for (affectedData* aff = affected; aff; aff = aff->next) {
+      if (aff->type == SPELL_LIVING_VINES) {
+        const int luckyBonus = isLucky(levelLuckModifier(aff->level))
+                                 ? 5 + std::max(0, GetMaxLevel() - (int)aff->level)
+                                 : 0;
+        if (!isTough(luckyBonus) && !isUndead()) {
+          sendTo("The vines tear at you as you struggle to your feet!\n\r");
+          act("The vines tear at $n as $e struggles to $s feet!", true, this, nullptr, nullptr, TO_ROOM);
+          wearSlotT foot = percentChance(50) ? getPrimaryFoot() : getSecondaryFoot();
+          if (isFourLegged()) {
+            foot = percentChance(50) ? (percentChance(50) ? WEAR_LEG_R : WEAR_LEG_L)
+                                     : (percentChance(50) ? WEAR_EX_LEG_R : WEAR_EX_LEG_L);
+          }
+          if (!hasPart(foot))
+            foot = getRandomPart(PART_MISSING);
+          if (foot != WEAR_NOWHERE) {
+            if (isLimbFlags(foot, PART_BLEEDING)) {
+              incrementBleedStack(foot, 250);
+            } else {
+              rawBleed(foot, 50, SILENT_NO, CHECK_IMMUNITY_YES);
+            }
+          }
+        }
+        aff->duration = std::max(0, aff->duration - 800);
+        break;
+      }
+    }
   }
 
   removeAllCasinoGames();
@@ -2725,7 +2811,7 @@ void TBeing::doSit(const sstring& argument) {
   }
 #if 0
   int rc = triggerSpecial(this, CMD_OBJ_SATON, arg);
-  if (IS_SET_DELETE(rc, DELETE_THIS)) 
+  if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
 
   if (rc)

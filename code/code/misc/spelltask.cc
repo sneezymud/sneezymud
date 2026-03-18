@@ -2415,6 +2415,9 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
       } else
         vlogf(LOG_BUG, "SPELL_LICH_TOUCH called with null obj");
       break;
+    case SPELL_LIVING_VINES:
+      rc = castLivingVines(this, victim);
+      break;
     case SPELL_HYPNOSIS:
       castHypnosis(this, victim);
       break;

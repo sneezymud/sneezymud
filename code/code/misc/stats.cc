@@ -1096,30 +1096,30 @@ bool TBeing::statSelfCheck(statTypeT stat, int num) const {
   return percentChance(plotStat(STAT_CURRENT, stat, 5, 95, 25) + num);
 }
 
-bool TBeing::isStrong() const { return statSelfCheck(STAT_STR); }
+bool TBeing::isStrong(int num) const { return statSelfCheck(STAT_STR, num); }
 
-bool TBeing::isPerceptive() const { return statSelfCheck(STAT_PER); }
+bool TBeing::isPerceptive(int num) const { return statSelfCheck(STAT_PER, num); }
 
 bool TBeing::isAgile(int num) const { return statSelfCheck(STAT_AGI, num); }
 
-bool TBeing::isDextrous() const { return statSelfCheck(STAT_DEX); }
+bool TBeing::isDextrous(int num) const { return statSelfCheck(STAT_DEX, num); }
 
-bool TBeing::isTough() const { return statSelfCheck(STAT_CON); }
+bool TBeing::isTough(int num) const { return statSelfCheck(STAT_CON, num); }
 
-bool TBeing::isBrawny() const { return statSelfCheck(STAT_BRA); }
+bool TBeing::isBrawny(int num) const { return statSelfCheck(STAT_BRA, num); }
 
-bool TBeing::isIntelligent() const { return statSelfCheck(STAT_INT); }
+bool TBeing::isIntelligent(int num) const { return statSelfCheck(STAT_INT, num); }
 
-bool TBeing::isWise() const { return statSelfCheck(STAT_WIS); }
+bool TBeing::isWise(int num) const { return statSelfCheck(STAT_WIS, num); }
 
-bool TBeing::isFast() const { return statSelfCheck(STAT_SPE); }
+bool TBeing::isFast(int num) const { return statSelfCheck(STAT_SPE, num); }
 
-bool TBeing::isFocused() const { return statSelfCheck(STAT_FOC); }
+bool TBeing::isFocused(int num) const { return statSelfCheck(STAT_FOC, num); }
 
-bool TBeing::isCharismatic() const { return statSelfCheck(STAT_CHA); }
+bool TBeing::isCharismatic(int num) const { return statSelfCheck(STAT_CHA, num); }
 
-bool TBeing::isLucky() const { return statSelfCheck(STAT_KAR); }
+bool TBeing::isKarmic(int num) const { return statSelfCheck(STAT_KAR, num); }
 
-bool TBeing::isUgly() const { return statSelfCheck(STAT_CHA); }
+bool TBeing::isUgly(int num) const { return !statSelfCheck(STAT_CHA, num); }
 
 bool TBeing::isRealUgly() const { return (isUgly() && isUgly()); }

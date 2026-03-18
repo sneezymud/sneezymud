@@ -180,21 +180,28 @@ void livingVines(TBeing* caster, TBeing* victim, TMagicItem* obj) {
   livingVines(caster, victim, obj->getMagicLevel(), obj->getMagicLearnedness());
 }
 
-void livingVines(TBeing* caster, TBeing* victim) {
-  int ret, level;
-
-  if (!bPassMageChecks(caster, SPELL_LIVING_VINES, victim))
-    return;
-
-  level = caster->getSkillLevel(SPELL_LIVING_VINES);
-  int bKnown = caster->getSkillValue(SPELL_LIVING_VINES);
-
-  if ((ret = livingVines(caster, victim, level, bKnown)) == SPELL_SUCCESS) {
-  } else {
-    if (ret == SPELL_CRIT_FAIL) {
-    } else {
-    }
+int livingVines(TBeing* caster, TBeing* victim) {
+  if (caster->roomp->notRangerLandSector() && !caster->roomp->isForestSector()) {
+    caster->sendTo("You need to be in nature or on land to cast this spell!\n\r");
+    caster->nothingHappens(SILENT_YES);
+    return FALSE;
   }
+
+  if (!bPassShamanChecks(caster, SPELL_LIVING_VINES, victim))
+    return FALSE;
+
+  lag_t rounds = discArray[SPELL_LIVING_VINES]->lag;
+  taskDiffT diff = discArray[SPELL_LIVING_VINES]->task;
+
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_LIVING_VINES, diff,
+    1, "", rounds, caster->in_room, 0, 0, TRUE, 0);
+  return TRUE;
+}
+
+int castLivingVines(TBeing* caster, TBeing* victim) {
+  int level = caster->getSkillLevel(SPELL_LIVING_VINES);
+  int bKnown = caster->getSkillValue(SPELL_LIVING_VINES);
+  return livingVines(caster, victim, level, bKnown);
 }
 
 // END LIVING VINES
