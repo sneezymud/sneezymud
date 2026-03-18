@@ -280,7 +280,10 @@ static void TBeingSave(TBeing* ch, TMonster* mob, int vnum) {
 
   ch->sendTo("Saving.\n\r");
   TDatabase db(DB_IMMORTAL);
-  db.query("begin");
+  if (!db.query("begin")) {
+    ch->sendTo("Database error starting transaction!\n\r");
+    return;
+  }
 
   if (
     !db.query(
@@ -382,7 +385,11 @@ static void TBeingSave(TBeing* ch, TMonster* mob, int vnum) {
       }
     }
   }
-  db.query("commit");
+  if (!db.query("commit")) {
+    db.query("rollback");
+    ch->sendTo("Database error committing mob save!\n\r");
+    return;
+  }
 }
 
 static void msave(TBeing* ch, char* argument) {
@@ -560,16 +567,13 @@ static void mremove(TBeing* ch, int vnum) {
     return;
   }
 
+  // FK CASCADE on mob_imm and mob_extra handles child row cleanup
   if (!db.query("delete from mob where vnum=%i and player_id=%i", vnum,
-        ch->getPlayerID()) ||
-      !db.query("delete from mob_imm where vnum=%i and player_id=%i", vnum,
-        ch->getPlayerID()) ||
-      !db.query("delete from mob_extra where vnum=%i and player_id=%i", vnum,
         ch->getPlayerID())) {
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
-  } else
-    ch->sendTo("Removed.\n\r");
+  }
+  ch->sendTo("Removed.\n\r");
 }
 
 static void change_mob_name(TBeing* ch, TMonster* mob, const char* arg,
