@@ -285,7 +285,9 @@ int loanShark(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
         return true;
       }
 
-      db.query("insert into shopownedloans values (%i, %i, %i, %i, %i, %f, %f)",
+      db.query(
+        "insert into shopownedloans (shop_nr, player_id, amt, granted_time, "
+        "term, rate, default_charge) values (%i, %i, %i, %i, %i, %f, %f)",
         shop_nr, ch->getPlayerID(), amt, time(NULL), term,
         getRate(shop_nr, ch->getPlayerID()),
         getPenalty(shop_nr, ch->getPlayerID()));
