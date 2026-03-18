@@ -119,7 +119,28 @@ For quick pulse initialization, wait until `CMD_GENERIC_QUICK_PULSE` to perform 
 | `DELETE_VICT` | The `ch` parameter should be deleted by caller |
 | `DELETE_ITEM` | The `obj`/`t2` parameter should be deleted by caller |
 
-### DELETE Flag Context by Command
+### DELETE Flag Dispatch by Calling Path
+
+Object spec procs have two calling paths with different DELETE flag semantics. Using the wrong flag means the deletion is silently ignored.
+
+**Command path** (`parse.cc triggerSpecial`): Handles player commands like CMD_SAY, CMD_PUT, etc. The dispatcher iterates room contents, calling `checkSpec()` on each object:
+
+| Return Value | Dispatcher Action |
+|--------------|-------------------|
+| `DELETE_THIS` | Deletes the object (`delete t`) |
+| `DELETE_VICT` | Returns `DELETE_THIS` to caller (signals the acting player died) |
+| `DELETE_ITEM` | Returns `DELETE_VICT` to caller (signals another being died) |
+
+**Pulse path** (`socket.cc procObjSpecProcs`/`procObjSpecProcsQuick`): Handles CMD_GENERIC_PULSE and CMD_GENERIC_QUICK_PULSE:
+
+| Return Value | Dispatcher Action |
+|--------------|-------------------|
+| `DELETE_ITEM` | Marks the object for deletion |
+| `DELETE_THIS` | Not checked - deletion is silently skipped |
+
+Choose the flag matching your proc's trigger: `DELETE_THIS` for command-triggered procs, `DELETE_ITEM` for pulse-triggered procs. If a proc handles both paths and needs self-deletion from either, it must return the appropriate flag for each path.
+
+### DELETE Flag Context for Mob Procs
 
 | Context | `DELETE_THIS` Means | `DELETE_VICT` Means |
 |---------|---------------------|---------------------|
