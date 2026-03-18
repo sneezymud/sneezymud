@@ -208,13 +208,14 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
       int chopperId = db.fetchRow() ? convertTo<int>(db["id"]) : 0;
 
       // get team affiliation for cutesy message below
+      int caddyId = ch->isPc() ? ch->getPlayerID() : 0;
       sstring team;
       bool samaritan = false;
       db.query(
         "select (select team from quest_limbs_team where player_id=%i) as "
         "chopper_team, (select team from quest_limbs_team where player_id=%i) "
         "as caddy_team",
-        chopperId, ch->getPlayerID());
+        chopperId, caddyId);
       if (db.fetchRow()) {
         team = db["chopper_team"];
         if (chopper.compare(ch->name)) {
