@@ -61,7 +61,7 @@ void endAuction(int ticket, int bidder, int seller) {
   } else {
     if (seller > 0)
       store_mail(seller, auctioneer.c_str(), 0,
-        (format("Your auction %i for %s was sold."
+        (format("Your auction %i for %s was sold. "
                 "Your money will be deposited to your bank account as soon as "
                 "the buyer pays.") %
           ticket % obj->getName())

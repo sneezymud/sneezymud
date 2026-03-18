@@ -294,8 +294,8 @@ static void ObjSave(TBeing* ch, TObj* o, int vnum) {
   o->getFourValues(&tmp1, &tmp2, &tmp3, &tmp4);
 
   TDatabase db(DB_IMMORTAL);
+  db.query("begin");
 
-  //  db.query("delete from obj where vnum=%i", vnum);
   if (!db.query("insert into obj (vnum, name, short_desc, long_desc, type, "
                 "action_flag, wear_flag, val0, val1, val2, val3, weight, "
                 "price, can_be_seen, spec_proc, max_exist, cur_struct, "
@@ -308,15 +308,19 @@ static void ObjSave(TBeing* ch, TObj* o, int vnum) {
         o->max_exist, o->obj_flags.struct_points,
         o->obj_flags.max_struct_points, o->obj_flags.decay_time, o->getVolume(),
         o->getMaterial(), ch->getPlayerID(), o->action_description.c_str())) {
+    db.query("rollback");
     ch->sendTo(
       "Unable to save object.  Make sure that an object doesn't already exist "
       "in that slot.\n\r");
-    //    ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   }
 
-  db.query("delete from objextra where vnum=%i and player_id=%i", vnum,
-    ch->getPlayerID());
+  if (!db.query("delete from objextra where vnum=%i and player_id=%i", vnum,
+        ch->getPlayerID())) {
+    db.query("rollback");
+    ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
+    return;
+  }
 
   int i, j, k;
   char temp[2048];
@@ -333,6 +337,7 @@ static void ObjSave(TBeing* ch, TObj* o, int vnum) {
       if (!db.query("insert into objextra (name, description, player_id, vnum) "
                     "values ('%s', '%s', %i, %i)",
             exdes->keyword.c_str(), temp, ch->getPlayerID(), vnum)) {
+        db.query("rollback");
         ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
         return;
       }
@@ -340,6 +345,7 @@ static void ObjSave(TBeing* ch, TObj* o, int vnum) {
       if (!db.query("insert into objextra (name, description, player_id, vnum) "
                     "values ('%s', '', %i, %i)",
             exdes->keyword.c_str(), ch->getPlayerID(), vnum)) {
+        db.query("rollback");
         ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
         return;
       }
@@ -348,6 +354,7 @@ static void ObjSave(TBeing* ch, TObj* o, int vnum) {
 
   if (!db.query("delete from objaffect where vnum=%i and player_id=%i", vnum,
         ch->getPlayerID())) {
+    db.query("rollback");
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   }
@@ -369,11 +376,14 @@ static void ObjSave(TBeing* ch, TObj* o, int vnum) {
               ? mapSpellnumToFile(spellNumT(o->affected[i].modifier))
               : o->affected[i].modifier,
             o->affected[i].modifier2, ch->getPlayerID(), vnum)) {
+        db.query("rollback");
         ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
         return;
       }
     }
   }
+
+  db.query("commit");
 }
 
 static void osave(TBeing* ch, const char* argument) {
@@ -411,7 +421,7 @@ static void olist(TPerson* ch, bool zone = false) {
     db.query(
       "select vnum, name from obj where player_id=%i and vnum>%i and vnum<=%i "
       "order by vnum",
-      ch->getPlayerID(), zone_table[ch->roomp->getZone()->zone_nr - 1].top,
+      ch->getPlayerID(), zone_table[ch->roomp->getZone()->zone_nr].bottom - 1,
       ch->roomp->getZone()->top);
   } else {
     db.query("select vnum, name from obj where player_id=%i order by vnum",

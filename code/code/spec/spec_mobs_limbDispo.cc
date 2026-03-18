@@ -223,13 +223,14 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
         }
       } else
         team = "";
-      if (chopperId > 0)
+      if (chopperId > 0) {
         db.query(
           "insert into quest_limbs "
           "(player_id, team, mob_vnum, slot_num, slot_name) "
           "values (%i, '%s', %i, %i, '%s')",
           chopperId, team.c_str(), m_vnum, slot, mob_part.c_str());
-      vlogf(LOG_MAROR, format("Chop shop: %s") % partname);
+        vlogf(LOG_MAROR, format("Chop shop: %s") % partname);
+      }
 
       if (!team.empty()) {
         if (samaritan) {

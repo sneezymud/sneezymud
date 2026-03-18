@@ -1748,13 +1748,11 @@ int newbieHelperWProc(TBeing* vict, cmdTypeT cmd, const char* Parg, TObj* o,
               ch->sendTo(format("%s:    goto park      : Newbie Area    [Basic "
                                 "area for newbies]\n\r") %
                          o->getName());
-          } else
-            return FALSE;
+          } else {
+            return false;
+          }
 
-          return FALSE;  // He didn't call on us for help, maybe another
-                         // player?
-          return TRUE;   // If we got here, we had a topic so lets eat the
-                         // command.
+          return true;  // Had a topic, eat the command
         }
       }
       return FALSE;
@@ -6458,7 +6456,7 @@ int satyrShrine(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   act("A shimmering portal appears!", false, portalOut, nullptr, nullptr,
     TO_ROOM);
 
-  return DELETE_ITEM;
+  return DELETE_THIS;
 }
 
 int skittishObject(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {

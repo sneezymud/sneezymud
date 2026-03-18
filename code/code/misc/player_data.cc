@@ -1029,16 +1029,17 @@ void TBeing::saveChar(int load_room) {
 
   TTransaction db(DB_SNEEZY);
 
-  db.query("update player set account_id=%i where id=%i", accountId,
-    getPlayerID());
-
   if (!isImmortal()) {
     db.query(
-      "update player set talens=%i, load_room=%i, "
+      "update player set account_id=%i, talens=%i, load_room=%i, "
       "last_logon=%i, nutrition=%i where id=%i",
-      chFile.money, load_room, chFile.last_logon, nutrition, getPlayerID());
+      accountId, chFile.money, load_room, chFile.last_logon, nutrition,
+      getPlayerID());
 
     chFile.load_room = 0;
+  } else {
+    db.query("update player set account_id=%i where id=%i", accountId,
+      getPlayerID());
   }
 
   assert(getPlayerID());
@@ -1347,7 +1348,11 @@ void do_the_player_stuff(const char* name) {
           // Delete the player DB row (FK CASCADE handles child tables)
           {
             TDatabase db(DB_SNEEZY);
-            db.query("delete from player where name='%s'", name);
+            db.query("select id from player where name='%s'", name);
+            if (db.fetchRow()) {
+              db.query("delete from player where id=%i",
+                convertTo<int>(db["id"]));
+            }
           }
           return;
         } else {
