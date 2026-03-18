@@ -1190,8 +1190,11 @@ void TBeing::show_me_to_char(TBeing* ch, showModeT mode) const {
         "location",
         getPlayerID());
       while (db.fetchRow()) {
-        tattoos[convertTo<int>(db["location"])] = db["tattoo"];
-        found = true;
+        int loc = convertTo<int>(db["location"]);
+        if (loc >= MIN_WEAR && loc < MAX_WEAR) {
+          tattoos[loc] = db["tattoo"];
+          found = true;
+        }
       }
     }
 

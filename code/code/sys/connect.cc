@@ -3446,8 +3446,9 @@ int Descriptor::doAccountStuff(char* arg) {
       delete trophy;
 
       // delete player entry (FK CASCADE handles blockedlist, tattoos, mail,
-      // etc.)
-      db.query("delete from player where id=%i", playerID);
+      // etc.) - look up by name since playerID is not set in the account menu
+      // flow
+      db.query("delete from player where name='%s'", delname);
 
       wipePlayerFile(delname);  // handles corpses too
       wipeRentFile(delname);
