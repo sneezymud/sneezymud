@@ -2006,14 +2006,11 @@ void Descriptor::sstring_add(sstring s) {
           delete obj;
           mailSent = true;
         } else {
-          // Look up recipient player_id first, before committing items/talens
-          TDatabase lookup(DB_SNEEZY);
-          lookup.query("select id from player where name='%s'", name);
-          if (!lookup.fetchRow()) {
+          int to_id = getPlayerIdByName(name);
+          if (to_id == 0) {
             writeToQ("That player no longer exists! Mail not sent.\n\r");
             delete obj;
           } else {
-            int to_id = convertTo<int>(lookup["id"]);
             int rent_id = 0;
             if (obj && obj->canBeMailed(name)) {
               ItemSaveDB is("mail", GH_MAIL_SHOP);
@@ -3454,9 +3451,8 @@ int Descriptor::doAccountStuff(char* arg) {
       wipeRentFile(delname);
       wipeFollowersFile(delname);
 
-      // Mail is already deleted by FK CASCADE on player deletion above,
-      // but log for auditability
-      vlogf(LOG_PIO, format("Deleting mail for character %s.") % delname);
+      vlogf(LOG_PIO,
+        format("Mail for character %s deleted via CASCADE.") % delname);
 
       sprintf(buf, "mutable/account/%c/%s/%s", LOWER(account->name[0]),
         sstring(account->name).lower().c_str(), delname);

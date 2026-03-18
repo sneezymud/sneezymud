@@ -190,14 +190,11 @@ void TShopOwned::COGS_add(const sstring& name, int amt, int num) {
 void TShopOwned::COGS_remove(const sstring& name, int num) {
   TDatabase db(DB_SNEEZY);
 
-  //  db.query("update shoplogcogs set
-  //  total_cost=total_cost-((total_cost/count)*%i), count=count-%i where
-  //  obj_name='%s' and shop_nr=%i", num, num, name.c_str(), shop_nr);
-
-  queryqueue.push(format("update shoplogcogs set "
-                         "total_cost=floor(total_cost-(total_cost/count)*%i), "
-                         "count=count-%i where obj_name='%s' and shop_nr=%i") %
-                  num % num % name.escape() % shop_nr);
+  db.query(
+    "update shoplogcogs set "
+    "total_cost=floor(total_cost-(total_cost/count)*%i), "
+    "count=count-%i where obj_name='%s' and shop_nr=%i",
+    num, num, name.escape().c_str(), shop_nr);
 }
 
 int TShopOwned::COGS_get(const sstring& name, int num) {

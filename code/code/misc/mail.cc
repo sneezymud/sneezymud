@@ -566,12 +566,12 @@ void autoMail(TBeing* ch, const char* targ, const char* msg, int m, int r) {
   if (ch) {
     store_mail(ch->getPlayerID(), SNEEZY_ADMIN, 0, msg, m, r);
   } else if (targ) {
-    TDatabase db(DB_SNEEZY);
-    db.query("select id from player where name='%s'", targ);
-    if (db.fetchRow())
-      store_mail(convertTo<int>(db["id"]), SNEEZY_ADMIN, 0, msg, m, r);
-    else
+    int to_id = getPlayerIdByName(targ);
+    if (to_id > 0) {
+      store_mail(to_id, SNEEZY_ADMIN, 0, msg, m, r);
+    } else {
       vlogf(LOG_BUG, format("autoMail: no player found for '%s'") % targ);
+    }
   } else {
     vlogf(LOG_BUG, "Error in autoMail");
   }

@@ -203,9 +203,7 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
     if (record_part) {
       TDatabase db(DB_SNEEZY);
 
-      // Resolve chopper name to player_id
-      db.query("select id from player where name='%s'", chopper.c_str());
-      int chopperId = db.fetchRow() ? convertTo<int>(db["id"]) : 0;
+      int chopperId = getPlayerIdByName(chopper.c_str());
 
       // get team affiliation for cutesy message below
       int caddyId = ch->isPc() ? ch->getPlayerID() : 0;
