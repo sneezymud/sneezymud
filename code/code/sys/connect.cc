@@ -2001,17 +2001,8 @@ void Descriptor::sstring_add(sstring s) {
         mailSent = true;  // suppress "not sent" message for ignored mail
       } else if (terminator) {
         if (sstring(name) == "faction") {
-          // Faction mail: send to all members of the sender's faction
-          TDatabase fm(DB_SNEEZY);
-          fm.query(
-            "SELECT player_id FROM factionmembers WHERE faction="
-            "(SELECT faction FROM factionmembers WHERE player_id=%i)",
-            character->getPlayerID());
-          while (fm.fetchRow()) {
-            store_mail(convertTo<int>(fm["player_id"]),
-              character->getName().c_str(), character->getPlayerID(),
-              str->c_str(), 0, 0);
-          }
+          store_faction_mail(character->getPlayerID(),
+            character->getName().c_str(), str->c_str());
           delete obj;
           mailSent = true;
         } else {

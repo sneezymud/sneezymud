@@ -59,28 +59,26 @@ void store_mail(int to_id, const char* from_name, int from_id,
   const char* message_pointer, int talens, int rent_id) {
   TDatabase db(DB_SNEEZY);
 
-  // from_id: 0 means system/NPC sender, stored as null in DB
-  // rent_id: <= 0 means no attachment, omit to default to null (FK constraint)
-  if (from_id > 0 && rent_id > 0)
-    db.query(
-      "insert into mail (port, mailfrom, from_id, to_id, timesent, content, "
-      "talens, rent_id) values (%i, '%s', %i, %i, NOW(), '%s', %i, %i)",
-      gamePort, from_name, from_id, to_id, message_pointer, talens, rent_id);
-  else if (from_id > 0)
-    db.query(
-      "insert into mail (port, mailfrom, from_id, to_id, timesent, content, "
-      "talens) values (%i, '%s', %i, %i, NOW(), '%s', %i)",
-      gamePort, from_name, from_id, to_id, message_pointer, talens);
-  else if (rent_id > 0)
-    db.query(
-      "insert into mail (port, mailfrom, to_id, timesent, content, "
-      "talens, rent_id) values (%i, '%s', %i, NOW(), '%s', %i, %i)",
-      gamePort, from_name, to_id, message_pointer, talens, rent_id);
-  else
-    db.query(
-      "insert into mail (port, mailfrom, to_id, timesent, content, "
-      "talens) values (%i, '%s', %i, NOW(), '%s', %i)",
-      gamePort, from_name, to_id, message_pointer, talens);
+  // from_id: 0 = system/NPC sender -> null via NULLIF (FK requires null, not 0)
+  // rent_id: 0 = no attachment -> null via NULLIF (FK requires null, not 0)
+  db.query(
+    "insert into mail (port, mailfrom, from_id, to_id, timesent, content, "
+    "talens, rent_id) values (%i, '%s', NULLIF(%i,0), %i, NOW(), '%s', %i, "
+    "NULLIF(%i,0))",
+    gamePort, from_name, from_id, to_id, message_pointer, talens, rent_id);
+}
+
+void store_faction_mail(int sender_id, const char* sender_name,
+  const char* message) {
+  TDatabase fm(DB_SNEEZY);
+  fm.query(
+    "SELECT player_id FROM factionmembers WHERE faction="
+    "(SELECT faction FROM factionmembers WHERE player_id=%i)",
+    sender_id);
+  while (fm.fetchRow()) {
+    store_mail(convertTo<int>(fm["player_id"]), sender_name, sender_id, message,
+      0, 0);
+  }
 }
 
 sstring read_delete(int player_id, const char* recipient_formatted,
@@ -338,6 +336,8 @@ void TBeing::postmasterSendMail(const char* arg, TMonster* me) {
   recipient = recipient.lower();
   sendFaction = recipient == "faction";
 
+  // Bug fix: only validate recipient as a real player when NOT sending to
+  // faction (there is no player named "faction")
   if (recipient != "faction" && !load_char(recipient, &st)) {
     sendTo("No such player to mail to!\n\r");
     return;
