@@ -294,7 +294,10 @@ static void ObjSave(TBeing* ch, TObj* o, int vnum) {
   o->getFourValues(&tmp1, &tmp2, &tmp3, &tmp4);
 
   TDatabase db(DB_IMMORTAL);
-  db.query("begin");
+  if (!db.query("begin")) {
+    ch->sendTo("Database error starting transaction!\n\r");
+    return;
+  }
 
   if (!db.query("insert into obj (vnum, name, short_desc, long_desc, type, "
                 "action_flag, wear_flag, val0, val1, val2, val3, weight, "
@@ -383,7 +386,11 @@ static void ObjSave(TBeing* ch, TObj* o, int vnum) {
     }
   }
 
-  db.query("commit");
+  if (!db.query("commit")) {
+    db.query("rollback");
+    ch->sendTo("Database error committing object save!\n\r");
+    return;
+  }
 }
 
 static void osave(TBeing* ch, const char* argument) {
