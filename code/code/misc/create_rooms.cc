@@ -2957,17 +2957,10 @@ static void RoomSave(TBeing* ch, int start, int end, int useSecond) {
   strcpy(dots, "\0");
 
   db.query("begin");
+  // FK CASCADE on roomexit and roomextra handles child row cleanup
   db.query(
     "delete from room where player_id=%i and (block=%i or vnum between %i and "
     "%i)",
-    ch->getPlayerID(), useSecond, start, end);
-  db.query(
-    "delete from roomexit where player_id=%i and (block=%i or vnum between %i "
-    "and %i)",
-    ch->getPlayerID(), useSecond, start, end);
-  db.query(
-    "delete from roomextra where player_id=%i and (block=%i or vnum between "
-    "%i and %i)",
     ch->getPlayerID(), useSecond, start, end);
 
   for (i = rstart; i <= rend; i++) {

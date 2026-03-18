@@ -522,16 +522,13 @@ void oremove(TBeing* ch, int vnum) {
     return;
   }
 
+  // FK CASCADE on objaffect and objextra handles child row cleanup
   if (!db.query("delete from obj where vnum=%i and player_id=%i", vnum,
-        ch->getPlayerID()) ||
-      !db.query("delete from objaffect where vnum=%i and player_id=%i", vnum,
-        ch->getPlayerID()) ||
-      !db.query("delete from objextra where vnum=%i and player_id=%i", vnum,
         ch->getPlayerID())) {
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
-  } else
-    ch->sendTo("Removed.\n\r");
+  }
+  ch->sendTo("Removed.\n\r");
 }
 
 // This is the main function that controls all the object stuff - Russ
