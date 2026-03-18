@@ -83,8 +83,11 @@
 #include "obj_trap.h"
 #include "obj_portal.h"
 #include "obj_symbol.h"
+#include "obj_bow.h"
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
+#include "obj_arrow.h"
+#include "obj_quiver.h"
 #include "obj_drinkcon.h"
 #include "obj_potion.h"
 #include "obj_staff.h"
@@ -6282,6 +6285,90 @@ int stickerBush(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
   return TRUE;
 }
 
+int poisonQuiver(TBeing* ch, cmdTypeT cmd, const char*, TObj* q, TObj* a) {
+  TQuiver* quiver = dynamic_cast<TQuiver*>(q);
+  if (!quiver) {
+    return false;
+  }
+
+  // When quiver is unequipped, remove poison from all arrows
+  if (cmd == CMD_OBJ_UNEQUIPPED) {
+    int count = 0;
+    for (TThing* thing : q->stuff) {
+      auto* arrow = dynamic_cast<TArrow*>(thing);
+
+      // Only remove poison if it's the standard poison added by quiver
+      if (arrow && arrow->isPoisoned() &&
+          arrow->getPoison() == LIQ_POISON_STANDARD) {
+        arrow->setPoison((liqTypeT)-1);
+        count++;
+      }
+    }
+
+    // Only show message if we actually unpoisoned some arrows
+    if (count > 0) {
+      act("The <g>sickly green<1> glow emanating from within your $p fades.",
+          false, ch, q, nullptr, TO_CHAR);
+      act("The <g>sickly green<1> glow emanating from within $n's $p fades.", true,
+          ch, q, nullptr, TO_ROOM);
+    }
+
+    return false;
+  }
+
+  // When quiver is equipped, poison all unpoisoned arrows inside
+  if (cmd == CMD_OBJ_EQUIPPED) {
+    int count = 0;
+    for (TThing* thing : q->stuff) {
+      auto* arrow = dynamic_cast<TArrow*>(thing);
+      if (arrow && !arrow->isPoisoned()) {
+        arrow->setPoison(LIQ_POISON_STANDARD);
+        count++;
+      }
+    }
+
+    // Only show message if we actually poisoned some arrows
+    if (count > 0) {
+      act("A <g>sickly green<1> glow begins emanating from within your $p.", false,
+          ch, q, nullptr, TO_CHAR);
+      act("A <g>sickly green<1> glow begins emanating from within $n's $p.", true,
+          ch, q, nullptr, TO_ROOM);
+    }
+
+    return false;
+  }
+
+  // When arrow is put into equipped quiver, poison it
+  if (cmd != CMD_OBJ_HAVING_SOMETHING_PUT_INTO || !a || !q || !ch ||
+      !q->equippedBy) {
+    return false;
+  }
+  auto* arrow = dynamic_cast<TArrow*>(a);
+
+  if (!arrow || arrow->isPoisoned()) {
+    return false;
+  }
+
+  arrow->setPoison(LIQ_POISON_STANDARD);
+  act("The arrow glows a <g>sickly green<1> as it enters the $p.", TRUE, ch, q,
+    0, TO_CHAR);
+  act("The arrow glows a <g>sickly green<1> as it enters the $p.", TRUE, ch, q,
+    0, TO_ROOM);
+
+  return false;
+}
+
+int flamingArrowBow(TBeing*, cmdTypeT cmd, const char*, TObj* b, TObj* arrow) {
+  TBow* bow = dynamic_cast<TBow*>(b);
+  if (!bow || !arrow || cmd != CMD_SHOOT)
+    return false;
+
+  arrow->addObjStat(ITEM_BURNING);
+  act("The $p <r>bursts into flames<1> as it flies through the air!", true,
+    nullptr, arrow, nullptr, TO_ROOM);
+  return false;
+}
+
 int rechargingWand(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
   if (!o) {
     return false;
@@ -7758,4 +7845,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
   {TRUE, "Piety Regen", pietyRegen}, {TRUE, "DK Sword", dkSword},
   {TRUE, "Molten Weapon", moltenWeapon},
   {TRUE, "Glacial Weapon", glacialWeapon},  // 162
-  {FALSE, "satyr shrine", satyrShrine}, {FALSE, "last proc", bogusObjProc}};
+  {FALSE, "satyr shrine", satyrShrine},
+  {TRUE, "poison quiver", poisonQuiver},
+  {TRUE, "flaming arrow bow", flamingArrowBow},
+  {FALSE, "last proc", bogusObjProc}};

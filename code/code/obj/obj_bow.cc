@@ -344,6 +344,17 @@ int TBow::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count, dirTypeT dir,
 
     *ch->roomp += *the_arrow;
 
+    // Check for bow spec proc (e.g., flaming arrow bow)
+    if (spec) {
+      int spec_rc = checkSpec(ch, CMD_SHOOT, "", the_arrow);
+      if (IS_SET_DELETE(spec_rc, DELETE_VICT))
+        return DELETE_VICT;
+      if (IS_SET_DELETE(spec_rc, DELETE_THIS))
+        return DELETE_THIS;
+      if (IS_SET_DELETE(spec_rc, DELETE_ITEM))
+        return DELETE_ITEM;
+    }
+
     // construct reload buf, do it here since arrow might go bye-bye
     // as sanity check, verify that person has an arrow to reload at this
     // point too.
