@@ -185,13 +185,15 @@ static int stab(TBeing* thief, TBeing* victim, bool isChain = false) {
   if (thief->checkPeaceful("Naughty, naughty.  None of that here.\n\r"))
     return FALSE;
 
-  if (thief->riding && (thief->getSkillLevel(SKILL_RIDE)<80)) {
+  TBeing* thiefMount = dynamic_cast<TBeing*>(thief->riding);
+  if (thiefMount && thief->getSkillLevel(SKILL_RIDE) < 80) {
     thief->sendTo("You aren't a skilled enough rider to stab while mounted!\n\r");
     return FALSE;
   }
 
   TBeing* victimMount = dynamic_cast<TBeing*>(victim->riding);
-  if ((victim->isFlying() || (victimMount && victimMount->isFlying())) && (!thief->isFlying()) && thief->fight() != victim) {
+  bool thiefAirborne = thief->isFlying() || (thiefMount && thiefMount->isFlying());
+  if ((victim->isFlying() || (victimMount && victimMount->isFlying())) && !thiefAirborne && thief->fight() != victim) {
     thief->sendTo("You can't stab a flying person with your feet on the ground!\n\r");
     return FALSE;
   }

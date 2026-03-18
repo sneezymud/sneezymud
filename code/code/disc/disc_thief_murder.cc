@@ -259,6 +259,9 @@ int TBeing::doBackstab(const char* argument, TBeing* vict) {
   }
   rc = backstab(this, victim);
 
+  if (rc)
+    addSkillLag(SKILL_BACKSTAB, rc);
+
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
       return rc;
@@ -270,9 +273,6 @@ int TBeing::doBackstab(const char* argument, TBeing* vict) {
     // Only update suspicion if victim survived and is a mob
     dynamic_cast<TMonster*>(victim)->US(25);
   }
-
-  if (rc)
-    addSkillLag(SKILL_BACKSTAB, rc);
 
   return rc;
 }
@@ -293,12 +293,14 @@ int backstab(TBeing* thief, TBeing* victim) {
     thief->sendTo("You need to wield a weapon, to make it a success.\n\r");
     return FALSE;
   }
-  if (thief->riding && (thief->getSkillLevel(SKILL_RIDE)<80)) {
+  TBeing* thiefMount = dynamic_cast<TBeing*>(thief->riding);
+  if (thiefMount && thief->getSkillLevel(SKILL_RIDE) < 80) {
     thief->sendTo("You aren't a skilled enough rider to backstab while mounted!\n\r");
     return FALSE;
   }
   TBeing* victimMount = dynamic_cast<TBeing*>(victim->riding);
-  if ((victim->isFlying() || (victimMount && victimMount->isFlying())) && (!thief->isFlying()) && thief->fight() != victim) {
+  bool thiefAirborne = thief->isFlying() || (thiefMount && thiefMount->isFlying());
+  if ((victim->isFlying() || (victimMount && victimMount->isFlying())) && !thiefAirborne && thief->fight() != victim) {
     thief->sendTo("You can't backstab a flying person with your feet on the ground!\n\r");
     return FALSE;
   }
@@ -607,6 +609,9 @@ int TBeing::doThroatSlit(const char* argument, TBeing* vict) {
 
   rc = throatSlit(this, victim);
 
+  if (rc)
+    addSkillLag(SKILL_THROATSLIT, rc);
+
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
       return rc;
@@ -618,9 +623,6 @@ int TBeing::doThroatSlit(const char* argument, TBeing* vict) {
     // Only update suspicion if victim survived and is a mob
     dynamic_cast<TMonster*>(victim)->US(25);
   }
-
-  if (rc)
-    addSkillLag(SKILL_THROATSLIT, rc);
 
   return rc;
 }
