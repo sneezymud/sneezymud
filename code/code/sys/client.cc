@@ -503,24 +503,15 @@ int Descriptor::read_client(char* str2) {
 
       // Look up recipient player_id first, before committing items/talens
       if (sstring(name) == "faction") {
-        // Faction mail: send to all members of the sender's faction
-        TDatabase fm(DB_SNEEZY);
-        fm.query(
-          "SELECT player_id FROM factionmembers WHERE faction="
-          "(SELECT faction FROM factionmembers WHERE player_id=%i)",
-          character->getPlayerID());
-        while (fm.fetchRow()) {
-          store_mail(convertTo<int>(fm["player_id"]),
-            character->getName().c_str(), character->getPlayerID(), buffer, 0,
-            0);
-        }
+        store_faction_mail(character->getPlayerID(),
+          character->getName().c_str(), buffer);
         delete obj;
       } else {
         TDatabase lookup(DB_SNEEZY);
         lookup.query("select id from player where name='%s'", name);
         if (!lookup.fetchRow()) {
+          character->sendTo("That player no longer exists! Mail not sent.\n\r");
           delete obj;
-          // clear and break - player deleted since compose started
           obj = nullptr;
           *(name) = '\0';
           amount = 0;
