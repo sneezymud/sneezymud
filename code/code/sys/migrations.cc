@@ -36,18 +36,23 @@ namespace {
   }
 
   bool columnIsType(TDatabase& db, const char* table, const char* column,
-    const char* expectedType) {
+    const char* expectedType, bool notNull = false) {
     db.query(
-      "SELECT COLUMN_TYPE FROM information_schema.COLUMNS "
+      "SELECT COLUMN_TYPE AS col_type, IS_NULLABLE AS nullable "
+      "FROM information_schema.COLUMNS "
       "WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='%s' "
       "AND COLUMN_NAME='%s'",
       table, column);
-    return db.fetchRow() && sstring(db[0u]) == expectedType;
+    if (!db.fetchRow() || sstring(db["col_type"]) != expectedType) {
+      return false;
+    }
+    // When notNull is required, verify the column is actually NOT null
+    return !notNull || sstring(db["nullable"]) == "NO";
   }
 
   void modifyColumnType(TDatabase& db, const char* table, const char* column,
     const char* type, bool notNull) {
-    if (!columnIsType(db, table, column, type)) {
+    if (!columnIsType(db, table, column, type, notNull)) {
       if (notNull) {
         assert(db.query("ALTER TABLE %s MODIFY %s %s NOT null", table, column,
           type));
@@ -57,12 +62,24 @@ namespace {
     }
   }
   bool hasForeignKey(TDatabase& db, const char* table, const char* column,
-    const char* refTable) {
-    db.query(
-      "SELECT COUNT(*) AS cnt FROM information_schema.KEY_COLUMN_USAGE "
-      "WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='%s' "
-      "AND COLUMN_NAME='%s' AND REFERENCED_TABLE_NAME='%s'",
+    const char* refTable, const char* refColumn = nullptr,
+    const char* onDelete = nullptr) {
+    auto query = std::format(
+      "SELECT COUNT(*) AS cnt "
+      "FROM information_schema.KEY_COLUMN_USAGE k "
+      "JOIN information_schema.REFERENTIAL_CONSTRAINTS r "
+      "ON k.CONSTRAINT_SCHEMA = r.CONSTRAINT_SCHEMA "
+      "AND k.CONSTRAINT_NAME = r.CONSTRAINT_NAME "
+      "WHERE k.TABLE_SCHEMA=DATABASE() AND k.TABLE_NAME='{}' "
+      "AND k.COLUMN_NAME='{}' AND k.REFERENCED_TABLE_NAME='{}'",
       table, column, refTable);
+    if (refColumn) {
+      query += std::format(" AND k.REFERENCED_COLUMN_NAME='{}'", refColumn);
+    }
+    if (onDelete) {
+      query += std::format(" AND r.DELETE_RULE='{}'", onDelete);
+    }
+    db.query(query.c_str());
     return db.fetchRow() && convertTo<int>(db["cnt"]) > 0;
   }
 
@@ -76,7 +93,7 @@ namespace {
 
   void addForeignKey(TDatabase& db, const char* table, const char* column,
     const char* refTable, const char* refColumn, const char* onDelete) {
-    if (!hasForeignKey(db, table, column, refTable)) {
+    if (!hasForeignKey(db, table, column, refTable, refColumn, onDelete)) {
       // Explicit constraint name (fk_table_column) ensures database-wide
       // uniqueness, which MariaDB 10.x requires for InnoDB FKs.  MariaDB 12
       // relaxed this to per-table, but auto-generates short names like "1"
@@ -92,11 +109,16 @@ namespace {
     const char* column, const char* refSchema, const char* refTable,
     const char* refColumn, const char* onDelete) {
     db.query(
-      "SELECT COUNT(*) AS cnt FROM information_schema.KEY_COLUMN_USAGE "
-      "WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='%s' "
-      "AND COLUMN_NAME='%s' AND REFERENCED_TABLE_SCHEMA='%s' "
-      "AND REFERENCED_TABLE_NAME='%s'",
-      table, column, refSchema, refTable);
+      "SELECT COUNT(*) AS cnt "
+      "FROM information_schema.KEY_COLUMN_USAGE k "
+      "JOIN information_schema.REFERENTIAL_CONSTRAINTS r "
+      "ON k.CONSTRAINT_SCHEMA = r.CONSTRAINT_SCHEMA "
+      "AND k.CONSTRAINT_NAME = r.CONSTRAINT_NAME "
+      "WHERE k.TABLE_SCHEMA=DATABASE() AND k.TABLE_NAME='%s' "
+      "AND k.COLUMN_NAME='%s' AND k.REFERENCED_TABLE_SCHEMA='%s' "
+      "AND k.REFERENCED_TABLE_NAME='%s' "
+      "AND k.REFERENCED_COLUMN_NAME='%s' AND r.DELETE_RULE='%s'",
+      table, column, refSchema, refTable, refColumn, onDelete);
     if (db.fetchRow() && convertTo<int>(db["cnt"]) > 0)
       return;
     assert(db.query(
