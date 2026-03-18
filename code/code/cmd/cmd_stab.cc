@@ -147,7 +147,7 @@ int stabPrimAtk(TBeing* thief, TBeing* victim, TGenWeapon* primWeapon,
   TGenWeapon* offWeapon) {
   int rc = stabCore(thief, victim, primWeapon);
 
-  if (IS_SET_DELETE(rc, DELETE_VICT) || IS_SET_DELETE(rc, DELETE_THIS))
+  if (IS_SET_DELETE(rc, DELETE_VICT))
     return rc;
 
   if (victim && offWeapon && offWeapon->canStab()) {
