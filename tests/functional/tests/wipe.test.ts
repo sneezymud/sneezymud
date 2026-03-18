@@ -1,8 +1,8 @@
 /**
  * Immortal `wipe` command: player character deletion.
  *
- * Verifies the two-step lookup+delete (SELECT id, DELETE WHERE id) and
- * CASCADE FK cleanup when an immortal wipes a player character.
+ * Verifies that an immortal can wipe an offline player character and
+ * that the player record is removed from the database.
  *
  * Required immortal powers: wipe.
  * Uses an ephemeral account so the wiped character is isolated.
@@ -54,7 +54,12 @@ describe("Immortal Wipe", () => {
         password: DEFAULT_PASSWORD,
       });
     } catch (error) {
-      // Account may already be gone if wipe cleaned it up
+      // Rethrow system/connection errors (ECONNREFUSED, ECONNRESET, etc.);
+      // suppress protocol-level failures since the account was likely
+      // already cleaned up by the wipe command
+      if (error instanceof Error && "code" in error) {
+        throw error;
+      }
       console.warn(
         `Cleanup of account "${account}" failed (may be expected):`,
         error,
