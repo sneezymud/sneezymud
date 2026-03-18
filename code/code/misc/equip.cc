@@ -1229,6 +1229,24 @@ int TBeing::wear(TObj* o, wearKeyT keyword, TBeing* ch) {
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_ITEM;
 
+  // Check for equipment spec proc (e.g., cursed items that react to being worn)
+  if (o->spec) {
+    rc = o->checkSpec(this, CMD_OBJ_EQUIPPED, "", nullptr);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      // Object wants to be deleted after being equipped
+      // Unequip it first, then let caller delete
+      wearSlotT slot = o->eq_pos;
+      unequip(slot);
+      return DELETE_ITEM;
+    }
+    if (IS_SET_DELETE(rc, DELETE_VICT)) {
+      // Being wants to be deleted (e.g., cursed item kills wearer)
+      // The being deletion process will automatically unequip all items
+      // and put them in the corpse, so we don't need to unequip here
+      return DELETE_THIS;
+    }
+  }
+
   return FALSE;
 }
 
@@ -1452,6 +1470,24 @@ int TBeing::remove(TThing* obj, TBeing* ch) {
   }
 
   if ((obj = ch->unequip(pos))) {
+    // Check for unequip spec proc (e.g., cursed items that react to being removed)
+    TObj* tobj = dynamic_cast<TObj*>(obj);
+    if (tobj && tobj->spec) {
+      rc = tobj->checkSpec(ch, CMD_OBJ_UNEQUIPPED, "", nullptr);
+      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+        // Object wants to be deleted after being unequipped
+        // Don't delete here - return DELETE_ITEM and let caller delete
+        return DELETE_ITEM;
+      }
+      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+        // Being wants to be deleted (e.g., cursed item kills wearer when removed)
+        // The being deletion process will automatically handle inventory
+        // Put the object back in inventory first
+        *ch += *obj;
+        return DELETE_THIS;
+      }
+    }
+
     rc = obj->removeMe(this, pos);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_ITEM;
@@ -2039,10 +2075,29 @@ int TBeing::doUnsaddle(sstring arg) {
       horse->tied_to = NULL;
     }
 
-    *this += *(horse->unequip(WEAR_NECK));
+    saddle = horse->unequip(WEAR_NECK);
   } else
-    *this += *(horse->unequip(WEAR_BACK));
+    saddle = horse->unequip(WEAR_BACK);
 
+  // Check for unequip spec proc (e.g., cursed saddles that react to being removed)
+  TObj* tsaddle = dynamic_cast<TObj*>(saddle);
+  if (tsaddle && tsaddle->spec) {
+    int rc = tsaddle->checkSpec(horse, CMD_OBJ_UNEQUIPPED, "", nullptr);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      // Saddle wants to be deleted after being unequipped
+      delete saddle;
+      return TRUE;  // Saddle was deleted
+    }
+    if (IS_SET_DELETE(rc, DELETE_VICT)) {
+      // Horse wants to be deleted (e.g., cursed saddle kills horse when removed)
+      // Put the saddle in player's inventory first
+      *this += *saddle;
+      delete horse;
+      return TRUE;  // Horse was deleted
+    }
+  }
+
+  *this += *saddle;
   return TRUE;
 }
 
@@ -2194,6 +2249,27 @@ int TBeing::doSaddle(sstring arg) {
 
   --(*saddle);
   horse->equipChar(saddle, slot);
+
+  // Check for equipment spec proc (e.g., cursed saddles that react to being equipped)
+  if (saddle->spec) {
+    int rc = saddle->checkSpec(horse, CMD_OBJ_EQUIPPED, "", nullptr);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      // Saddle wants to be deleted after being equipped
+      // Must unequip it first, then delete it
+      wearSlotT slot_pos = saddle->eq_pos;
+      TThing* temp = horse->unequip(slot_pos);
+      delete temp;
+      return FALSE;  // Saddle was deleted
+    }
+    if (IS_SET_DELETE(rc, DELETE_VICT)) {
+      // Horse wants to be deleted (e.g., cursed saddle kills horse)
+      // The being deletion process will automatically unequip all items
+      // and put them in the corpse, so we don't need to unequip here
+      delete horse;
+      return FALSE;  // Horse was deleted
+    }
+  }
+
   return TRUE;
 }
 
