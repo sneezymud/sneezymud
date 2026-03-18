@@ -1436,17 +1436,15 @@ void runMigrations() {
         assert(
           sneezy.query("ALTER TABLE tattoos "
                        "ADD COLUMN player_id BIGINT UNSIGNED DEFAULT null"));
+      }
+
+      // Backfill and cleanup: run whenever legacy column still exists
+      // (handles both fresh run and crash-after-ADD-COLUMN retry)
+      if (hasColumn(sneezy, "tattoos", "name")) {
         assert(
           sneezy.query("UPDATE tattoos t JOIN player p ON t.name = p.name "
                        "SET t.player_id = p.id"));
-        // Delete orphans (player no longer exists)
         assert(sneezy.query("DELETE FROM tattoos WHERE player_id IS null"));
-      }
-
-      // Swap PK from (name, location) to (player_id, location)
-      if (hasColumn(sneezy, "tattoos", "name")) {
-        // Ensure orphan cleanup completed (idempotent if block 1 finished)
-        sneezy.query("DELETE FROM tattoos WHERE player_id IS null");
         assert(
           sneezy.query("ALTER TABLE tattoos "
                        "DROP PRIMARY KEY, "
@@ -1507,16 +1505,13 @@ void runMigrations() {
         assert(
           sneezy.query("ALTER TABLE fishkeeper "
                        "ADD COLUMN player_id BIGINT UNSIGNED DEFAULT null"));
-        assert(
-          sneezy.query("UPDATE fishkeeper fk JOIN player p ON fk.name = p.name "
-                       "SET fk.player_id = p.id"));
-        // Delete orphans (player no longer exists)
-        assert(sneezy.query("DELETE FROM fishkeeper WHERE player_id IS null"));
       }
 
       if (hasColumn(sneezy, "fishkeeper", "name")) {
-        // Ensure orphan cleanup completed (idempotent if block 1 finished)
-        sneezy.query("DELETE FROM fishkeeper WHERE player_id IS null");
+        assert(
+          sneezy.query("UPDATE fishkeeper fk JOIN player p ON fk.name = p.name "
+                       "SET fk.player_id = p.id"));
+        assert(sneezy.query("DELETE FROM fishkeeper WHERE player_id IS null"));
         // Swap PK from (name) to (player_id)
         assert(
           sneezy.query("ALTER TABLE fishkeeper "
@@ -1622,27 +1617,24 @@ void runMigrations() {
           sneezy.query("ALTER TABLE mail "
                        "ADD COLUMN to_id BIGINT UNSIGNED DEFAULT null, "
                        "ADD COLUMN from_id BIGINT UNSIGNED DEFAULT null"));
+      }
 
+      // Backfill and finalize (guarded by old column - re-runs safely if
+      // server crashed after ADD COLUMN but before completion)
+      if (hasColumn(sneezy, "mail", "mailto")) {
         // Backfill to_id from mailto
         assert(
           sneezy.query("UPDATE mail m JOIN player p ON m.mailto=p.name "
                        "SET m.to_id=p.id"));
-        // Backfill from_id from mailfrom (only for player senders)
+        // Backfill from_id from mailfrom (only for player senders).
+        // System/NPC senders with no player match keep from_id as null.
         assert(
           sneezy.query("UPDATE mail m JOIN player p ON m.mailfrom=p.name "
                        "SET m.from_id=p.id"));
 
-        // Delete orphan mail where recipient no longer exists (nobody will
-        // check it). System/NPC senders with no player match keep from_id
-        // as null - that's correct.
+        // Delete orphan mail where recipient no longer exists
         assert(sneezy.query("DELETE FROM mail WHERE to_id IS null"));
-      }
 
-      // Drop mailto (replaced by to_id), keep mailfrom (display name for
-      // system/NPC senders like "SneezyMUD Administration")
-      if (hasColumn(sneezy, "mail", "mailto")) {
-        // Ensure orphan cleanup completed (idempotent if block 1 finished)
-        sneezy.query("DELETE FROM mail WHERE to_id IS null");
         // Drop old index on mailto (created by migration 12)
         if (hasIndex(sneezy, "mail", "idx_mail_mailto"))
           assert(sneezy.query("ALTER TABLE mail DROP INDEX idx_mail_mailto"));
@@ -1651,8 +1643,12 @@ void runMigrations() {
           sneezy.query("ALTER TABLE mail "
                        "DROP COLUMN mailto, "
                        "MODIFY to_id BIGINT UNSIGNED NOT null"));
+      }
 
-        // Add index for the read query pattern (has_mail, read_delete)
+      // Add index for the read query pattern (has_mail, read_delete).
+      // Independent guard: if server crashed after DROP COLUMN mailto but
+      // before this, the hasColumn guard above won't re-enter.
+      if (!hasIndex(sneezy, "mail", "idx_mail_to")) {
         assert(
           sneezy.query("ALTER TABLE mail "
                        "ADD INDEX idx_mail_to (to_id, port)"));
@@ -1669,18 +1665,15 @@ void runMigrations() {
         assert(
           sneezy.query("ALTER TABLE shopownedaccess "
                        "ADD COLUMN player_id BIGINT UNSIGNED DEFAULT null"));
+      }
+
+      if (hasColumn(sneezy, "shopownedaccess", "name")) {
         assert(
           sneezy.query("UPDATE shopownedaccess soa "
                        "JOIN player p ON soa.name = p.name "
                        "SET soa.player_id = p.id"));
-        // Delete orphans (player no longer exists)
         assert(
           sneezy.query("DELETE FROM shopownedaccess WHERE player_id IS null"));
-      }
-
-      if (hasColumn(sneezy, "shopownedaccess", "name")) {
-        // Ensure orphan cleanup completed (idempotent if block 1 finished)
-        sneezy.query("DELETE FROM shopownedaccess WHERE player_id IS null");
         // Swap PK from (shop_nr, name) to (shop_nr, player_id)
         assert(
           sneezy.query("ALTER TABLE shopownedaccess "
@@ -2360,14 +2353,19 @@ void runMigrations() {
           sneezy.query("ALTER TABLE configuration "
                        "DROP PRIMARY KEY, "
                        "DROP COLUMN id"));
+      }
+
+      // Independent guards: if server crashed after DROP COLUMN id but
+      // before these, the hasColumn guard above won't re-enter.
+      if (!hasPrimaryKey(sneezy, "configuration")) {
         assert(
           sneezy.query("ALTER TABLE configuration ADD PRIMARY KEY (config)"));
-        if (hasIndex(sneezy, "configuration", "config"))
-          assert(sneezy.query("ALTER TABLE configuration DROP INDEX config"));
-        if (hasIndex(sneezy, "configuration", "idx_configuration_key"))
-          assert(sneezy.query(
-            "ALTER TABLE configuration DROP INDEX idx_configuration_key"));
       }
+      if (hasIndex(sneezy, "configuration", "config"))
+        assert(sneezy.query("ALTER TABLE configuration DROP INDEX config"));
+      if (hasIndex(sneezy, "configuration", "idx_configuration_key"))
+        assert(sneezy.query(
+          "ALTER TABLE configuration DROP INDEX idx_configuration_key"));
     },
     // Ensure every corporation has a bank entry. Production data may be
     // missing rows for corps that never deposited - doReserve() silently
