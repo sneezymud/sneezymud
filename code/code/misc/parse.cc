@@ -1870,6 +1870,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring& argument, TThing* vict,
         case CMD_RESP_KILLED:
         case CMD_RESP_STARTFIGHT:
         case CMD_RESP_TRIGGER:
+        case CMD_RESP_GIVEEXP:
         case CMD_GENERIC_PULSE:
         case CMD_GENERIC_QUICK_PULSE:
         case CMD_GENERIC_CREATED:

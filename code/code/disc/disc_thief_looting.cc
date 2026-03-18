@@ -113,8 +113,8 @@ int detectSecret(TBeing* thief) {
                                  : "NO NAME. TELL A GOD"));
         act(buf, FALSE, thief, 0, 0, TO_ROOM);
         thief->setMove(max(0, (thief->getMove() - 30)));
-        thief->gainTaskExp(0, 50);
-        thief->doSave(SILENT_YES);
+        thief->gainTaskExp(SKILL_SEARCH, bKnown, 1.0, true);
+
         return TRUE;
       }
     }

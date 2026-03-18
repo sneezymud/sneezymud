@@ -133,22 +133,10 @@ void TBeing::doCook(sstring arg) {
   start_task(this, pot, NULL, TASK_COOK, "", recipes[recipe_index].difficulty, inRoom(), recipe_index, 0, 5);
 }
 
-double getCookingDifficultyScale(taskDiffT diff) {
-  switch(diff) {
-    case TASK_HOPELESS:    return .80;   // Most exp - hardest task
-    case TASK_DANGEROUS:   return .65;
-    case TASK_DIFFICULT:   return .50;
-    case TASK_NORMAL:      return .35;
-    case TASK_EASY:        return .25;
-    case TASK_TRIVIAL:     return .20;   // Least exp - easiest task
-    default:               return .35;   // Normal as default
-  }
-}
-
 int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj* pot) {
   int recipe_index = ch->task->status;
   const int MAX_TIME = 50; // Prevent infinite failure loop
-  
+
   // Basic validation
   if (recipe_index < 0 || recipes[recipe_index].recipe < 0) {
     ch->sendTo("Something went wrong with the recipe.\n\r");
@@ -162,10 +150,12 @@ int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj* po
     act("$n stops cooking.", TRUE, ch, 0, 0, TO_ROOM);
     ch->stopTask();
 
-    if (!pot->stuff.empty()) {
-      delete pot->stuff.front();
+    if (pot && !pot->stuff.empty()) {
+      TThing* contents = pot->stuff.front();
+      --(*contents);
+      delete contents;
     }
-    
+
     return FALSE;
   }
 
@@ -176,25 +166,27 @@ int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj* po
   if (ch->task->timeLeft < 0) {
     act("You finish cooking.", FALSE, ch, pot, 0, TO_CHAR);
     act("$n finishes cooking.", TRUE, ch, pot, 0, TO_ROOM);
-    
-    // Verify the food object matches our recipe
-    TObj* food = dynamic_cast<TObj*>(pot->stuff.front());
-   if (!food || obj_index[food->number].virt != recipes[recipe_index].vnum) {
+
+    if (pot->stuff.empty()) {
       ch->sendTo("Something went wrong with the cooking.\n\r");
       ch->stopTask();
-      if (food) delete food;
       return FALSE;
     }
-    
+
+    // Verify the food object matches our recipe
+    TThing* contents = pot->stuff.front();
+    TObj* food = dynamic_cast<TObj*>(contents);
+    if (!food || obj_index[food->number].virt != recipes[recipe_index].vnum) {
+      ch->sendTo("Something went wrong with the cooking.\n\r");
+      ch->stopTask();
+      --(*contents);
+      delete contents;
+      return FALSE;
+    }
+
     if (ch->bSuccess(ch->getSkillValue(SKILL_COOK), SKILL_COOK)) {
       ch->sendTo(format("You successfully prepare %s.\n\r") % recipes[recipe_index].name);
-      int diffValue = recipes[recipe_index].difficulty * 10;
-      if (diffValue <= 1)
-        diffValue = 5;
-      
-      // Apply difficulty scaling to experience gain
-      double scaleFactor = getCookingDifficultyScale(recipes[recipe_index].difficulty);
-      ch->gainTaskExp(diffValue, scaleFactor);
+      ch->gainTaskExp(SKILL_COOK, (recipes[recipe_index].difficulty + 1) * 25, 1.0, false);
     } else {
       ch->sendTo("Your cooking attempt fails, ruining the ingredients.\n\r");
       if (recipes[recipe_index].difficulty >= TASK_DIFFICULT) {
@@ -204,15 +196,16 @@ int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj* po
         if (rc == -1)
           return DELETE_THIS;
       }
+      --(*food);
       delete food;
       TObj* burnt = read_object(Obj::GENERIC_COMMODITY, VIRTUAL);
-      
+
       if (burnt) {
         burnt->setMaterial(MAT_POWDER);  // Ash
         *pot += *burnt;
       }
     }
-    
+
     ch->doSave(SILENT_YES);
     ch->stopTask();
     return FALSE;
@@ -228,7 +221,7 @@ int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj* po
         if (ch->getSkillValue(SKILL_COOK) > 50) timeReduction++;
         if (ch->getSkillValue(SKILL_COOK) > 75) timeReduction++;
         ch->task->timeLeft -= timeReduction;
-        
+
         switch (ch->task->timeLeft) {
           case 2:
           case 1:
@@ -243,13 +236,14 @@ int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj* po
         }
       } else {
         // Higher difficulty = more time added on failure
-        int penalty = (recipes[recipe_index].difficulty + 1) / 2;
-        
+        // Clamp to minimum of 1 so trivial recipes still make progress
+        int penalty = max(1, (recipes[recipe_index].difficulty + 1) / 2);
+
         if (ch->task->timeLeft < MAX_TIME) {
           ch->task->timeLeft += penalty;
           act("You make a mistake and ruin some of your work.", FALSE, ch, pot, 0, TO_CHAR);
           act("$n makes a mistake while cooking.", TRUE, ch, pot, 0, TO_ROOM);
-          
+
           if (recipes[recipe_index].difficulty >= TASK_DIFFICULT) {
             ch->sendTo("You burn yourself in the process!\n\r");
             int dam = 1 + number(recipes[recipe_index].difficulty, recipes[recipe_index].difficulty * 5);
@@ -261,8 +255,11 @@ int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj* po
           // Task automatically fails if it takes too long
           ch->sendTo("You've completely ruined this cooking attempt.\n\r");
           ch->stopTask();
-          if (!pot->stuff.empty())
-            delete pot->stuff.front();
+          if (!pot->stuff.empty()) {
+            TThing* contents = pot->stuff.front();
+            --(*contents);
+            delete contents;
+          }
           TObj* burnt = read_object(Obj::GENERIC_COMMODITY, VIRTUAL);
           if (burnt) {
             burnt->setMaterial(MAT_POWDER);  // Ash

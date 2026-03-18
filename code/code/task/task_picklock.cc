@@ -69,15 +69,15 @@ static void pick_pulse(TBeing* ch, TThing* pick) {
                   fname(exit->keyword))
         : sstring("$n picks the lock.");
     act(msg, true, ch, nullptr, nullptr, TO_ROOM);
-    
+
     ch->sendTo("The lock quickly yields to your skills.\n\r");
-    
+
     double lockExp = 50.0 - ((exit->lock_difficulty / 100.0) * 40.0);
     lockExp = max(10.0, min(50.0, lockExp));
-    
-    ch->gainTaskExp(0, lockExp);
-    ch->doSave(SILENT_YES);
-    
+
+    ch->gainTaskExp(SKILL_PICK_LOCK, exit->lock_difficulty, lockExp / 100.0,
+      true);
+
     // now for unlocking the other side, too
     TRoom* other = real_roomp(exit->to_room);
     roomDirData* back;

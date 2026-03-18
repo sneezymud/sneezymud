@@ -364,6 +364,30 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
       if (rc == RET_STOP_PARSING)
         return rc;
       break;
+    case CMD_RESP_GIVEEXP: {
+      // giveexp <amount>
+      value = convertTo<int>(arg);
+      if (value <= 0) {
+        vlogf(LOG_MOB_RS,
+          format("Bad exp amount (%d) in giveexp command for mob %s") % value %
+            getName());
+        return FALSE;
+      }
+      if (!mob) {
+        vlogf(LOG_MOB_RS,
+          format("No target for giveexp command for mob %s") % getName());
+        return FALSE;
+      }
+      const double expBefore = mob->getExp();
+      gain_exp(mob, value, -1);
+      const int grantedExp = static_cast<int>(mob->getExp() - expBefore);
+      if (grantedExp > 0) {
+        mob->sendTo(COLOR_MOBS,
+          format("You have earned %d experience point%s for your effort!\n\r") %
+            grantedExp % (grantedExp == 1 ? "" : "s"));
+      }
+      return FALSE;
+    }
     case CMD_JUNK:
       // rc = doCommand(cmd, arg, NULL, FALSE);
       tStObj = tStArgument.word(0);
@@ -1591,6 +1615,8 @@ resp* TMonster::readCommand(std::istringstream& is) {
       newCmd = new command(CMD_RESP_SETMODE, args);
     else if (is_abbrev(buf, "trigger"))
       newCmd = new command(CMD_RESP_TRIGGER, args);
+    else if (!strcasecmp(buf, "giveexp"))
+      newCmd = new command(CMD_RESP_GIVEEXP, args);
     else {
       if ((cmd = searchForCommandNum(buf)) >= MAX_CMD_LIST) {
         vlogf(LOG_MOB_RS, format("Responses::readCommand(): Parse error in %s. "

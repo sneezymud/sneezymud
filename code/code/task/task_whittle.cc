@@ -23,24 +23,6 @@ using std::min;
 
 std::map<unsigned long int, taskWhittleEntry> whittleItems;
 
-double getWhittleScaleFactor(whittleTypeT type) {
-  switch(type) {
-    case WHITTLE_ERROR:        return .20;  // least exp
-    case WHITTLE_GENERAL:      return .25;
-    case WHITTLE_EASY:         return .30;
-    case WHITTLE_MEDIUM:       return .35;
-    case WHITTLE_STANDARD:     return .40;
-    case WHITTLE_HARD:         return .45;
-    case WHITTLE_TOUGH:        return .50;
-    case WHITTLE_DELICATE:     return .55;
-    case WHITTLE_INVOLVED:     return .60;
-    case WHITTLE_STRONG:       return .70;
-    case WHITTLE_TIMECONSUMING: return .80;
-    case WHITTLE_VALUABLE:     return .90;   // most exp
-    default:                   return .40;
-  }
-}
-
 void initWhittle() {
   int i = 0;
 
@@ -478,6 +460,10 @@ int task_whittleObject(TBeing* ch, sstring tStWood) {
   // dRc;
   TArrow* tArrow = dynamic_cast<TArrow*>(ch->task->obj);
   TBow* tBow = dynamic_cast<TBow*>(ch->task->obj);
+  int skillReq = whittleItems[ch->task->flags].whittleReq;
+  int difficulty = whittleItems[ch->task->flags].itemType;
+  double weight = whittleItems[ch->task->flags].weiSize;
+  double multiplier = max(1.0, weight + difficulty);
 
   //  Dash requested damage from whittle be removed
   //
@@ -497,13 +483,16 @@ int task_whittleObject(TBeing* ch, sstring tStWood) {
   }
 
   if (process >= 0.41 && process <= 0.80) {
-    if (tArrow) {
+    // Set stats and grant XP only once when entering this stage
+    if (tArrow && !tArrow->isArrowFlag(ARROW_CARVED)) {
       tArrow->addArrowFlags(ARROW_CARVED);
       task_whittlePulse(ch, tArrow, WHITTLE_PULSE_CARVED);
+      ch->gainTaskExp(SKILL_WHITTLE, skillReq, multiplier, false);
     }
-    if (tBow) {
+    if (tBow && !tBow->isBowFlag(BOW_CARVED)) {
       tBow->addBowFlags(BOW_CARVED);
       task_whittlePulse(ch, tBow, WHITTLE_PULSE_CARVED);
+      ch->gainTaskExp(SKILL_WHITTLE, skillReq, multiplier, false);
     }
 
     act("You gently scrape the nodes off of $p.", FALSE, ch, ch->task->obj,
@@ -511,13 +500,16 @@ int task_whittleObject(TBeing* ch, sstring tStWood) {
   }
 
   if (process >= 0.81 && process <= 0.99) {
-    if (tArrow) {
+    // Set stats and grant XP only once when entering this stage
+    if (tArrow && !tArrow->isArrowFlag(ARROW_SCRAPED)) {
       tArrow->addArrowFlags(ARROW_SCRAPED);
       task_whittlePulse(ch, tArrow, WHITTLE_PULSE_SCRAPED);
+      ch->gainTaskExp(SKILL_WHITTLE, skillReq, multiplier, false);
     }
-    if (tBow) {
+    if (tBow && !tBow->isBowFlag(BOW_SCRAPED)) {
       tBow->addBowFlags(BOW_SCRAPED);
       task_whittlePulse(ch, tBow, WHITTLE_PULSE_SCRAPED);
+      ch->gainTaskExp(SKILL_WHITTLE, skillReq, multiplier, false);
     }
 
     act("You gently smooth $p.", FALSE, ch, ch->task->obj, NULL, TO_CHAR);
@@ -525,12 +517,18 @@ int task_whittleObject(TBeing* ch, sstring tStWood) {
 
   if (process >= 1.00) {
     if (tArrow) {
-      tArrow->addArrowFlags(ARROW_SMOOTHED);
-      task_whittlePulse(ch, tArrow, WHITTLE_PULSE_SMOOTHED);
+      if (!tArrow->isArrowFlag(ARROW_SMOOTHED)) {
+        tArrow->addArrowFlags(ARROW_SMOOTHED);
+        task_whittlePulse(ch, tArrow, WHITTLE_PULSE_SMOOTHED);
+        ch->gainTaskExp(SKILL_WHITTLE, skillReq, multiplier, false);
+      }
     }
     if (tBow) {
-      tBow->addBowFlags(BOW_SMOOTHED);
-      task_whittlePulse(ch, tBow, WHITTLE_PULSE_SMOOTHED);
+      if (!tBow->isBowFlag(BOW_SMOOTHED)) {
+        tBow->addBowFlags(BOW_SMOOTHED);
+        task_whittlePulse(ch, tBow, WHITTLE_PULSE_SMOOTHED);
+        ch->gainTaskExp(SKILL_WHITTLE, skillReq, multiplier, false);
+      }
     }
 
     act("You are done with $p.", FALSE, ch, ch->task->obj, NULL, TO_CHAR);
@@ -538,9 +536,12 @@ int task_whittleObject(TBeing* ch, sstring tStWood) {
     TThing* tThing;
     tThing = ch->task->obj;
     *ch += *tThing;
-    double scaleFactor = getWhittleScaleFactor(whittleItems[ch->task->flags].itemType);
-    ch->gainTaskExp(0, scaleFactor);
-    ch->doSave(SILENT_YES);
+
+    // Grant XP on completion for non-arrow/bow items only
+    if (!tArrow && !tBow) {
+      ch->gainTaskExp(SKILL_WHITTLE, skillReq, multiplier, false);
+    }
+
     ch->task->obj = NULL;
 
     if (tArrow) {

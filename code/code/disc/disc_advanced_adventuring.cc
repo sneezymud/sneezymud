@@ -119,10 +119,9 @@ int forage(TBeing* caster, short bKnown) {
       *caster->roomp += *obj;
       foodpile /= 3;
     }
-    
-    caster->gainTaskExp(0, 50.0);
-    caster->doSave(SILENT_YES);
-    
+
+    caster->gainTaskExp(skill, caster->getSkillValue(skill), 1.0, false);
+
     aff.type = SKILL_FORAGE;
     aff.location = APPLY_NONE;
     aff.duration = 4 * Pulse::UPDATES_PER_MUDHOUR;
@@ -649,7 +648,7 @@ int determineSkinningItem(TBaseCorpse* corpse, int* amount, char* msg,
       case RACE_DINOSAUR:
       case RACE_FISH:
       case RACE_BIRD:
-      case RACE_SNAKE: 
+      case RACE_SNAKE:
       case RACE_PRIMATE:
       case RACE_RODENT:
       case RACE_FISHMAN:

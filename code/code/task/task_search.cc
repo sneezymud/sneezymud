@@ -96,12 +96,11 @@ int task_search(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
         } else
           return task_search(ch, cmd, "", pulse, NULL, NULL);
       }
-      // If we've searched 3, 6, or 9 directions lets attempt a gain.  This
-      // means Search will gain 3 times like this but will take some more work
-      // to actually get the increases. Skipped exits, above this code, do Not
-      // count as searched directions.
+      // If we've searched 3, 6, or 9 directions lets attempt a learn. Skipped
+      // exits, above this code, do not count as searched directions.
       if ((ch->task->timeLeft % 3) == 0 && ch->task->timeLeft != 0)
         ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_SEARCH, 5);
+
       // Basic messages to the thief and others in the room to let them know we
       // are searching for exits.
       if (eDirection == DIR_UP) {
@@ -149,6 +148,7 @@ int task_search(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
         ch->sendTo(buf);
         sprintf(buf, toRoomPrint, doorName.c_str(), dirs[eDirection]);
         act(buf, FALSE, ch, 0, 0, TO_ROOM);
+        ch->gainTaskExp(SKILL_SEARCH, bKnown, 1.0, true);
       }
       // We remove the moves here, just in case we checked the last direction.
       ch->setMove(max(0, (ch->getMove() - moveCost)));

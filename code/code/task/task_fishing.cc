@@ -155,19 +155,19 @@ TObj* catch_a_fish(TRoom* rp) {
 
   //  vlogf(LOG_PEEL, format("weightmod=%f") %  weightmod);
 
-  if (!::number(0, 99)) {  // 1 in 100
+  if (!::number(0, 9)) {  // 1 in 10
     // big one
     weightmod = 2 + ((float)::number(0, 100) / 100.0);  // 2-3
 
-    if (!::number(0, 99)) {  // 1 in 10000
+    if (!::number(0, 7)) {  // 1 in 80
       // real big one
       weightmod = 3 + ((float)::number(0, 100) / 100.0);  // 3-4
 
-      if (!::number(0, 99)) {  // 1 in 1000000
+      if (!::number(0, 4)) {  // 1 in 400
         // REAL big one
         weightmod = 4 + ((float)::number(0, 100) / 100.0);  // 4-5
 
-        if (!::number(0, 99)) {  // 1 in 100000000
+        if (!::number(0, 1)) {  // 1 in 800
           // freak of nature
           weightmod = 5 + ((float)::number(0, 500) / 100.0);  // 5-10
         }
@@ -450,8 +450,18 @@ int task_fishing(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
               (::number(5, 10) > rp->getFished())) {
             *ch += *fish;
 
-            ch->gainTaskExp(0, 50.0);
-            ch->doSave(SILENT_YES);
+            int exp = ch->getSkillValue(SKILL_FISHING);
+            if (rp->getFished() > 0) {
+              exp = ch->getSkillValue(SKILL_FISHING) / rp->getFished();
+            }
+            if (exp < 1) {
+              exp = 1;
+            }
+            double weightMultiplier = fish->getWeight();
+            if (weightMultiplier <= 0.0) {
+              weightMultiplier = 1.0;
+            }
+            ch->gainTaskExp(SKILL_FISHING, exp, weightMultiplier, false);
 
             if (awesomeFisher) {
               act("You snatch up $p!", FALSE, ch, fish, 0, TO_CHAR);

@@ -1454,6 +1454,8 @@ void TBeing::statBeing(TBeing* k) {
           str += format("startfight %s\n\r") % respy->args;
         } else if (respy->cmd == CMD_RESP_ENDMODE) {
           str += format("endmode %s\n\r") % respy->args;
+        } else if (respy->cmd == CMD_RESP_GIVEEXP) {
+          str += format("giveexp %s\n\r") % respy->args;
         } else {
           str += format("%d %s\n\r") % respy->cmd % respy->args;
         }

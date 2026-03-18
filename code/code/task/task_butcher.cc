@@ -216,8 +216,7 @@ int TThing::butcherPulse(TBeing* ch, TBaseCorpse* corpse) {
     steak->setDescr(buf);
 
     *ch += *steak;
-    ch->gainTaskExp(corpse->getCorpseLevel(), 30.0);
-    ch->doSave(SILENT_YES);
+    ch->gainTaskExp(SKILL_BUTCHER, corpse->getCorpseLevel(), 1.0, true);
   }
   return FALSE;
 }
@@ -279,10 +278,9 @@ int TTool::butcherPulse(TBeing* ch, TBaseCorpse* corpse) {
     act(gl_msg, FALSE, ch, item, corpse, TO_ROOM);
    *ch += *item;
 #endif
+    ch->gainTaskExp(SKILL_BUTCHER, corpse->getCorpseLevel(), 1.0, true);
   }
 
-  ch->gainTaskExp(corpse->getCorpseLevel(), 30.0);
-  ch->doSave(SILENT_YES);
   return FALSE;
 }
 
@@ -424,8 +422,8 @@ int bareHandsButcherPulse(TBeing* ch, TBaseCorpse* corpse) {
                     meats[whichmeat] % fromName);
 
     *ch += *steak;
-    ch->gainTaskExp(corpse->getCorpseLevel(), 30.0);
-    ch->doSave(SILENT_YES);
+
+    ch->gainTaskExp(SKILL_BUTCHER, corpse->getCorpseLevel(), 1, true);
   }
   return FALSE;
 }

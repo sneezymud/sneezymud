@@ -222,9 +222,13 @@ int task_logging(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
                 (!ch->doesKnowSkill(SKILL_LOGGING) && !::number(0, 99))) &&
               (log = harvest_a_log(rp))) {
             *rp += *log;
-
-            ch->gainTaskExp(0, 50.0);
-            ch->doSave(SILENT_YES);
+            int exp = learning;
+            if (rp->getLogsHarvested() > 0) {
+              exp = learning/rp->getLogsHarvested();
+            }
+            // Clamp to minimum of 1 to avoid rejecting low-skill logging in depleted rooms
+            exp = max(1, exp);
+            ch->gainTaskExp(SKILL_LOGGING, exp, 1.0, false);
             act("You harvest $p.", FALSE, ch, log, 0, TO_CHAR);
             act("$n harvests $p.", TRUE, ch, log, 0, TO_ROOM);
           } else {

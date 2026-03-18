@@ -1680,31 +1680,55 @@ void TBeing::removeAllProtection() {
 
 }
 
- double TBeing::gainTaskExp(int baseLevel, double scaleFactor) {
-   if (roomp && roomp->isRoomFlag(ROOM_ARENA))
-     return -1;
-     
-   if (isPking() || isImmortal())
-     return -1;
- 
-   if (scaleFactor <= 0.0) {
-     vlogf(LOG_BUG,
-       format("gainTaskExp called with non-positive scaleFactor: %f") % scaleFactor);
-     return -1;
-   }
-   
-   int lvl = baseLevel ? baseLevel : GetMaxLevel();
-   if (lvl > 15)
-     lvl -= 15;
-   else
-     lvl = 1;
 
-  // 10% exp variance
-  double exp = mob_exp(lvl);
-  exp *= (1.0 + ((::number(0, 20) - 10) / 100.0));
-  double finalExp = exp * scaleFactor;
+double TBeing::gainTaskExp(spellNumT skill, int baseLevel, double scaleFactor,
+  bool cooldown) {
+  // Basic validation
+  if (roomp && roomp->isRoomFlag(ROOM_ARENA))
+    return -1;
 
+  if (isPking() || isImmortal())
+    return -1;
+
+  if (baseLevel <= 0 || scaleFactor <= 0.0) {
+    vlogf(LOG_BUG,
+      format("gainTaskExp called with invalid values: baseLevel=%d, scaleFactor=%f") %
+        baseLevel % scaleFactor);
+    return -1;
+  }
+
+  if (cooldown && affectedBySpell(skill))
+    return 0;
+
+  int advLearning = getAdvLearning(skill);
+  double multiplier = scaleFactor * (advLearning / 5.0);
+
+  double exp = baseLevel * multiplier;
+  double variance = 1.0 + ((::number(0, 20) - 10) / 100.0);
+  double finalExp = exp * variance;
+
+  const double expBefore = getExp();
   gain_exp(this, finalExp, -1);
-  return finalExp;
+  const double grantedExp = getExp() - expBefore;
+  if (cooldown && grantedExp > 0.0) {
+    affectedData aff;
+    aff.type = skill;
+    aff.duration = 4 * Pulse::UPDATES_PER_MUDHOUR;
+    aff.location = APPLY_NONE;
+    aff.modifier = 0;
+    aff.bitvector = 0;
+    affectTo(&aff, -1);
+  }
+
+  doSave(SILENT_YES);
+  if (grantedExp > 0.0) {
+    const int displayExp = static_cast<int>(grantedExp);
+    if (displayExp > 0) {
+      sendTo(format("You have earned %d experience point%s for your effort!\n\r") %
+        displayExp % (displayExp == 1 ? "" : "s"));
+    }
+  }
+
+  return grantedExp;
 }
 
