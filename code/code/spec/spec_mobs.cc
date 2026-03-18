@@ -4720,9 +4720,8 @@ int fishTracker(TBeing* ch, cmdTypeT cmd, const char* argument,
             "order by fk.weight desc limit 10");
           topten = true;
         } else {
-          TDatabase lookup(DB_SNEEZY);
-          lookup.query("select id from player where name='%s'", buf.c_str());
-          if (lookup.fetchRow()) {
+          int targetId = getPlayerIdByName(buf.c_str());
+          if (targetId > 0) {
             db.query(
               "select p.name, fk.weight, count(fl.player_id) as count "
               "from fishkeeper fk "
@@ -4731,7 +4730,7 @@ int fishTracker(TBeing* ch, cmdTypeT cmd, const char* argument,
               "where fk.player_id=%i "
               "group by fk.player_id, p.name, fk.weight "
               "order by fk.weight desc limit 10",
-              convertTo<int>(lookup["id"]));
+              targetId);
           } else {
             myself->doSay("I've never heard of that person.");
             return true;

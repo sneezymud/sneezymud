@@ -2716,7 +2716,10 @@ void TBeing::doEquipment(const sstring& arg) {
         "location",
         getPlayerID());
       while (db.fetchRow()) {
-        tattoos[convertTo<int>(db["location"])] = db["tattoo"];
+        int loc = convertTo<int>(db["location"]);
+        if (loc >= MIN_WEAR && loc < MAX_WEAR) {
+          tattoos[loc] = db["tattoo"];
+        }
       }
     }
 
@@ -2767,7 +2770,10 @@ void TBeing::doEquipment(const sstring& arg) {
           "location",
           victim->getPlayerID());
         while (db.fetchRow()) {
-          tattoos[convertTo<int>(db["location"])] = db["tattoo"];
+          int loc = convertTo<int>(db["location"]);
+          if (loc >= MIN_WEAR && loc < MAX_WEAR) {
+            tattoos[loc] = db["tattoo"];
+          }
         }
       }
 

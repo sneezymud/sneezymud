@@ -3765,12 +3765,7 @@ void TBeing::doWipe(const char* argument) {
   trophy->wipe();
   delete trophy;
 
-  {
-    TDatabase lookup(DB_SNEEZY);
-    lookup.query("select id from player where name='%s'", namebuf);
-    if (lookup.fetchRow())
-      db.query("delete from player where id=%i", convertTo<int>(lookup["id"]));
-  }
+  db.query("delete from player where name='%s'", namebuf);
 
   sprintf(buf, "mutable/account/%c/%s/%s", LOWER(st.aname[0]),
     sstring(st.aname).lower().c_str(), sstring(namebuf).lower().c_str());

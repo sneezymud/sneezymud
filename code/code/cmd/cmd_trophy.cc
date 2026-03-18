@@ -335,11 +335,10 @@ void TBeing::doTrophy(const sstring& arg) {
 }
 
 void TTrophy::wipe() {
-  pimpl->db.query("select id from player where name='%s'", getMyName().c_str());
-
-  if (pimpl->db.fetchRow())
-    pimpl->db.query("delete from trophy where player_id=%i",
-      convertTo<int>(pimpl->db["id"]));
+  int playerId = getPlayerIdByName(getMyName().c_str());
+  if (playerId > 0) {
+    pimpl->db.query("delete from trophy where player_id=%i", playerId);
+  }
 
   pimpl->counts.clear();
 }

@@ -1243,13 +1243,11 @@ namespace {
       return;
     }
 
-    // Resolve player name to player_id
-    db.query("SELECT id FROM player WHERE name='%s'", playerArg.c_str());
-    if (!db.fetchRow()) {
+    const auto targetId = getPlayerIdByName(playerArg.c_str());
+    if (targetId == 0) {
       ch.sendTo(std::format("Player '{}' not found.\n\r", playerArg));
       return;
     }
-    const auto targetId = convertTo<int>(db["id"]);
 
     if (!db.query("DELETE FROM shopownedaccess WHERE shop_nr=%i AND "
                   "player_id=%i",

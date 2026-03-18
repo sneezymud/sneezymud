@@ -191,6 +191,7 @@ extern void wipeRentFile(const char*);
 extern void wipeFollowersFile(const char*);
 extern void wipePlayerFile(const char*);
 extern void handleCorrupted(const char*, char*);
+extern int getPlayerIdByName(const char* name);
 extern void store_mail(int to_id, const char* from_name, int from_id,
   const char* message, int talens, int rent_id);
 extern void store_faction_mail(int sender_id, const char* sender_name,

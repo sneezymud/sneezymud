@@ -869,15 +869,12 @@ int TShopOwned::setRates(sstring arg) {
   } else if (buf == "player") {  ////////////////////////////////////////////
     arg = one_argument(arg, buf);
 
-    // Resolve player name to ID
-    TDatabase lookup(DB_SNEEZY);
-    lookup.query("select id from player where name='%s'", buf.c_str());
-    if (!lookup.fetchRow()) {
+    auto targetPlayerId = getPlayerIdByName(buf.c_str());
+    if (targetPlayerId == 0) {
       keeper->doTell(ch->getName(),
         format("I don't know anyone named %s.") % buf);
       return true;
     }
-    auto targetPlayerId = convertTo<int>(lookup["id"]);
 
     db.query("select 1 from shopownedplayer where shop_nr=%i and player_id=%i",
       shop_nr, targetPlayerId);
@@ -1231,14 +1228,12 @@ int TShopOwned::setAccess(sstring arg) {
   buf2 = arg.word(1);
 
   if (!buf2.empty()) {  // set value
-    // Resolve player name to player_id
-    db.query("select id from player where name='%s'", buf.c_str());
-    if (!db.fetchRow()) {
+    auto targetId = getPlayerIdByName(buf.c_str());
+    if (targetId == 0) {
       keeper->doTell(ch->getName(),
         format("I don't know anyone named %s.") % buf);
       return false;
     }
-    auto targetId = convertTo<int>(db["id"]);
 
     db.query("delete from shopownedaccess where shop_nr=%i and player_id=%i",
       shop_nr, targetId);

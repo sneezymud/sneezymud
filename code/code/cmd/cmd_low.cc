@@ -1535,14 +1535,11 @@ void TPerson::doLow(const sstring& argument) {
       sendTo("Must specify a builder name.\n\r");
       return;
     }
-    TDatabase lookupDb(DB_SNEEZY);
-    lookupDb.query("SELECT id FROM player WHERE name='%s'",
-      builderName.c_str());
-    if (!lookupDb.fetchRow()) {
+    int playerId = getPlayerIdByName(builderName.c_str());
+    if (playerId == 0) {
       sendTo("Player not found.\n\r");
       return;
     }
-    int playerId = convertTo<int>(lookupDb["id"]);
 
     if (is_abbrev(command, "mvroom")) {
       int block = convertTo<int>(argument.word(2));

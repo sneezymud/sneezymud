@@ -65,10 +65,10 @@ void TBeing::petSave() {
   owner = (char*)aff->be;
 
   // get the owner player_id
-  db.query("select id from player where name='%s'", owner);
-  if (!db.fetchRow())
+  owner_id = getPlayerIdByName(owner);
+  if (owner_id == 0) {
     return;
-  owner_id = convertTo<int>(db["id"]);
+  }
 
   // get the pet name
   sstring short_desc = name;

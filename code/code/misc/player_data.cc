@@ -1348,11 +1348,7 @@ void do_the_player_stuff(const char* name) {
           // Delete the player DB row (FK CASCADE handles child tables)
           {
             TDatabase db(DB_SNEEZY);
-            db.query("select id from player where name='%s'", name);
-            if (db.fetchRow()) {
-              db.query("delete from player where id=%i",
-                convertTo<int>(db["id"]));
-            }
+            db.query("delete from player where name='%s'", name);
           }
           return;
         } else {
@@ -2342,4 +2338,13 @@ int numFifties(race_t race, bool perma, sstring account_name) {
   closedir(dfd);
 
   return num_fifties;
+}
+
+int getPlayerIdByName(const char* name) {
+  TDatabase db(DB_SNEEZY);
+  db.query("select id from player where name='%s'", name);
+  if (db.fetchRow()) {
+    return convertTo<int>(db["id"]);
+  }
+  return 0;
 }

@@ -507,9 +507,8 @@ int Descriptor::read_client(char* str2) {
           character->getName().c_str(), buffer);
         delete obj;
       } else {
-        TDatabase lookup(DB_SNEEZY);
-        lookup.query("select id from player where name='%s'", name);
-        if (!lookup.fetchRow()) {
+        int to_id = getPlayerIdByName(name);
+        if (to_id == 0) {
           character->sendTo("That player no longer exists! Mail not sent.\n\r");
           delete obj;
           obj = nullptr;
@@ -517,8 +516,6 @@ int Descriptor::read_client(char* str2) {
           amount = 0;
           break;
         }
-
-        int to_id = convertTo<int>(lookup["id"]);
 
         if (obj && obj->canBeMailed(sstring(name))) {
           ItemSaveDB is("mail", GH_MAIL_SHOP);
