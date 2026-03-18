@@ -1442,9 +1442,7 @@ void mvResponse(TPerson& ch, int playerId, const sstring& builderName,
     "list mob responses owned by the builder.\n\r";
 
   if (playerId == 0) {
-    ch.sendTo(
-      "Must specify the name of the builder who owns the vnums being "
-      "moved.\n\r");
+    ch.sendTo(std::format("Builder '{}' not found.\n\r", builderName));
     ch.sendTo(usage);
     return;
   }

@@ -5,7 +5,7 @@
 // create table poll (poll_id int primary key, descr varchar(127), status
 // varchar(8)); create table poll_option (option_id int, poll_id int, descr
 // varchar(127), primary key (option_id, poll_id)); create table poll_vote
-// (account varchar(80), poll_id int, option_id int, primary key (account,
+// (account_id int, poll_id int, option_id int, primary key (account_id,
 // poll_id, option_id));
 
 bool voteAdmin(TBeing* ch) {
