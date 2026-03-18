@@ -4787,7 +4787,7 @@ int factionScoreBoard(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1,
     db.query(
       "select fm.level, t.count from trophyplayer t "
       "join factionmembers fm on t.player_id=fm.player_id "
-      "where fm.faction='%s' group by fm.level, t.count",
+      "where fm.faction='%s'",
       factnames[i].c_str());
 
     score = 0;
