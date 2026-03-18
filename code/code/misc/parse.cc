@@ -1899,6 +1899,8 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring& argument, TThing* vict,
         case CMD_OBJ_EXPELLED:
         case CMD_OBJ_START_TO_FALL:
         case CMD_OBJ_OPENED:
+        case CMD_OBJ_EQUIPPED:
+        case CMD_OBJ_UNEQUIPPED:
         case CMD_ARROW_GLANCE:
         case CMD_ARROW_MISSED:
         case CMD_ARROW_EMBED:

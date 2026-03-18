@@ -83,8 +83,11 @@
 #include "obj_trap.h"
 #include "obj_portal.h"
 #include "obj_symbol.h"
+#include "obj_bow.h"
 #include "obj_general_weapon.h"
 #include "obj_base_weapon.h"
+#include "obj_arrow.h"
+#include "obj_quiver.h"
 #include "obj_drinkcon.h"
 #include "obj_potion.h"
 #include "obj_staff.h"
@@ -2856,7 +2859,7 @@ int tinkerBagFuse(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
 }
 int manaBurnRobe(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
 #if 0
-  
+
     TBeing *ch;
 
     if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
@@ -3460,23 +3463,23 @@ int minecart(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* myself, TObj*) {
 int switchtrack(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* myself,
   TObj*) {
 #if 0
-  if (cmd != CMD_PUSH && 
-      cmd != CMD_PULL && 
-      cmd != CMD_OPERATE && 
-      cmd != CMD_USE && 
-      cmd != CMD_TURN) 
+  if (cmd != CMD_PUSH &&
+      cmd != CMD_PULL &&
+      cmd != CMD_OPERATE &&
+      cmd != CMD_USE &&
+      cmd != CMD_TURN)
     return FALSE;
-  
+
   if (!myself->getName())
     return FALSE;
-      
+
   int where = myself->in_room;
   char arg1[30], arg2[30], buf[256];
   arg = one_argument(arg, arg1);
   arg = one_argument(arg, arg2);
 
   if (is_abbrev(arg1, "switchtracks") || is_abbrev(arg1, "tracks")) {
-    switch (where) { 
+    switch (where) {
     case 18007:
       if(!arg2)
 	strcpy(arg2,isname("switchtrackdoswitch", myself->getName())?"southwest":"south");
@@ -3499,10 +3502,10 @@ int switchtrack(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* myself,
 	ch->sendTo("This switchtrack can only be moved to the south or southwest.");
 	return TRUE;
       }
-      
+
       break;
     case 18011:
-      if(!arg2) 
+      if(!arg2)
 	strcpy(arg2,isname("switchtrackdoswitch", myself->getName())?"south":"east");
       else if(is_abbrev(arg2, "east") || is_abbrev(arg2, "e")) {
 	strcpy(arg2,"eastern");
@@ -3518,15 +3521,15 @@ int switchtrack(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* myself,
 	  ch->sendTo(format("The switchtrack is already aligned with the %s fork.") % arg2);
 	  return TRUE;
 	}
-	strcpy(myself->name, "switchtracks tracks switchtrackdontswitch");  
+	strcpy(myself->name, "switchtracks tracks switchtrackdontswitch");
       } else {
         ch->sendTo("This switchtrack can only be moved to the south or east.");
         return TRUE;
       }
-      
+
       break;
     case 18020:
-      if(!arg2) 
+      if(!arg2)
 	strcpy(arg2,isname("switchtrackdoswitch", myself->getName())?"north":"east");
       else if(is_abbrev(arg2, "east") || is_abbrev(arg2, "e")) {
 	strcpy(arg2,"eastern");
@@ -3547,11 +3550,11 @@ int switchtrack(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* myself,
         ch->sendTo("This switchtrack can only be moved to the north or east.");
         return TRUE;
       }
-      
+
       break;
     default:
       ch->sendTo("Uh. This switchtrack shouldn't be here. Tell a god or something?");
-      //      vlogf(LOG_PROC, format("%s tried to operate a switchtrack (%d) in room with no switchtrack code (%d)") % 
+      //      vlogf(LOG_PROC, format("%s tried to operate a switchtrack (%d) in room with no switchtrack code (%d)") %
       //	    ch->getName() % myself->objVnum % where);
     }
     sprintf(buf,"<k>You force the $o into alignment with the %s tunnel.<1>",arg2);
@@ -5100,24 +5103,24 @@ int HSCopsi(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*) {
 
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;
-  
-  
+
+
   if(!(pendant = dynamic_cast<TObj *>(ch->equipment[WEAR_NECK])))
     return FALSE;
   if (obj_index[pendant->getItemIndex()].virt != 17258)
     return FALSE;
-  
+
   if(!(hammer1 = dynamic_cast<TObj *>(ch->equipment[HOLD_RIGHT])))
     return FALSE;
   if (obj_index[hammer1->getItemIndex()].virt != 17256 || obj_index[hammer1->getItemIndex()].virt != 17257)
     return FALSE;
-  
+
   if(!(hammer2 = dynamic_cast<TObj *>(ch->equipment[HOLD_RIGHT])))
     return FALSE;
   if (obj_index[hammer2->getItemIndex()].virt != 17256 || obj_index[hammer2->getItemIndex()].virt != 17257)
     return FALSE;
 
-  // yay, he's using all three. 
+  // yay, he's using all three.
   int charge = 0;
   sscanf(pendant->name, "pendant crystal hammer [quest] [charge=%d]", &charge);
 
@@ -5131,11 +5134,11 @@ int HSCopsi(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*) {
   act("Your $o flashes pale <b>blue<1> for a moment.",TRUE,ch,pendant,vict,TO_CHAR,NULL);
   act("$n's $o flashes pale <b>blue<1> for a moment.",TRUE,ch,pendant,vict,TO_NOTVICT,NULL);
   act("$n's $o flashes pale <b>blue<1> for a moment.",TRUE,ch,pendant,vict,TO_VICT,NULL);
- 
-  
+
+
   charge += dam;
   sprintf(pendant->name, "pendant crystal hammer [quest] [charge=%d]", charge);
-  
+
   int rc = ch->reconcileDamage(vict, dam, DAMAGE_DRAIN);
   if (IS_SET_DELETE(rc, DELETE_VICT))
     return DELETE_VICT;
@@ -5320,7 +5323,7 @@ int energyShield(TBeing* v, cmdTypeT cmd, const char*, TObj* o, TObj* weapon) {
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy))) {
 
     delete o;
-    return FALSE; 
+    return FALSE;
   }
   if(!(generator = dynamic_cast<TObj *>(ch->equipment[WEAR_WAIST]))) {
     act("Your $o collapses.",TRUE,ch,o,NULL,TO_CHAR,NULL);
@@ -5335,40 +5338,40 @@ int energyShield(TBeing* v, cmdTypeT cmd, const char*, TObj* o, TObj* weapon) {
     return FALSE;
   }
 
-  
+
   int isOn = 0; //0 is false, 1 is true
-  
+
   int charge = 0;
   sscanf(generator->name, "generator shield belt [on=%d] [charge=%d]", &isOn, &charge);
   int newcharge = charge;
-  
+
   if (!isOn || charge < 1) {
     act("Your $o collapses.",TRUE,ch,o,NULL,TO_CHAR,NULL);
     act("$n's $o collapses.",TRUE,ch,o,NULL,TO_ROOM,NULL);
     delete o;
     return FALSE;
   }
-  
+
   newcharge = newcharge - max(0,::number(-8,1)); // upkeep.. basically .1 point/round/shield
-  
+
   if(o->getStructPoints() < o->getMaxStructPoints()) {
     o->addToStructPoints(1);
     newcharge = newcharge - 1; // recharge
   }
-  
+
   if ((charge-1) / 100 != (newcharge-1) / 100 || (newcharge == 1000 && charge < 1000)) {
     if (newcharge / 100 <= 3) buf="<r>red";
     else if ( newcharge / 100 <= 6) buf="<Y>yellow";
     else if ( newcharge / 100 <= 9) buf="<g>green";
     else buf="<c>blue";
-    
+
     buf2 = format("The display panel on your $o glows %s<1> as it reads %d0%c.") % buf % (newcharge/100) % '%';
     act(buf2,TRUE,ch,generator,NULL,TO_CHAR,NULL);
     buf2 = format("The display panel on $n's $o glows %s<1>.") % buf;
     act(buf2,TRUE,ch,generator,NULL, TO_ROOM,NULL);
   }
-  
-  
+
+
   sprintf(generator->name, "generator shield belt [on=%d] [charge=%d]", isOn, newcharge);
 
 #endif
@@ -5393,7 +5396,7 @@ int energyShieldGenerator(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o,
   if (cmd == CMD_GENERIC_PULSE) {
 
     sscanf(o->name, "generator shield belt [on=%d] [charge=%d]", &isOn, &charge);
-    
+
     newcharge = charge;
 
     if (charge < 1000 && ch->outside() && is_daytime()) {
@@ -5402,10 +5405,10 @@ int energyShieldGenerator(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o,
     }
 
     if (isOn) {
-      
-      
+
+
       wearSlotT il;
-      
+
       for (il = MIN_WEAR; il < MAX_WEAR; il++) {
 	if (il == HOLD_RIGHT || il == HOLD_LEFT)
 	  continue;
@@ -5415,9 +5418,9 @@ int energyShieldGenerator(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o,
 	    vlogf(LOG_PROC, "Shield generator couldn't load energy shield!");
 	    return TRUE;
 	  }
-	  
+
 	  int bit = (1<<14);
-	  
+
 	  if(il == WEAR_HEAD) bit = ITEM_WEAR_HEAD;
 	  if(il == WEAR_NECK) bit = ITEM_WEAR_NECK;
 	  if(il == WEAR_BACK) bit = ITEM_WEAR_BACK;
@@ -5439,26 +5442,26 @@ int energyShieldGenerator(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o,
 	  if(il == WEAR_EX_LEG_L) bit = ITEM_WEAR_LEGS;
 	  if(il == WEAR_EX_FOOT_R) bit = ITEM_WEAR_FEET;
 	  if(il == WEAR_EX_FOOT_L) bit = ITEM_WEAR_FEET;
-	  
+
 	  shield->obj_flags.wear_flags = bit;
 	  TBaseClothing *armor = NULL;
-	  
+
 	  if ((armor = dynamic_cast<TBaseClothing *>(shield))) {
 	    armor->setDefArmorLevel(ch->GetMaxLevel());
 	    armor->setVolume((int) (((100. * (double) ch->getHeight())) * race_vol_constants[mapSlotToFile(il)] / 100));
 	  }
-	  
+
 	  ch->equipChar(shield, il);
-	  
+
 	  buf2 = format("Your %s is surrounded by a crackling blue aura.") % ch->describeBodySlot((wearSlotT)il);
-	  
+
 	  act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
 	  buf2 = format("$n's %s is surrounded by a crackling blue aura.") % ch->describeBodySlot((wearSlotT)il);
-	  
+
 	  act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
-	  
+
 	  newcharge = newcharge - 10;
-	  
+
 	}
       }
 
@@ -5468,14 +5471,14 @@ int energyShieldGenerator(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o,
       else if ( newcharge / 100 <= 6) buf="<Y>yellow";
       else if ( newcharge / 100 <= 9) buf="<g>green";
       else buf="<c>blue";
-      
+
       buf2 = format("The display panel on your $o glows %s<1> as it reads %d0%c.") % buf % (newcharge/100) % '%';
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
       buf2 = format("The display panel on $n's $o glows %s<1>.") % buf;
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
-      
+
     }
-    
+
     sprintf(o->name, "generator shield belt [on=%d] [charge=%d]", isOn, newcharge);
     return FALSE;
 
@@ -5484,9 +5487,9 @@ int energyShieldGenerator(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o,
     arg2=sstring(arg).word(1);
 
     if (is_abbrev(arg1, "display") && is_abbrev(arg2, "button")) {
-     
+
       sscanf(o->name, "generator shield belt [on=%d] [charge=%d]", &isOn, &charge);
-      
+
       if (charge / 100 <= 3) buf="<r>red";
       else if (charge / 100 <= 6) buf="<Y>yellow";
       else if (charge / 100 <= 9) buf="<g>green";
@@ -5504,12 +5507,12 @@ int energyShieldGenerator(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o,
       buf2 = format("The power LED on your $o is currently %s<1>.") % (isOn ? "<g>on<1>" : "<r>off<1>");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
 
-      
+
       return TRUE;
     } else if (is_abbrev(arg1, "power") && is_abbrev(arg2, "button")) {
       int charge = 0;
       sscanf(o->name, "generator shield belt [on=%d] [charge=%d]", &isOn, &charge);
-      
+
 
 
       act("You press the power button on $p.",TRUE,ch,o,NULL,TO_CHAR,NULL);
@@ -5576,8 +5579,8 @@ int stimPack(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o, TObj* weapon) {
     if (is_abbrev(arg1, "display") && is_abbrev(arg2, "button")) {
       act("You press the display button on your <W>forearm guard<1>.",TRUE,ch,o,NULL,TO_CHAR,NULL);
       act("$n presses a button on $s <W>forearm guard<1>.",TRUE,ch,o,NULL, TO_ROOM,NULL);
-      
-      
+
+
       buf2="The display panel on your <W>forearm guard<1> flips open, revealing a row of lights.";
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
       buf2="A panel on $n's <W>forearm guard<1> flips open, revealing a row of lights.";
@@ -5599,22 +5602,22 @@ int stimPack(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o, TObj* weapon) {
       buf2="You quickly flip the display panel closed again.";
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
 
-      
+
       ret = TRUE;
     } else if (is_abbrev(arg1, "stim") && is_abbrev(arg2, "button")) {
-      
+
       act("You press the stim button on your <W>forearm guard<1>.",TRUE,ch,o,NULL,TO_CHAR,NULL);
       act("$n presses a button on $s <W>forearm guard<1>.",TRUE,ch,o,NULL, TO_ROOM,NULL);
-      
+
       if (charge < 200) {
 	buf2="Nothing seems to happen.";
 	act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
       } else {
-      
+
 	newcharge = charge - 200;
 
 	affectedData aff;
-	
+
 	aff.type = AFFECT_DRUG;
 	aff.level = 50;
 	aff.duration = 2 * Pulse::UPDATES_PER_MUDHOUR;
@@ -5629,7 +5632,7 @@ int stimPack(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o, TObj* weapon) {
 	aff.location = APPLY_CON;
 	aff.bitvector = 0;
 	ch->affectTo(&aff, -1);
-	if (charge == 1000) {  // give an extra boost when stimming from full 
+	if (charge == 1000) {  // give an extra boost when stimming from full
 	  aff.type = SPELL_HASTE;
 	  aff.level = 50;
 	  aff.duration =  1 * Pulse::UPDATES_PER_MUDHOUR;
@@ -5638,7 +5641,7 @@ int stimPack(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o, TObj* weapon) {
 	  aff.bitvector = 0;
 	  ch->affectTo(&aff, -1);
 	}
-	
+
 	act("You feel a <r>sharp prick<1> from your <W>forearm guard<1>.",TRUE,ch,o,NULL,TO_CHAR,NULL);
 	act("<o>Suddenly a tendril of burning fire seems to course through your bloodstream!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
         act("You shudder in pain but simultaneously feel your reflexes become quicker!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
@@ -5649,7 +5652,7 @@ int stimPack(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o, TObj* weapon) {
 	  return DELETE_VICT;
       }
       ret = TRUE;
-      
+
     } else if (is_abbrev(arg1, "charge") && is_abbrev(arg2, "button")) {
 
       act("You press the charge button on your <W>forearm guard<1>.",TRUE,ch,o,NULL,TO_CHAR,NULL);
@@ -5665,20 +5668,20 @@ int stimPack(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o, TObj* weapon) {
       buf2 = format("The charging LED on your $o turns %s<1>.") % (isOn ? "<P>on<1>" : "<k>off<1>");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
       buf2 = format("A little %s on $n's <W>forearm guard<1> %s.") %
-	(isOn ? "<k>light<1>" : "<P>light<1>") % 
+	(isOn ? "<k>light<1>" : "<P>light<1>") %
 	(isOn ? "turns <P>on<1>" : "goes <k>out<1>");
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
-      
+
       sprintf(o->name, "forearm-guard guard plastic lights stim wristband [on_%d] [charge_%d]", isOn, newcharge);
       ret = TRUE;
-      
+
     }
-    
+
   }
-  
-  
+
+
   if (newcharge != charge) {
-    // for display lights turning on  
+    // for display lights turning on
     if (newcharge >= 200 && charge < 200) {
       buf2="The <k>first<1> LED on your <W>forearm guard<1> begins to <R>glow<1>.";
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
@@ -5739,7 +5742,7 @@ int stimPack(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o, TObj* weapon) {
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
       buf2="One of the <B>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.";
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
-      
+
     }
     sprintf(o->name, "forearm-guard guard plastic lights stim wristband [on_%d] [charge_%d]", isOn, newcharge);
   }
@@ -6265,6 +6268,90 @@ int stickerBush(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
   return TRUE;
 }
 
+int poisonQuiver(TBeing* ch, cmdTypeT cmd, const char*, TObj* q, TObj* a) {
+  TQuiver* quiver = dynamic_cast<TQuiver*>(q);
+  if (!quiver) {
+    return false;
+  }
+
+  // When quiver is unequipped, remove poison from all arrows
+  if (cmd == CMD_OBJ_UNEQUIPPED) {
+    int count = 0;
+    for (TThing* thing : q->stuff) {
+      auto* arrow = dynamic_cast<TArrow*>(thing);
+
+      // Only remove poison if it's the standard poison added by quiver
+      if (arrow && arrow->isPoisoned() &&
+          arrow->getPoison() == LIQ_POISON_STANDARD) {
+        arrow->setPoison((liqTypeT)-1);
+        count++;
+      }
+    }
+
+    // Only show message if we actually unpoisoned some arrows
+    if (count > 0) {
+      act("The <g>sickly green<1> glow emanating from within your $p fades.",
+          false, ch, q, nullptr, TO_CHAR);
+      act("The <g>sickly green<1> glow emanating from within $n's $p fades.", true,
+          ch, q, nullptr, TO_ROOM);
+    }
+
+    return false;
+  }
+
+  // When quiver is equipped, poison all unpoisoned arrows inside
+  if (cmd == CMD_OBJ_EQUIPPED) {
+    int count = 0;
+    for (TThing* thing : q->stuff) {
+      auto* arrow = dynamic_cast<TArrow*>(thing);
+      if (arrow && !arrow->isPoisoned()) {
+        arrow->setPoison(LIQ_POISON_STANDARD);
+        count++;
+      }
+    }
+
+    // Only show message if we actually poisoned some arrows
+    if (count > 0) {
+      act("A <g>sickly green<1> glow begins emanating from within your $p.", false,
+          ch, q, nullptr, TO_CHAR);
+      act("A <g>sickly green<1> glow begins emanating from within $n's $p.", true,
+          ch, q, nullptr, TO_ROOM);
+    }
+
+    return false;
+  }
+
+  // When arrow is put into equipped quiver, poison it
+  if (cmd != CMD_OBJ_HAVING_SOMETHING_PUT_INTO || !a || !q || !ch ||
+      !q->equippedBy) {
+    return false;
+  }
+  auto* arrow = dynamic_cast<TArrow*>(a);
+
+  if (!arrow || arrow->isPoisoned()) {
+    return false;
+  }
+
+  arrow->setPoison(LIQ_POISON_STANDARD);
+  act("The arrow glows a <g>sickly green<1> as it enters the $p.", TRUE, ch, q,
+    0, TO_CHAR);
+  act("The arrow glows a <g>sickly green<1> as it enters the $p.", TRUE, ch, q,
+    0, TO_ROOM);
+
+  return false;
+}
+
+int flamingArrowBow(TBeing*, cmdTypeT cmd, const char*, TObj* b, TObj* arrow) {
+  TBow* bow = dynamic_cast<TBow*>(b);
+  if (!bow || !arrow || cmd != CMD_SHOOT)
+    return false;
+
+  arrow->addObjStat(ITEM_BURNING);
+  act("The $p <r>bursts into flames<1> as it flies through the air!", true,
+    nullptr, arrow, nullptr, TO_ROOM);
+  return false;
+}
+
 int rechargingWand(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
   if (!o){
     return false;
@@ -6272,18 +6359,18 @@ int rechargingWand(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
 
   ch = dynamic_cast<TBeing*>(o->equippedBy);
   TWand* wand = dynamic_cast<TWand*>(o);
-  
+
   if (cmd == CMD_GENERIC_PULSE && !::number(0, 49)) {
 
     // The proc should only work when a mage mob or PC has the object equipped
     if (!ch) {
       return false;
     }
-  
+
     // The proc should only work on wands that aren't already at max charges
     if (!wand || wand->getCurCharges() >= wand->getMaxCharges())
       return false;
-    
+
     int level = wand->getMagicLevel();
     int manaCost = ::number(10, (50 + level));
 
@@ -6292,14 +6379,14 @@ int rechargingWand(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
       act("$p begins to pull energy from you, but you are too weak.", false, ch, o, nullptr, TO_CHAR);
       return false;
     }
-  
+
     wand->addToCurCharges(1);
     ch->addToMana(-manaCost);
     act("You feel <P>energy<z> pulled from you and into $p.", false, ch, wand, nullptr, TO_CHAR);
     return true;
   }
 
-  
+
 
   if (cmd == CMD_OBJ_USED) {
     if (!ch || !wand) {
@@ -6927,7 +7014,7 @@ int mobSpawnGrab(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* me,
   if (cmd != CMD_OBJ_GOTTEN || !cont || !ch || !me)
     return FALSE;
 
-#if 0 
+#if 0
 /* screw it */
   // look for the proc flag in the name
   // it will contain the number of seconds since it was first grabbed, as recorded at the time
@@ -6940,7 +7027,7 @@ int mobSpawnGrab(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* me,
     if (grabbed) {
       if ((double) time(NULL) - grabbed > 2629743) {
         // decay the object after one real month
-        
+
         // equipped, inventory, on ground, on table, in a bag... yeesh
         if (ch) {
           act("Your $p goes poof.", FALSE, ch, me, 0, TO_CHAR, NULL);
@@ -6949,7 +7036,7 @@ int mobSpawnGrab(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* me,
           // on the ground i guess
           act("$n goes poof.", FALSE, o, 0, 0, TO_ROOM);
         }
-        
+
       }
     }
     return FALSE;
@@ -7742,4 +7829,6 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
   {TRUE, "Molten Weapon", moltenWeapon},
   {TRUE, "Glacial Weapon", glacialWeapon}, //162
   {FALSE, "satyr shrine", satyrShrine},
+  {TRUE, "poison quiver", poisonQuiver},
+  {TRUE, "flaming arrow bow", flamingArrowBow},
   {FALSE, "last proc", bogusObjProc}};
