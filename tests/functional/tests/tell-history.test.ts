@@ -146,6 +146,9 @@ describe("Tell History", () => {
         expect(output).not.toContainCaseInsensitive(earlyMarker);
         // The recent tells should still be present
         expect(output).toContainCaseInsensitive("cap24");
+        // Verify exactly 25 entries (the cap)
+        const entries = output.match(/told you/gi) ?? [];
+        expect(entries).toHaveLength(25);
       } finally {
         await mortal.close();
       }
