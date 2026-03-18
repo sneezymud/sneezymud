@@ -29,6 +29,9 @@ describe("Brick Scorecard", () => {
     playerId = await dbQuery({
       sql: `SELECT id FROM player WHERE name='${config.character}'`,
     });
+    if (!playerId) {
+      throw new Error(`Player '${config.character}' not found in database`);
+    }
 
     // Go to a neutral room so a shopkeeper doesn't scavenge the dropped board
     await mud.command("goto 1");

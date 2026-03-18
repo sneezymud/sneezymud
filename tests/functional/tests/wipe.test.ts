@@ -53,8 +53,12 @@ describe("Immortal Wipe", () => {
         connection: config,
         password: DEFAULT_PASSWORD,
       });
-    } catch {
+    } catch (error) {
       // Account may already be gone if wipe cleaned it up
+      console.warn(
+        `Cleanup of account "${account}" failed (may be expected):`,
+        error,
+      );
     }
   });
 
