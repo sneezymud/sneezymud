@@ -4598,6 +4598,10 @@ int fishTracker(TBeing* ch, cmdTypeT cmd, const char* argument,
         return FALSE;
       }
 
+      if (!ch->isPc()) {
+        return false;
+      }
+
       // update total weight caught for player
       db.query("update fishkeeper set weight=weight+%f where player_id=%i",
         o->getWeight(), ch->getPlayerID());
@@ -4656,6 +4660,10 @@ int fishTracker(TBeing* ch, cmdTypeT cmd, const char* argument,
       if (!isname(buf, myself->name))
         return FALSE;
 
+      if (!ch->isPc()) {
+        return false;
+      }
+
       arg = one_argument(arg, buf);
 
       if (buf == "records") {
@@ -4712,15 +4720,19 @@ int fishTracker(TBeing* ch, cmdTypeT cmd, const char* argument,
             "order by fk.weight desc limit 10");
           topten = true;
         } else {
-          db.query(
-            "select p.name, fk.weight, count(fl.player_id) as count "
-            "from fishkeeper fk "
-            "join player p on fk.player_id=p.id "
-            "left join fishlargest fl on fk.player_id=fl.player_id "
-            "where p.name='%s' "
-            "group by fk.player_id, p.name, fk.weight "
-            "order by fk.weight desc limit 10",
-            buf.c_str());
+          TDatabase lookup(DB_SNEEZY);
+          lookup.query("select id from player where name='%s'", buf.c_str());
+          if (lookup.fetchRow()) {
+            db.query(
+              "select p.name, fk.weight, count(fl.player_id) as count "
+              "from fishkeeper fk "
+              "join player p on fk.player_id=p.id "
+              "left join fishlargest fl on fk.player_id=fl.player_id "
+              "where fk.player_id=%i "
+              "group by fk.player_id, p.name, fk.weight "
+              "order by fk.weight desc limit 10",
+              convertTo<int>(lookup["id"]));
+          }
         }
 
         while (db.fetchRow()) {
@@ -6850,6 +6862,10 @@ int brickCollector(TBeing* ch, cmdTypeT cmd, const char* argument,
     case CMD_MOB_GIVEN_ITEM:
       if (!o || !isname("foundbrick", o->name)) {
         return FALSE;
+      }
+
+      if (!ch->isPc()) {
+        return false;
       }
 
       db.query("select 1 from brickquest where player_id=%i",

@@ -1592,6 +1592,10 @@ bool TBeing::applyTattoo(wearSlotT slot, const sstring& tat,
   if (!hasPart(slot) || notBleedSlot(slot))
     return FALSE;
 
+  if (!isPc()) {
+    return false;
+  }
+
   TDatabase db(DB_SNEEZY);
   if (tat.length() == 0) {
     // removal
