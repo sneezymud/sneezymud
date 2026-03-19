@@ -975,16 +975,9 @@ int TBeing::doTell(const sstring& name, const sstring& message, bool visible) {
   if (!isPc() || (dynamic_cast<TMonster*>(vict) && !(vict->desc))) {
     // no tell history for mob senders or mob recipients
   } else {
-    auto victId = vict->getPlayerID();
     queryqueue.push(format("insert into tellhistory (from_id, to_id, tell) "
                            "values (%i, %i, '%s')") %
-                    getPlayerID() % victId % garbed.escape());
-    // Cap at 25 rows per recipient
-    queryqueue.push(
-      format("delete from tellhistory where to_id=%i and id not in "
-             "(select id from (select id from tellhistory where to_id=%i "
-             "order by telltime desc limit 25) t)") %
-      victId % victId);
+                    getPlayerID() % vict->getPlayerID() % garbed.escape());
   }
 
   if ((d && d->m_bIsClient) || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {

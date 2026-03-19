@@ -564,6 +564,12 @@ class procQuerytimesCleanup : public TProcess {
     procQuerytimesCleanup(const int&);
 };
 
+class procTellHistoryCleanup : public TProcess {
+  public:
+    void run(const TPulse&) const;
+    procTellHistoryCleanup(const int&);
+};
+
 class procBankInterest : public TProcess {
   public:
     void run(const TPulse&) const;
