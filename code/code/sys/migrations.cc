@@ -64,6 +64,8 @@ namespace {
   bool hasForeignKey(TDatabase& db, const char* table, const char* column,
     const char* refTable, const char* refColumn = nullptr,
     const char* onDelete = nullptr) {
+    // Uses std::format instead of db.query() %s placeholders because the
+    // query is built incrementally from optional clauses.
     auto query = std::format(
       "SELECT COUNT(*) AS cnt "
       "FROM information_schema.KEY_COLUMN_USAGE k "
