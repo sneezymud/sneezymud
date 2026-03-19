@@ -208,6 +208,7 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
       // get team affiliation for cutesy message below
       int caddyId = ch->isPc() ? ch->getPlayerID() : 0;
       sstring team;
+      sstring caddyTeam;
       bool samaritan = false;
       db.query(
         "select (select team from quest_limbs_team where player_id=%i) as "
@@ -216,12 +217,14 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
         chopperId, caddyId);
       if (db.fetchRow()) {
         team = db["chopper_team"];
-        if (chopper.compare(ch->name)) {
+        caddyTeam = db["caddy_team"];
+        if (chopper != ch->name) {
           // turning in someone else's limb
           samaritan = true;
         }
-      } else
+      } else {
         team = "";
+      }
       if (chopperId > 0) {
         if (db.query("insert into quest_limbs "
                      "(player_id, team, mob_vnum, slot_num, slot_name) "
@@ -236,7 +239,7 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
           mob->doWhisper(
             format("%s Why ain't you thoughtful, picking up after %s's mess!") %
             ch->name % chopper);
-          if (team.compare(db["caddy_team"]))
+          if (team != caddyTeam)
             mob->doWhisper(format("%s I'll make sure their gang, <o>%s<1>, "
                                   "gets the blame for this one.") %
                            ch->name % team);
