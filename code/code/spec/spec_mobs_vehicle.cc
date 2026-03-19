@@ -561,12 +561,8 @@ int shipCaptain(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
           return TRUE;
         }
       } else {
-        myself->doSay(
-          format("Aye aye, settin' sail for <W>%s<1>.") % argument.word(2));
-        // Clear existing route
-        for (int i = 0; i < 10; ++i)
-          job->room[i] = 0;
-
+        // Validate all destinations before modifying the route
+        int newRoute[10] = {};
         int roomCount = 0;
         for (int i = 2; i < 12 && !argument.word(i).empty(); ++i) {
           db.query(
@@ -576,9 +572,12 @@ int shipCaptain(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
             myself->doSay("What the...?!  I've never 'eard of that!");
             return true;
           }
-          job->room[roomCount++] = convertTo<int>(db["room"]);
+          newRoute[roomCount++] = convertTo<int>(db["room"]);
         }
         if (roomCount > 0) {
+          myself->doSay(
+            format("Aye aye, settin' sail for <W>%s<1>.") % argument.word(2));
+          std::copy(std::begin(newRoute), std::end(newRoute), job->room);
           job->cur = 0;
           job->cruise = (argument.word(1) == "cruise" && roomCount > 1);
         }
