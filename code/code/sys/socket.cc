@@ -638,6 +638,24 @@ void procQuerytimesCleanup::run(const TPulse&) const {
     "WHERE date_logged < DATE_SUB(NOW(), INTERVAL 30 DAY)");
 }
 
+procTellHistoryCleanup::procTellHistoryCleanup(const int& p) {
+  trigger_pulse = p;
+  name = "procTellHistoryCleanup";
+}
+
+void procTellHistoryCleanup::run(const TPulse&) const {
+  TDatabase db(DB_SNEEZY);
+  db.query(
+    "DELETE t FROM tellhistory t "
+    "INNER JOIN ("
+    "  SELECT id FROM ("
+    "    SELECT id, ROW_NUMBER() OVER "
+    "      (PARTITION BY to_id ORDER BY telltime DESC) AS rn "
+    "    FROM tellhistory"
+    "  ) ranked WHERE rn > 25"
+    ") excess ON t.id = excess.id");
+}
+
 procWeightVolumeFumble::procWeightVolumeFumble(const int& p) {
   trigger_pulse = p;
   name = "procWeightVolumeFumble";
@@ -1669,6 +1687,7 @@ int TMainSocket::gameLoop() {
   scheduler.add(new procBankInterest(Pulse::MUDDAY));
   scheduler.add(new procCloseAccountingBooks(Pulse::MUDDAY));
   scheduler.add(new procQuerytimesCleanup(Pulse::MUDDAY));
+  scheduler.add(new procTellHistoryCleanup(Pulse::MUDDAY));
   scheduler.add(new procFactoryProduction(Pulse::MUDDAY));
 
   // pulse realhour
