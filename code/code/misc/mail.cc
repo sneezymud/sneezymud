@@ -68,9 +68,10 @@ void store_mail(int to_id, const char* from_name, int from_id,
     gamePort, from_name, from_id, to_id, message_pointer, talens, rent_id);
 }
 
-void store_faction_mail(int sender_id, const char* sender_name,
+int store_faction_mail(int sender_id, const char* sender_name,
   const char* message) {
   TDatabase fm(DB_SNEEZY);
+  int count = 0;
   // Deliberately includes the sender as a recipient (serves as confirmation)
   fm.query(
     "SELECT player_id FROM factionmembers WHERE faction="
@@ -79,7 +80,69 @@ void store_faction_mail(int sender_id, const char* sender_name,
   while (fm.fetchRow()) {
     store_mail(convertTo<int>(fm["player_id"]), sender_name, sender_id, message,
       0, 0);
+    ++count;
   }
+  return count;
+}
+
+void Descriptor::dispatchMail(const char* body) {
+  if (ignoreList::isMailIgnored(this, name)) {
+    vlogf(LOG_OBJ, format("Mail: mail sent by %s was ignored by %s.") %
+                     character->getName() % name);
+    obj = nullptr;
+    *(name) = '\0';
+    amount = 0;
+    writeToQ("Message sent!\n\r");
+    return;
+  }
+
+  if (sstring(name) == "faction") {
+    int sent = store_faction_mail(character->getPlayerID(),
+      character->getName().c_str(), body);
+    if (sent == 0) {
+      writeToQ("No faction members found! Mail not sent.\n\r");
+    } else {
+      writeToQ("Message sent!\n\r");
+    }
+    obj = nullptr;
+    *(name) = '\0';
+    amount = 0;
+    return;
+  }
+
+  int to_id = getPlayerIdByName(name);
+  if (to_id == 0) {
+    writeToQ("That player no longer exists! Mail not sent.\n\r");
+    obj = nullptr;
+    *(name) = '\0';
+    amount = 0;
+    return;
+  }
+
+  int rent_id = 0;
+  if (obj && obj->canBeMailed(name)) {
+    ItemSaveDB is("mail", GH_MAIL_SHOP);
+    rent_id = is.raw_write_item(obj, -1, 0);
+    vlogf(LOG_OBJ,
+      format("Mail: %s mailing %s (vnum:%i) to %s rented as rent_id:%i") %
+        character->getName() % obj->getName() % obj->objVnum() % name %
+        rent_id);
+    delete obj;
+  }
+
+  if (amount > 0) {
+    vlogf(LOG_OBJ, format("Mail: %s mailing %i talens to %s") %
+                     character->getName() % amount % name);
+    character->addToMoney(min(0, -amount), GOLD_XFER);
+  }
+
+  store_mail(to_id, character->getName().c_str(), character->getPlayerID(),
+    body, amount, rent_id);
+
+  obj = nullptr;
+  *(name) = '\0';
+  amount = 0;
+  writeToQ("Message sent!\n\r");
 }
 
 sstring read_delete(int player_id, const char* recipient_formatted,

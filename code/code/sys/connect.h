@@ -520,6 +520,7 @@ class Descriptor {
     void sendPermaDeathMessage();
     bool start_page_file(const char*, const char*);
     int client_nanny(char*);
+    void dispatchMail(const char* body);
     void writeToQ(const sstring& arg);
     void clientf(const sstring& msg);
     bool page_file(const char*);

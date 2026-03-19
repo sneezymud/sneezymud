@@ -1994,58 +1994,17 @@ void Descriptor::sstring_add(sstring s) {
   }
   if (terminator || t2) {
     if (character->isPlayerAction(PLR_MAILING)) {
-      bool mailSent = false;
-      if (ignored.isMailIgnored(this, name)) {
-        vlogf(LOG_OBJ, format("Mail: mail sent by %s was ignored by %s.") %
-                         character->getName() % name);
-        mailSent = true;  // suppress "not sent" message for ignored mail
-      } else if (terminator) {
-        if (sstring(name) == "faction") {
-          store_faction_mail(character->getPlayerID(),
-            character->getName().c_str(), str->c_str());
-          delete obj;
-          mailSent = true;
-        } else {
-          int to_id = getPlayerIdByName(name);
-          if (to_id == 0) {
-            writeToQ("That player no longer exists! Mail not sent.\n\r");
-            delete obj;
-          } else {
-            int rent_id = 0;
-            if (obj && obj->canBeMailed(name)) {
-              ItemSaveDB is("mail", GH_MAIL_SHOP);
-              rent_id = is.raw_write_item(obj, -1, 0);
-              vlogf(LOG_OBJ,
-                format(
-                  "Mail: %s mailing %s (vnum:%i) to %s rented as rent_id:%i") %
-                  character->getName() % obj->getName() % obj->objVnum() %
-                  name % rent_id);
-              delete obj;
-            }
-            if (amount > 0) {
-              vlogf(LOG_OBJ, format("Mail: %s mailing %i talens to %s") %
-                               character->getName() % amount % name);
-              character->addToMoney(min(0, -amount), GOLD_XFER);
-            }
-            store_mail(to_id, character->getName().c_str(),
-              character->getPlayerID(), str->c_str(), amount, rent_id);
-            mailSent = true;
-          }
-        }
+      if (terminator) {
+        dispatchMail(str->c_str());
+      } else {
+        obj = nullptr;
+        *(name) = '\0';
+        amount = 0;
+        writeToQ("Message deleted!\n\r");
       }
 
       *str = "";
       str = nullptr;
-
-      // clear amount, object, name
-      obj = nullptr;
-      *(name) = '\0';
-      amount = 0;
-
-      if (mailSent)
-        writeToQ("Message sent!\n\r");
-      else if (!terminator)
-        writeToQ("Message deleted!\n\r");
       character->remPlayerAction(PLR_MAILING);
     } else if (character->isPlayerAction(PLR_BUGGING)) {
       if (terminator) {
