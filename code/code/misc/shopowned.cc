@@ -15,24 +15,6 @@
 
 #define GRIMHAVEN_TAX_OFFICE 14
 
-// this function relies on the fact that the db will return rows in the order
-// that they were created, chronologically.  I'm not sure if this is defined
-// behavior or not, so if it stops working, you need to put a timestamp value
-// into the table and sort by that
-bool sameAccount(sstring buf, int shop_nr) {
-  TDatabase db(DB_SNEEZY);
-
-  // Check if a different character on the same account has shop access
-  db.query(
-    "select 1 from shopownedaccess soa "
-    "join player p on soa.player_id=p.id "
-    "join player me on me.name='%s' "
-    "where soa.shop_nr=%i and p.account_id=me.account_id and p.id!=me.id "
-    "limit 1",
-    buf.c_str(), shop_nr);
-  return db.fetchRow();
-}
-
 sstring transactionToString(transactionTypeT action) {
   switch (action) {
     case TX_BUYING:
@@ -199,13 +181,6 @@ int getShopAccess(int shop_nr, TBeing* ch) {
 
   if (db.fetchRow())
     access = convertTo<int>(db["access"]);
-
-#if 0  
-  if(sameAccount(ch->getName(), shop_nr) && !ch->isImmortal() && access){
-    ch->sendTo("Another character in your account has permissions at this shop, so this character can not use the ownership functions.\n\r");
-    access=0;
-  }
-#endif
 
   if (ch->isImmortal())
     access = SHOPACCESS_OWNER;

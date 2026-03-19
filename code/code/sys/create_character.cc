@@ -754,9 +754,9 @@ connectStateT nannyLaunchpad_input(Descriptor* desc, sstring& output,
       format("%s [%s] new player.") % desc->character->getName() % desc->host);
     desc->character->saveChar(Room::AUTO_RENT);
     desc->character->loadMapData();
-    db.query("insert into player (name, account_id) values (lower('%s'), %i)",
+    db.query("insert into player (name, account_id) values ('%s', %i)",
       desc->character->getName().c_str(), desc->account->account_id);
-    db.query("select id from player where lower(name)=('%s')",
+    db.query("select id from player where name='%s'",
       desc->character->getName().c_str());
     assert(db.fetchRow());
     desc->playerID = desc->character->player.player_id =
