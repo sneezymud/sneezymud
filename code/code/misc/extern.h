@@ -191,10 +191,11 @@ extern void wipeRentFile(const char*);
 extern void wipeFollowersFile(const char*);
 extern void wipePlayerFile(const char*);
 extern void handleCorrupted(const char*, char*);
-extern int getPlayerIdByName(const char* name);
+// DB query - not cached. Avoid in hot loops.
+[[nodiscard]] extern int getPlayerIdByName(const char* name);
 extern void store_mail(int to_id, const char* from_name, int from_id,
   const char* message, int talens, int rent_id);
-extern void store_faction_mail(int sender_id, const char* sender_name,
+extern int store_faction_mail(int sender_id, const char* sender_name,
   const char* message);
 extern void setup_dir(FILE* fl, int room, dirTypeT dir, TRoom* = NULL);
 extern char hostLogList[MAX_BAN_HOSTS][40];
