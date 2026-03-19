@@ -64,6 +64,10 @@ int tattooArtist(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
       return FALSE;
     }
 
+    if (!ch->isPc()) {
+      return false;
+    }
+
     TDatabase db(DB_SNEEZY);
     db.query("select 1 from tattoos where player_id=%i and location=%i",
       ch->getPlayerID(), slot);

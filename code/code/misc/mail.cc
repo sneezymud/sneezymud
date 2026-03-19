@@ -59,6 +59,9 @@ void store_mail(int to_id, const char* from_name, int from_id,
   const char* message_pointer, int talens, int rent_id) {
   TDatabase db(DB_SNEEZY);
 
+  // mailfrom is a denormalized name column (not an FK) because system mail and
+  // NPC-sent mail have no player row to reference. to_id is a proper FK because
+  // recipients are always players.
   // from_id: 0 = system/NPC sender -> null via NULLIF (FK requires null, not 0)
   // rent_id: 0 = no attachment -> null via NULLIF (FK requires null, not 0)
   db.query(
@@ -375,12 +378,10 @@ int postmaster(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
 
 void TBeing::postmasterSendMail(const char* arg, TMonster* me) {
   sstring args = arg, item, recipient, talen;
-  charFile st;
   bool sendFaction;
-  int i, imm = FALSE, amt, shop_nr = find_shop_nr(me->number);
+  int imm = false, amt, shop_nr = find_shop_nr(me->number);
   float profit_buy = 0;
 
-  // added this check - bat
   if (!mail_ok(this))
     return;
 
@@ -400,19 +401,26 @@ void TBeing::postmasterSendMail(const char* arg, TMonster* me) {
   recipient = recipient.lower();
   sendFaction = recipient == "faction";
 
-  // Bug fix: only validate recipient as a real player when NOT sending to
-  // faction (there is no player named "faction")
-  if (recipient != "faction" && !load_char(recipient, &st)) {
+  if (!sendFaction && getPlayerIdByName(recipient.c_str()) == 0) {
     sendTo("No such player to mail to!\n\r");
     return;
   }
   imm = isImmortal();
 
-  for (i = 0; !imm && i < 8; i++)
-    if (st.level[i] > MAX_MORT)
-      imm = TRUE;
+  // Level 1 senders can only mail immortals - check recipient's level via
+  // pfile since the player table doesn't store levels.
+  if (!sendFaction && !imm && GetMaxLevel() < MIN_MAIL_LEVEL) {
+    charFile st;
+    if (load_char(recipient, &st)) {
+      for (int i = 0; i < 8; i++) {
+        if (st.level[i] > MAX_MORT) {
+          imm = true;
+          break;
+        }
+      }
+    }
+  }
 
-  // let anybody mail to immortals
   if (GetMaxLevel() < MIN_MAIL_LEVEL && !imm) {
     me->doTell(getName(),
       format("Sorry, you have to be level %d to send mail!") % MIN_MAIL_LEVEL);
