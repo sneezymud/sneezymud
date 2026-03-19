@@ -162,8 +162,8 @@ void TShopOwned::journalize_debit(int post_ref, const sstring& customer,
     format("insert into shoplogjournal (shop_nr, journal_id, customer_name, "
            "obj_name, sneezy_year, logtime, post_ref, debit, credit) values "
            "(%i, %s, '%s', '%s', %i, now(), %i, %i, 0)") %
-    shop_nr % ((sstring)(new_id ? "0" : "LAST_INSERT_ID()")).escape() %
-    customer.escape() % name.escape() % GameTime::getYear() % post_ref % amt);
+    shop_nr % (new_id ? "0" : "LAST_INSERT_ID()") % customer.escape() %
+    name.escape() % GameTime::getYear() % post_ref % amt);
 }
 
 void TShopOwned::journalize_credit(int post_ref, const sstring& customer,
@@ -173,8 +173,8 @@ void TShopOwned::journalize_credit(int post_ref, const sstring& customer,
     format("insert into shoplogjournal (shop_nr, journal_id, customer_name, "
            "obj_name, sneezy_year, logtime, post_ref, debit, credit) values "
            "(%i, %s, '%s', '%s', %i, now(), %i, 0, %i)") %
-    shop_nr % ((sstring)(new_id ? "0" : "LAST_INSERT_ID()")).escape() %
-    customer.escape() % name.escape() % GameTime::getYear() % post_ref % amt);
+    shop_nr % (new_id ? "0" : "LAST_INSERT_ID()") % customer.escape() %
+    name.escape() % GameTime::getYear() % post_ref % amt);
 }
 
 void TShopOwned::COGS_add(const sstring& name, int amt, int num) {
