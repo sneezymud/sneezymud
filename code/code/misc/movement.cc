@@ -23,6 +23,7 @@
 
 #include "handler.h"
 #include "extern.h"
+#include "immunity.h"
 #include "being.h"
 #include "low.h"
 #include "monster.h"
@@ -229,6 +230,34 @@ namespace {
   }
 }  // namespace
 
+bool TBeing::vineBleedLeg(int affLevel) {
+  const int luckyBonus = isLucky(levelLuckModifier(affLevel))
+                           ? 5 + std::max(0, GetMaxLevel() - affLevel)
+                           : 0;
+  if (isTough(luckyBonus) || isUndead())
+    return false;
+
+  wearSlotT limb;
+  if (isFourLegged()) {
+    limb = percentChance(50) ? (percentChance(50) ? WEAR_LEG_R : WEAR_LEG_L)
+                             : (percentChance(50) ? WEAR_EX_LEG_R : WEAR_EX_LEG_L);
+  } else {
+    limb = percentChance(50) ? getPrimaryFoot() : getSecondaryFoot();
+  }
+  if (!hasPart(limb))
+    limb = getRandomPart(PART_MISSING);
+
+  if (limb == WEAR_NOWHERE || isImmune(IMMUNE_BLEED, limb))
+    return false;
+
+  if (isLimbFlags(limb, PART_BLEEDING))
+    incrementBleedStack(limb, 250);
+  else
+    rawBleed(limb, 50, SILENT_NO, CHECK_IMMUNITY_YES);
+
+  return true;
+}
+
 bool TBeing::validMove(dirTypeT cmd) {
   roomDirData* exitp;
   TRoom* rp;
@@ -272,29 +301,12 @@ bool TBeing::validMove(dirTypeT cmd) {
         // Reduce duration with each failed escape attempt
         aff->duration = std::max(0, aff->duration - 800);
 
-        wearSlotT foot = percentChance(50) ? getPrimaryFoot() : getSecondaryFoot();
-        if (isFourLegged()) {
-          if (percentChance(50)) {
-            foot = percentChance(50) ? WEAR_LEG_R : WEAR_LEG_L;
-          } else {
-            foot = percentChance(50) ? WEAR_EX_LEG_R : WEAR_EX_LEG_L;
-          }
-        }
-        if (!hasPart(foot))
-          foot = getRandomPart(PART_MISSING);
-
         if (!isPc())
           setMove(getMove() / 2);
 
-        if (foot != WEAR_NOWHERE && !isTough(luckyBonus) && !isUndead()) {
+        if (vineBleedLeg(aff->level)) {
           sendTo("The vines tear at your flesh!\n\r");
           act("The vines tear at $n's flesh!", true, this, nullptr, nullptr, TO_ROOM);
-
-          if (isLimbFlags(foot, PART_BLEEDING)) {
-            incrementBleedStack(foot, 250);
-          } else {
-            rawBleed(foot, 50, SILENT_NO, CHECK_IMMUNITY_YES);
-          }
         }
 
         return false;
@@ -2710,26 +2722,9 @@ void TBeing::doStand() {
   if (prevPos != POSITION_STANDING && getPosition() == POSITION_STANDING) {
     for (affectedData* aff = affected; aff; aff = aff->next) {
       if (aff->type == SPELL_LIVING_VINES) {
-        const int luckyBonus = isLucky(levelLuckModifier(aff->level))
-                                 ? 5 + std::max(0, GetMaxLevel() - (int)aff->level)
-                                 : 0;
-        if (!isTough(luckyBonus) && !isUndead()) {
+        if (vineBleedLeg(aff->level)) {
           sendTo("The vines tear at you as you struggle to your feet!\n\r");
           act("The vines tear at $n as $e struggles to $s feet!", true, this, nullptr, nullptr, TO_ROOM);
-          wearSlotT foot = percentChance(50) ? getPrimaryFoot() : getSecondaryFoot();
-          if (isFourLegged()) {
-            foot = percentChance(50) ? (percentChance(50) ? WEAR_LEG_R : WEAR_LEG_L)
-                                     : (percentChance(50) ? WEAR_EX_LEG_R : WEAR_EX_LEG_L);
-          }
-          if (!hasPart(foot))
-            foot = getRandomPart(PART_MISSING);
-          if (foot != WEAR_NOWHERE) {
-            if (isLimbFlags(foot, PART_BLEEDING)) {
-              incrementBleedStack(foot, 250);
-            } else {
-              rawBleed(foot, 50, SILENT_NO, CHECK_IMMUNITY_YES);
-            }
-          }
         }
         aff->duration = std::max(0, aff->duration - 800);
         break;

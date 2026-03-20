@@ -961,6 +961,7 @@ class TBeing : public TThing {
     void rawBlind(int, int, saveTypeT);
     int rawSleep(int, int, int, saveTypeT);
     int rawBleed(wearSlotT, int, silentTypeT, checkImmunityT);
+    bool vineBleedLeg(int affLevel);
     int maxBleedVitalPart(wearSlotT limb, int duration);
     int incrementBleedStack(wearSlotT limb, int newDuration);
     int incrementBruiseStack(wearSlotT limb, int newDuration);

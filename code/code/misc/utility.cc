@@ -9,8 +9,6 @@
 #include <algorithm>
 #include <stdio.h>
 
-#include "immunity.h"
-#include "limbs.h"
 #include "log.h"
 #include "extern.h"
 #include "room.h"
@@ -284,31 +282,11 @@ int TMonster::standUp() {
         (getPosition() > POSITION_STUNNED)) ||
       ((getPosition() > POSITION_STUNNED) && riding &&
         !dynamic_cast<TBeing*>(riding))) {
-    affectedData* aff;
-    for (aff = affected; aff; aff = aff->next) {
+    for (affectedData* aff = affected; aff; aff = aff->next) {
       if (aff->type == SPELL_LIVING_VINES) {
-        const int luckyBonus = isLucky(levelLuckModifier(aff->level))
-                                 ? 5 + std::max(0, GetMaxLevel() - (int)aff->level)
-                                 : 0;
-        if (!isTough(luckyBonus) && !isUndead()) {
+        if (vineBleedLeg(aff->level)) {
           act("The vines tear at $n as $e struggles to $s feet!", true, this, nullptr, nullptr, TO_ROOM);
           act("The vines tear at you as you struggle to your feet!", true, this, nullptr, nullptr, TO_CHAR);
-          wearSlotT limb;
-          if (isFourLegged()) {
-            limb = percentChance(50) ? (percentChance(50) ? WEAR_LEG_R : WEAR_LEG_L)
-                                     : (percentChance(50) ? WEAR_EX_LEG_R : WEAR_EX_LEG_L);
-          } else {
-            limb = percentChance(50) ? getPrimaryFoot() : getSecondaryFoot();
-          }
-          if (!hasPart(limb))
-            limb = getRandomPart(PART_MISSING);
-          if (limb != WEAR_NOWHERE && !isImmune(IMMUNE_BLEED, limb)) {
-            if (isLimbFlags(limb, PART_BLEEDING)) {
-              incrementBleedStack(limb, 250);
-            } else {
-              rawBleed(limb, 50, SILENT_NO, CHECK_IMMUNITY_YES);
-            }
-          }
         }
         aff->duration = std::max(0, aff->duration - 800);
         break;
