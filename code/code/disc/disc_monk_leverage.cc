@@ -58,9 +58,7 @@ int hurlMiss(TBeing* caster, TBeing* victim) {
     victim, TO_VICT);
 
   int rc = caster->stumble(victim);
-  if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_THIS;
-  if (IS_SET_DELETE(rc, DELETE_VICT))
+  if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
     return rc;
   caster->reconcileDamage(victim, 0, SKILL_SHOULDER_THROW);
   return TRUE;
@@ -171,10 +169,8 @@ int TBeing::aiHurl(dirTypeT dr, TBeing* victim) {
     if (rc) {
       addSkillLag(SKILL_HURL, rc);
     }
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   }
 
   /*
@@ -318,10 +314,8 @@ int hurl(TBeing* caster, TBeing* victim, char* direction) {
       caster->addSkillLag(SKILL_HURL, rc);
     }
 
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   }
   return FALSE;
 }
@@ -377,9 +371,7 @@ int shoulderThrowMiss(TBeing* caster, TBeing* victim) {
     TO_VICT);
 
   int rc = caster->stumble(victim);
-  if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_THIS;
-  if (IS_SET_DELETE(rc, DELETE_VICT))
+  if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
     return rc;
   caster->reconcileDamage(victim, 0, SKILL_CHOP);
   return TRUE;
@@ -532,10 +524,8 @@ int shoulderThrow(TBeing* caster, TBeing* victim) {
       return DELETE_THIS;
   } else {
     rc = shoulderThrowMiss(caster, victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   }
   return TRUE;
 }
@@ -586,9 +576,7 @@ int defenestrateMiss(TBeing* caster, TBeing* victim) {
     victim, TO_VICT);
 
   int rc = caster->stumble(victim);
-  if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_THIS;
-  if (IS_SET_DELETE(rc, DELETE_VICT))
+  if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
     return rc;
   caster->reconcileDamage(victim, 0, SKILL_SHOULDER_THROW);
   return TRUE;
@@ -802,10 +790,8 @@ int defenestrate(TBeing* caster, TBeing* victim, sstring direction) {
       caster->addSkillLag(SKILL_DEFENESTRATE, rc);
     }
 
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   }
   return FALSE;
 }

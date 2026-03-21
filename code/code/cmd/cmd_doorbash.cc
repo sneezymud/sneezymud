@@ -25,19 +25,14 @@ int TBeing::slamIntoWall(roomDirData* exitp) {
   sendTo("OUCH!  That REALLY Hurt!\n\r");
   sprintf(buf, "$n crashes against the %s with no effect.\n\r", doorname);
   act(buf, FALSE, this, 0, 0, TO_ROOM);
-  TBeing* fightTarget = fight();
-  int rc = stumble(fightTarget);
+  int rc = crashLanding(POSITION_SITTING);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
-  if (IS_SET_DELETE(rc, DELETE_VICT)) {
-    delete fightTarget;
-    fightTarget = nullptr;
-  }
 
   int dam = ::number(1, 10) * 2;
   if (isBrawny())
     dam /= 2;
-  addToWait(combatRound(dam));
+  addSkillLag(SKILL_DOORBASH, 0);
   if (reconcileDamage(this, dam, DAMAGE_COLLISION) == -1)
     return DELETE_THIS;
 

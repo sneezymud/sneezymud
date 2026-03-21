@@ -3518,25 +3518,32 @@ int TBeing::stumble(TBeing* victim) {
 
     int stumbleDam = dice(1, 4);
 
+    bool victimDeleted = false;
     TBeing* springTarget = victim ? victim : fight();
     if (springTarget) {
       int rc = trySpringleap(springTarget);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       if (IS_SET_DELETE(rc, DELETE_VICT))
-        return DELETE_VICT;
+        victimDeleted = true;
       if (rc)
         stumbleDam /= 2;
     }
 
     if (reconcileDamage(this, stumbleDam, DAMAGE_FALL) == -1)
-      return DELETE_THIS;
+      return DELETE_THIS | (victimDeleted ? DELETE_VICT : 0);
+    if (victimDeleted)
+      return DELETE_VICT;
   } else {
-    setPosition(POSITION_STANDING);
-    if (isFlying()) {
-      sendTo("You stumble, but quickly recover your footing!\n\r");
-      act("$n stumbles, but quickly recovers!", true, this, nullptr, nullptr, TO_ROOM);
+    if (isFlying() && roomp->isFallSector()) {
+      sendTo("You falter in the air, but quickly recover!\n\r");
+      act("$n falters in the air, but quickly recovers!", true, this, nullptr, nullptr, TO_ROOM);
+    } else if (isFlying()) {
+      setPosition(POSITION_STANDING);
+      sendTo("You stumble out of the air, but land on your feet!\n\r");
+      act("$n stumbles out of the air, but lands on $s feet!", true, this, nullptr, nullptr, TO_ROOM);
     } else {
+      setPosition(POSITION_STANDING);
       sendTo("You stumble, but catch yourself!\n\r");
       act("$n stumbles, but catches $mself!", true, this, nullptr, nullptr, TO_ROOM);
     }

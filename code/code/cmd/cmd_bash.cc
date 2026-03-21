@@ -324,9 +324,7 @@ int TBeing::bashFail(TBeing* victim, spellNumT skill,
 
   if (hasLegs()) {
     int rc = stumble(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_VICT))
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   }
 

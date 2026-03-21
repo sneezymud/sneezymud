@@ -66,9 +66,7 @@ int TBeing::headbuttMiss(TBeing* v) {
       0, v, TO_VICT);
 
     int rc = stumble(v);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_VICT))
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   }
   reconcileDamage(v, 0, SKILL_HEADBUTT);

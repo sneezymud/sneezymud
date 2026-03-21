@@ -98,9 +98,7 @@ int TBeing::bodyslamMiss(TBeing* victim, skillMissT type) {
       FALSE, this, 0, victim, TO_NOTVICT);
 
     int rc = stumble(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_VICT))
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   } else if (type == TYPE_STR) {
     act("$n tries to bodyslam $N but fails to lift $M.", false, this, 0, victim,
@@ -111,15 +109,18 @@ int TBeing::bodyslamMiss(TBeing* victim, skillMissT type) {
       victim, TO_VICT);
 
     int rc = stumble(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_VICT))
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   } else {
+    act("$n tries to bodyslam $N but can't get a grip.", false, this, 0, victim,
+      TO_NOTVICT);
+    act("You try to bodyslam $N but can't get a grip.", false, this, 0, victim,
+      TO_CHAR);
+    act("$n tries to bodyslam you but can't get a grip.", false, this, 0,
+      victim, TO_VICT);
+
     int rc = stumble(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_VICT))
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   }
 

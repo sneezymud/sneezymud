@@ -115,9 +115,7 @@ int TBeing::spinMiss(TBeing* victim, skillMissT type) {
       TO_NOTVICT);
 
     int rc = stumble(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_VICT))
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   } else {
     act("$n tries to spin $N but loses $s footing.", false, this, 0, victim,
@@ -128,9 +126,7 @@ int TBeing::spinMiss(TBeing* victim, skillMissT type) {
       TO_VICT);
 
     int rc = stumble(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_VICT))
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   }
 
