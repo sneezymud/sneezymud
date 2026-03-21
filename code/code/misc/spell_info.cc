@@ -3376,7 +3376,9 @@ void buildSpellArray() {
   discArray[SPELL_LIVING_VINES] =
     new spellInfo(SPELL_SHAMAN, DISC_SHAMAN_SPIDER, DISC_SHAMAN_SPIDER,
       STAT_INT, "living vines", TASK_NORMAL, LAG_3, POSITION_SITTING, MANA_0,
-      LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM, SYMBOL_STRESS_0,
+      LIFEFORCE_0, PRAY_0,
+      TAR_CHAR_ROOM | TAR_VIOLENT | TAR_FIGHT_VICT | TAR_SELF_NONO,
+      SYMBOL_STRESS_0,
       "The vines entangling you wither and fall away.",
       "The vines entangling $n wither and fall away.",
       "The vines entangling you seem to be weakening.",

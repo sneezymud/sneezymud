@@ -299,7 +299,9 @@ bool TBeing::validMove(dirTypeT cmd) {
         addToWait(combatRound(3));
 
         // Reduce duration with each failed escape attempt
-        aff->duration = std::max(0, aff->duration - 800);
+        for (auto* vine = affected; vine; vine = vine->next)
+          if (vine->type == SPELL_LIVING_VINES)
+            vine->duration = std::max(0, vine->duration - 800);
 
         if (!isPc())
           setMove(getMove() / 2);
@@ -313,7 +315,9 @@ bool TBeing::validMove(dirTypeT cmd) {
       } else {
         addToWait(combatRound(1));
         addToMove(-50);
-        aff->duration = std::max(0, aff->duration - 400);
+        for (auto* vine = affected; vine; vine = vine->next)
+          if (vine->type == SPELL_LIVING_VINES)
+            vine->duration = std::max(0, vine->duration - 400);
         sendTo("You manage to slip free from the vines!\n\r");
         act("$n manages to slip free from the vines!", true, this, nullptr, nullptr, TO_ROOM);
       }
@@ -2726,7 +2730,9 @@ void TBeing::doStand() {
           sendTo("The vines tear at you as you struggle to your feet!\n\r");
           act("The vines tear at $n as $e struggles to $s feet!", true, this, nullptr, nullptr, TO_ROOM);
         }
-        aff->duration = std::max(0, aff->duration - 800);
+        for (auto* vine = affected; vine; vine = vine->next)
+          if (vine->type == SPELL_LIVING_VINES)
+            vine->duration = std::max(0, vine->duration - 800);
         break;
       }
     }
