@@ -173,6 +173,8 @@ int TBeing::aiHurl(dirTypeT dr, TBeing* victim) {
     }
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_VICT;
   }
 
   /*
@@ -318,6 +320,8 @@ int hurl(TBeing* caster, TBeing* victim, char* direction) {
 
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_VICT;
   }
   return FALSE;
 }
@@ -530,6 +534,8 @@ int shoulderThrow(TBeing* caster, TBeing* victim) {
     rc = shoulderThrowMiss(caster, victim);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_VICT;
   }
   return TRUE;
 }
@@ -798,6 +804,8 @@ int defenestrate(TBeing* caster, TBeing* victim, sstring direction) {
 
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_VICT;
   }
   return FALSE;
 }
