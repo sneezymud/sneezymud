@@ -184,9 +184,8 @@ int TBeing::backstabHit(TBeing* victim, TThing* obj, int modifier) {
       getAdvLearning(SKILL_STABBING) >= 50) {
     // Call stab with isChain=true to skip move cost and skilllag
     int rc = doStab("", victim, true);
-    if (IS_SET_DELETE(rc, DELETE_VICT)) {
-      return DELETE_VICT;
-    }
+    if (IS_SET_DELETE(rc, DELETE_VICT) || IS_SET_DELETE(rc, DELETE_THIS))
+      return rc;
   }
 
   return 0;

@@ -91,9 +91,8 @@ static void stabBleedCheck(TBeing* thief, TBeing* victim, TGenWeapon* weapon,
   }
 }
 
-// Core stab attack logic shared by primary and offhand attacks
+// Does NOT add skilllag or move cost - caller is responsible for that
 static int stabCore(TBeing* thief, TBeing* victim, TGenWeapon* weapon) {
-  // Check if attack succeeds
   int specResult = thief->specialAttack(victim, SKILL_STABBING, 0, STAT_DEX,
     STAT_SPE, STAT_AGI, STAT_PER, false);
   if (specResult != COMPLETE_SUCCESS && specResult != GUARANTEED_SUCCESS) {
@@ -271,7 +270,7 @@ int TBeing::doStab(const char* argument, TBeing* vict, bool chain) {
   }
   rc = stab(this, victim, chain);
 
-  // Only add skilllag if stab is not chained from another skill
+  // Add skilllag after stab attempt; pass rc so DELETE_VICT can reduce lag on kill
   if (rc && !chain)
     addSkillLag(SKILL_STABBING, rc);
 
