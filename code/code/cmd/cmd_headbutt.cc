@@ -210,7 +210,7 @@ int TBeing::doHeadbutt(const char* argument, TBeing* vict) {
   if (rc)
     addSkillLag(SKILL_HEADBUTT, rc);
 
-  if (IS_SET_ONLY(rc, DELETE_VICT)) {
+  if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
       return rc;
     delete v;
