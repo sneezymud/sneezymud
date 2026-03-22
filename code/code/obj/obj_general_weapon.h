@@ -34,6 +34,7 @@ class TGenWeapon : public TBaseWeapon {
     virtual bool canCudgel() const;
     virtual bool canBackstab() const;
     virtual bool canStab() const;
+    virtual bool isSpear() const;
 
     TGenWeapon();
     TGenWeapon(const TGenWeapon& a);
