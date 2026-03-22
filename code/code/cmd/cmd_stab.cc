@@ -131,11 +131,15 @@ static int stabCore(TBeing* thief, TBeing* victim, TGenWeapon* weapon) {
 
   int specRc = weapon->checkSpec(victim, CMD_STAB,
     reinterpret_cast<char*>(limb), thief);
+  // Translate checkSpec flags: DELETE_VICT = victim, DELETE_ITEM = thief (t2),
+  // DELETE_THIS = weapon (not used after this point, no action needed)
+  int rc = 0;
   if (IS_SET_DELETE(specRc, DELETE_VICT))
-    return DELETE_VICT;
+    rc |= DELETE_VICT;
   if (IS_SET_DELETE(specRc, DELETE_ITEM))
-    return DELETE_THIS;  // thief (t2) was destroyed
-  // DELETE_THIS = weapon destroyed; not used after this point
+    rc |= DELETE_THIS;
+  if (rc)
+    return rc;
 
   return TRUE;
 }
@@ -190,7 +194,7 @@ static int stab(TBeing* thief, TBeing* victim, bool isChain = false) {
     return FALSE;
 
   TBeing* thiefMount = dynamic_cast<TBeing*>(thief->riding);
-  if (thiefMount && thief->getSkillLevel(SKILL_RIDE) < 80) {
+  if (thiefMount && thief->getSkillValue(SKILL_RIDE) < 80) {
     thief->sendTo("You aren't a skilled enough rider to stab while mounted!\n\r");
     return FALSE;
   }

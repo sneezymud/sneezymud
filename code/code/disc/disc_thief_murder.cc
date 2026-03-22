@@ -159,12 +159,15 @@ int TBeing::backstabHit(TBeing* victim, TThing* obj, int modifier) {
         if (weapon) {
           int specRc = weapon->checkSpec(victim, CMD_BACKSTAB,
             "-special-", this);
+          int rc = 0;
           if (IS_SET_DELETE(specRc, DELETE_VICT))
-            return DELETE_VICT;
+            rc |= DELETE_VICT;
           if (IS_SET_DELETE(specRc, DELETE_ITEM))
-            return DELETE_THIS;  // this (t2=attacker) was destroyed
+            rc |= DELETE_THIS;
           if (IS_SET_DELETE(specRc, DELETE_THIS))
             weapon = nullptr;  // weapon destroyed, skip poison
+          if (rc)
+            return rc;
         }
 
         // poison — weapon may be null if checkSpec destroyed it
@@ -302,7 +305,7 @@ int backstab(TBeing* thief, TBeing* victim) {
     return FALSE;
   }
   TBeing* thiefMount = dynamic_cast<TBeing*>(thief->riding);
-  if (thiefMount && thief->getSkillLevel(SKILL_RIDE) < 80) {
+  if (thiefMount && thief->getSkillValue(SKILL_RIDE) < 80) {
     thief->sendTo("You aren't a skilled enough rider to backstab while mounted!\n\r");
     return FALSE;
   }
@@ -530,12 +533,15 @@ int TBeing::throatSlitHit(TBeing* victim, TThing* obj, int modifier) {
         if (weapon) {
           int specRc = weapon->checkSpec(victim, CMD_SLIT,
             "-special-", this);
+          int rc = 0;
           if (IS_SET_DELETE(specRc, DELETE_VICT))
-            return DELETE_VICT;
+            rc |= DELETE_VICT;
           if (IS_SET_DELETE(specRc, DELETE_ITEM))
-            return DELETE_THIS;  // this (t2=attacker) was destroyed
+            rc |= DELETE_THIS;
           if (IS_SET_DELETE(specRc, DELETE_THIS))
             weapon = nullptr;  // weapon destroyed, skip poison
+          if (rc)
+            return rc;
         }
 
         // poison — weapon may be null if checkSpec destroyed it
@@ -664,7 +670,7 @@ int throatSlit(TBeing* thief, TBeing* victim) {
     return FALSE;
   }
   if (6 * thief->getHeight() < 3 * victim->getHeight() &&
-      !(thief->isFlying() || victim->getPosition() < POSITION_STANDING)) {
+      !(thief->isFlying() || (victim->getPosition() < POSITION_STANDING && victim->getPosition() != POSITION_FIGHTING))) {
     thief->sendTo("You don't stand a chance, that creature is too tall.\n\r");
     return FALSE;
   }

@@ -2879,24 +2879,14 @@ int TMonster::takeFirstHit(TBeing& vict) {
         // except if the weapon is a spear (tgw->isSpear()) then always use backstab
         if (GetMaxLevel() < 35 || tgw->isSpear()) {
           rc = doBackstab("", &vict);
-          if (IS_SET_DELETE(rc, DELETE_VICT)) {
-            return DELETE_VICT;
-          }
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            return DELETE_THIS;
-          }
-          return TRUE;
         } else {
-          // Thieves should have slit as well
           rc = doThroatSlit("", &vict);
-          if (IS_SET_DELETE(rc, DELETE_VICT)) {
-            return DELETE_VICT;
-          }
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            return DELETE_THIS;
-          }
-          return TRUE;
         }
+        if (IS_SET_DELETE(rc, DELETE_VICT) || IS_SET_DELETE(rc, DELETE_THIS))
+          return rc;
+        if (rc)
+          return TRUE;
+        // Opener rejected (FALSE) — fall through to normal attack
       }
     }
   }
