@@ -656,6 +656,27 @@ void procTellHistoryCleanup::run(const TPulse&) const {
     ") excess ON t.id = excess.id");
 }
 
+procShopLogCleanup::procShopLogCleanup(const int& p) {
+  trigger_pulse = p;
+  name = "procShopLogCleanup";
+}
+
+void procShopLogCleanup::run(const TPulse&) const {
+  TDatabase db(DB_SNEEZY);
+
+  // Retain 1 year of shop transaction logs.
+  // Batch limit prevents long locks on first run against large backlog.
+  db.query(
+    "DELETE FROM shoplog "
+    "WHERE logtime < DATE_SUB(NOW(), INTERVAL 365 DAY) "
+    "LIMIT 10000");
+
+  db.query(
+    "DELETE FROM shoplogjournalarchive "
+    "WHERE logtime < DATE_SUB(NOW(), INTERVAL 365 DAY) "
+    "LIMIT 10000");
+}
+
 procWeightVolumeFumble::procWeightVolumeFumble(const int& p) {
   trigger_pulse = p;
   name = "procWeightVolumeFumble";
@@ -1688,6 +1709,7 @@ int TMainSocket::gameLoop() {
   scheduler.add(new procCloseAccountingBooks(Pulse::MUDDAY));
   scheduler.add(new procQuerytimesCleanup(Pulse::MUDDAY));
   scheduler.add(new procTellHistoryCleanup(Pulse::MUDDAY));
+  scheduler.add(new procShopLogCleanup(Pulse::MUDDAY));
   scheduler.add(new procFactoryProduction(Pulse::MUDDAY));
 
   // pulse realhour

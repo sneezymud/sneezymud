@@ -2410,6 +2410,242 @@ void runMigrations() {
                      "ON c.corp_id = cb.corp_id AND c.bank = cb.shop_nr "
                      "WHERE cb.corp_id IS null"));
     },
+    // Add nullability constraints on core columns
+    [&]() {
+      vlogf(LOG_MISC, "Adding NOT NULL constraints to core columns");
+
+      // Fix any NULLs in numeric columns (should be zero per audit, but
+      // ensure ALTER won't fail)
+      sneezy.query("UPDATE player SET talens = 0 WHERE talens IS null");
+      sneezy.query("UPDATE player SET nutrition = 0 WHERE nutrition IS null");
+      sneezy.query("UPDATE account SET email = '' WHERE email IS null");
+      sneezy.query("UPDATE rent SET weight = 0 WHERE weight IS null");
+
+      // player.name - UNIQUE constraint makes NULL a logic error
+      modifyColumnType(sneezy, "player", "name", "varchar(80)", true);
+
+      // player.talens, player.nutrition
+      if (!columnIsType(sneezy, "player", "talens", "int(11)", true))
+        assert(sneezy.query(
+          "ALTER TABLE player MODIFY talens int(11) NOT NULL DEFAULT 0"));
+      if (!columnIsType(sneezy, "player", "nutrition", "int(11)", true))
+        assert(sneezy.query(
+          "ALTER TABLE player MODIFY nutrition int(11) NOT NULL DEFAULT 0"));
+
+      // account.name, account.passwd - required for login
+      modifyColumnType(sneezy, "account", "name", "varchar(80)", true);
+      modifyColumnType(sneezy, "account", "passwd", "varchar(255)", true);
+
+      // account.email
+      if (!columnIsType(sneezy, "account", "email", "varchar(80)", true))
+        assert(sneezy.query(
+          "ALTER TABLE account MODIFY email varchar(80) NOT NULL DEFAULT ''"));
+
+      // rent.weight - all other numeric rent columns are already NOT NULL
+      if (!columnIsType(sneezy, "rent", "weight", "double", true))
+        assert(sneezy.query(
+          "ALTER TABLE rent MODIFY weight double NOT NULL DEFAULT 0"));
+
+      // rent.owner_type - polymorphic discriminator must not be nullable.
+      // ENUM type string varies by MariaDB version, so check IS_NULLABLE
+      // directly instead of using columnIsType.
+      sneezy.query(
+        "SELECT IS_NULLABLE AS is_nullable "
+        "FROM information_schema.COLUMNS "
+        "WHERE TABLE_SCHEMA = 'sneezy' AND TABLE_NAME = 'rent' "
+        "AND COLUMN_NAME = 'owner_type'");
+      if (sneezy.fetchRow() && sstring(sneezy["is_nullable"]) == "YES")
+        assert(sneezy.query(
+          "ALTER TABLE rent MODIFY "
+          "owner_type ENUM('player','shop','room','mail') NOT NULL"));
+
+      // Shop log shop_nr is never null in practice - enforce it
+      modifyColumnType(sneezy, "shoplog", "shop_nr", "int(11)", true);
+      modifyColumnType(sneezy, "shoplogjournal", "shop_nr", "int(11)", true);
+      modifyColumnType(sneezy, "shoplogjournalarchive", "shop_nr", "int(11)",
+        true);
+    },
+    // Right-size text columns
+    [&]() {
+      vlogf(LOG_MISC, "Converting oversized text columns to appropriate types");
+
+      // shoplogjournal: mediumtext -> VARCHAR
+      modifyColumnType(sneezy, "shoplogjournal", "customer_name", "varchar(80)",
+        false);
+      modifyColumnType(sneezy, "shoplogjournal", "obj_name", "varchar(127)",
+        false);
+
+      // shoplogjournalarchive: same changes
+      modifyColumnType(sneezy, "shoplogjournalarchive", "customer_name",
+        "varchar(80)", false);
+      modifyColumnType(sneezy, "shoplogjournalarchive", "obj_name",
+        "varchar(127)", false);
+
+      // shoplogaccountchart: mediumtext -> VARCHAR(32)
+      modifyColumnType(sneezy, "shoplogaccountchart", "name", "varchar(32)",
+        false);
+
+      // board_message: mediumtext -> TEXT (64KB, not 16MB)
+      modifyColumnType(sneezy, "board_message", "post", "text", false);
+    },
+    // Convert char() to varchar() in mob tables
+    [&]() {
+      vlogf(LOG_MISC,
+        "Converting char() to varchar() in sneezy.mob and mob_extra");
+
+      // sneezy.mob
+      modifyColumnType(sneezy, "mob", "name", "varchar(127)", true);
+      modifyColumnType(sneezy, "mob", "short_desc", "varchar(127)", true);
+      modifyColumnType(sneezy, "mob", "long_desc", "varchar(255)", true);
+      modifyColumnType(sneezy, "mob", "local_sound", "varchar(255)", false);
+      modifyColumnType(sneezy, "mob", "adjacent_sound", "varchar(255)", false);
+
+      // sneezy.mob_extra
+      modifyColumnType(sneezy, "mob_extra", "keyword", "varchar(32)", true);
+      modifyColumnType(sneezy, "mob_extra", "description", "varchar(255)",
+        false);
+
+      // immortal.mob and mob_extra - same columns still use char()
+      modifyColumnType(immortal, "mob", "local_sound", "varchar(255)", false);
+      modifyColumnType(immortal, "mob", "adjacent_sound", "varchar(255)",
+        false);
+      modifyColumnType(immortal, "mob_extra", "keyword", "varchar(32)", true);
+      modifyColumnType(immortal, "mob_extra", "description", "varchar(255)",
+        false);
+    },
+    // Change zone.zone_enabled to tinyint(1)
+    [&]() {
+      vlogf(LOG_MISC, "Converting zone.zone_enabled to tinyint(1)");
+      sneezy.query(
+        "UPDATE zone SET zone_enabled = 0 WHERE zone_enabled IS null");
+      if (!columnIsType(sneezy, "zone", "zone_enabled", "tinyint(1)", true))
+        assert(
+          sneezy.query("ALTER TABLE zone "
+                       "MODIFY zone_enabled tinyint(1) NOT NULL DEFAULT 0"));
+    },
+    // Widen rent_obj_aff columns to match player_affect
+    [&]() {
+      vlogf(LOG_MISC,
+        "Widening rent_obj_aff columns to match player_affect types");
+
+      if (!columnIsType(sneezy, "rent_obj_aff", "modifier", "bigint(20)", true))
+        assert(
+          sneezy.query("ALTER TABLE rent_obj_aff "
+                       "MODIFY modifier bigint(20) NOT NULL DEFAULT 0"));
+      if (!columnIsType(sneezy, "rent_obj_aff", "modifier2", "bigint(20)",
+            true))
+        assert(
+          sneezy.query("ALTER TABLE rent_obj_aff "
+                       "MODIFY modifier2 bigint(20) NOT NULL DEFAULT 0"));
+      if (!columnIsType(sneezy, "rent_obj_aff", "bitvector",
+            "bigint(20) unsigned", true))
+        assert(sneezy.query(
+          "ALTER TABLE rent_obj_aff "
+          "MODIFY bitvector bigint(20) unsigned NOT NULL DEFAULT 0"));
+    },
+
+    // Add logtime index to shoplogjournalarchive and name snapshots,
+    // FKs, indexes to immortal_exchange_coin
+    [&]() {
+      vlogf(LOG_MISC,
+        "Adding logtime index to shoplogjournalarchive and name snapshot "
+        "columns, FKs, and indexes to immortal_exchange_coin");
+
+      // Add logtime index for time-based retention queries
+      if (!hasIndex(sneezy, "shoplogjournalarchive", "idx_sjarchive_logtime"))
+        assert(
+          sneezy.query("ALTER TABLE shoplogjournalarchive "
+                       "ADD INDEX idx_sjarchive_logtime (logtime)"));
+
+      // Add name snapshot columns to immortal_exchange_coin
+      if (!hasColumn(sneezy, "immortal_exchange_coin", "created_by_name"))
+        assert(sneezy.query(
+          "ALTER TABLE immortal_exchange_coin "
+          "ADD COLUMN created_by_name varchar(80) DEFAULT null, "
+          "ADD COLUMN created_for_name varchar(80) DEFAULT null, "
+          "ADD COLUMN redeemed_by_name varchar(80) DEFAULT null, "
+          "ADD COLUMN redeemed_for_name varchar(80) DEFAULT null"));
+
+      // Backfill names from player table.
+      // Idempotent: only updates rows where name is still null.
+      // Players already deleted get null names (history already lost).
+      sneezy.query(
+        "UPDATE immortal_exchange_coin SET created_by_name = "
+        "(SELECT name FROM player WHERE id = created_by) "
+        "WHERE created_by IS NOT null AND created_by_name IS null");
+      sneezy.query(
+        "UPDATE immortal_exchange_coin SET created_for_name = "
+        "(SELECT name FROM player WHERE id = created_for) "
+        "WHERE created_for IS NOT null AND created_for_name IS null");
+      sneezy.query(
+        "UPDATE immortal_exchange_coin SET redeemed_by_name = "
+        "(SELECT name FROM player WHERE id = redeemed_by) "
+        "WHERE redeemed_by IS NOT null AND redeemed_by_name IS null");
+      sneezy.query(
+        "UPDATE immortal_exchange_coin SET redeemed_for_name = "
+        "(SELECT name FROM player WHERE id = redeemed_for) "
+        "WHERE redeemed_for IS NOT null AND redeemed_for_name IS null");
+
+      // Add indexes on player ID columns (created before FKs so FK
+      // creation doesn't auto-create indexes with system-generated names)
+      if (!hasIndex(sneezy, "immortal_exchange_coin", "idx_iec_created_by"))
+        assert(
+          sneezy.query("ALTER TABLE immortal_exchange_coin "
+                       "ADD INDEX idx_iec_created_by (created_by)"));
+      if (!hasIndex(sneezy, "immortal_exchange_coin", "idx_iec_created_for"))
+        assert(
+          sneezy.query("ALTER TABLE immortal_exchange_coin "
+                       "ADD INDEX idx_iec_created_for (created_for)"));
+      if (!hasIndex(sneezy, "immortal_exchange_coin", "idx_iec_redeemed_by"))
+        assert(
+          sneezy.query("ALTER TABLE immortal_exchange_coin "
+                       "ADD INDEX idx_iec_redeemed_by (redeemed_by)"));
+      if (!hasIndex(sneezy, "immortal_exchange_coin", "idx_iec_redeemed_for"))
+        assert(
+          sneezy.query("ALTER TABLE immortal_exchange_coin "
+                       "ADD INDEX idx_iec_redeemed_for (redeemed_for)"));
+
+      // Add FKs with ON DELETE SET null. When a player is deleted,
+      // the ID becomes null but the name snapshot preserves who they were.
+      addForeignKey(sneezy, "immortal_exchange_coin", "created_by", "player",
+        "id", "SET null");
+      addForeignKey(sneezy, "immortal_exchange_coin", "created_for", "player",
+        "id", "SET null");
+      addForeignKey(sneezy, "immortal_exchange_coin", "redeemed_by", "player",
+        "id", "SET null");
+      addForeignKey(sneezy, "immortal_exchange_coin", "redeemed_for", "player",
+        "id", "SET null");
+    },
+
+    // Purge old shop log and journal archive entries. These two tables
+    // account for 88% of database size (~680 MB) and grow without bound.
+    // procShopLogCleanup handles ongoing retention; this clears the
+    // initial backlog so it doesn't take days of periodic ticks.
+    [&]() {
+      vlogf(LOG_MISC, "Purging old shop log and journal archive entries");
+
+      // Delete in batches to avoid oversized undo log
+      for (;;) {
+        sneezy.query(
+          "DELETE FROM shoplog "
+          "WHERE logtime < DATE_SUB(NOW(), INTERVAL 365 DAY) "
+          "LIMIT 100000");
+        if (sneezy.rowCount() == 0) {
+          break;
+        }
+      }
+
+      for (;;) {
+        sneezy.query(
+          "DELETE FROM shoplogjournalarchive "
+          "WHERE logtime < DATE_SUB(NOW(), INTERVAL 365 DAY) "
+          "LIMIT 100000");
+        if (sneezy.rowCount() == 0) {
+          break;
+        }
+      }
+    },
+
   };
 
   int oldVersion = getVersion(sneezy);
