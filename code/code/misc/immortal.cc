@@ -6677,9 +6677,11 @@ void TPerson::doBestow(const sstring& argument) {
         }
         coin_uid = 0;
         db.query(
-          "insert immortal_exchange_coin (created_by, created_for) select %i, "
-          "%i",
-          getPlayerID(), ch->getPlayerID());
+          "insert into immortal_exchange_coin "
+          "(created_by, created_for, created_by_name, created_for_name) "
+          "values (%i, %i, '%s', '%s')",
+          getPlayerID(), ch->getPlayerID(), getName().c_str(),
+          ch->getName().c_str());
         if (db.rowCount() == 1) {
           // insert succeeded
           db.query("select max(k_coin) as k_coin from immortal_exchange_coin");
@@ -6768,9 +6770,12 @@ void TPerson::doBestow(const sstring& argument) {
 
         if (redeem) {
           db.query(
-            "update immortal_exchange_coin set redeemed_by = %i, redeemed_for "
-            "= %i, date_redeemed = CURRENT_TIMESTAMP where k_coin = %i",
-            getPlayerID(), ch->getPlayerID(), coin->getSerialNumber());
+            "update immortal_exchange_coin set redeemed_by = %i, "
+            "redeemed_for = %i, redeemed_by_name = '%s', "
+            "redeemed_for_name = '%s', date_redeemed = CURRENT_TIMESTAMP "
+            "where k_coin = %i",
+            getPlayerID(), ch->getPlayerID(), getName().c_str(),
+            ch->getName().c_str(), coin->getSerialNumber());
           sendTo(
             format("Coin number %i crumbles with immortal redemption.\n\r") %
             coin->getSerialNumber());

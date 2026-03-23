@@ -1410,7 +1410,7 @@ int TShopOwned::doLogs(sstring arg) {
     if (!arg.empty()) {
       db.query(
         "select name, action, item, talens, shoptalens, shopvalue, logtime "
-        "from shoplog where shop_nr=%i and upper(name)=upper('%s') order by "
+        "from shoplog where shop_nr=%i and name='%s' order by "
         "logtime desc, action desc",
         shop_nr, arg.c_str());
     } else {

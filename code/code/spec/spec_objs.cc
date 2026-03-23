@@ -7437,11 +7437,12 @@ int ieComputer(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
       if (is_abbrev(arg3, "redeemed")) {
         sstring contents = "<o>Immortal Exchange Coin Redemption<1>\n\r";
         db.query(
-          "select p1.name as redeemed_for, p2.name as redeemed_by, count(*) as "
-          "coins, date_format(now(), '%%M %%e %%Y %%l:%%i %%p') as "
-          "date_printed from immortal_exchange_coin c1 left join player p1 on "
-          "p1.id = c1.redeemed_for left join player p2 on c1.redeemed_by = "
-          "p2.id group by p1.name, p2.name order by p1.name, p2.name;");
+          "select redeemed_for_name as redeemed_for, "
+          "redeemed_by_name as redeemed_by, count(*) as coins, "
+          "date_format(now(), '%%M %%e %%Y %%l:%%i %%p') as date_printed "
+          "from immortal_exchange_coin "
+          "group by redeemed_for_name, redeemed_by_name "
+          "order by redeemed_for_name, redeemed_by_name");
         if (db.fetchRow()) {
           contents +=
             format("<o>as of<1> <c>%s<1>\n\r\n\r") % db["date_printed"];
@@ -7462,11 +7463,12 @@ int ieComputer(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
       } else {
         sstring contents = "<g>Immortal Exchange Coin Distribution<1>\n\r";
         db.query(
-          "select p1.name as created_for, p2.name as created_by, count(*) as "
-          "coins, date_format(now(), '%%M %%e %%Y %%l:%%i %%p') as "
-          "date_printed from immortal_exchange_coin c1 left join player p1 on "
-          "p1.id = c1.created_for left join player p2 on c1.created_by = p2.id "
-          "group by p1.name, p2.name order by p1.name, p2.name;");
+          "select created_for_name as created_for, "
+          "created_by_name as created_by, count(*) as coins, "
+          "date_format(now(), '%%M %%e %%Y %%l:%%i %%p') as date_printed "
+          "from immortal_exchange_coin "
+          "group by created_for_name, created_by_name "
+          "order by created_for_name, created_by_name");
         if (db.fetchRow()) {
           contents +=
             format("<g>as of<1> <c>%s<1>\n\r\n\r") % db["date_printed"];
