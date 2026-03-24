@@ -1841,13 +1841,8 @@ void runMigrations() {
       addForeignKey(sneezy, "poll_vote", "poll_id", "poll", "poll_id",
         "CASCADE");
 
-      // board_message.board_vnum, factoryblueprint.vnum, and
-      // ship_destinations.room reference world-data tables (obj.vnum,
-      // room.vnum) but are NOT part of the world-data family that gets
-      // deleted and re-inserted together during `low mv*`. CASCADE would
-      // silently destroy these rows; RESTRICT would block the workflow.
-      // These FKs are deferred until `low mv*` is converted from
-      // DELETE+INSERT to UPSERT, at which point they become safe.
+      // FKs referencing world-data tables (mob.vnum, obj.vnum, room.vnum)
+      // are added in the world-data FK migration later in this file.
 
       // shopowned.tax_nr -> shopowned.shop_nr (self-referential)
       addForeignKey(sneezy, "shopowned", "tax_nr", "shopowned", "shop_nr",
@@ -2644,6 +2639,80 @@ void runMigrations() {
           break;
         }
       }
+    },
+
+    // Add FK constraints to world-data tables (mob.vnum, obj.vnum,
+    // room.vnum). Enabled by the low mv* UPSERT refactor - parent rows
+    // are no longer deleted during approve, so RESTRICT/CASCADE FKs are
+    // safe.
+    [&]() {
+      vlogf(LOG_MISC, "Adding FK constraints to world-data tables");
+
+      // Clean up orphaned roomexit.destination rows (exits to
+      // non-existent rooms in disabled zones, plus one broken lift
+      // exit with destination=-1).
+      sneezy.query(
+        "DELETE re FROM roomexit re "
+        "LEFT JOIN room r ON re.destination = r.vnum "
+        "WHERE r.vnum IS null");
+
+      // CASCADE FK tables - delete orphans
+      sneezy.query(
+        "DELETE FROM trophy WHERE mobvnum NOT IN (SELECT vnum FROM mob)");
+      sneezy.query(
+        "DELETE FROM quest_limbs WHERE mob_vnum NOT IN (SELECT vnum FROM mob)");
+      sneezy.query(
+        "DELETE FROM board_message WHERE board_vnum NOT IN (SELECT vnum FROM "
+        "obj)");
+      sneezy.query(
+        "DELETE FROM factoryblueprint WHERE vnum NOT IN (SELECT vnum FROM "
+        "obj)");
+
+      // Nullable RESTRICT FK columns - set null
+      sneezy.query(
+        "UPDATE property SET key_vnum=null WHERE key_vnum IS NOT null AND "
+        "key_vnum NOT IN (SELECT vnum FROM obj)");
+      sneezy.query(
+        "UPDATE property SET entrance=null WHERE entrance IS NOT null AND "
+        "entrance NOT IN (SELECT vnum FROM room)");
+
+      // Small RESTRICT FK tables - delete orphans (broken data)
+      sneezy.query("DELETE FROM pet WHERE vnum NOT IN (SELECT vnum FROM mob)");
+      sneezy.query(
+        "DELETE sd FROM ship_destinations sd LEFT JOIN mob m ON sd.vnum = "
+        "m.vnum WHERE m.vnum IS null");
+      sneezy.query(
+        "DELETE sm FROM ship_master sm LEFT JOIN mob m ON sm.captain_vnum = "
+        "m.vnum WHERE m.vnum IS null");
+      sneezy.query(
+        "DELETE sd FROM ship_destinations sd LEFT JOIN room r ON sd.room = "
+        "r.vnum WHERE r.vnum IS null");
+
+      // -> mob.vnum
+      addForeignKey(sneezy, "shop", "keeper", "mob", "vnum", "RESTRICT");
+      addForeignKey(sneezy, "trophy", "mobvnum", "mob", "vnum", "CASCADE");
+      addForeignKey(sneezy, "pet", "vnum", "mob", "vnum", "RESTRICT");
+      addForeignKey(sneezy, "quest_limbs", "mob_vnum", "mob", "vnum",
+        "CASCADE");
+      addForeignKey(sneezy, "ship_destinations", "vnum", "mob", "vnum",
+        "RESTRICT");
+      addForeignKey(sneezy, "ship_master", "captain_vnum", "mob", "vnum",
+        "RESTRICT");
+
+      // -> obj.vnum
+      addForeignKey(sneezy, "board_message", "board_vnum", "obj", "vnum",
+        "CASCADE");
+      addForeignKey(sneezy, "factoryblueprint", "vnum", "obj", "vnum",
+        "CASCADE");
+      addForeignKey(sneezy, "property", "key_vnum", "obj", "vnum", "RESTRICT");
+
+      // -> room.vnum
+      addForeignKey(sneezy, "shop", "in_room", "room", "vnum", "RESTRICT");
+      addForeignKey(sneezy, "property", "entrance", "room", "vnum", "RESTRICT");
+      addForeignKey(sneezy, "roomexit", "destination", "room", "vnum",
+        "RESTRICT");
+      addForeignKey(sneezy, "ship_destinations", "room", "room", "vnum",
+        "RESTRICT");
     },
 
   };
