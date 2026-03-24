@@ -1177,8 +1177,10 @@ void mvRoom(TPerson& ch, int playerId, int block, const sstring& rooms) {
 
   db_beta.query("begin");
 
+  // Pass 1: UPSERT all parent room rows. This ensures every room in the batch
+  // exists before pass 2 inserts roomexit rows that reference them via FK.
+  std::vector<int> foundVnums;
   for (auto vnum : vnums) {
-    //// room
     db_immo.query(
       "select vnum, x, y, z, name, description, zone, room_flag, sector, "
       "teletime, teletarg, telelook, river_speed, river_dir, capacity, height, "
@@ -1188,12 +1190,19 @@ void mvRoom(TPerson& ch, int playerId, int block, const sstring& rooms) {
     if (db_immo.fetchRow()) {
       ch.sendTo(format("Adding %i ('%s')\n") % vnum % db_immo["name"]);
 
-      db_beta.query("delete from room where vnum=%i", vnum);
       db_beta.query(
         "insert into room "
         "(vnum,x,y,z,name,description,zone,room_flag,sector,teletime,teletarg,"
         "telelook,river_speed,river_dir,capacity,height,spec) values "
-        "(%s,%s,%s,%s,'%s','%s',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+        "(%s,%s,%s,%s,'%s','%s',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) "
+        "ON DUPLICATE KEY UPDATE "
+        "x=VALUES(x), y=VALUES(y), z=VALUES(z), name=VALUES(name), "
+        "description=VALUES(description), zone=VALUES(zone), "
+        "room_flag=VALUES(room_flag), sector=VALUES(sector), "
+        "teletime=VALUES(teletime), teletarg=VALUES(teletarg), "
+        "telelook=VALUES(telelook), river_speed=VALUES(river_speed), "
+        "river_dir=VALUES(river_dir), capacity=VALUES(capacity), "
+        "height=VALUES(height), spec=VALUES(spec)",
         db_immo["vnum"].c_str(), db_immo["x"].c_str(), db_immo["y"].c_str(),
         db_immo["z"].c_str(), db_immo["name"].c_str(),
         db_immo["description"].c_str(), db_immo["zone"].c_str(),
@@ -1203,45 +1212,52 @@ void mvRoom(TPerson& ch, int playerId, int block, const sstring& rooms) {
         db_immo["river_dir"].c_str(), db_immo["capacity"].c_str(),
         db_immo["height"].c_str(), db_immo["spec"].c_str());
 
-      //// roomextra
-      db_beta.query("delete from roomextra where vnum=%i", vnum);
-
-      db_immo.query(
-        "select vnum, name, description from roomextra where player_id=%i and "
-        "vnum=%i and block=%i",
-        playerId, vnum, block);
-
-      while (db_immo.fetchRow()) {
-        db_beta.query(
-          "insert into roomextra (vnum, name, description) values (%s, '%s', "
-          "'%s')",
-          db_immo["vnum"].c_str(), db_immo["name"].c_str(),
-          db_immo["description"].c_str());
-      }
-
-      //// roomexit
-      db_beta.query("delete from roomexit where vnum=%i", vnum);
-
-      db_immo.query(
-        "select vnum, direction, name, description, type, condition_flag, "
-        "lock_difficulty, weight, key_num, destination from roomexit where "
-        "player_id=%i and vnum=%i and block=%i",
-        playerId, vnum, block);
-
-      while (db_immo.fetchRow()) {
-        db_beta.query(
-          "insert into roomexit "
-          "(vnum,direction,name,description,type,condition_flag,lock_"
-          "difficulty,weight,key_num,destination) values (%s, "
-          "%s,'%s','%s',%s,%s,%s,%s,%s,%s)",
-          db_immo["vnum"].c_str(), db_immo["direction"].c_str(),
-          db_immo["name"].c_str(), db_immo["description"].c_str(),
-          db_immo["type"].c_str(), db_immo["condition_flag"].c_str(),
-          db_immo["lock_difficulty"].c_str(), db_immo["weight"].c_str(),
-          db_immo["key_num"].c_str(), db_immo["destination"].c_str());
-      }
+      foundVnums.push_back(vnum);
     } else {
       ch.sendTo(format("Not found: %i\n") % vnum);
+    }
+  }
+
+  // Pass 2: Replace children for all rooms found in pass 1. Each db_immo
+  // fetchRow() loop completes before the next db_immo query, satisfying the
+  // shared-connection constraint.
+  for (auto vnum : foundVnums) {
+    //// roomextra
+    db_beta.query("delete from roomextra where vnum=%i", vnum);
+
+    db_immo.query(
+      "select vnum, name, description from roomextra where player_id=%i and "
+      "vnum=%i and block=%i",
+      playerId, vnum, block);
+
+    while (db_immo.fetchRow()) {
+      db_beta.query(
+        "insert into roomextra (vnum, name, description) values (%s, '%s', "
+        "'%s')",
+        db_immo["vnum"].c_str(), db_immo["name"].c_str(),
+        db_immo["description"].c_str());
+    }
+
+    //// roomexit
+    db_beta.query("delete from roomexit where vnum=%i", vnum);
+
+    db_immo.query(
+      "select vnum, direction, name, description, type, condition_flag, "
+      "lock_difficulty, weight, key_num, destination from roomexit where "
+      "player_id=%i and vnum=%i and block=%i",
+      playerId, vnum, block);
+
+    while (db_immo.fetchRow()) {
+      db_beta.query(
+        "insert into roomexit "
+        "(vnum,direction,name,description,type,condition_flag,lock_"
+        "difficulty,weight,key_num,destination) values (%s, "
+        "%s,'%s','%s',%s,%s,%s,%s,%s,%s)",
+        db_immo["vnum"].c_str(), db_immo["direction"].c_str(),
+        db_immo["name"].c_str(), db_immo["description"].c_str(),
+        db_immo["type"].c_str(), db_immo["condition_flag"].c_str(),
+        db_immo["lock_difficulty"].c_str(), db_immo["weight"].c_str(),
+        db_immo["key_num"].c_str(), db_immo["destination"].c_str());
     }
   }
 
@@ -1285,10 +1301,23 @@ void mvObj(TPerson& ch, int playerId, const sstring& rooms) {
         action_flag = action_flag - (1 << 4);
       }
 
-      db_beta.query("delete from obj where vnum=%i", vnum);
       db_beta.query(
-        "insert into obj values(%s, '%s', '%s', '%s', '%s', %s, %i, %s, %s, "
-        "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+        "insert into obj (vnum, name, short_desc, long_desc, action_desc, "
+        "type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, "
+        "can_be_seen, spec_proc, max_exist, max_struct, cur_struct, decay, "
+        "volume, material) "
+        "values (%s, '%s', '%s', '%s', '%s', %s, %i, %s, %s, %s, %s, %s, "
+        "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) "
+        "ON DUPLICATE KEY UPDATE "
+        "name=VALUES(name), short_desc=VALUES(short_desc), "
+        "long_desc=VALUES(long_desc), action_desc=VALUES(action_desc), "
+        "type=VALUES(type), action_flag=VALUES(action_flag), "
+        "wear_flag=VALUES(wear_flag), val0=VALUES(val0), val1=VALUES(val1), "
+        "val2=VALUES(val2), val3=VALUES(val3), weight=VALUES(weight), "
+        "price=VALUES(price), can_be_seen=VALUES(can_be_seen), "
+        "spec_proc=VALUES(spec_proc), max_exist=VALUES(max_exist), "
+        "max_struct=VALUES(max_struct), cur_struct=VALUES(cur_struct), "
+        "decay=VALUES(decay), volume=VALUES(volume), material=VALUES(material)",
         db_immo["vnum"].c_str(), db_immo["name"].c_str(),
         db_immo["short_desc"].c_str(), db_immo["long_desc"].c_str(),
         db_immo["action_desc"].c_str(), db_immo["type"].c_str(), action_flag,
@@ -1369,12 +1398,34 @@ void mvMob(TPerson& ch, int playerId, const sstring& rooms) {
       // clear this bit as set in create_mob.cc
       actions = convertTo<int>(db_immo["actions"]) & ~ACT_STRINGS_CHANGED;
 
-      db_beta.query("delete from mob where vnum=%i", vnum);
       db_beta.query(
-        "insert into mob values(%s, '%s', '%s', '%s', '%s', %i, %s, %s, %s, "
-        "'%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, "
-        "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', "
-        "'%s')",
+        "insert into mob (vnum, name, short_desc, long_desc, description, "
+        "actions, affects, faction, fact_perc, letter, attacks, class, level, "
+        "tohit, ac, hpbonus, damage_level, damage_precision, gold, race, "
+        "weight, height, str, bra, con, dex, agi, intel, wis, foc, per, cha, "
+        "kar, spe, pos, def_position, sex, spec_proc, skin, vision, "
+        "can_be_seen, max_exist, local_sound, adjacent_sound) "
+        "values (%s, '%s', '%s', '%s', '%s', %i, %s, %s, %s, '%s', %s, %s, "
+        "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, "
+        "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', '%s') "
+        "ON DUPLICATE KEY UPDATE "
+        "name=VALUES(name), short_desc=VALUES(short_desc), "
+        "long_desc=VALUES(long_desc), description=VALUES(description), "
+        "actions=VALUES(actions), affects=VALUES(affects), "
+        "faction=VALUES(faction), fact_perc=VALUES(fact_perc), "
+        "letter=VALUES(letter), attacks=VALUES(attacks), class=VALUES(class), "
+        "level=VALUES(level), tohit=VALUES(tohit), ac=VALUES(ac), "
+        "hpbonus=VALUES(hpbonus), damage_level=VALUES(damage_level), "
+        "damage_precision=VALUES(damage_precision), gold=VALUES(gold), "
+        "race=VALUES(race), weight=VALUES(weight), height=VALUES(height), "
+        "str=VALUES(str), bra=VALUES(bra), con=VALUES(con), dex=VALUES(dex), "
+        "agi=VALUES(agi), intel=VALUES(intel), wis=VALUES(wis), "
+        "foc=VALUES(foc), per=VALUES(per), cha=VALUES(cha), kar=VALUES(kar), "
+        "spe=VALUES(spe), pos=VALUES(pos), def_position=VALUES(def_position), "
+        "sex=VALUES(sex), spec_proc=VALUES(spec_proc), skin=VALUES(skin), "
+        "vision=VALUES(vision), can_be_seen=VALUES(can_be_seen), "
+        "max_exist=VALUES(max_exist), local_sound=VALUES(local_sound), "
+        "adjacent_sound=VALUES(adjacent_sound)",
         db_immo["vnum"].c_str(), db_immo["name"].c_str(),
         db_immo["short_desc"].c_str(), db_immo["long_desc"].c_str(),
         db_immo["description"].c_str(), actions, db_immo["affects"].c_str(),
@@ -1492,8 +1543,9 @@ void mvResponse(TPerson& ch, int playerId, const sstring& builderName,
       playerId, vnum);
 
     if (immDb.fetchRow()) {
-      prodDb.query("delete from mobresponses where vnum=%i", vnum);
-      prodDb.query("insert into mobresponses (vnum, response) values (%s,'%s')",
+      prodDb.query(
+        "insert into mobresponses (vnum, response) values (%s, '%s') "
+        "ON DUPLICATE KEY UPDATE response=VALUES(response)",
         immDb["vnum"].c_str(), immDb["response"].c_str());
       ch.sendTo(format("Moved response for vnum %i.\n\r") % vnum);
     } else {

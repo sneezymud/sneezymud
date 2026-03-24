@@ -4,7 +4,7 @@ Google Test-based tests for SneezyMUD, run via `make test`.
 
 ```
 tests/cpp/
-  unit/           Unit tests - no database or game server
+  unit/           Unit and integration tests
   CMakeLists.txt  Auto-discovers *_test.cc files in unit/
   README.md
 ```
@@ -55,10 +55,20 @@ The fixture handles a complex cleanup sequence: severing descriptor links before
 
 Do not use when:
 
-- You need a database connection, disk files, or a running server
-- You're testing how systems interact (commands, AI responses, game loops)
+- You need a **live database** - use `DatabaseFixture` instead (see below)
+- You're testing how systems interact through the game interface (commands, AI responses, game loops) - use the **functional suite** instead
 
-If you find yourself needing a running server, use the **functional suite** instead.
+For tests that need a database connection, inherit from `DatabaseFixture` (`unit/database_fixture.h`), which extends `GameFixture` with:
+
+- `dbExecute(db, sql)` - run SQL and assert success
+- `dbQueryScalar(db, sql)` - query a single scalar value (returns empty string if no rows)
+- `dbCleanupLater(db, sql)` - register a cleanup query for TearDown (register child table deletes before parent table deletes)
+
+`DatabaseFixture` probes both `DB_SNEEZY` and `DB_IMMORTAL` at suite startup. If either database is unreachable (e.g., CI without MariaDB), all tests in the suite are skipped via `GTEST_SKIP()` rather than failed.
+
+When testing functions that use `BEGIN`/`COMMIT` internally (like the `low mv*` commands), all setup queries must happen before calling the function, and all verification queries after. This is because all `TDatabase` instances of the same `dbTypeT` share a single `MYSQL*` connection - a `BEGIN` on one instance affects all of them.
+
+Functions that live in `.cc` files without headers (like the `mv*` functions in `cmd_low.cc`) can be tested via `extern` declarations in the test file.
 
 ### Functional tests (`tests/functional/`, `make test-func`)
 
