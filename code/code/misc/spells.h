@@ -602,6 +602,10 @@ enum spellNumT {
 
   // end of generic
 
+  // late-added true skills appended here to preserve existing numbering
+  SKILL_RESOURCEFULNESS,
+  SKILL_SCRUTINY,
+
   // keep this as the last of the true skills
   MAX_SKILL,
 

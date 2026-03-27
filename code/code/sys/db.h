@@ -20,6 +20,19 @@
 
 extern bool bootTime;
 
+struct CheckgearSourceInfo {
+    int mobVnum;
+    sstring mobName;
+    sstring zoneName;
+};
+
+struct CheckgearGearInfo {
+    int objVnum;
+    sstring objName;
+    int slot;
+    int chance;
+};
+
 const int MAX_OBJ_AFFECT = 5;
 
 class File {
@@ -89,6 +102,7 @@ int create_entry(char* name);
 void zone_update(void);
 int real_object(int, bool silent = false);
 int real_mobile(int);
+void rebuildCheckgearCaches();
 
 // forward class decl
 class resetCom;
@@ -316,5 +330,7 @@ class resetQElement {
 };
 
 extern std::queue<sstring> queryqueue;
+extern std::vector<std::vector<CheckgearSourceInfo>> obj_load_sources_cache;
+extern std::vector<std::vector<CheckgearGearInfo>> mob_gear_cache;
 
 void markProp(TObj& obj);

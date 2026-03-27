@@ -648,6 +648,7 @@ class TObj : public TThing {
     virtual void lookObj(TBeing*, int) const;
     virtual void examineObj(TBeing*) const {}
     virtual void fillMe(const TBeing*, liqTypeT);
+    void objLoadSource(TBeing*) const;
     virtual void pourMeOut(TBeing*);
     virtual void pourMeIntoDrink2(TBeing*, TBaseCup*);
     virtual void pourMeIntoDrink1(TBeing*, TObj*);
