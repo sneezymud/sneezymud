@@ -230,13 +230,7 @@ namespace {
   }
 }  // namespace
 
-bool TBeing::vineBleedLeg(int affLevel) {
-  const int luckyBonus = isLucky(levelLuckModifier(affLevel))
-                           ? 5 + std::max(0, GetMaxLevel() - affLevel)
-                           : 0;
-  if (isTough(luckyBonus) || isUndead())
-    return false;
-
+void TBeing::vineBleedLeg(int affLevel) {
   wearSlotT limb;
   if (isFourLegged()) {
     limb = percentChance(50) ? (percentChance(50) ? WEAR_LEG_R : WEAR_LEG_L)
@@ -247,15 +241,31 @@ bool TBeing::vineBleedLeg(int affLevel) {
   if (!hasPart(limb))
     limb = getRandomPart(PART_MISSING);
 
-  if (limb == WEAR_NOWHERE || isImmune(IMMUNE_BLEED, limb))
-    return false;
+  if (limb == WEAR_NOWHERE)
+    return;
 
-  if (isLimbFlags(limb, PART_BLEEDING))
-    incrementBleedStack(limb, 250);
-  else
-    rawBleed(limb, 50, SILENT_NO, CHECK_IMMUNITY_YES);
+  const int luckyBonus = isLucky(levelLuckModifier(affLevel))
+                           ? 5 + std::max(0, GetMaxLevel() - affLevel)
+                           : 0;
 
-  return true;
+  // Vines always squeeze the limb
+  int damage = ::number(affLevel / 2, affLevel);
+  if (isTough(luckyBonus))
+    damage /= 2;
+  hurtLimb(damage, limb);
+  sendTo(format("The vines dig into your %s!\n\r") % describeBodySlot(limb));
+  act(format("The vines dig into $n's %s!") % describeBodySlot(limb),
+    true, this, nullptr, nullptr, TO_ROOM);
+
+  // Living creatures can also bleed
+  if (!isUndead() && !isImmune(IMMUNE_BLEED, limb)) {
+    if (isLimbFlags(limb, PART_BLEEDING))
+      incrementBleedStack(limb, 250);
+    else
+      rawBleed(limb, 50, SILENT_NO, CHECK_IMMUNITY_YES);
+    sendTo("The vines tear at your flesh!\n\r");
+    act("The vines tear at $n's flesh!", true, this, nullptr, nullptr, TO_ROOM);
+  }
 }
 
 bool TBeing::validMove(dirTypeT cmd) {
@@ -306,10 +316,7 @@ bool TBeing::validMove(dirTypeT cmd) {
         if (!isPc())
           setMove(getMove() / 2);
 
-        if (vineBleedLeg(aff->level)) {
-          sendTo("The vines tear at your flesh!\n\r");
-          act("The vines tear at $n's flesh!", true, this, nullptr, nullptr, TO_ROOM);
-        }
+        vineBleedLeg(aff->level);
 
         return false;
       } else {
@@ -318,8 +325,8 @@ bool TBeing::validMove(dirTypeT cmd) {
         for (auto* vine = affected; vine; vine = vine->next)
           if (vine->type == SPELL_LIVING_VINES)
             vine->duration = std::max(0, vine->duration - 400);
-        sendTo("You manage to slip free from the vines!\n\r");
-        act("$n manages to slip free from the vines!", true, this, nullptr, nullptr, TO_ROOM);
+        sendTo("You force your way through the mass of vines entangling you!\n\r");
+        act("$n forces $s way through the mass of vines entangling $m!", true, this, nullptr, nullptr, TO_ROOM);
       }
       break;
     }
@@ -2726,13 +2733,23 @@ void TBeing::doStand() {
   if (prevPos != POSITION_STANDING && getPosition() == POSITION_STANDING) {
     for (affectedData* aff = affected; aff; aff = aff->next) {
       if (aff->type == SPELL_LIVING_VINES) {
-        if (vineBleedLeg(aff->level)) {
-          sendTo("The vines tear at you as you struggle to your feet!\n\r");
-          act("The vines tear at $n as $e struggles to $s feet!", true, this, nullptr, nullptr, TO_ROOM);
+        const int luckyBonus = isLucky(levelLuckModifier(aff->level))
+                                 ? 5 + std::max(0, GetMaxLevel() - static_cast<int>(aff->level))
+                                 : 0;
+        if (!isAgile(luckyBonus)) {
+          sendTo("You struggle to your feet against the mass of vines!\n\r");
+          act("$n struggles to $s feet against the mass of vines!", true, this, nullptr, nullptr, TO_ROOM);
+          vineBleedLeg(aff->level);
+          for (auto* vine = affected; vine; vine = vine->next)
+            if (vine->type == SPELL_LIVING_VINES)
+              vine->duration = std::max(0, vine->duration - 800);
+        } else {
+          sendTo("You manage to stand, despite the vines entangling you.\n\r");
+          act("$n manages to stand, despite the vines entangling $m.", true, this, nullptr, nullptr, TO_ROOM);
+          for (auto* vine = affected; vine; vine = vine->next)
+            if (vine->type == SPELL_LIVING_VINES)
+              vine->duration = std::max(0, vine->duration - 400);
         }
-        for (auto* vine = affected; vine; vine = vine->next)
-          if (vine->type == SPELL_LIVING_VINES)
-            vine->duration = std::max(0, vine->duration - 800);
         break;
       }
     }

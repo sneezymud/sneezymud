@@ -284,11 +284,23 @@ int TMonster::standUp() {
         !dynamic_cast<TBeing*>(riding))) {
     for (affectedData* aff = affected; aff; aff = aff->next) {
       if (aff->type == SPELL_LIVING_VINES) {
-        if (vineBleedLeg(aff->level)) {
-          act("The vines tear at $n as $e struggles to $s feet!", true, this, nullptr, nullptr, TO_ROOM);
-          act("The vines tear at you as you struggle to your feet!", true, this, nullptr, nullptr, TO_CHAR);
+        const int luckyBonus = isLucky(levelLuckModifier(aff->level))
+                                 ? 5 + std::max(0, GetMaxLevel() - static_cast<int>(aff->level))
+                                 : 0;
+        if (!isAgile(luckyBonus)) {
+          act("$n struggles to $s feet against the mass of vines!", true, this, nullptr, nullptr, TO_ROOM);
+          act("You struggle to your feet against the mass of vines!", true, this, nullptr, nullptr, TO_CHAR);
+          vineBleedLeg(aff->level);
+          for (auto* vine = affected; vine; vine = vine->next)
+            if (vine->type == SPELL_LIVING_VINES)
+              vine->duration = std::max(0, vine->duration - 800);
+        } else {
+          act("$n manages to stand, despite the vines entangling $m.", true, this, nullptr, nullptr, TO_ROOM);
+          act("You manage to stand, despite the vines entangling you.", true, this, nullptr, nullptr, TO_CHAR);
+          for (auto* vine = affected; vine; vine = vine->next)
+            if (vine->type == SPELL_LIVING_VINES)
+              vine->duration = std::max(0, vine->duration - 400);
         }
-        aff->duration = std::max(0, aff->duration - 800);
         break;
       }
     }
