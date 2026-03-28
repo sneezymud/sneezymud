@@ -135,20 +135,22 @@ class LowMvTest : public DatabaseFixture {
     }
 
     void insertImmortalRooms() {
-      dbExecute(DB_IMMORTAL, std::format(
-        "INSERT INTO room (vnum, x, y, z, name, description, zone, "
-        "room_flag, sector, teletime, teletarg, telelook, river_speed, "
-        "river_dir, capacity, height, spec, player_id, block) "
-        "VALUES (99901, 0, 0, 0, 'Test Room Alpha', 'A test room.', 999, "
-        "0, 0, 0, 0, 0, 0, 0, 0, 100, 0, {}, 1)",
-        playerId));
-      dbExecute(DB_IMMORTAL, std::format(
-        "INSERT INTO room (vnum, x, y, z, name, description, zone, "
-        "room_flag, sector, teletime, teletarg, telelook, river_speed, "
-        "river_dir, capacity, height, spec, player_id, block) "
-        "VALUES (99902, 0, 0, 0, 'Test Room Beta', 'Another test room.', "
-        "999, 0, 0, 0, 0, 0, 0, 0, 0, 100, 0, {}, 1)",
-        playerId));
+      dbExecute(DB_IMMORTAL,
+        std::format(
+          "INSERT INTO room (vnum, x, y, z, name, description, zone, "
+          "room_flag, sector, teletime, teletarg, telelook, river_speed, "
+          "river_dir, capacity, height, spec, player_id, block) "
+          "VALUES (99901, 0, 0, 0, 'Test Room Alpha', 'A test room.', 0, "
+          "0, 0, 0, 0, 0, 0, 0, 0, 100, 0, {}, 1)",
+          playerId));
+      dbExecute(DB_IMMORTAL,
+        std::format(
+          "INSERT INTO room (vnum, x, y, z, name, description, zone, "
+          "room_flag, sector, teletime, teletarg, telelook, river_speed, "
+          "river_dir, capacity, height, spec, player_id, block) "
+          "VALUES (99902, 0, 0, 0, 'Test Room Beta', 'Another test room.', "
+          "0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 0, {}, 1)",
+          playerId));
 
       // Room 99901 south (direction 2) to 99902
       dbExecute(DB_IMMORTAL, std::format(
@@ -230,11 +232,10 @@ TEST_F(LowMvTest, MvMobUpdatesExistingMobAndReplacesChildData) {
 TEST_F(LowMvTest, MvMobPreservesExternalFkDuringUpdate) {
   registerMobCleanup();
 
-  // Create mob in sneezy via mvMob
   insertImmortalMob();
   mvMob(*tc->ch, playerId, "99901");
 
-  // Insert a trophy referencing this mob
+  // Trophy row references this mob via FK
   dbExecute(DB_SNEEZY, std::format(
     "INSERT INTO trophy (player_id, mobvnum, count, totalcount) "
     "VALUES ({}, 99901, 1, 1)", playerId));
@@ -245,7 +246,6 @@ TEST_F(LowMvTest, MvMobPreservesExternalFkDuringUpdate) {
     "WHERE vnum = 99901 AND player_id = {}", playerId));
   mvMob(*tc->ch, playerId, "99901");
 
-  // Mob was updated
   EXPECT_EQ(dbQueryScalar(DB_SNEEZY,
     "SELECT short_desc FROM mob WHERE vnum = 99901"),
     "post-trophy update");
@@ -278,6 +278,39 @@ TEST_F(LowMvTest, MvMobHandlesSpecialCharacters) {
   EXPECT_EQ(dbQueryScalar(DB_SNEEZY,
     "SELECT name FROM mob WHERE vnum = 99901"),
     "baker's apprentice test");
+}
+
+TEST_F(LowMvTest, MvMobTransfersMobImmChildData) {
+  registerMobCleanup();
+
+  insertImmortalMob();
+  TDatabase db(DB_IMMORTAL);
+  db.query(
+    "INSERT INTO mob_imm (vnum, type, amt, player_id) "
+    "VALUES (99901, 5, 100, %i)",
+    playerId);
+
+  mvMob(*tc->ch, playerId, "99901");
+
+  EXPECT_EQ(dbQueryScalar(DB_SNEEZY,
+              "SELECT amt FROM mob_imm WHERE vnum = 99901 AND type = 5"),
+    "100");
+}
+
+TEST_F(LowMvTest, MvMobHandlesMultipleVnums) {
+  registerMobCleanup();
+
+  insertImmortalMob(99901, "first mob");
+  insertImmortalMob(99902, "second mob");
+
+  mvMob(*tc->ch, playerId, "99901 99902");
+
+  EXPECT_EQ(
+    dbQueryScalar(DB_SNEEZY, "SELECT short_desc FROM mob WHERE vnum = 99901"),
+    "first mob");
+  EXPECT_EQ(
+    dbQueryScalar(DB_SNEEZY, "SELECT short_desc FROM mob WHERE vnum = 99902"),
+    "second mob");
 }
 
 // -------------------------------------------------------------------
@@ -339,6 +372,72 @@ TEST_F(LowMvTest, MvObjUpdatesExistingObjAndReplacesChildData) {
     "1");
 }
 
+TEST_F(LowMvTest, MvObjTransfersObjaffectChildData) {
+  registerObjCleanup();
+
+  insertImmortalObj();
+  TDatabase db(DB_IMMORTAL);
+  db.query(
+    "INSERT INTO objaffect (vnum, type, mod1, mod2, player_id) "
+    "VALUES (99901, 3, 10, 0, %i)",
+    playerId);
+
+  mvObj(*tc->ch, playerId, "99901");
+
+  EXPECT_EQ(dbQueryScalar(DB_SNEEZY,
+              "SELECT mod1 FROM objaffect WHERE vnum = 99901 AND type = 3"),
+    "10");
+}
+
+TEST_F(LowMvTest, MvObjHandlesSpecialCharacters) {
+  registerObjCleanup();
+
+  insertImmortalObj();
+  mvObj(*tc->ch, playerId, "99901");
+
+  TDatabase updater(DB_IMMORTAL);
+  updater.query(
+    "UPDATE obj SET short_desc='%s', name='%s' "
+    "WHERE vnum=99901 AND player_id=%i",
+    "the baker's rolling pin", "baker's rolling pin test", playerId);
+
+  mvObj(*tc->ch, playerId, "99901");
+
+  EXPECT_EQ(
+    dbQueryScalar(DB_SNEEZY, "SELECT short_desc FROM obj WHERE vnum = 99901"),
+    "the baker's rolling pin");
+}
+
+TEST_F(LowMvTest, MvObjPreservesExternalFkDuringUpdate) {
+  registerObjCleanup();
+
+  insertImmortalObj();
+  mvObj(*tc->ch, playerId, "99901");
+
+  // Insert a rent row referencing this obj (rent.vnum FK)
+  dbExecute(DB_SNEEZY,
+    "INSERT INTO rent (rent_id, owner, owner_type, vnum, val0, val1, val2, "
+    "val3, extra_flags, weight, bitvector, cur_struct, max_struct, "
+    "decay, material, volume, price) "
+    "VALUES (99905, 0, 'player', 99901, 0, 0, 0, 0, 0, 1, 0, 100, 100, "
+    "0, 0, 1, 0)");
+  dbCleanupLater(DB_SNEEZY, "DELETE FROM rent WHERE rent_id = 99905");
+
+  dbExecute(DB_IMMORTAL,
+    std::format("UPDATE obj SET short_desc = 'post-rent update' "
+                "WHERE vnum = 99901 AND player_id = {}",
+      playerId));
+  mvObj(*tc->ch, playerId, "99901");
+
+  EXPECT_EQ(
+    dbQueryScalar(DB_SNEEZY, "SELECT short_desc FROM obj WHERE vnum = 99901"),
+    "post-rent update");
+  EXPECT_EQ(
+    dbQueryScalar(DB_SNEEZY, "SELECT COUNT(*) FROM rent WHERE rent_id = 99905"),
+    "1")
+    << "Rent row should survive obj UPSERT (proves UPSERT, not DELETE+INSERT)";
+}
+
 // -------------------------------------------------------------------
 // mvRoom tests
 // -------------------------------------------------------------------
@@ -354,7 +453,6 @@ TEST_F(LowMvTest, MvRoomInsertsWithCrossReferencingExitsAndRoomextra) {
 
   mvRoom(*tc->ch, playerId, 1, "99901-99902");
 
-  // Both rooms exist
   EXPECT_EQ(dbQueryScalar(DB_SNEEZY,
     "SELECT name FROM room WHERE vnum = 99901"),
     "Test Room Alpha");
@@ -362,7 +460,7 @@ TEST_F(LowMvTest, MvRoomInsertsWithCrossReferencingExitsAndRoomextra) {
     "SELECT name FROM room WHERE vnum = 99902"),
     "Test Room Beta");
 
-  // Cross-referencing exits (tests two-pass: rooms first, exits second)
+  // Cross-referencing exits work because mvRoom inserts rooms before exits
   EXPECT_EQ(dbQueryScalar(DB_SNEEZY,
     "SELECT destination FROM roomexit WHERE vnum = 99901 AND direction = 2"),
     "99902");
@@ -370,7 +468,6 @@ TEST_F(LowMvTest, MvRoomInsertsWithCrossReferencingExitsAndRoomextra) {
     "SELECT destination FROM roomexit WHERE vnum = 99902 AND direction = 0"),
     "99901");
 
-  // Roomextra child data
   EXPECT_EQ(dbQueryScalar(DB_SNEEZY,
     "SELECT name FROM roomextra WHERE vnum = 99901"),
     "test sign");
@@ -410,12 +507,11 @@ TEST_F(LowMvTest, MvRoomDropsExitsToNonExistentRooms) {
 
   mvRoom(*tc->ch, playerId, 1, "99901");
 
-  // Room still exists
   EXPECT_EQ(dbQueryScalar(DB_SNEEZY,
     "SELECT name FROM room WHERE vnum = 99901"),
     "Test Room Alpha");
 
-  // Valid south exit survived
+  // Valid south exit survived despite invalid east exit failing
   EXPECT_EQ(dbQueryScalar(DB_SNEEZY,
     "SELECT destination FROM roomexit WHERE vnum = 99901 AND direction = 2"),
     "99902");
@@ -424,6 +520,88 @@ TEST_F(LowMvTest, MvRoomDropsExitsToNonExistentRooms) {
   EXPECT_EQ(dbQueryScalar(DB_SNEEZY,
     "SELECT COUNT(*) FROM roomexit WHERE vnum = 99901 AND direction = 1"),
     "0");
+}
+
+TEST_F(LowMvTest, MvRoomSkipsVnumsNotInImmortalDb) {
+  registerRoomCleanup();
+
+  insertImmortalRooms();
+  // Move vnums 99901-99903, but 99903 doesn't exist in immortal
+  mvRoom(*tc->ch, playerId, 1, "99901-99903");
+
+  EXPECT_EQ(
+    dbQueryScalar(DB_SNEEZY, "SELECT COUNT(*) FROM room WHERE vnum = 99901"),
+    "1");
+  EXPECT_EQ(
+    dbQueryScalar(DB_SNEEZY, "SELECT COUNT(*) FROM room WHERE vnum = 99902"),
+    "1");
+  EXPECT_EQ(
+    dbQueryScalar(DB_SNEEZY, "SELECT COUNT(*) FROM room WHERE vnum = 99903"),
+    "0")
+    << "Room not in immortal DB should not appear in sneezy";
+}
+
+TEST_F(LowMvTest, MvRoomUpdatesExistingExits) {
+  registerRoomCleanup();
+
+  insertImmortalRooms();
+  mvRoom(*tc->ch, playerId, 1, "99901-99902");
+
+  EXPECT_EQ(dbQueryScalar(DB_SNEEZY,
+              "SELECT type FROM roomexit WHERE vnum = 99901 AND direction = 2"),
+    "0");
+
+  dbExecute(DB_IMMORTAL,
+    std::format(
+      "UPDATE roomexit SET type = 1 WHERE vnum = 99901 AND direction = 2 "
+      "AND player_id = {}",
+      playerId));
+
+  mvRoom(*tc->ch, playerId, 1, "99901-99902");
+
+  EXPECT_EQ(dbQueryScalar(DB_SNEEZY,
+              "SELECT type FROM roomexit WHERE vnum = 99901 AND direction = 2"),
+    "1");
+}
+
+TEST_F(LowMvTest, MvRoomStoresNullZoneForNegativeOne) {
+  registerRoomCleanup();
+
+  dbExecute(DB_IMMORTAL,
+    std::format("INSERT INTO room (vnum, x, y, z, name, description, zone, "
+                "room_flag, sector, teletime, teletarg, telelook, river_speed, "
+                "river_dir, capacity, height, spec, player_id, block) "
+                "VALUES (99901, 0, 0, 0, 'Zoneless Room', 'No zone.', null, "
+                "0, 0, 0, 0, 0, 0, 0, 0, 100, 0, {}, 1)",
+      playerId));
+
+  mvRoom(*tc->ch, playerId, 1, "99901");
+
+  EXPECT_EQ(dbQueryScalar(DB_SNEEZY,
+              "SELECT COALESCE(zone, 'null') FROM room WHERE vnum = 99901"),
+    "null")
+    << "Room with no zone should store null, not -1";
+}
+
+TEST_F(LowMvTest, MvRoomStoresValidZone) {
+  registerRoomCleanup();
+
+  auto validZone = dbQueryScalar(DB_SNEEZY, "SELECT MIN(zone_nr) FROM zone");
+  ASSERT_FALSE(validZone.empty());
+
+  dbExecute(DB_IMMORTAL,
+    std::format("INSERT INTO room (vnum, x, y, z, name, description, zone, "
+                "room_flag, sector, teletime, teletarg, telelook, river_speed, "
+                "river_dir, capacity, height, spec, player_id, block) "
+                "VALUES (99901, 0, 0, 0, 'Zoned Room', 'Has zone.', {}, "
+                "0, 0, 0, 0, 0, 0, 0, 0, 100, 0, {}, 1)",
+      validZone, playerId));
+
+  mvRoom(*tc->ch, playerId, 1, "99901");
+
+  EXPECT_EQ(
+    dbQueryScalar(DB_SNEEZY, "SELECT zone FROM room WHERE vnum = 99901"),
+    validZone);
 }
 
 // -------------------------------------------------------------------
