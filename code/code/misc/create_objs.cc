@@ -287,7 +287,7 @@ void ObjLoad(TBeing* ch, int vnum) {
 
   *ch += *o;
 }
-static void ObjSave(TBeing* ch, TObj* o, int vnum) {
+void ObjSave(TBeing* ch, TObj* o, int vnum) {
   ch->sendTo("Saving.\n\r");
 
   int tmp1, tmp2, tmp3, tmp4;

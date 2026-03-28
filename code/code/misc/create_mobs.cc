@@ -262,7 +262,7 @@ static void TBeingLoad(TBeing* ch, int vnum) {
   }
 }
 
-static void TBeingSave(TBeing* ch, TMonster* mob, int vnum) {
+void TBeingSave(TBeing* ch, TMonster* mob, int vnum) {
   if (mob->name.empty() || mob->getDescr().empty() || mob->shortDescr.empty() ||
       mob->getLongDesc().empty()) {
     ch->sendTo("Your mob is missing one or more important strings.\n\r");
@@ -555,7 +555,7 @@ static void mlist(TPerson* ch, bool zone = false) {
   ch->desc->page_string(longstr, SHOWNOW_NO, ALLOWREP_YES);
 }
 
-static void mremove(TBeing* ch, int vnum) {
+void mremove(TBeing* ch, int vnum) {
   // delete a mob from a player's immortal file
   TDatabase db(DB_IMMORTAL);
 

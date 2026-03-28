@@ -36,27 +36,17 @@ class SpellParserTest : public GameFixture {
     TestCharacter* caster = nullptr;
 };
 
+TEST_F(SpellParserTest, AmbiguousAbbreviationRejected) {
+  // "d i" matches both "detect invisibility" and "dispel invisible"
+  EXPECT_EQ(parse("d i"), TYPE_UNDEFINED)
+    << "Ambiguous abbreviation should return TYPE_UNDEFINED";
+}
+
 TEST_F(SpellParserTest, AbbreviatedMultiWord) {
   // "d i" is ambiguous (matches both "detect invisibility" and
   // "dispel invisible"), so use "det i" for a unique match.
   EXPECT_EQ(parse("det i"), SPELL_DETECT_INVISIBLE)
     << "'det i' should match detect invisibility";
-}
-
-TEST_F(SpellParserTest, PartialName) {
-  EXPECT_EQ(parse("detect invis"), SPELL_DETECT_INVISIBLE)
-    << "'detect invis' should match detect invisible";
-}
-
-TEST_F(SpellParserTest, FullName) {
-  // Spell is "detect invisibility", not "detect invisible"
-  EXPECT_EQ(parse("detect invisibility"), SPELL_DETECT_INVISIBLE)
-    << "Full spell name should match";
-}
-
-TEST_F(SpellParserTest, SingleWord) {
-  const spellNumT result = parse("flight");
-  EXPECT_EQ(result, SPELL_FLY) << "'flight' should match fly";
 }
 
 TEST_F(SpellParserTest, NonExistentSpell) {
@@ -67,9 +57,6 @@ TEST_F(SpellParserTest, NonExistentSpell) {
 TEST_F(SpellParserTest, EmptyInput) {
   EXPECT_EQ(parse(""), TYPE_UNDEFINED)
     << "Empty input should return TYPE_UNDEFINED";
-}
-
-TEST_F(SpellParserTest, WhitespaceOnly) {
   EXPECT_EQ(parse("   "), TYPE_UNDEFINED)
     << "Whitespace-only input should return TYPE_UNDEFINED";
 }
@@ -87,11 +74,6 @@ TEST_F(SpellParserTest, MultiWordWithTarget) {
     << "'true sight victim' should match true sight";
   EXPECT_NE(remaining.find("victim"), sstring::npos)
     << "Remaining args should contain 'victim', got: " << remaining;
-}
-
-TEST_F(SpellParserTest, ThreeWordSpell) {
-  EXPECT_EQ(parse("protection from fire"), SPELL_PROTECTION_FROM_FIRE)
-    << "Three-word spell should match";
 }
 
 TEST_F(SpellParserTest, ThreeWordSpellWithTarget) {

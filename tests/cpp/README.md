@@ -70,6 +70,38 @@ When testing functions that use `BEGIN`/`COMMIT` internally (like the `low mv*` 
 
 Functions that live in `.cc` files without headers (like the `mv*` functions in `cmd_low.cc`) can be tested via `extern` declarations in the test file.
 
+For tests that need mob/obj index data, inherit from `WorldFixture` (`unit/world_fixture.h`), which extends `DatabaseFixture` with:
+
+- `insertTestMob(vnum, name, level)` - creates a synthetic `mob_index` entry at the given vnum. Use vnums 99000-99999 to avoid collisions with real data. Cleaned up in TearDown.
+- `insertTestObj(vnum, name, type)` - same for `obj_index`. `type` is an `itemTypeT` like `ITEM_WEAPON`.
+- `loadMob(vnum, room)` - instantiates a mob from the index via `read_mobile()` and places it in the room. Returns a `TestMob&` wrapper that handles cleanup (spec procs, birth room, groups, hatreds/fears). Requires the vnum to exist in `mob_index`.
+- `loadObj(vnum)` - instantiates an object via `read_object()`. Returns a `TestObject&` wrapper.
+- `loadRealMobIndex()` / `loadRealObjIndex()` - opt-in loading of the full mob/obj index from the database. Guarded against double-init. Use these when tests need real game data rather than synthetic entries.
+
+`SetUpTestSuite` also initializes `ItemInfo[]` (via `assign_item_info()`) and the `stats` constants (damage mods, max_exist, etc.) that many game functions depend on.
+
+For tests involving the shopping pipeline, inherit from `ShopFixture` (`unit/shop_fixture.h`), which extends `WorldFixture` with:
+
+- `insertTestShop(shop_nr, keeper_rnum, room_vnum)` - creates a synthetic shop in `shop_index`. The keeper_rnum must be a valid `mob_index` entry (use `insertTestMob` first). Accepts optional `profit_buy` and `profit_sell` parameters.
+- `loadRealShops()` - loads all shops from the database via `bootTheShops()`. Requires `mob_index` and `obj_index` to be populated first.
+
+`PfileHelper` (`unit/pfile_helper.h`) is a standalone RAII utility, not a fixture. Use it when testing functions gated by `load_char()`. The constructor writes a minimal binary pfile to disk, the destructor removes it. Requires a matching `player` row in the database (use `dbExecute` to create one).
+
+```cpp
+PfileHelper pfile("Testchar", 10, RACE_HUMAN);
+// pfile exists at mutable/player/T/Testchar
+// destructor removes it automatically
+```
+
+The fixture hierarchy:
+
+```
+GameFixture              - characters, rooms, spells, races
+  DatabaseFixture        - + database access, cleanup tracking
+    WorldFixture         - + mob/obj index, ItemInfo, stats
+      ShopFixture        - + shop_index
+```
+
 ### Functional tests (`tests/functional/`, `make test-func`)
 
 Use when:
