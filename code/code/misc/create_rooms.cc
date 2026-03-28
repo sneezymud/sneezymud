@@ -2936,7 +2936,7 @@ static void change_room_extra(TRoom* rp, TBeing* ch, const char* arg,
   ch->specials.edit = CHANGE_ROOM_ROOM_EXDESC;
 }
 
-static void RoomSave(TBeing* ch, int start, int end, int useSecond) {
+void RoomSave(TBeing* ch, int start, int end, int useSecond) {
   char temp[2048], dots[500];
   int rstart, rend, i, k, x;
   extraDescription* exptr;
@@ -2981,17 +2981,20 @@ static void RoomSave(TBeing* ch, int start, int end, int useSecond) {
     }
     temp[x] = '\0';
 
+    int zoneNum = rp->getZoneNum();
+    sstring zoneSql = zoneNum >= 0 ? std::to_string(zoneNum) : "null";
+
     db.query(
       "insert into room (player_id, block, "
       "vnum,x,y,z,name,description,room_flag,sector,teletime,teletarg,telelook,"
       "river_speed,river_dir,capacity,height,zone,spec) values "
-      "(%i,%i,%i,%i,%i,%i,'%s','%s',%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i)",
+      "(%i,%i,%i,%i,%i,%i,'%s','%s',%i,%i,%i,%i,%i,%i,%i,%i,%i,%s,%i)",
       ch->getPlayerID(), useSecond, rp->number, rp->getXCoord(),
       rp->getYCoord(), rp->getZCoord(), rp->name.c_str(), temp,
       rp->getRoomFlags(), mapSectorToFile(rp->getSectorType()),
       rp->getTeleTime(), rp->getTeleTarg(), rp->getTeleLook(),
       rp->getRiverSpeed(), rp->getRiverDir(), rp->getMoblim(),
-      rp->getRoomHeight(), rp->getZoneNum(), rp->spec);
+      rp->getRoomHeight(), zoneSql.c_str(), rp->spec);
 
     dirTypeT j;
     for (j = MIN_DIR; j < MAX_DIR; j++) {

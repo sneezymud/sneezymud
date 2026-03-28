@@ -1241,6 +1241,7 @@ int Descriptor::nanny(sstring arg) {
 
       prompt_mode = 1;
       character->doSave(SILENT_YES);
+      character->desc->account->last_logon = time(0);
       character->desc->saveAccount();
 
       if (character->desc && !character->desc->m_bIsClient) {

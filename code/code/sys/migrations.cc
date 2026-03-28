@@ -46,8 +46,9 @@ namespace {
     if (!db.fetchRow() || sstring(db["col_type"]) != expectedType) {
       return false;
     }
-    // When notNull is required, verify the column is actually NOT null
-    return !notNull || sstring(db["nullable"]) == "NO";
+    // Verify nullability matches the requirement in both directions
+    return notNull ? sstring(db["nullable"]) == "NO"
+                   : sstring(db["nullable"]) == "YES";
   }
 
   void modifyColumnType(TDatabase& db, const char* table, const char* column,
@@ -1572,6 +1573,12 @@ void runMigrations() {
 
       addForeignKey(sneezy, "factionmembers", "player_id", "player", "id",
         "CASCADE");
+
+      if (!hasIndex(sneezy, "factionmembers", "idx_factionmembers_faction")) {
+        assert(
+          sneezy.query("ALTER TABLE factionmembers "
+                       "ADD INDEX idx_factionmembers_faction (faction)"));
+      }
     },
     // Migrate tellhistory from name to player_id
     [&]() {
@@ -2667,6 +2674,15 @@ void runMigrations() {
       sneezy.query(
         "DELETE FROM factoryblueprint WHERE vnum NOT IN (SELECT vnum FROM "
         "obj)");
+      sneezy.query(
+        "DELETE FROM shopproducing WHERE producing NOT IN "
+        "(SELECT vnum FROM obj)");
+      sneezy.query(
+        "DELETE FROM factoryproducing WHERE vnum NOT IN "
+        "(SELECT vnum FROM obj)");
+      sneezy.query(
+        "DELETE FROM shopownedratios WHERE obj_nr NOT IN "
+        "(SELECT vnum FROM obj)");
 
       // Nullable RESTRICT FK columns - set null
       sneezy.query(
@@ -2705,6 +2721,14 @@ void runMigrations() {
       addForeignKey(sneezy, "factoryblueprint", "vnum", "obj", "vnum",
         "CASCADE");
       addForeignKey(sneezy, "property", "key_vnum", "obj", "vnum", "RESTRICT");
+      addForeignKey(sneezy, "fishlargest", "vnum", "obj", "vnum", "CASCADE");
+      addForeignKey(sneezy, "shopproducing", "producing", "obj", "vnum",
+        "CASCADE");
+      addForeignKey(sneezy, "rent", "vnum", "obj", "vnum", "RESTRICT");
+      addForeignKey(sneezy, "factoryproducing", "vnum", "obj", "vnum",
+        "CASCADE");
+      addForeignKey(sneezy, "shopownedratios", "obj_nr", "obj", "vnum",
+        "CASCADE");
 
       // -> room.vnum
       addForeignKey(sneezy, "shop", "in_room", "room", "vnum", "RESTRICT");
@@ -2713,6 +2737,43 @@ void runMigrations() {
         "RESTRICT");
       addForeignKey(sneezy, "ship_destinations", "room", "room", "vnum",
         "RESTRICT");
+
+      // -> zone.zone_nr (make nullable, convert -1 sentinel to null)
+      modifyColumnType(sneezy, "room", "zone", "int(11)", false);
+      modifyColumnType(immortal, "room", "zone", "int(11)", false);
+      sneezy.query("UPDATE room SET zone = null WHERE zone = -1");
+      immortal.query("UPDATE room SET zone = null WHERE zone = -1");
+      addForeignKey(sneezy, "room", "zone", "zone", "zone_nr", "RESTRICT");
+      addCrossDbForeignKey(immortal, "room", "zone", "sneezy", "zone",
+        "zone_nr", "RESTRICT");
+    },
+
+    // Data cleanup and schema fixes from database audit
+    [&]() {
+      vlogf(LOG_MISC, "Database audit: cleanup and schema fixes");
+
+      // Orphaned mail rent rows - attachments from deleted mail
+      sneezy.query(
+        "DELETE FROM rent WHERE owner_type = 'mail' "
+        "AND rent_id NOT IN "
+        "(SELECT rent_id FROM mail WHERE rent_id IS NOT null)");
+
+      // Fix rent.container DEFAULT (-1 is wrong, code uses 0)
+      sneezy.query("ALTER TABLE rent ALTER COLUMN container SET DEFAULT 0");
+
+      // Convert mob float(5,1) to decimal(5,1) for exact game balance values
+      for (const auto* col : {"attacks", "ac", "hpbonus", "damage_level"}) {
+        if (!columnIsType(sneezy, "mob", col, "decimal(5,1)", true)) {
+          sneezy.query("ALTER TABLE mob MODIFY %s DECIMAL(5,1) NOT null", col);
+        }
+        if (!columnIsType(immortal, "mob", col, "decimal(5,1)", true)) {
+          immortal.query("ALTER TABLE mob MODIFY %s DECIMAL(5,1) NOT null",
+            col);
+        }
+      }
+
+      // Delete orphaned players with no account (legacy/test data)
+      sneezy.query("DELETE FROM player WHERE account_id IS null");
     },
 
   };
