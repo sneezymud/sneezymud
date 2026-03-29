@@ -251,6 +251,11 @@ bool TDatabase::query(const char* query, ...) {
       (toggleInfo.isLoaded() && toggleInfo[TOG_DBLOGGING]->toggle))
     vlogf(LOG_DB, buf);
 
+  if (!pimpl.db) {
+    vlogf(LOG_DB, "query failed: no database connection");
+    return false;
+  }
+
   if (mysql_query(pimpl.db, buf.c_str())) {
     vlogf(LOG_DB, format("query failed: %s") % mysql_error(pimpl.db));
     vlogf(LOG_DB, format("%s") % buf);
