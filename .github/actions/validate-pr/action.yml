@@ -16,6 +16,10 @@ runs:
       shell: bash
       run: ./scripts/start_server.sh
 
+    - name: Run C++ tests
+      shell: bash
+      run: ctest --test-dir build/release-clang --output-on-failure
+
     - name: Set up bun
       uses: oven-sh/setup-bun@v2
 
