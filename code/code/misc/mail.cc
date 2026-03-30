@@ -71,21 +71,26 @@ void store_mail(int to_id, const char* from_name, int from_id,
     gamePort, from_name, from_id, to_id, message_pointer, talens, rent_id);
 }
 
-int store_faction_mail(int sender_id, const char* sender_name,
-  const char* message) {
+int store_faction_mail(Descriptor* sender_desc, int sender_id,
+  const char* sender_name, const char* message) {
   TDatabase fm(DB_SNEEZY);
-  int count = 0;
+  int members = 0;
   // Deliberately includes the sender as a recipient (serves as confirmation)
   fm.query(
-    "SELECT player_id FROM factionmembers WHERE faction="
+    "SELECT fm.player_id, p.name FROM factionmembers fm "
+    "JOIN player p ON fm.player_id = p.id "
+    "WHERE fm.faction="
     "(SELECT faction FROM factionmembers WHERE player_id=%i)",
     sender_id);
   while (fm.fetchRow()) {
+    ++members;
+    if (ignoreList::isMailIgnored(sender_desc, fm["name"])) {
+      continue;
+    }
     store_mail(convertTo<int>(fm["player_id"]), sender_name, sender_id, message,
       0, 0);
-    ++count;
   }
-  return count;
+  return members;
 }
 
 void Descriptor::dispatchMail(const char* body) {
@@ -100,7 +105,7 @@ void Descriptor::dispatchMail(const char* body) {
   }
 
   if (sstring(name) == "faction") {
-    int sent = store_faction_mail(character->getPlayerID(),
+    int sent = store_faction_mail(this, character->getPlayerID(),
       character->getName().c_str(), body);
     if (sent == 0) {
       writeToQ("No faction members found! Mail not sent.\n\r");
@@ -136,7 +141,7 @@ void Descriptor::dispatchMail(const char* body) {
   if (amount > 0) {
     vlogf(LOG_OBJ, format("Mail: %s mailing %i talens to %s") %
                      character->getName() % amount % name);
-    character->addToMoney(min(0, -amount), GOLD_XFER);
+    character->addToMoney(-amount, GOLD_XFER);
   }
 
   store_mail(to_id, character->getName().c_str(), character->getPlayerID(),
@@ -155,7 +160,8 @@ sstring read_delete(int player_id, const char* recipient_formatted,
   db.query(
     "select mailfrom, DATE_FORMAT(timesent, '%%a %%b %%e %%T %%Y') as "
     "timesent, content, mailid, talens, rent_id from mail "
-    "where port=%i and to_id=%i",
+    "where port=%i and to_id=%i "
+    "order by mailid asc limit 1",
     gamePort, player_id);
   if (!db.fetchRow())
     return "error!";
@@ -576,6 +582,11 @@ void TBeing::postmasterReceiveMail(TMonster* me) {
     note->name = "letter mail";
     note->shortDescr = "<o>a handwritten <W>letter<1>";
     note->setDescr("A wrinkled <W>letter<1> lies here.");
+    // Transaction ensures the mail row and its rent attachment (if any) are
+    // deleted atomically - a crash between the two can't orphan rent items.
+    TDatabase txn(DB_SNEEZY);
+    txn.query("BEGIN");
+
     msg = read_delete(getPlayerID(), getName().c_str(), from, talens, rent_id);
     note->action_description = msg.c_str();
     if (note->action_description.empty())
@@ -589,6 +600,7 @@ void TBeing::postmasterReceiveMail(TMonster* me) {
     if (env_robj < 0 || env_robj >= (signed int)obj_index.size() ||
         !(envelope = read_object(env_robj, REAL))) {
       vlogf(LOG_BUG, "Couldn't load envelope object!");
+      txn.query("ROLLBACK");
       return;
     }
 
@@ -607,23 +619,26 @@ void TBeing::postmasterReceiveMail(TMonster* me) {
       TObj* obj = NULL;
       int slot = -1;
       ItemLoadDB il("mail", GH_MAIL_SHOP);
-      TDatabase db(DB_SNEEZY);
 
       obj = il.raw_read_item(rent_id, slot);
-      // CASCADE FKs on rent_obj_aff and rent_strung handle child cleanup
-      db.query("delete from rent where rent_id=%i", rent_id);
 
       if (obj) {
+        // CASCADE FKs on rent_obj_aff and rent_strung handle child cleanup
+        txn.query("delete from rent where rent_id=%i", rent_id);
         vlogf(LOG_OBJ, format("Mail: retrieved object %s from rent_id:%i from "
                               "mail for %s from %s") %
                          obj->getName() % rent_id % getName() % from);
         *envelope += *obj;
       } else {
+        // Don't delete the rent row on load failure - the data is still
+        // intact and may load successfully after a fix or restart.
         vlogf(LOG_BUG,
           format("Mail: error retrieving rent_id:%i from mail for %s from %s") %
             rent_id % getName() % from);
       }
     }
+
+    txn.query("COMMIT");
 
     *this += *envelope;
 

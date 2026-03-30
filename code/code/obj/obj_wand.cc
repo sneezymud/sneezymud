@@ -233,8 +233,12 @@ int TWand::useMe(TBeing* ch, const char* argument) {
         return DELETE_VICT;
 
       // Trigger CMD_OBJ_USED for after-spell procs
-      if (spec && checkSpec(ch, CMD_OBJ_USED, "", NULL))
-        return TRUE;
+      if (spec) {
+        int specRc = checkSpec(ch, CMD_OBJ_USED, "", nullptr);
+        if (specRc) {
+          return specRc;
+        }
+      }
     } else
       act("$p seems powerless.", FALSE, ch, this, 0, TO_CHAR);
   } else

@@ -1,4 +1,5 @@
 #include "monster.h"
+#include "person.h"
 #include "room.h"
 #include "obj_corpse.h"
 #include "obj_drinkcon.h"
@@ -206,7 +207,11 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
       int chopperId = getPlayerIdByName(chopper.c_str());
 
       // get team affiliation for cutesy message below
-      int caddyId = ch->isPc() ? ch->getPlayerID() : 0;
+      // getPlayerID handles polymorph; fall back to desc->original for switch
+      int caddyId = ch->getPlayerID();
+      if (caddyId == 0 && ch->desc && ch->desc->original) {
+        caddyId = ch->desc->original->getPlayerID();
+      }
       sstring team;
       sstring caddyTeam;
       bool samaritan = false;
@@ -218,7 +223,7 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
       if (db.fetchRow()) {
         team = db["chopper_team"];
         caddyTeam = db["caddy_team"];
-        if (chopper != ch->name) {
+        if (chopperId > 0 && chopperId != caddyId) {
           // turning in someone else's limb
           samaritan = true;
         }

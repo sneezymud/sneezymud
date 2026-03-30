@@ -2956,17 +2956,26 @@ void RoomSave(TBeing* ch, int start, int end, int useSecond) {
   ch->sendTo("Saving.\n\r");
   strcpy(dots, "\0");
 
-  db.query("begin");
+  if (!db.query("begin")) {
+    ch->sendTo("Error starting room save transaction.  Save aborted.\n\r");
+    return;
+  }
   // FK CASCADE on roomexit and roomextra handles child row cleanup
-  db.query(
-    "delete from room where player_id=%i and (block=%i or vnum between %i and "
-    "%i)",
-    ch->getPlayerID(), useSecond, start, end);
+  if (!db.query(
+        "delete from room where player_id=%i and block=%i and vnum between %i "
+        "and %i",
+        ch->getPlayerID(), useSecond, start, end)) {
+    db.query("rollback");
+    ch->sendTo("Error deleting old room data.  Save aborted.\n\r");
+    return;
+  }
 
-  for (i = rstart; i <= rend; i++) {
+  bool saveOk = true;
+  for (i = rstart; i <= rend && saveOk; i++) {
     rp = real_roomp(i);
-    if (rp == NULL)
+    if (rp == nullptr) {
       continue;
+    }
 
     strcat(dots, ".");
 
@@ -2975,26 +2984,30 @@ void RoomSave(TBeing* ch, int start, int end, int useSecond) {
     if (rp->getDescr().empty()) {
       rp->setDescr("Empty\n");
     }
-    for (k = 0; k <= (int)rp->getDescr().length(); k++) {
-      if (rp->getDescr().c_str()[k] != 13)
+    for (k = 0; k <= static_cast<int>(rp->getDescr().length()); k++) {
+      if (rp->getDescr().c_str()[k] != 13) {
         temp[x++] = rp->getDescr().c_str()[k];
+      }
     }
     temp[x] = '\0';
 
     int zoneNum = rp->getZoneNum();
     sstring zoneSql = zoneNum >= 0 ? std::to_string(zoneNum) : "null";
 
-    db.query(
-      "insert into room (player_id, block, "
-      "vnum,x,y,z,name,description,room_flag,sector,teletime,teletarg,telelook,"
-      "river_speed,river_dir,capacity,height,zone,spec) values "
-      "(%i,%i,%i,%i,%i,%i,'%s','%s',%i,%i,%i,%i,%i,%i,%i,%i,%i,%s,%i)",
-      ch->getPlayerID(), useSecond, rp->number, rp->getXCoord(),
-      rp->getYCoord(), rp->getZCoord(), rp->name.c_str(), temp,
-      rp->getRoomFlags(), mapSectorToFile(rp->getSectorType()),
-      rp->getTeleTime(), rp->getTeleTarg(), rp->getTeleLook(),
-      rp->getRiverSpeed(), rp->getRiverDir(), rp->getMoblim(),
-      rp->getRoomHeight(), zoneSql.c_str(), rp->spec);
+    if (!db.query(
+          "insert into room (player_id, block, "
+          "vnum,x,y,z,name,description,room_flag,sector,teletime,teletarg,"
+          "telelook,river_speed,river_dir,capacity,height,zone,spec) values "
+          "(%i,%i,%i,%i,%i,%i,'%s','%s',%i,%i,%i,%i,%i,%i,%i,%i,%i,%s,%i)",
+          ch->getPlayerID(), useSecond, rp->number, rp->getXCoord(),
+          rp->getYCoord(), rp->getZCoord(), rp->name.c_str(), temp,
+          rp->getRoomFlags(), mapSectorToFile(rp->getSectorType()),
+          rp->getTeleTime(), rp->getTeleTarg(), rp->getTeleLook(),
+          rp->getRiverSpeed(), rp->getRiverDir(), rp->getMoblim(),
+          rp->getRoomHeight(), zoneSql.c_str(), rp->spec)) {
+      saveOk = false;
+      break;
+    }
 
     dirTypeT j;
     for (j = MIN_DIR; j < MAX_DIR; j++) {
@@ -3002,9 +3015,11 @@ void RoomSave(TBeing* ch, int start, int end, int useSecond) {
       if (rdd) {
         temp[0] = '\0';
         if (!rdd->description.empty()) {
-          for (k = 0, x = 0; k <= (int)rdd->description.length(); k++) {
-            if (rdd->description.c_str()[k] != 13)
+          for (k = 0, x = 0; k <= static_cast<int>(rdd->description.length());
+            k++) {
+            if (rdd->description.c_str()[k] != 13) {
               temp[x++] = rdd->description.c_str()[k];
+            }
           }
           temp[x] = '\0';
         }
@@ -3016,37 +3031,58 @@ void RoomSave(TBeing* ch, int start, int end, int useSecond) {
           keyword.replaceString("\n", "");
         }
 
-        db.query(
-          "insert into roomexit (player_id,block, "
-          "vnum,direction,name,description,type,condition_flag,lock_difficulty,"
-          "weight,key_num,destination) values (%i, %i, %i, "
-          "%i,'%s','%s',%i,%i,%i,%i,%i,%i)",
-          ch->getPlayerID(), useSecond, rp->number, mapDirToFile(j),
-          keyword.c_str(), descr.c_str(), rdd->door_type, rdd->condition,
-          rdd->lock_difficulty, rdd->weight, rdd->key, rdd->to_room);
+        if (!db.query(
+              "insert into roomexit (player_id,block, "
+              "vnum,direction,name,description,type,condition_flag,"
+              "lock_difficulty,weight,key_num,destination) values (%i, %i, %i, "
+              "%i,'%s','%s',%i,%i,%i,%i,%i,%i)",
+              ch->getPlayerID(), useSecond, rp->number, mapDirToFile(j),
+              keyword.c_str(), descr.c_str(), rdd->door_type, rdd->condition,
+              rdd->lock_difficulty, rdd->weight, rdd->key, rdd->to_room)) {
+          saveOk = false;
+          break;
+        }
       }
+    }
+
+    if (!saveOk) {
+      break;
     }
 
     for (exptr = rp->ex_description; exptr; exptr = exptr->next) {
       x = 0;
       if (!exptr->description.empty()) {
-        for (k = 0; k <= (int)exptr->description.length(); k++) {
-          if (exptr->description.c_str()[k] != 13)
+        for (k = 0; k <= static_cast<int>(exptr->description.length()); k++) {
+          if (exptr->description.c_str()[k] != 13) {
             temp[x++] = exptr->description.c_str()[k];
+          }
         }
         temp[x] = '\0';
 
-        db.query(
-          "insert into roomextra (player_id, block, vnum, name, description) "
-          "values (%i,%i,%i,'%s','%s')",
-          ch->getPlayerID(), useSecond, rp->number, exptr->keyword.c_str(),
-          temp);
+        if (!db.query("insert into roomextra (player_id, block, vnum, name, "
+                      "description) values (%i,%i,%i,'%s','%s')",
+              ch->getPlayerID(), useSecond, rp->number, exptr->keyword.c_str(),
+              temp)) {
+          saveOk = false;
+          break;
+        }
       }
     }
   }
-  db.query("commit");
-  ch->sendTo(dots);
-  ch->sendTo("\n\rDone.\n\r");
+
+  if (saveOk) {
+    if (!db.query("commit")) {
+      db.query("rollback");
+      ch->sendTo(
+        "\n\rDatabase error committing save.  Changes rolled back.\n\r");
+      return;
+    }
+    ch->sendTo(dots);
+    ch->sendTo("\n\rDone.\n\r");
+  } else {
+    db.query("rollback");
+    ch->sendTo("\n\rDatabase error during save.  Changes rolled back.\n\r");
+  }
 }
 
 void RoomLoad(TBeing* ch, int start, int end, int useSecond) {
@@ -3065,7 +3101,8 @@ void RoomLoad(TBeing* ch, int start, int end, int useSecond) {
 
   db.query(
     "select vnum, x, y, z, name, description, room_flag, sector, teletime, "
-    "teletarg, telelook, river_speed, river_dir, capacity, height from room "
+    "teletarg, telelook, river_speed, river_dir, capacity, height, spec from "
+    "room "
     "where player_id=%i and block=%i and vnum >= %i and vnum <= %i order by "
     "vnum asc",
     ch->getPlayerID(), useSecond, start, end);
@@ -3148,7 +3185,7 @@ void RoomLoad(TBeing* ch, int start, int end, int useSecond) {
 
       rp2->setRoomHeight(convertTo<int>(db["height"]));
 
-      rp2->spec = 0;
+      rp2->spec = convertTo<int>(db["spec"]);
       rp2->setLight(0);
       rp2->setHasWindow(0);
 

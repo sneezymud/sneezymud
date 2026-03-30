@@ -89,13 +89,13 @@ For tests involving the shopping pipeline, inherit from `ShopFixture` (`unit/sho
 
 ```cpp
 PfileHelper pfile("Testchar", 10, RACE_HUMAN);
-// pfile exists at mutable/player/T/Testchar
+// pfile exists at mutable/player/t/testchar
 // destructor removes it automatically
 ```
 
 The fixture hierarchy:
 
-```
+```text
 GameFixture              - characters, rooms, spells, races
   DatabaseFixture        - + database access, cleanup tracking
     WorldFixture         - + mob/obj index, ItemInfo, stats

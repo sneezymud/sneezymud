@@ -2830,11 +2830,10 @@ int tinkerBagFuse(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
       act("$n's $p wiggles, as if something within it is moving.", TRUE, ch,
         container, 0, TO_ROOM, ANSI_ORANGE);
     } else if (container->roomp) {
-      // On the ground - show room-wide messages
-      act("$p hisses slightly, and releases a tiny bit of smoke.", TRUE,
-        nullptr, container, 0, TO_ROOM, ANSI_GRAY);
-      act("$p wiggles, as if something within it is moving.", TRUE, nullptr,
-        container, 0, TO_ROOM, ANSI_ORANGE);
+      act("$p hisses slightly, and releases a tiny bit of smoke.", true,
+        container, container, nullptr, TO_ROOM, ANSI_GRAY);
+      act("$p wiggles, as if something within it is moving.", true, container,
+        container, nullptr, TO_ROOM, ANSI_ORANGE);
     }
     return FALSE;
   }
@@ -2857,10 +2856,9 @@ int tinkerBagFuse(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
       return DELETE_THIS;
     }
   } else if (container->roomp) {
-    // Bag is on the ground - just announce it
-    act("$p makes an ominous clicking sound!", TRUE, nullptr, container, 0,
-      TO_ROOM);
-    act("$p explodes!", TRUE, nullptr, container, 0, TO_ROOM);
+    act("$p makes an ominous clicking sound!", true, container, container,
+      nullptr, TO_ROOM);
+    act("$p explodes!", true, container, container, nullptr, TO_ROOM);
   }
 
   // Destroy the bag after the timer if the trap didn't trigger
@@ -6351,10 +6349,9 @@ int rechargingWand(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
       act("$p <k>crumbles<1> into dust!", false, ch, wand, nullptr, TO_CHAR);
       act("$p <k>crumbles<1> into dust!", false, ch, wand, nullptr, TO_ROOM);
       if (!wand->makeScraps()) {
-        delete wand;
-        wand = nullptr;
+        return DELETE_THIS;
       }
-      return TRUE;
+      return true;
     }
     return TRUE;
   }
@@ -6414,6 +6411,9 @@ int satyrShrine(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
 
   if (!portalIn || !portalOut) {
     vlogf(LOG_PROC, "satyrShrine: failed to load portal prototype(s)");
+    ch->sendTo(
+      "The shrine shudders, but its magic seems broken. Something is wrong "
+      "with the portal enchantment.\n\r");
     delete portalIn;
     delete portalOut;
     return false;
@@ -7441,6 +7441,7 @@ int ieComputer(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
           "redeemed_by_name as redeemed_by, count(*) as coins, "
           "date_format(now(), '%%M %%e %%Y %%l:%%i %%p') as date_printed "
           "from immortal_exchange_coin "
+          "where date_redeemed is not null "
           "group by redeemed_for_name, redeemed_by_name "
           "order by redeemed_for_name, redeemed_by_name");
         if (db.fetchRow()) {

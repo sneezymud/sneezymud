@@ -31,10 +31,16 @@ class DatabaseFixture : public GameFixture {
       // TDatabase lazy-connects using db_hosts[type].c_str() as the
       // host parameter to mysql_real_connect. The vectors default to
       // empty strings, which may or may not work depending on the
-      // client library build. Explicitly set to "localhost" for
-      // reliable local socket connections.
-      db_hosts[DB_SNEEZY] = "localhost";
-      db_hosts[DB_IMMORTAL] = "localhost";
+      // client library build. Fall back to "localhost" for reliable
+      // local socket connections.
+      savedSneezyHost = db_hosts[DB_SNEEZY];
+      savedImmortalHost = db_hosts[DB_IMMORTAL];
+      if (db_hosts[DB_SNEEZY].empty()) {
+        db_hosts[DB_SNEEZY] = "localhost";
+      }
+      if (db_hosts[DB_IMMORTAL].empty()) {
+        db_hosts[DB_IMMORTAL] = "localhost";
+      }
 
       // Probe both databases. If either is unreachable, all tests
       // in this suite are skipped rather than failed.
@@ -44,6 +50,11 @@ class DatabaseFixture : public GameFixture {
           !probeImmortal.query("SELECT 1")) {
         databaseAvailable = false;
       }
+    }
+
+    static void TearDownTestSuite() {
+      db_hosts[DB_SNEEZY] = savedSneezyHost;
+      db_hosts[DB_IMMORTAL] = savedImmortalHost;
     }
 
     void SetUp() override {
@@ -59,22 +70,22 @@ class DatabaseFixture : public GameFixture {
       // parent tables last.
       for (const auto& [db, sql] : cleanupQueries) {
         TDatabase tdb(db);
-        tdb.query(sql.c_str());
+        if (!tdb.query(sql.c_str())) {
+          ADD_FAILURE() << "Cleanup query failed: " << sql;
+        }
       }
       cleanupQueries.clear();
 
       GameFixture::TearDown();
     }
 
-    // Execute SQL and assert success. The sql string is passed directly
-    // to TDatabase::query() as a format string, so any literal '%' in
-    // the SQL will be misinterpreted as a format specifier. For strings
-    // needing escaping (e.g., apostrophes, percent signs), use
-    // TDatabase::query() directly with %s/%i format specifiers instead.
+    // Execute SQL and assert success. The sql string is passed as a
+    // format string to TDatabase::query(), so any literal '%' in the
+    // SQL will be misinterpreted. Use TDatabase::query() directly
+    // with %s/%i format specifiers for strings needing '%'.
     void dbExecute(dbTypeT db, const sstring& sql) {
       TDatabase tdb(db);
-      ASSERT_TRUE(tdb.query(sql.c_str()))
-        << "SQL failed: " << sql;
+      ASSERT_TRUE(tdb.query(sql.c_str())) << "SQL failed: " << sql;
     }
 
     // Query a single scalar value. Returns empty string if no rows.
@@ -99,5 +110,7 @@ class DatabaseFixture : public GameFixture {
 
   private:
     static inline bool databaseAvailable = true;
+    static inline std::string savedSneezyHost;
+    static inline std::string savedImmortalHost;
     std::vector<std::pair<dbTypeT, sstring>> cleanupQueries;
 };

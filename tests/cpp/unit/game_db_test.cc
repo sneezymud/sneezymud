@@ -23,19 +23,45 @@ class GameDbTest : public DatabaseFixture {
       room = &makeRoom(49997);
       placeInRoom(*tc, *room);
 
-      auto pidStr = dbQueryScalar(DB_SNEEZY, "SELECT MIN(id) FROM player");
-      ASSERT_FALSE(pidStr.empty());
-      playerId = convertTo<int>(pidStr);
-      tc->ch->player.player_id = playerId;
+      // Create a synthetic test player to avoid mutating seeded data.
+      // Pre-cleanup handles leftovers from a previous crashed run.
+      {
+        TDatabase cleanup(DB_SNEEZY);
+        cleanup.query("DELETE FROM player WHERE name = 'Testgamedb'");
+        cleanup.query("DELETE FROM account WHERE name = 'gamedb_acct'");
+      }
 
-      playerName = dbQueryScalar(DB_SNEEZY, std::format(
-        "SELECT name FROM player WHERE id = {}", playerId));
-      ASSERT_FALSE(playerName.empty());
+      dbExecute(DB_SNEEZY,
+        "INSERT INTO account (name, passwd, email, last_logon) "
+        "VALUES ('gamedb_acct', 'x', '', 0)");
+      acctId =
+        convertTo<int>(dbQueryScalar(DB_SNEEZY, "SELECT LAST_INSERT_ID()"));
+      ASSERT_NE(acctId, 0);
+
+      dbExecute(DB_SNEEZY, std::format("INSERT INTO player (name, account_id) "
+                                       "VALUES ('Testgamedb', {})",
+                             acctId));
+      playerId =
+        convertTo<int>(dbQueryScalar(DB_SNEEZY, "SELECT LAST_INSERT_ID()"));
+      ASSERT_NE(playerId, 0);
+      tc->ch->player.player_id = playerId;
+      playerName = "Testgamedb";
+    }
+
+    void TearDown() override {
+      // Delete synthetic parent rows by ID - CASCADE cleans child tables,
+      // making the base class dbCleanupLater queries no-ops (defensive).
+      TDatabase db(DB_SNEEZY);
+      db.query("DELETE FROM player WHERE id = %i", playerId);
+      db.query("DELETE FROM account WHERE account_id = %i", acctId);
+
+      DatabaseFixture::TearDown();
     }
 
     TestCharacter* tc = nullptr;
     TRoom* room = nullptr;
     int playerId = 0;
+    int acctId = 0;
     sstring playerName;
 };
 
@@ -63,9 +89,10 @@ TEST_F(GameDbTest, CorporationGetAccessReturnsCorrectLevel) {
     "SELECT MIN(corp_id) FROM corporation");
   ASSERT_FALSE(corpId.empty());
 
-  dbExecute(DB_SNEEZY, std::format(
-    "INSERT IGNORE INTO corpaccess (corp_id, player_id, access) "
-    "VALUES ({}, {}, 7)", corpId, playerId));
+  dbExecute(DB_SNEEZY,
+    std::format("INSERT INTO corpaccess (corp_id, player_id, access) "
+                "VALUES ({}, {}, 7)",
+      corpId, playerId));
   dbCleanupLater(DB_SNEEZY, std::format(
     "DELETE FROM corpaccess WHERE corp_id = {} AND player_id = {}",
     corpId, playerId));
@@ -80,9 +107,10 @@ TEST_F(GameDbTest, CorporationHasAccessChecksPermissionBits) {
     "SELECT MIN(corp_id) FROM corporation");
   ASSERT_FALSE(corpId.empty());
 
-  dbExecute(DB_SNEEZY, std::format(
-    "INSERT IGNORE INTO corpaccess (corp_id, player_id, access) "
-    "VALUES ({}, {}, 5)", corpId, playerId));
+  dbExecute(DB_SNEEZY,
+    std::format("INSERT INTO corpaccess (corp_id, player_id, access) "
+                "VALUES ({}, {}, 5)",
+      corpId, playerId));
   dbCleanupLater(DB_SNEEZY, std::format(
     "DELETE FROM corpaccess WHERE corp_id = {} AND player_id = {}",
     corpId, playerId));
@@ -163,36 +191,50 @@ TEST_F(GameDbTest, ClearRentCascadesToChildTables) {
   auto objVnum = dbQueryScalar(DB_SNEEZY, "SELECT MIN(vnum) FROM obj");
   ASSERT_FALSE(objVnum.empty());
 
+  // Allocate a rent_id above the current max to avoid collisions
+  auto rentIdStr =
+    dbQueryScalar(DB_SNEEZY, "SELECT COALESCE(MAX(rent_id), 0) + 1 FROM rent");
+  ASSERT_FALSE(rentIdStr.empty());
+  auto rentId = convertTo<int>(rentIdStr);
+
   dbExecute(DB_SNEEZY,
     std::format(
       "INSERT INTO rent (rent_id, owner, owner_type, vnum, val0, val1, val2, "
       "val3, extra_flags, weight, bitvector, cur_struct, max_struct, "
       "decay, material, volume, price) "
-      "VALUES (99950, 99950, 'player', {}, 0, 0, 0, 0, 0, 1, 0, 100, 100, "
+      "VALUES ({0}, {0}, 'player', {1}, 0, 0, 0, 0, 0, 1, 0, 100, 100, "
       "0, 0, 1, 0)",
-      objVnum));
-  dbCleanupLater(DB_SNEEZY, "DELETE FROM rent WHERE rent_id = 99950");
+      rentId, objVnum));
+  dbCleanupLater(DB_SNEEZY,
+    std::format("DELETE FROM rent WHERE rent_id = {}", rentId));
 
   dbExecute(DB_SNEEZY,
-    "INSERT INTO rent_obj_aff (rent_id, type, level, duration, modifier, "
-    "modifier2, bitvector) VALUES (99950, 1, 5, -1, 10, 0, 0)");
+    std::format(
+      "INSERT INTO rent_obj_aff (rent_id, type, level, duration, "
+      "modifier, modifier2, bitvector) VALUES ({}, 1, 5, -1, 10, 0, 0)",
+      rentId));
   dbExecute(DB_SNEEZY,
-    "INSERT INTO rent_strung (rent_id, short_desc) "
-    "VALUES (99950, 'a glowing test sword')");
+    std::format("INSERT INTO rent_strung (rent_id, short_desc) "
+                "VALUES ({}, 'a glowing test sword')",
+      rentId));
 
   // clearRent relies on CASCADE - no longer manually deletes children
-  ItemSaveDB is("player", 99950);
+  ItemSaveDB is("player", rentId);
   is.clearRent();
 
   EXPECT_EQ(
-    dbQueryScalar(DB_SNEEZY, "SELECT COUNT(*) FROM rent WHERE rent_id = 99950"),
+    dbQueryScalar(DB_SNEEZY,
+      std::format("SELECT COUNT(*) FROM rent WHERE rent_id = {}", rentId)),
     "0");
-  EXPECT_EQ(dbQueryScalar(DB_SNEEZY,
-              "SELECT COUNT(*) FROM rent_obj_aff WHERE rent_id = 99950"),
+  EXPECT_EQ(
+    dbQueryScalar(DB_SNEEZY,
+      std::format("SELECT COUNT(*) FROM rent_obj_aff WHERE rent_id = {}",
+        rentId)),
     "0")
     << "rent_obj_aff should be cleaned up by CASCADE";
   EXPECT_EQ(dbQueryScalar(DB_SNEEZY,
-              "SELECT COUNT(*) FROM rent_strung WHERE rent_id = 99950"),
+              std::format("SELECT COUNT(*) FROM rent_strung WHERE rent_id = {}",
+                rentId)),
     "0")
     << "rent_strung should be cleaned up by CASCADE";
 }

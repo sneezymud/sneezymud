@@ -2035,9 +2035,7 @@ int TPerson::saveRent(bool d /*=false*/, int msgStatus /*=0*/) {
     wipeRentFile(getName().c_str());
 
   if (d) {
-    short save_room = in_room;
-    saveChar(save_room);
-    in_room = save_room;
+    saveChar(in_room);
     preKillCheck(TRUE);
     return DELETE_VICT;
   }
