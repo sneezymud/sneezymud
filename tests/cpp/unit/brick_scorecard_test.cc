@@ -29,15 +29,37 @@ class BrickScorecardTest : public DatabaseFixture {
       board->spec = SPEC_BRICKQUEST;
       *room += *board;
 
-      // Get a real player for brickquest data
-      playerName = dbQueryScalar(DB_SNEEZY, "SELECT name FROM player LIMIT 1");
-      ASSERT_FALSE(playerName.empty());
-      playerId = dbQueryScalar(DB_SNEEZY,
-        std::format("SELECT id FROM player WHERE name = '{}'", playerName));
-      ASSERT_FALSE(playerId.empty());
+      // Create a synthetic test player to avoid mutating seeded data.
+      // Pre-cleanup handles leftovers from a previous crashed run.
+      {
+        TDatabase cleanup(DB_SNEEZY);
+        cleanup.query(
+          "DELETE FROM brickquest WHERE player_id IN "
+          "(SELECT id FROM player WHERE name = 'Bricktester')");
+        cleanup.query("DELETE FROM player WHERE name = 'Bricktester'");
+        cleanup.query("DELETE FROM account WHERE name = 'brickscore_acct'");
+      }
 
+      dbExecute(DB_SNEEZY,
+        "INSERT INTO account (name, passwd, email, last_logon) "
+        "VALUES ('brickscore_acct', 'x', '', 0)");
+      auto acctId = dbQueryScalar(DB_SNEEZY, "SELECT LAST_INSERT_ID()");
+      ASSERT_FALSE(acctId.empty());
+
+      dbExecute(DB_SNEEZY, std::format("INSERT INTO player (name, account_id) "
+                                       "VALUES ('Bricktester', {})",
+                             acctId));
+      playerId = dbQueryScalar(DB_SNEEZY, "SELECT LAST_INSERT_ID()");
+      ASSERT_FALSE(playerId.empty());
+      playerName = "Bricktester";
+
+      // Cleanup: child tables first, parent tables last (by ID, not name)
       dbCleanupLater(DB_SNEEZY,
         std::format("DELETE FROM brickquest WHERE player_id = {}", playerId));
+      dbCleanupLater(DB_SNEEZY,
+        std::format("DELETE FROM player WHERE id = {}", playerId));
+      dbCleanupLater(DB_SNEEZY,
+        std::format("DELETE FROM account WHERE account_id = {}", acctId));
     }
 
     TestCharacter* tc = nullptr;

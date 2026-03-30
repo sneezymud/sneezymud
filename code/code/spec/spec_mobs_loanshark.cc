@@ -129,6 +129,10 @@ int loanShark(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
   if (cmd == CMD_WHISPER)
     return shopWhisper(ch, me, shop_nr, arg);
 
+  if (!ch->isPc()) {
+    return false;
+  }
+
   TShopOwned tso(shop_nr, me, ch);
 
   db.query("select x, y from shopownedloanrate where shop_nr=%i", shop_nr);
@@ -246,10 +250,16 @@ int loanShark(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
   ////////////////////////////
   if (cmd == CMD_BUY) {
     if (sstring(arg).word(0) == "repo" && tso.hasAccess(SHOPACCESS_OWNER)) {
+      int targetId = getPlayerIdByName(sstring(arg).word(2).c_str());
+      if (targetId == 0) {
+        me->doTell(ch->getName(), "I don't know that player.");
+        return true;
+      }
+
       db.query(
         "select amt, granted_time, term, rate, default_charge from "
-        "shopownedloans, player where player_id=id and name='%s'",
-        sstring(arg).word(2).c_str());
+        "shopownedloans where player_id=%i",
+        targetId);
 
       if (!db.fetchRow()) {
         me->doTell(ch->getName(), "I can't find a loan for that player.");
@@ -285,12 +295,17 @@ int loanShark(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
         return true;
       }
 
-      db.query(
-        "insert into shopownedloans (shop_nr, player_id, amt, granted_time, "
-        "term, rate, default_charge) values (%i, %i, %i, %i, %i, %f, %f)",
-        shop_nr, ch->getPlayerID(), amt, time(NULL), term,
-        getRate(shop_nr, ch->getPlayerID()),
-        getPenalty(shop_nr, ch->getPlayerID()));
+      if (!db.query(
+            "insert into shopownedloans (shop_nr, player_id, amt, "
+            "granted_time, "
+            "term, rate, default_charge) values (%i, %i, %i, %i, %i, %f, %f)",
+            shop_nr, ch->getPlayerID(), amt, time(nullptr), term,
+            getRate(shop_nr, ch->getPlayerID()),
+            getPenalty(shop_nr, ch->getPlayerID()))) {
+        me->doTell(ch->getName(),
+          "I can't seem to finalize the paperwork right now.");
+        return true;
+      }
 
       me->giveMoney(ch, amt, GOLD_SHOP);
       me->saveItems(shop_nr);

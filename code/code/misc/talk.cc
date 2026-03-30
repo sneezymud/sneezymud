@@ -972,12 +972,24 @@ int TBeing::doTell(const sstring& name, const sstring& message, bool visible) {
 
   d->output.push(cptr);
 
-  if (!isPc() || (dynamic_cast<TMonster*>(vict) && !(vict->desc))) {
-    // no tell history for mob senders or mob recipients
-  } else {
-    queryqueue.push(format("insert into tellhistory (from_id, to_id, tell) "
-                           "values (%i, %i, '%s')") %
-                    getPlayerID() % vict->getPlayerID() % garbed.escape());
+  // For switched bodies (TMonster with desc but no ACT_POLYSELF),
+  // getPlayerID() returns 0. Resolve through desc->original instead.
+  {
+    int fromId = getPlayerID();
+    if (fromId == 0 && desc && desc->original) {
+      fromId = desc->original->getPlayerID();
+    }
+
+    int victId = vict->getPlayerID();
+    if (victId == 0 && vict->desc && vict->desc->original) {
+      victId = vict->desc->original->getPlayerID();
+    }
+
+    if (fromId > 0 && victId > 0) {
+      queryqueue.push(format("insert into tellhistory (from_id, to_id, tell) "
+                             "values (%i, %i, '%s')") %
+                      fromId % victId % garbed.escape());
+    }
   }
 
   if ((d && d->m_bIsClient) || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {

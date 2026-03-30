@@ -3758,17 +3758,24 @@ void TBeing::doWipe(const char* argument) {
     return;
   }
 
-  wipePlayerFile(namebuf);
-  wipeRentFile(namebuf);
-  wipeFollowersFile(namebuf);
-  TTrophy* trophy = new TTrophy(namebuf);
-  trophy->wipe();
-  delete trophy;
+  // Delete DB row first so FK cascades fire before files are removed.
+  // If the query fails, bail out - an orphaned pfile without a DB row is
+  // recoverable (re-wipe), but a DB row without a pfile is not.
+  if (!db.query("delete from player where name='%s'", st.name)) {
+    sendTo("Database delete failed; aborting wipe.\n\r");
+    vlogf(LOG_BUG,
+      format("doWipe: failed deleting player row for '%s'") % st.name);
+    return;
+  }
 
-  db.query("delete from player where name='%s'", namebuf);
+  wipePlayerFile(st.name);
+  wipeRentFile(st.name);
+  wipeFollowersFile(st.name);
+  TTrophy trophy(st.name);
+  trophy.wipe();
 
   sprintf(buf, "mutable/account/%c/%s/%s", LOWER(st.aname[0]),
-    sstring(st.aname).lower().c_str(), sstring(namebuf).lower().c_str());
+    sstring(st.aname).lower().c_str(), sstring(st.name).lower().c_str());
 
   if (unlink(buf) != 0)
     vlogf(LOG_FILE, format("error in unlink (7) (%s) %d") % buf % errno);
@@ -6673,25 +6680,25 @@ void TPerson::doBestow(const sstring& argument) {
           sendTo(
             "You begin to mint a coin, but the clay seems to be "
             "unusable...\n\r");
+          delete obj;
           continue;
         }
         coin_uid = 0;
-        db.query(
-          "insert into immortal_exchange_coin "
-          "(created_by, created_for, created_by_name, created_for_name) "
-          "values (%i, %i, '%s', '%s')",
-          getPlayerID(), ch->getPlayerID(), getName().c_str(),
-          ch->getName().c_str());
-        if (db.rowCount() == 1) {
-          // insert succeeded
-          db.query("select max(k_coin) as k_coin from immortal_exchange_coin");
-          if (db.fetchRow())
-            coin_uid = convertTo<int>(db["k_coin"]);
+        if (db.query(
+              "insert into immortal_exchange_coin "
+              "(created_by, created_for, created_by_name, created_for_name) "
+              "values (%i, %i, '%s', '%s')",
+              getPlayerID(), ch->getPlayerID(), getName().c_str(),
+              ch->getName().c_str()) &&
+            db.rowCount() == 1) {
+          coin_uid = static_cast<int>(db.lastInsertId());
         }
         if (!coin_uid) {
           sendTo(
             "You tried to mint a coin, but the clay wouldn't take the "
             "stamp.\n\r");
+          delete coin;
+          coin = nullptr;
           continue;
         }
 
@@ -6740,51 +6747,61 @@ void TPerson::doBestow(const sstring& argument) {
       if (coin && coin->objVnum() == Obj::IMMORTAL_EXCHANGE_COIN) {
         /* validity check then redeem the coin */
         number_tried++;
-        redeem = TRUE;
+        redeem = true;
+        bool destroyCoin = true;
         if (!coin->getSerialNumber()) {
           sendTo("Unstamped coin!  Destroying!!\n\r");
-          redeem = FALSE;
+          redeem = false;
+        } else if (!db.query("select date_redeemed from immortal_exchange_coin "
+                             "where k_coin = %i",
+                     coin->getSerialNumber())) {
+          sendTo("Database error validating coin; keeping it.\n\r");
+          redeem = false;
+          destroyCoin = false;
+        } else if (db.fetchRow()) {
+          if (db["date_redeemed"].length() > 0) {
+            // already redeemed, possible duped object
+            sendTo(format("Coin #%i already redeemed!  Counterfeit!!  "
+                          "Destroying!!!\n\r") %
+                   coin->getSerialNumber());
+            redeem = false;
+          }
         } else {
-          db.query(
-            "select date_redeemed from immortal_exchange_coin where k_coin = "
-            "%i",
+          // no record in the db?! that's pretty bad, since it got a serial
+          // number somehow...
+          sendTo(
+            format(
+              "Coin with an unknown serial number: %i!  Destroying!!\n\r") %
             coin->getSerialNumber());
-          if (db.fetchRow()) {
-            if (db["date_redeemed"].length() > 0) {
-              // already redeemed, possible duped object
-              sendTo(format("Coin #%i already redeemed!  Counterfeit!!  "
-                            "Destroying!!!\n\r") %
-                     coin->getSerialNumber());
-              redeem = FALSE;
-            }
-          } else {
-            // no record in the db?! that's pretty bad, since it got a serial
-            // number somehow...
+          redeem = false;
+        }
+        if (redeem) {
+          // Atomic check-and-update prevents double-redemption race
+          if (!db.query(
+                "update immortal_exchange_coin set redeemed_by = %i, "
+                "redeemed_for = %i, redeemed_by_name = '%s', "
+                "redeemed_for_name = '%s', date_redeemed = CURRENT_TIMESTAMP "
+                "where k_coin = %i and date_redeemed is null",
+                getPlayerID(), ch->getPlayerID(), getName().c_str(),
+                ch->getName().c_str(), coin->getSerialNumber())) {
+            sendTo("Database error redeeming coin; keeping it.\n\r");
+            destroyCoin = false;
+          } else if (db.rowCount() == 1) {
             sendTo(
-              format(
-                "Coin with an unknown serial number: %i!  Destroying!!\n\r") %
+              format("Coin number %i crumbles with immortal redemption.\n\r") %
               coin->getSerialNumber());
-            redeem = FALSE;
+            number_done++;
+          } else {
+            sendTo(format("Coin #%i was already redeemed!  Counterfeit!!  "
+                          "Destroying!!!\n\r") %
+                   coin->getSerialNumber());
           }
         }
 
-        if (redeem) {
-          db.query(
-            "update immortal_exchange_coin set redeemed_by = %i, "
-            "redeemed_for = %i, redeemed_by_name = '%s', "
-            "redeemed_for_name = '%s', date_redeemed = CURRENT_TIMESTAMP "
-            "where k_coin = %i",
-            getPlayerID(), ch->getPlayerID(), getName().c_str(),
-            ch->getName().c_str(), coin->getSerialNumber());
-          sendTo(
-            format("Coin number %i crumbles with immortal redemption.\n\r") %
-            coin->getSerialNumber());
-          number_done++;
+        if (destroyCoin) {
+          delete coin;
+          coin = nullptr;
         }
-
-        // no matter what happened, we're getting rid of the coin
-        delete coin;
-        coin = NULL;
 
         if (number_tried == number_needed)
           break;

@@ -676,10 +676,13 @@ int TShopOwned::setRates(sstring arg) {
     } else if (buf == "player") {
       arg = one_argument(arg, buf);
 
-      db.query(
-        "delete from shopownedplayer where shop_nr=%i "
-        "and player_id=(select id from player where name='%s')",
-        shop_nr, buf.c_str());
+      int targetId = getPlayerIdByName(buf.c_str());
+      if (targetId == 0) {
+        keeper->doTell(ch->getName(), "I don't know that player.");
+        return true;
+      }
+      db.query("delete from shopownedplayer where shop_nr=%i and player_id=%i",
+        shop_nr, targetId);
 
       keeper->doTell(ch->getName(), "Done.");
       shoplog(shop_nr, ch, keeper, buf, 0, "clear setrates");

@@ -12,7 +12,9 @@
 #include <cstring>
 #include <filesystem>
 #include <fstream>
+#include <stdexcept>
 #include <string>
+#include <system_error>
 
 #include "charfile.h"
 #include "db.h"
@@ -24,7 +26,15 @@ class PfileHelper {
     PfileHelper(const std::string& name, int level, race_t race) : name_(name) {
       namespace fs = std::filesystem;
 
+      if (name.empty()) {
+        throw std::invalid_argument("PfileHelper: name must not be empty");
+      }
+
       charFile cf{};
+      if (name.size() >= sizeof(cf.name)) {
+        throw std::invalid_argument(
+          "PfileHelper: name is too long for charFile");
+      }
       std::strncpy(cf.name, name.c_str(), sizeof(cf.name) - 1);
       cf.level[0] = static_cast<byte>(level);
       cf.race = static_cast<ubyte>(race);
@@ -48,10 +58,18 @@ class PfileHelper {
 
       path_ = dir / lowerName;
       std::ofstream out(path_, std::ios::binary);
+      if (!out) {
+        throw std::runtime_error(
+          "PfileHelper: failed to create " + path_.string());
+      }
       out.write(reinterpret_cast<const char*>(&cf), sizeof(cf));
+      if (!out) {
+        throw std::runtime_error(
+          "PfileHelper: failed to write " + path_.string());
+      }
     }
 
-    ~PfileHelper() { cleanup(); }
+    ~PfileHelper() noexcept { cleanupNoThrow(); }
 
     PfileHelper(const PfileHelper&) = delete;
     PfileHelper& operator=(const PfileHelper&) = delete;
@@ -64,7 +82,7 @@ class PfileHelper {
 
     PfileHelper& operator=(PfileHelper&& other) noexcept {
       if (this != &other) {
-        cleanup();
+        cleanupNoThrow();
         name_ = std::move(other.name_);
         path_ = std::move(other.path_);
         other.path_.clear();
@@ -72,17 +90,20 @@ class PfileHelper {
       return *this;
     }
 
-    void cleanup() {
-      if (!path_.empty()) {
-        std::filesystem::remove(path_);
-        path_.clear();
-      }
-    }
+    void cleanup() noexcept { cleanupNoThrow(); }
 
     [[nodiscard]] const std::string& name() const { return name_; }
     [[nodiscard]] const std::filesystem::path& path() const { return path_; }
 
   private:
+    void cleanupNoThrow() noexcept {
+      if (!path_.empty()) {
+        std::error_code ec;
+        std::filesystem::remove(path_, ec);
+        path_.clear();
+      }
+    }
+
     std::string name_;
     std::filesystem::path path_;
 };

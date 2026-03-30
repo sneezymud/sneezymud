@@ -373,7 +373,7 @@ void TBeingSave(TBeing* ch, TMonster* mob, int vnum) {
   }
   for (extraDescription* tExDescr = mob->ex_description; tExDescr;
     tExDescr = tExDescr->next) {
-    if (tExDescr->description.empty()) {
+    if (!tExDescr->description.empty()) {
       if (!db.query(
             "insert into mob_extra (player_id, vnum, keyword, description) "
             "values (%i, %i, '%s', '%s')",
@@ -559,8 +559,11 @@ void mremove(TBeing* ch, int vnum) {
   // delete a mob from a player's immortal file
   TDatabase db(DB_IMMORTAL);
 
-  db.query("select vnum from mob where vnum=%i and player_id=%i", vnum,
-    ch->getPlayerID());
+  if (!db.query("select vnum from mob where vnum=%i and player_id=%i", vnum,
+        ch->getPlayerID())) {
+    ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
+    return;
+  }
 
   if (!db.isResults()) {
     ch->sendTo("Mob not found.\n\r");

@@ -74,6 +74,10 @@ describe("Tell", () => {
 
         const output = await imm.command(`tell ${character} hello there`);
         expect(output).toContainCaseInsensitive("you tell");
+
+        // Verify the receiver got the tell
+        const received = await mortal.readUntilIdle(0.5);
+        expect(received).toContainCaseInsensitive("hello there");
       } finally {
         await mortal.close();
       }

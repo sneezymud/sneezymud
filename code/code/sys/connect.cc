@@ -3391,6 +3391,18 @@ int Descriptor::doAccountStuff(char* arg) {
         break;
 #endif
 
+      // delete player entry first (FK CASCADE handles blockedlist, tattoos,
+      // mail, etc.) - look up by name since playerID is not set in the account
+      // menu flow. Do this before irreversible cleanup so failure is
+      // recoverable.
+      if (!db.query("delete from player where name='%s'", delname)) {
+        vlogf(LOG_DB,
+          format("Failed to delete player row for %s during self-delete") %
+            delname);
+        writeToQ("Error deleting character. Try again.\n\r");
+        break;
+      }
+
       writeToQ("Character deleted.\n\r");
       vlogf(LOG_PIO, format("Character %s self-deleted. (%s account)") %
                        delname % account->name);
@@ -3401,11 +3413,6 @@ int Descriptor::doAccountStuff(char* arg) {
       trophy = new TTrophy(delname);
       trophy->wipe();
       delete trophy;
-
-      // delete player entry (FK CASCADE handles blockedlist, tattoos, mail,
-      // etc.) - look up by name since playerID is not set in the account menu
-      // flow
-      db.query("delete from player where name='%s'", delname);
 
       wipePlayerFile(delname);  // handles corpses too
       wipeRentFile(delname);

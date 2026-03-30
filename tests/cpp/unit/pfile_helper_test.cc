@@ -6,29 +6,32 @@
 #include "charfile.h"
 #include "db.h"
 #include "pfile_helper.h"
-#include "database_fixture.h"
+#include "game_fixture.h"
 
 namespace fs = std::filesystem;
 
-class PfileHelperTest : public DatabaseFixture {};
+class PfileHelperTest : public GameFixture {};
 
 TEST_F(PfileHelperTest, WritePfileCreatesFileAtLowercasePath) {
   PfileHelper pfile("Testchar", 10, RACE_HUMAN);
 
   // load_char uses LOWER(name[0]) / name.lower() for the path.
   fs::path expected = fs::path(Path::MUTABLE_PLAYER) / "t" / "testchar";
-  EXPECT_TRUE(fs::exists(expected));
+  ASSERT_TRUE(fs::exists(expected));
 
   auto size = fs::file_size(expected);
-  EXPECT_EQ(size, sizeof(charFile));
+  ASSERT_EQ(size, sizeof(charFile));
 }
 
 TEST_F(PfileHelperTest, WritePfileContainsCorrectData) {
   PfileHelper pfile("Testchar", 25, RACE_ELVEN);
 
   std::ifstream in(pfile.path(), std::ios::binary);
-  charFile cf;
+  ASSERT_TRUE(in.is_open()) << "Failed to open pfile: " << pfile.path();
+
+  charFile cf{};
   in.read(reinterpret_cast<char*>(&cf), sizeof(cf));
+  ASSERT_TRUE(in) << "Failed to read pfile: " << pfile.path();
 
   EXPECT_STREQ(cf.name, "Testchar");
   EXPECT_EQ(cf.level[0], 25);

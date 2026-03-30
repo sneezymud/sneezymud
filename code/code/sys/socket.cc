@@ -633,9 +633,11 @@ procQuerytimesCleanup::procQuerytimesCleanup(const int& p) {
 
 void procQuerytimesCleanup::run(const TPulse&) const {
   TDatabase db(DB_SNEEZY);
+  // Batch limit prevents long locks on first run against large backlog.
   db.query(
     "DELETE FROM querytimes "
-    "WHERE date_logged < DATE_SUB(NOW(), INTERVAL 30 DAY)");
+    "WHERE date_logged < DATE_SUB(NOW(), INTERVAL 30 DAY) "
+    "LIMIT 10000");
 }
 
 procTellHistoryCleanup::procTellHistoryCleanup(const int& p) {
@@ -650,9 +652,9 @@ void procTellHistoryCleanup::run(const TPulse&) const {
     "INNER JOIN ("
     "  SELECT id FROM ("
     "    SELECT id, ROW_NUMBER() OVER "
-    "      (PARTITION BY to_id ORDER BY telltime DESC) AS rn "
+    "      (PARTITION BY to_id ORDER BY telltime DESC, id DESC) AS rn"
     "    FROM tellhistory"
-    "  ) ranked WHERE rn > 25"
+    "  ) ranked WHERE rn > 25 LIMIT 10000"
     ") excess ON t.id = excess.id");
 }
 

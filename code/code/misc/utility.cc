@@ -1696,14 +1696,10 @@ void TBeing::addToMoney(int money, moneyTypeT type, bool allowTithe) {
         reconcileHelp(NULL, -money * TITHE_FACTOR);
         break;
       case GOLD_GAMBLE:
-        db.query("select 1 from gamblers where player_id=%i", getPlayerID());
-        if (!db.fetchRow()) {
-          db.query("insert into gamblers values (%i, %i)", getPlayerID(),
-            money);
-        } else {
-          db.query("update gamblers set money=money+%i where player_id=%i",
-            money, getPlayerID());
-        }
+        db.query(
+          "insert into gamblers (player_id, money) values (%i, %i) "
+          "on duplicate key update money=money+%i",
+          getPlayerID(), money, money);
         // fall through
       case GOLD_REPAIR:
       case GOLD_SHOP:

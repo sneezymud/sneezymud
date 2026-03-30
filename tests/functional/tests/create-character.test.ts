@@ -18,7 +18,9 @@ describe("character creation", () => {
     try {
       await deleteAccount({ account, connection, password });
     } catch {
-      // best-effort cleanup
+      console.warn(
+        `Best-effort cleanup of ephemeral account "${account}" failed`,
+      );
     }
   });
 

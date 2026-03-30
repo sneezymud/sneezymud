@@ -101,11 +101,10 @@ float shopData::getProfitSell(const TObj* obj, const TBeing* ch) {
   }
 
   // check pricing for player
-  for (iter = sell_player_cache.begin(); ch && iter != sell_player_cache.end();
-       ++iter) {
-    if ((*iter).first == (sstring)ch->name) {
-      profit = ((*iter).second);
-      break;
+  if (ch) {
+    if (auto it = sell_player_cache.find(ch->getPlayerID());
+      it != sell_player_cache.end()) {
+      profit = it->second;
     }
   }
 
@@ -161,15 +160,15 @@ bool shopData::ensureCache() {
   }
 
   db.query(
-    "select p.name, sop.profit_buy, sop.profit_sell, sop.max_num "
+    "select sop.player_id, sop.profit_buy, sop.profit_sell, sop.max_num "
     "from shopownedplayer sop "
-    "join player p on sop.player_id=p.id "
     "where sop.shop_nr=%i",
     shop_nr);
   while (db.fetchRow()) {
-    buy_player_cache[db["name"]] = convertTo<float>(db["profit_buy"]);
-    sell_player_cache[db["name"]] = convertTo<float>(db["profit_sell"]);
-    max_player_cache[db["name"]] = convertTo<int>(db["max_num"]);
+    int pid = convertTo<int>(db["player_id"]);
+    buy_player_cache[pid] = convertTo<float>(db["profit_buy"]);
+    sell_player_cache[pid] = convertTo<float>(db["profit_sell"]);
+    max_player_cache[pid] = convertTo<int>(db["max_num"]);
   }
 
   // clear all regular shopowned values to defaults (set only if query returns)
@@ -262,10 +261,12 @@ int shopData::getMaxNum(const TBeing* ch, const TObj* o, int defaultMax) {
   if (o && buy_ratios_cache.count(o->objVnum()))
     return max_ratios_cache[o->objVnum()];
 
-  for (iter = max_player_cache.begin(); ch && iter != max_player_cache.end();
-       ++iter)
-    if ((*iter).first == (sstring)ch->name)
-      return (*iter).second;
+  if (ch) {
+    if (auto it = max_player_cache.find(ch->getPlayerID());
+      it != max_player_cache.end()) {
+      return it->second;
+    }
+  }
 
   return max_num >= 0 ? max_num : defaultMax;
 }
@@ -301,12 +302,9 @@ float shopData::getProfitBuy(int vnum, sstring name, const TBeing* ch) {
 
   // check for player specific modifiers
   if (isOwned() && ch) {
-    for (iter = buy_player_cache.begin(); iter != buy_player_cache.end();
-         ++iter) {
-      if ((*iter).first == (sstring)ch->name) {
-        profit = ((*iter).second);
-        break;
-      }
+    if (auto it = buy_player_cache.find(ch->getPlayerID());
+      it != buy_player_cache.end()) {
+      profit = it->second;
     }
   }
 
