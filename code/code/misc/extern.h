@@ -16,8 +16,14 @@
 
 #include <sys/select.h>  // for fd_set
 #include <cmath>         // for pow
+#include <climits>       // for INT_MAX, INT_MIN
+#include <algorithm>     // for std::clamp
 
 struct PolyType;
+
+inline int saturate_to_int(double v) {
+  return (int)std::clamp(v, (double)INT_MIN, (double)INT_MAX);
+}
 class charFile;
 
 using std::max;

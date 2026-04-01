@@ -104,11 +104,12 @@
 int TObj::checkSpec(TBeing* t, cmdTypeT cmd, const char* arg, TThing* t2) {
   int rc;
 
-  // we use static_cast here because we don't ALWAYS pass the proper kind of
-  // parameter through the pointer fields.
+  // We use reinterpret_cast as we don't always pass a true TObj* as the extra
+  // pointer. Some commands pass other types (e.g. TBeing*) through t2.
+  // The receiving spec procs that need the real type cast it back via TThing*.
   if (spec) {
     rc = (objSpecials[GET_OBJ_SPE_INDEX(spec)].proc)(t, cmd, arg, this,
-      static_cast<TObj*>(t2));
+      reinterpret_cast<TObj*>(t2));
     return rc;
   }
   return FALSE;

@@ -347,8 +347,8 @@ int TBaseClothing::armorPriceStruct(armorLevT type, double* lev) const {
   double str_price = (str_lev * max(str_lev, 20.0) * 75);
 
   // now adjust above number so that it splits it over all the pieces...
-  int ac_comp = (int)(ac_price * ac_perc);
-  int str_comp = (int)(str_price * str_perc);
+  int ac_comp = saturate_to_int(ac_price * ac_perc);
+  int str_comp = saturate_to_int(str_price * str_perc);
 
   int price = 0;
   *lev = 0.0;
@@ -508,8 +508,9 @@ int TBaseClothing::suggestedPrice() const {
         affected[i].location == APPLY_HITNDAM) {
       // add directly to price since we don't want to be scaled
       // this formula is in balance notes
-      int amt = (int)(lev * max(lev, 20.0) * 450 / 4);
-      amt -= (int)((lev - num) * max(lev - num, 20.0) * 450 / 4);
+      double amt_d = lev * max(lev, 20.0) * 450.0 / 4.0
+                   - (lev - num) * max(lev - num, 20.0) * 450.0 / 4.0;
+      int amt = saturate_to_int(amt_d);
       price += amt;
     }
     if (canWear(ITEM_WEAR_FINGERS)) {
