@@ -222,9 +222,7 @@ void TBaseWeapon::dullMe(TBeing* ch, TTool* tool) {
 }
 
 int TBaseWeapon::sharpenPrice() const {
-  int cost = obj_flags.cost;
-  cost *= 5;
-  cost /= 100;
+  int cost = saturate_to_int((double)obj_flags.cost * 5 / 100);
 
   cost = max(cost, 1);
   if (!getMaxSharp())
@@ -1246,9 +1244,9 @@ int TBaseWeapon::suggestedPrice() const {
   }
   if (tohit) {
     // this formula is from balance notes
-    int amt = (int)(weapon_lev * max(weapon_lev, 20.0) * 450 / 4);
-    amt -=
-      (int)((weapon_lev - tohit) * max(weapon_lev - tohit, 20.0) * 450 / 4);
+    double amt_d = weapon_lev * max(weapon_lev, 20.0) * 450.0 / 4.0
+                 - (weapon_lev - tohit) * max(weapon_lev - tohit, 20.0) * 450.0 / 4.0;
+    int amt = saturate_to_int(amt_d);
     price += amt;
   }
   switch (todam) {

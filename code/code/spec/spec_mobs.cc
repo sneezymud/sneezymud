@@ -3203,7 +3203,7 @@ static int attunePrice(const TSymbol* obj, TBeing* ch, unsigned int shop_nr) {
 
   cost *= shop_index[shop_nr].getProfitBuy(obj, ch);
 
-  return (int)cost;
+  return saturate_to_int(cost);
 }
 
 void attune_struct::clearAttuneData() {

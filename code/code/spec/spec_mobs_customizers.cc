@@ -40,7 +40,7 @@ static int engraveCost(TObj* obj, TBeing* ch, unsigned int shop_nr) {
   if (shop_nr)
     cost *= shop_index[shop_nr].getProfitBuy(obj, ch);
 
-  return (int)cost;
+  return saturate_to_int(cost);
 }
 
 int engraver(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {

@@ -357,7 +357,7 @@ int TObj::sellPrice(int, int shop_nr, float chr, const TBeing* ch) {
   // make sure we don't have a negative cost
   cost = max(1.0, cost);
 
-  return (int)cost;
+  return saturate_to_int(cost);
 }
 
 // this is price shop will sell it at
@@ -377,7 +377,7 @@ int TObj::shopPrice(int num, int shop_nr, float chr, const TBeing* ch) const {
 
   // cast this back to an int so that we can multiple without inflating the
   // price
-  int singleCost = (int)cost;
+  int singleCost = saturate_to_int(cost);
 
   // finally do the multiplication for number of items
   // we do this last so that the actual price is the same as the single-object
