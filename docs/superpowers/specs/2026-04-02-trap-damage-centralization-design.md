@@ -103,8 +103,38 @@ Append `\n\r` to all source message constants (`DOOR_TRAP_CHAR_MSG`, `PORTAL_TRA
 | Acid | `ROOM_MOD` (0.5) | `OTHER_SIDE_MOD` (1/3) | none |
 | Pierce/Blade/Hammer/Fire | none | none | n/a |
 
+## Consolidated Damage Modifiers
+
+The old code had identical per-type modifier switches duplicated across all five `get*TrapDam` functions. The refactor extracted `getDoorTrapDamageModifier` for door/container/mine but changed several values, while grenade/arrow kept separate inline switches with the old values. This created a divergence.
+
+Resolution: consolidate into a single `getTrapDamageModifier` function used by all five `get*TrapDam` functions. Values are the max (higher damage) of old and new for each type:
+
+| Trap Type | Old (all) | New (door) | Consolidated |
+|-----------|-----------|------------|-------------|
+| TNT | +3 | +3 | +3 |
+| Poison | -1 | -1 | -1 |
+| Sleep | +1 | +1 | +1 |
+| Acid | +1 | +1 | +1 |
+| Disease | +3 | -1 | +3 |
+| Frost | +3 | 0 | +3 |
+| Fire | 0 | +1 | +1 |
+| Hammer | -10 | +2 | +2 |
+| Blade | -3 | +1 | +1 |
+| Spike | -5 | 0 | 0 |
+| Teleport | +5 | 0 | +5 |
+| Energy | +5 | +1 | +5 |
+| Bolt | +1 | 0 | +1 |
+| Disk | +3 | 0 | +3 |
+| Pebble | -5 | 0 | 0 |
+
+The grenade and arrow functions drop their inline switches and call `getTrapDamageModifier` like the others.
+
+## Additional Fixes
+
+- **Mine frost trap message**: `triggerTrap()` FROST case still uses old-style `act("An icy cloud pours out of $p.", ...)` instead of standardized `MINE_TRAP_CHAR_MSG` + `FROST_EFFECT_CHAR_MSG`. Update to match all other mine cases.
+
 ## Files Changed
 
-- `code/code/misc/trap.cc` — Add TrapTypeInfo table, helper functions, refactor trigger functions, delete dead functions, fix message constants
+- `code/code/misc/trap.cc` — Add TrapTypeInfo table, helper functions, refactor trigger functions, delete dead functions, fix message constants, consolidate damage modifiers, fix mine frost message
 - `code/code/misc/trap.h` — Add TrapTypeInfo struct declaration (if needed externally, otherwise stays in anonymous namespace)
 - `code/code/misc/being.h` — Remove dead `trapDoor*Damage` declarations
