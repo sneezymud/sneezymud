@@ -105,29 +105,9 @@ Append `\n\r` to all source message constants (`DOOR_TRAP_CHAR_MSG`, `PORTAL_TRA
 
 ## Consolidated Damage Modifiers
 
-The old code had identical per-type modifier switches duplicated across all five `get*TrapDam` functions. The refactor extracted `getDoorTrapDamageModifier` for door/container/mine but changed several values, while grenade/arrow kept separate inline switches with the old values. This created a divergence.
+The old code had identical per-type modifier switches duplicated across all five `get*TrapDam` functions. The refactor extracted the shared switch into `getDoorTrapDamageModifier` for door/container/mine, but grenade and arrow kept their own inline copies. The values are identical across all five — the duplication is purely mechanical.
 
-Resolution: consolidate into a single `getTrapDamageModifier` function used by all five `get*TrapDam` functions. Values are the max (higher damage) of old and new for each type:
-
-| Trap Type | Old (all) | New (door) | Consolidated |
-|-----------|-----------|------------|-------------|
-| TNT | +3 | +3 | +3 |
-| Poison | -1 | -1 | -1 |
-| Sleep | +1 | +1 | +1 |
-| Acid | +1 | +1 | +1 |
-| Disease | +3 | -1 | +3 |
-| Frost | +3 | 0 | +3 |
-| Fire | 0 | +1 | +1 |
-| Hammer | -10 | +2 | +2 |
-| Blade | -3 | +1 | +1 |
-| Spike | -5 | 0 | 0 |
-| Teleport | +5 | 0 | +5 |
-| Energy | +5 | +1 | +5 |
-| Bolt | +1 | 0 | +1 |
-| Disk | +3 | 0 | +3 |
-| Pebble | -5 | 0 | 0 |
-
-The grenade and arrow functions drop their inline switches and call `getTrapDamageModifier` like the others.
+Consolidation: rename `getDoorTrapDamageModifier` → `getTrapDamageModifier`, then replace the grenade and arrow inline switches with calls to the shared function. No value changes needed — all five already match.
 
 ## Additional Fixes
 
