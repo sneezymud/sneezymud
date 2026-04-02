@@ -87,6 +87,12 @@ namespace {
   constexpr const char* BLADE_EFFECT_ROOM_MSG = "$n is sliced by the razor blades.";
   constexpr const char* BLUNT_EFFECT_CHAR_MSG = "You are pummeled by the heavy weights!";
   constexpr const char* BLUNT_EFFECT_ROOM_MSG = "$n is pummeled by the heavy weights.";
+  constexpr const char* BOLT_EFFECT_CHAR_MSG = "You are perforated by the bolts!";
+  constexpr const char* BOLT_EFFECT_ROOM_MSG = "$n is perforated by the bolts.";
+  constexpr const char* DISK_EFFECT_CHAR_MSG = "You are slashed by the razor-disks!";
+  constexpr const char* DISK_EFFECT_ROOM_MSG = "$n is slashed by the razor-disks.";
+  constexpr const char* PEBBLE_EFFECT_CHAR_MSG = "You are hit by the fusillade!";
+  constexpr const char* PEBBLE_EFFECT_ROOM_MSG = "$n is hit by the pebbles.";
   constexpr const char* TELEPORT_EFFECT_CHAR_MSG = "You find yourself sucked into the vortex!";
   constexpr const char* TELEPORT_EFFECT_ROOM_MSG = "$n flails wildly, but falls into the vortex.";
   constexpr const char* DISEASE_EFFECT_CHAR_MSG = "You are surrounded by a cloud of spores!";
@@ -135,11 +141,11 @@ namespace {
     // DOOR_TRAP_ENERGY
     {DAMAGE_TRAP_ENERGY, ENERGY_EFFECT_CHAR_MSG, ENERGY_EFFECT_ROOM_MSG, nullptr},
     // DOOR_TRAP_BOLT
-    {DAMAGE_TRAP_PIERCE, SPIKE_EFFECT_CHAR_MSG, SPIKE_EFFECT_ROOM_MSG, nullptr},
+    {DAMAGE_TRAP_PIERCE, BOLT_EFFECT_CHAR_MSG, BOLT_EFFECT_ROOM_MSG, nullptr},
     // DOOR_TRAP_DISK
-    {DAMAGE_TRAP_SLASH, BLADE_EFFECT_CHAR_MSG, BLADE_EFFECT_ROOM_MSG, nullptr},
+    {DAMAGE_TRAP_SLASH, DISK_EFFECT_CHAR_MSG, DISK_EFFECT_ROOM_MSG, nullptr},
     // DOOR_TRAP_PEBBLE
-    {DAMAGE_TRAP_BLUNT, BLUNT_EFFECT_CHAR_MSG, BLUNT_EFFECT_ROOM_MSG, nullptr},
+    {DAMAGE_TRAP_BLUNT, PEBBLE_EFFECT_CHAR_MSG, PEBBLE_EFFECT_ROOM_MSG, nullptr},
   }};
 
   // Iterates a room's occupants and applies trap damage at a modifier.
