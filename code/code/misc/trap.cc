@@ -1431,26 +1431,16 @@ int TBeing::triggerTrap(TTrap* o) {
       return TRUE;
     case DOOR_TRAP_FIRE:
       sendTo(format(MINE_TRAP_CHAR_MSG) % fname(o->getName()));
-      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), false, this, 0, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
-        for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
-          v = *(it++);
-          tbt = dynamic_cast<TBeing*>(v);
-          if (tbt && tbt->desc && tbt != this) {
-            act(FIRE_EFFECT_CHAR_MSG, FALSE, tbt, o, 0, TO_CHAR);
-            act(FIRE_EFFECT_ROOM_MSG, FALSE, tbt, o, 0, TO_ROOM);
-            rc = tbt->objDamage(DAMAGE_TRAP_FIRE, o->getTrapDamAmount() * ROOM_MOD, o);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              delete tbt;
-              tbt = NULL;
-            }
-          }
-        }
+        applyRoomWideDamage(this, roomp, trapTypeInfo[static_cast<doorTrapT>(o->getTrapDamType())],
+                            o->getTrapDamAmount(), ROOM_MOD, o,
+                            [](TBeing* b) { return !b->desc; });
       }
 
-      act(FIRE_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
-      act(FIRE_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
+      act(FIRE_EFFECT_CHAR_MSG, false, this, o, 0, TO_CHAR);
+      act(FIRE_EFFECT_ROOM_MSG, false, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_FIRE, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -1460,7 +1450,7 @@ int TBeing::triggerTrap(TTrap* o) {
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
 
-      return TRUE;
+      return true;
     case DOOR_TRAP_TELEPORT:
       sendTo(format(MINE_TRAP_CHAR_MSG) % fname(o->getName()));
       act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
@@ -1510,141 +1500,86 @@ int TBeing::triggerTrap(TTrap* o) {
       return TRUE;
     case DOOR_TRAP_BOLT:
       sendTo(format(MINE_TRAP_CHAR_MSG) % fname(o->getName()));
-      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), false, this, 0, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
-        for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
-          v = *(it++);
-          tbt = dynamic_cast<TBeing*>(v);
-          if (tbt && tbt->desc && tbt != this) {
-            act(SPIKE_EFFECT_CHAR_MSG, FALSE, tbt, o, 0, TO_CHAR);
-            act(SPIKE_EFFECT_ROOM_MSG, FALSE, tbt, o, 0, TO_ROOM);
-            rc = tbt->objDamage(DAMAGE_TRAP_PIERCE,
-              o->getTrapDamAmount() * ROOM_MOD, o);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              delete tbt;
-              tbt = NULL;
-            }
-          }
-        }
+        applyRoomWideDamage(this, roomp, trapTypeInfo[static_cast<doorTrapT>(o->getTrapDamType())],
+                            o->getTrapDamAmount(), ROOM_MOD, o,
+                            [](TBeing* b) { return !b->desc; });
       }
 
-      act(SPIKE_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
-      act(SPIKE_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
+      act(SPIKE_EFFECT_CHAR_MSG, false, this, o, 0, TO_CHAR);
+      act(SPIKE_EFFECT_ROOM_MSG, false, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_PIERCE, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
 
-      return TRUE;
+      return true;
     case DOOR_TRAP_PEBBLE:
       sendTo(format(MINE_TRAP_CHAR_MSG) % fname(o->getName()));
-      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), false, this, 0, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
-        for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
-          v = *(it++);
-          tbt = dynamic_cast<TBeing*>(v);
-          if (tbt && tbt->desc && tbt != this) {
-            act(BLUNT_EFFECT_CHAR_MSG, FALSE, tbt, o, 0, TO_CHAR);
-            act(BLUNT_EFFECT_ROOM_MSG, FALSE, tbt, o, 0, TO_ROOM);
-            rc = tbt->objDamage(DAMAGE_TRAP_BLUNT,
-              o->getTrapDamAmount() * ROOM_MOD, o);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              delete tbt;
-              tbt = NULL;
-            }
-          }
-        }
+        applyRoomWideDamage(this, roomp, trapTypeInfo[static_cast<doorTrapT>(o->getTrapDamType())],
+                            o->getTrapDamAmount(), ROOM_MOD, o,
+                            [](TBeing* b) { return !b->desc; });
       }
 
-      act(BLUNT_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
-      act(BLUNT_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
+      act(BLUNT_EFFECT_CHAR_MSG, false, this, o, 0, TO_CHAR);
+      act(BLUNT_EFFECT_ROOM_MSG, false, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_BLUNT, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
 
-      return TRUE;
+      return true;
     case DOOR_TRAP_DISK:
       sendTo(format(MINE_TRAP_CHAR_MSG) % fname(o->getName()));
-      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), false, this, 0, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
-        for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
-          v = *(it++);
-          tbt = dynamic_cast<TBeing*>(v);
-          if (tbt && tbt->desc && tbt != this) {
-            act(BLADE_EFFECT_CHAR_MSG, FALSE, tbt, o, 0, TO_CHAR);
-            act(BLADE_EFFECT_ROOM_MSG, FALSE, tbt, o, 0, TO_ROOM);
-            rc = tbt->objDamage(DAMAGE_TRAP_SLASH,
-              o->getTrapDamAmount() * ROOM_MOD, o);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              delete tbt;
-              tbt = NULL;
-            }
-          }
-        }
+        applyRoomWideDamage(this, roomp, trapTypeInfo[static_cast<doorTrapT>(o->getTrapDamType())],
+                            o->getTrapDamAmount(), ROOM_MOD, o,
+                            [](TBeing* b) { return !b->desc; });
       }
 
-      act(BLADE_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
-      act(BLADE_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
+      act(BLADE_EFFECT_CHAR_MSG, false, this, o, 0, TO_CHAR);
+      act(BLADE_EFFECT_ROOM_MSG, false, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_SLASH, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
-      return TRUE;
+      return true;
     case DOOR_TRAP_TNT:
       sendTo(format(MINE_TRAP_CHAR_MSG) % fname(o->getName()));
-      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), false, this, 0, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
-        for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
-          v = *(it++);
-          tbt = dynamic_cast<TBeing*>(v);
-          if (tbt && tbt->desc && tbt != this) {
-            act(TNT_EFFECT_CHAR_MSG, FALSE, tbt, o, 0, TO_CHAR);
-            act(TNT_EFFECT_ROOM_MSG, FALSE, tbt, o, 0, TO_ROOM);
-            rc =
-              tbt->objDamage(DAMAGE_TRAP_TNT, o->getTrapDamAmount() * ROOM_MOD, o);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              delete tbt;
-              tbt = NULL;
-            }
-          }
-        }
+        applyRoomWideDamage(this, roomp, trapTypeInfo[static_cast<doorTrapT>(o->getTrapDamType())],
+                            o->getTrapDamAmount(), ROOM_MOD, o,
+                            [](TBeing* b) { return !b->desc; });
       }
 
-      act(TNT_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
-      act(TNT_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
+      act(TNT_EFFECT_CHAR_MSG, false, this, o, 0, TO_CHAR);
+      act(TNT_EFFECT_ROOM_MSG, false, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_TNT, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
-      return TRUE;
+      return true;
     case DOOR_TRAP_FROST:
-      act("An icy cloud pours out of $p.", FALSE, this, o, 0, TO_CHAR);
-      act("An icy cloud pours out of $p.", FALSE, this, o, 0, TO_ROOM);
+      sendTo(format(MINE_TRAP_CHAR_MSG) % fname(o->getName()));
+      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), false, this, 0, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
-        for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
-          v = *(it++);
-          tbt = dynamic_cast<TBeing*>(v);
-          if (tbt && tbt->desc && tbt != this) {
-            act(FROST_EFFECT_CHAR_MSG, FALSE, tbt, o, 0, TO_CHAR);
-            act(FROST_EFFECT_ROOM_MSG, FALSE, tbt, o, 0, TO_ROOM);
-            rc = tbt->objDamage(DAMAGE_TRAP_FROST,
-              o->getTrapDamAmount() * ROOM_MOD, o);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              delete tbt;
-              tbt = NULL;
-            }
-          }
-        }
+        applyRoomWideDamage(this, roomp, trapTypeInfo[static_cast<doorTrapT>(o->getTrapDamType())],
+                            o->getTrapDamAmount(), ROOM_MOD, o,
+                            [](TBeing* b) { return !b->desc; });
       }
 
-      act(FROST_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
-      act(FROST_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
+      act(FROST_EFFECT_CHAR_MSG, false, this, o, 0, TO_CHAR);
+      act(FROST_EFFECT_ROOM_MSG, false, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_FROST, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -1654,58 +1589,36 @@ int TBeing::triggerTrap(TTrap* o) {
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
 
-      return TRUE;
+      return true;
     case DOOR_TRAP_ENERGY:
       sendTo(format(MINE_TRAP_CHAR_MSG) % fname(o->getName()));
-      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), false, this, 0, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
-        for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
-          v = *(it++);
-          tbt = dynamic_cast<TBeing*>(v);
-          if (tbt && tbt->desc && tbt != this) {
-            act(ENERGY_EFFECT_CHAR_MSG, FALSE, tbt, o, 0, TO_CHAR);
-            act(ENERGY_EFFECT_ROOM_MSG, FALSE, tbt, o, 0, TO_ROOM);
-            rc = tbt->objDamage(DAMAGE_TRAP_ENERGY,
-              o->getTrapDamAmount() * ROOM_MOD, o);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              delete tbt;
-              tbt = NULL;
-            }
-          }
-        }
+        applyRoomWideDamage(this, roomp, trapTypeInfo[static_cast<doorTrapT>(o->getTrapDamType())],
+                            o->getTrapDamAmount(), ROOM_MOD, o,
+                            [](TBeing* b) { return !b->desc; });
       }
 
-      act(ENERGY_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
-      act(ENERGY_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
+      act(ENERGY_EFFECT_CHAR_MSG, false, this, o, 0, TO_CHAR);
+      act(ENERGY_EFFECT_ROOM_MSG, false, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_ENERGY, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
-      return TRUE;
+      return true;
     case DOOR_TRAP_ACID:
       sendTo(format(MINE_TRAP_CHAR_MSG) % fname(o->getName()));
-      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
+      act(format(MINE_TRAP_ROOM_MSG) % fname(o->getName()), false, this, 0, 0, TO_ROOM);
 
       if (o->isTrapEffectType(TRAP_EFF_ROOM)) {
-        for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
-          v = *(it++);
-          tbt = dynamic_cast<TBeing*>(v);
-          if (tbt && tbt->desc && tbt != this) {
-            act(ACID_EFFECT_CHAR_MSG, FALSE, tbt, o, 0, TO_CHAR);
-            act(ACID_EFFECT_ROOM_MSG, FALSE, tbt, o, 0, TO_ROOM);
-            rc = tbt->objDamage(DAMAGE_TRAP_ACID, o->getTrapDamAmount() * ROOM_MOD,
-              o);
-            if (IS_SET_DELETE(rc, DELETE_THIS)) {
-              delete tbt;
-              tbt = NULL;
-            }
-          }
-        }
+        applyRoomWideDamage(this, roomp, trapTypeInfo[static_cast<doorTrapT>(o->getTrapDamType())],
+                            o->getTrapDamAmount(), ROOM_MOD, o,
+                            [](TBeing* b) { return !b->desc; });
       }
 
-      act(ACID_EFFECT_CHAR_MSG, FALSE, this, o, 0, TO_CHAR);
-      act(ACID_EFFECT_ROOM_MSG, FALSE, this, o, 0, TO_ROOM);
+      act(ACID_EFFECT_CHAR_MSG, false, this, o, 0, TO_CHAR);
+      act(ACID_EFFECT_ROOM_MSG, false, this, o, 0, TO_ROOM);
 
       rc = objDamage(DAMAGE_TRAP_ACID, o->getTrapDamAmount(), o);
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -1715,7 +1628,7 @@ int TBeing::triggerTrap(TTrap* o) {
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
 
-      return TRUE;
+      return true;
     default:
       vlogf(LOG_BUG, format("Unknown trap type %d in triggerTrap (%s:%d)") %
                        o->getTrapDamType() % o->getName() % o->objVnum());
