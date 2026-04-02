@@ -8,7 +8,10 @@
 #include "combat.h"
 #include "disc_thief_looting.h"
 #include "obj_trap.h"
+#include "obj_trap_component.h"
+#include "trap.h"
 #include "obj_portal.h"
+#include "low.h"
 
 int TBeing::doSearch(const char* argument) {
   int rc;
@@ -141,10 +144,8 @@ int TBeing::disarmTrap(const char* arg, TObj* tp) {
 
   if ((trap = tp) || (trap = get_obj_vis_accessible(this, type))) {
     rc = disarmTrapObj(this, trap);
-    if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-      delete trap;
-      trap = NULL;
-    }
+    if (IS_SET_DELETE(rc, DELETE_ITEM))
+      trap = nullptr;
     if (rc)
       addSkillLag(SKILL_DISARM_TRAP, rc);
 
@@ -170,6 +171,94 @@ int TBeing::disarmTrap(const char* arg, TObj* tp) {
   return FALSE;
 }
 
+// Helper function to reclaim trap components during disarming
+bool reclaimTrapComps(TBeing* thief, sstring trap_type, TTrap* trap) {
+  std::vector<int> components;
+  size_t comp_recovered = 0;
+  bool casing_recovered = false;
+
+  // Determine trap target type for correct component selection
+  trap_targ_t targ = TRAP_TARG_DOOR; // default for door traps (trap == nullptr)
+  if (trap) {
+    if (trap->isTrapEffectType(TRAP_EFF_THROW))
+      targ = TRAP_TARG_GRENADE;
+    else if (trap->isTrapEffectType(TRAP_EFF_MOVE))
+      targ = TRAP_TARG_MINE;
+    else
+      targ = TRAP_TARG_CONT;
+  }
+
+  int item1, item2, item3;
+  if (!getTrapComponents(trap_type.c_str(), targ, item1, item2, item3))
+    return false;
+
+  components = {item1, item2, item3};
+
+  // Calculate chance of recovering each component
+  int recovery_chance = 50 + (thief->getSkillValue(SKILL_DISARM_TRAP) / 2);
+
+  for (auto item_vnum : components) {
+    // Roll for each component
+    if (::number(1, 100) <= recovery_chance) {
+      TObj* comp = read_object(item_vnum, VIRTUAL);
+      if (comp) {
+        // If it's a trap component, set it up with charges
+        TTrapComponent* trapComp = dynamic_cast<TTrapComponent*>(comp);
+        if (trapComp) {
+          trapComp->setTrapComponentCharges(1); // Salvaged components have 1 charge
+        }
+
+        // Notify player of recovered component first
+        thief->sendTo(format("You carefully recover %s from the trap.\n\r") %
+                      comp->shortDescr);
+
+        // Then add to inventory (which may trigger merge messages)
+        *thief += *comp;
+        comp_recovered++;
+      }
+    }
+  }
+
+  // Also try to recover the casing for grenades and mines
+  if (targ == TRAP_TARG_GRENADE || targ == TRAP_TARG_MINE) {
+    int casing_vnum = (targ == TRAP_TARG_GRENADE)
+      ? Obj::ST_CASE_GRENADE
+      : Obj::ST_CASE_MINE;
+
+    if (casing_vnum != -1 && ::number(1, 100) <= recovery_chance) {
+      TObj* casing = read_object(casing_vnum, VIRTUAL);
+      if (casing) {
+        // If it's a trap component, set it up with charges
+        TTrapComponent* trapComp = dynamic_cast<TTrapComponent*>(casing);
+        if (trapComp) {
+          trapComp->setTrapComponentCharges(1); // Salvaged components have 1 charge
+        }
+
+        // Notify player of recovered casing first
+        thief->sendTo(format("You carefully recover %s from the trap.\n\r") %
+                      casing->shortDescr);
+
+        // Then add to inventory (which may trigger merge messages)
+        *thief += *casing;
+        casing_recovered = true;
+      }
+    }
+  }
+
+  if (comp_recovered == 0 && !casing_recovered) {
+    thief->sendTo(
+      "You were unable to salvage any components from the trap.\n\r");
+    return false;
+  } else if (comp_recovered < components.size()) {
+    thief->sendTo("You managed to salvage some components from the trap.\n\r");
+  } else {
+    thief->sendTo(
+      "You successfully recovered all components from the trap!\n\r");
+  }
+
+  return true;
+}
+
 int TObj::disarmMe(TBeing* thief) {
   thief->sendTo("I don't think that's a trap.\n\r");
   return FALSE;
@@ -190,8 +279,31 @@ int TTrap::disarmMe(TBeing* thief) {
   if (thief->bSuccess(bKnown, SKILL_DISARM_TRAP)) {
     thief->sendTo(format("Click.  You disarm the %s trap.\n\r") % trap_type);
     act("$n disarms $p.", FALSE, thief, this, 0, TO_ROOM);
-    setTrapCharges(0);
-    return TRUE;
+
+    // Try to salvage components if the thief has the appropriate trap-setting skills
+    bool canSalvage = false;
+    if (isTrapEffectType(TRAP_EFF_THROW) && thief->doesKnowSkill(SKILL_SET_TRAP_GREN)) {
+      canSalvage = true;
+    } else if (isTrapEffectType(TRAP_EFF_MOVE) && !isTrapEffectType(TRAP_EFF_THROW) &&
+               thief->doesKnowSkill(SKILL_SET_TRAP_MINE)) {
+      canSalvage = true;
+    } else if (!isTrapEffectType(TRAP_EFF_THROW) && !isTrapEffectType(TRAP_EFF_MOVE) &&
+               thief->doesKnowSkill(SKILL_SET_TRAP_CONT)) {
+      canSalvage = true;
+    }
+
+    if (canSalvage) {
+      reclaimTrapComps(thief, trap_type, this);
+    } else {
+      thief->sendTo(
+        "You lack the knowledge to salvage components from this type of "
+        "trap.\n\r");
+    }
+
+    // Trap is spent — remove from world and notify caller
+    --(*this);
+    delete this;
+    return DELETE_ITEM;
   } else {
     thief->sendTo("Click. (whoops)\n\r");
     act("$n tries to disarm $p.", FALSE, thief, this, 0, TO_ROOM);
@@ -209,7 +321,7 @@ int disarmTrapObj(TBeing* thief, TObj* trap) {
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     return DELETE_THIS;
   }
-  return FALSE;
+  return rc;
 }
 
 int disarmTrapDoor(TBeing* thief, dirTypeT door) {
@@ -237,6 +349,16 @@ int disarmTrapDoor(TBeing* thief, dirTypeT door) {
                   trap_type % doorbuf);
     sprintf(buf, "$n disarms the %s trap in the %s.", trap_type, doorbuf);
     act(buf, FALSE, thief, 0, 0, TO_ROOM);
+
+    // Try to salvage components from door traps if the thief has the appropriate skill
+    if (thief->doesKnowSkill(SKILL_SET_TRAP_DOOR)) {
+      reclaimTrapComps(thief, trap_type, nullptr); // nullptr indicates door trap
+    } else {
+      thief->sendTo(
+        "You lack the knowledge to salvage components from this type of "
+        "trap.\n\r");
+    }
+
     REMOVE_BIT(exitp->condition, EXIT_TRAPPED);
     if ((rp = real_roomp(exitp->to_room)) &&
         (back = rp->dir_option[rev_dir(door)])) {
