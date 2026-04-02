@@ -691,7 +691,6 @@ int TBeing::doSetTraps(const char* arg) {
 int TBeing::triggerPortalTrap(TPortal* o) {
   int rc;
   int amnt;
-  TThing* t;
 
   act("You hear a strange noise...", TRUE, this, 0, 0, TO_ROOM);
   act("You hear a strange noise...", TRUE, this, 0, 0, TO_CHAR);
@@ -783,21 +782,9 @@ int TBeing::triggerPortalTrap(TPortal* o) {
       act(format(PORTAL_TRAP_ROOM_MSG) % fname(o->getName()), FALSE, this, 0, 0, TO_ROOM);
       amnt = o->getPortalTrapDam();
 
-      // fry people in room
-
-      for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
-        t = *(it++);
-        TBeing* tbt = dynamic_cast<TBeing*>(t);
-        if (tbt && this != tbt && !tbt->isImmortal()) {
-          act(TNT_EFFECT_CHAR_MSG, FALSE, tbt, 0, 0, TO_CHAR);
-          act(TNT_EFFECT_ROOM_MSG, FALSE, tbt, 0, 0, TO_ROOM);
-          rc = tbt->objDamage(DAMAGE_TRAP_TNT, amnt * ROOM_MOD, o);
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            delete tbt;
-            tbt = NULL;
-          }
-        }
-      }
+      applyRoomWideDamage(this, roomp, trapTypeInfo[DOOR_TRAP_TNT],
+                          amnt, ROOM_MOD, o,
+                          [](TBeing* b) { return b->isImmortal(); });
 
       act(TNT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
       act(TNT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
@@ -906,19 +893,8 @@ int TBeing::triggerContTrap(TOpenContainer* obj) {
         t = NULL;
       }
       // fry people in room
-      for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
-        t = *(it++);
-        TBeing* tbt = dynamic_cast<TBeing*>(t);
-        if (tbt && this != tbt) {
-          act(TNT_EFFECT_CHAR_MSG, FALSE, tbt, 0, 0, TO_CHAR);
-          act(TNT_EFFECT_ROOM_MSG, FALSE, tbt, 0, 0, TO_ROOM);
-          rc = tbt->objDamage(DAMAGE_TRAP_TNT, amnt * ROOM_MOD, obj);
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            delete tbt;
-            tbt = NULL;
-          }
-        }
-      }
+      applyRoomWideDamage(this, roomp, trapTypeInfo[DOOR_TRAP_TNT],
+                          amnt, ROOM_MOD, obj);
       act(TNT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
       act(TNT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
       rc = objDamage(DAMAGE_TRAP_TNT, amnt, obj);
@@ -1018,7 +994,6 @@ int TBeing::triggerContTrap(TOpenContainer* obj) {
 // triggers when arrow hits
 int TBeing::triggerArrowTrap(TArrow* obj) {
   int rc = 0;
-  TThing* t;
   int amnt;
 
   act(STRANGE_NOISE_MSG, TRUE, this, 0, 0, TO_ROOM);
@@ -1090,20 +1065,9 @@ int TBeing::triggerArrowTrap(TArrow* obj) {
     case DOOR_TRAP_TNT:
       amnt = obj->getTrapDamAmount();
 
-      // fry people in room
-      for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
-        t = *(it++);
-        TBeing* tbt = dynamic_cast<TBeing*>(t);
-        if (tbt && this != tbt && !tbt->isImmortal()) {
-          act(TNT_EFFECT_CHAR_MSG, FALSE, tbt, 0, 0, TO_CHAR);
-          act(TNT_EFFECT_ROOM_MSG, FALSE, tbt, 0, 0, TO_ROOM);
-          rc = tbt->objDamage(DAMAGE_TRAP_TNT, amnt * ROOM_MOD, obj);
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            delete tbt;
-            tbt = NULL;
-          }
-        }
-      }
+      applyRoomWideDamage(this, roomp, trapTypeInfo[DOOR_TRAP_TNT],
+                          amnt, ROOM_MOD, obj,
+                          [](TBeing* b) { return b->isImmortal(); });
 
       act(TNT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
       act(TNT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
