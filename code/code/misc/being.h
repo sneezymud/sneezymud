@@ -1055,8 +1055,7 @@ class TBeing : public TThing {
     bool willBump(int) const;
     bool willBumpHead(TRoom*) const;
     bool willBumpHeadDoor(roomDirData*, int*) const;
-    void sendTrapMessage(const char*, trap_targ_t, int);
-    bool hasTrapComps(const char*, trap_targ_t, int, int* price = NULL);
+    bool hasTrapComps(const char*, trap_targ_t, int, int* price = nullptr);
     int goofUpTrap(doorTrapT, trap_targ_t);
     int springTrap(TTrap*);
     int triggerTrap(TTrap*);
@@ -1068,14 +1067,6 @@ class TBeing : public TThing {
     int checkForInsideTrap(TThing*);
     int checkForGetTrap(TThing*);
     int checkForAnyTrap(TThing*);
-    int trapDoorSlashDamage(int, dirTypeT);
-    int trapDoorFireDamage(int, dirTypeT);
-    int trapDoorPierceDamage(int, dirTypeT);
-    int trapDoorTntDamage(int, dirTypeT);
-    int trapDoorAcidDamage(int, dirTypeT);
-    int trapDoorHammerDamage(int, dirTypeT);
-    int trapDoorEnergyDamage(int, dirTypeT);
-    int trapDoorFrostDamage(int, dirTypeT);
     virtual int grenadeHit(TTrap*);
     virtual bool addHated(TBeing*);
     virtual void setHunting(TBeing*) {}

@@ -1602,286 +1602,6 @@ int TBeing::triggerTrap(TTrap* o) {
   return TRUE;
 }
 
-// returns DELETE_THIs or FALSE
-int TBeing::trapDoorTntDamage(int amnt, dirTypeT door) {
-  TThing* t;
-  int rc;
-
-  sendToRoom("You hear a loud boom.\n\r", in_room);
-  sendToRoom("The door is ripped apart by some sort of explosive.\n\r",
-    in_room);
-
-  for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
-    t = *(it++);
-    TBeing* tbt = dynamic_cast<TBeing*>(t);
-    if (tbt && this != tbt) {
-      rc = tbt->objDamage(DAMAGE_TRAP_TNT, amnt * ROOM_MOD, NULL);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        delete tbt;
-        tbt = NULL;
-      }
-    }
-  }
-
-  // blow other side too
-  TRoom* rp;
-  if ((rp = real_roomp(exitDir(door)->to_room))) {
-    sendToRoom("You hear a loud boom.\n\r", exitDir(door)->to_room);
-    sendToRoom("The door is ripped apart by some sort of explosive.\n\r",
-      exitDir(door)->to_room);
-
-    for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end();) {
-      t = *(it++);
-      TBeing* tbt = dynamic_cast<TBeing*>(t);
-      if (tbt && this != tbt) {
-        rc = tbt->objDamage(DAMAGE_TRAP_TNT, amnt * OTHER_SIDE_MOD, NULL);
-        if (IS_SET_DELETE(rc, DELETE_THIS)) {
-          delete tbt;
-          tbt = NULL;
-        }
-      }
-    }
-  }
-
-  // apply top opened
-  return objDamage(DAMAGE_TRAP_TNT, amnt, NULL);
-}
-
-// returns DELETE_THIS or FALSE
-int TBeing::trapDoorPierceDamage(int amnt, dirTypeT door) {
-  char buf[256];
-
-  sprintf(buf,
-    "You hear a loud metallic sound as a sharpened spike leaps out of the "
-    "%s!\n\r",
-    fname(exitDir(door)->keyword).c_str());
-  sendToRoom(buf, in_room);
-
-  // blow other side too
-  TRoom* rp;
-  if ((rp = real_roomp(exitDir(door)->to_room))) {
-    sendToRoom(buf, exitDir(door)->to_room);
-  }
-
-  act("$n is skewered by the spike.", TRUE, this, 0, 0, TO_ROOM);
-  act("You are skewered by the spike.", TRUE, this, 0, 0, TO_CHAR);
-  return objDamage(DAMAGE_TRAP_PIERCE, amnt, NULL);
-}
-
-// returns DELETE_THIS or FALSE
-int TBeing::trapDoorHammerDamage(int amnt, dirTypeT door) {
-  char buf[256];
-
-  sprintf(buf,
-    "You hear a grinding noise as giant weights fall from above the %s!\n\r",
-    fname(exitDir(door)->keyword).c_str());
-  sendToRoom(buf, in_room);
-
-  // blow other side too
-  TRoom* rp;
-  if ((rp = real_roomp(exitDir(door)->to_room))) {
-    sendToRoom(buf, exitDir(door)->to_room);
-  }
-
-  act("$n is hit by a falling weight.", TRUE, this, 0, 0, TO_ROOM);
-  act("You are crushed by a falling weight.", TRUE, this, 0, 0, TO_CHAR);
-  return objDamage(DAMAGE_TRAP_BLUNT, amnt, NULL);
-}
-
-// returns DELETE_THIS or FALSE
-int TBeing::trapDoorSlashDamage(int amnt, dirTypeT door) {
-  char buf[256];
-
-  sprintf(buf,
-    "You hear a grinding noise as swinging blades slice out of %s!\n\r",
-    fname(exitDir(door)->keyword).c_str());
-  sendToRoom(buf, in_room);
-
-  // blow other side too
-  TRoom* rp;
-  if ((rp = real_roomp(exitDir(door)->to_room))) {
-    sendToRoom(buf, exitDir(door)->to_room);
-  }
-
-  act("$n is cut by the blades.", TRUE, this, 0, 0, TO_ROOM);
-  act("You are cut by the blades.", TRUE, this, 0, 0, TO_CHAR);
-  return objDamage(DAMAGE_TRAP_SLASH, amnt, NULL);
-}
-
-// returns DELETE_THIS or FALSE
-int TBeing::trapDoorFrostDamage(int amnt, dirTypeT door) {
-  TThing* t;
-  int rc;
-  char buf[256];
-
-  sprintf(buf,
-    "You hear a high pitched whine as a frosty blast rushes out of the %s!\n\r",
-    fname(exitDir(door)->keyword).c_str());
-  sendToRoom(buf, in_room);
-
-  for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
-    t = *(it++);
-    TBeing* tbt = dynamic_cast<TBeing*>(t);
-    if (tbt && this != tbt && !tbt->isImmortal()) {
-      act("$n is chilled by the arctic blast.", TRUE, tbt, 0, 0, TO_ROOM);
-      act("You are chilled by the arctic blast.", TRUE, tbt, 0, 0, TO_CHAR);
-      rc = tbt->objDamage(DAMAGE_TRAP_FROST, amnt * ROOM_MOD, NULL);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        delete tbt;
-        tbt = NULL;
-      }
-    }
-  }
-
-  // blow other side too
-  TRoom* rp;
-  if ((rp = real_roomp(exitDir(door)->to_room))) {
-    sendToRoom(buf, exitDir(door)->to_room);
-
-    for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end();) {
-      t = *(it++);
-      TBeing* tbt = dynamic_cast<TBeing*>(t);
-      if (tbt && this != tbt) {
-        act("$n is chilled by the arctic blast.", TRUE, tbt, 0, 0, TO_ROOM);
-        act("You are chilled by the arctic blast.", TRUE, tbt, 0, 0, TO_CHAR);
-        rc = tbt->objDamage(DAMAGE_TRAP_FROST, amnt * OTHER_SIDE_MOD, NULL);
-        if (IS_SET_DELETE(rc, DELETE_THIS)) {
-          delete tbt;
-          tbt = NULL;
-        }
-      }
-    }
-  }
-
-  act("$n is frozen by the arctic blast.", TRUE, this, 0, 0, TO_ROOM);
-  act("You are frozen by the arctic blast.", TRUE, this, 0, 0, TO_CHAR);
-
-  rc = frostEngulfed();
-  if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_THIS;
-
-  return objDamage(DAMAGE_TRAP_FROST, amnt, NULL);
-}
-
-// returns DELETE_THIS or FALSE
-int TBeing::trapDoorEnergyDamage(int amnt, dirTypeT door) {
-  TThing* t;
-  int rc;
-  char buf[256];
-
-  sprintf(buf,
-    "You hear a powerful humming as bolts of plasma stream out of the %s!\n\r",
-    fname(exitDir(door)->keyword).c_str());
-  sendToRoom(buf, in_room);
-
-  for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
-    t = *(it++);
-    TBeing* tbt = dynamic_cast<TBeing*>(t);
-    if (tbt && this != tbt && !tbt->isImmortal()) {
-      act("$n is hit by the plasma bolts.", TRUE, tbt, 0, 0, TO_ROOM);
-      act("You are hit by the plasma bolts.", TRUE, tbt, 0, 0, TO_CHAR);
-      rc = tbt->objDamage(DAMAGE_TRAP_ENERGY, amnt * ROOM_MOD, NULL);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        delete tbt;
-        tbt = NULL;
-      }
-    }
-  }
-
-  // blow other side too
-  TRoom* rp;
-  if ((rp = real_roomp(exitDir(door)->to_room))) {
-    sendToRoom(buf, exitDir(door)->to_room);
-
-    for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end();) {
-      t = *(it++);
-      TBeing* tbt = dynamic_cast<TBeing*>(t);
-      if (tbt && this != tbt) {
-        act("$n is hit by the plasma bolts.", TRUE, tbt, 0, 0, TO_ROOM);
-        act("You are hit by the plasma bolts.", TRUE, tbt, 0, 0, TO_CHAR);
-        rc = tbt->objDamage(DAMAGE_TRAP_ENERGY, amnt * OTHER_SIDE_MOD, NULL);
-        if (IS_SET_DELETE(rc, DELETE_THIS)) {
-          delete tbt;
-          tbt = NULL;
-        }
-      }
-    }
-  }
-
-  act("$n is blasted by numerous plasma bolts!", TRUE, this, 0, 0, TO_ROOM);
-  act("You are blasted by numerous plasma bolts!", TRUE, this, 0, 0, TO_CHAR);
-
-  return objDamage(DAMAGE_TRAP_ENERGY, amnt, NULL);
-}
-
-// returns DELETE_THIS or FALSE
-int TBeing::trapDoorFireDamage(int amnt, dirTypeT door) {
-  int rc;
-  char buf[256];
-
-  sprintf(buf,
-    "You feel an intense amount of heat as flames shoot from a %s!\n\r",
-    fname(exitDir(door)->keyword).c_str());
-  sendToRoom(buf, in_room);
-
-  act("$n is enveloped by flames.", TRUE, this, 0, 0, TO_ROOM);
-  act("You are enveloped by fire.", TRUE, this, 0, 0, TO_CHAR);
-
-  rc = flameEngulfed();
-  if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_THIS;
-
-  rc = objDamage(DAMAGE_TRAP_FIRE, amnt, NULL);
-  return rc;
-}
-
-// returns DELETE_THIS or FALSE
-int TBeing::trapDoorAcidDamage(int amnt, dirTypeT door) {
-  TThing* t;
-  int rc;
-  char buf[256];
-
-  sprintf(buf, "A strange liquid squirts everywhere as the %s is opened.\n\r",
-    fname(exitDir(door)->keyword).c_str());
-  sendToRoom(buf, in_room);
-
-  for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
-    t = *(it++);
-    TBeing* tbt = dynamic_cast<TBeing*>(t);
-    if (tbt && this != tbt) {
-      rc = tbt->objDamage(DAMAGE_TRAP_ACID, amnt * ROOM_MOD, NULL);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        delete tbt;
-        tbt = NULL;
-      }
-    }
-  }
-
-  // blow other side too
-  TRoom* rp;
-  if ((rp = real_roomp(exitDir(door)->to_room))) {
-    sendToRoom(buf, exitDir(door)->to_room);
-
-    for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end();) {
-      t = *(it++);
-      TBeing* tbt = dynamic_cast<TBeing*>(t);
-      if (tbt && this != tbt) {
-        rc = tbt->objDamage(DAMAGE_TRAP_ACID, amnt * OTHER_SIDE_MOD, NULL);
-        if (IS_SET_DELETE(rc, DELETE_THIS)) {
-          delete tbt;
-          tbt = NULL;
-        }
-      }
-    }
-  }
-
-  rc = acidEngulfed();
-  if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_THIS;
-
-  return objDamage(DAMAGE_TRAP_ACID, amnt, NULL);
-}
-
 // returns DELETE_THIS
 int TBeing::trapTeleport(int amt) {
   int rc;
@@ -2828,8 +2548,7 @@ int TObj::grenadeHit(TTrap* o) {
 }
 
 namespace {
-  // Door trap damage modifiers
-  constexpr int getDoorTrapDamageModifier(doorTrapT trap_type) {
+  constexpr int getTrapDamageModifier(doorTrapT trap_type) {
     switch (trap_type) {
       case DOOR_TRAP_TNT: return 3;
       case DOOR_TRAP_POISON: return -1;
@@ -2891,7 +2610,7 @@ int TBeing::getDoorTrapDam(doorTrapT trap_type) {
   int damage = 10 + getSkillLevel(SKILL_SET_TRAP_DOOR) / 2;
   damage *= getDoorTrapLearn(trap_type);
   damage /= 100;
-  damage += getDoorTrapDamageModifier(trap_type);
+  damage += getTrapDamageModifier(trap_type);
   return min(max(damage, 1), 50);
 }
 
@@ -2900,7 +2619,7 @@ int TBeing::getContainerTrapDam(doorTrapT trap_type) {
   int damage = 20 + getSkillLevel(SKILL_SET_TRAP_CONT) / 3;
   damage *= getContainerTrapLearn(trap_type);
   damage /= 100;
-  damage += getDoorTrapDamageModifier(trap_type);  // Same modifiers as door traps
+  damage += getTrapDamageModifier(trap_type);
   return min(max(damage, 1), 50);
 }
 
@@ -2909,7 +2628,7 @@ int TBeing::getMineTrapDam(doorTrapT trap_type) {
   int damage = 20 + getSkillLevel(SKILL_SET_TRAP_MINE) / 2;
   damage *= getMineTrapLearn(trap_type);
   damage /= 100;
-  damage += getDoorTrapDamageModifier(trap_type);  // Same modifiers as door traps
+  damage += getTrapDamageModifier(trap_type);
   return min(max(damage, 1), 50);
 }
 
@@ -2923,52 +2642,7 @@ int TBeing::getGrenadeTrapDam(doorTrapT trap_type) {
   damage *= getGrenadeTrapLearn(trap_type);
   damage /= 100;
 
-  switch (trap_type) {
-    case DOOR_TRAP_TNT:
-      damage += 3;
-      break;
-    case DOOR_TRAP_POISON:
-      damage -= 1;
-      break;
-    case DOOR_TRAP_SLEEP:
-      damage += 1;
-      break;
-    case DOOR_TRAP_ACID:
-      damage += 1;
-      break;
-    case DOOR_TRAP_DISEASE:
-      damage += 3;
-      break;
-    case DOOR_TRAP_FROST:
-      damage += 3;
-      break;
-    case DOOR_TRAP_SPIKE:
-      damage -= 5;
-      break;
-    case DOOR_TRAP_BOLT:
-      damage += 1;
-      break;
-    case DOOR_TRAP_BLADE:
-      damage -= 3;
-      break;
-    case DOOR_TRAP_DISK:
-      damage += 3;
-      break;
-    case DOOR_TRAP_HAMMER:
-      damage -= 10;
-      break;
-    case DOOR_TRAP_PEBBLE:
-      damage -= 5;
-      break;
-    case DOOR_TRAP_ENERGY:
-      damage += 5;
-      break;
-    case DOOR_TRAP_TELEPORT:
-      damage += 5;
-      break;
-    default:
-      break;
-  }
+  damage += getTrapDamageModifier(trap_type);
   damage = min(max(damage, 1), 50);
   return damage;
 }
@@ -2980,49 +2654,7 @@ int TBeing::getArrowTrapDam(doorTrapT trap_type) {
   damage *= getArrowTrapLearn(trap_type);
   damage /= 100;
 
-  switch (trap_type) {
-    case DOOR_TRAP_TNT:
-      damage += 3;
-      break;
-    case DOOR_TRAP_SLEEP:
-      damage += 1;
-      break;
-    case DOOR_TRAP_ACID:
-      damage += 1;
-      break;
-    case DOOR_TRAP_DISEASE:
-      damage += 3;
-      break;
-    case DOOR_TRAP_FROST:
-      damage += 3;
-      break;
-    case DOOR_TRAP_SPIKE:
-      damage -= 5;
-      break;
-    case DOOR_TRAP_BOLT:
-      damage += 1;
-      break;
-    case DOOR_TRAP_BLADE:
-      damage -= 3;
-      break;
-    case DOOR_TRAP_DISK:
-      damage += 3;
-      break;
-    case DOOR_TRAP_HAMMER:
-      damage -= 10;
-      break;
-    case DOOR_TRAP_PEBBLE:
-      damage -= 5;
-      break;
-    case DOOR_TRAP_ENERGY:
-      damage += 5;
-      break;
-    case DOOR_TRAP_TELEPORT:
-      damage += 5;
-      break;
-    default:
-      break;
-  }
+  damage += getTrapDamageModifier(trap_type);
   damage = min(max(damage, 1), 50);
   return damage;
 }
