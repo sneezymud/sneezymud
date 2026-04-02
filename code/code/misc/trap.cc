@@ -1160,17 +1160,12 @@ int TBeing::triggerArrowTrap(TArrow* obj) {
 
 // returns DELETE_THIS or FALSE
 int TBeing::triggerDoorTrap(dirTypeT door) {
-  roomDirData *exitp, *back = NULL;
-  TRoom* rp;
-  int dam;
+  roomDirData *exitp, *back = nullptr;
+  TRoom* rp = nullptr;
   int rc;
 
   exitp = exitDir(door);
-  dam = dice(exitp->trap_dam, 8);
-
-  // door traps can be triggered by means other than opening
-  // eg trying to set another trap
-  //  rawOpenDoor(door);
+  int dam = dice(exitp->trap_dam, TRAP_DICE_SIZE);
 
   REMOVE_BIT(exitp->condition, EXIT_TRAPPED);
   if ((rp = real_roomp(exitp->to_room)) &&
@@ -1178,145 +1173,81 @@ int TBeing::triggerDoorTrap(dirTypeT door) {
     REMOVE_BIT(back->condition, EXIT_TRAPPED);
   }
 
-  act("You hear a strange noise...", TRUE, this, 0, 0, TO_ROOM);
-  act("You hear a strange noise...", TRUE, this, 0, 0, TO_CHAR);
+  act(STRANGE_NOISE_MSG, true, this, 0, 0, TO_ROOM);
+  act(STRANGE_NOISE_MSG, true, this, 0, 0, TO_CHAR);
 
-  switch (exitp->trap_info) {
+  const auto trapType = static_cast<doorTrapT>(exitp->trap_info);
+  const auto& info = trapTypeInfo[trapType];
+
+  // Source message — where the trap is
+  sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
+  act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), false, this, 0, 0, TO_ROOM);
+
+  // Status-only types: dispatch to dedicated functions
+  switch (trapType) {
     case DOOR_TRAP_POISON:
-      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
-      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
-      act(POISON_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
-      act(POISON_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
+      act(info.charMsg, false, this, 0, 0, TO_CHAR);
+      act(info.roomMsg, false, this, 0, 0, TO_ROOM);
       trapPoison(dam);
-      break;
-    case DOOR_TRAP_SPIKE:
-      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
-      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
-      act(SPIKE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
-      act(SPIKE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
-      rc = objDamage(DAMAGE_TRAP_PIERCE, dam, NULL);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      break;
+      return false;
     case DOOR_TRAP_SLEEP:
-      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
-      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
-      act(SLEEP_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
-      act(SLEEP_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
+      act(info.charMsg, false, this, 0, 0, TO_CHAR);
+      act(info.roomMsg, false, this, 0, 0, TO_ROOM);
       rc = trapSleep(dam);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
-      break;
-    case DOOR_TRAP_TNT:
-      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
-      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
-      exitp->destroyDoor(door, in_room);
-
-      // Room-wide TNT effects
-      for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
-        TThing* t = *(it++);
-        TBeing* tbt = dynamic_cast<TBeing*>(t);
-        if (tbt && this != tbt) {
-          act(TNT_EFFECT_CHAR_MSG, FALSE, tbt, 0, 0, TO_CHAR);
-          act(TNT_EFFECT_ROOM_MSG, FALSE, tbt, 0, 0, TO_ROOM);
-          rc = tbt->objDamage(DAMAGE_TRAP_TNT, dam * ROOM_MOD, NULL);
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            delete tbt;
-            tbt = NULL;
-          }
-        }
-      }
-
-      act(TNT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
-      act(TNT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
-      rc = objDamage(DAMAGE_TRAP_TNT, dam, NULL);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      break;
-    case DOOR_TRAP_FIRE:
-      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
-      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
-      act(FIRE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
-      act(FIRE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
-      rc = objDamage(DAMAGE_TRAP_FIRE, dam, NULL);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      rc = flameEngulfed();
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      break;
-    case DOOR_TRAP_ACID:
-      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
-      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
-      act(ACID_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
-      act(ACID_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
-      rc = objDamage(DAMAGE_TRAP_ACID, dam, NULL);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      rc = acidEngulfed();
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      break;
+      return false;
     case DOOR_TRAP_DISEASE:
-      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
-      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
-      act(DISEASE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
-      act(DISEASE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
+      act(info.charMsg, false, this, 0, 0, TO_CHAR);
+      act(info.roomMsg, false, this, 0, 0, TO_ROOM);
       trapDisease(dam);
-      break;
+      return false;
     case DOOR_TRAP_TELEPORT:
-      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
-      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
-      act(TELEPORT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
-      act(TELEPORT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
-
+      act(info.charMsg, false, this, 0, 0, TO_CHAR);
+      act(info.roomMsg, false, this, 0, 0, TO_ROOM);
       rc = trapTeleport(dam);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return rc;
-    case DOOR_TRAP_HAMMER:
-      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
-      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
-      act(BLUNT_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
-      act(BLUNT_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
-      rc = objDamage(DAMAGE_TRAP_BLUNT, dam, NULL);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      break;
-    case DOOR_TRAP_BLADE:
-      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
-      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
-      act(BLADE_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
-      act(BLADE_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
-      rc = objDamage(DAMAGE_TRAP_SLASH, dam, NULL);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      break;
-    case DOOR_TRAP_ENERGY:
-      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
-      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
-      act(ENERGY_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
-      act(ENERGY_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
-      rc = objDamage(DAMAGE_TRAP_ENERGY, dam, NULL);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      break;
-    case DOOR_TRAP_FROST:
-      sendTo(format(DOOR_TRAP_CHAR_MSG) % fname(exitp->keyword));
-      act(format(DOOR_TRAP_ROOM_MSG) % fname(exitp->keyword), FALSE, this, 0, 0, TO_ROOM);
-      act(FROST_EFFECT_CHAR_MSG, FALSE, this, 0, 0, TO_CHAR);
-      act(FROST_EFFECT_ROOM_MSG, FALSE, this, 0, 0, TO_ROOM);
-      rc = objDamage(DAMAGE_TRAP_FROST, dam, NULL);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      rc = frostEngulfed();
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      break;
     default:
       break;
   }
-  return FALSE;
+
+  // Damage types: use table-driven path
+
+  // TNT special: destroy the door
+  if (trapType == DOOR_TRAP_TNT)
+    exitp->destroyDoor(door, in_room);
+
+  // Room-wide damage for area trap types
+  if (isDoorAreaTrap(trapType)) {
+    // Frost and energy skip immortals in the same room; TNT and acid do not
+    std::function<bool(TBeing*)> filter = nullptr;
+    if (trapType == DOOR_TRAP_FROST || trapType == DOOR_TRAP_ENERGY)
+      filter = [](TBeing* b) { return b->isImmortal(); };
+
+    applyRoomWideDamage(this, roomp, info, dam, ROOM_MOD, nullptr, filter);
+
+    // Other-side-of-door damage
+    if (rp)
+      applyOtherSideDamage(this, rp, info, dam);
+  }
+
+  // Effect messages and direct damage to triggerer
+  act(info.charMsg, false, this, 0, 0, TO_CHAR);
+  act(info.roomMsg, false, this, 0, 0, TO_ROOM);
+  rc = objDamage(info.damageType, dam, nullptr);
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_THIS;
+
+  // Engulfed effect (fire, frost, acid)
+  if (info.engulfedFn) {
+    rc = (this->*(info.engulfedFn))();
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
+  }
+
+  return false;
 }
 
 // returns DELETE_VICT
