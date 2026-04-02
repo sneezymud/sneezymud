@@ -5,6 +5,8 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <array>
+#include <functional>
 #include <stdio.h>
 
 #include "handler.h"
@@ -94,6 +96,103 @@ namespace {
   // Consolidated trap goof messages
   constexpr const char* GOOF_CHAR_MSG = "Your hand slips and you fall victim to your own device!";
   constexpr const char* GOOF_ROOM_MSG = "$n's hand slips and $e falls victim to $s own device!";
+
+  // Maps each doorTrapT to its intrinsic properties.
+  // Status-only types (poison, sleep, disease, teleport) have damageType = 0
+  // since they use dedicated functions with varied return semantics.
+  struct TrapTypeInfo {
+    spellNumT damageType;
+    const char* charMsg;
+    const char* roomMsg;
+    int (TBeing::*engulfedFn)();
+  };
+
+  constexpr std::array<TrapTypeInfo, MAX_TRAP_TYPES> trapTypeInfo = {{
+    // DOOR_TRAP_NONE
+    {TYPE_UNDEFINED, nullptr, nullptr, nullptr},
+    // DOOR_TRAP_POISON (status-only)
+    {TYPE_UNDEFINED, POISON_EFFECT_CHAR_MSG, POISON_EFFECT_ROOM_MSG, nullptr},
+    // DOOR_TRAP_SPIKE
+    {DAMAGE_TRAP_PIERCE, SPIKE_EFFECT_CHAR_MSG, SPIKE_EFFECT_ROOM_MSG, nullptr},
+    // DOOR_TRAP_SLEEP (status-only)
+    {TYPE_UNDEFINED, SLEEP_EFFECT_CHAR_MSG, SLEEP_EFFECT_ROOM_MSG, nullptr},
+    // DOOR_TRAP_TNT
+    {DAMAGE_TRAP_TNT, TNT_EFFECT_CHAR_MSG, TNT_EFFECT_ROOM_MSG, nullptr},
+    // DOOR_TRAP_BLADE
+    {DAMAGE_TRAP_SLASH, BLADE_EFFECT_CHAR_MSG, BLADE_EFFECT_ROOM_MSG, nullptr},
+    // DOOR_TRAP_FIRE
+    {DAMAGE_TRAP_FIRE, FIRE_EFFECT_CHAR_MSG, FIRE_EFFECT_ROOM_MSG, &TBeing::flameEngulfed},
+    // DOOR_TRAP_ACID
+    {DAMAGE_TRAP_ACID, ACID_EFFECT_CHAR_MSG, ACID_EFFECT_ROOM_MSG, &TBeing::acidEngulfed},
+    // DOOR_TRAP_DISEASE (status-only)
+    {TYPE_UNDEFINED, DISEASE_EFFECT_CHAR_MSG, DISEASE_EFFECT_ROOM_MSG, nullptr},
+    // DOOR_TRAP_HAMMER
+    {DAMAGE_TRAP_BLUNT, BLUNT_EFFECT_CHAR_MSG, BLUNT_EFFECT_ROOM_MSG, nullptr},
+    // DOOR_TRAP_FROST
+    {DAMAGE_TRAP_FROST, FROST_EFFECT_CHAR_MSG, FROST_EFFECT_ROOM_MSG, &TBeing::frostEngulfed},
+    // DOOR_TRAP_TELEPORT (status-only)
+    {TYPE_UNDEFINED, TELEPORT_EFFECT_CHAR_MSG, TELEPORT_EFFECT_ROOM_MSG, nullptr},
+    // DOOR_TRAP_ENERGY
+    {DAMAGE_TRAP_ENERGY, ENERGY_EFFECT_CHAR_MSG, ENERGY_EFFECT_ROOM_MSG, nullptr},
+    // DOOR_TRAP_BOLT
+    {DAMAGE_TRAP_PIERCE, SPIKE_EFFECT_CHAR_MSG, SPIKE_EFFECT_ROOM_MSG, nullptr},
+    // DOOR_TRAP_DISK
+    {DAMAGE_TRAP_SLASH, BLADE_EFFECT_CHAR_MSG, BLADE_EFFECT_ROOM_MSG, nullptr},
+    // DOOR_TRAP_PEBBLE
+    {DAMAGE_TRAP_BLUNT, BLUNT_EFFECT_CHAR_MSG, BLUNT_EFFECT_ROOM_MSG, nullptr},
+  }};
+
+  // Iterates a room's occupants and applies trap damage at a modifier.
+  // Skips triggerer and any being for which filter returns true.
+  // Handles DELETE_THIS by deleting dead bystanders inline.
+  void applyRoomWideDamage(TBeing* triggerer, TRoom* room,
+                           const TrapTypeInfo& info, int dam, double mod,
+                           TObj* trapObj,
+                           std::function<bool(TBeing*)> filter = nullptr) {
+    for (StuffIter it = room->stuff.begin(); it != room->stuff.end();) {
+      TThing* t = *(it++);
+      if (auto* tbt = dynamic_cast<TBeing*>(t)) {
+        if (tbt == triggerer)
+          continue;
+        if (filter && filter(tbt))
+          continue;
+        act(info.charMsg, false, tbt, 0, 0, TO_CHAR);
+        act(info.roomMsg, false, tbt, 0, 0, TO_ROOM);
+        int rc = tbt->objDamage(info.damageType, static_cast<int>(dam * mod), trapObj);
+        if (IS_SET_DELETE(rc, DELETE_THIS)) {
+          delete tbt;
+          tbt = nullptr;
+        }
+      }
+    }
+  }
+
+  // Applies trap damage to beings in the room on the other side of a door.
+  // Always uses OTHER_SIDE_MOD. No filter — old code didn't check immortality
+  // on the other side.
+  void applyOtherSideDamage(TBeing* triggerer, TRoom* otherRoom,
+                            const TrapTypeInfo& info, int dam) {
+    for (StuffIter it = otherRoom->stuff.begin(); it != otherRoom->stuff.end();) {
+      TThing* t = *(it++);
+      if (auto* tbt = dynamic_cast<TBeing*>(t)) {
+        if (tbt == triggerer)
+          continue;
+        act(info.charMsg, false, tbt, 0, 0, TO_CHAR);
+        act(info.roomMsg, false, tbt, 0, 0, TO_ROOM);
+        int rc = tbt->objDamage(info.damageType, static_cast<int>(dam * OTHER_SIDE_MOD), nullptr);
+        if (IS_SET_DELETE(rc, DELETE_THIS)) {
+          delete tbt;
+          tbt = nullptr;
+        }
+      }
+    }
+  }
+
+  // Door trap types that produce area effects (room-wide + other-side).
+  constexpr bool isDoorAreaTrap(doorTrapT type) {
+    return type == DOOR_TRAP_TNT || type == DOOR_TRAP_FROST
+        || type == DOOR_TRAP_ENERGY || type == DOOR_TRAP_ACID;
+  }
 
   // Standardized trap creation messages
   constexpr const char* TRAP_START_CHAR_MSG = "You start working on your trap.";
