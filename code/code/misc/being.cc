@@ -558,20 +558,10 @@ charFile::charFile() :
 
 charFile::~charFile() {}
 
-// this returns the ID in the database, or creates a new one if needed
+// TMonster path: resolves through desc->original for switched/polyed
+// bodies. Returns 0 for normal mobs - callers must handle this.
 int TBeing::getPlayerID() const {
-  // Handle shapeshifted player
-  if (dynamic_cast<const TMonster*>(this) &&
-      IS_SET(specials.act, ACT_POLYSELF) && desc->original) {
-    if (desc->original->player.player_id == 0)
-      vlogf(LOG_BUG,
-        format("%s has no player ID!") % desc->original->getName());
-    return desc->original->player.player_id;
-  }
-
-  if (player.player_id == 0)
-    vlogf(LOG_BUG, format("%s has no player ID!") % getName());
-  return player.player_id;
+  return desc && desc->original ? desc->original->getPlayerID() : 0;
 }
 
 int TBeing::getAccountID() const {

@@ -101,7 +101,7 @@ float shopData::getProfitSell(const TObj* obj, const TBeing* ch) {
   }
 
   // check pricing for player
-  if (ch) {
+  if (ch && ch->isPc()) {
     if (auto it = sell_player_cache.find(ch->getPlayerID());
       it != sell_player_cache.end()) {
       profit = it->second;
@@ -261,7 +261,7 @@ int shopData::getMaxNum(const TBeing* ch, const TObj* o, int defaultMax) {
   if (o && buy_ratios_cache.count(o->objVnum()))
     return max_ratios_cache[o->objVnum()];
 
-  if (ch) {
+  if (ch && ch->isPc()) {
     if (auto it = max_player_cache.find(ch->getPlayerID());
       it != max_player_cache.end()) {
       return it->second;
@@ -301,7 +301,7 @@ float shopData::getProfitBuy(int vnum, sstring name, const TBeing* ch) {
     profit = profit_buy;
 
   // check for player specific modifiers
-  if (isOwned() && ch) {
+  if (isOwned() && ch && ch->isPc()) {
     if (auto it = buy_player_cache.find(ch->getPlayerID());
       it != buy_player_cache.end()) {
       profit = it->second;

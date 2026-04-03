@@ -9,7 +9,7 @@
  * in real-time during a session. So the mortal must re-login after
  * receiving tells to see them in `history` output.
  *
- * Required immortal powers: none beyond being immortal (for the tell command).
+ * Required immortal powers: POWER_SWITCH (for the switched-body test).
  * Uses an ephemeral account so tell history starts empty.
  */
 
@@ -149,6 +149,56 @@ describe("Tell History", () => {
         // Verify exactly 25 entries (the cap)
         const entries = output.match(/told you/gi) ?? [];
         expect(entries).toHaveLength(25);
+      } finally {
+        await mortal.close();
+      }
+    },
+    ACCOUNT_TEST_TIMEOUT,
+  );
+
+  it(
+    "records tell history when sender is switched into a mob",
+    async () => {
+      // Verifies that getPlayerID() resolves through desc->original for
+      // switched bodies. The immortal switches into a mob and tells the
+      // mortal; on re-login, the mortal should see the tell in history.
+
+      // Phase 1: mortal logs in, immortal switches into a mob and sends tell
+      let mortal = await MudClient.connect(config);
+      await mortal.login({
+        account,
+        character,
+        password: DEFAULT_PASSWORD,
+      });
+
+      await imm.command("switch load janitor");
+      await imm.readUntilIdle(1);
+
+      const marker = `switchtest${Date.now()}`;
+      await imm.command(`tell ${character} ${marker}`);
+      await imm.readUntilIdle(1);
+
+      await imm.command("return");
+      await imm.readUntilIdle(1);
+
+      // Drain and log out mortal
+      await mortal.readUntilIdle(1);
+      await mortal.send("rent");
+      await mortal.readUntilIdle(1);
+      await mortal.close();
+
+      // Phase 2: re-login mortal to load tell history from database
+      mortal = await MudClient.connect(config);
+      try {
+        await mortal.login({
+          account,
+          character,
+          password: DEFAULT_PASSWORD,
+        });
+
+        const output = await mortal.pagedCommand("history");
+        expect(output).toContainCaseInsensitive(marker);
+        expect(output).toContainCaseInsensitive("told you");
       } finally {
         await mortal.close();
       }

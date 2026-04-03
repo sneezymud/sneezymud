@@ -1564,7 +1564,9 @@ class TBeing : public TThing {
     virtual bool canSee(const TThing*, infraTypeT = INFRA_NO) const;
 
     // functions for protected member manipulation
-    virtual bool isPc() const { return ((specials.act & ACT_POLYSELF) != 0); }
+    virtual bool isPc() const {
+      return IS_SET(specials.act, ACT_POLYSELF) && desc && desc->original;
+    }
     void setCurLimbHealth(wearSlotT, unsigned short);
     unsigned short getCurLimbHealth(wearSlotT) const;
     void addCurLimbHealth(wearSlotT, int);

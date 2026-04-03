@@ -207,11 +207,7 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
       int chopperId = getPlayerIdByName(chopper.c_str());
 
       // get team affiliation for cutesy message below
-      // getPlayerID handles polymorph; fall back to desc->original for switch
       int caddyId = ch->getPlayerID();
-      if (caddyId == 0 && ch->desc && ch->desc->original) {
-        caddyId = ch->desc->original->getPlayerID();
-      }
       sstring team;
       sstring caddyTeam;
       bool samaritan = false;

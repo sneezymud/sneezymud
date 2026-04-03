@@ -4,6 +4,7 @@
 #include "pathfinder.h"
 #include "low.h"
 
+#include <cassert>
 #include <unordered_map>
 #include <queue>
 #include <set>
@@ -115,6 +116,14 @@ TPerson::~TPerson() {
   }
   delete d;
   d = nullptr;
+}
+
+int TPerson::getPlayerID() const {
+  // Set during character load (loadFromDb/loadFromSt), before the player
+  // enters the game. A zero here means loading failed silently, and every
+  // subsequent DB write using this ID would corrupt shared tables.
+  assert(player.player_id != 0);
+  return player.player_id;
 }
 
 std::pair<bool, int> TPerson::doPersonCommand(cmdTypeT cmd,
