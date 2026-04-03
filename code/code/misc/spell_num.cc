@@ -246,7 +246,7 @@ int mapSpellnumToFile(spellNumT stt) {
       return 67;
     case SPELL_FLY:
       return 68;
-    case SPELL_ANTIGRAVITY:
+    case SPELL_ANTIGRAVITY:  // removed spell, file slot kept for save stability
       return 69;
     case SPELL_DIVINATION:
       return 73;
@@ -304,7 +304,8 @@ int mapSpellnumToFile(spellNumT stt) {
       return 110;
     case SPELL_TSUNAMI:
       return 111;
-    case SPELL_BREATH_OF_SARAHAGE:
+    case SPELL_BREATH_OF_SARAHAGE:  // removed spell, file slot kept for save
+                                    // stability
       return 112;
     case SPELL_PLASMA_MIRROR:
       return 113;
@@ -1427,7 +1428,8 @@ spellNumT mapFileToSpellnum(int stt) {
     case 68:
       return SPELL_FLY;
     case 69:
-      return SPELL_ANTIGRAVITY;
+      return SPELL_ANTIGRAVITY;  // removed spell, file slot kept for save
+                                 // stability
     case 73:
       return SPELL_DIVINATION;
     case 74:
@@ -1485,7 +1487,8 @@ spellNumT mapFileToSpellnum(int stt) {
     case 111:
       return SPELL_TSUNAMI;
     case 112:
-      return SPELL_BREATH_OF_SARAHAGE;
+      return SPELL_BREATH_OF_SARAHAGE;  // removed spell, file slot kept for
+                                        // save stability
     case 113:
       return SPELL_PLASMA_MIRROR;
     case 114:

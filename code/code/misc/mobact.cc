@@ -2113,7 +2113,7 @@ int TMonster::mageMove(TBeing& vict) {
 
   if (on_me) {
     if (IS_SET(discArray[spell]->targets,
-          TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF)) {
+          TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF | TAR_GROUP)) {
       return doDiscipline(spell, "");
     }
     vlogf(LOG_BUG, format("Mob casting (1) spell %d on self with possibly bad "
@@ -2178,7 +2178,7 @@ int TMonster::shamanMove(TBeing& vict) {
 
   if (on_me) {
     if (IS_SET(discArray[spell]->targets,
-          TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF)) {
+          TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF | TAR_GROUP)) {
       return doDiscipline(spell, "");
     }
     vlogf(LOG_BUG, format("Shaman Mob casting (1) spell %d on self with "
@@ -2822,7 +2822,7 @@ int TMonster::clerMove(TBeing& vict) {
 
   if (on_me) {
     if (IS_SET(discArray[spell]->targets,
-          TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF)) {
+          TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF | TAR_GROUP)) {
       return doDiscipline(spell, "");
     }
     vlogf(LOG_BUG, format("Mob invoking (1) prayer %d on self with possibly "
@@ -4560,7 +4560,7 @@ int TMonster::defendSelf(int) {
       if (usecomp)
         dynamicComponentLoader(spell, 10);
       if (IS_SET(discArray[spell]->targets,
-            TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF)) {
+            TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF | TAR_GROUP)) {
         rc = doDiscipline(spell, "");
       } else {
         vlogf(LOG_BUG, format("Shaman Mob casting (4) spell %d on self with "
@@ -4747,7 +4747,7 @@ int TMonster::defendSelf(int) {
       if (usecomp)
         dynamicComponentLoader(spell, 10);
       if (IS_SET(discArray[spell]->targets,
-            TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF)) {
+            TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF | TAR_GROUP)) {
         rc = doDiscipline(spell, "");
       } else {
         vlogf(LOG_BUG, format("Mob casting (4) spell %d on self with possibly "
@@ -4807,7 +4807,7 @@ int TMonster::defendSelf(int) {
 
     if (found) {
       if (IS_SET(discArray[spell]->targets,
-            TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF)) {
+            TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF | TAR_GROUP)) {
         rc = doDiscipline(spell, "");
       } else {
         vlogf(LOG_BUG, format("Mob invoking (4) prayer %d on self with "
@@ -4839,7 +4839,7 @@ int TMonster::defendSelf(int) {
 
     if (found) {
       if (IS_SET(discArray[spell]->targets,
-            TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF)) {
+            TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF | TAR_GROUP)) {
         rc = doDiscipline(spell, "");
       } else {
         vlogf(LOG_BUG, format("Mob invoking (5) prayer %d on self with "
@@ -4864,8 +4864,9 @@ int TMonster::defendSelf(int) {
 
     if (found) {
       dynamicComponentLoader(spell, 10);
-      if (IS_SET(discArray[spell]->targets,
-            TAR_SELF_ONLY | TAR_IGNORE | TAR_FIGHT_SELF | TAR_NAME)) {
+      if (IS_SET(discArray[spell]->targets, TAR_SELF_ONLY | TAR_IGNORE |
+                                              TAR_FIGHT_SELF | TAR_GROUP |
+                                              TAR_NAME)) {
         if (spell == SKILL_BARKSKIN)
           rc = doBarkskin(name.c_str());
         else

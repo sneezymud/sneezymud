@@ -223,8 +223,7 @@ int thornflesh(TBeing* caster, int level, short bKnown) {
 static bool canBeLunged(TBeing* caster, TBeing* victim) {
   if (victim->isAffected(AFF_WATERBREATH) &&
       !(victim->affectedBySpell(SPELL_GILLS_OF_FLESH) ||
-        !(victim->affectedBySpell(SPELL_AQUALUNG) ||
-          victim->affectedBySpell(SPELL_BREATH_OF_SARAHAGE)))) {
+        victim->affectedBySpell(SPELL_AQUALUNG))) {
     if (caster != victim)
       act("$N already has the ability to breathe underwater.", FALSE, caster,
         NULL, victim, TO_CHAR);
@@ -1129,8 +1128,7 @@ int genericChaseSpirits(TBeing* caster, TBeing* victim, int level,
   chaseStruct chaseArray[] = {
     // air disc
     {SPELL_FEATHERY_DESCENT, false, true, false},
-    {SPELL_FLY, true, true, false}, {SPELL_ANTIGRAVITY, true, true, false},
-    {SPELL_LEVITATE, true, true, false},
+    {SPELL_FLY, true, true, false}, {SPELL_LEVITATE, true, true, false},
     {SPELL_FALCON_WINGS, true, true, false},
     {SPELL_PROTECTION_FROM_AIR, true, true, false},
     // earth

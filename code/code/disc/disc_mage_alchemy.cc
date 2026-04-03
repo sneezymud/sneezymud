@@ -1337,8 +1337,7 @@ int generic_dispel_magic(TBeing* caster, TBeing* victim, int level,
   dispelStruct dispelArray[] = {
     // air disc
     {SPELL_FEATHERY_DESCENT, false, true, false},
-    {SPELL_FLY, true, true, false}, {SPELL_ANTIGRAVITY, true, true, false},
-    {SPELL_LEVITATE, true, true, false},
+    {SPELL_FLY, true, true, false}, {SPELL_LEVITATE, true, true, false},
     {SPELL_FALCON_WINGS, true, true, false},
     {SPELL_PROTECTION_FROM_AIR, true, true, false},
     // earth

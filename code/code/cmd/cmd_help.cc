@@ -845,11 +845,15 @@ void TBeing::doHelp(const char* arg) {
         : "No");
     str += buf2;
 
-    sprintf(buf2, "%sCast on Others   : %s%s \n\r", purple(), norm(),
-      (discArray[skill]->targets & TAR_SELF_ONLY)                      ? "No"
-      : (discArray[skill]->targets & (TAR_CHAR_ROOM | TAR_CHAR_WORLD)) ? "Yes"
-                                                                       : "No");
-    str += buf2;
+    str +=
+      format("%sCast on Others   : %s%s\t%sCast on Group        : %s%s\n\r") %
+      purple() % norm() %
+      (discArray[skill]->targets & TAR_SELF_ONLY ? "No"
+        : (discArray[skill]->targets & (TAR_CHAR_ROOM | TAR_CHAR_WORLD))
+          ? "Yes"
+          : "No") %
+      purple() % norm() %
+      (discArray[skill]->targets & TAR_GROUP ? "Yes" : "No");
 
     str += "\n\r";
 

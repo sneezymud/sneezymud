@@ -1237,7 +1237,8 @@ namespace {
     {SPELL_LIGHTNING_BOLT, "SPELL_LIGHTNING_BOLT"},
     {SPELL_CHAIN_LIGHTNING, "SPELL_CHAIN_LIGHTNING"},
     {SPELL_FLY, "SPELL_FLY"},
-    {SPELL_ANTIGRAVITY, "SPELL_ANTIGRAVITY"},
+    {SPELL_ANTIGRAVITY,
+      "SPELL_ANTIGRAVITY"},  // removed spell, kept for enum stability
     {SPELL_DIVINATION, "SPELL_DIVINATION"},
     {SPELL_SHATTER, "SPELL_SHATTER"},
     {SPELL_SPONTANEOUS_GENERATION, "SPELL_SPONTANEOUS_GENERATION"},
@@ -1264,7 +1265,8 @@ namespace {
     {SPELL_WATERY_GRAVE, "SPELL_WATERY_GRAVE"},
     {SPELL_TSUNAMI, "SPELL_TSUNAMI"},
     {SPELL_BLIZZARD, "SPELL_BLIZZARD"},
-    {SPELL_BREATH_OF_SARAHAGE, "SPELL_BREATH_OF_SARAHAGE"},
+    {SPELL_BREATH_OF_SARAHAGE,
+      "SPELL_BREATH_OF_SARAHAGE"},  // removed spell, kept for enum stability
     {SPELL_PLASMA_MIRROR, "SPELL_PLASMA_MIRROR"},
     {SPELL_GARMULS_TAIL, "SPELL_GARMULS_TAIL"},
     {SPELL_ETHER_GATE, "SPELL_ETHER_GATE"},
@@ -1882,9 +1884,6 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
     case SPELL_FLY:
       rc = fly(this, ch);
       break;
-    case SPELL_ANTIGRAVITY:
-      rc = antigravity(this);
-      break;
     case SPELL_FALCON_WINGS:
       rc = falconWings(this, ch);
       break;
@@ -2187,9 +2186,6 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
       break;
     case SPELL_AQUALUNG:
       aqualung(this, ch);
-      break;
-    case SPELL_BREATH_OF_SARAHAGE:
-      rc = breathOfSarahage(this);
       break;
     case SPELL_PROTECTION_FROM_WATER:
       protectionFromWater(this);

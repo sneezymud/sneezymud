@@ -1226,37 +1226,20 @@ int TBeing::checkBadSpellCondition(TBeing* caster, int which) {
       }
       return FALSE;
     case SPELL_FLY:
-      if (victim->affectedBySpell(SPELL_LEVITATE)) {
-        act("$n is already affected by a spell of levitation .", FALSE, caster,
-          NULL, NULL, TO_ROOM);
-        return TRUE;
+      if (victim && victim->affectedBySpell(SPELL_LEVITATE)) {
+        act("$N is already affected by a spell of levitation.", false, caster,
+          nullptr, victim, TO_CHAR);
+        return true;
       }
-      return FALSE;
-    case SPELL_ANTIGRAVITY:
-
-      // A) this is causing a crash
-      // B) i think we check for this on a per person in group basis at the end
-      // of a success. dash 05/26/01 blah
-#if 0
-      if ((caster == victim) || (caster->inGroup(*victim))) {
-        if (victim->isAffected(AFF_FLYING) || 
-            victim->isAffected(AFF_LEVITATING)) {
-           victim->sendTo("Nothing seems to happen.\n\r");
-           caster->sendTo("$n is already effected by an anti gravity spell!\n\r"
-);
-        return TRUE;
-        }
-      }
-#endif
-      return FALSE;
+      return false;
     case SPELL_FALCON_WINGS:
-      if (victim->affectedBySpell(SPELL_LEVITATE) ||
-          victim->affectedBySpell(SPELL_FLY)) {
-        act("$n is already affected by a some type of flight spell.", FALSE,
-          caster, NULL, NULL, TO_ROOM);
-        return TRUE;
+      if (victim && (victim->affectedBySpell(SPELL_LEVITATE) ||
+                      victim->affectedBySpell(SPELL_FLY))) {
+        act("$N is already affected by some type of flight spell.", false,
+          caster, nullptr, victim, TO_CHAR);
+        return true;
       }
-      return FALSE;
+      return false;
     case SPELL_PROTECTION_FROM_AIR:
     case SPELL_CONJURE_AIR:
     case SPELL_ENTHRALL_SPECTRE:  // shaman
@@ -1314,14 +1297,6 @@ int TBeing::checkBadSpellCondition(TBeing* caster, int which) {
       if (victim->hasDisease(DISEASE_DROWNING)) {
         act("Nothing seems to happen.", TRUE, caster, 0, 0, TO_ROOM);
         act("$N is already drowning.", TRUE, caster, 0, victim, TO_CHAR);
-        return TRUE;
-      }
-      return FALSE;
-    case SPELL_BREATH_OF_SARAHAGE:
-      if (victim && victim->isAffected(AFF_WATERBREATH)) {
-        act("$N already has the ability to breathe underwater.", FALSE, caster,
-          NULL, victim, TO_CHAR);
-        act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
         return TRUE;
       }
       return FALSE;
@@ -1982,12 +1957,6 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
       } else
         vlogf(LOG_BUG, "SPELL_TORNADO called with null obj");
       break;
-    case SPELL_ANTIGRAVITY:
-      if (!o) {
-        rc = castAntigravity(this);
-      } else
-        vlogf(LOG_BUG, "SPELL_ANTIGRAVITY called with null obj");
-      break;
     case SPELL_FALCON_WINGS:
       if (!o) {
         rc = castFalconWings(this, victim);
@@ -2176,9 +2145,6 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
       break;
     case SPELL_THORNFLESH:
       rc = castThornflesh(this);
-      break;
-    case SPELL_BREATH_OF_SARAHAGE:
-      rc = castBreathOfSarahage(this);
       break;
     case SPELL_DJALLA:
       rc = castDjallasProtection(this, victim);

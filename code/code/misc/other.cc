@@ -3084,9 +3084,6 @@ int doObjSpell(TBeing* caster, TBeing* victim, TMagicItem* obj, TObj* target,
     case SPELL_HEROES_FEAST:
       heroesFeast(caster);
       break;
-    case SPELL_ANTIGRAVITY:
-      antigravity(caster);
-      break;
     case SPELL_LEVITATE:
       levitate(caster, victim);
       break;
