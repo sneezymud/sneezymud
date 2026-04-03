@@ -58,7 +58,7 @@ Options:
   --docker          Target Docker dev environment (sneezy-db container +
                     sneezy-mutable volume) instead of host-native MariaDB
   --date YYYY-MM-DD Restore a specific backup date (default: latest release)
-  --seed            Restore from _Setup-data/ seed files instead of a backup
+  --seed            Restore from db/ seed files instead of a backup
                     release. Mutually exclusive with --date.
   --yes, -y         Skip confirmation prompt
   --force           Proceed even if the game server is running
@@ -224,8 +224,8 @@ extract_and_validate() {
 validate_seed_data() {
   local repo_root
   repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-  SEED_DIR="$repo_root/_Setup-data"
-  [[ -d "$SEED_DIR" ]] || error "_Setup-data/ not found at $SEED_DIR\n  Run this script from within the repository."
+  SEED_DIR="$repo_root/db"
+  [[ -d "$SEED_DIR" ]] || error "db/ not found at $SEED_DIR\n  Run this script from within the repository."
   success "Seed data found ($SEED_DIR)"
 }
 
@@ -277,16 +277,14 @@ restore_database() {
   db_cmd mariadb -e "DROP DATABASE IF EXISTS immortal; DROP DATABASE IF EXISTS sneezy;"
   if $SEED_MODE; then
     db_cmd mariadb -e "CREATE DATABASE sneezy; CREATE DATABASE immortal;"
-    local db phase dir sql
+    local db dir sql
     for db in immortal sneezy; do
-      for phase in tables views data; do
-        dir="$SEED_DIR/sql_${phase}/${db}"
-        [[ -d "$dir" ]] || continue
-        for sql in "$dir"/*.sql; do
-          [[ -f "$sql" ]] || continue
-          info "  $db/$phase/$(basename "$sql")"
-          db_cmd mariadb "$db" < "$sql"
-        done
+      dir="$SEED_DIR/${db}"
+      [[ -d "$dir" ]] || continue
+      for sql in "$dir"/*.sql; do
+        [[ -f "$sql" ]] || continue
+        info "  $db/$(basename "$sql")"
+        db_cmd mariadb "$db" < "$sql"
       done
     done
   else

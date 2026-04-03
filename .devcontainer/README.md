@@ -13,7 +13,7 @@ Complete development environment with intellisense, debugging, and a pre-seeded 
 2. When prompted "Reopen in Container", click yes (or run **Dev Containers: Reopen in Container** from the command palette)
 3. Wait for the container to build
 
-The first build pulls base images and installs the full C++ toolchain. On first boot, the entrypoint seeds the database from `_Setup-data/`, which can take several minutes. Click "show log" in the notification toast to see progress. Subsequent opens reuse the cached image and persistent volumes, starting in seconds.
+The first build pulls base images and installs the full C++ toolchain. On first boot, the entrypoint seeds the database from `db/`, which can take several minutes. Click "show log" in the notification toast to see progress. Subsequent opens reuse the cached image and persistent volumes, starting in seconds.
 
 ## Daily workflow
 
@@ -26,7 +26,7 @@ The first build pulls base images and installs the full C++ toolchain. On first 
 
 | Concern | How |
 |---------|-----|
-| Database | MariaDB runs as the container's main process (PID 1). On first boot, the entrypoint initializes and seeds both databases from `_Setup-data/`. A sentinel file tracks completion so partial failures are retried on next boot. Data persists in a named volume across restarts and rebuilds. Schema migrations run on game server boot. |
+| Database | MariaDB runs as the container's main process (PID 1). On first boot, the entrypoint initializes and seeds both databases from `db/`. A sentinel file tracks completion so partial failures are retried on next boot. Data persists in a named volume across restarts and rebuilds. Schema migrations run on game server boot. |
 | DB connection | The game server connects to localhost via socket auth - no config needed. The entrypoint creates an `ubuntu` DB user with matching socket auth so terminals and builds work without credentials. |
 | Intellisense | clangd runs inside the container with all headers and project dependencies available. The C/C++ (cpptools) extension is also installed - it provides the `cppdbg` debug adapter used by the launch configs. Both extensions are required. |
 | Debugging | GDB via F5, or "Attach to Sneezy" for a running server. `SYS_PTRACE` and `seccomp=unconfined` are granted to allow attaching. AddressSanitizer and UndefinedBehaviorSanitizer options are set in `containerEnv` so they apply to all execution methods (F5, `make run`, running the binary directly). |
@@ -44,7 +44,7 @@ Rebuilding recreates the container, so manually installed extensions need reinst
 
 ### Resetting the database
 
-Database data persists in the `sneezymud-db` volume. To re-seed from scratch (e.g., after `_Setup-data/` changes):
+Database data persists in the `sneezymud-db` volume. To re-seed from scratch (e.g., after `db/` changes):
 
 ```sh
 docker volume rm sneezymud-db

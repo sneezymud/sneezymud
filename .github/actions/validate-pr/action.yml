@@ -10,7 +10,7 @@ runs:
 
     - name: Set up test database
       shell: bash
-      run: ./scripts/setup_db.sh
+      run: ./db/init-db.sh
 
     - name: Start game server
       shell: bash

@@ -63,11 +63,11 @@ cd sneezymud
 #### Database Setup
 
 ```bash
-# Creates databases, grants access to your OS user, and loads seed data
-./scripts/setup_db.sh
+# Drops/recreates databases, grants access to your OS user, and loads seed data
+./db/init-db.sh
 ```
 
-Pass a username to grant access to a different MariaDB user: `./scripts/setup_db.sh myuser`
+Pass a username to grant access to a different MariaDB user: `./db/init-db.sh myuser`
 
 #### Restoring a Production Backup
 
@@ -279,21 +279,13 @@ lib/           Various game data
   mutable/       Player files, corpses, rent (writable at runtime)
   help/          In-game helpfile content
 
-_Setup-data/   Database setup
-  sql_tables/    Table schemas
-  sql_views/     View definitions
-  sql_data/      Seed data
-  migrations/    Database migrations
+db/            Database seed data (schema + world data for fresh instances)
 
 cmake/         CMake modules
 scripts/       Build and utility scripts
 tests/         Functional and C++ unit tests
 web/           Old but still useful info about the game
 ```
-
-## Database Migrations
-
-Ongoing changes to the database structure are stored as numbered migrations in `_Setup-data/migrations/`. Migrations already applied to the seed data in this repository are in `migrations/applied/` and don't need to be run on fresh installations.
 
 ## Contributing
 
