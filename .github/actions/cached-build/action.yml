@@ -93,14 +93,22 @@ runs:
         )
         .github/scripts/install-packages.sh "${packages[@]}"
 
+    # CMake configure always runs to ensure build directory and build system
+    # are set up, enabling downstream steps like CTest to run reliably.
+    # On exact cache hits, only this configure step runs (no compilation).
+    # On cache misses, this is followed by the full build step.
+    - name: Configure CMake
+      shell: bash
+      run: cmake --preset "${{ inputs.build-preset }}"
+
     # ccache provides incremental compilation. Linking is the slowest step
     # and always runs in full when any source changes.
+    # This step is skipped on exact cache hits to avoid unnecessary work.
     - name: Build from source
       if: steps.cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
         ccache --zero-stats
-        cmake --preset "${{ inputs.build-preset }}"
         cmake --build --preset "${{ inputs.build-preset }}"
         ccache --show-stats
 
