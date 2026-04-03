@@ -18,7 +18,12 @@ runs:
 
     - name: Run C++ tests
       shell: bash
-      run: ctest --test-dir build/release-clang --output-on-failure
+      run: |
+        if [ -d build/release-clang ]; then
+          ctest --test-dir build/release-clang --output-on-failure
+        else
+          echo "Skipping C++ tests (no build directory; binary restored from cache)"
+        fi
 
     - name: Set up bun
       uses: oven-sh/setup-bun@v2
