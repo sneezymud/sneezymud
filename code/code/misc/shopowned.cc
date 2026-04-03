@@ -172,7 +172,7 @@ int getShopAccess(int shop_nr, TBeing* ch) {
   int access = 0;
   TDatabase db(DB_SNEEZY);
 
-  if (!ch)
+  if (!ch || !ch->isPc())
     return 0;
 
   db.query(
