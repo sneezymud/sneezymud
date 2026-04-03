@@ -1,0 +1,53 @@
+/*M!999999\- enable the sandbox mode */ 
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*M!100616 SET @OLD_NOTE_VERBOSITY=@@NOTE_VERBOSITY, NOTE_VERBOSITY=0 */;
+DROP TABLE IF EXISTS `obj`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `obj` (
+  `vnum` int(11) NOT NULL DEFAULT 0,
+  `name` varchar(127) NOT NULL DEFAULT '',
+  `short_desc` varchar(127) NOT NULL DEFAULT '',
+  `long_desc` varchar(255) NOT NULL DEFAULT '',
+  `action_desc` varchar(255) NOT NULL DEFAULT '',
+  `type` int(11) NOT NULL DEFAULT 0,
+  `action_flag` int(11) NOT NULL DEFAULT 0,
+  `wear_flag` int(11) NOT NULL DEFAULT 0,
+  `val0` int(11) NOT NULL DEFAULT 0,
+  `val1` int(11) NOT NULL DEFAULT 0,
+  `val2` int(11) NOT NULL DEFAULT 0,
+  `val3` int(11) NOT NULL DEFAULT 0,
+  `weight` double NOT NULL DEFAULT 0,
+  `price` int(11) NOT NULL DEFAULT 0,
+  `can_be_seen` int(11) NOT NULL DEFAULT 0,
+  `spec_proc` int(11) NOT NULL DEFAULT 0,
+  `max_exist` int(11) NOT NULL DEFAULT 0,
+  `max_struct` int(11) NOT NULL DEFAULT 0,
+  `cur_struct` int(11) NOT NULL DEFAULT 0,
+  `decay` int(11) NOT NULL DEFAULT 0,
+  `volume` int(11) NOT NULL DEFAULT 0,
+  `material` int(11) NOT NULL DEFAULT 0,
+  `player_id` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`player_id`,`vnum`),
+  CONSTRAINT `fk_obj_player_id` FOREIGN KEY (`player_id`) REFERENCES `sneezy`.`player` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
+

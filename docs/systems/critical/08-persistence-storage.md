@@ -234,8 +234,8 @@ When corruption is detected, `handleCorrupted()` moves files to `corrupt/` subdi
 | `code/code/misc/rent.cc` | Rent/persistence implementation |
 | `code/code/misc/charfile.h` | Binary character struct |
 | `code/code/sys/database.cc` | Database access, caching |
-| `_Setup-data/sql_tables/sneezy/rent*.sql` | Item storage schema |
-| `_Setup-data/sql_tables/sneezy/player.sql` | Player table schema |
+| `db/sneezy/rent*.sql` | Item storage schema |
+| `db/sneezy/player.sql` | Player table schema |
 
 ## Troubleshooting
 
