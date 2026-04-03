@@ -283,8 +283,8 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
       return &((CDAir*)cd)->skChainLightning;
     case SPELL_FLY:
       return &((CDAir*)cd)->skFly;
-    case SPELL_ANTIGRAVITY:
-      return &((CDAir*)cd)->skAntigravity;
+    case SPELL_ANTIGRAVITY:  // removed spell, enum kept for DB stability
+      return nullptr;
     case SKILL_PIERCE_RESIST:
       return &((CDAir*)cd)->skPierceResist;
 
@@ -367,8 +367,8 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
       return &((CDWater*)cd)->skTsunami;
     case SPELL_BLIZZARD:
       return &((CDWater*)cd)->skBlizzard;
-    case SPELL_BREATH_OF_SARAHAGE:
-      return &((CDWater*)cd)->skBreathOfSarahage;
+    case SPELL_BREATH_OF_SARAHAGE:  // removed spell, enum kept for DB stability
+      return nullptr;
     case SPELL_PLASMA_MIRROR:
       return &((CDWater*)cd)->skPlasmaMirror;
     case SPELL_GARMULS_TAIL:

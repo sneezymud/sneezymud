@@ -7,6 +7,7 @@
 #include "low.h"
 #include "monster.h"
 #include "disc_mage_air.h"
+#include "disc_mage_group.h"
 #include "disease.h"
 #include "combat.h"
 #include "spelltask.h"
@@ -1223,132 +1224,196 @@ int castTornado(TBeing* caster) {
   return FALSE;
 }
 
-int featheryDescent(TBeing* caster, TBeing* victim, int, affectedData* aff,
-  short bKnown) {
-  caster->reconcileHelp(victim, discArray[SPELL_FEATHERY_DESCENT]->alignMod);
+namespace {
 
-  if (caster->bSuccess(bKnown, SPELL_FEATHERY_DESCENT)) {
+  // Returns false when affectJoin can't renew an existing non-expired affect.
+  // GroupCastMessages::Suppressed silences affectJoin's "can't increase
+  // duration" message so group-cast loops roll up a single epilogue instead
+  // of one message per target.  See disc_mage_group.h.
+  [[nodiscard]] bool applyFeatheryDescent(TBeing* caster, TBeing* victim,
+    int level, int duration,
+    GroupCastMessages messages = GroupCastMessages::Verbose) {
+    affectedData aff;
+    aff.type = SPELL_FEATHERY_DESCENT;
+    aff.level = level;
+    aff.duration = duration;
+    aff.modifier = 0;
+    aff.location = APPLY_NONE;
+    aff.bitvector = 0;
+    if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES,
+          messages == GroupCastMessages::Verbose))
+      return false;
+
+    act("$N seems lighter on $S feet!", false, caster, nullptr, victim,
+      TO_NOTVICT);
+    act("You feel much \"lighter\"!", false, victim, nullptr, nullptr, TO_CHAR);
+    victim->sendTo("You have been granted the gift of featherfall!\n\r");
+    if (caster != victim)
+      act("You have given $N the gift of featherfall!", false, caster, nullptr,
+        victim, TO_CHAR);
+    return true;
+  }
+
+  bool rollFeatheryDescentCrit(TBeing* caster) {
     switch (critSuccess(caster, SPELL_FEATHERY_DESCENT)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_FEATHERY_DESCENT);
-        aff->duration >>= 1;
-        break;
+        return true;
       case CRIT_S_NONE:
         break;
     }
-    victim->affectJoin(caster, aff, AVG_DUR_NO, AVG_EFF_YES);
-    return SPELL_SUCCESS;
-  } else {
+    return false;
+  }
+
+  int featheryDescentDuration(TBeing* caster, int level, bool crit) {
+    int duration = caster->durationModify(SPELL_FEATHERY_DESCENT,
+      level * Pulse::UPDATES_PER_MUDHOUR);
+    if (crit)
+      duration >>= 1;
+    return duration;
+  }
+
+}  // namespace
+
+int featheryDescent(TBeing* caster, TBeing* victim, int level, short bKnown) {
+  if (!caster->bSuccess(bKnown, SPELL_FEATHERY_DESCENT)) {
+    caster->nothingHappens();
     return SPELL_FAIL;
   }
+
+  bool crit = rollFeatheryDescentCrit(caster);
+  int duration = featheryDescentDuration(caster, level, crit);
+
+  if (!applyFeatheryDescent(caster, victim, level, duration))
+    return SPELL_FAIL;
+
+  caster->reconcileHelp(victim, discArray[SPELL_FEATHERY_DESCENT]->alignMod);
+  return SPELL_SUCCESS;
 }
 
 void featheryDescent(TBeing* caster, TBeing* victim, TMagicItem* obj) {
   featheryDescent(caster, victim, obj->getMagicLevel() / 3,
-    obj->getMagicLearnedness());
+    static_cast<short>(obj->getMagicLearnedness()));
 }
 
 void featheryDescent(TBeing* caster, TBeing* victim, int level, int learn) {
-  affectedData aff;
-  int ret;
-
-  aff.type = SPELL_FEATHERY_DESCENT;
-  aff.level = level;
-  aff.duration = caster->durationModify(SPELL_FEATHERY_DESCENT,
-    aff.level * Pulse::UPDATES_PER_MUDHOUR);
-  aff.modifier = 0;
-  aff.location = APPLY_NONE;
-  aff.bitvector = 0;
-
-  if (victim->affectedBySpell(SPELL_FEATHERY_DESCENT)) {
-    caster->nothingHappens();
-    return;
-  }
-
-  ret = featheryDescent(caster, victim, level, &aff, learn);
-
-  if (IS_SET(ret, SPELL_SUCCESS)) {
-    act("$N seems lighter on $S feet!", FALSE, caster, NULL, victim,
-      TO_NOTVICT);
-    act("You feel much \"lighter\"!", FALSE, victim, NULL, NULL, TO_CHAR);
-    victim->sendTo("You have been granted the gift of featherfall!\n\r");
-  } else {
-    caster->nothingHappens();
-  }
+  featheryDescent(caster, victim, level, static_cast<short>(learn));
 }
 
 int featheryDescent(TBeing* caster, TBeing* victim) {
   if (!bPassMageChecks(caster, SPELL_FEATHERY_DESCENT, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_FEATHERY_DESCENT]->lag;
   taskDiffT diff = discArray[SPELL_FEATHERY_DESCENT]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_FEATHERY_DESCENT, diff,
-    1, "", rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_FEATHERY_DESCENT,
+    diff, 1, "", rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
+
 int castFeatheryDescent(TBeing* caster, TBeing* victim) {
-  affectedData aff;
-
   int level = caster->getSkillLevel(SPELL_FEATHERY_DESCENT);
+  int bKnown = caster->getSkillValue(SPELL_FEATHERY_DESCENT);
 
-  aff.type = SPELL_FEATHERY_DESCENT;
-  aff.level = level;
-  aff.duration = caster->durationModify(SPELL_FEATHERY_DESCENT,
-    aff.level * Pulse::UPDATES_PER_MUDHOUR);
-  aff.modifier = 0;
-  aff.location = APPLY_NONE;
-  aff.bitvector = 0;
-
-  int ret = featheryDescent(caster, victim, level, &aff,
-    caster->getSkillValue(SPELL_FEATHERY_DESCENT));
-  if (IS_SET(ret, SPELL_SUCCESS)) {
-    act("$N seems lighter on $S feet!", FALSE, caster, NULL, victim,
-      TO_NOTVICT);
-    act("You feel much \"lighter\"!", FALSE, victim, NULL, NULL, TO_CHAR);
-    victim->sendTo("You have been granted the gift of featherfall!\n\r");
-    if (caster != victim)
-      act("You have given $N the gift of featherfall!", FALSE, caster, NULL,
-        victim, TO_CHAR);
-  } else {
+  if (!caster->bSuccess(bKnown, SPELL_FEATHERY_DESCENT)) {
     caster->nothingHappens();
+    return false;
   }
-  return TRUE;
+
+  bool crit = rollFeatheryDescentCrit(caster);
+  int duration = featheryDescentDuration(caster, level, crit);
+
+  if (victim) {
+    if (applyFeatheryDescent(caster, victim, level, duration))
+      caster->reconcileHelp(victim,
+        discArray[SPELL_FEATHERY_DESCENT]->alignMod);
+  } else {
+    bool anyBuffed = forEachGroupBuffTarget(caster, [&](TBeing* target) {
+      if (!applyFeatheryDescent(caster, target, level, duration,
+            GroupCastMessages::Suppressed))
+        return false;
+      caster->reconcileHelp(target,
+        discArray[SPELL_FEATHERY_DESCENT]->alignMod);
+      return true;
+    });
+    if (!anyBuffed)
+      caster->sendTo("Everyone in your group already has feather fall.\n\r");
+  }
+  return true;
 }
 
-int fly(TBeing* caster, TBeing* victim, int, affectedData* aff, short bKnown) {
-  caster->reconcileHelp(victim, discArray[SPELL_FLY]->alignMod);
+void weightCorrectDuration(const TBeing* victim, affectedData* aff) {
+  aff->duration = static_cast<int>(aff->duration * 170.0 / victim->getWeight());
+}
 
-  if (caster->bSuccess(bKnown, SPELL_FLY)) {
+namespace {
+
+  // See applyFeatheryDescent for quiet/return semantics.
+  [[nodiscard]] bool applyFly(TBeing* caster, TBeing* victim, int level,
+    int duration, GroupCastMessages messages = GroupCastMessages::Verbose) {
+    affectedData aff;
+    aff.type = SPELL_FLY;
+    aff.level = level;
+    aff.duration = duration;
+    aff.modifier = 0;
+    aff.location = APPLY_NONE;
+    aff.bitvector = AFF_FLYING;
+
+    // correct for weight
+    weightCorrectDuration(victim, &aff);
+
+    if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES,
+          messages == GroupCastMessages::Verbose))
+      return false;
+
+    victim->sendTo("You feel much \"lighter\"!\n\r");
+    act("$n seems lighter on $s feet!", false, victim, nullptr, nullptr,
+      TO_ROOM);
+    return true;
+  }
+
+  bool rollFlyCrit(TBeing* caster) {
     switch (critSuccess(caster, SPELL_FLY)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_FLY);
-        aff->duration >>= 1;
-        break;
+        return true;
       case CRIT_S_NONE:
         break;
     }
-    victim->affectJoin(caster, aff, AVG_DUR_NO, AVG_EFF_YES);
-    return SPELL_SUCCESS;
-  } else {
-    return SPELL_FAIL;
+    return false;
   }
-}
 
-void weightCorrectDuration(const TBeing* victim, affectedData* aff) {
-  aff->duration = (int)(aff->duration * 170.0 / victim->getWeight());
+  int flyDuration(TBeing* caster, int level, bool crit) {
+    int duration =
+      caster->durationModify(SPELL_FLY, 3 * Pulse::UPDATES_PER_MUDHOUR * level);
+    if (crit)
+      duration >>= 1;
+    return duration;
+  }
+
+}  // namespace
+
+int fly(TBeing* caster, TBeing* victim, int, affectedData* aff, short bKnown) {
+  if (!caster->bSuccess(bKnown, SPELL_FLY))
+    return SPELL_FAIL;
+
+  if (rollFlyCrit(caster))
+    aff->duration >>= 1;
+  if (!victim->affectJoin(caster, aff, AVG_DUR_NO, AVG_EFF_YES))
+    return SPELL_FAIL;
+
+  caster->reconcileHelp(victim, discArray[SPELL_FLY]->alignMod);
+  return SPELL_SUCCESS;
 }
 
 void fly(TBeing* caster, TBeing* victim, TMagicItem* obj) {
   affectedData aff;
-  int level;
-
-  level = obj->getMagicLevel();
+  int level = obj->getMagicLevel();
 
   aff.type = SPELL_FLY;
   aff.level = level;
@@ -1363,13 +1428,9 @@ void fly(TBeing* caster, TBeing* victim, TMagicItem* obj) {
 
   int ret = fly(caster, victim, level, &aff, obj->getMagicLearnedness());
   if (IS_SET(ret, SPELL_SUCCESS)) {
-    if (caster == victim) {
-      caster->sendTo("You feel much \"lighter\"!\n\r");
-      act("$n seems lighter on $s feet!", FALSE, caster, NULL, 0, TO_ROOM);
-    } else {
-      victim->sendTo("You feel much \"lighter\"!\n\r");
-      act("$n seems lighter on $s feet!", FALSE, victim, NULL, 0, TO_ROOM);
-    }
+    victim->sendTo("You feel much \"lighter\"!\n\r");
+    act("$n seems lighter on $s feet!", false, victim, nullptr, nullptr,
+      TO_ROOM);
   } else {
     caster->nothingHappens();
   }
@@ -1377,133 +1438,48 @@ void fly(TBeing* caster, TBeing* victim, TMagicItem* obj) {
 
 int fly(TBeing* caster, TBeing* victim) {
   if (!bPassMageChecks(caster, SPELL_FLY, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_FLY]->lag;
   taskDiffT diff = discArray[SPELL_FLY]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_FLY, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_FLY, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castFly(TBeing* caster, TBeing* victim) {
-  affectedData aff;
-
   int level = caster->getSkillLevel(SPELL_FLY);
+  int bKnown = caster->getSkillValue(SPELL_FLY);
 
-  aff.type = SPELL_FLY;
-  aff.level = level;
-  aff.duration =
-    caster->durationModify(SPELL_FLY, 3 * Pulse::UPDATES_PER_MUDHOUR * level);
-  aff.modifier = 0;
-  aff.location = APPLY_NONE;
-  aff.bitvector = AFF_FLYING;
-
-  // correct for weight
-  weightCorrectDuration(victim, &aff);
-
-  int ret = fly(caster, victim, level, &aff, caster->getSkillValue(SPELL_FLY));
-  if (IS_SET(ret, SPELL_SUCCESS)) {
-    if (caster == victim) {
-      caster->sendTo("You feel much \"lighter\"!\n\r");
-      act("$n seems lighter on $s feet!", FALSE, caster, NULL, 0, TO_ROOM);
-    } else {
-      victim->sendTo("You feel much \"lighter\"!\n\r");
-      act("$n seems lighter on $s feet!", FALSE, victim, NULL, 0, TO_ROOM);
-    }
-  } else {
+  if (!caster->bSuccess(bKnown, SPELL_FLY)) {
     caster->nothingHappens();
+    return false;
   }
-  return TRUE;
-}
 
-int antigravity(TBeing* caster, int, affectedData* aff, short bKnown) {
-  TThing* t = NULL;
-  TBeing* vict = NULL;
-  char buf[80];
+  bool crit = rollFlyCrit(caster);
+  int duration = flyDuration(caster, level, crit);
 
-  if (caster->bSuccess(bKnown, SPELL_ANTIGRAVITY)) {
-    switch (critSuccess(caster, SPELL_ANTIGRAVITY)) {
-      case CRIT_S_DOUBLE:
-      case CRIT_S_TRIPLE:
-      case CRIT_S_KILL:
-        CS(SPELL_ANTIGRAVITY);
-        aff->duration >>= 1;
-        break;
-      case CRIT_S_NONE:
-        break;
-    }
-    for (StuffIter it = caster->roomp->stuff.begin();
-         it != caster->roomp->stuff.end() && (t = *it); ++it) {
-      vict = dynamic_cast<TBeing*>(t);
-      if (!vict)
-        continue;
-      if ((caster == vict) || (caster->inGroup(*vict))) {
-        if (vict->isAffected(AFF_LEVITATING) || vict->canFly()) {
-          if (caster == vict)
-            sprintf(buf, "You are already capable of some form of flight!\n\r");
-          else
-            sprintf(buf, "%s is already capable of some form of flight!\n\r",
-              vict->getName().c_str());
-
-          caster->sendTo(buf);
-          caster->nothingHappens(SILENT_YES);
-          continue;
-        }
-        caster->reconcileHelp(vict, discArray[SPELL_ANTIGRAVITY]->alignMod);
-        act("You begin to levitate! You're floating in the air!", TRUE, vict,
-          NULL, NULL, TO_CHAR);
-        act("With the grace of an angel, $n floats up off the $g!", TRUE, vict,
-          NULL, NULL, TO_ROOM);
-        vict->affectJoin(caster, aff, AVG_DUR_NO, AVG_EFF_YES);
-      }
-    }
-    return SPELL_SUCCESS;
+  if (victim) {
+    if (applyFly(caster, victim, level, duration))
+      caster->reconcileHelp(victim, discArray[SPELL_FLY]->alignMod);
   } else {
-    return SPELL_FAIL;
+    bool anyBuffed = forEachGroupBuffTarget(
+      caster,
+      [&](TBeing* target) {
+        if (!applyFly(caster, target, level, duration,
+              GroupCastMessages::Suppressed))
+          return false;
+        caster->reconcileHelp(target, discArray[SPELL_FLY]->alignMod);
+        return true;
+      },
+      // Mirror checkBadSpellCondition()'s SPELL_FLY guard so group-cast can't
+      // overlay flight on a levitating member when single-target would refuse.
+      [](TBeing* target) { return target->affectedBySpell(SPELL_LEVITATE); });
+    if (!anyBuffed)
+      caster->sendTo("Everyone in your group can already fly.\n\r");
   }
-}
-
-int antigravity(TBeing* caster) {
-  if (!bPassMageChecks(caster, SPELL_ANTIGRAVITY, NULL))
-    return FALSE;
-
-  lag_t rounds = discArray[SPELL_ANTIGRAVITY]->lag;
-  taskDiffT diff = discArray[SPELL_ANTIGRAVITY]->task;
-
-  start_cast(caster, NULL, NULL, caster->roomp, SPELL_ANTIGRAVITY, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
-}
-
-int castAntigravity(TBeing* caster) {
-  affectedData aff;
-  int ret, level;
-
-  if (!caster->roomp)
-    return TRUE;
-
-  level = caster->getSkillLevel(SPELL_ANTIGRAVITY);
-
-  aff.type = SPELL_LEVITATE;
-  aff.level = level;
-  aff.duration = caster->durationModify(SPELL_ANTIGRAVITY,
-    (caster->isImmortal() ? caster->GetMaxLevel() : 3) *
-      Pulse::UPDATES_PER_MUDHOUR);
-  aff.modifier = 0;
-  aff.location = APPLY_NONE;
-  aff.bitvector = AFF_LEVITATING;
-
-  if ((ret = antigravity(caster, level, &aff,
-         caster->getSkillValue(SPELL_ANTIGRAVITY))) == SPELL_SUCCESS) {
-    act("$n makes a minor change to the laws of physics.", TRUE, caster, 0, 0,
-      TO_ROOM);
-    act("You alter the forces of space and time slightly.", TRUE, caster, 0, 0,
-      TO_CHAR);
-  } else
-    caster->nothingHappens();
-  return TRUE;
+  return true;
 }
 
 int conjureElemAir(TBeing* caster, int level, short bKnown) {
@@ -1700,101 +1676,130 @@ void levitate(TBeing* caster, TBeing* victim) {
     rounds, caster->in_room, 0, 0, TRUE, 0);
 }
 
-int falconWings(TBeing* caster, TBeing* victim, int level, short bKnown) {
-  affectedData aff;
+namespace {
 
-  if (victim->affectedBySpell(SPELL_FLY) ||
-      victim->affectedBySpell(SPELL_FALCON_WINGS)) {
-    act("$N is already affected by a some type of flight spell.", FALSE, caster,
-      NULL, victim, TO_CHAR);
-    caster->nothingHappens(SILENT_YES);
-    return SPELL_FAIL;
+  // See applyFeatheryDescent for quiet/return semantics.
+  [[nodiscard]] bool applyFalconWings(TBeing* caster, TBeing* victim, int level,
+    int duration, GroupCastMessages messages = GroupCastMessages::Verbose) {
+    affectedData aff;
+    aff.type = SPELL_FALCON_WINGS;
+    aff.level = level;
+    aff.duration = duration;
+    aff.modifier = 0;
+    aff.location = APPLY_NONE;
+    aff.bitvector = AFF_FLYING;
+    weightCorrectDuration(victim, &aff);
+
+    if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES,
+          messages == GroupCastMessages::Verbose))
+      return false;
+
+    victim->sendTo("Feathers sprout from your arms!\n\r");
+    victim->sendTo("You feel as if you could fly!!\n\r");
+    act("Feathers sprout from $n's arms and $e leaps into the sky!", false,
+      victim, nullptr, nullptr, TO_ROOM);
+    act("$n seems capable of flight!", false, victim, nullptr, nullptr,
+      TO_ROOM);
+    return true;
   }
 
-  aff.type = SPELL_FALCON_WINGS;
-  aff.level = level;
-  aff.duration =
-    caster->durationModify(SPELL_FALCON_WINGS, 3 * Pulse::UPDATES_PER_MUDHOUR);
-  aff.modifier = 0;
-  aff.location = APPLY_NONE;
-  aff.bitvector = AFF_FLYING;
-
-  // correct for weight
-  weightCorrectDuration(victim, &aff);
-
-  if (caster->bSuccess(bKnown, SPELL_FALCON_WINGS)) {
+  bool rollFalconWingsCrit(TBeing* caster) {
     switch (critSuccess(caster, SPELL_FALCON_WINGS)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_FALCON_WINGS);
-        aff.duration >>= 1;
-        break;
+        return true;
       case CRIT_S_NONE:
         break;
     }
+    return false;
+  }
 
-    victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
+  int falconWingsDuration(TBeing* caster, bool crit) {
+    int duration = caster->durationModify(SPELL_FALCON_WINGS,
+      3 * Pulse::UPDATES_PER_MUDHOUR);
+    if (crit)
+      duration >>= 1;
+    return duration;
+  }
 
-    victim->sendTo("Feathers sprout from your arms!\n\r");
-    victim->sendTo("You feel as if you could fly!!\n\r");
-    act("Feathers sprout from $n's arms and $e leaps into the sky!", FALSE,
-      victim, NULL, 0, TO_ROOM);
-    act("$n seems capable of flight!", FALSE, victim, NULL, 0, TO_ROOM);
+}  // namespace
 
-    return SPELL_SUCCESS;
-  } else {
+int falconWings(TBeing* caster, TBeing* victim, int level, short bKnown) {
+  if (!caster->bSuccess(bKnown, SPELL_FALCON_WINGS)) {
     caster->nothingHappens();
     return SPELL_FAIL;
   }
+
+  bool crit = rollFalconWingsCrit(caster);
+  int duration = falconWingsDuration(caster, crit);
+
+  if (!applyFalconWings(caster, victim, level, duration))
+    return SPELL_FAIL;
+
+  caster->reconcileHelp(victim, discArray[SPELL_FALCON_WINGS]->alignMod);
+  return SPELL_SUCCESS;
 }
 
 void falconWings(TBeing* caster, TBeing* victim, TMagicItem* obj) {
-  int level;
-
-  level = obj->getMagicLevel();
-
-  falconWings(caster, victim, level, obj->getMagicLearnedness());
+  falconWings(caster, victim, obj->getMagicLevel(),
+    static_cast<short>(obj->getMagicLearnedness()));
 }
 
 int falconWings(TBeing* caster, TBeing* victim) {
-  taskDiffT diff;
-
   if (caster->roomp->isUnderwaterSector()) {
     caster->sendTo("Falcons can't fly under these wet conditions!\n\r");
-    return FALSE;
-  }
-  if (victim->affectedBySpell(SPELL_FALCON_WINGS) ||
-      victim->affectedBySpell(SPELL_FLY)) {
-    act("$N is already affected by a some type of flight spell.", FALSE, caster,
-      NULL, victim, TO_CHAR);
-    caster->nothingHappens(SILENT_YES);
-    return FALSE;
+    return false;
   }
 
   if (!bPassMageChecks(caster, SPELL_FALCON_WINGS, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_FALCON_WINGS]->lag;
-  diff = discArray[SPELL_FALCON_WINGS]->task;
+  taskDiffT diff = discArray[SPELL_FALCON_WINGS]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_FALCON_WINGS, diff, 1,
-    "", rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_FALCON_WINGS, diff,
+    1, "", rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castFalconWings(TBeing* caster, TBeing* victim) {
-  int ret, level;
+  int level = caster->getSkillLevel(SPELL_FALCON_WINGS);
+  int bKnown = caster->getSkillValue(SPELL_FALCON_WINGS);
 
-  caster->reconcileHelp(victim, discArray[SPELL_FALCON_WINGS]->alignMod);
-
-  level = caster->getSkillLevel(SPELL_FALCON_WINGS);
-
-  if ((ret = falconWings(caster, victim, level,
-         caster->getSkillValue(SPELL_FALCON_WINGS))) == SPELL_SUCCESS) {
-  } else {
+  if (!caster->bSuccess(bKnown, SPELL_FALCON_WINGS)) {
+    caster->nothingHappens();
+    return false;
   }
-  return FALSE;
+
+  bool crit = rollFalconWingsCrit(caster);
+  int duration = falconWingsDuration(caster, crit);
+
+  if (victim) {
+    if (applyFalconWings(caster, victim, level, duration))
+      caster->reconcileHelp(victim, discArray[SPELL_FALCON_WINGS]->alignMod);
+  } else {
+    bool anyBuffed = forEachGroupBuffTarget(
+      caster,
+      [&](TBeing* target) {
+        if (!applyFalconWings(caster, target, level, duration,
+              GroupCastMessages::Suppressed))
+          return false;
+        caster->reconcileHelp(target, discArray[SPELL_FALCON_WINGS]->alignMod);
+        return true;
+      },
+      // Mirror checkBadSpellCondition()'s SPELL_FALCON_WINGS guard so
+      // group-cast can't overlay falcon wings on members that single-target
+      // would refuse for already having flight active.
+      [](TBeing* target) {
+        return target->affectedBySpell(SPELL_LEVITATE) ||
+               target->affectedBySpell(SPELL_FLY);
+      });
+    if (!anyBuffed)
+      caster->sendTo("Everyone in your group can already fly.\n\r");
+  }
+  return true;
 }
 
 int protectionFromAir(TBeing* caster, int level, short bKnown) {

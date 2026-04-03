@@ -8,7 +8,6 @@ class CDWater : public CDiscipline {
     CSkill skWateryGrave;  //      40th level individual
     CSkill skTsunami;      // NEW  36th level area affect
     CSkill skBlizzard;
-    CSkill skBreathOfSarahage;
     CSkill skPlasmaMirror;
     CSkill skGarmulsTail;
     CSkill skProtectionFromWater;
@@ -63,10 +62,6 @@ int gillsOfFlesh(TBeing*, TBeing*);
 int castGillsOfFlesh(TBeing*, TBeing*);
 void gillsOfFlesh(TBeing*, TBeing*, TMagicItem*);
 int gillsOfFlesh(TBeing*, TBeing*, int, short);
-
-int breathOfSarahage(TBeing*);
-int castBreathOfSarahage(TBeing*);
-int breathOfSarahage(TBeing*, int, short);
 
 int protectionFromWater(TBeing*);
 void protectionFromWater(TBeing*, TMagicItem*);

@@ -40,6 +40,13 @@ double getSkillDiffModifier(spellNumT skill) {
 
 void getSkillLevelRange(spellNumT skill, int& min_lev, int& max_lev,
   int adv_learn) {
+  // Guard against unregistered enum slots and any skill defined with learn
+  // == 0 (division by zero below).
+  if (!discArray[skill] || discArray[skill]->learn == 0) {
+    min_lev = 1;
+    max_lev = 1;
+    return;
+  }
   if (discArray[skill]->disc != discArray[skill]->assDisc) {
     // skill is in a basic disc
     max_lev =

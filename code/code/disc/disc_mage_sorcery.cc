@@ -8,6 +8,7 @@
 #include "disease.h"
 #include "combat.h"
 #include "spelltask.h"
+#include "disc_mage_group.h"
 #include "disc_mage_sorcery.h"
 #include "obj_armor.h"
 #include "obj_magic_item.h"
@@ -1234,56 +1235,76 @@ int castAnimate(TBeing* caster) {
   return TRUE;
 }
 
-int sorcerersGlobe(TBeing* caster, TBeing* victim, int level, short bKnown) {
-  affectedData aff;
+namespace {
 
-  aff.type = SPELL_SORCERERS_GLOBE;
-  aff.level = level;
-  aff.duration = caster->durationModify(SPELL_SORCERERS_GLOBE,
-    (3 + (aff.level / 2)) * Pulse::UPDATES_PER_MUDHOUR);
-  aff.location = APPLY_ARMOR;
-  aff.modifier = -100;
-  aff.bitvector = 0;
+  // Armor bonus for sorcerer's globe. A single uniform value for both
+  // self-cast and cast-on-other: the spell is now group-targetable, and the
+  // old self-vs-other asymmetry (-100 / -20) made unsolicited group buffs
+  // feel like an imposition on allies.
+  inline constexpr int SORCERERS_GLOBE_ARMOR = -50;
 
-  if (caster->bSuccess(bKnown, SPELL_SORCERERS_GLOBE)) {
+  // See applyFeatheryDescent (disc_mage_air.cc) for quiet/return semantics.
+  // The caller plays the room sound once for the whole cast, not per target.
+  [[nodiscard]] bool applySorcerersGlobe(TBeing* caster, TBeing* victim,
+    int level, int duration,
+    GroupCastMessages messages = GroupCastMessages::Verbose) {
+    affectedData aff;
+    aff.type = SPELL_SORCERERS_GLOBE;
+    aff.level = level;
+    aff.duration = duration;
+    aff.location = APPLY_ARMOR;
+    aff.modifier = SORCERERS_GLOBE_ARMOR;
+    aff.bitvector = 0;
+
+    if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES,
+          messages == GroupCastMessages::Verbose))
+      return false;
+
+    act("$n is instantly surrounded by a hardened wall of air!", false, victim,
+      nullptr, nullptr, TO_ROOM);
+    act("You are instantly surrounded by a hardened wall of air!", false,
+      victim, nullptr, nullptr, TO_CHAR);
+    return true;
+  }
+
+  int sorcerersGlobeDuration(TBeing* caster, int level, bool crit) {
+    int duration = caster->durationModify(SPELL_SORCERERS_GLOBE,
+      (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR);
+    if (crit)
+      duration *= 2;
+    return duration;
+  }
+
+  bool rollSorcerersGlobeCrit(TBeing* caster) {
     switch (critSuccess(caster, SPELL_SORCERERS_GLOBE)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
         CS(SPELL_SORCERERS_GLOBE);
-        aff.duration *= 2;
-        if (caster != victim)
-          aff.modifier *= 2;
-        break;
+        return true;
       case CRIT_S_NONE:
         break;
     }
-    if (caster != victim)
-      aff.modifier /= 5;
+    return false;
+  }
 
-    // I changed this to use affectJoin, it was just adding
-    // new affs every cast - Russ 12/18/97
-    // Second argument FALSE causes it to add new duration to old
-    // Third argument TRUE causes it to average the old and newmodifier
+}  // namespace
 
-    if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES)) {
-      caster->nothingHappens();
-      return FALSE;
-    }
-
-    victim->roomp->playsound(SOUND_SPELL_SORCERERS_GLOBE, SOUND_TYPE_MAGIC);
-
-    act("$n is instantly surrounded by a hardened wall of air!", FALSE, victim,
-      NULL, NULL, TO_ROOM);
-    act("You are instantly surrounded by a hardened wall of air!", FALSE,
-      victim, NULL, NULL, TO_CHAR);
-
-    caster->reconcileHelp(victim, discArray[SPELL_SORCERERS_GLOBE]->alignMod);
-    return SPELL_SUCCESS;
-  } else {
+int sorcerersGlobe(TBeing* caster, TBeing* victim, int level, short bKnown) {
+  if (!caster->bSuccess(bKnown, SPELL_SORCERERS_GLOBE)) {
     caster->nothingHappens();
     return SPELL_FAIL;
   }
+
+  bool crit = rollSorcerersGlobeCrit(caster);
+  int duration = sorcerersGlobeDuration(caster, level, crit);
+
+  if (!applySorcerersGlobe(caster, victim, level, duration))
+    return SPELL_FAIL;
+
+  victim->roomp->playsound(SOUND_SPELL_SORCERERS_GLOBE, SOUND_TYPE_MAGIC);
+  caster->reconcileHelp(victim, discArray[SPELL_SORCERERS_GLOBE]->alignMod);
+  return SPELL_SUCCESS;
 }
 
 void sorcerersGlobe(TBeing* caster, TBeing* victim, TMagicItem* obj) {
@@ -1300,19 +1321,44 @@ int sorcerersGlobe(TBeing* caster, TBeing* victim) {
   lag_t rounds = discArray[SPELL_SORCERERS_GLOBE]->lag;
   diff = discArray[SPELL_SORCERERS_GLOBE]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_SORCERERS_GLOBE, diff,
-    1, "", rounds, caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_SORCERERS_GLOBE,
+    diff, 1, "", rounds, caster->in_room, 0, 0, true, 0);
   return TRUE;
 }
 
 int castSorcerersGlobe(TBeing* caster, TBeing* victim) {
-  int ret, level;
-
-  level = caster->getSkillLevel(SPELL_SORCERERS_GLOBE);
+  int level = caster->getSkillLevel(SPELL_SORCERERS_GLOBE);
   int bKnown = caster->getSkillValue(SPELL_SORCERERS_GLOBE);
 
-  if ((ret = sorcerersGlobe(caster, victim, level, bKnown)) == SPELL_SUCCESS) {}
-  return TRUE;
+  if (!caster->bSuccess(bKnown, SPELL_SORCERERS_GLOBE)) {
+    caster->nothingHappens();
+    return false;
+  }
+
+  bool crit = rollSorcerersGlobeCrit(caster);
+  int duration = sorcerersGlobeDuration(caster, level, crit);
+
+  if (victim) {
+    if (applySorcerersGlobe(caster, victim, level, duration)) {
+      caster->roomp->playsound(SOUND_SPELL_SORCERERS_GLOBE, SOUND_TYPE_MAGIC);
+      caster->reconcileHelp(victim, discArray[SPELL_SORCERERS_GLOBE]->alignMod);
+    }
+  } else {
+    bool anyBuffed = forEachGroupBuffTarget(caster, [&](TBeing* target) {
+      if (!applySorcerersGlobe(caster, target, level, duration,
+            GroupCastMessages::Suppressed))
+        return false;
+      caster->reconcileHelp(target, discArray[SPELL_SORCERERS_GLOBE]->alignMod);
+      return true;
+    });
+    if (!anyBuffed)
+      caster->sendTo(
+        "Everyone in your group is already protected by a sorcerer's "
+        "globe.\n\r");
+    else
+      caster->roomp->playsound(SOUND_SPELL_SORCERERS_GLOBE, SOUND_TYPE_MAGIC);
+  }
+  return true;
 }
 
 int bind(TBeing* caster, TBeing* victim, int level, short bKnown) {

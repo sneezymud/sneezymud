@@ -11,7 +11,6 @@ class CDAir : public CDiscipline {
     CSkill skLightningBolt;   //      20th level single target
     CSkill skChainLightning;  //      80th level chaining
     CSkill skFly;
-    CSkill skAntigravity;
     CSkill skPierceResist;
 
     virtual CDAir* cloneMe() { return new CDAir(*this); }
@@ -54,7 +53,7 @@ int castTornado(TBeing*);
 
 void featheryDescent(TBeing*, TBeing*, int, int);
 void featheryDescent(TBeing*, TBeing*, TMagicItem*);
-int featheryDescent(TBeing*, TBeing*, int, affectedData*, short);
+int featheryDescent(TBeing*, TBeing*, int, short);
 int castFeatheryDescent(TBeing*, TBeing*);
 int featheryDescent(TBeing*, TBeing*);
 
@@ -62,10 +61,6 @@ int castFly(TBeing*, TBeing*);
 int fly(TBeing*, TBeing*);
 void fly(TBeing*, TBeing*, TMagicItem*);
 int fly(TBeing*, TBeing*, int, affectedData*, short);
-
-int antigravity(TBeing*);
-int antigravity(TBeing*, int, affectedData*, short);
-int castAntigravity(TBeing*);
 
 int castConjureElemAir(TBeing*);
 int conjureElemAir(TBeing*, int, short);

@@ -1,0 +1,10 @@
+Several mage buff spells can now be cast on your entire group at once.
+Cast without specifying a target to buff all group members in the room,
+or specify a target for single-target mode as before.
+
+Updated spells: haste, flight, gills of flesh, accelerate, stealth,
+feathery descent, falcon wings, sorcerer's globe.
+
+The redundant group-only versions of flight and gills of flesh --
+antigravity and breath of Sarahage -- have been removed. Flight and
+gills of flesh now cover both single-target and group use cases.
