@@ -285,14 +285,19 @@ bool TTrapComponent::splitMe(TBeing* ch, const sstring& tString) {
 
   // Set up the split component
   tComponent->setTrapComponentCharges(tCount);
-  tComponent->obj_flags.cost = (obj_flags.cost * tCount) / getTrapComponentCharges();
+  // Temporarily zero cost so willMerge rejects the re-merge when added to inventory
+  tComponent->obj_flags.cost = 0;
 
   // Reduce this component's charges and cost
+  int splitCost = (obj_flags.cost * tCount) / getTrapComponentCharges();
   addToTrapComponentCharges(-tCount);
-  obj_flags.cost -= tComponent->obj_flags.cost;
+  obj_flags.cost -= splitCost;
 
-  // Give the split component to the player
+  // Give the split component to the player (cost=0 prevents auto-merge)
   *ch += *tComponent;
+
+  // Now set the real cost
+  tComponent->obj_flags.cost = splitCost;
 
   ch->sendTo(format("You split off %d charges into a new component.\n\r") % tCount);
   return true;

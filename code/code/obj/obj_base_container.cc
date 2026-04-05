@@ -72,7 +72,8 @@ int TBaseContainer::getCarriedVolume() const {
   // to worry about subcontainers (unsupported on sneezy), so we don't
   // need to use getTotalVolume() here
   for (StuffIter it = stuff.begin(); it != stuff.end() && (t = *it); ++it) {
-    if (t->getKind() == TThing::TThingKind::TComponent)
+    if (t->getKind() == TThing::TThingKind::TComponent ||
+        t->getKind() == TThing::TThingKind::TTrapComponent)
       total += (int)(t->getReducedVolume(this) * 0.10);
     else {
       total += t->getReducedVolume(this);
