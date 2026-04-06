@@ -936,7 +936,9 @@ int hide(TBeing* thief, spellNumT skill) {
 
   if (thief->bSuccess(bKnown, skill)) {
     SET_BIT(thief->specials.affectedBy, AFF_HIDE);
+    thief->sendTo("You slip into the shadows, concealed from view.\n\r");
   } else {
+    thief->sendTo("You fail to blend in with your surroundings.\n\r");
   }
   return TRUE;
 }
