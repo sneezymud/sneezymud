@@ -128,6 +128,14 @@ bool willBreakHide(cmdTypeT tCmd, bool isPre) {
     case CMD_ATTRIBUTE:
     case CMD_WORLD:
     case CMD_SPY:
+    case CMD_CONCEAL:
+    case CMD_REST:
+    case CMD_SIT:
+    case CMD_STAND:
+    case CMD_SIGN:
+    case CMD_PTELL:
+    case CMD_EAT:
+    case CMD_DRINK:
     case CMD_CLS:
     case CMD_PROMPT:
     case CMD_ALIAS:
@@ -353,8 +361,10 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring& argument, TThing* vict,
       }
     }
 
-    if (IS_SET(specials.affectedBy, AFF_HIDE) && willBreakHide(cmd, true))
+    if (IS_SET(specials.affectedBy, AFF_HIDE) && willBreakHide(cmd, true)) {
+      sendTo("You move from your hiding spot.\n\r");
       REMOVE_BIT(specials.affectedBy, AFF_HIDE);
+    }
 
     rc = triggerSpecial(NULL, cmd, newarg.c_str());
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -2063,10 +2073,10 @@ int TBeing::parseCommand(const sstring& orig_arg, bool typedIn, bool doAlias) {
     return FALSE;
   }
 
-  if (IS_SET(specials.affectedBy, AFF_HIDE) && cmd != CMD_BACKSTAB)
+  if (IS_SET(specials.affectedBy, AFF_HIDE) && willBreakHide(cmd, true)) {
+    sendTo("You move from your hiding spot.\n\r");
     REMOVE_BIT(specials.affectedBy, AFF_HIDE);
-  if (IS_SET(specials.affectedBy, AFF_HIDE) && cmd != CMD_SLIT)
-    REMOVE_BIT(specials.affectedBy, AFF_HIDE);
+  }
 
   if (getCaptiveOf()) {
     if (!sameRoom(*getCaptiveOf())) {
