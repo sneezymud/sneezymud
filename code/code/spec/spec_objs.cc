@@ -6291,53 +6291,6 @@ int poisonQuiver(TBeing* ch, cmdTypeT cmd, const char*, TObj* q, TObj* a) {
     return false;
   }
 
-  // When quiver is unequipped, remove poison from all arrows
-  if (cmd == CMD_OBJ_UNEQUIPPED) {
-    int count = 0;
-    for (TThing* thing : q->stuff) {
-      auto* arrow = dynamic_cast<TArrow*>(thing);
-
-      // Only remove poison if it's the standard poison added by quiver
-      if (arrow && arrow->isPoisoned() &&
-          arrow->getPoison() == LIQ_POISON_STANDARD) {
-        arrow->setPoison(LIQ_NONE);
-        count++;
-      }
-    }
-
-    // Only show message if we actually unpoisoned some arrows
-    if (count > 0) {
-      act("The <g>sickly green<1> glow emanating from within your $p fades.",
-          false, ch, q, nullptr, TO_CHAR);
-      act("The <g>sickly green<1> glow emanating from within $n's $p fades.", true,
-          ch, q, nullptr, TO_ROOM);
-    }
-
-    return false;
-  }
-
-  // When quiver is equipped, poison all unpoisoned arrows inside
-  if (cmd == CMD_OBJ_EQUIPPED) {
-    int count = 0;
-    for (TThing* thing : q->stuff) {
-      auto* arrow = dynamic_cast<TArrow*>(thing);
-      if (arrow && !arrow->isPoisoned()) {
-        arrow->setPoison(LIQ_POISON_STANDARD);
-        count++;
-      }
-    }
-
-    // Only show message if we actually poisoned some arrows
-    if (count > 0) {
-      act("A <g>sickly green<1> glow begins emanating from within your $p.", false,
-          ch, q, nullptr, TO_CHAR);
-      act("A <g>sickly green<1> glow begins emanating from within $n's $p.", true,
-          ch, q, nullptr, TO_ROOM);
-    }
-
-    return false;
-  }
-
   // When arrow is put into equipped quiver by the wearer, poison it
   if (cmd != CMD_OBJ_HAVING_SOMETHING_PUT_INTO || !a || !q || !ch ||
       ch != q->equippedBy) {
