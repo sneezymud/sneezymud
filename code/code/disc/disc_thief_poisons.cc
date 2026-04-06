@@ -261,26 +261,10 @@ int TBaseCup::poisonMePoison(TBeing* ch, TObj* target) {
     msg = format("$n coats $p with %s.") % liquidInfo[getDrinkType()]->name;
     act(msg, false, ch, target, nullptr, TO_ROOM);
   } else {
-    if (critFail(ch, SKILL_POISON_WEAPON) != CRIT_F_NONE) {
-      act("You slip up and nick yourself on $p!", false, ch, target, nullptr,
-        TO_CHAR);
-      act("$n slips up and nicks $mself on $p!", false, ch, target, nullptr,
-        TO_ROOM);
-
-      act("You inflict something nasty on yourself!", false, ch, target, nullptr,
-        TO_CHAR, ANSI_RED);
-      act("$n inflicts something nasty on $mself!", false, ch, target, nullptr,
-        TO_ROOM, ANSI_RED);
-
-      int rc = doLiqSpell(ch, ch, getDrinkType(), 1);
-      if (IS_SET(rc, VICTIM_DEAD | CASTER_DEAD))
-        return DELETE_THIS;
-    } else {
-      auto msg = format("You try to coat $p with %s, but it doesn't take.") % liquidInfo[getDrinkType()]->name;
-      act(msg, false, ch, target, nullptr, TO_CHAR);
-      msg = format("$n tries to coat $p with %s, but it doesn't seem to take.") % liquidInfo[getDrinkType()]->name;
-      act(msg, false, ch, target, nullptr, TO_ROOM);
-    }
+    auto msg = format("You try to coat $p with %s, but it doesn't take.") % liquidInfo[getDrinkType()]->name;
+    act(msg, false, ch, target, nullptr, TO_CHAR);
+    msg = format("$n tries to coat $p with %s, but it doesn't seem to take.") % liquidInfo[getDrinkType()]->name;
+    act(msg, false, ch, target, nullptr, TO_ROOM);
   }
 
   addToDrinkUnits(-1);
