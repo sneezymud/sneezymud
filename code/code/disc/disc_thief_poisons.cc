@@ -240,6 +240,12 @@ int TBaseCup::poisonMePoison(TBeing* ch, TObj* target) {
     return false;
   }
 
+  if (getDrinkType() == LIQ_WATER || getDrinkType() == LIQ_SALTWATER) {
+    ch->sendTo(format("%s isn't something you can poison with.\n\r") %
+      sstring(liquidInfo[getDrinkType()]->name).cap());
+    return false;
+  }
+
   int bKnown = ch->getSkillValue(SKILL_POISON_WEAPON);
 
   if (ch->bSuccess(bKnown, SKILL_POISON_WEAPON)) {

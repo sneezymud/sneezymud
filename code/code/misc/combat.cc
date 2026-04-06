@@ -5925,8 +5925,10 @@ bool bluntType(spellNumT wtype) {
 
 bool TObj::isBluntWeapon() const { return FALSE; }
 
-sstring TObj::showModifier(showModeT, const TBeing*) const {
-  if (isPoisoned())
+sstring TObj::showModifier(showModeT mode, const TBeing*) const {
+  if (isPoisoned() &&
+      (mode == SHOW_MODE_SHORT_PLUS || mode == SHOW_MODE_SHORT_PLUS_INV ||
+       mode == SHOW_MODE_SHORT))
     return " (poisoned)";
   return "";
 }

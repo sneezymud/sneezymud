@@ -612,7 +612,7 @@ class TObj : public TThing {
     void checkObjStats();
     virtual void update(int);
     virtual bool isPoisoned() const;
-    virtual int applyPoison(TBeing*);
+    virtual int applyPoison(TBeing* vict, TBeing* attacker = nullptr);
     void setPoison(liqTypeT);
     liqTypeT getPoison() const { return poison; }
     void clearPoison() { poison = static_cast<liqTypeT>(-1); }

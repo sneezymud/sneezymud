@@ -1055,23 +1055,6 @@ int TObj::poisonWeaponWeapon(TBeing* ch, TThing* poisonSource) {
     return false;
   }
 
-  // Water container cleans poison off
-  if (auto* cup = dynamic_cast<TBaseCup*>(poisonSource);
-      cup && cup->getDrinkUnits() > 0 &&
-      (cup->getDrinkType() == LIQ_WATER ||
-       cup->getDrinkType() == LIQ_SALTWATER)) {
-    if (isPoisoned()) {
-      clearPoison();
-      act("You use some water from $P to wash the poison off $p.",
-        false, ch, this, cup, TO_CHAR);
-      act("$n uses some water from $P to wash the poison off $p.",
-        false, ch, this, cup, TO_ROOM);
-      return true;
-    }
-    ch->sendTo("That isn't poisoned.\n\r");
-    return false;
-  }
-
   if (isPoisoned()) {
     ch->sendTo("That is already poisoned!\n\r");
     return false;
@@ -1575,7 +1558,7 @@ int TBaseWeapon::catchSmack(TBeing* ch, TBeing** targ, TRoom* rp, int cdist,
         d = get_range_actual_damage(ch, tb, this, d, damtype);
 
         if (isPoisoned()) {
-          rc = applyPoison(tb);
+          rc = applyPoison(tb, ch);
           if (IS_SET_DELETE(rc, DELETE_VICT)) {
             if (true_targ) {
               ADD_DELETE(resCode, DELETE_VICT);
@@ -1646,10 +1629,7 @@ sstring TBaseWeapon::showModifier(showModeT mode, const TBeing* ch) const {
       a += buf;
     }
   }
-
-  if (isPoisoned())
-    a += " (poisoned)";
-
+  a += TObj::showModifier(mode, ch);
   return a;
 }
 
@@ -1729,11 +1709,12 @@ bool TObj::isPoisoned() const {
   return getPoison() >= LIQ_WATER;
 }
 
-int TObj::applyPoison(TBeing* vict) {
+int TObj::applyPoison(TBeing* vict, TBeing* attacker) {
   if (!isPoisoned())
     return FALSE;
 
-  if (auto* ch = dynamic_cast<TBeing*>(equippedBy)) {
+  auto* ch = attacker ? attacker : dynamic_cast<TBeing*>(equippedBy);
+  if (ch) {
     act("There was something nasty on that $o!", false, ch, this, vict,
       TO_VICT, ANSI_RED);
     act("You inflict something nasty on $N!", false, ch, this, vict,

@@ -16,6 +16,7 @@
 #include "obj_saddle.h"
 #include "obj_harness.h"
 #include "obj_low.h"
+#include "liquids.h"
 
 TBaseClothing::TBaseClothing() : TObj() {}
 
@@ -152,6 +153,26 @@ void TBaseClothing::evaluateMe(TBeing* ch) const {
     ch->sendTo(COLOR_OBJECTS, format("IMMORTAL EVAL (new): %s should load on "
                                      "level %.2f or lower mobs.\n\r") %
                                 getName() % ae.getLoadLevel());
+  }
+
+  if (ch->hasClass(CLASS_THIEF) || ch->isImmortal()) {
+    char capbuf[80];
+    strncpy(capbuf, ch->objs(this), sizeof(capbuf) - 1);
+
+    if (isSpiked())
+      ch->sendTo(COLOR_OBJECTS,
+        format("%s seems to have spikes on it.\n\r") % sstring(capbuf).cap());
+
+    if (isPoisoned()) {
+      if (ch->doesKnowSkill(SKILL_POISON_WEAPON)) {
+        ch->sendTo(COLOR_OBJECTS,
+          format("%s seems to be poisoned with %s.\n\r") %
+            sstring(capbuf).cap() % liquidInfo[getPoison()]->name);
+      } else {
+        ch->sendTo(COLOR_OBJECTS,
+          format("%s seems to be poisoned.\n\r") % sstring(capbuf).cap());
+      }
+    }
   }
 }
 
@@ -598,6 +619,7 @@ sstring TBaseClothing::showModifier(showModeT mode, const TBeing* ch) const {
       a += buf;
     }
   }
+  a += TObj::showModifier(mode, ch);
   return a;
 }
 

@@ -453,16 +453,28 @@ liqEntry::liqEntry(int d, int h, int t, bool p, bool x, const char* col,
       }   
     }
   
-    // If no valid room sources, check inventory for valid container sources
-    for (TThing* thing : ch->stuff) {
-      auto* source = dynamic_cast<TBaseCup*>(thing);
-      
+    // Check equipped items (e.g. held waterskin)
+    for (int slot = MIN_WEAR; slot < MAX_WEAR; ++slot) {
+      auto* source = dynamic_cast<TBaseCup*>(ch->equipment[slot]);
+
       if (source && source->getDrinkUnits() >= reqUnits &&
           (source->getDrinkType() == LIQ_WATER ||
            source->getDrinkType() == LIQ_SALTWATER)) {
         *container = source;
         return true;
-      }   
+      }
+    }
+
+    // Check inventory for valid container sources
+    for (TThing* thing : ch->stuff) {
+      auto* source = dynamic_cast<TBaseCup*>(thing);
+
+      if (source && source->getDrinkUnits() >= reqUnits &&
+          (source->getDrinkType() == LIQ_WATER ||
+           source->getDrinkType() == LIQ_SALTWATER)) {
+        *container = source;
+        return true;
+      }
     }
   
     return false;
