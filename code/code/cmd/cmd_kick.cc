@@ -304,8 +304,9 @@ static int kickHit(TBeing* caster, TBeing* victim, int score, int level,
     }
   }
 
-  // Use impactSpec to handle all impact effects (spikes, thornflesh, hardness)
-  dam += impactSpec(caster, victim, caster->getPrimaryFoot(), slot);
+  rc = impactSpec(caster, victim, caster->getPrimaryFoot(), slot);
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    return DELETE_VICT;
 
   if (caster->reconcileDamage(victim, dam, dam_type) == -1)
     return DELETE_VICT;

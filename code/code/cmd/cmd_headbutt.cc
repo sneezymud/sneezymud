@@ -153,8 +153,9 @@ int TBeing::headbuttHit(TBeing* victim) {
     }
   }
 
-  // Use impactSpec to handle all impact effects (spikes, thorns, hardness)
-  dam += impactSpec(this, victim, WEAR_HEAD, pos);
+  rc = impactSpec(this, victim, WEAR_HEAD, pos);
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    return DELETE_VICT;
   if ((rc = reconcileDamage(victim, dam, dam_type)) == -1)
     return DELETE_VICT;
 

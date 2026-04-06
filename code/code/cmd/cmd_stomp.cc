@@ -159,8 +159,9 @@ int TBeing::stompHit(TBeing* victim) {
       TO_VICT, ANSI_RED);
   }
 
-  // Use impactSpec to handle all impact effects (spikes, thornflesh, hardness)
-  dam += impactSpec(this, victim, getPrimaryFoot(), targetLimb);
+  int irc = impactSpec(this, victim, getPrimaryFoot(), targetLimb);
+  if (IS_SET_DELETE(irc, DELETE_VICT))
+    return DELETE_VICT;
 
   if (reconcileDamage(victim, dam, SKILL_STOMP) == -1)
     return DELETE_VICT;

@@ -381,10 +381,10 @@ int TBeing::bashSuccess(TBeing* victim, spellNumT skill, bool isHoldingShield,
     limb = WEAR_HEAD;
   }
 
-  // Use impactSpec to handle all impact effects (spikes, thornflesh, hardness)
-  // This handles messaging, bleeding, equipment damage, etc.
   wearSlotT attackerLimb = isHoldingShield ? getSecondaryHold() : atkLimb;
-  shieldDam += impactSpec(this, victim, attackerLimb, limb);
+  int irc = impactSpec(this, victim, attackerLimb, limb);
+  if (IS_SET_DELETE(irc, DELETE_VICT))
+    return DELETE_VICT;
 
   if (reconcileDamage(victim, shieldDam, SKILL_BASH) == -1)
     return DELETE_VICT;

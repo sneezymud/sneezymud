@@ -7,6 +7,8 @@
 
 #include <stdio.h>
 
+#include <algorithm>
+
 #include "extern.h"
 #include "room.h"
 #include "low.h"
@@ -15,6 +17,7 @@
 #include "colorstring.h"
 #include "configuration.h"
 #include "combat.h"
+#include "spells.h"
 #include "statistics.h"
 #include "shop.h"
 #include "skills.h"
@@ -26,22 +29,22 @@
 #include "corporation.h"
 #include "materials.h"
 #include "spec_mobs.h"
+#include "obj_base_cup.h"
+#include "discipline.h"
 
 TBaseWeapon::TBaseWeapon() :
   TObj(),
   maxSharp(0),
   curSharp(0),
   damLevel(0),
-  damDev(0),
-  poison((liqTypeT)-1) {}
+  damDev(0) {}
 
 TBaseWeapon::TBaseWeapon(const TBaseWeapon& a) :
   TObj(a),
   maxSharp(a.maxSharp),
   curSharp(a.curSharp),
   damLevel(a.damLevel),
-  damDev(a.damDev),
-  poison(a.poison) {}
+  damDev(a.damDev) {}
 
 TBaseWeapon& TBaseWeapon::operator=(const TBaseWeapon& a) {
   if (this == &a)
@@ -51,7 +54,6 @@ TBaseWeapon& TBaseWeapon::operator=(const TBaseWeapon& a) {
   curSharp = a.curSharp;
   damLevel = a.damLevel;
   damDev = a.damDev;
-  poison = a.poison;
   return *this;
 }
 
@@ -1042,20 +1044,49 @@ int TGenWeapon::smiteWithMe(TBeing* ch, TBeing* v) {
   return TRUE;
 }
 
-int TBaseWeapon::poisonWeaponWeapon(TBeing* ch, TThing* poison) {
-  int rc;
-
-  if (isBluntWeapon()) {
-    ch->sendTo("Blunt weapons can't be poisoned effectively.\n\r");
-    return FALSE;
+int TObj::poisonWeaponWeapon(TBeing* ch, TThing* poisonSource) {
+  // Handle "remove" command (poisonSource is nullptr, water validated by caller)
+  if (!poisonSource) {
+    if (isPoisoned()) {
+      clearPoison();
+      return true;
+    }
+    ch->sendTo("That isn't poisoned.\n\r");
+    return false;
   }
+
+  // Water container cleans poison off
+  if (auto* cup = dynamic_cast<TBaseCup*>(poisonSource);
+      cup && cup->getDrinkUnits() > 0 &&
+      (cup->getDrinkType() == LIQ_WATER ||
+       cup->getDrinkType() == LIQ_SALTWATER)) {
+    if (isPoisoned()) {
+      clearPoison();
+      act("You use some water from $P to wash the poison off $p.",
+        false, ch, this, cup, TO_CHAR);
+      act("$n uses some water from $P to wash the poison off $p.",
+        false, ch, this, cup, TO_ROOM);
+      return true;
+    }
+    ch->sendTo("That isn't poisoned.\n\r");
+    return false;
+  }
+
   if (isPoisoned()) {
     ch->sendTo("That is already poisoned!\n\r");
-    return FALSE;
+    return false;
   }
 
-  rc = poison->poisonMePoison(ch, this);
-  return rc;
+  return poisonSource->poisonMePoison(ch, this);
+}
+
+int TBaseWeapon::poisonWeaponWeapon(TBeing* ch, TThing* poisonSource) {
+  if (isBluntWeapon() && !isSpiked()) {
+    ch->sendTo("Blunt weapons can't be poisoned effectively.\n\r");
+    return false;
+  }
+
+  return TObj::poisonWeaponWeapon(ch, poisonSource);
 }
 
 void TBaseWeapon::curseMe() {
@@ -1543,8 +1574,18 @@ int TBaseWeapon::catchSmack(TBeing* ch, TBeing** targ, TRoom* rp, int cdist,
 
         d = get_range_actual_damage(ch, tb, this, d, damtype);
 
-        if (isPoisoned())
-          applyPoison(tb);
+        if (isPoisoned()) {
+          rc = applyPoison(tb);
+          if (IS_SET_DELETE(rc, DELETE_VICT)) {
+            if (true_targ) {
+              ADD_DELETE(resCode, DELETE_VICT);
+              return resCode;
+            }
+            delete tb;
+            tb = nullptr;
+            return resCode;
+          }
+        }
 
         TArrow* arrow;
         if ((arrow = dynamic_cast<TArrow*>(this)) &&
@@ -1684,35 +1725,76 @@ void TBaseWeapon::sellMeMoney(TBeing* ch, TMonster* keeper, int cost,
   tso.doSellTransaction(cost, getName(), TX_SELLING);
 }
 
-bool TBaseWeapon::isPoisoned() const {
-  if (poison >= LIQ_WATER)
-    return true;
-
-  return false;
+bool TObj::isPoisoned() const {
+  return getPoison() >= LIQ_WATER;
 }
 
-void TBaseWeapon::applyPoison(TBeing* vict) {
-  TBeing* ch;
-
+int TObj::applyPoison(TBeing* vict) {
   if (!isPoisoned())
-    return;
+    return FALSE;
 
-  if ((ch = dynamic_cast<TBeing*>(equippedBy))) {
-    act("There was something nasty on that $o!", FALSE, ch, this, vict, TO_VICT,
-      ANSI_RED);
-    act("You inflict something nasty on $N!", FALSE, ch, this, vict, TO_CHAR,
-      ANSI_RED);
-    act("There was something nasty on that $o!", FALSE, ch, this, vict,
+  if (auto* ch = dynamic_cast<TBeing*>(equippedBy)) {
+    act("There was something nasty on that $o!", false, ch, this, vict,
+      TO_VICT, ANSI_RED);
+    act("You inflict something nasty on $N!", false, ch, this, vict,
+      TO_CHAR, ANSI_RED);
+    act("There was something nasty on that $o!", false, ch, this, vict,
       TO_NOTVICT, ANSI_RED);
-    doLiqSpell(ch, vict, poison, 1);
+
+    int rc;
+    if (ch->doesKnowSkill(SKILL_POISON_WEAPON))
+      rc = doLiqSpell(ch, vict, getPoison(), 1, ch->GetMaxLevel(), ch->getSkillValue(SKILL_POISON_WEAPON));
+    else
+      rc = doLiqSpell(ch, vict, getPoison(), 1);
+    if (IS_SET(rc, VICTIM_DEAD)) {
+      clearPoison();
+      return DELETE_VICT;
+    }
+
+    // Skill-based extra poison damage
+    if (ch->doesKnowSkill(SKILL_POISON_WEAPON)) {
+      int bKnown = ch->getSkillValue(SKILL_POISON_WEAPON);
+      if (ch->bSuccess(bKnown, SKILL_POISON_WEAPON)) {
+        int extraDamage = std::min(ch->getSkillLevel(SKILL_POISON_WEAPON) / 2, 15);
+
+        act("The poison seems particularly effective!", false, ch, this, vict,
+          TO_CHAR, ANSI_RED);
+        act("The poison seems particularly potent!", false, ch, this, vict,
+          TO_VICT, ANSI_RED);
+
+        if (extraDamage > 0) {
+          if (ch->reconcileDamage(vict, extraDamage, SPELL_POISON) == -1) {
+            clearPoison();
+            return DELETE_VICT;
+          }
+        }
+      }
+    }
+
+    // Skill-based chance to preserve the poison coating
+    if (ch->doesKnowSkill(SKILL_POISON_WEAPON)) {
+      int bKnown = ch->getSkillValue(SKILL_POISON_WEAPON);
+      int preserveChance = std::clamp((bKnown / 2) + static_cast<int>(ch->getStatMod(STAT_DEX)), 0, 100);
+      if (ch->bSuccess(bKnown, SKILL_POISON_WEAPON) &&
+          percentChance(preserveChance)) {
+        act("Your expert application allows the poison to remain effective.",
+          false, ch, this, nullptr, TO_CHAR);
+        return FALSE;
+      }
+    }
   } else {
-    doLiqSpell(vict, vict, poison, 1);
+    int rc = doLiqSpell(vict, vict, getPoison(), 1);
+    if (IS_SET(rc, VICTIM_DEAD)) {
+      clearPoison();
+      return DELETE_VICT;
+    }
   }
 
-  poison = (liqTypeT)-1;
+  clearPoison();
+  return FALSE;
 }
 
-void TBaseWeapon::setPoison(liqTypeT liq) {
+void TObj::setPoison(liqTypeT liq) {
   if (!isPoisoned())
     poison = liq;
 }

@@ -32,3 +32,5 @@ class liqInfoT {
     liqInfoT();
     ~liqInfoT();
 };
+
+bool checkWaterUsage(TBeing* ch, int reqUnits, TBaseCup** container);

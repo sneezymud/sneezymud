@@ -4468,8 +4468,13 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
       // poison
       TBaseWeapon* tow;
       if (weapon && (tow = dynamic_cast<TBaseWeapon*>(weapon)) &&
-          tow->isPoisoned())
-        tow->applyPoison(vict);
+          tow->isPoisoned()) {
+        rc = tow->applyPoison(vict);
+        if (IS_SET_DELETE(rc, DELETE_VICT)) {
+          retCode |= DELETE_VICT;
+          return retCode;
+        }
+      }
 
       // more absorbtion stuff..
       //      affectedData *af;
@@ -5919,6 +5924,12 @@ bool bluntType(spellNumT wtype) {
 }
 
 bool TObj::isBluntWeapon() const { return FALSE; }
+
+sstring TObj::showModifier(showModeT, const TBeing*) const {
+  if (isPoisoned())
+    return " (poisoned)";
+  return "";
+}
 
 bool slashType(spellNumT wtype) {
   switch (wtype) {

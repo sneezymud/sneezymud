@@ -49,7 +49,7 @@ class TBaseCup : public virtual TObj {
     virtual void examineObj(TBeing*) const;
     virtual void peeMe(const TBeing*, liqTypeT);
     virtual int getReducedVolume(const TThing*) const;
-    virtual int poisonMePoison(TBeing*, TBaseWeapon*);
+    virtual int poisonMePoison(TBeing*, TObj*);
     sstring showModifier(showModeT, const TBeing*) const;
 
     void genericEmpty();

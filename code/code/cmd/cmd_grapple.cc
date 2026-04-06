@@ -112,9 +112,10 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
 
       int dam = c->getSkillDam(victim, skill, c->getSkillLevel(skill),
         c->getAdvLearning(skill));
-      // Use impactSpec to handle all impact effects (spikes, thorns, hardness)
       wearSlotT targetLimb = victim->getPartHit(c, TRUE);
-      dam += impactSpec(c, victim, WEAR_BODY, targetLimb);
+      int irc = impactSpec(c, victim, WEAR_BODY, targetLimb);
+      if (IS_SET_DELETE(irc, DELETE_VICT))
+        return DELETE_VICT;
       if (c->reconcileDamage(victim, dam, SKILL_GRAPPLE) == -1)
         return DELETE_VICT;
 

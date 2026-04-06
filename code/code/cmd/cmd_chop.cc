@@ -120,8 +120,9 @@ static int chopHit(TBeing* c, TBeing* v, int score) {
     handSlot = WEAR_HAND_L;
   }
 
-  // Use impactSpec to handle all impact effects (spikes, thornflesh, hardness)
-  dam += impactSpec(c, v, handSlot, pos);
+  int rc = impactSpec(c, v, handSlot, pos);
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    return DELETE_VICT;
 
   if (c->reconcileDamage(v, dam, SKILL_CHOP) == -1)
     return DELETE_VICT;

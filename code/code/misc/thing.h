@@ -328,7 +328,7 @@ class TThing {
     virtual void attuneMe(TBeing*, TVial*);
     virtual void sharpenMeStone(TBeing*, TThing*);
     virtual void dullMeFile(TBeing*, TThing*);
-    virtual int poisonMePoison(TBeing*, TBaseWeapon*);
+    virtual int poisonMePoison(TBeing*, TObj*);
     virtual int garotteMe(TBeing*, TBeing*);
     virtual void sstringMeBow(TBeing*, TThing*);
     virtual void sstringMeString(TBeing*, TBow*);

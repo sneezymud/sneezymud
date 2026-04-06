@@ -134,8 +134,9 @@ int TBeing::kneestrikeMiss(TBeing* v, int type) {
       cantHit += v->loseRound(0.25);
       addToWait(combatRound(0.25));
 
-      // Use impactSpec to handle all impact effects (spikes, thornflesh, hardness)
-      dam += impactSpec(v, this, v->getPrimaryFoot(), WEAR_BODY);
+      int irc = impactSpec(v, this, v->getPrimaryFoot(), WEAR_BODY);
+      if (IS_SET_DELETE(irc, DELETE_VICT))
+        return DELETE_THIS;
 
       if (v->reconcileDamage(this, dam, DAMAGE_KICK_HEAD) == -1)
         return DELETE_THIS;
@@ -342,10 +343,10 @@ int TBeing::kneestrikeHit(TBeing* victim) {
   // advance learning gave increased success, this seems bad idea
   //  dam += c->getAdvLearning(SKILL_KNEESTRIKE)/10;
 
-  // Use impactSpec to handle all impact effects (spikes, thornflesh, hardness)
-  // This includes automatic hardness-based damage to equipment/limbs
   caster_pos = (::number(0, 1) ? WEAR_LEG_L : WEAR_LEG_R);
-  dam += impactSpec(this, victim, caster_pos, pos);
+  rc = impactSpec(this, victim, caster_pos, pos);
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    return DELETE_VICT;
   if ((rc = reconcileDamage(victim, dam, dam_type)) == -1)
     return DELETE_VICT;
 

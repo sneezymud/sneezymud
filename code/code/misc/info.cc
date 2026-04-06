@@ -4824,6 +4824,16 @@ void TBeing::describeOtherFeatures(const TGenWeapon* obj, int learn) const {
       sendTo(COLOR_OBJECTS, format("%s seems small enough to be used for "
                                    "backstabbing or throat slitting.\n\r") %
                               sstring(capbuf).cap());
+    if (obj->isPoisoned()) {
+      if (doesKnowSkill(SKILL_POISON_WEAPON)) {
+        sendTo(COLOR_OBJECTS,
+          format("%s seems to be poisoned with %s.\n\r") %
+            sstring(capbuf).cap() % liquidInfo[obj->getPoison()]->name);
+      } else {
+        sendTo(COLOR_OBJECTS,
+          format("%s seems to be poisoned.\n\r") % sstring(capbuf).cap());
+      }
+    }
   }
 }
 

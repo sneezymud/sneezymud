@@ -527,6 +527,7 @@ class TObj : public TThing {
     bool isTasked;
     bool isLocked;  // set if the object should be protected from damage
                     // temporarily
+    liqTypeT poison;  // applied poison coating (session-only, not persisted)
 
   protected:
     TObj();
@@ -539,7 +540,7 @@ class TObj : public TThing {
     virtual ~TObj();
 
     // VIRTUAL FUNCTIONS
-    virtual sstring showModifier(showModeT, const TBeing*) const { return ""; }
+    virtual sstring showModifier(showModeT, const TBeing*) const;
     virtual bool isPersonalized() { return !action_description.empty(); }
     virtual int getVolume() const { return (obj_flags.volume); }
     virtual const sstring& getName() const { return shortDescr; }
@@ -610,6 +611,12 @@ class TObj : public TThing {
     virtual int checkFalling();
     void checkObjStats();
     virtual void update(int);
+    virtual bool isPoisoned() const;
+    virtual int applyPoison(TBeing*);
+    void setPoison(liqTypeT);
+    liqTypeT getPoison() const { return poison; }
+    void clearPoison() { poison = static_cast<liqTypeT>(-1); }
+    int poisonWeaponWeapon(TBeing*, TThing*) override;
     virtual bool isBluntWeapon() const;
     bool canRust();
     bool willDent(int);

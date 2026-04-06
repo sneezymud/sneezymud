@@ -2230,9 +2230,10 @@ int TBeing::doQuaff(sstring argument) {
 }
 
 // this function handles any special affect that drinking a liquid has
-int doLiqSpell(TBeing* ch, TBeing* vict, liqTypeT liq, int amt) {
+int doLiqSpell(TBeing* ch, TBeing* vict, liqTypeT liq, int amt, int levelOverride, int learnOverride) {
   int rc = 0, i;
-  int level = max(30, amt * 6), learn = max(100, amt * 20);
+  int level = levelOverride >= 0 ? levelOverride : max(30, amt * 6);
+  int learn = learnOverride >= 0 ? learnOverride : max(100, amt * 20);
   int duration = (level << 2) * Pulse::UPDATES_PER_MUDHOUR;
   affectedData aff, aff5[5];
   statTypeT whichStat;

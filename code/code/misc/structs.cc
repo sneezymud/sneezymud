@@ -374,7 +374,8 @@ TObj::TObj() :
   action_description(NULL),
   owners(NULL),
   isTasked(false),
-  isLocked(false) {
+  isLocked(false),
+  poison(static_cast<liqTypeT>(-1)) {
   // change the default value here
   number = -1;
 
@@ -1395,7 +1396,8 @@ TObj::TObj(const TObj& a) :
   TThing(a),
   obj_flags(a.obj_flags),
   isTasked(a.isTasked),
-  isLocked(a.isLocked) {
+  isLocked(a.isLocked),
+  poison(a.poison) {
   int i;
 
   for (i = 0; i < MAX_OBJ_AFFECT; i++)
@@ -1429,6 +1431,7 @@ TObj& TObj::operator=(const TObj& a) {
   int i;
 
   obj_flags = a.obj_flags;
+  poison = a.poison;
 
   for (i = 0; i < MAX_OBJ_AFFECT; i++) {
     affected[i] = a.affected[i];

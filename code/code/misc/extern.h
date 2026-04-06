@@ -337,7 +337,7 @@ extern bool genericDisease(TBeing*, TBeing*, int);
 extern void genericCurse(TBeing*, TBeing*, int, spellNumT);
 extern sstring displayDifficulty(spellNumT skill);
 extern void generic_dirlist(const char*, const TBeing*);
-extern int doLiqSpell(TBeing*, TBeing*, liqTypeT, int);
+extern int doLiqSpell(TBeing*, TBeing*, liqTypeT, int, int levelOverride = -1, int learnOverride = -1);
 extern int doObjSpell(TBeing*, TBeing*, TMagicItem*, TObj*, const char*,
   spellNumT);
 extern double getSkillDiffModifier(spellNumT);

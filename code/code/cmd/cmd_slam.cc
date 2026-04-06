@@ -172,11 +172,11 @@ int TBeing::slamSuccess(TBeing* victim) {
   else if (weapon->isSlashWeapon())
     damageType = DAMAGE_HACKED;
 
-  // Apply impact effects from weapon contact
   wearSlotT targetLimb = victim->getPartHit(this, TRUE);
-  dam += impactSpec(this, victim, getPrimaryHold(), targetLimb);
+  int irc = impactSpec(this, victim, getPrimaryHold(), targetLimb);
+  if (IS_SET_DELETE(irc, DELETE_VICT))
+    return DELETE_VICT;
 
-  // Reconcile damage
   if (reconcileDamage(victim, dam, damageType) == -1)
     return DELETE_VICT;
 

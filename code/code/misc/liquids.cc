@@ -1,4 +1,10 @@
 #include "liquids.h"
+#include "weather.h"
+#include "obj_base_cup.h"
+#include "obj_pool.h"
+#include "room.h"
+#include "being.h"
+
 
 #include <map>
 
@@ -404,3 +410,61 @@ liqEntry::liqEntry(int d, int h, int t, bool p, bool x, const char* col,
   color(col),
   name(n),
   price(pr) {}
+
+  
+  bool checkWaterUsage(TBeing* ch, int reqUnits, TBaseCup** container) {
+    if (!ch || !ch->roomp) {
+      return false;
+    }
+  
+    // First check room conditions
+    if (ch->roomp->isWaterSector() || 
+        ch->roomp->isUnderwaterSector() ||
+        Weather::getWeather(*ch->roomp) == Weather::RAINY) {
+      return true;
+    }
+  
+    // After this point, if container is null, can't continue
+    if (!container) {
+      return false;
+    }
+  
+    // Check room for valid pools of liquid first
+    for (TThing* thing : ch->roomp->stuff) {
+      auto* source = dynamic_cast<TPool*>(thing);
+      
+      if (source && source->getDrinkUnits() >= reqUnits &&
+          (source->getDrinkType() == LIQ_WATER ||
+           source->getDrinkType() == LIQ_SALTWATER)) {
+        *container = source;
+        return true;
+      }   
+    }
+  
+    // If no pools in room, check for containers on the ground
+    for (TThing* thing : ch->roomp->stuff) {
+      auto* source = dynamic_cast<TBaseCup*>(thing);
+      
+      if (source && source->getDrinkUnits() >= reqUnits &&
+          (source->getDrinkType() == LIQ_WATER ||
+           source->getDrinkType() == LIQ_SALTWATER)) {
+        *container = source;
+        return true;
+      }   
+    }
+  
+    // If no valid room sources, check inventory for valid container sources
+    for (TThing* thing : ch->stuff) {
+      auto* source = dynamic_cast<TBaseCup*>(thing);
+      
+      if (source && source->getDrinkUnits() >= reqUnits &&
+          (source->getDrinkType() == LIQ_WATER ||
+           source->getDrinkType() == LIQ_SALTWATER)) {
+        *container = source;
+        return true;
+      }   
+    }
+  
+    return false;
+  }
+  
