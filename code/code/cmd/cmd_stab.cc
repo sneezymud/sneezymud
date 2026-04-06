@@ -194,7 +194,8 @@ static int stabPrimAtk(TBeing* thief, TBeing* victim, TGenWeapon* primWeapon,
 
   // Check for bleeding and poison
   stabBleedCheck(thief, victim, primWeapon, limb);
-  stabPoisonCheck(victim, primWeapon);
+  if (IS_SET_DELETE(stabPoisonCheck(victim, primWeapon), DELETE_VICT))
+    return DELETE_VICT;
 
   // Check weapon spec proc
   if (primWeapon->checkSpec(victim, CMD_STAB, reinterpret_cast<char*>(limb),
