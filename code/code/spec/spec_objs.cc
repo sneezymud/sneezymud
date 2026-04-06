@@ -6300,7 +6300,7 @@ int poisonQuiver(TBeing* ch, cmdTypeT cmd, const char*, TObj* q, TObj* a) {
       // Only remove poison if it's the standard poison added by quiver
       if (arrow && arrow->isPoisoned() &&
           arrow->getPoison() == LIQ_POISON_STANDARD) {
-        arrow->setPoison((liqTypeT)-1);
+        arrow->setPoison(LIQ_NONE);
         count++;
       }
     }
@@ -6338,9 +6338,9 @@ int poisonQuiver(TBeing* ch, cmdTypeT cmd, const char*, TObj* q, TObj* a) {
     return false;
   }
 
-  // When arrow is put into equipped quiver, poison it
+  // When arrow is put into equipped quiver by the wearer, poison it
   if (cmd != CMD_OBJ_HAVING_SOMETHING_PUT_INTO || !a || !q || !ch ||
-      !q->equippedBy) {
+      ch != q->equippedBy) {
     return false;
   }
   auto* arrow = dynamic_cast<TArrow*>(a);
@@ -6350,22 +6350,20 @@ int poisonQuiver(TBeing* ch, cmdTypeT cmd, const char*, TObj* q, TObj* a) {
   }
 
   arrow->setPoison(LIQ_POISON_STANDARD);
-  act("The arrow glows a <g>sickly green<1> as it enters the $p.", TRUE, ch, q,
-    0, TO_CHAR);
-  act("The arrow glows a <g>sickly green<1> as it enters the $p.", TRUE, ch, q,
-    0, TO_ROOM);
+  act(format("%s glows a <g>sickly green<1> as it enters the $p.") % a->getName(),
+    true, ch, q, nullptr, TO_ROOM);
 
   return false;
 }
 
-int flamingArrowBow(TBeing*, cmdTypeT cmd, const char*, TObj* b, TObj* arrow) {
+int flamingArrowBow(TBeing* ch, cmdTypeT cmd, const char*, TObj* b, TObj* arrow) {
   TBow* bow = dynamic_cast<TBow*>(b);
   if (!bow || !arrow || cmd != CMD_SHOOT)
     return false;
 
   arrow->addObjStat(ITEM_BURNING);
   act("The $p <r>bursts into flames<1> as it flies through the air!", true,
-    nullptr, arrow, nullptr, TO_ROOM);
+    ch, arrow, nullptr, TO_ROOM);
   return false;
 }
 
