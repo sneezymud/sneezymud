@@ -59,10 +59,11 @@ static void stabMissMsg(TBeing* thief, TBeing* victim, TGenWeapon* weapon) {
   act("$n misses $s thrust into $N.", FALSE, thief, weapon, victim, TO_NOTVICT);
 }
 
-// Apply poison from weapon if present
-static void stabPoisonCheck(TBeing* victim, TGenWeapon* weapon) {
+// Apply poison from weapon if present; returns DELETE_VICT if poison kills
+static int stabPoisonCheck(TBeing* victim, TGenWeapon* weapon) {
   if (weapon->isPoisoned())
-    weapon->applyPoison(victim);
+    return weapon->applyPoison(victim);
+  return 0;
 }
 
 // Check for bleeding based on weapon sharpness vs limb hardness
@@ -140,7 +141,8 @@ static int stabOffAtk(TBeing* thief, TBeing* victim, TGenWeapon* weapon) {
 
   // Check for bleeding and poison
   stabBleedCheck(thief, victim, weapon, limb);
-  stabPoisonCheck(victim, weapon);
+  if (IS_SET_DELETE(stabPoisonCheck(victim, weapon), DELETE_VICT))
+    return DELETE_VICT;
 
   // Check weapon spec proc
   if (weapon->checkSpec(victim, CMD_STAB, reinterpret_cast<char*>(limb),

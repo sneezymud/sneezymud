@@ -160,8 +160,10 @@ int TBeing::backstabHit(TBeing* victim, TThing* obj, int modifier) {
         }
 
         // poison
-        if (victim && weapon && weapon->isPoisoned())
-          weapon->applyPoison(victim);
+        if (victim && weapon && weapon->isPoisoned()) {
+          if (IS_SET_DELETE(weapon->applyPoison(victim), DELETE_VICT))
+            return DELETE_VICT;
+        }
       }
     }
   } else {
@@ -501,8 +503,10 @@ int TBeing::throatSlitHit(TBeing* victim, TThing* obj, int modifier) {
         }
 
         // poison
-        if (victim && weapon && weapon->isPoisoned())
-          weapon->applyPoison(victim);
+        if (victim && weapon && weapon->isPoisoned()) {
+          if (IS_SET_DELETE(weapon->applyPoison(victim), DELETE_VICT))
+            return DELETE_VICT;
+        }
       }
     }
   } else {
