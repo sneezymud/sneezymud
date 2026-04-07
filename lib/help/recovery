@@ -1,0 +1,62 @@
+Recovery refers to how your character regains hit points, moves, and other
+resources between fights.  This help file explains how the recovery system
+works while you are sitting, resting, or sleeping, and how to make the most
+of it.
+
+The three recovery positions all heal you over time, but at different rates
+and with different costs:
+
+  SLEEP - Fastest recovery, but you are unconscious and helpless.  Best in
+          a place you trust to be safe.
+  REST  - Slower than sleep, but you remain aware of your surroundings and
+          can react to events.
+  SIT   - Slowest of the three, but the lightest commitment.
+
+While in any of these positions, you also recover small amounts of mana
+and piety per tick.  These are nominal amounts only.  For real mana or
+piety regeneration, use the corresponding skills (meditation for mana,
+penance for piety).
+
+<c>Recovery Bonuses<1>
+
+When you begin a recovery task, the game will list any bonuses that are
+currently active.  Each active bonus increases the amount of HP and moves
+you regain per tick.  Bonuses stack, so a prepared adventurer can recover
+significantly faster than someone who simply lies down in the wilderness.
+
+The available bonuses are:
+
+  <o>Camp<1>            - You or a groupmate has set up an encampment in
+                    the room.  See HELP ENCAMP.
+  <r>Campfire<1>        - There is a lit campfire in the room.
+  <p>Groupmate<1>       - You have at least one groupmate in the same room
+                    watching your back.
+  <k>Hidden<1>          - You are hidden from view.  Note that hide is
+                    typically broken when you sleep, so this bonus mostly
+                    applies to resting and sitting.
+  <g>Familiar Terrain<1> - You are on terrain native to your race.
+  <G>Background<1>      - The terrain matches your character's background.
+
+A clever adventurer might establish a campsite near their hunting grounds
+as a retreat between fights, taking advantage of stacked bonuses to recover
+quickly without having to travel back to a safer area.
+
+<c>Special Cases<1>
+
+<c>Thieves<1> learn to "sleep with one eye open."  Their training lets them
+recover from resting and sitting at twice the normal rate, putting their
+resting recovery on par with what other classes get from sleeping.  Because
+of this, sleep offers no additional benefit to a thief and is rarely
+worthwhile given the extra vulnerability.
+
+<c>Beds and other furniture<1> (including portable bedrolls) provide their
+own bonus on top of the normal recovery rate.  This bonus is separate from
+the bonus list above - it scales the underlying recovery rather than adding
+a flat amount per tick.  Larger beds suit larger characters; trying to use
+a bed that is too small for you reduces or eliminates the bonus.
+
+Recovery does not work in rooms flagged as no-heal.  In those rooms, only
+movement regenerates and at a reduced rate.
+
+See Also: SLEEP, REST, SIT, ENCAMP, LIFEFORCE, MEDITATE, PENANCE
+Related Topics: MOVEMENT

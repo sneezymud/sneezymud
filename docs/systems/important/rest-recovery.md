@@ -1,31 +1,31 @@
 ---
 title: Rest and Recovery System
-description: Regeneration of HP, mana, movement, piety, and lifeforce through half-tick recovery and task-based recovery tied to positions and class abilities.
+description: Regeneration of HP, mana, piety, and movement through half-tick recovery and task-based recovery tied to positions, environmental bonuses, and class abilities.
 category: important
-keywords: [regeneration, half-tick recovery, task-based recovery, penance, yoginsa, camping, hospital room, bed bonus]
+keywords: [regeneration, half-tick recovery, task-based recovery, regen bonus stack, penance, yoginsa, camping, hospital room, bed bonus]
 primary_symbols:
-  functions: [hitGain, manaGain, moveGain, regenTime, updateHalfTickStuff, inCamp, bedRegen, canMeditate]
+  functions: [hitGain, manaGain, moveGain, regenTime, updateHalfTickStuff, inCamp, bedRegen, canMeditate, task_regen, processRegen, sendRegenStartupMessage, startRegenTask]
   classes: [TBeing, TPerson, TBed]
-  enums: [POSITION_SLEEPING, POSITION_RESTING, POSITION_SITTING, POSITION_STANDING, POSITION_FIGHTING, ROOM_NO_HEAL, ROOM_HOSPITAL, SPELL_ENLIVEN, AFFECT_WET, SKILL_MEDITATE, SKILL_PENANCE, SKILL_YOGINSA, SKILL_ENCAMP, SKILL_WOHLIN, AFF_GROUP, Pulse::ONE_SECOND, Pulse::MOBACT, Pulse::UPDATE, Pulse::MUDHOUR, TASK_SLEEP, TASK_REST, TASK_SIT, TASK_MEDITATE, TASK_PENANCE, TASK_YOGINSA, PERMANENT_DURATION]
+  enums: [POSITION_SLEEPING, POSITION_RESTING, POSITION_SITTING, POSITION_STANDING, POSITION_FIGHTING, ROOM_NO_HEAL, ROOM_HOSPITAL, SPELL_ENLIVEN, AFFECT_WET, SKILL_MEDITATE, SKILL_PENANCE, SKILL_YOGINSA, SKILL_ENCAMP, SKILL_WOHLIN, AFF_HIDE, AFF_GROUP, Pulse::ONE_SECOND, Pulse::MOBACT, Pulse::UPDATE, Pulse::MUDHOUR, TASK_SLEEP, TASK_REST, TASK_SIT, TASK_MEDITATE, TASK_PENANCE, TASK_YOGINSA, PERMANENT_DURATION, RegenTaskType, CLASS_THIEF]
 ---
 
 ## Overview
 
-How do characters recover from damage, restore spent mana, and regain stamina after exertion? The rest and recovery system manages regeneration of HP, mana, movement, piety, and lifeforce through multiple overlapping mechanisms.
+How do characters recover from damage, restore spent mana, and regain stamina after exertion? The rest and recovery system manages regeneration of HP, mana, and movement through multiple overlapping mechanisms.
 
-Recovery in SneezyMUD operates on two parallel tracks: **half-tick recovery** applies globally to all characters every 36 seconds regardless of activity, while **task-based recovery** provides bonus regeneration tied to specific positions (sleeping, resting, sitting) and class abilities (meditation, penance, yoginsa). Environmental factors like beds, camps, and hospital rooms layer additional bonuses on top of these base rates.
+Recovery in SneezyMUD operates on two parallel tracks: **half-tick recovery** applies globally to all characters every 36 seconds regardless of activity, while **task-based recovery** provides bonus regeneration tied to specific positions (sleeping, resting, sitting) and class abilities (meditation, penance, yoginsa). Environmental factors like beds, camps, hospital rooms, and the regen bonus stack layer additional bonuses on top of these base rates.
 
-The system balances recovery speed against vulnerability and capability. Sleeping provides the fastest regeneration but leaves you defenseless and unable to act. Resting offers good recovery while permitting limited actions. Standing gives only half-tick recovery but full combat readiness. This creates meaningful tactical decisions about when and where to recover.
+The system balances recovery speed against vulnerability and capability. Sleeping provides the fastest regeneration for most classes but leaves the character defenseless and unable to act. Resting offers good recovery while permitting limited actions. Sitting is slower still but the lightest commitment. Standing gives only half-tick recovery but full combat readiness. Thieves get a class-specific multiplier that doubles their effective regen rate while sitting or resting, putting their rest recovery on par with sleep for other classes. This creates meaningful tactical decisions about when and where to recover.
 
 Recovery rates scale with level, constitution, and environmental bonuses. A level 50 character in a hospital bed with the enliven spell active recovers dramatically faster than a low-level character standing in hostile territory. Class-specific abilities provide additional recovery options: mages meditate for mana, clerics perform penance for piety, monks practice yoginsa for enhanced healing with bonus curative effects.
 
-A wounded warrior returns from battle to the inn. Lying down to sleep triggers a task that grants +1 HP, +1 mana, and +1 movement on each cycle. Simultaneously, every 36 seconds the global half-tick adds their full hitGain() and manaGain() values. If they sleep on a bed in a hospital room, both multipliers stack. After several minutes, they wake fully restored and ready for the next adventure.
+A wounded warrior returns from battle to the inn. Lying down to sleep triggers a task that grants +1 HP, +1 mana, +0.10 piety, and +1 movement on each cycle, plus +1 HP and +1 movement for each active regen bonus (camp, campfire, groupmate in the room, and so on). Simultaneously, every 36 seconds the global half-tick adds their full hitGain() and manaGain() values. If they sleep on a bed in a hospital room, both multipliers stack. After several minutes, they wake fully restored and ready for the next adventure.
 
 ## Patterns
 
 ### Position Selection
 
-Always choose sleeping when maximum recovery speed is needed and safety is ensured. Sleep provides the fastest task interval and grants all three primary resources. If you need to perform limited actions during recovery, use resting instead - the interval is twice as long but you remain somewhat responsive.
+For most classes, sleeping is the fastest recovery option when safety is assured, with rest at half that rate and sit at a quarter. Resting and sitting let the character remain aware of their surroundings and respond to events. Thieves are an exception - their `regenMod` divides by 2, so a thief resting recovers as fast as another class sleeping, and a thief sitting recovers as fast as another class resting. A thief therefore has little reason to ever sleep outside of a bed.
 
 Never attempt to sleep or rest while in combat, flying, or in water without aquatic adaptation. The system rejects these attempts and wastes the player's action. Check these conditions before allowing position changes.
 
@@ -33,25 +33,21 @@ Never attempt to sleep or rest while in combat, flying, or in water without aqua
 
 Never assume fixed task intervals. The `regenTime()` function calculates intervals dynamically based on the character's current regeneration rates. Higher regeneration rates produce shorter intervals. The formula divides the update pulse length by the slowest of the character's HP, mana, and movement gain rates.
 
-### Shaman Lifeforce Handling
-
-Always check for shaman class when implementing HP recovery logic. Shamans above level 5 drain lifeforce instead of gaining HP through sleep/rest tasks. They must rely on half-tick recovery for HP or maintain positive lifeforce through spirit consumption. Never grant task-based HP to shamans without first checking lifeforce status.
-
 ### ROOM_NO_HEAL Behavior
 
-ROOM_NO_HEAL blocks nearly all recovery. The flag stops task-based regeneration completely and blocks half-tick HP and mana recovery. Only movement recovery continues, reduced by two-thirds. Characters in these rooms cannot recover HP or mana through any passive mechanism.
+`ROOM_NO_HEAL` blocks nearly all recovery. The flag stops task-based regeneration completely (the regen task aborts the tick early before applying gains or evaluating the bonus stack) and blocks half-tick HP and mana recovery. Only movement recovery continues, reduced by two-thirds. Characters in these rooms cannot recover HP or mana through any passive mechanism.
 
 ### Camp Application
 
-Never tie camp bonuses to position. Unlike most recovery mechanics, camp bonuses from `inCamp()` apply directly to `hitGain()` and `moveGain()` calculations. Characters receive camp benefits whether standing, sitting, or sleeping. The bonus scales with the camper's skill level, with groupmates receiving half the benefit.
+Camp creates two distinct recovery effects that stack. The percentage bonus from `inCamp()` applies inside `hitGain()` and `moveGain()`, scaling the half-tick recovery rate regardless of position - a camped character receives it whether standing, sitting, or sleeping, with the bonus scaling by the camper's skill level (groupmates receive half). Separately, the regen task bonus stack adds a flat +1 HP and +1 move per tick whenever a character is sitting, resting, or sleeping in a camped room. A camped character resting therefore benefits from both: the percentage-scaled half-tick gain and the flat per-tick bonus.
 
 ### Combat Interruption
 
-Always apply round loss penalties when characters are attacked while resting or sleeping. The task fighting handler causes 1-2 lost combat rounds before stopping the task. This represents the vulnerability cost of recovery positions.
+Being attacked in a recovery position stops the task and imposes a round-loss penalty that varies by position: rest loses 1 round plus a 33% chance of a second, sleep loses 1 round plus a 50% chance of a second, and sit has only a 33% chance of losing a single round. Sleep's penalty is harshest because the character is unconscious when attacked; sit is lightest because the character remains aware of their surroundings.
 
 ### Piety Recovery
 
-Always use rest position for piety recovery through the task system. Sleep does NOT grant piety despite being faster for other resources. The penance skill provides the best piety recovery for clerics and deikhan, scaling with duration.
+All three recovery positions grant a nominal +0.10 piety per tick through the unified regen handler. This is a small baseline - real piety recovery for clerics and deikhan comes from the penance skill, which scales with duration.
 
 ### Meditation Position Requirements
 
@@ -83,19 +79,43 @@ Always check wet status for aquatic characters. Wet aquatic characters gain 1.3x
 | `inCamp()` | function | Check camp status and return skill level bonus |
 | `bedRegen()` | function | Apply bed bonus to recovery calculation |
 | `canMeditate()` | function | Validate position for meditation skills |
+| `task_regen()` | function | Unified handler for TASK_SLEEP/REST/SIT |
+| `processRegen()` | function | Per-tick body that applies the bonus stack and updates resources |
+| `startRegenTask()` | function | Common entry point for `doSit`/`doRest`/`doSleep` and the bed equivalents |
+| `sendRegenStartupMessage()` | function | Print the active bonus list when a regen task begins |
+| `RegenTaskType` | enum | Selector for the per-task config map; values alias `positionTypeT` |
 | `TBeing` | class | Base class with recovery methods |
 | `TPerson` | class | Player class with specialized hitGain/manaGain |
 | `TBed` | class | Furniture providing recovery bonuses |
 
 ### Position Recovery Rates
 
-| Position | Task Interval | HP | Mana | Move | Piety | Notes |
-|----------|---------------|----|----|------|-------|-------|
-| `POSITION_SLEEPING` | `regenTime()` | +1 | +1 | +1 | None | Fastest, vulnerable |
-| `POSITION_RESTING` | `2 * regenTime()` | +1 | +1 | +1 | +0.10 | Only position with piety |
-| `POSITION_SITTING` | `4 * regenTime()` | +1 | +1 | +1 | None | Slowest task bonus |
-| `POSITION_STANDING` | None | None | None | None | None | Half-tick only |
-| `POSITION_FIGHTING` | None | None | None | None | None | No recovery |
+All three recovery positions (`SLEEPING`, `RESTING`, `SITTING`) share a single unified task handler in `task_regen_common.cc`. Each tick grants +1 HP, +1 mana, +0.10 piety, and +1 move (up to `moveLimit()`). The bonus system adds +1 to HP/move per active bonus source (see below). Sleep suppresses bonus flavor messages because the character is unconscious.
+
+| Position | Task Interval (non-thief) | Task Interval (thief) | HP | Mana | Move | Piety | Bonuses Apply |
+|----------|---------------------------|-----------------------|----|------|------|-------|---------------|
+| `POSITION_SLEEPING` | `regenTime()` | `regenTime()` | +1 | +1 | +1 | +0.10 | Yes (silent) |
+| `POSITION_RESTING` | `2 * regenTime()` | `regenTime()` | +1 | +1 | +1 | +0.10 | Yes |
+| `POSITION_SITTING` | `4 * regenTime()` | `2 * regenTime()` | +1 | +1 | +1 | +0.10 | Yes |
+| `POSITION_STANDING` | None | None | None | None | None | None | Half-tick only |
+| `POSITION_FIGHTING` | None | None | None | None | None | None | No recovery |
+
+Thieves divide their tick rate multiplier by 2 (floored at 1), effectively doubling their regen rate while awake. Sleep is unaffected because it is already at the floor.
+
+### Regen Bonuses
+
+Each of the following conditions adds +1 to HP and move regen per tick while a regen task is active. They stack - a character in a camp with a hidden groupmate next to a campfire on home terrain would accumulate all applicable bonuses. Rest and sit emit a 20% chance flavor message per tick per active bonus; sleep suppresses them.
+
+| Condition | Check |
+|-----------|-------|
+| Camp | `inCamp()` (own or groupmate's) |
+| Groupmate in room | `hasGroupmateInRoom()` |
+| Campfire in room | `roomp->hasCampfire()` |
+| Hidden from view | `isAffected(AFF_HIDE)` |
+| Home terrain | `homeTurf()` (race matches sector) |
+| Background experience | `backgroundBonus()` (background matches sector) |
+
+A summary of active bonuses is sent to the character when the task starts via `sendRegenStartupMessage()`, which all three position commands (`doRest`, `doSleep`, `doSit`) call after `setPosition()`.
 
 ### Position Command Restrictions
 
@@ -104,7 +124,7 @@ Common restrictions across doSleep, doRest, and doSit:
 - Cannot enter position while fighting or berserking
 - Cannot sleep or rest in water sectors without being aquatic or using a boat
 - ROOM_NO_HEAL prevents task-based recovery but allows position change
-- Sleep loses sneak status automatically
+- All three commands clear the sneak affect on entry. Hide handling is covered in the Hide Interaction section under Implementation.
 
 ### Recovery Modifiers
 
@@ -233,9 +253,11 @@ Task interval examples:
 | `limits.cc` | hitGain, manaGain, moveGain, regenTime calculations |
 | `periodic.cc` | updateHalfTickStuff half-tick handler |
 | `movement.cc` | doSleep, doRest, doSit, doWake commands |
-| `task_sleep.cc` | TASK_SLEEP handler |
-| `task_rest.cc` | TASK_REST handler |
-| `task_sit.cc` | TASK_SIT handler |
+| `task_regen_common.cc` | Unified `task_regen` handler, `bonusChecks` array, `sendRegenStartupMessage` helper, per-task `RegenTaskConfig` map |
+| `task_regen_common.h` | `RegenTaskType` enum, public declarations |
+| `task_sleep.cc` | TASK_SLEEP thin delegation to `task_regen` |
+| `task_rest.cc` | TASK_REST thin delegation to `task_regen` |
+| `task_sit.cc` | TASK_SIT thin delegation to `task_regen` |
 | `task_meditate.cc` | TASK_MEDITATE handler |
 | `task_penance.cc` | TASK_PENANCE handler |
 | `disc_monk_meditation.cc` | TASK_YOGINSA handler |
@@ -252,17 +274,34 @@ HP and mana regeneration have additional prerequisites. The character must not b
 
 ### Position Task Startup
 
-When a player executes sleep, rest, or sit commands, the movement handler validates prerequisites: no flying, no water without boat/aquatic status, no combat, no berserk mode. Sleeping additionally clears the sneak affect as stealth is incompatible with unconsciousness.
+When a player executes sleep, rest, or sit commands, the movement handler validates prerequisites: no flying, no water without boat/aquatic status, no combat, no berserk mode. All three call `loseSneak()` on entry to clear the sneak affect.
 
-After setting the new position, the handler calls `start_task()` with the appropriate task type and interval multiplier. Sleep uses `regenTime()` directly for the fastest interval. Rest doubles the interval. Sit quadruples it. Only PCs receive tasks; NPCs rely solely on half-tick recovery.
+After setting the new position, the handler calls `startRegenTask()` (declared in `task_regen_common.h`), which emits a summary of any active regen bonuses via `sendRegenStartupMessage()` and then invokes `start_task()` with the canonical parameter set for the requested `RegenTaskType`. The bed object methods (`TBed::sitMe`, `restMe`, `sleepMe`) call `startRegenTask` the same way, so resting on a bedroll or other bed object also produces the bonus list. The initial task interval is the base `regenTime()` (sleep) or a multiple of it (rest doubles, sit quadruples) - the per-task config carries the multiplier, and the same value is reused on every subsequent tick via `calcNextUpdate()`. Only PCs receive tasks; NPCs rely solely on half-tick recovery.
+
+### Hide Interaction
+
+The Hidden entry in the regen bonus stack tests `isAffected(AFF_HIDE)` on each tick, so a hidden character benefits from the bonus only as long as the affect remains set when the tick fires. Two code paths govern whether hide survives entering a recovery position:
+
+1. **`willBreakHide()`** in `disc_thief_stealth.cc` lists commands that do *not* break hide. `CMD_REST`, `CMD_SIT`, and `CMD_STAND` are on the do-not-break list, so a hidden thief can drop into rest or sit without losing the affect. `CMD_SLEEP` is not on the list, so issuing the sleep command strips `AFF_HIDE` before the regen task starts.
+2. The hide/break check runs in `parseCommand()` (`parse.cc`), not inside `doRest`/`doSit`/`doSleep`. By the time the position handler runs, hide has already been preserved or cleared by the parser. `loseSneak()` inside the position handlers only touches the sneak affect, not hide.
+
+Combined effect: a hidden thief who rests or sits keeps the Hidden bonus indefinitely (until they take an action that does break hide, e.g. backstab or any non-listed command). A hidden character who sleeps loses hide before the task starts and never receives the bonus, which is consistent with the regen task suppressing all bonus flavor messages during sleep.
 
 ### Task Execution Cycle
 
-Each task handler receives control when its interval expires. The handler first calls `calcNextUpdate()` to schedule the next iteration, then checks ROOM_NO_HEAL to determine if recovery should apply.
+All three position tasks delegate to `task_regen()` in `task_regen_common.cc`, which reads a per-task `RegenTaskConfig` from a compile-time map keyed by `RegenTaskType` (whose enumerators alias the corresponding `positionTypeT` values). The config carries the tick rate multiplier, the silence flag, the combat-interruption lambda, and the task-specific command handler (for CMD_SIT, CMD_REST, CMD_WAKE, etc.).
 
-For standard sleep/rest/sit tasks, each cycle adds +1 to HP, mana, and movement (if below maximum). Rest additionally grants +0.10 piety. The shaman special case intercepts this flow for characters above level 5 who are not shapeshifted or immortal - instead of gaining HP, they lose 1 lifeforce with a warning message. Low-level shamans recover normally.
+On `CMD_TASK_CONTINUE`, `processRegen()` runs:
 
-Task handlers receive CMD_TASK_CONTINUE (normal cycle), CMD_TASK_FIGHTING (combat interruption), and CMD_GENERIC_PULSE (time advancement). On CMD_TASK_CONTINUE, the handler applies recovery (if not blocked by ROOM_NO_HEAL), calls `calcNextUpdate()` to schedule the next cycle, and returns FALSE to keep the task active. On CMD_TASK_FIGHTING, the handler applies cantHit penalty, stops the task via `stopTask()`, and returns FALSE.
+1. `calcNextUpdate()` schedules the next tick using `regenMod * regenTime()`, where `regenMod = max(tickRateMultiplier / (thief ? 2 : 1), 1)`.
+2. If the room has `ROOM_NO_HEAL`, the function returns early without applying any gains or evaluating the bonus stack.
+3. `regenAmt` starts at 1. Each entry in the `bonusChecks` array is evaluated; active bonuses add +1 to `regenAmt` and (if not silent) have a 20% chance to emit their flavor message.
+4. HP gains `regenAmt`. Move gains `min(regenAmt, moveLimit - getMove())`, guarded to avoid decrementing when current move exceeds the cap (which can happen via potions, aegis, or vampire drain). Mana gains +1 and piety gains +0.10.
+5. `updatePos()` runs and the GMCP/ANSI/VT100 screen updates fire.
+
+Bonuses only affect HP and move - mana and piety gains are fixed regardless of how many bonuses are active.
+
+On `CMD_TASK_FIGHTING`, the config's `applyFightingPenalty` lambda runs and the task is stopped. On unknown commands, the config's `cmdHandler` lambda runs; if it handles the command it returns true, otherwise the helper falls through to `cmd >= MAX_CMD_LIST` to distinguish utility commands (let the caller process them) from task-eating commands.
 
 ### HP Gain Calculation
 
@@ -318,7 +357,7 @@ Mage meditation through TASK_MEDITATE runs on a 4 * Pulse::MOBACT interval (appr
 
 On successful skill check, the character gains their full manaGain() value minus 1 (minimum 1). Failure grants only +1 mana. Regardless of success, +1 HP and +1 movement (if below max) apply every cycle.
 
-Cleric/deikhan penance through TASK_PENANCE runs on a 5 * Pulse::MOBACT interval (approximately 6 seconds). A counter increments each cycle, providing a 0.3 multiplier bonus to piety gain that increases over time. Failed checks still grant 0.6-0.8 piety, better than resting's 0.10.
+Cleric/deikhan penance through TASK_PENANCE runs on a 5 * Pulse::MOBACT interval (approximately 6 seconds). A counter increments each cycle, providing a 0.3 multiplier bonus to piety gain that increases over time. Failed checks still grant 0.6-0.8 piety, far better than the nominal 0.10 granted by the generic regen tasks.
 
 Monk yoginsa through TASK_YOGINSA runs on the same interval as meditation. Success grants 80% of hitGain(), 50% of moveGain(), and 50% of manaGain(). Additionally, the Wohlin skill tree provides automatic curative effects at various thresholds: salve at 20%, cure poison at 35%, sterilize at 50%, cure disease at 60%, clot at 75%, and hunger reduction at 90%.
 
@@ -326,7 +365,7 @@ For SKILL_YOGINSA, success requires two rolls: bSuccess against the SKILL_YOGINS
 
 ### Combat Interruption Handling
 
-When a character in a recovery task is attacked, the CMD_TASK_FIGHTING case triggers. The handler sends a warning message, applies 1-2 lost combat rounds (the second round has 33% chance via `number(0,2) == 0`), and calls `stopTask()` to end recovery. This represents the disorientation of being caught in a vulnerable position.
+When a character in a recovery task is attacked, the `CMD_TASK_FIGHTING` branch of `task_regen` sends a position-appropriate warning (`"You are unable to fight while %s!"` with the task description), invokes the task's `applyFightingPenalty` lambda, and calls `stopTask()`. Each position configures its own penalty lambda, which lets the three tasks impose different costs for the same interruption (see the Combat Interruption pattern above for the specific probabilities).
 
 ## Troubleshooting
 
@@ -334,11 +373,11 @@ When a character in a recovery task is attacked, the CMD_TASK_FIGHTING case trig
 
 **Symptom:** Character sleeps but HP does not increase over time.
 
-**Likely cause:** Multiple possibilities - shaman lifeforce depletion, ROOM_NO_HEAL flag, or combat state.
+**Likely cause:** `ROOM_NO_HEAL` flag or active combat. The unified regen task delivers HP/mana/move/piety regardless of class - it does not branch on the character class. (For half-tick HP recovery specifically, see the early-return guards listed under HP Gain Calculation.)
 
-**Diagnostic approach:** Check if character is shaman above level 5 with zero lifeforce. Check room flags for ROOM_NO_HEAL. Verify character's fight() returns null. For shamans, check lifeforce value and shapeshifted status.
+**Diagnostic approach:** Check room flags for `ROOM_NO_HEAL`. Verify character's `fight()` returns null. If the regen task ticks are firing but the visible bar is not moving, confirm the screen update path (GMCP/ANSI/VT100) is reaching the descriptor.
 
-**Fix:** For shamans, restore lifeforce through spirit consumption. For room issues, move to a different room. For combat state, wait for combat to end naturally.
+**Fix:** Move out of the no-heal room or wait for combat to end.
 
 ### Mana Regeneration Slower Than Expected
 
