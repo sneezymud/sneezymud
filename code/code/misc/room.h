@@ -262,6 +262,8 @@ class TRoom : public TThing {
     int pitchBlackDark() { return getLight() <= 0; }
 
     TThing* findInRoom(const std::function<bool(TThing*)>&);
+    const TThing* findInRoom(const std::function<bool(const TThing*)>&) const;
+    bool hasCampfire() const;
 };
 
 const int ZONE_MAX_TIME = 50;

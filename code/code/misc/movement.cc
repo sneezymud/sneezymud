@@ -43,6 +43,7 @@
 #include "game_crazyeights.h"
 #include "game_drawpoker.h"
 #include "configuration.h"
+#include "task_regen_common.h"
 
 void TBeing::goThroughPortalMsg(const TPortal* o) const {
   char buf[256];
@@ -1193,7 +1194,7 @@ int TBeing::moveGroup(dirTypeT dir) {
         } else {
           followData* found = NULL;
           for (found = followers; found && found->follower != tft;
-               found = found->next)
+            found = found->next)
             ;
           if (!found) {
             vlogf(LOG_BUG,
@@ -1477,7 +1478,7 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total) {
   --(*this);
   *rp1 += *this;
   for (StuffIter it = rp1->stuff.begin(); it != rp1->stuff.end() && (t = *it);
-       ++it) {
+    ++it) {
     TBeing* ch = dynamic_cast<TBeing*>(t);
     if (!ch)
       continue;
@@ -1565,7 +1566,7 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total) {
     sprintf(tmp + strlen(tmp), " [%d]", total);
 
   for (StuffIter it = rp2->stuff.begin(); it != rp2->stuff.end() && (t = *it);
-       ++it) {
+    ++it) {
     TBeing* tbt = dynamic_cast<TBeing*>(t);
     if (!tbt)
       continue;
@@ -1671,14 +1672,14 @@ int TBeing::genericMovedIntoRoom(TRoom* rp, int was_in,
   int groupcount = 0;  // used to make mobs not go superaggro on groups - dash
 
   for (StuffIter it = roomp->stuff.begin();
-       it != roomp->stuff.end() && (t3 = *it); ++it) {
+    it != roomp->stuff.end() && (t3 = *it); ++it) {
     TBeing* tbt = dynamic_cast<TBeing*>(t3);
     if (tbt && inGroup(*tbt))
       groupcount++;
   }
   if (was_in != -1) {
     for (StuffIter it = real_roomp(was_in)->stuff.begin();
-         it != real_roomp(was_in)->stuff.end() && (t3 = *it); ++it) {
+      it != real_roomp(was_in)->stuff.end() && (t3 = *it); ++it) {
       TBeing* tbt = dynamic_cast<TBeing*>(t3);
       if (tbt && inGroup(*tbt))
         groupcount++;
@@ -1717,7 +1718,8 @@ int TBeing::genericMovedIntoRoom(TRoom* rp, int was_in,
       continue;
 
     if (was_in != -1) {
-      // was_in (room number) is passed as a pointer - receivers cast back to int
+      // was_in (room number) is passed as a pointer - receivers cast back to
+      // int
       rc = tmons->checkSpec(this, CMD_MOB_MOVED_INTO_ROOM, "",
         reinterpret_cast<TThing*>(static_cast<uintptr_t>(was_in)));
       if (rc) {
@@ -2269,7 +2271,7 @@ bool has_key(TBeing* ch, int key) {
 
   // check inv
   for (StuffIter it = ch->stuff.begin(); it != ch->stuff.end() && (t = *it);
-       ++it) {
+    ++it) {
     o = dynamic_cast<TObj*>(t);
     if (!o)
       continue;
@@ -2280,7 +2282,7 @@ bool has_key(TBeing* ch, int key) {
     if (!ring)
       continue;
     for (StuffIter it = ring->stuff.begin();
-         it != ring->stuff.end() && (t2 = *it); ++it) {
+      it != ring->stuff.end() && (t2 = *it); ++it) {
       o = dynamic_cast<TObj*>(t2);
       if (!o)
         continue;
@@ -2543,7 +2545,7 @@ int TBeing::portalLeaveCheck(char* argum, cmdTypeT cmd) {
 
   one_argument(argum, arg, cElements(arg));
   for (StuffIter it = roomp->stuff.begin();
-       it != roomp->stuff.end() && (t = *it); ++it) {
+    it != roomp->stuff.end() && (t = *it); ++it) {
     o = dynamic_cast<TPortal*>(t);
     if (o && (((cmd == CMD_LEAVE) && (!*arg || isname(arg, o->name))) ||
                ((cmd == CMD_EXITS) && *arg && isname(arg, o->name)))) {
@@ -2745,8 +2747,7 @@ void TBeing::doSit(const sstring& argument) {
         act("You sit down.", FALSE, this, 0, 0, TO_CHAR);
         act("$n sits down.", TRUE, this, 0, 0, TO_ROOM);
         setPosition(POSITION_SITTING);
-        if (isPc())
-          start_task(this, 0, 0, TASK_SIT, "", 350, 0, 1, 0, 4 * regenTime());
+        startRegenTask(*this, RegenTaskType::SIT);
         break;
       case POSITION_SITTING:
         sendTo("You're sitting already.\n\r");
@@ -2758,8 +2759,7 @@ void TBeing::doSit(const sstring& argument) {
         act("You stop resting, and sit up.", FALSE, this, 0, 0, TO_CHAR);
         act("$n stops resting.", TRUE, this, 0, 0, TO_ROOM);
         setPosition(POSITION_SITTING);
-        if (isPc())
-          start_task(this, 0, 0, TASK_SIT, "", 350, 0, 1, 0, 4 * regenTime());
+        startRegenTask(*this, RegenTaskType::SIT);
         break;
       case POSITION_SLEEPING:
         act("You have to wake up first.", FALSE, this, 0, 0, TO_CHAR);
@@ -2776,8 +2776,7 @@ void TBeing::doSit(const sstring& argument) {
         act("$n stops floating around, and sits down.", TRUE, this, 0, 0,
           TO_ROOM);
         setPosition(POSITION_SITTING);
-        if (isPc())
-          start_task(this, 0, 0, TASK_SIT, "", 350, 0, 1, 0, 4 * regenTime());
+        startRegenTask(*this, RegenTaskType::SIT);
         break;
     }
   } else {
@@ -2845,8 +2844,7 @@ void TBeing::doRest(const sstring& argument) {
           0, 0, TO_CHAR);
         act("$n sits down, leans back and rests.", TRUE, this, 0, 0, TO_ROOM);
         setPosition(POSITION_RESTING);
-        if (isPc())
-          start_task(this, 0, 0, TASK_REST, "", 350, 0, 1, 0, 2 * regenTime());
+        startRegenTask(*this, RegenTaskType::REST);
         break;
       case POSITION_SITTING:
         if (removeAllCasinoGames())
@@ -2856,8 +2854,7 @@ void TBeing::doRest(const sstring& argument) {
           TO_CHAR);
         act("$n leans back and rests.", TRUE, this, 0, 0, TO_ROOM);
         setPosition(POSITION_RESTING);
-        if (isPc())
-          start_task(this, 0, 0, TASK_REST, "", 350, 0, 1, 0, 2 * regenTime());
+        startRegenTask(*this, RegenTaskType::REST);
         break;
       case POSITION_RESTING:
         act("You are already resting.", FALSE, this, 0, 0, TO_CHAR);
@@ -2873,8 +2870,7 @@ void TBeing::doRest(const sstring& argument) {
           FALSE, this, 0, 0, TO_CHAR);
         act("$n stops floating around, and rests.", FALSE, this, 0, 0, TO_ROOM);
         setPosition(POSITION_SITTING);
-        if (isPc())
-          start_task(this, 0, 0, TASK_REST, "", 350, 0, 1, 0, 2 * regenTime());
+        startRegenTask(*this, RegenTaskType::REST);
         break;
     }
   } else {
@@ -2941,16 +2937,14 @@ void TBeing::doSleep(const sstring& argument) {
         sendTo("You go to sleep.\n\r");
         act("$n lies down and falls asleep.", TRUE, this, 0, 0, TO_ROOM);
         setPosition(POSITION_SLEEPING);
-        if (isPc())
-          start_task(this, 0, 0, TASK_SLEEP, "", 350, 0, 1, 0, regenTime());
+        startRegenTask(*this, RegenTaskType::SLEEP);
         break;
       case POSITION_CRAWLING:
       case POSITION_SITTING:
         sendTo("You go to sleep.\n\r");
         act("$n lies down and falls asleep.", TRUE, this, 0, 0, TO_ROOM);
         setPosition(POSITION_SLEEPING);
-        if (isPc())
-          start_task(this, 0, 0, TASK_SLEEP, "", 350, 0, 1, 0, regenTime());
+        startRegenTask(*this, RegenTaskType::SLEEP);
         if (removeAllCasinoGames())
           break;
         break;
@@ -2966,8 +2960,7 @@ void TBeing::doSleep(const sstring& argument) {
         act("$n stops floating around, and lie down to sleep.", TRUE, this, 0,
           0, TO_ROOM);
         setPosition(POSITION_SLEEPING);
-        if (isPc())
-          start_task(this, 0, 0, TASK_SLEEP, "", 350, 0, 1, 0, regenTime());
+        startRegenTask(*this, RegenTaskType::SLEEP);
         break;
     }
   } else {

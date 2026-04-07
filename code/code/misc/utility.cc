@@ -183,48 +183,53 @@ time_info_data* TBeing::age() const {
   return (&player_age);
 }
 
-bool TBeing::inGroup(const TBeing& tbt) const {
-  if ((this == &tbt) || (&tbt == dynamic_cast<const TBeing*>(riding)) ||
-      (&tbt == dynamic_cast<const TBeing*>(rider)))
-    return TRUE;
-
-  if (!isAffected(AFF_GROUP))
-    return FALSE;
-
-  TBeing* tbt2 = dynamic_cast<TBeing*>(tbt.rider);
-  if (tbt2 && inGroup(*tbt2))
-    return TRUE;
-
-  if (!tbt.isAffected(AFF_GROUP))
-    return FALSE;
-
-  if (!master && !tbt.master)
-    return FALSE;
-
-  if (this == tbt.master)
-    return TRUE;
-
-  if (master == &tbt)
-    return TRUE;
-
-  if (master == tbt.master) {
-    return TRUE;
+bool TBeing::inGroup(const TBeing& being) const {
+  // Self, mount, and rider are always considered "in group" regardless of
+  // AFF_GROUP state. Several mechanics (group buff spells, regen helpers)
+  // rely on a character always being part of their own group.
+  if (this == &being || &being == riding || &being == rider) {
+    return true;
   }
 
-  return FALSE;
+  if (!isAffected(AFF_GROUP)) {
+    return false;
+  }
+
+  if (const auto* riderBeing = dynamic_cast<const TBeing*>(being.rider);
+    riderBeing && inGroup(*riderBeing)) {
+    return true;
+  }
+
+  if (!being.isAffected(AFF_GROUP)) {
+    return false;
+  }
+
+  return this == being.master || master == &being ||
+         (master && master == being.master);
 }
 
-unsigned int TBeing::numberInGroupInRoom() const {
-  TThing* t = NULL;
-  unsigned int count = 0;
-
-  for (StuffIter it = roomp->stuff.begin();
-    it != roomp->stuff.end() && (t = *it); ++it) {
-    TBeing* tbt = dynamic_cast<TBeing*>(t);
-    if (tbt && inGroup(*tbt))
-      count++;
+namespace {
+  bool thingInGroup(const TBeing& being, const TThing& thing) {
+    if (const auto* beingThing = dynamic_cast<const TBeing*>(&thing)) {
+      return being.inGroup(*beingThing);
+    }
+    return false;
   }
-  return count;
+}  // namespace
+
+unsigned int TBeing::numberInGroupInRoom() const {
+  if (!roomp) {
+    return 0;
+  }
+
+  return std::ranges::count_if(roomp->stuff,
+    [this](const TThing* thing) { return thingInGroup(*this, *thing); });
+}
+
+bool TBeing::hasGroupmateInRoom() const {
+  // Self always counts as one group member via inGroup; require at least
+  // one other group member in the room before granting "groupmate" bonuses.
+  return numberInGroupInRoom() > 1;
 }
 
 bool getall(const char* name, char* newname) {
@@ -1898,7 +1903,7 @@ bool TBeing::checkBusy(const sstring& buf) const {
     sendTo("You are still busy orienting yourself.");
   }
 #if 0
-  int tmpnum = (hitsPerRound ? (int) (cantHit/hitsPerRound + 1) : 1000000); 
+  int tmpnum = (hitsPerRound ? (int) (cantHit/hitsPerRound + 1) : 1000000);
   sendTo(format(" (Roughly %d round%s to go)\n\r") % tmpnum % (tmpnum > 1) ? "s" : "");
 #else
   float tmpnum = (hitsPerRound ? (cantHit / hitsPerRound) : 1000000);

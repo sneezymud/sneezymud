@@ -1049,6 +1049,7 @@ class TBeing : public TThing {
     void failSleep(TBeing*);
     void failPara(TBeing*);
     bool inGroup(const TBeing&) const;
+    bool hasGroupmateInRoom() const;
     int inCamp() const;
     int bumpHead(int*);
     virtual int bumpHeadDoor(roomDirData*, int*);

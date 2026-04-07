@@ -7,10 +7,15 @@
 // room.cc
 
 #include "room.h"
+#include <algorithm>
+#include <functional>
 #include "extern.h"
 #include "being.h"
 #include "monster.h"
+#include "obj.h"
 #include "weather.h"
+#include "obj_organic.h"
+#include "obj_flame.h"
 
 bool TRoom::isCitySector() const {
   switch (getSectorType()) {
@@ -470,6 +475,25 @@ int TRoom::getLight() {
 }
 
 TThing* TRoom::findInRoom(const std::function<bool(TThing*)>& predicate) {
-  auto found = std::find_if(stuff.begin(), stuff.end(), predicate);
+  auto found = std::ranges::find_if(stuff, predicate);
   return found != stuff.end() ? *found : nullptr;
+}
+
+const TThing* TRoom::findInRoom(
+  const std::function<bool(const TThing*)>& predicate) const {
+  auto found = std::ranges::find_if(stuff, predicate);
+  return found != stuff.end() ? *found : nullptr;
+}
+
+bool TRoom::hasCampfire() const {
+  return std::ranges::any_of(stuff, [](const TThing* obj) {
+    // Check for burning logs
+    if (const auto* log = dynamic_cast<const TOrganic*>(obj)) {
+      return log->itemType() == ITEM_RAW_ORGANIC &&
+             log->isObjStat(ITEM_BURNING);
+    }
+
+    // Check for flame objects
+    return dynamic_cast<const TFFlame*>(obj) != nullptr;
+  });
 }
