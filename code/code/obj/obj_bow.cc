@@ -351,8 +351,6 @@ int TBow::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count, dirTypeT dir,
         return DELETE_VICT;
       if (IS_SET_DELETE(spec_rc, DELETE_THIS))
         return DELETE_THIS;
-      if (IS_SET_DELETE(spec_rc, DELETE_ITEM))
-        return DELETE_ITEM;
     }
 
     // construct reload buf, do it here since arrow might go bye-bye
