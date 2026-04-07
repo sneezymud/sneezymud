@@ -907,38 +907,43 @@ int sneak(TBeing* thief, spellNumT skill) {
 }
 
 int TBeing::doHide() {
-  spellNumT skill = getSkillNum(SKILL_HIDE);
-
-  if (!doesKnowSkill(skill)) {
+  if (!doesKnowSkill(SKILL_HIDE)) {
     sendTo("You know nothing about hiding.\n\r");
-    return FALSE;
+    return 0;
   }
-  int rc = hide(this, skill);
-  if (rc)
-    addSkillLag(skill, rc);
 
-  return rc;
-}
-
-int hide(TBeing* thief, spellNumT skill) {
-  if (thief->fight()) {
-    thief->sendTo("No way!! You simply can NOT hide while fighting!\n\r");
-    return FALSE;
+  if (fight()) {
+    sendTo("No way!! You simply can NOT hide while fighting!\n\r");
+    return 0;
   }
-  thief->sendTo("You attempt to hide yourself.\n\r");
 
-  if (thief->riding) {
-    thief->sendTo("Yeah... right... while mounted\n\r");
-    return FALSE;
+  if (riding) {
+    sendTo("Yeah... right... while mounted\n\r");
+    return 0;
   }
-  int bKnown = thief->getSkillValue(skill);
-  bKnown += thief->plotStat(STAT_CURRENT, STAT_DEX, -40, 15, 0);
 
-  if (thief->bSuccess(bKnown, skill)) {
-    SET_BIT(thief->specials.affectedBy, AFF_HIDE);
+  if (isAffected(AFF_HIDE)) {
+    sendTo("You're already blending into your surroundings.\n\r");
+    return 0;
+  }
+
+  // TODO: Add a separate success check for hiding, after bSuccess passes, that
+  // accounts for circumstantial modifiers, such as: room lighting, terrain
+  // type, stats, etc. The sorts of things that would make hiding easier or
+  // harder regardless of the thief's skill level. bSuccess should only
+  // determine whether the thief has practiced the mechanics of hiding enough to
+  // properly attempt it, while the second check should determine whether the
+  // thief can actually find a good hiding spot in the current environment.
+
+  if (bSuccess(SKILL_HIDE)) {
+    SET_BIT(specials.affectedBy, AFF_HIDE);
+    sendTo("You deftly blend into your surroundings.\n\r");
   } else {
+    sendTo("You fail to blend into your surroundings.\n\r");
   }
-  return TRUE;
+
+  addSkillLag(SKILL_HIDE, 0);
+  return 1;
 }
 
 int TBeing::doSubterfuge(const char* arg) {
@@ -966,7 +971,7 @@ int subterfugeMiss(TBeing* thief, TBeing* victim) {
   if (victim->isPc()) {
     return false;
   }
-  
+
   if (!thief->fight()) {
     if (!thief->isAgile(0)) {
       act("$n tries to put on a show for you and falls on $s face!", FALSE, thief, NULL, victim, TO_VICT);
@@ -1004,7 +1009,7 @@ int subterfugePlayer(TBeing* thief, TBeing* victim) {
   }
 
   return true;
-} 
+}
 
 int subterfugeHit(TBeing* thief, TBeing* victim) {
 // Mob success actions
@@ -1146,7 +1151,7 @@ int subterfugeSuccess(TBeing* thief, TBeing* victim) {
 int subterfugeFail(TBeing* thief, TBeing* victim) {
    thief->sendTo("You fail to execute the subterfuge properly.\n\r");
     if (!thief->isCharismatic() && !victim->isPc()) {
-      act("WUH OH! $N looks pretty pissed off.", FALSE, thief, NULL, victim, TO_CHAR); 
+      act("WUH OH! $N looks pretty pissed off.", FALSE, thief, NULL, victim, TO_CHAR);
       act("$n tried to trick you! $e's gonna pay for that!", FALSE, thief, NULL, victim, TO_VICT);
       act("$n tried to trick $N! $e's gonna pay for that!", FALSE, thief, NULL, victim, TO_NOTVICT);
       thief->setCharFighting(victim);
@@ -1183,8 +1188,8 @@ int subterfuge(TBeing* thief, TBeing* victim) {
   int level = thief->getSkillLevel(SKILL_SUBTERFUGE);
   level = (max (1, (level + (thief->getChaReaction()))));
   int bKnown = thief->getSkillValue(SKILL_SUBTERFUGE);
-  
-  
+
+
 
   if (thief->isNotPowerful(victim, level, SKILL_SUBTERFUGE, SILENT_YES)) {
     act("$N's mind is too powerful to be confused.", FALSE, thief, NULL, victim, TO_CHAR);
@@ -1195,9 +1200,9 @@ int subterfuge(TBeing* thief, TBeing* victim) {
     thief->sendTo("You aren't skilled enough to trick monsters, yet.\n\r");
     return false;
   }
-  
+
   thief->addToMove(-25);
-  
+
   // bSuccess check
   if (!thief->bSuccess(bKnown, SKILL_SUBTERFUGE)) {
     return subterfugeFail(thief, victim);
@@ -1254,4 +1259,63 @@ int spy(TBeing* thief) {
   aff.bitvector = 0;
   thief->affectTo(&aff, -1);
   return TRUE;
+}
+
+bool willBreakHide(cmdTypeT tCmd) {
+  switch (tCmd) {
+    case CMD_BACKSTAB:
+    case CMD_SLIT:
+    case CMD_LOOK:
+    case CMD_SCORE:
+    case CMD_TROPHY:
+    case CMD_INVENTORY:
+    case CMD_HELP:
+    case CMD_WHO:
+    case CMD_NEWS:
+    case CMD_EQUIPMENT:
+    case CMD_WEATHER:
+    case CMD_SAVE:
+    case CMD_EXITS:
+    case CMD_TIME:
+    case CMD_HIDE:
+    case CMD_SNEAK:
+    case CMD_QUEST:
+    case CMD_LEVELS:
+    case CMD_WIZLIST:
+    case CMD_CONSIDER:
+    case CMD_CREDITS:
+    case CMD_TITLE:
+    case CMD_ATTRIBUTE:
+    case CMD_WORLD:
+    case CMD_SPY:
+    case CMD_CONCEAL:
+    case CMD_REST:
+    case CMD_SIT:
+    case CMD_STAND:
+    case CMD_SIGN:
+    case CMD_PTELL:
+    case CMD_EAT:
+    case CMD_DRINK:
+    case CMD_CLS:
+    case CMD_PROMPT:
+    case CMD_ALIAS:
+    case CMD_CLEAR:
+    case CMD_MOTD:
+    case CMD_PRACTICE:
+    case CMD_HISTORY:
+    case CMD_EVALUATE:
+    case CMD_DISGUISE:
+    case CMD_EMAIL:
+    case CMD_AFK:
+    case CMD_SPELLS:
+    case CMD_COMPARE:
+    case CMD_ZONES:
+    case CMD_NEWBIE:
+    case CMD_REQUEST:
+    case CMD_IGNORE:
+    case MAX_CMD_LIST:
+      return false;
+    default:
+      return true;
+  }
 }

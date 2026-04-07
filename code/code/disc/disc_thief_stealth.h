@@ -15,7 +15,6 @@ class CDStealth : public CDiscipline {
 
 int conceal(TBeing*, TBeing*);
 int sneak(TBeing*, spellNumT);
-int hide(TBeing*, spellNumT);
 int subterfuge(TBeing*, TBeing*);
 int subterfugeFail(TBeing*, TBeing*);
 int subterfugeSuccess(TBeing*, TBeing*);
