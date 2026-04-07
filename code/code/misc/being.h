@@ -702,6 +702,8 @@ class TBeing : public TThing {
     classIndT bestClass() const;
     int getClassLevel(int) const;
     void loseSneak();
+    void loseSkulk();
+    void breakStealth();
     int checkEngagementStatus();
     virtual sstring parseTitle(Descriptor*);
     int onlyClass(int) const;
@@ -1992,6 +1994,7 @@ class TBeing : public TThing {
     void doNewbieEqLoad(race_t, unsigned short, bool);
     virtual void doLoad(const char*);
     int doDisguise(const char*);
+    int doSkulk(const char*);
     int doPoisonWeapon(sstring);
     int doGarrotte(const char*, TBeing*);
     int doStab(const char*, TBeing*);

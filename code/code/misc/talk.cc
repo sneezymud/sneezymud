@@ -406,7 +406,7 @@ void TBeing::doShout(const sstring& arg) {
       colorString(this, desc, garbled, NULL, COLOR_BASIC, FALSE) % norm());
   act("$n rears back $s head and shouts loudly.", FALSE, this, 0, 0, TO_ROOM);
 
-  loseSneak();
+  breakStealth();
 
   if (isPc())
     addToMove(-15);

@@ -610,6 +610,8 @@ enum spellNumT {
 
   // end of generic
 
+  SKILL_SKULK,
+
   // keep this as the last of the true skills
   MAX_SKILL,
 

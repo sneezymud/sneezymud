@@ -1011,7 +1011,7 @@ int TBeing::doFlee(const char* arg) {
         TO_ROOM);
       act("You turn tail and attempt to run away.", true, this, nullptr,
         nullptr, TO_CHAR);
-      loseSneak();
+      breakStealth();
 
       // Handle troglodyte racial
       if (panic && !::number(0, 1) && getMyRace()->hasTalent(TALENT_MUSK) &&

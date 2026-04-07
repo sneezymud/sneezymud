@@ -608,7 +608,7 @@ int TBeing::doMount(const char* arg, cmdTypeT cmd, TBeing* h,
           act("$n hops on your back!", FALSE, this, 0, horse, TO_VICT);
         }
       }
-      loseSneak();
+      breakStealth();
 
       mount(horse);
       setPosition(POSITION_MOUNTED);

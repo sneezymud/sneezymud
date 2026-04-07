@@ -341,3 +341,19 @@ void TBeing::loseSneak() {
 
   // don't remove a generalized AFF_SNEAK since this is a character trait
 }
+
+void TBeing::loseSkulk() {
+  if (affectedBySpell(SKILL_SKULK)) {
+    affectFrom(SKILL_SKULK);
+    sendTo("You are no longer skulking.\n\r");
+  }
+}
+
+// Clear all stealth states that should drop when the actor is revealed.
+// AFF_HIDE is intentionally not handled here — it has its own clearing
+// pipeline in parse.cc via willBreakHide(). Once that path is unified,
+// hide can fold into this helper.
+void TBeing::breakStealth() {
+  loseSneak();
+  loseSkulk();
+}
