@@ -164,6 +164,7 @@ const char* const File::WIZNEWS_DIR =
 
 std::vector<TRoom*> roomspec_db(0);
 std::vector<TRoom*> roomsave_db(0);
+std::vector<TRoom*> affectedRooms_db;
 std::queue<sstring> queryqueue;
 
 struct cached_object {

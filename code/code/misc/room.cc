@@ -6,8 +6,11 @@
 
 // room.cc
 
-#include "room.h"
 #include <algorithm>
+#include <ranges>
+#include <unordered_map>
+
+#include "room.h"
 #include <functional>
 #include "extern.h"
 #include "being.h"
@@ -16,6 +19,26 @@
 #include "weather.h"
 #include "obj_organic.h"
 #include "obj_flame.h"
+
+namespace {
+  // Per-spell-type vtables for room affects, populated at boot via
+  // registerRoomAffect(). Generic dispatch (tick processing, look output)
+  // looks the vtable up here instead of switching on spellNumT.
+  std::unordered_map<int, const RoomAffectVTable*>& roomAffectRegistry() {
+    static std::unordered_map<int, const RoomAffectVTable*> registry;
+    return registry;
+  }
+
+  const RoomAffectVTable* getRoomAffectVTable(spellNumT type) {
+    auto& registry = roomAffectRegistry();
+    auto it = registry.find(static_cast<int>(type));
+    return it != registry.end() ? it->second : nullptr;
+  }
+}  // namespace
+
+void registerRoomAffect(spellNumT type, const RoomAffectVTable* vtable) {
+  roomAffectRegistry()[static_cast<int>(type)] = vtable;
+}
 
 bool TRoom::isCitySector() const {
   switch (getSectorType()) {
@@ -496,4 +519,71 @@ bool TRoom::hasCampfire() const {
     // Check for flame objects
     return dynamic_cast<const TFFlame*>(obj) != nullptr;
   });
+}
+
+bool TRoom::hasRoomAffect(spellNumT type) const {
+  return std::ranges::any_of(roomAffects,
+    [type](const auto& a) { return a.type == type; });
+}
+
+RoomAffectData* TRoom::getRoomAffect(spellNumT type) {
+  auto it = std::ranges::find_if(roomAffects,
+    [type](const auto& a) { return a.type == type; });
+  return it != roomAffects.end() ? &(*it) : nullptr;
+}
+
+void TRoom::addRoomAffect(const RoomAffectData& affect) {
+  roomAffects.push_back(affect);
+
+  if (std::ranges::find(affectedRooms_db, this) == affectedRooms_db.end())
+    affectedRooms_db.push_back(this);
+}
+
+void TRoom::removeRoomAffect(spellNumT type) {
+  std::erase_if(roomAffects, [type](const auto& a) { return a.type == type; });
+
+  if (roomAffects.empty())
+    std::erase(affectedRooms_db, this);
+}
+
+void sendRoomAffectDescs(TBeing* ch, TRoom* rp, bool here) {
+  if (!rp)
+    return;
+  for (const auto& affect : rp->getRoomAffects()) {
+    const RoomAffectVTable* vt = getRoomAffectVTable(affect.type);
+    if (!vt || !vt->lookDesc)
+      continue;
+    sstring desc = vt->lookDesc(here);
+    if (!desc.empty())
+      ch->sendTo(desc);
+  }
+}
+
+bool TRoom::tickRoomAffects() {
+  // duration semantics: number of damage ticks remaining. Tick first, then
+  // decrement, then expire when it hits 0. So a freshly-cast affect with
+  // duration N fires N onTick callbacks followed by one onExpire.
+  //
+  // Iterate backwards so we can erase expired entries safely. Re-acquire the
+  // reference after each callback since onTick can transitively call
+  // addRoomAffect (e.g. a death cascade triggers a mob spec proc that casts
+  // a room-affect spell), which may reallocate the vector.
+  for (int i = static_cast<int>(roomAffects.size()) - 1; i >= 0; --i) {
+    auto idx = static_cast<size_t>(i);
+    spellNumT type = roomAffects[idx].type;
+
+    if (const auto* vt = getRoomAffectVTable(type); vt && vt->onTick)
+      vt->onTick(this, roomAffects[idx]);
+
+    // Re-validate: callback may have mutated the vector.
+    if (idx >= roomAffects.size() || roomAffects[idx].type != type)
+      continue;
+
+    if (--roomAffects[idx].duration <= 0) {
+      if (const auto* vt = getRoomAffectVTable(type); vt && vt->onExpire)
+        vt->onExpire(this, roomAffects[idx]);
+      roomAffects.erase(roomAffects.begin() + static_cast<ptrdiff_t>(i));
+    }
+  }
+  return !roomAffects.empty();
 }

@@ -1253,6 +1253,7 @@ namespace {
     {SPELL_SILENCE, "SPELL_SILENCE"},
     {SPELL_WATERY_GRAVE, "SPELL_WATERY_GRAVE"},
     {SPELL_TSUNAMI, "SPELL_TSUNAMI"},
+    {SPELL_BLIZZARD, "SPELL_BLIZZARD"},
     {SPELL_BREATH_OF_SARAHAGE, "SPELL_BREATH_OF_SARAHAGE"},
     {SPELL_PLASMA_MIRROR, "SPELL_PLASMA_MIRROR"},
     {SPELL_GARMULS_TAIL, "SPELL_GARMULS_TAIL"},
@@ -2160,6 +2161,9 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
       break;
     case SPELL_TSUNAMI:
       rc = tsunami(this);
+      break;
+    case SPELL_BLIZZARD:
+      rc = blizzard(this);
       break;
     case SPELL_CONJURE_WATER:
       conjureElemWater(this);

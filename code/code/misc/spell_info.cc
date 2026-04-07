@@ -10,6 +10,7 @@
 /////////////////////////////////////////////////////////////////
 
 #include "discipline.h"
+#include "disc_mage_water.h"
 #include "extern.h"
 #include "spell2.h"
 #include "toggle.h"
@@ -1049,6 +1050,16 @@ void buildSpellArray() {
     COMP_GESTURAL | COMP_GESTURAL_RANDOM | COMP_VERBAL | COMP_VERBAL_RANDOM |
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
+
+  discArray[SPELL_BLIZZARD] = new spellInfo(SPELL_MAGE, DISC_WATER, DISC_WATER,
+    STAT_INT, "blizzard", TASK_DIFFICULT, LAG_5, POSITION_SITTING, MANA_50,
+    LIFEFORCE_0, PRAY_0, TAR_AREA | TAR_IGNORE | TAR_VIOLENT, SYMBOL_STRESS_0,
+    "", "", "", "", START_50, LEARN_2, START_DO_40, LEARN_DO_5, START_DO_NO,
+    LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.04,
+    COMP_GESTURAL | COMP_GESTURAL_RANDOM | COMP_VERBAL | COMP_VERBAL_RANDOM |
+      COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
+    0);
+  registerBlizzardRoomAffect();
 
   discArray[SPELL_BREATH_OF_SARAHAGE] =
     new spellInfo(SPELL_MAGE, DISC_WATER, DISC_WATER, STAT_INT,
