@@ -423,7 +423,7 @@ int brimstoneAsh(TBeing* caster, TBeing* victim) {
   }
 
   if (!victim->equipment[slot] && !victim->getStuckIn(slot)) {
-    const int rc = victim->stickIn(brimstone, slot);
+    const int rc = victim->stickIn(brimstone, slot, SILENT_YES);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
 
@@ -435,7 +435,7 @@ int brimstoneAsh(TBeing* caster, TBeing* victim) {
       false, caster, brimstone, victim, TO_VICT);
 
     if (percentChance(caster->getStatMod(STAT_WIS) * 50)) {
-      brimstone->setObjStat(ITEM_BURNING);
+      brimstone->addObjStat(ITEM_BURNING);
       act(format("The $p burns your %s!") % victim->describeBodySlot(slot),
         false, caster, brimstone, victim, TO_VICT);
       act(format("The $p burns $N's %s!") % victim->describeBodySlot(slot),
@@ -444,7 +444,7 @@ int brimstoneAsh(TBeing* caster, TBeing* victim) {
         false, caster, brimstone, victim, TO_CHAR);
     }
   } else {
-    brimstone->setObjStat(ITEM_BURNING);
+    brimstone->addObjStat(ITEM_BURNING);
     *caster->roomp += *brimstone;
     act("A shard of $p falls to the ground and ignites!", false, caster,
       brimstone, nullptr, TO_ROOM);
@@ -457,7 +457,7 @@ int brimstoneAsh(TBeing* caster, TBeing* victim) {
 
 int rainBrimstone(TBeing* caster, TBeing* victim, int level, short bKnown,
   spellNumT spell, int adv_learn) {
-  if (!victim->outside()) {
+  if (!caster->outside()) {
     caster->sendTo(
       "You need to be under the open heavens to call down such aid!\n\r");
     return SPELL_FAIL;
@@ -487,11 +487,11 @@ int rainBrimstone(TBeing* caster, TBeing* victim, int level, short bKnown,
         CS(spell);
         dam *= 2;
         act(
-          "Thunder <W>CRACKS<z> as <r>flaming hot<1> <y>brimstone<1> rain down "
+          "Thunder <W>CRACKS<z> as <r>flaming hot<1> <y>brimstone<1> rains down "
           "on $N!",
           false, caster, nullptr, victim, TO_NOTVICT);
         act(
-          "Thunder <W>CRACKS<z> as <r>flaming hot<1> <y>brimstone<1> rain down "
+          "Thunder <W>CRACKS<z> as <r>flaming hot<1> <y>brimstone<1> rains down "
           "on $N!",
           false, caster, nullptr, victim, TO_CHAR);
         act(
@@ -514,18 +514,24 @@ int rainBrimstone(TBeing* caster, TBeing* victim, int level, short bKnown,
           "you!",
           false, caster, nullptr, victim, TO_VICT);
 
-        if (victim->isAgile(-(caster->getStatMod(STAT_WIS)))) {
-          SV(spell);
-          act("$N manages to avoid some of the sulfur particles!", false,
-            caster, nullptr, victim, TO_NOTVICT);
-          act("$N manages to avoid some of the sulfur particles!", false,
-            caster, nullptr, victim, TO_CHAR);
-          act("Luckily, you manage to avoid some of the sulfur particles!",
-            false, caster, nullptr, victim, TO_VICT);
-          dam *= 2;
-          dam /= 3;
-        } else {
-          ashRc = brimstoneAsh(caster, victim);
+        {
+          int mod = caster->spellLuckModifier(spell);
+          if (!victim->isAgile(0))
+            mod += static_cast<int>(100 * caster->getStatMod(STAT_WIS));
+
+          if (victim->isLucky(mod)) {
+            SV(spell);
+            act("$N manages to avoid some of the sulfur particles!", false,
+              caster, nullptr, victim, TO_NOTVICT);
+            act("$N manages to avoid some of the sulfur particles!", false,
+              caster, nullptr, victim, TO_CHAR);
+            act("Luckily, you manage to avoid some of the sulfur particles!",
+              false, caster, nullptr, victim, TO_VICT);
+            dam *= 2;
+            dam /= 3;
+          } else {
+            ashRc = brimstoneAsh(caster, victim);
+          }
         }
         break;
     }
