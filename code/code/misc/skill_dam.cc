@@ -248,6 +248,7 @@ int TBeing::getSkillDam(const TBeing* victim, spellNumT skill, int level,
       break;
     case SPELL_SAND_BLAST:
     case SPELL_HELLFIRE:
+    case SPELL_BLIZZARD:
     case SPELL_ENERGY_DRAIN:
       dam = genericDam(victim, this, skill, DISC_MAGE, level, adv_learn,
         2 * HARD_TO_FIND_COMPONENT, REDUCE_YES, !isPc(), TRIM_NO);

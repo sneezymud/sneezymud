@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "extern.h"
 #include "room.h"
 #include "low.h"
@@ -1457,3 +1459,258 @@ int garmulsTail(TBeing* caster, TBeing* victim, int level, short bKnown) {
     return SPELL_FAIL;
   }
 }
+
+// ---- BLIZZARD ----
+
+int blizzard(TBeing* caster, int level, short bKnown, int adv_learn) {
+  TRoom* room = caster->roomp;
+  int orig_damage =
+    caster->getSkillDam(nullptr, SPELL_BLIZZARD, level, adv_learn);
+
+  if (caster->bSuccess(bKnown, SPELL_BLIZZARD)) {
+    act(
+      "$n raises $s arms and calls forth a <W>howling blizzard<z> of ice and "
+      "snow!",
+      false, caster, nullptr, nullptr, TO_ROOM, ANSI_CYAN);
+    act(
+      "You raise your arms and call forth a <W>howling blizzard<z> of ice and "
+      "snow!",
+      false, caster, nullptr, nullptr, TO_CHAR, ANSI_CYAN);
+
+    // Initial burst — lighter than a typical AoE at this level
+    int burst_damage = orig_damage / 2;
+
+    // Build target list first, then iterate (safety invariant)
+    std::vector<TBeing*> targets;
+    for (StuffIter it = room->stuff.begin(); it != room->stuff.end(); ++it) {
+      if (auto* victim = dynamic_cast<TBeing*>(*it))
+        targets.push_back(victim);
+    }
+
+    for (auto* victim : targets) {
+      if (!victim)
+        continue;
+      // Re-validate: an earlier victim's death cascade can free or move
+      // other beings in the room before we get to them.
+      if (std::find(room->stuff.begin(), room->stuff.end(), victim) ==
+          room->stuff.end())
+        continue;
+      if (victim->getPosition() == POSITION_DEAD)
+        continue;
+      if (victim == caster)
+        continue;
+      if (victim->isImmortal())
+        continue;
+      if (caster->inGroup(*victim))
+        continue;
+
+      caster->reconcileHurt(victim, discArray[SPELL_BLIZZARD]->alignMod);
+      int damage = burst_damage;
+
+      if (victim->isLucky(caster->spellLuckModifier(SPELL_BLIZZARD))) {
+        act("$N finds shelter from the worst of the blast!", false, caster,
+          nullptr, victim, TO_NOTVICT, ANSI_CYAN);
+        act("$N finds shelter from the worst of the blast!", false, caster,
+          nullptr, victim, TO_CHAR, ANSI_CYAN);
+        act("You find shelter from the worst of the blast!", false, caster,
+          nullptr, victim, TO_VICT, ANSI_CYAN);
+        damage /= 2;
+      } else {
+        act("$N is battered by the onslaught of ice and snow!", false, caster,
+          nullptr, victim, TO_NOTVICT, ANSI_CYAN);
+        act("$N is battered by the onslaught of ice and snow!", false, caster,
+          nullptr, victim, TO_CHAR, ANSI_CYAN);
+        act("You are battered by the onslaught of ice and snow!", false, caster,
+          nullptr, victim, TO_VICT, ANSI_CYAN);
+      }
+
+      if (caster->reconcileDamage(victim, damage, SPELL_BLIZZARD) == -1) {
+        delete victim;
+        victim = nullptr;
+      }
+    }
+
+    // Apply room affect for ongoing damage. duration is the number of damage
+    // ticks; tickRoomAffects fires that many onTick callbacks followed by one
+    // onExpire.
+    int per_tick_damage = max(1, orig_damage / 4);
+    int duration = 3 + min(4, level / 25);
+
+    if (auto* existing = room->getRoomAffect(SPELL_BLIZZARD)) {
+      // Refresh: update duration, damage, and caster
+      existing->duration = duration;
+      existing->modifier = per_tick_damage;
+      existing->casterID = caster->getPlayerID();
+      existing->level = level;
+    } else {
+      RoomAffectData affect;
+      affect.type = SPELL_BLIZZARD;
+      affect.duration = duration;
+      affect.level = level;
+      affect.modifier = per_tick_damage;
+      affect.casterID = caster->getPlayerID();
+      room->addRoomAffect(affect);
+    }
+
+    return SPELL_SUCCESS;
+  } else {
+    switch (critFail(caster, SPELL_BLIZZARD)) {
+      case CRIT_F_HITSELF:
+      case CRIT_F_HITOTHER:
+        CF(SPELL_BLIZZARD);
+        act("The spell backfires, engulfing $n in a blast of freezing air!",
+          false, caster, nullptr, nullptr, TO_ROOM, ANSI_CYAN);
+        act("The spell backfires, engulfing you in a blast of freezing air!",
+          false, caster, nullptr, nullptr, TO_CHAR, ANSI_CYAN);
+        if (caster->reconcileDamage(caster, orig_damage / 3, SPELL_BLIZZARD) ==
+            -1)
+          return SPELL_CRIT_FAIL + CASTER_DEAD;
+        return SPELL_CRIT_FAIL;
+      default:
+        act("Your spell fizzles and fails to conjure a blizzard.", true, caster,
+          nullptr, nullptr, TO_CHAR);
+        caster->nothingHappens(SILENT_YES);
+        return SPELL_FAIL;
+    }
+  }
+}
+
+int blizzard(TBeing* caster) {
+  if (!bPassMageChecks(caster, SPELL_BLIZZARD, nullptr))
+    return false;
+
+  if (caster->checkPeaceful(
+        "Such a destructive spell is not needed in this peaceful place.\n\r"))
+    return false;
+
+  lag_t rounds = discArray[SPELL_BLIZZARD]->lag;
+  taskDiffT diff = discArray[SPELL_BLIZZARD]->task;
+
+  start_cast(caster, nullptr, nullptr, caster->roomp, SPELL_BLIZZARD, diff, 1,
+    "", rounds, caster->in_room, 0, 0, true, 0);
+  return true;
+}
+
+int castBlizzard(TBeing* caster) {
+  int level = caster->getSkillLevel(SPELL_BLIZZARD);
+  int bKnown = caster->getSkillValue(SPELL_BLIZZARD);
+  int rc = 0;
+
+  int ret =
+    blizzard(caster, level, bKnown, caster->getAdvLearning(SPELL_BLIZZARD));
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+  return rc;
+}
+
+namespace {
+  void blizzardRoomTick(TRoom* room, RoomAffectData& affect);
+  void blizzardRoomExpire(TRoom* room, const RoomAffectData&);
+
+  sstring blizzardLookDesc(bool here) {
+    return (
+      format("<c>A howling blizzard rages %s, pelting everything with ice "
+             "and snow.<z>\n\r") %
+      (here ? "here" : "there"))
+      .str();
+  }
+
+  const RoomAffectVTable kBlizzardRoomAffect = {
+    .onTick = &blizzardRoomTick,
+    .onExpire = &blizzardRoomExpire,
+    .lookDesc = &blizzardLookDesc,
+  };
+}  // namespace
+
+void registerBlizzardRoomAffect() {
+  registerRoomAffect(SPELL_BLIZZARD, &kBlizzardRoomAffect);
+}
+
+namespace {
+  void blizzardRoomTick(TRoom* room, RoomAffectData& affect) {
+    // Look up caster by player ID for the group exemption check. casterID == 0
+    // means the original caster wasn't a real player (TBeing::getPlayerID()
+    // returns 0 for normal mobs), so skip the lookup entirely — otherwise we'd
+    // match the first mob in character_list and exempt its followers.
+    TBeing* caster = nullptr;
+    if (affect.casterID > 0) {
+      for (TBeing* ch = character_list; ch; ch = ch->next) {
+        if (ch->getPlayerID() == affect.casterID) {
+          caster = ch;
+          break;
+        }
+      }
+    }
+
+    // Group exemption only applies while the caster is still in the room —
+    // if they walked out (or died), the blizzard damages everyone
+    // indiscriminately
+    const bool caster_in_room = caster && caster->roomp == room;
+
+    MakeNoise(room->in_room,
+      "<c>The blizzard rages, pelting everything with ice and snow!<z>\n\r",
+      "<c>You hear howling winds nearby.<z>\n\r");
+
+    // Build target list first (safety invariant: don't modify during iteration)
+    std::vector<TBeing*> targets;
+    for (StuffIter it = room->stuff.begin(); it != room->stuff.end(); ++it) {
+      if (auto* victim = dynamic_cast<TBeing*>(*it))
+        targets.push_back(victim);
+    }
+
+    for (auto* victim : targets) {
+      if (!victim)
+        continue;
+      // Re-validate: an earlier tick victim's death cascade (scripts, mount
+      // riders, charm chains) can free or move other beings in the room.
+      if (std::find(room->stuff.begin(), room->stuff.end(), victim) ==
+          room->stuff.end())
+        continue;
+      if (victim->getPosition() == POSITION_DEAD)
+        continue;
+      if (victim->isImmortal())
+        continue;
+
+      // Skip caster and their group only while the caster remains in the room
+      if (caster_in_room) {
+        if (victim == caster)
+          continue;
+        if (caster->inGroup(*victim))
+          continue;
+      }
+
+      // Honor cold immunity / type-specific resistances. applyDamage doesn't
+      // run the preProcDam pipeline that reconcileDamage does, so we have to
+      // call getActualDamage explicitly or cold-immune mobs would take full
+      // damage.
+      int damage = victim->getActualDamage(victim, nullptr, affect.modifier,
+        SPELL_BLIZZARD);
+      if (damage <= 0)
+        continue;
+
+      // Compute save using the caster's class level at cast time, stored on the
+      // affect. This matches spellLuckModifier()'s formula (class_level * 20)
+      // without needing the caster to still exist.
+      if (victim->isLucky(affect.level * 20))
+        damage /= 2;
+
+      // Environmental damage: the initial burst already built hatred against
+      // the caster. Ticks deal damage without re-attribution, so the behavior
+      // is identical whether the caster is present, gone, or logged out. This
+      // also avoids AFF_AGGRESSOR pollution from reconcileDamage's self-flag
+      // path.
+      int rc = victim->applyDamage(victim, damage, SPELL_BLIZZARD);
+      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+        delete victim;
+        victim = nullptr;
+      }
+    }
+  }
+
+  void blizzardRoomExpire(TRoom* room, const RoomAffectData&) {
+    MakeNoise(room->in_room,
+      "<c>The blizzard subsides, leaving only a bitter chill in the "
+      "air.<z>\n\r",
+      "<c>The howling winds nearby fade to silence.<z>\n\r");
+  }
+}  // namespace

@@ -129,6 +129,8 @@ void TBeing::lookDir(int keyword_no) {
         if (!isPlayerAction(PLR_BRIEF))
           sendRoomDesc(rp);
 
+        sendRoomAffectDescs(this, rp, false);
+
         listExits(rp);
         list_thing_in_room(rp->stuff, this);
       }
@@ -225,6 +227,9 @@ void TBeing::lookRoom(bool changedZones) {
   describeWeather(in_room);
   describeGround();
   describeRoomLight();
+
+  sendRoomAffectDescs(this, roomp, true);
+
   //  doEvaluate("room");
   listExits(roomp);
 
@@ -286,6 +291,7 @@ void TBeing::lookAtRoom() {
   sendRoomName(roomp);
   sendRoomDesc(roomp);
   describeWeather(in_room);
+  sendRoomAffectDescs(this, roomp, true);
   listExits(roomp);
 
   if (dynamic_cast<TPerson*>(this)) {

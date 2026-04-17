@@ -384,6 +384,12 @@ class procRoomPulse : public TProcess {
     procRoomPulse(const int&);
 };
 
+class procRoomAffects : public TProcess {
+  public:
+    void run(const TPulse&) const;
+    procRoomAffects(const int&);
+};
+
 class procWeightVolumeFumble : public TProcess {
   public:
     void run(const TPulse&) const;

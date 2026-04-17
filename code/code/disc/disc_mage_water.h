@@ -7,6 +7,7 @@ class CDWater : public CDiscipline {
   public:
     CSkill skWateryGrave;  //      40th level individual
     CSkill skTsunami;      // NEW  36th level area affect
+    CSkill skBlizzard;
     CSkill skBreathOfSarahage;
     CSkill skPlasmaMirror;
     CSkill skGarmulsTail;
@@ -48,6 +49,11 @@ int iceStorm(TBeing*, int, short, int);
 int tsunami(TBeing*);
 int castTsunami(TBeing*);
 int tsunami(TBeing*, int, short, int);
+
+int blizzard(TBeing*);
+int castBlizzard(TBeing*);
+int blizzard(TBeing*, int, short, int);
+void registerBlizzardRoomAffect();
 
 int conjureElemWater(TBeing*);
 int castConjureElemWater(TBeing*);

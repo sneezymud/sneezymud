@@ -1335,6 +1335,7 @@ int TBeing::checkBadSpellCondition(TBeing* caster, int which) {
     case SPELL_ARCTIC_BLAST:
     case SPELL_ICE_STORM:
     case SPELL_TSUNAMI:
+    case SPELL_BLIZZARD:
     case SPELL_CONJURE_WATER:
     case SPELL_GUSHER:
       return FALSE;
@@ -2154,6 +2155,9 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
       break;
     case SPELL_TSUNAMI:
       rc = castTsunami(this);
+      break;
+    case SPELL_BLIZZARD:
+      rc = castBlizzard(this);
       break;
     case SPELL_CONJURE_WATER:
       rc = castConjureElemWater(this);

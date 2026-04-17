@@ -1514,6 +1514,7 @@ void TBeing::statBeing(TBeing* k) {
       case SPELL_FROST_BREATH:
       case SPELL_WATERY_GRAVE:
       case SPELL_TSUNAMI:
+      case SPELL_BLIZZARD:
       case SPELL_CHLORINE_BREATH:
       case SPELL_DUST_BREATH:
       case SPELL_POISON_DEIKHAN:
