@@ -1244,6 +1244,8 @@ void buildComponentArray() {
     "$n shatters $p.", "", ""));
   CompInfo.push_back(compInfo(SPELL_TSUNAMI, "", "", "", "You uncork $p.",
     "$n uncorks $p.", "", ""));
+  CompInfo.push_back(compInfo(SPELL_BLIZZARD, "", "", "",
+    "You place $p on your tongue.", "$n places $p on $s tongue.", "", ""));
   CompInfo.push_back(compInfo(SPELL_CONJURE_WATER, "", "", "",
     "You shatter $p.", "$n shatters $p.", "", ""));
   CompInfo.push_back(
