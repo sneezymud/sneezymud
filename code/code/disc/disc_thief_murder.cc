@@ -270,8 +270,10 @@ int TBeing::doBackstab(const char* argument, TBeing* vict) {
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return rc;
 
-  if (rc)
+  if (rc) {
     addSkillLag(SKILL_BACKSTAB, rc);
+    REMOVE_BIT(specials.affectedBy, AFF_HIDE);
+  }
 
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
@@ -636,8 +638,10 @@ int TBeing::doThroatSlit(const char* argument, TBeing* vict) {
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return rc;
 
-  if (rc)
+  if (rc) {
     addSkillLag(SKILL_THROATSLIT, rc);
+    REMOVE_BIT(specials.affectedBy, AFF_HIDE);
+  }
 
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
