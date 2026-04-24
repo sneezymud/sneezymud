@@ -267,6 +267,14 @@ int TBeing::doBackstab(const char* argument, TBeing* vict) {
   }
   rc = backstab(this, victim);
 
+  // Clean up locally-resolved victim before the DELETE_THIS early return so
+  // combined DELETE_THIS | DELETE_VICT doesn't leak it.
+  if (IS_SET_DELETE(rc, DELETE_VICT) && !vict) {
+    delete victim;
+    victim = nullptr;
+    REM_DELETE(rc, DELETE_VICT);
+  }
+
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return rc;
 
@@ -275,14 +283,10 @@ int TBeing::doBackstab(const char* argument, TBeing* vict) {
     REMOVE_BIT(specials.affectedBy, AFF_HIDE);
   }
 
-  if (IS_SET_DELETE(rc, DELETE_VICT)) {
-    if (vict)
-      return rc;
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    return rc;
 
-    delete victim;
-    victim = NULL;
-    REM_DELETE(rc, DELETE_VICT);
-  } else if (rc && !victim->isPc()) {
+  if (victim && rc && !victim->isPc()) {
     // Only update suspicion if victim survived and is a mob
     dynamic_cast<TMonster*>(victim)->US(25);
   }
@@ -325,13 +329,19 @@ int backstab(TBeing* thief, TBeing* victim) {
   if (thief->noHarmCheck(victim))
     return FALSE;
 
-  if (thief->attackers) {
-    thief->sendTo(
-      "There's no way to reach that back while you're fighting!\n\r");
-    return FALSE;
-  }
-
   int bKnown = thief->getSkillValue(SKILL_BACKSTAB);
+
+  if (thief->attackers) {
+    if (bKnown <= 80) {
+      thief->sendTo(
+        "There's no way to reach that back while you're fighting!\n\r");
+      return FALSE;
+    }
+    if (victim->getPosition() > POSITION_SITTING) {
+      thief->sendTo("Your target must be off their feet to backstab while under attack.\n\r");
+      return FALSE;
+    }
+  }
 
   if (!obj->canBackstab() && !obj->isSpear()) {
     act("You can't use $p to backstab.", false, thief, obj, NULL, TO_CHAR);
@@ -345,8 +355,14 @@ int backstab(TBeing* thief, TBeing* victim) {
   }
 
   if (thief->fight()) {
-    thief->sendTo("You're too busy to backstab!\n\r");
-    return FALSE;
+    if (bKnown <= 65) {
+      thief->sendTo("You aren't skilled enough to backstab during a fight.\n\r");
+      return FALSE;
+    }
+    if (victim->getPosition() > POSITION_SITTING) {
+      thief->sendTo("Your target must be off their feet to backstab mid-fight.\n\r");
+      return FALSE;
+    }
   }
   thief->reconcileHurt(victim, 0.04);
 

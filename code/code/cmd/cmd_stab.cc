@@ -285,18 +285,19 @@ int TBeing::doStab(const char* argument, TBeing* vict) {
   }
   rc = stab(this, victim);
 
+  // Clean up locally-resolved victim before the DELETE_THIS early return so
+  // combined DELETE_THIS | DELETE_VICT doesn't leak it.
+  if (IS_SET_DELETE(rc, DELETE_VICT) && !vict) {
+    delete victim;
+    victim = nullptr;
+    REM_DELETE(rc, DELETE_VICT);
+  }
+
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return rc;
 
   if (rc)
     addSkillLag(SKILL_STABBING, rc);
 
-  if (IS_SET_DELETE(rc, DELETE_VICT)) {
-    if (vict)
-      return rc;
-    delete victim;
-    victim = nullptr;
-    REM_DELETE(rc, DELETE_VICT);
-  }
   return rc;
 }
