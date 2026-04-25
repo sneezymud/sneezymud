@@ -652,23 +652,29 @@ int TBeing::doThroatSlit(const char* argument, TBeing* vict) {
   }
 
   rc = throatSlit(this, victim);
+  const int lagRc = rc;
+
+  // Clean up locally-resolved victim before the DELETE_THIS early return so
+  // combined DELETE_THIS | DELETE_VICT doesn't leak it. lagRc preserves the
+  // original DELETE_VICT bit so addSkillLag still applies its kill cap.
+  if (IS_SET_DELETE(rc, DELETE_VICT) && !vict) {
+    delete victim;
+    victim = nullptr;
+    REM_DELETE(rc, DELETE_VICT);
+  }
 
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return rc;
 
-  if (rc) {
-    addSkillLag(SKILL_THROATSLIT, rc);
+  if (lagRc) {
+    addSkillLag(SKILL_THROATSLIT, lagRc);
     REMOVE_BIT(specials.affectedBy, AFF_HIDE);
   }
 
-  if (IS_SET_DELETE(rc, DELETE_VICT)) {
-    if (vict)
-      return rc;
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    return rc;
 
-    delete victim;
-    victim = NULL;
-    REM_DELETE(rc, DELETE_VICT);
-  } else if (rc && !victim->isPc()) {
+  if (victim && rc && !victim->isPc()) {
     // Only update suspicion if victim survived and is a mob
     dynamic_cast<TMonster*>(victim)->US(25);
   }
