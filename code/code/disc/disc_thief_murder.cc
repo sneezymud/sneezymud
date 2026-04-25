@@ -320,7 +320,7 @@ int backstab(TBeing* thief, TBeing* victim) {
   TBeing* victimMount = dynamic_cast<TBeing*>(victim->riding);
   bool thiefAirborne = thief->isFlying() || (thiefMount && thiefMount->isFlying());
   bool victimAirborne = victim->isFlying() || (victimMount && victimMount->isFlying());
-  if (victimAirborne && !thiefAirborne && thief->fight() != victim) {
+  if (victimAirborne && !thiefAirborne) {
     thief->sendTo("You can't backstab a flying person with your feet on the ground!\n\r");
     return FALSE;
   }
@@ -340,8 +340,7 @@ int backstab(TBeing* thief, TBeing* victim) {
         "There's no way to reach that back while you're fighting!\n\r");
       return FALSE;
     }
-    // Airborne victims count as off-feet — they have no feet on the ground.
-    if (victim->getPosition() > POSITION_SITTING && !victimAirborne) {
+    if (victim->getPosition() > POSITION_SITTING) {
       thief->sendTo("Your target must be off their feet to backstab while under attack.\n\r");
       return FALSE;
     }
@@ -363,7 +362,7 @@ int backstab(TBeing* thief, TBeing* victim) {
       thief->sendTo("You aren't skilled enough to backstab during a fight.\n\r");
       return FALSE;
     }
-    if (victim->getPosition() > POSITION_SITTING && !victimAirborne) {
+    if (victim->getPosition() > POSITION_SITTING) {
       thief->sendTo("Your target must be off their feet to backstab mid-fight.\n\r");
       return FALSE;
     }
