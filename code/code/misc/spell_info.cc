@@ -10,6 +10,7 @@
 /////////////////////////////////////////////////////////////////
 
 #include "discipline.h"
+#include "disc_cleric_aegis.h"
 #include "disc_mage_water.h"
 #include "extern.h"
 #include "spell2.h"
@@ -1457,6 +1458,13 @@ void buildSpellArray() {
     LIFEFORCE_0, PRAY_500, TAR_AREA | TAR_IGNORE, SYMBOL_STRESS_45, "", "", "",
     "", START_80, LEARN_5, START_DO_50, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_PRAYERS, 0.02, COMP_GESTURAL | COMP_VERBAL, 0);
+
+  discArray[SPELL_CONSECRATE] = new spellInfo(SPELL_CLERIC, DISC_AEGIS,
+    DISC_AEGIS, STAT_WIS, "consecrate", TASK_NORMAL, LAG_3, POSITION_SITTING,
+    MANA_0, LIFEFORCE_0, PRAY_400, TAR_AREA | TAR_IGNORE, SYMBOL_STRESS_75, "",
+    "", "", "", START_60, LEARN_5, START_DO_50, LEARN_DO_5, START_DO_NO,
+    LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.04, COMP_GESTURAL | COMP_VERBAL, 0);
+  registerConsecrateRoomAffect();
 
   // disc_hand_of_god
 

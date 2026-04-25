@@ -233,6 +233,8 @@ enum spellNumT {
   SPELL_KNIT_BONE,
   SPELL_RELIVE,
   SPELL_CRUSADE,
+  SPELL_CONSECRATE,
+  SPELL_CONSECRATE_AFFECT,
 
   // end of cleric
 

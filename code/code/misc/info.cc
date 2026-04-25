@@ -1395,6 +1395,7 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme,
       case SPELL_SANCTUARY:
       case SPELL_RELIVE:
       case SPELL_CRUSADE:
+      case SPELL_CONSECRATE:
       case SPELL_CURE_PARALYSIS:
       case SPELL_SECOND_WIND:
       case SPELL_HEROES_FEAST:
@@ -2007,6 +2008,13 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme,
         }
         break;
       // Not in discarray since it's not a skill
+      case SPELL_CONSECRATE_AFFECT:
+        if (show && aff->shouldGenerateText()) {
+          str +=
+            format("Affected: Consecration.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
       case SPELL_AURA_MIGHT:
         if (show && aff->shouldGenerateText()) {
           str += format("Affected: Aura of Might.  Approx. duration : %s\n\r") %

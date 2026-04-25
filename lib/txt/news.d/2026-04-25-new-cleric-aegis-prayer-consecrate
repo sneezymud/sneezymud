@@ -1,0 +1,14 @@
+New Cleric Aegis Prayer: Consecrate
+Clerics now have access to a new room-affecting protection prayer!
+
+Consecrate hallows the ground around the cleric, creating a circle of
+holy light that protects everyone within from fear, life drain, and
+paralysis - the favored attacks of undead and other unholy creatures.
+The consecration also makes those within more vulnerable to holy
+damage, giving clerics an edge when smiting evil.
+
+Existing fear is cleansed on cast, and active paralysis recovers more
+quickly within the circle.  The room is brightly lit for the duration
+(about two minutes), and recasting refreshes the consecration in place.
+
+See 'help consecrate' for more details.
