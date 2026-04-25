@@ -284,9 +284,11 @@ int TBeing::doStab(const char* argument, TBeing* vict) {
     return FALSE;
   }
   rc = stab(this, victim);
+  const int lagRc = rc;
 
   // Clean up locally-resolved victim before the DELETE_THIS early return so
-  // combined DELETE_THIS | DELETE_VICT doesn't leak it.
+  // combined DELETE_THIS | DELETE_VICT doesn't leak it. lagRc preserves the
+  // original DELETE_VICT bit so addSkillLag still applies its kill cap.
   if (IS_SET_DELETE(rc, DELETE_VICT) && !vict) {
     delete victim;
     victim = nullptr;
@@ -296,8 +298,8 @@ int TBeing::doStab(const char* argument, TBeing* vict) {
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return rc;
 
-  if (rc)
-    addSkillLag(SKILL_STABBING, rc);
+  if (lagRc)
+    addSkillLag(SKILL_STABBING, lagRc);
 
   return rc;
 }
