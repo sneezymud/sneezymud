@@ -1,0 +1,13 @@
+Consecrate is an aegis prayer that hallows the ground around the cleric,
+creating a circle of holy light that protects all within from the dark
+magicks favored by undead and other unholy creatures.
+
+While the consecration holds, every being in the room - friend or foe -
+gains substantial resistance to fear, drain, and paralysis, and becomes
+more vulnerable to holy damage.  Existing fear is cleansed on cast, and
+active paralysis recovers more quickly within the circle.
+
+The room is bathed in holy light for the duration.  The consecration
+fades after about two minutes; recasting refreshes it in place.
+
+Cure paralysis remains the only way to instantly free a held target.

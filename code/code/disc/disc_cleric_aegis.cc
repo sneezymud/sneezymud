@@ -1384,3 +1384,193 @@ void bless(TBeing* c, TBeing* victim) {
 
   bless(c, victim, level, c->getSkillValue(spell), spell);
 }
+
+namespace {
+  // Sized so affectJoin's AVG_DUR_YES averaging stabilizes well above zero
+  // between room ticks; matches the deikhan aura pattern.
+  const int CONSECRATE_BUFF_DURATION = 9;
+
+  // Doubles paralysis recovery rate (room ticks every 3 combat pulses).
+  const int CONSECRATE_PARA_DECAY = 3;
+
+  void consecrateRoomTick(TRoom* room, RoomAffectData& affect);
+  void consecrateRoomExpire(TRoom* room, const RoomAffectData& affect);
+
+  sstring consecrateLookDesc(bool here) {
+    return (format("<Y>A circle of consecrated ground glows softly with holy "
+                   "light %s.<z>\n\r") %
+             (here ? "here" : "there"))
+      .str();
+  }
+
+  const RoomAffectVTable kConsecrateRoomAffect = {
+    .onTick = &consecrateRoomTick,
+    .onExpire = &consecrateRoomExpire,
+    .lookDesc = &consecrateLookDesc,
+  };
+}  // namespace
+
+void registerConsecrateRoomAffect() {
+  registerRoomAffect(SPELL_CONSECRATE, &kConsecrateRoomAffect);
+}
+
+namespace {
+  void applyConsecrateBuff(TBeing* victim, int level) {
+    struct ImmunityMod {
+        immuneTypeT type;
+        int amount;
+    };
+    // Negative HOLY immunity makes undead/demons (who usually carry strong
+    // holy resistance) take more damage from cleric attacks; PCs almost never
+    // have holy immunity so the debuff is effectively no-op for them.
+    const ImmunityMod mods[] = {
+      {IMMUNE_FEAR, 60},
+      {IMMUNE_PARALYSIS, 40},
+      {IMMUNE_DRAIN, 50},
+      {IMMUNE_HOLY, -10},
+    };
+    for (auto m : mods) {
+      affectedData aff;
+      // SPELL_CONSECRATE_AFFECT has no discArray entry, so the affect-update
+      // loop's renew/wear-off message paths early-return — silent refresh.
+      aff.type = SPELL_CONSECRATE_AFFECT;
+      aff.level = level;
+      aff.duration = CONSECRATE_BUFF_DURATION;
+      aff.location = APPLY_IMMUNITY;
+      aff.modifier = m.type;
+      aff.modifier2 = m.amount;
+      aff.bitvector = 0;
+      victim->affectJoin(victim, &aff, AVG_DUR_YES, AVG_EFF_YES, false);
+    }
+  }
+
+  void shortenParalysis(TBeing* victim) {
+    for (affectedData* af = victim->affected; af; af = af->next) {
+      if (af->type != SPELL_PARALYZE)
+        continue;
+      af->duration -= CONSECRATE_PARA_DECAY;
+      if (af->duration < 0)
+        af->duration = 0;
+    }
+  }
+
+  void consecrateRoomTick(TRoom* room, RoomAffectData& affect) {
+    // Ambient pulse to adjacent rooms every ~18s (5 ticks at SPEC_PROCS).
+    if (affect.duration % 5 == 0) {
+      MakeNoise(room->in_room, "",
+        "<Y>A warm holy light glows from nearby.<z>\n\r");
+    }
+
+    // Snapshot before iterating; victims may be removed mid-loop.
+    std::vector<TBeing*> targets;
+    for (StuffIter it = room->stuff.begin(); it != room->stuff.end(); ++it) {
+      if (auto* victim = dynamic_cast<TBeing*>(*it))
+        targets.push_back(victim);
+    }
+    for (auto* victim : targets) {
+      if (!victim)
+        continue;
+      if (std::find(room->stuff.begin(), room->stuff.end(), victim) ==
+          room->stuff.end())
+        continue;
+      if (victim->getPosition() == POSITION_DEAD)
+        continue;
+
+      applyConsecrateBuff(victim, affect.level);
+      shortenParalysis(victim);
+    }
+  }
+
+  void consecrateRoomExpire(TRoom* room, const RoomAffectData& affect) {
+    // modifier2 records whether this cast set ROOM_ALWAYS_LIT.
+    if (affect.modifier2 == 1)
+      room->removeRoomFlagBit(ROOM_ALWAYS_LIT);
+
+    MakeNoise(room->in_room,
+      "<Y>The holy light of the consecration fades away.<z>\n\r",
+      "<Y>The warm holy light from nearby fades away.<z>\n\r");
+  }
+}  // namespace
+
+void consecrate(TBeing* ch) {
+  if (!bPassClericChecks(ch, SPELL_CONSECRATE))
+    return;
+
+  if (ch->roomp->isRoomFlag(ROOM_NO_MAGIC)) {
+    ch->sendTo(
+      "Your prayer is rejected by some unholy force in this place.\n\r");
+    ch->deityIgnore(SILENT_YES);
+    return;
+  }
+
+  if (!ch->bSuccess(ch->getSkillValue(SPELL_CONSECRATE), ch->getPerc(),
+        SPELL_CONSECRATE)) {
+    ch->deityIgnore();
+    return;
+  }
+
+  int level = ch->getSkillLevel(SPELL_CONSECRATE);
+  TRoom* room = ch->roomp;
+
+  const int CONSECRATE_DURATION = 33;  // ~120s at SPEC_PROCS cadence
+
+  // Only mark ourselves as the light source if we actually set the flag.
+  int light_was_set = room->isRoomFlag(ROOM_ALWAYS_LIT) ? 0 : 1;
+  if (light_was_set)
+    room->setRoomFlagBit(ROOM_ALWAYS_LIT);
+
+  if (auto* existing = room->getRoomAffect(SPELL_CONSECRATE)) {
+    existing->duration = CONSECRATE_DURATION;
+    existing->level = level;
+    // Take ownership if this recast newly turned the flag on (e.g., the
+    // original cast was on an already-lit room and that source has since gone).
+    if (light_was_set)
+      existing->modifier2 = 1;
+  } else {
+    RoomAffectData affect;
+    affect.type = SPELL_CONSECRATE;
+    affect.duration = CONSECRATE_DURATION;
+    affect.level = level;
+    affect.modifier2 = light_was_set;
+    affect.casterID = ch->getPlayerID();
+    room->addRoomAffect(affect);
+  }
+
+  act("$n stands tall and consecrates the ground with <Y>blessed light<1>!",
+    TRUE, ch, 0, 0, TO_ROOM);
+  act("You stand tall and consecrate the ground with <Y>blessed light<1>!",
+    TRUE, ch, 0, 0, TO_CHAR);
+
+  MakeNoise(room->in_room, "",
+    "<Y>A warm holy light glows from nearby.<z>\n\r");
+
+  // Apply immunity buffs immediately so occupants are protected from the
+  // moment of cast, not only after the first room tick fires up to 3.6s
+  // later. Paralysis is deliberately not cleansed here; the tick handler
+  // shortens its duration instead, leaving cure paralysis as the only
+  // instant unstick.
+  std::vector<TBeing*> targets;
+  for (StuffIter it = room->stuff.begin(); it != room->stuff.end(); ++it) {
+    if (auto* victim = dynamic_cast<TBeing*>(*it))
+      targets.push_back(victim);
+  }
+  for (auto* victim : targets) {
+    if (!victim)
+      continue;
+    if (std::find(room->stuff.begin(), room->stuff.end(), victim) ==
+        room->stuff.end())
+      continue;
+    if (victim->getPosition() == POSITION_DEAD)
+      continue;
+
+    applyConsecrateBuff(victim, level);
+
+    if (victim->affectedBySpell(SPELL_FEAR)) {
+      victim->affectFrom(SPELL_FEAR);
+      act("$n's fear is washed away by the holy presence.", TRUE, victim, 0, 0,
+        TO_ROOM);
+      act("Your fear is washed away by the holy presence.", TRUE, victim, 0, 0,
+        TO_CHAR);
+    }
+  }
+}

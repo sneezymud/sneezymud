@@ -10,6 +10,7 @@ class CDAegis : public CDiscipline {
     CSkill skSecondWind;
     CSkill skRelive;
     CSkill skCrusade;
+    CSkill skConsecrate;
 
     virtual CDAegis* cloneMe() { return new CDAegis(*this); }
 
@@ -65,3 +66,6 @@ void cureDisease(TBeing*, TBeing*, TMagicItem*, spellNumT);
 void relive(TBeing*, TBeing*);
 
 void crusade(TBeing*);
+
+void consecrate(TBeing*);
+void registerConsecrateRoomAffect();
