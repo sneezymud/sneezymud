@@ -349,12 +349,6 @@ void rebuildCheckgearCaches() {
     zoneData& zone = zone_table[zone_num];
     armorSetLoad localSets;
 
-    for (int cmd_no = 0; cmd_no < (int)zone.cmd_table.size(); ++cmd_no) {
-      resetCom& cmd = zone.cmd_table[cmd_no];
-      if (cmd.command == 'X')
-        localSets.setArmor(cmd.arg3, cmd.arg1, cmd.arg2);
-    }
-
     int currentMobRnum = -1;
     sstring currentZoneName = "Unknown Zone";
     int currentChance = 100;
@@ -362,6 +356,11 @@ void rebuildCheckgearCaches() {
 
     for (int cmd_no = 0; cmd_no < (int)zone.cmd_table.size(); ++cmd_no) {
       resetCom& cmd = zone.cmd_table[cmd_no];
+
+      if (cmd.command == 'X') {
+        localSets.setArmor(cmd.arg3, cmd.arg1, cmd.arg2);
+        continue;
+      }
 
       if (cmd.command == 'M' || cmd.command == 'C' || cmd.command == 'K' ||
           cmd.command == 'R') {
@@ -400,7 +399,7 @@ void rebuildCheckgearCaches() {
       }
 
       if (cmd.command == 'L') {
-        if (cmd.if_flag && cmd.arg4 == 0) {
+        if (cmd.arg4 == 0) {
           for (TLootStructure* tTLoot = tLoot; tTLoot; tTLoot = tTLoot->tNext) {
             if (!in_range(tTLoot->tLevel, cmd.arg1, cmd.arg2))
               continue;
@@ -728,9 +727,6 @@ void bootDb(void) {
   bootPulse("Loading zone table.");
   bootZones();
 
-  bootPulse("Building checkgear caches.");
-  rebuildCheckgearCaches();
-
   // must be done before loading objects
   bootPulse("Loading drug-type information.");
   assign_drug_info();
@@ -804,6 +800,9 @@ void bootDb(void) {
 
   bootPulse("Creating Loot List.");
   sysLootBoot();
+
+  bootPulse("Building checkgear caches.");
+  rebuildCheckgearCaches();
 
   bootPulse("Calculating object load potentials:", false);
   for (i = 0; i < zone_table.size(); i++) {
