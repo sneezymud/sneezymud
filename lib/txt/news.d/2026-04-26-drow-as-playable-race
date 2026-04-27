@@ -1,0 +1,22 @@
+New Playable Race: Drow
+The drow - dark elves of the underdark - are now available as an advanced
+playable race for accounts with at least one level-50 character.
+
+Drow are a glass-cannon spellcaster race: high intelligence, dexterity,
+and charisma offset by frail constitution and poor wisdom.  They have
+infravision, are harder to spot indoors, and resist charm, paralysis,
+and magical sleep.  Their racial pariah status follows them everywhere -
+the cityguards of Grimhaven and Brightmoon attack drow PCs on sight,
+and even their own kin in T'ir Na Z'goth are no friendlier.
+
+A new 'innate' command surfaces racial activated abilities and their
+cooldowns.  Drow get two: short-duration invisibility for slipping
+past hostiles to reach a trainer, and a magical darkness that smothers
+the current room and blinds any occupant lacking infravision or true
+sight (including the drow themselves).  Each is usable about twice per
+game day.
+
+Note for elves: paralysis resistance has been adjusted from 50 to 40
+as part of the racial balance pass.
+
+See 'help drow' and 'help innate' for details.

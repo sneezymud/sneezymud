@@ -1379,6 +1379,9 @@ int TThing::visibility() const {
       cbs += max(1, (eqbonus / 2000));
     else
       cbs += (eqbonus / 6000);
+
+    if (tbt->getRace() == RACE_DROW && roomp->isIndoorSector())
+      cbs += 5;
   }
 
   if (roomp->isForestSector())
@@ -2151,7 +2154,7 @@ bool TBeing::backgroundBonus() const {
       background == HOME_TER_FROGMAN_URBAN ||
       background == HOME_TER_FISHMAN_URBAN ||
       background == HOME_TER_BIRDMAN_URBAN ||
-      background == HOME_TER_TROLL_URBAN) {
+      background == HOME_TER_TROLL_URBAN || background == HOME_TER_DROW_URBAN) {
     return (sector == SECT_ARCTIC_CITY || sector == SECT_TEMPERATE_CITY ||
             sector == SECT_TROPICAL_CITY || sector == SECT_ARCTIC_BUILDING ||
             sector == SECT_TEMPERATE_BUILDING ||
@@ -2204,7 +2207,8 @@ bool TBeing::backgroundBonus() const {
       background == HOME_TER_FROGMAN_MOUNTAIN ||
       background == HOME_TER_FISHMAN_MOUNTAIN ||
       background == HOME_TER_BIRDMAN_MOUNTAIN ||
-      background == HOME_TER_TROLL_MOUNTAIN) {
+      background == HOME_TER_TROLL_MOUNTAIN ||
+      background == HOME_TER_DROW_MOUNTAIN) {
     return (
       sector == SECT_ARCTIC_MOUNTAINS || sector == SECT_TEMPERATE_MOUNTAINS ||
       sector == SECT_TROPICAL_MOUNTAINS || sector == SECT_ARCTIC_CAVE ||
@@ -2234,7 +2238,7 @@ bool TBeing::backgroundBonus() const {
       background == HOME_TER_ORC_HILL || background == HOME_TER_FROGMAN_HILL ||
       background == HOME_TER_FISHMAN_HILL ||
       background == HOME_TER_BIRDMAN_HILL ||
-      background == HOME_TER_TROLL_HILL) {
+      background == HOME_TER_TROLL_HILL || background == HOME_TER_DROW_HILL) {
     return (sector == SECT_TEMPERATE_HILLS || sector == SECT_TROPICAL_HILLS);
   }
 
@@ -2267,7 +2271,8 @@ bool TBeing::backgroundBonus() const {
       background == HOME_TER_ORC_RECLUSE ||
       background == HOME_TER_FROGMAN_RECLUSE ||
       background == HOME_TER_FISHMAN_RECLUSE ||
-      background == HOME_TER_TROLL_RECLUSE) {
+      background == HOME_TER_TROLL_RECLUSE ||
+      background == HOME_TER_DROW_RECLUSE) {
     return (sector == SECT_ARCTIC_FOREST || sector == SECT_TEMPERATE_FOREST ||
             sector == SECT_JUNGLE || sector == SECT_RAINFOREST ||
             sector == SECT_ARCTIC_MOUNTAINS ||
@@ -2290,7 +2295,8 @@ bool TBeing::backgroundBonus() const {
       background == HOME_TER_FROGMAN_VILLAGER ||
       background == HOME_TER_FISHMAN_VILLAGER ||
       background == HOME_TER_BIRDMAN_VILLAGER ||
-      background == HOME_TER_TROLL_VILLAGER) {
+      background == HOME_TER_TROLL_VILLAGER ||
+      background == HOME_TER_DROW_VILLAGER) {
     return (sector == SECT_TEMPERATE_BUILDING ||
             sector == SECT_TROPICAL_BUILDING || sector == SECT_TEMPERATE_ROAD ||
             sector == SECT_TROPICAL_ROAD || sector == SECT_PLAINS ||

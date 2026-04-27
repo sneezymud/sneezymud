@@ -2352,6 +2352,16 @@ void TBeing::statBeing(TBeing* k) {
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
         break;
 
+      case SKILL_DROW_INVIS:
+        str += "Drow Invis (cooldown).\n\r";
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+        break;
+
+      case SKILL_DROW_DARKNESS:
+        str += "Drow Darkness (cooldown).\n\r";
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+        break;
+
       case SPELL_AURA_VENGEANCE:
         str += "Aura of Vengeance.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %

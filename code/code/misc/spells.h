@@ -604,6 +604,10 @@ enum spellNumT {
   SKILL_INEVITABILITY,
   SKILL_COMMON,
 
+  // drow racial innates
+  SKILL_DROW_INVIS,
+  SKILL_DROW_DARKNESS,
+
   // end of generic
 
   // keep this as the last of the true skills

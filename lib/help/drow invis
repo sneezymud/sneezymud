@@ -1,0 +1,23 @@
+Syntax: innate invis
+
+A drow racial innate ability that wraps the drow briefly in shadow,
+rendering them invisible.  The effect is identical to the standard
+invisibility spell - it persists until the drow attacks or until the
+duration expires, and is defeated by detect-invisibility, true sight,
+and similar effects.
+
+The invisibility lasts about four real minutes.  After use, the drow
+must wait roughly half an hour (about twelve mud hours) before
+summoning the shadows again, allowing for approximately two uses per
+game day.
+
+This ability cannot be used in rooms warded against magic.
+
+If the drow is already invisible from another source (a potion, a
+cast spell, or a still-running prior use of this innate) and that
+existing effect cannot have its duration extended, the racial innate
+declines to fire and the cooldown is not consumed - try again once
+the existing invisibility has run down enough to be renewable.
+
+See 'help innate' for the underlying command.
+

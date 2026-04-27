@@ -547,6 +547,24 @@ int cityguard(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
           ch->doAction(fname(tch->name), CMD_GLARE);
         }
         return TRUE;
+      } else if (tch->isPc() && tch->getRace() == RACE_DROW &&
+                 !IS_SET(tch->specials.act, ACT_POLYSELF) &&
+                 (ch->inGrimhaven() || ch->inBrightmoon())) {
+        if (!hasWandered && !targetHasWandered) {
+          if (!ch->checkSoundproof())
+            act("$n screams 'Foul drow!  Get thee back to the underdark!'",
+              false, ch, nullptr, nullptr, TO_ROOM);
+
+          rc = ch->takeFirstHit(*tch);
+          if (IS_SET_DELETE(rc, DELETE_VICT)) {
+            delete tch;
+            tch = nullptr;
+          } else if (IS_SET_DELETE(rc, DELETE_THIS))
+            return DELETE_THIS;
+        } else if (!::number(0, 9)) {
+          ch->doAction(fname(tch->name), CMD_GLARE);
+        }
+        return true;
       }
 
     } else {

@@ -1120,6 +1120,13 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme,
     af2 = aff->next;
 
     switch (aff->type) {
+      // Racial innate cooldowns are surfaced via the 'innate' command,
+      // not the 'affects' list. These are intentionally silent — do not
+      // fold into the BOGUS catch-all at the bottom of this switch.
+      case SKILL_DROW_INVIS:
+      case SKILL_DROW_DARKNESS:
+        break;
+
       case SKILL_TRACK:
       case SKILL_SEEKWATER:
         str += format("Tracking: %s\n\r") %

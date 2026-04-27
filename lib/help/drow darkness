@@ -1,0 +1,29 @@
+Syntax: innate darkness
+
+A drow racial innate ability that smothers the current room in an
+unnatural pall of magical darkness.  This is no mere absence of light
+but a created darkness that mundane light sources cannot pierce -
+a torch lit within is no help at all.
+
+The darkness blinds every creature in the room that lacks infravision
+or true sight, including the drow who summoned it.  Drow themselves
+have infravision and so can see normally through their own darkness;
+most surface races - humans, elves, ogres - are completely blinded.
+Other races with infravision (dwarves, hobbits, gnomes, goblins, and
+similar) are likewise unaffected.
+
+The darkness lasts about four real minutes and persists in the room
+even after the drow leaves it.  This makes it useful for breaking
+engagement and escaping pursuit, since pursuers without infravision
+will be left blinded in the room while the drow slips away.
+
+The drow must wait roughly half an hour (about twelve mud hours)
+between uses, allowing for approximately two uses per game day.
+
+This ability cannot be used in rooms that are peaceful, warded
+against magic, or under permanent magical lighting (temples,
+sun-blessed chambers, and certain shrines).  Casting is refused
+upfront in such rooms and the cooldown is not consumed.
+
+See 'help innate' for the underlying command.
+

@@ -54,6 +54,7 @@ class Room {
     static constexpr int TROLL_INN = 30935;
     static constexpr int KALYSIA_INN = 14233;
     static constexpr int BULLYWUG_INN = 45054;
+    static constexpr int DROW_START = 9999;
     static constexpr int NEWBIE = 584;
     static constexpr int TAILOR_BLACKSMITH_ENTRANCE = 46592;
     static constexpr int TAILOR = 46594;

@@ -9,6 +9,7 @@
 //
 /////////////////////////////////////////////////////////////////
 
+#include "cmd_innate.h"
 #include "discipline.h"
 #include "disc_cleric_aegis.h"
 #include "disc_mage_water.h"
@@ -3843,4 +3844,7 @@ void buildSpellArray() {
           spell->name % spell->start % spell->learn);
     }
   }
+
+  // Racial innate room affects (no discArray entries — not learned skills).
+  registerDrowDarknessRoomAffect();
 }
