@@ -53,25 +53,19 @@ sstring TTreasure::statObjInfo() const {
       a = "\n\r<R>Invalid Immortal Exchange coin: no serial number.<1>\n\r";
     } else {
       TDatabase db(DB_SNEEZY);
-      db.query(
-        "select *, (select name from player where id = c1.created_by) as "
-        "name_created_by, (select name from player where id = c1.created_for) "
-        "as name_created_for, (select name from player where id = "
-        "c1.redeemed_by) as name_redeemed_by, (select name from player where "
-        "id = c1.redeemed_for) as name_redeemed_for from "
-        "immortal_exchange_coin c1 where c1.k_coin = %i",
+      db.query("select * from immortal_exchange_coin where k_coin = %i",
         getSerialNumber());
       if (db.fetchRow()) {
         a = format("\n\rImmortal Exchange coin serial number: %i\n\r") %
             getSerialNumber();
-        a += format("Created by %s on %s.\n\r") % db["name_created_by"].cap() %
+        a += format("Created by %s on %s.\n\r") % db["created_by_name"].cap() %
              db["date_created"];
-        a += format("Created for %s.\n\r") % db["name_created_for"].cap();
-        if (db["name_redeemed_by"].length() > 0)
+        a += format("Created for %s.\n\r") % db["created_for_name"].cap();
+        if (db["redeemed_by_name"].length() > 0)
           a += format("Redeemed by %s on %s.\n\r") %
-               db["name_redeemed_by"].cap() % db["date_redeemed"];
-        if (db["name_redeemed_for"].length() > 0)
-          a += format("Redeemed for %s.\n\r") % db["name_redeemed_for"].cap();
+               db["redeemed_by_name"].cap() % db["date_redeemed"];
+        if (db["redeemed_for_name"].length() > 0)
+          a += format("Redeemed for %s.\n\r") % db["redeemed_for_name"].cap();
         // add a warning...
         if (db["date_redeemed"].length() > 0)
           a +=

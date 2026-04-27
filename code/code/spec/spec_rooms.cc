@@ -1368,121 +1368,174 @@ int monkQuestProcFall(TBeing* ch, cmdTypeT cmd, const char*, TRoom* rp) {
   return TRUE;
 }
 
-int blazingroom (TBeing*, cmdTypeT cmd, const char*, TRoom* roomp) {
-  TBeing* tb;
-  int rc;
-  
-  if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+namespace {
+  void closeAndLockExit(TRoom& room, roomDirData& door, dirTypeT dir) {
+    const sstring firstPart = format("The door to the %s") % dirs[dir];
 
-  if (::number(0, 100))
-    return FALSE;
+    if (!IS_SET(door.condition, EXIT_CLOSED)) {
+      SET_BIT(door.condition, EXIT_CLOSED);
+      room.sendTo(firstPart + " swings closed.\n\r");
+    }
 
-  // check for player in this room if so
-  for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end(); ++it) {
-    if ((tb = dynamic_cast<TBeing*>(*it)) && tb->isPc()) {
-      int flamDam = ::number(20, 50);
-      tb->sendTo(COLOR_BASIC,
-        "<R>The blazing heat around you erupts into a raging inferno.<1>\n\r");
-      tb->sendTo(COLOR_BASIC,
-        "<r>The flames engulf you, singeing your flesh!<1>\n\r");
-      if (tb->isAgile(50)) {
-      flamDam = flamDam / 2;
-      tb->sendTo("You manage to dodge the worst of the flames.\n\r");
-      }
-      rc = tb->reconcileDamage(tb, flamDam, DAMAGE_TRAP_FIRE);
-      if (IS_SET_DELETE(rc, DELETE_VICT)) {
-        delete tb;
-        continue;
-      }
-
+    if (!IS_SET(door.condition, EXIT_LOCKED)) {
+      SET_BIT(door.condition, EXIT_LOCKED);
+      room.sendTo(firstPart + " locks with an audible *click*.\n\r");
     }
   }
 
-  return TRUE;
+  void closeAndLockExits(TRoom& room) {
+    for (dirTypeT dir = MIN_DIR; dir < MAX_DIR; dir++) {
+      roomDirData* exit = room.dir_option[dir];
+
+      if (!exit) {
+        continue;
+      }
+
+      closeAndLockExit(room, *exit, dir);
+
+      if (TRoom* adjacent = real_roomp(exit->to_room)) {
+        const dirTypeT rdir = rev_dir(dir);
+
+        if (roomDirData* rexit = adjacent->dir_option[rdir]) {
+          closeAndLockExit(*adjacent, *rexit, rdir);
+        }
+      }
+    }
+  }
+
+  struct DamageEffect {
+      spellNumT type;
+
+      // Define some reasonable defaults for damage range
+      int minDam{20};
+      int maxDam{50};
+
+      // onTrigger is optional, as you might want to only display a single trigger message for multiple effects
+      const char* onTrigger{nullptr};
+
+      // onDamage is required, as it describes the effect of this specific damage type
+      const char* onDamage;
+
+      // onSave is optional, as a save being possible depends on the behavior of the proc itself
+      const char* onSave{nullptr};
+
+      // All damage types should have an onImmune message to avoid confusion for
+      // players immune to the damage. This generic default should cover most
+      // cases, but it can be overridden if desired.
+      const char* onImmune{"You barely notice it."};
+  };
+
+  void damageRoomOccupants(TRoom& room,
+    std::initializer_list<DamageEffect> effects) {
+    std::vector<TBeing*> targets;
+
+    for (TThing* thing : room.stuff) {
+      if (auto* tb = dynamic_cast<TBeing*>(thing); tb && tb->isPc()) {
+        targets.push_back(tb);
+      }
+    }
+
+    std::vector<TBeing*> toDelete;
+
+    for (auto* tb : targets) {
+      // Re-validate: earlier damage may have moved this PC out of the room
+      // (e.g. linkdead PCs get moved to Room::STORAGE during makeCorpse)
+      if (tb->roomp != &room) {
+        continue;
+      }
+
+      auto sendToChar = [tb](const char* msg) {
+        colorAct(COLOR_ROOMS, msg, false, tb, nullptr, nullptr, TO_CHAR);
+      };
+
+      for (const auto& effect : effects) {
+        if (effect.onTrigger) {
+          sendToChar(effect.onTrigger);
+        }
+
+        if (tb->isImmune(getTypeImmunity(effect.type), WEAR_BODY)) {
+          sendToChar(effect.onImmune);
+          continue;
+        }
+
+        int dam = ::number(effect.minDam, effect.maxDam);
+        sendToChar(effect.onDamage);
+
+        if (effect.onSave && tb->isAgile(0)) {
+          dam /= 2;
+          sendToChar(effect.onSave);
+        }
+
+        if (tb->reconcileDamage(tb, dam, effect.type) == -1) {
+          toDelete.push_back(tb);
+          break;
+        }
+      }
+    }
+
+    for (auto* tb : toDelete) {
+      delete tb;
+    }
+  }
+
+  struct ShouldDamageRoomParams {
+      TRoom* roomp;
+      cmdTypeT cmd;
+      int triggerChance;
+  };
+
+  bool shouldDamageRoom(ShouldDamageRoomParams params) {
+    // Room procs get called with CMD_GENERIC_PULSE every 3.6 real seconds, so a
+    // high trigger chance means the damage will occur very frequently. Adjust
+    // accordingly.
+    return params.roomp && params.cmd == CMD_GENERIC_PULSE &&
+           percentChance(params.triggerChance);
+  }
+}  // namespace
+
+int blazingroom(TBeing*, cmdTypeT cmd, const char*, TRoom* roomp) {
+  if (!shouldDamageRoom({.roomp = roomp, .cmd = cmd, .triggerChance = 1})) {
+    return false;
+  }
+
+  damageRoomOccupants(*roomp,
+    {
+      {
+        .type = DAMAGE_TRAP_FIRE,
+        .onTrigger = "<R>The blazing heat around you erupts into a raging "
+                     "inferno.<1>",
+        .onDamage = "<r>The flames engulf you, singeing your flesh!<1>",
+        .onSave = "You manage to dodge the worst of the flames.",
+        .onImmune = "You barely feel the heat of the flames.",
+      },
+    });
+
+  return true;
 }
 
 int BankVault(TBeing*, cmdTypeT cmd, const char*, TRoom* roomp) {
-  TRoom* rp;
-  TBeing* tb;
-  int rc;
-
-  if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
-
-  if (::number(0, 100))
-    return FALSE;
-
-  // close and lock vault doors
-  //  vlogf(LOG_PEEL, "Bank: closing/locking vault doors");
-
-  if (roomp->number == 31780) {
-    if (!IS_SET(roomp->dir_option[DIR_WEST]->condition, EXIT_CLOSED)) {
-      SET_BIT(roomp->dir_option[DIR_WEST]->condition, EXIT_CLOSED);
-      roomp->sendTo("The door to the west swings closed.\n\r");
-    }
-    if (!IS_SET(roomp->dir_option[DIR_WEST]->condition, EXIT_LOCKED)) {
-      SET_BIT(roomp->dir_option[DIR_WEST]->condition, EXIT_LOCKED);
-      roomp->sendTo("The door to the west locks with an audible *click*.\n\r");
-    }
-
-    rp = real_roomp(31779);
-    if (!IS_SET(rp->dir_option[DIR_EAST]->condition, EXIT_CLOSED)) {
-      SET_BIT(rp->dir_option[DIR_EAST]->condition, EXIT_CLOSED);
-      rp->sendTo("The door to the east swings closed.\n\r");
-    }
-    if (!IS_SET(rp->dir_option[DIR_EAST]->condition, EXIT_LOCKED)) {
-      SET_BIT(rp->dir_option[DIR_EAST]->condition, EXIT_LOCKED);
-      rp->sendTo("The door to the east locks with an audible *click*.\n\r");
-    }
+  if (!shouldDamageRoom({.roomp = roomp, .cmd = cmd, .triggerChance = 1})) {
+    return false;
   }
 
-  if (roomp->number == 31786) {
-    if (!IS_SET(roomp->dir_option[DIR_WEST]->condition, EXIT_CLOSED)) {
-      SET_BIT(roomp->dir_option[DIR_WEST]->condition, EXIT_CLOSED);
-      roomp->sendTo("The door to the west swings closed.\n\r");
-    }
-    if (!IS_SET(roomp->dir_option[DIR_WEST]->condition, EXIT_LOCKED)) {
-      SET_BIT(roomp->dir_option[DIR_WEST]->condition, EXIT_LOCKED);
-      roomp->sendTo("The door to the west locks with an audible *click*.\n\r");
-    }
+  closeAndLockExits(*roomp);
+  damageRoomOccupants(*roomp,
+    {
+      {
+        .type = DAMAGE_TRAP_ACID,
+        .onTrigger =
+          "<G>Acidic gas shoots out of small holes in the ceiling.<1>",
+        .onDamage = "<r>The acid burns you!<1>",
+        .onImmune = "You hardly notice the acid running over you.",
+      },
+      {
+        .type = DAMAGE_TRAP_POISON,
+        .onDamage = "<r>You choke uncontrollably on the poison!<1>",
+        .onImmune = "The poisonous vapors don't affect you.",
+      },
+    });
 
-    rp = real_roomp(31785);
-    if (!IS_SET(rp->dir_option[DIR_EAST]->condition, EXIT_CLOSED)) {
-      SET_BIT(rp->dir_option[DIR_EAST]->condition, EXIT_CLOSED);
-      rp->sendTo("The door to the east swings closed.\n\r");
-    }
-    if (!IS_SET(rp->dir_option[DIR_EAST]->condition, EXIT_LOCKED)) {
-      SET_BIT(rp->dir_option[DIR_EAST]->condition, EXIT_LOCKED);
-      rp->sendTo("The door to the east locks with an audible *click*.\n\r");
-    }
-  }
-
-  // check for player in this room and poison if so
-  for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end(); ++it) {
-    if ((tb = dynamic_cast<TBeing*>(*it)) && tb->isPc()) {
-      tb->sendTo(COLOR_BASIC,
-        "<G>Acidic gas shoots out of small holes in the ceiling.<1>\n\r");
-      tb->sendTo(COLOR_BASIC,
-        "<r>It burns your skin and you choke uncontrollably!<1>\n\r");
-
-      //  vlogf(LOG_PEEL, format("Bank: %s caught in vault") %  tb->getName());
-
-      rc = tb->reconcileDamage(tb, ::number(20, 50), DAMAGE_TRAP_POISON);
-      if (IS_SET_DELETE(rc, DELETE_VICT)) {
-        delete tb;
-        continue;
-      }
-
-      rc = tb->reconcileDamage(tb, ::number(20, 50), DAMAGE_TRAP_ACID);
-      if (IS_SET_DELETE(rc, DELETE_VICT)) {
-        delete tb;
-        continue;
-      }
-    }
-  }
-
-  return TRUE;
+  return true;
 }
 
 int BankMainEntrance(TBeing*, cmdTypeT cmd, const char*, TRoom* roomp) {
@@ -1734,54 +1787,21 @@ int boulderRoom(TBeing*, cmdTypeT cmd, const char*, TRoom* roomp) {
   }
 }
 
-extern int sleepTagControl(TBeing*, cmdTypeT, const char*, TRoom*);
-extern int sleepTagRoom(TBeing*, cmdTypeT, const char*, TRoom*);
-extern int bankRoom(TBeing*, cmdTypeT, const char*, TRoom*);
-extern int healing_room(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp);
-extern int emergency_room(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp);
-extern int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp);
-extern int blazingroom(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp);
-
-int bogusRoomProc(TBeing*, cmdTypeT, const char*, TRoom* rp) {
-  vlogf(LOG_PROC,
-    format("WARNING: %s is running around with bogus spec proc #%d") %
-      rp->getName() % rp->spec);
-  return FALSE;
-}
-
 int TRoom::checkSpec(TBeing* ch, cmdTypeT cmd, const char* arg, TThing*) {
-  if (spec && spec <= NUM_ROOM_SPECIALS)
-    return (roomSpecials[spec].proc)(ch, cmd, arg, this);
-  return FALSE;
-}
+  if (spec == 0) {
+    return false;
+  }
 
-TRoomSpecs roomSpecials[NUM_ROOM_SPECIALS + 1] = {
-  {FALSE, "UNUSED", bogusRoomProc}, {FALSE, "UNUSED", bogusRoomProc},  // 1
-  {FALSE, "Bank Main Entrance", BankMainEntrance},
-  {FALSE, "Bank Vault", BankVault}, {FALSE, "Secret Doors", SecretDoors},
-  {FALSE, "Secret Portal Doors", SecretPortalDoors},  // 5
-  {FALSE, "Whirlpool", Whirlpool}, {FALSE, "Bank Room", bankRoom},
-  {FALSE, "belimus Blow Hole", belimusBlowHole},
-  {FALSE, "belimus Lungs", belimusLungs},
-  {FALSE, "belimus Stomach", belimusStomach},  // 10
-  {FALSE, "belimus Throat", belimusThroat},
-  {FALSE, "boulder Room", boulderRoom}, {FALSE, "UNUSED", bogusRoomProc},
-  {FALSE, "dayGate Room", dayGateRoom},
-  {FALSE, "duergar Water", duergarWater},  // 15
-  {FALSE, "UNUSED", bogusRoomProc}, {FALSE, "emergency room", emergency_room},
-  {FALSE, "UNUSED", bogusRoomProc}, {FALSE, "healing room", healing_room},
-  {FALSE, "monk Quest Proc Fall", monkQuestProcFall},  // 20
-  {FALSE, "monk Quest Proc Land", monkQuestProcLand},
-  {FALSE, "moonGate Room", moonGateRoom}, {FALSE, "noise Boom", noiseBoom},
-  {FALSE, "oft frequented room", oft_frequented_room},
-  {FALSE, "UNUSED", bogusRoomProc},  // 25
-  {FALSE, "prison Dump", prisonDump},
-  {FALSE, "random Mob Distribution", randomMobDistribution},
-  {FALSE, "sleep Tag Control", sleepTagControl},
-  {FALSE, "sleep Tag Room", sleepTagRoom}, {FALSE, "slide", slide},  // 30
-  {FALSE, "the Knot", theKnot}, {FALSE, "weird Circle", weirdCircle},
-  {TRUE, "blazingroom", blazingroom},
-  {FALSE, "last proc", bogusRoomProc}};
+  const auto* const config = findRoomSpec(spec);
+
+  if (!config) {
+    vlogf(LOG_PROC,
+      format("WARNING: room %d has unknown spec proc #%d") % number % spec);
+    return false;
+  }
+
+  return config->proc(ch, cmd, arg, this);
+}
 
 // the following procs are unused but preserved here for future interest
 /*

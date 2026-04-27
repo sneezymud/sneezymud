@@ -46,60 +46,123 @@ bool TObj::canBeMailed(sstring name) const {
   return canMail;
 }
 
-bool has_mail(const sstring recipient) {
+bool has_mail(int player_id) {
   TDatabase db(DB_SNEEZY);
 
-  db.query(
-    "select count(*) as count from mail where port=%i and "
-    "lower(mailto)=lower('%s')",
-    gamePort, recipient.c_str());
+  db.query("select 1 from mail where port=%i and to_id=%i limit 1", gamePort,
+    player_id);
 
-  if (db.fetchRow() && convertTo<int>(db["count"]) != 0)
-    return TRUE;
-
-  return FALSE;
+  return db.fetchRow();
 }
 
-void store_mail(const char* to, const char* from, const char* message_pointer,
-  int talens, int rent_id) {
+void store_mail(int to_id, const char* from_name, int from_id,
+  const char* message_pointer, int talens, int rent_id) {
   TDatabase db(DB_SNEEZY);
-  time_t mail_time;
-  char* tmstr;
 
-  mail_time = time(0);
-  tmstr = asctime(localtime(&mail_time));
-  *(tmstr + strlen(tmstr) - 1) = '\0';
+  // mailfrom is a denormalized name column (not an FK) because system mail and
+  // NPC-sent mail have no player row to reference. to_id is a proper FK because
+  // recipients are always players.
+  // from_id: 0 = system/NPC sender -> null via NULLIF (FK requires null, not 0)
+  // rent_id: 0 = no attachment -> null via NULLIF (FK requires null, not 0)
+  db.query(
+    "insert into mail (port, mailfrom, from_id, to_id, timesent, content, "
+    "talens, rent_id) values (%i, '%s', NULLIF(%i,0), %i, NOW(), '%s', %i, "
+    "NULLIF(%i,0))",
+    gamePort, from_name, from_id, to_id, message_pointer, talens, rent_id);
+}
 
-  if (!strcmp(to, "faction")) {
-    TDatabase fm(DB_SNEEZY);
-    fm.query(
-      "select name from factionmembers where faction=(select faction from "
-      "factionmembers where name='%s')",
-      from);
-
-    while (fm.fetchRow()) {
-      db.query(
-        "insert into mail (port, mailfrom, mailto, timesent, content, talens, "
-        "rent_id) values (%i, '%s', '%s', '%s', '%s', 0, 0)",
-        gamePort, from, fm["name"].c_str(), tmstr, message_pointer);
+int store_faction_mail(Descriptor* sender_desc, int sender_id,
+  const char* sender_name, const char* message) {
+  TDatabase fm(DB_SNEEZY);
+  int members = 0;
+  // Deliberately includes the sender as a recipient (serves as confirmation)
+  fm.query(
+    "SELECT fm.player_id, p.name FROM factionmembers fm "
+    "JOIN player p ON fm.player_id = p.id "
+    "WHERE fm.faction="
+    "(SELECT faction FROM factionmembers WHERE player_id=%i)",
+    sender_id);
+  while (fm.fetchRow()) {
+    ++members;
+    if (ignoreList::isMailIgnored(sender_desc, fm["name"])) {
+      continue;
     }
-  } else {
-    db.query(
-      "insert into mail (port, mailfrom, mailto, timesent, content, talens, "
-      "rent_id) values (%i, '%s', '%s', '%s', '%s', %i, %i)",
-      gamePort, from, to, tmstr, message_pointer, talens, rent_id);
+    store_mail(convertTo<int>(fm["player_id"]), sender_name, sender_id, message,
+      0, 0);
   }
-} /* store mail */
+  return members;
+}
 
-sstring read_delete(const sstring recipient, const char* recipient_formatted,
+void Descriptor::dispatchMail(const char* body) {
+  if (ignoreList::isMailIgnored(this, name)) {
+    vlogf(LOG_OBJ, format("Mail: mail sent by %s was ignored by %s.") %
+                     character->getName() % name);
+    obj = nullptr;
+    *(name) = '\0';
+    amount = 0;
+    writeToQ("Message sent!\n\r");
+    return;
+  }
+
+  if (sstring(name) == "faction") {
+    int sent = store_faction_mail(this, character->getPlayerID(),
+      character->getName().c_str(), body);
+    if (sent == 0) {
+      writeToQ("No faction members found! Mail not sent.\n\r");
+    } else {
+      writeToQ("Message sent!\n\r");
+    }
+    obj = nullptr;
+    *(name) = '\0';
+    amount = 0;
+    return;
+  }
+
+  int to_id = getPlayerIdByName(name);
+  if (to_id == 0) {
+    writeToQ("That player no longer exists! Mail not sent.\n\r");
+    obj = nullptr;
+    *(name) = '\0';
+    amount = 0;
+    return;
+  }
+
+  int rent_id = 0;
+  if (obj && obj->canBeMailed(name)) {
+    ItemSaveDB is("mail", GH_MAIL_SHOP);
+    rent_id = is.raw_write_item(obj, -1, 0);
+    vlogf(LOG_OBJ,
+      format("Mail: %s mailing %s (vnum:%i) to %s rented as rent_id:%i") %
+        character->getName() % obj->getName() % obj->objVnum() % name %
+        rent_id);
+    delete obj;
+  }
+
+  if (amount > 0) {
+    vlogf(LOG_OBJ, format("Mail: %s mailing %i talens to %s") %
+                     character->getName() % amount % name);
+    character->addToMoney(-amount, GOLD_XFER);
+  }
+
+  store_mail(to_id, character->getName().c_str(), character->getPlayerID(),
+    body, amount, rent_id);
+
+  obj = nullptr;
+  *(name) = '\0';
+  amount = 0;
+  writeToQ("Message sent!\n\r");
+}
+
+sstring read_delete(int player_id, const char* recipient_formatted,
   sstring& from, int& talens, int& rent_id) {
   TDatabase db(DB_SNEEZY);
-  sstring buf;
 
   db.query(
-    "select mailfrom, timesent, content, mailid, talens, rent_id from mail "
-    "where port=%i and lower(mailto)=lower('%s')",
-    gamePort, recipient.c_str());
+    "select mailfrom, DATE_FORMAT(timesent, '%%a %%b %%e %%T %%Y') as "
+    "timesent, content, mailid, talens, rent_id from mail "
+    "where port=%i and to_id=%i "
+    "order by mailid asc limit 1",
+    gamePort, player_id);
   if (!db.fetchRow())
     return "error!";
 
@@ -107,14 +170,17 @@ sstring read_delete(const sstring recipient, const char* recipient_formatted,
   talens = convertTo<int>(db["talens"]);
   rent_id = convertTo<int>(db["rent_id"]);
 
-  buf = format(
-          "The letter has a date stamped in the corner: "
-          "%s\n\r\n\r%s,\n\r%s\n\rSigned, %s\n\r\n\r") %
-        db["timesent"] % recipient_formatted % db["content"] % db["mailfrom"];
+  // Collect values before the next query invalidates the result set
+  sstring timesent = db["timesent"];
+  sstring content = db["content"];
+  sstring mailfrom = db["mailfrom"];
+  sstring mailid = db["mailid"];
 
-  db.query("delete from mail where mailid=%s", db["mailid"].c_str());
+  db.query("delete from mail where mailid=%s", mailid.c_str());
 
-  return sstring(buf);
+  return {format("The letter has a date stamped in the corner: "
+                 "%s\n\r\n\r%s,\n\r%s\n\rSigned, %s\n\r\n\r") %
+          timesent % recipient_formatted % content % mailfrom};
 }
 
 void postmasterValue(TBeing* ch, TBeing* postmaster, const char* arg) {
@@ -318,12 +384,10 @@ int postmaster(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
 
 void TBeing::postmasterSendMail(const char* arg, TMonster* me) {
   sstring args = arg, item, recipient, talen;
-  charFile st;
   bool sendFaction;
-  int i, imm = FALSE, amt, shop_nr = find_shop_nr(me->number);
+  int imm = false, amt, shop_nr = find_shop_nr(me->number);
   float profit_buy = 0;
 
-  // added this check - bat
   if (!mail_ok(this))
     return;
 
@@ -343,17 +407,26 @@ void TBeing::postmasterSendMail(const char* arg, TMonster* me) {
   recipient = recipient.lower();
   sendFaction = recipient == "faction";
 
-  if (recipient == "faction" && !load_char(recipient, &st)) {
+  if (!sendFaction && getPlayerIdByName(recipient.c_str()) == 0) {
     sendTo("No such player to mail to!\n\r");
     return;
   }
   imm = isImmortal();
 
-  for (i = 0; !imm && i < 8; i++)
-    if (st.level[i] > MAX_MORT)
-      imm = TRUE;
+  // Level 1 senders can only mail immortals - check recipient's level via
+  // pfile since the player table doesn't store levels.
+  if (!sendFaction && !imm && GetMaxLevel() < MIN_MAIL_LEVEL) {
+    charFile st;
+    if (load_char(recipient, &st)) {
+      for (int i = 0; i < 8; i++) {
+        if (st.level[i] > MAX_MORT) {
+          imm = true;
+          break;
+        }
+      }
+    }
+  }
 
-  // let anybody mail to immortals
   if (GetMaxLevel() < MIN_MAIL_LEVEL && !imm) {
     me->doTell(getName(),
       format("Sorry, you have to be level %d to send mail!") % MIN_MAIL_LEVEL);
@@ -464,42 +537,28 @@ void TBeing::postmasterSendMail(const char* arg, TMonster* me) {
 }
 
 void TBeing::postmasterCheckMail(TMonster* me) {
-  sstring recipient;
-
-  parse_name_sstring(getName(), recipient);
-
-  // added this check - bat
   if (!mail_ok(this))
     return;
 
-  recipient = recipient.lower();
-
-  if (has_mail(recipient))
+  if (has_mail(getPlayerID()))
     me->doTell(getName(), "You have mail waiting.");
   else
     me->doTell(getName(), "Sorry, you don't have any mail waiting.");
 }
 
 void TBeing::postmasterReceiveMail(TMonster* me) {
-  sstring recipient;
   TObj *note, *envelope;
   sstring msg;
   sstring from;
 
-  if (parse_name_sstring(sstring(getName()), recipient))
-    return;
-
-  // added this check - bat
   if (!mail_ok(this))
     return;
 
-  recipient = recipient.lower();
-
-  if (!has_mail(recipient)) {
+  if (!has_mail(getPlayerID())) {
     me->doTell(fname(name), "Sorry, you don't have any mail waiting.");
     return;
   }
-  while (has_mail(recipient)) {
+  while (has_mail(getPlayerID())) {
     int talens = 0;
     int rent_id = 0;
     int env_vnum = 124;
@@ -523,7 +582,12 @@ void TBeing::postmasterReceiveMail(TMonster* me) {
     note->name = "letter mail";
     note->shortDescr = "<o>a handwritten <W>letter<1>";
     note->setDescr("A wrinkled <W>letter<1> lies here.");
-    msg = read_delete(recipient, getName().c_str(), from, talens, rent_id);
+    // Transaction ensures the mail row and its rent attachment (if any) are
+    // deleted atomically - a crash between the two can't orphan rent items.
+    TDatabase txn(DB_SNEEZY);
+    txn.query("BEGIN");
+
+    msg = read_delete(getPlayerID(), getName().c_str(), from, talens, rent_id);
     note->action_description = msg.c_str();
     if (note->action_description.empty())
       note->action_description =
@@ -536,6 +600,7 @@ void TBeing::postmasterReceiveMail(TMonster* me) {
     if (env_robj < 0 || env_robj >= (signed int)obj_index.size() ||
         !(envelope = read_object(env_robj, REAL))) {
       vlogf(LOG_BUG, "Couldn't load envelope object!");
+      txn.query("ROLLBACK");
       return;
     }
 
@@ -554,24 +619,26 @@ void TBeing::postmasterReceiveMail(TMonster* me) {
       TObj* obj = NULL;
       int slot = -1;
       ItemLoadDB il("mail", GH_MAIL_SHOP);
-      TDatabase db(DB_SNEEZY);
 
       obj = il.raw_read_item(rent_id, slot);
-      db.query("delete from rent where rent_id=%i", rent_id);
-      db.query("delete from rent_obj_aff where rent_id=%i", rent_id);
-      db.query("delete from rent_strung where rent_id=%i", rent_id);
 
       if (obj) {
+        // CASCADE FKs on rent_obj_aff and rent_strung handle child cleanup
+        txn.query("delete from rent where rent_id=%i", rent_id);
         vlogf(LOG_OBJ, format("Mail: retrieved object %s from rent_id:%i from "
                               "mail for %s from %s") %
                          obj->getName() % rent_id % getName() % from);
         *envelope += *obj;
       } else {
+        // Don't delete the rent row on load failure - the data is still
+        // intact and may load successfully after a fix or restart.
         vlogf(LOG_BUG,
           format("Mail: error retrieving rent_id:%i from mail for %s from %s") %
             rent_id % getName() % from);
       }
     }
+
+    txn.query("COMMIT");
 
     *this += *envelope;
 
@@ -582,12 +649,16 @@ void TBeing::postmasterReceiveMail(TMonster* me) {
 }
 
 void autoMail(TBeing* ch, const char* targ, const char* msg, int m, int r) {
-  // from field limited to 15 chars by mail structure
-
-  if (ch)
-    store_mail(ch->getName().c_str(), SNEEZY_ADMIN, msg, m, r);
-  else if (targ)
-    store_mail(targ, SNEEZY_ADMIN, msg, m, r);
-  else
+  if (ch) {
+    store_mail(ch->getPlayerID(), SNEEZY_ADMIN, 0, msg, m, r);
+  } else if (targ) {
+    int to_id = getPlayerIdByName(targ);
+    if (to_id > 0) {
+      store_mail(to_id, SNEEZY_ADMIN, 0, msg, m, r);
+    } else {
+      vlogf(LOG_BUG, format("autoMail: no player found for '%s'") % targ);
+    }
+  } else {
     vlogf(LOG_BUG, "Error in autoMail");
+  }
 }

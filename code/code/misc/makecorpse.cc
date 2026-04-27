@@ -239,6 +239,15 @@ TThing* TBeing::makeCorpse(spellNumT dmg_type, TBeing* tKiller,
         sprintf(buf, "The bloated, water-filled corpse of %s is here.",
           getName().c_str());
         break;
+      case SPELL_BLIZZARD: {
+        auto desc = (format("The frost-covered corpse of %s is here, frozen "
+                            "solid.") %
+                     getName())
+                      .str();
+        strncpy(buf, desc.c_str(), MAX_INPUT_LENGTH - 1);
+        buf[MAX_INPUT_LENGTH - 1] = '\0';
+        break;
+      }
       case SPELL_CARDIAC_STRESS:
       case DAMAGE_HEMORRHAGE:
         sprintf(buf,

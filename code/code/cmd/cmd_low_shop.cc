@@ -1050,8 +1050,9 @@ namespace {
       str << "Player Access:\n\r";
 
       db.query(
-        "SELECT name, access FROM shopownedaccess "
-        "WHERE shop_nr=%i ORDER BY access DESC, name",
+        "SELECT p.name, soa.access FROM shopownedaccess soa "
+        "JOIN player p ON soa.player_id=p.id "
+        "WHERE soa.shop_nr=%i ORDER BY soa.access DESC, p.name",
         shopNr);
 
       if (!db.rowCount()) {
@@ -1242,17 +1243,23 @@ namespace {
       return;
     }
 
+    const auto targetId = getPlayerIdByName(playerArg.c_str());
+    if (targetId == 0) {
+      ch.sendTo(std::format("Player '{}' not found.\n\r", playerArg));
+      return;
+    }
+
     if (!db.query("DELETE FROM shopownedaccess WHERE shop_nr=%i AND "
-                  "UPPER(name)=UPPER('%s')",
-          shopNr, playerArg.c_str())) {
+                  "player_id=%i",
+          shopNr, targetId)) {
       ch.sendTo("Database error: failed to update access.\n\r");
       return;
     }
 
     if (level > 0) {
-      if (!db.query("INSERT INTO shopownedaccess (shop_nr, name, access) "
-                    "VALUES (%i, '%s', %i)",
-            shopNr, playerArg.c_str(), level)) {
+      if (!db.query("INSERT INTO shopownedaccess (shop_nr, player_id, access) "
+                    "VALUES (%i, %i, %i)",
+            shopNr, targetId, level)) {
         ch.sendTo("Database error: failed to set access.\n\r");
         return;
       }

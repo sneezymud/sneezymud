@@ -192,9 +192,6 @@ bool loadsetCheck(TBeing* ch, int vnum, int chance, wearSlotT slot,
 
   ch->logItem(obj, CMD_LOAD);
 
-  if (!isImmLoad)
-    log_object(obj);
-
   if (obj->isPaired() && slot == WEAR_LEG_L) {
     delete obj;  // avoid double loads of pants
     return false;

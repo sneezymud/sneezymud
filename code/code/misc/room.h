@@ -6,6 +6,9 @@
 
 #pragma once
 
+#include <functional>
+#include <vector>
+
 #include "sound.h"
 #include "ansi.h"
 #include "structs.h"
@@ -14,6 +17,37 @@
 #include "obj.h"
 
 class TRoom;
+
+// Transient affect applied to a room (e.g., blizzard, poison fog).
+// Does not persist across reboots.
+struct RoomAffectData {
+    spellNumT type = TYPE_UNDEFINED;
+    int duration = 0;   // number of remaining onTick callbacks; when this hits
+                        // zero, onExpire fires and the affect is removed
+    int level = 0;      // caster level at cast time
+    int modifier = 0;   // primary value (e.g., damage per tick)
+    int modifier2 = 0;  // secondary value (reserved for future use)
+    int casterID = 0;   // player ID for group exclusion and hatred
+};
+
+// Per-spell behavior table for room affects. Each spell that introduces a
+// room affect registers one of these at boot via registerRoomAffect(). The
+// generic processing/look/etc. paths look up the vtable by spell type instead
+// of switching on it.
+//
+// Function pointers (not std::function) keep dispatch trivially cheap and
+// avoid any per-pulse allocation. Any field may be left null; the dispatcher
+// just skips that callback.
+struct RoomAffectVTable {
+    void (*onTick)(TRoom*, RoomAffectData&) = nullptr;
+    void (*onExpire)(TRoom*, const RoomAffectData&) = nullptr;
+    // Returns the room-affect description shown when looking. `here` is true
+    // when standing in the affected room, false when looking in from an
+    // adjacent room. Return an empty string to render nothing.
+    sstring (*lookDesc)(bool here) = nullptr;
+};
+
+void registerRoomAffect(spellNumT type, const RoomAffectVTable* vtable);
 
 // cubic inches of burning material where room itself burns
 const int ROOM_FIRE_THRESHOLD = 20000;
@@ -29,6 +63,7 @@ extern std::vector<zoneData> zone_table;
 // actually  have special procs
 extern std::vector<TRoom*> roomspec_db;
 extern std::vector<TRoom*> roomsave_db;
+extern std::vector<TRoom*> affectedRooms_db;
 
 // this is used for track range
 const unsigned int MAX_ROOMS = 5000;
@@ -138,6 +173,12 @@ class TRoom : public TThing {
     unsigned short fished;         // how fished out the room is
     unsigned short logsHarvested;  // how deforested the room is
     int treetype;                  // the kind of tree growing in the room
+
+    // Room affects (transient spell effects on the room itself). Private to
+    // force all mutation through add/removeRoomAffect so affectedRooms_db
+    // registry stays in sync, and through tickRoomAffects for per-tick
+    // processing.
+    std::vector<RoomAffectData> roomAffects;
 
   public:
     TThing* tBornInsideMe;  // List of mobs born inside me.
@@ -262,6 +303,28 @@ class TRoom : public TThing {
     int pitchBlackDark() { return getLight() <= 0; }
 
     TThing* findInRoom(const std::function<bool(TThing*)>&);
+    const TThing* findInRoom(const std::function<bool(const TThing*)>&) const;
+    bool hasCampfire() const;
+
+    [[nodiscard]] bool hasRoomAffect(spellNumT type) const;
+    [[nodiscard]] RoomAffectData* getRoomAffect(spellNumT type);
+    [[nodiscard]] const std::vector<RoomAffectData>& getRoomAffects() const {
+      return roomAffects;
+    }
+    void addRoomAffect(const RoomAffectData& affect);
+    void removeRoomAffect(spellNumT type);
+
+    // Per-tick bookkeeping for room affects: invokes the registered onTick
+    // callback for each active affect, then decrements durations and invokes
+    // onExpire for any that reached zero (erasing them). A freshly-cast
+    // affect with duration N fires N onTick callbacks followed by one
+    // onExpire. Returns true if any affects remain after processing.
+    bool tickRoomAffects();
 };
+
+// Renders any active room-affect descriptions into the looker's output.
+// `here` controls the deictic ("here" for a room you're standing in, "there"
+// for one you're peering into from an adjacent room).
+void sendRoomAffectDescs(TBeing* ch, TRoom* rp, bool here);
 
 const int ZONE_MAX_TIME = 50;

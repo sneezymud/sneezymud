@@ -1,0 +1,15 @@
+New Water Discipline Spell: Blizzard
+Water mages now have access to a powerful new area spell!
+
+Blizzard calls forth a howling storm of ice and snow upon the caster's
+enemies. The initial blast deals cold damage to all non-grouped
+creatures in the room, after which the blizzard persists for several
+rounds, continuing to batter anything caught within it. The duration
+of the blizzard scales with the caster's level.
+
+If the caster leaves the room or dies, the blizzard continues to rage
+but will damage all creatures indiscriminately, including former
+allies. Recasting blizzard in the same room will refresh the storm's
+duration.
+
+See 'help blizzard' for more details.

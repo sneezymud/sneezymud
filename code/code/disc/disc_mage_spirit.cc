@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#include <algorithm>
+
 #include "extern.h"
 #include "room.h"
 #include "client.h"
@@ -1581,37 +1583,6 @@ void senseLife(TBeing* caster, TBeing* victim, TMagicItem* obj) {
   }
 }
 
-int senseLife(TBeing* caster, TBeing* victim) {
-  taskDiffT diff;
-
-  if (!bPassMageChecks(caster, SPELL_SENSE_LIFE, victim))
-    return FALSE;
-
-  lag_t rounds = discArray[SPELL_SENSE_LIFE]->lag;
-  diff = discArray[SPELL_SENSE_LIFE]->task;
-
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_SENSE_LIFE, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
-}
-
-int castSenseLife(TBeing* caster, TBeing* victim) {
-  int ret, level;
-
-  level = caster->getSkillLevel(SPELL_SENSE_LIFE);
-  int bKnown = caster->getSkillValue(SPELL_SENSE_LIFE);
-
-  ret = senseLife(caster, victim, level, bKnown);
-  if (ret == SPELL_SUCCESS) {
-    victim->sendTo("You feel more aware of the world about you.\n\r");
-    act("$n's eyes flicker a faint aqua blue.", FALSE, victim, NULL, NULL,
-      TO_ROOM, ANSI_CYAN);
-  } else
-    caster->nothingHappens();
-
-  return TRUE;
-}
-
 int detectInvisibility(TBeing* caster, TBeing* victim, int level,
   short bKnown) {
   affectedData aff;
@@ -1656,32 +1627,6 @@ void detectInvisibility(TBeing* caster, TBeing* victim, TMagicItem* obj) {
     obj->getMagicLearnedness());
 }
 
-int detectInvisibility(TBeing* caster, TBeing* victim) {
-  taskDiffT diff;
-
-  if (!bPassMageChecks(caster, SPELL_DETECT_INVISIBLE, victim))
-    return FALSE;
-
-  lag_t rounds = discArray[SPELL_DETECT_INVISIBLE]->lag;
-  diff = discArray[SPELL_DETECT_INVISIBLE]->task;
-
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_DETECT_INVISIBLE, diff,
-    1, "", rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
-}
-
-int castDetectInvisibility(TBeing* caster, TBeing* victim) {
-  int ret, level;
-
-  level = caster->getSkillLevel(SPELL_DETECT_INVISIBLE);
-  int bKnown = caster->getSkillValue(SPELL_DETECT_INVISIBLE);
-
-  ret = detectInvisibility(caster, victim, level, bKnown);
-
-  if (ret == SPELL_SUCCESS) {}
-  return TRUE;
-}
-
 int trueSight(TBeing* caster, TBeing* victim, int level, short bKnown) {
   affectedData aff;
   caster->reconcileHelp(victim, discArray[SPELL_TRUE_SIGHT]->alignMod);
@@ -1724,28 +1669,159 @@ void trueSight(TBeing* caster, TBeing* victim, TMagicItem* obj) {
   trueSight(caster, victim, obj->getMagicLevel(), obj->getMagicLearnedness());
 }
 
-int trueSight(TBeing* caster, TBeing* victim) {
-  taskDiffT diff;
+namespace {
 
-  if (!bPassMageChecks(caster, SPELL_TRUE_SIGHT, victim))
-    return FALSE;
+  // Calculate the +vision modifier for mage sight based on caster level.
+  // Scales linearly from +5 at level 1 to +15 at level 50.
+  int mageSightVisionMod(int level) {
+    return std::clamp(5 + (level - 1) * 10 / 49, 5, 15);
+  }
 
-  lag_t rounds = discArray[SPELL_TRUE_SIGHT]->lag;
-  diff = discArray[SPELL_TRUE_SIGHT]->task;
+  // mageSightPassives is defined in disc_mage_spirit.h
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_TRUE_SIGHT, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  // Apply mage sight buffs to a single target. Called once per target.
+  // passiveMask is a bitmask of which passives succeeded the group-wide roll.
+  void applyMageSight(TBeing* caster, TBeing* victim, int level, int duration,
+    unsigned int passiveMask) {
+    // Apply the primary +vision buff
+    affectedData aff;
+    aff.type = SPELL_MAGE_SIGHT;
+    aff.level = level;
+    aff.duration = duration;
+    aff.modifier = mageSightVisionMod(level);
+    aff.location = APPLY_VISION;
+    aff.bitvector = 0;
+    victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES, false);
+
+    // Apply each passive that passed the group-wide success check.
+    // Passives are tagged with APPLY_VISION (modifier +1) and modifier2 =
+    // SPELL_MAGE_SIGHT so the cascade in affectFrom can distinguish them from
+    // independently-sourced buffs (e.g. infravision potions use APPLY_NONE).
+    // Cap passive duration to the primary's remaining duration so passives
+    // never outlive the parent spell (e.g. when recasting adds a previously
+    // failed passive while the primary is not yet renewable).
+    int passiveDur = duration;
+    for (auto* af = victim->affected; af; af = af->next) {
+      if (af->type == SPELL_MAGE_SIGHT) {
+        passiveDur = std::min(duration, static_cast<int>(af->duration));
+        break;
+      }
+    }
+
+    for (size_t i = 0; i < mageSightPassives.size(); i++) {
+      if (!(passiveMask & (1u << i)))
+        continue;
+
+      const auto& passive = mageSightPassives[i];
+      affectedData pAff;
+      pAff.type = passive.spell;
+      pAff.level = level;
+      pAff.duration = passiveDur;
+      pAff.modifier = 1;
+      pAff.modifier2 = SPELL_MAGE_SIGHT;
+      pAff.location = APPLY_VISION;
+      pAff.bitvector = passive.bitvector;
+      victim->affectJoin(caster, &pAff, AVG_DUR_NO, AVG_EFF_YES, false);
+    }
+  }
+
+}  // namespace
+
+// Item-based mage sight (scrolls, potions, wands).
+void mageSight(TBeing* caster, TBeing* victim, TMagicItem* obj) {
+  int level = obj->getMagicLevel();
+  int bKnown = obj->getMagicLearnedness();
+  int duration = caster->durationModify(SPELL_MAGE_SIGHT,
+    level * Pulse::UPDATES_PER_MUDHOUR);
+
+  caster->reconcileHelp(victim, discArray[SPELL_MAGE_SIGHT]->alignMod);
+
+  if (!caster->bSuccess(bKnown, SPELL_MAGE_SIGHT)) {
+    caster->nothingHappens();
+    return;
+  }
+
+  // Roll passives using the item's learnedness
+  unsigned int passiveMask = 0;
+  for (size_t i = 0; i < mageSightPassives.size(); i++) {
+    if (caster->bSuccess(bKnown, mageSightPassives[i].spell))
+      passiveMask |= (1u << i);
+  }
+
+  applyMageSight(caster, victim, level, duration, passiveMask);
+  act("Your eyes take on a magical gleam.", false, victim, nullptr, nullptr,
+    TO_CHAR);
+  act("$n's eyes take on a magical gleam.", false, victim, nullptr, nullptr,
+    TO_ROOM);
 }
 
-int castTrueSight(TBeing* caster, TBeing* victim) {
-  int level;
+// Initiator for mage sight: called from spell parser when player casts.
+// If victim is non-null, single target. If null, group cast.
+int mageSight(TBeing* caster, TBeing* victim) {
+  if (!bPassMageChecks(caster, SPELL_MAGE_SIGHT, victim))
+    return false;
 
-  level = caster->getSkillLevel(SPELL_TRUE_SIGHT);
-  int bKnown = caster->getSkillValue(SPELL_TRUE_SIGHT);
+  lag_t rounds = discArray[SPELL_MAGE_SIGHT]->lag;
+  taskDiffT diff = discArray[SPELL_MAGE_SIGHT]->task;
 
-  trueSight(caster, victim, level, bKnown);
-  return TRUE;
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_MAGE_SIGHT, diff, 1,
+    "", rounds, caster->in_room, 0, 0, true, 0);
+  return true;
+}
+
+// Cast completion handler for mage sight.
+int castMageSight(TBeing* caster, TBeing* victim) {
+  int level = caster->getSkillLevel(SPELL_MAGE_SIGHT);
+  int bKnown = caster->getSkillValue(SPELL_MAGE_SIGHT);
+  int duration = caster->durationModify(SPELL_MAGE_SIGHT,
+    level * Pulse::UPDATES_PER_MUDHOUR);
+
+  if (!caster->bSuccess(bKnown, SPELL_MAGE_SIGHT)) {
+    caster->nothingHappens();
+    return false;
+  }
+
+  // Roll passives once for the entire cast (group-wide)
+  unsigned int passiveMask = 0;
+  for (size_t i = 0; i < mageSightPassives.size(); i++) {
+    int pKnown = caster->getSkillValue(mageSightPassives[i].spell);
+    if (pKnown > 0 && caster->bSuccess(pKnown, mageSightPassives[i].spell))
+      passiveMask |= (1u << i);
+  }
+
+  if (victim) {
+    // Single target mode
+    caster->reconcileHelp(victim, discArray[SPELL_MAGE_SIGHT]->alignMod);
+    applyMageSight(caster, victim, level, duration, passiveMask);
+    act("Your eyes take on a magical gleam.", false, victim, nullptr, nullptr,
+      TO_CHAR);
+    act("$n's eyes take on a magical gleam.", false, victim, nullptr, nullptr,
+      TO_ROOM);
+  } else {
+    // Group mode: buff all group members in the room
+    bool found = false;
+    for (StuffIter it = caster->roomp->stuff.begin();
+      it != caster->roomp->stuff.end();) {
+      TThing* t = *(it++);
+      auto* target = dynamic_cast<TBeing*>(t);
+      if (!target)
+        continue;
+      if (!caster->inGroup(*target))
+        continue;
+
+      caster->reconcileHelp(target, discArray[SPELL_MAGE_SIGHT]->alignMod);
+      applyMageSight(caster, target, level, duration, passiveMask);
+      act("Your eyes take on a magical gleam.", false, target, nullptr, nullptr,
+        TO_CHAR);
+      act("$n's eyes take on a magical gleam.", false, target, nullptr, nullptr,
+        TO_ROOM);
+      found = true;
+    }
+    if (!found) {
+      caster->sendTo("There's nobody in your group here.\n\r");
+    }
+  }
+  return true;
 }
 
 int telepathy(TBeing* caster, int, short bKnown) {

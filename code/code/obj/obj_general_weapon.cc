@@ -42,13 +42,13 @@ TGenWeapon::~TGenWeapon() {}
 void TGenWeapon::assignFourValues(int x1, int x2, int x3, int x4) {
   TBaseWeapon::assignFourValues(x1, x2, x3, x4);
 
-  setWeaponType((weaponT)GET_BITS(x3, 7, 8), 0);
+  setWeaponType(GET_BITS(x3, 7, 8), 0);
   setWeaponFreq(GET_BITS(x3, 15, 8), 0);
 
-  setWeaponType((weaponT)GET_BITS(x3, 23, 8), 1);
+  setWeaponType(GET_BITS(x3, 23, 8), 1);
   setWeaponFreq(GET_BITS(x3, 31, 8), 1);
 
-  setWeaponType((weaponT)GET_BITS(x4, 7, 8), 2);
+  setWeaponType(GET_BITS(x4, 7, 8), 2);
   setWeaponFreq(GET_BITS(x4, 15, 8), 2);
 }
 
@@ -87,7 +87,14 @@ int TGenWeapon::getWeaponFreq(int which) const {
   return wtype_frequency[which];
 }
 
-void TGenWeapon::setWeaponType(weaponT n, int which) { weapon_type[which] = n; }
+void TGenWeapon::setWeaponType(int n, int which) {
+  if (n < WEAPON_TYPE_NONE || n >= WEAPON_TYPE_MAX) {
+    vlogf(LOG_BUG,
+      format("Invalid weapon type %d on %s, resetting to NONE") % n % getName());
+    n = WEAPON_TYPE_NONE;
+  }
+  weapon_type[which] = (weaponT)n;
+}
 
 void TGenWeapon::setWeaponFreq(int n, int which) { wtype_frequency[which] = n; }
 

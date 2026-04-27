@@ -543,10 +543,10 @@ Descriptor::~Descriptor() {
       character->removeFollowers();
 
       for (StuffIter it = character->stuff.begin();
-           it != character->stuff.end() && (th = *it); ++it) {
+        it != character->stuff.end() && (th = *it); ++it) {
         if (th) {
           for (StuffIter it = th->stuff.begin();
-               it != th->stuff.end() && (th2 = *it); ++it)
+            it != th->stuff.end() && (th2 = *it); ++it)
             num++;
           num++;
         }
@@ -555,7 +555,7 @@ Descriptor::~Descriptor() {
       for (int i = MIN_WEAR; i < MAX_WEAR; i++) {
         if ((th = character->equipment[i])) {
           for (StuffIter it = th->stuff.begin();
-               it != th->stuff.end() && (th2 = *it); ++it)
+            it != th->stuff.end() && (th2 = *it); ++it)
             num++;
 
           num++;
@@ -1241,6 +1241,7 @@ int Descriptor::nanny(sstring arg) {
 
       prompt_mode = 1;
       character->doSave(SILENT_YES);
+      character->desc->account->last_logon = time(0);
       character->desc->saveAccount();
 
       if (character->desc && !character->desc->m_bIsClient) {
@@ -1994,38 +1995,17 @@ void Descriptor::sstring_add(sstring s) {
   }
   if (terminator || t2) {
     if (character->isPlayerAction(PLR_MAILING)) {
-      if (ignored.isMailIgnored(this, name)) {
-        vlogf(LOG_OBJ, format("Mail: mail sent by %s was ignored by %s.") %
-                         character->getName() % name);
-      } else if (terminator) {
-        int rent_id = 0;
-        if (obj && obj->canBeMailed(name)) {
-          ItemSaveDB is("mail", GH_MAIL_SHOP);
-          rent_id = is.raw_write_item(obj, -1, 0);
-          vlogf(LOG_OBJ,
-            format("Mail: %s mailing %s (vnum:%i) to %s rented as rent_id:%i") %
-              character->getName() % obj->getName() % obj->objVnum() % name %
-              rent_id);
-          delete obj;
-        }
-        if (amount > 0) {
-          vlogf(LOG_OBJ, format("Mail: %s mailing %i talens to %s") %
-                           character->getName() % amount % name);
-          character->addToMoney(min(0, -amount), GOLD_XFER);
-        }
-        store_mail(name, character->getName().c_str(), str->c_str(), amount,
-          rent_id);
+      if (terminator) {
+        dispatchMail(str->c_str());
+      } else {
+        obj = nullptr;
+        *(name) = '\0';
+        amount = 0;
+        writeToQ("Message deleted!\n\r");
       }
 
       *str = "";
-      str = NULL;
-
-      // clear amount, object, name
-      obj = NULL;
-      *(name) = '\0';
-      amount = 0;
-
-      writeToQ(terminator ? "Message sent!\n\r" : "Message deleted!\n\r");
+      str = nullptr;
       character->remPlayerAction(PLR_MAILING);
     } else if (character->isPlayerAction(PLR_BUGGING)) {
       if (terminator) {
@@ -2319,7 +2299,7 @@ void setPrompts(fd_set out) {
           TObj* tObj = NULL;
 
           for (StuffIter it = ch->stuff.begin();
-               it != ch->stuff.end() && (tThing = *it); ++it) {
+            it != ch->stuff.end() && (tThing = *it); ++it) {
             if ((tObj = dynamic_cast<TObj*>(tThing)) &&
                 isname(ch->task->orig_arg, tThing->name))
               break;
@@ -2344,7 +2324,8 @@ void setPrompts(fd_set out) {
         }
       } else {
         if (ch && ch->spelltask && IS_SET(ch->desc->autobits, AUTO_SPELLTASK)) {
-          sprintf(promptbuf, "\n\r%s : %2d > ", discArray[ch->spelltask->spell]->name, ch->spelltask->rounds);
+          sprintf(promptbuf, "\n\r%s : %2d > ",
+            discArray[ch->spelltask->spell]->name, ch->spelltask->rounds);
           d->output.push(
             CommPtr(new UncategorizedComm(sstring(promptbuf).cap())));
         }
@@ -2755,7 +2736,7 @@ void processAllInput() {
             // in another wierd core, d was no longer in the descriptor_list
             Descriptor* tempdesc;
             for (tempdesc = descriptor_list; tempdesc;
-                 tempdesc = tempdesc->next) {
+              tempdesc = tempdesc->next) {
               if (tempdesc == d || tempdesc == next_to_process)
                 break;
             }
@@ -3410,6 +3391,18 @@ int Descriptor::doAccountStuff(char* arg) {
         break;
 #endif
 
+      // delete player entry first (FK CASCADE handles blockedlist, tattoos,
+      // mail, etc.) - look up by name since playerID is not set in the account
+      // menu flow. Do this before irreversible cleanup so failure is
+      // recoverable.
+      if (!db.query("delete from player where name='%s'", delname)) {
+        vlogf(LOG_DB,
+          format("Failed to delete player row for %s during self-delete") %
+            delname);
+        writeToQ("Error deleting character. Try again.\n\r");
+        break;
+      }
+
       writeToQ("Character deleted.\n\r");
       vlogf(LOG_PIO, format("Character %s self-deleted. (%s account)") %
                        delname % account->name);
@@ -3421,21 +3414,12 @@ int Descriptor::doAccountStuff(char* arg) {
       trophy->wipe();
       delete trophy;
 
-      // delete ignore list
-      db.query("delete from blockedlist where player_id=%i", playerID);
-
-      // delete player entry
-      db.query("delete from player where lower(name)=lower('%s')", delname);
-
-      // delete tats!
-      db.query("delete from tattoos where lower(name)=lower('%s')", delname);
-
       wipePlayerFile(delname);  // handles corpses too
       wipeRentFile(delname);
       wipeFollowersFile(delname);
 
-      vlogf(LOG_PIO, format("Deleting mail for character %s.") % delname);
-      db.query("delete from mail where lower(mailto)=lower('%s')", delname);
+      vlogf(LOG_PIO,
+        format("Mail for character %s deleted via CASCADE.") % delname);
 
       sprintf(buf, "mutable/account/%c/%s/%s", LOWER(account->name[0]),
         sstring(account->name).lower().c_str(), delname);
@@ -3801,7 +3785,9 @@ int Descriptor::inputProcessing() {
           break;
 
       } else {
-        vlogf(LOG_PIO, format("EOF encountered on socket read from %s (state: %d).") % host % connected);
+        vlogf(LOG_PIO,
+          format("EOF encountered on socket read from %s (state: %d).") % host %
+            connected);
         return (-1);
       }
     }

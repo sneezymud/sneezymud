@@ -38,8 +38,8 @@ void corpLogs(TBeing* ch, TMonster* me, sstring arg, sstring corp_arg) {
   if (ch->isImmortal()) {
     corp_id = convertTo<int>(corp_arg);
   } else {
-    db.query("select corp_id from corpaccess where lower(name)='%s'",
-      sstring(ch->getName()).lower().c_str());
+    db.query("select corp_id from corpaccess where player_id=%i",
+      ch->getPlayerID());
 
     if (corp_arg.empty()) {
       if (db.fetchRow())
@@ -195,7 +195,10 @@ void corpSummary(TBeing* ch, TMonster* me, int corp_id) {
       ((sstring)(format("%i") % (banktalens + gold + value))).comify());
 
   // officers
-  db.query("select name from corpaccess where corp_id=%i", corp_id);
+  db.query(
+    "select p.name from corpaccess ca join player p on ca.player_id=p.id "
+    "where ca.corp_id=%i",
+    corp_id);
 
   buf = "";
   while (db.fetchRow()) {
@@ -237,8 +240,8 @@ void corpDeposit(TBeing* ch, TMonster* me, int gold, sstring arg) {
   unsigned int shop_nr;
   TBeing* banker;
 
-  db.query("select corp_id from corpaccess where lower(name)='%s'",
-    sstring(ch->getName()).lower().c_str());
+  db.query("select corp_id from corpaccess where player_id=%i",
+    ch->getPlayerID());
 
   if (arg.empty()) {
     if (db.fetchRow())
@@ -310,8 +313,8 @@ void corpWithdraw(TBeing* ch, TMonster* me, int gold, sstring arg) {
   unsigned int shop_nr;
   TBeing* banker;
 
-  db.query("select corp_id from corpaccess where lower(name)='%s'",
-    sstring(ch->getName()).lower().c_str());
+  db.query("select corp_id from corpaccess where player_id=%i",
+    ch->getPlayerID());
 
   if (arg.empty()) {
     if (db.fetchRow())
@@ -391,8 +394,8 @@ void corpBalance(TBeing* ch, TMonster* me, sstring arg) {
   TDatabase db(DB_SNEEZY);
   int corp_id = 0;
 
-  db.query("select corp_id from corpaccess where lower(name)='%s'",
-    sstring(ch->getName()).lower().c_str());
+  db.query("select corp_id from corpaccess where player_id=%i",
+    ch->getPlayerID());
 
   if (arg.empty()) {
     if (db.fetchRow())

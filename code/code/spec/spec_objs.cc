@@ -104,11 +104,12 @@
 int TObj::checkSpec(TBeing* t, cmdTypeT cmd, const char* arg, TThing* t2) {
   int rc;
 
-  // we use static_cast here because we don't ALWAYS pass the proper kind of
-  // parameter through the pointer fields.
+  // We use reinterpret_cast as we don't always pass a true TObj* as the extra
+  // pointer. Some commands pass other types (e.g. TBeing*) through t2.
+  // The receiving spec procs that need the real type cast it back via TThing*.
   if (spec) {
     rc = (objSpecials[GET_OBJ_SPE_INDEX(spec)].proc)(t, cmd, arg, this,
-      static_cast<TObj*>(t2));
+      reinterpret_cast<TObj*>(t2));
     return rc;
   }
   return FALSE;
@@ -354,7 +355,7 @@ int TStaff::foodItemUsed(TBeing* ch, const char*) {
   addToCurCharges(-1);
 
   for (StuffIter it = ch->roomp->stuff.begin();
-       it != ch->roomp->stuff.end() && (t = *it); ++it) {
+    it != ch->roomp->stuff.end() && (t = *it); ++it) {
     vict = dynamic_cast<TBeing*>(t);
     if (!vict)
       continue;
@@ -421,7 +422,7 @@ int orbOfDestruction(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o,
         act("$n's $o explodes in a fiery blast of light!", 1, ch, o, NULL,
           TO_ROOM);
         for (StuffIter it = ch->roomp->stuff.begin();
-             it != ch->roomp->stuff.end();) {
+          it != ch->roomp->stuff.end();) {
           t = *(it++);
           vict = dynamic_cast<TBeing*>(t);
           if (!vict)
@@ -490,7 +491,7 @@ int orbOfTeleportation(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o,
           ch, o, NULL, TO_CHAR);
         act("$n's $o makes a loud, throbbing noise!", 1, ch, o, NULL, TO_ROOM);
         for (StuffIter it = ch->roomp->stuff.begin();
-             it != ch->roomp->stuff.end();) {
+          it != ch->roomp->stuff.end();) {
           t = *(it++);
           vict = dynamic_cast<TBeing*>(t);
           if (!vict)
@@ -1748,14 +1749,11 @@ int newbieHelperWProc(TBeing* vict, cmdTypeT cmd, const char* Parg, TObj* o,
               ch->sendTo(format("%s:    goto park      : Newbie Area    [Basic "
                                 "area for newbies]\n\r") %
                          o->getName());
-          } else
-  return FALSE;
+          } else {
+            return false;
+          }
 
-
-            return FALSE;  // He didn't call on us for help, maybe another
-                           // player?
-          return TRUE;     // If we got here, we had a topic so lets eat the
-                           // command.
+          return true;  // Had a topic, eat the command
         }
       }
       return FALSE;
@@ -2046,7 +2044,7 @@ int fishingBoat(TBeing*, cmdTypeT cmd, const char*, TObj* myself, TObj*) {
   if (myself->in_room == 15150) {
     found = 0;
     for (StuffIter it = boatroom->stuff.begin();
-         it != boatroom->stuff.end() && (tt = *it); ++it) {
+      it != boatroom->stuff.end() && (tt = *it); ++it) {
       if (dynamic_cast<TPerson*>(tt)) {
         found = 1;
         break;
@@ -2824,14 +2822,19 @@ int tinkerBagFuse(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
 
     if (ch) {
       // Held by someone - show personal messages
-      act("$p hisses slightly, and releases a tiny bit of smoke.", TRUE, ch, container, 0, TO_CHAR, ANSI_GRAY);
-      act("$p hisses slightly, and releases a tiny bit of smoke.", TRUE, ch, container, 0, TO_ROOM, ANSI_GRAY);
-      act("$p wiggles, as if something within it is moving.", TRUE, ch, container, 0, TO_CHAR, ANSI_ORANGE);
-      act("$n's $p wiggles, as if something within it is moving.", TRUE, ch, container, 0, TO_ROOM, ANSI_ORANGE);
+      act("$p hisses slightly, and releases a tiny bit of smoke.", TRUE, ch,
+        container, 0, TO_CHAR, ANSI_GRAY);
+      act("$p hisses slightly, and releases a tiny bit of smoke.", TRUE, ch,
+        container, 0, TO_ROOM, ANSI_GRAY);
+      act("$p wiggles, as if something within it is moving.", TRUE, ch,
+        container, 0, TO_CHAR, ANSI_ORANGE);
+      act("$n's $p wiggles, as if something within it is moving.", TRUE, ch,
+        container, 0, TO_ROOM, ANSI_ORANGE);
     } else if (container->roomp) {
-      // On the ground - show room-wide messages
-      act("$p hisses slightly, and releases a tiny bit of smoke.", TRUE, nullptr, container, 0, TO_ROOM, ANSI_GRAY);
-      act("$p wiggles, as if something within it is moving.", TRUE, nullptr, container, 0, TO_ROOM, ANSI_ORANGE);
+      act("$p hisses slightly, and releases a tiny bit of smoke.", true,
+        container, container, nullptr, TO_ROOM, ANSI_GRAY);
+      act("$p wiggles, as if something within it is moving.", true, container,
+        container, nullptr, TO_ROOM, ANSI_ORANGE);
     }
     return FALSE;
   }
@@ -2846,16 +2849,17 @@ int tinkerBagFuse(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   // Trigger trap if held by someone
   if (ch) {
     act("$p makes an ominous clicking sound!", TRUE, ch, container, 0, TO_CHAR);
-    act("$n's $p makes an ominous clicking sound!", TRUE, ch, container, 0, TO_ROOM);
+    act("$n's $p makes an ominous clicking sound!", TRUE, ch, container, 0,
+      TO_ROOM);
     int rc = ch->triggerContTrap(container);
     // If trap destroyed the container, don't try to makeScraps
     if (IS_SET_DELETE(rc, DELETE_ITEM)) {
       return DELETE_THIS;
     }
   } else if (container->roomp) {
-    // Bag is on the ground - just announce it
-    act("$p makes an ominous clicking sound!", TRUE, nullptr, container, 0, TO_ROOM);
-    act("$p explodes!", TRUE, nullptr, container, 0, TO_ROOM);
+    act("$p makes an ominous clicking sound!", true, container, container,
+      nullptr, TO_ROOM);
+    act("$p explodes!", true, container, container, nullptr, TO_ROOM);
   }
 
   // Destroy the bag after the timer if the trap didn't trigger
@@ -2867,7 +2871,7 @@ int tinkerBagFuse(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
 }
 int manaBurnRobe(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
 #if 0
-  
+
     TBeing *ch;
 
     if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
@@ -3471,23 +3475,23 @@ int minecart(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* myself, TObj*) {
 int switchtrack(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* myself,
   TObj*) {
 #if 0
-  if (cmd != CMD_PUSH && 
-      cmd != CMD_PULL && 
-      cmd != CMD_OPERATE && 
-      cmd != CMD_USE && 
-      cmd != CMD_TURN) 
+  if (cmd != CMD_PUSH &&
+      cmd != CMD_PULL &&
+      cmd != CMD_OPERATE &&
+      cmd != CMD_USE &&
+      cmd != CMD_TURN)
     return FALSE;
-  
+
   if (!myself->getName())
     return FALSE;
-      
+
   int where = myself->in_room;
   char arg1[30], arg2[30], buf[256];
   arg = one_argument(arg, arg1);
   arg = one_argument(arg, arg2);
 
   if (is_abbrev(arg1, "switchtracks") || is_abbrev(arg1, "tracks")) {
-    switch (where) { 
+    switch (where) {
     case 18007:
       if(!arg2)
 	strcpy(arg2,isname("switchtrackdoswitch", myself->getName())?"southwest":"south");
@@ -3510,10 +3514,10 @@ int switchtrack(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* myself,
 	ch->sendTo("This switchtrack can only be moved to the south or southwest.");
 	return TRUE;
       }
-      
+
       break;
     case 18011:
-      if(!arg2) 
+      if(!arg2)
 	strcpy(arg2,isname("switchtrackdoswitch", myself->getName())?"south":"east");
       else if(is_abbrev(arg2, "east") || is_abbrev(arg2, "e")) {
 	strcpy(arg2,"eastern");
@@ -3529,15 +3533,15 @@ int switchtrack(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* myself,
 	  ch->sendTo(format("The switchtrack is already aligned with the %s fork.") % arg2);
 	  return TRUE;
 	}
-	strcpy(myself->name, "switchtracks tracks switchtrackdontswitch");  
+	strcpy(myself->name, "switchtracks tracks switchtrackdontswitch");
       } else {
         ch->sendTo("This switchtrack can only be moved to the south or east.");
         return TRUE;
       }
-      
+
       break;
     case 18020:
-      if(!arg2) 
+      if(!arg2)
 	strcpy(arg2,isname("switchtrackdoswitch", myself->getName())?"north":"east");
       else if(is_abbrev(arg2, "east") || is_abbrev(arg2, "e")) {
 	strcpy(arg2,"eastern");
@@ -3558,11 +3562,11 @@ int switchtrack(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* myself,
         ch->sendTo("This switchtrack can only be moved to the north or east.");
         return TRUE;
       }
-      
+
       break;
     default:
       ch->sendTo("Uh. This switchtrack shouldn't be here. Tell a god or something?");
-      //      vlogf(LOG_PROC, format("%s tried to operate a switchtrack (%d) in room with no switchtrack code (%d)") % 
+      //      vlogf(LOG_PROC, format("%s tried to operate a switchtrack (%d) in room with no switchtrack code (%d)") %
       //	    ch->getName() % myself->objVnum % where);
     }
     sprintf(buf,"<k>You force the $o into alignment with the %s tunnel.<1>",arg2);
@@ -3852,7 +3856,7 @@ int permaDeathMonument(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1,
     return FALSE;
 
   for (StuffIter it = ch->roomp->stuff.begin();
-       it != ch->roomp->stuff.end() && (o = *it); ++it) {
+    it != ch->roomp->stuff.end() && (o = *it); ++it) {
     to = dynamic_cast<TObj*>(o);
     if (to && to->spec == SPEC_PERMA_DEATH && isname(arg, to->name)) {
       found = 1;
@@ -3916,7 +3920,7 @@ int trophyBoard(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1, TObj* o2) {
     return FALSE;
 
   for (StuffIter it = ch->roomp->stuff.begin();
-       it != ch->roomp->stuff.end() && (o = *it); ++it) {
+    it != ch->roomp->stuff.end() && (o = *it); ++it) {
     to = dynamic_cast<TObj*>(o);
     if (to && to->spec == SPEC_TROPHY_BOARD && isname(arg, to->name)) {
       found = 1;
@@ -4053,7 +4057,7 @@ int highrollersBoard(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1,
     return FALSE;
 
   for (StuffIter it = ch->roomp->stuff.begin();
-       it != ch->roomp->stuff.end() && (o = *it); ++it) {
+    it != ch->roomp->stuff.end() && (o = *it); ++it) {
     to = dynamic_cast<TObj*>(o);
     if (to && to->spec == SPEC_HIGHROLLERS_BOARD && isname(arg, to->name)) {
       found = 1;
@@ -4067,8 +4071,9 @@ int highrollersBoard(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1,
   TDatabase db(DB_SNEEZY);
 
   db.query(
-    "select getPlayerName(player_id) as name, money from gamblers where money "
-    "> 0 order by money desc limit 10");
+    "select p.name, g.money from gamblers g "
+    "join player p on p.id = g.player_id "
+    "where g.money > 0 order by g.money desc limit 10");
 
   ch->sendTo("You examine the board:\n\r");
   ch->sendTo(
@@ -4086,8 +4091,9 @@ int highrollersBoard(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1,
   }
 
   db.query(
-    "select getPlayerName(player_id) as name, money from gamblers where money "
-    "< 0 order by money limit 10");
+    "select p.name, g.money from gamblers g "
+    "join player p on p.id = g.player_id "
+    "where g.money < 0 order by g.money limit 10");
 
   ch->sendTo(COLOR_BASIC, "\n\r");
 
@@ -4111,7 +4117,7 @@ int shopinfoBoard(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1,
     return FALSE;
 
   for (StuffIter it = ch->roomp->stuff.begin();
-       it != ch->roomp->stuff.end() && (o = *it); ++it) {
+    it != ch->roomp->stuff.end() && (o = *it); ++it) {
     to = dynamic_cast<TObj*>(o);
     if (to && to->spec == SPEC_SHOPINFO_BOARD && isname(arg, to->name)) {
       found = 1;
@@ -4224,7 +4230,7 @@ int brickScorecard(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1,
     return FALSE;
 
   for (StuffIter it = ch->roomp->stuff.begin();
-       it != ch->roomp->stuff.end() && (o = *it); ++it) {
+    it != ch->roomp->stuff.end() && (o = *it); ++it) {
     to = dynamic_cast<TObj*>(o);
     if (to && to->spec == SPEC_BRICKQUEST && isname(arg, to->name)) {
       found = 1;
@@ -4244,16 +4250,14 @@ int brickScorecard(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1,
   ch->sendTo("+------------------------------------------------+\n\r\n\r");
 
   db_brickquest.query(
-    "select * from brickquest order by numbricks desc limit 25");
+    "select p.name, b.numbricks from brickquest b "
+    "join player p on b.player_id=p.id "
+    "order by b.numbricks desc limit 25");
 
-  int i = 1;
-  while (i <= 25) {
-    if (db_brickquest.fetchRow()) {
-      ch->sendTo(COLOR_BASIC, format("%s has %s bricks collected so far.\r\n") %
-                                db_brickquest["name"] %
-                                db_brickquest["numbricks"]);
-    }
-    ++i;
+  while (db_brickquest.fetchRow()) {
+    ch->sendTo(COLOR_BASIC, format("%s has %s bricks collected so far.\r\n") %
+                              db_brickquest["name"] %
+                              db_brickquest["numbricks"]);
   }
   return TRUE;
 }
@@ -4295,7 +4299,7 @@ int force(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
       TBeing* vict = NULL;
 
       for (StuffIter it = ch->roomp->stuff.begin();
-           it != ch->roomp->stuff.end() && (t = *it); ++it) {
+        it != ch->roomp->stuff.end() && (t = *it); ++it) {
         vict = dynamic_cast<TBeing*>(t);
         if (!vict)
           continue;
@@ -4557,7 +4561,7 @@ int symbolBlindingLight(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o,
       TRUE, ch, o, NULL, TO_CHAR, NULL);
 
     for (StuffIter it = ch->roomp->stuff.begin();
-         it != ch->roomp->stuff.end() && (t = *it); ++it) {
+      it != ch->roomp->stuff.end() && (t = *it); ++it) {
       tmp_victim = dynamic_cast<TBeing*>(t);
       if (!tmp_victim)
         continue;
@@ -4621,7 +4625,7 @@ int blizzardRing(TBeing* being, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
       TBeing* vict = NULL;
 
       for (StuffIter it = ch->roomp->stuff.begin();
-           it != ch->roomp->stuff.end() && (t = *it); ++it) {
+        it != ch->roomp->stuff.end() && (t = *it); ++it) {
         vict = dynamic_cast<TBeing*>(t);
         if (!vict)
           continue;
@@ -4688,7 +4692,7 @@ int factionScoreBoard(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1,
     return FALSE;
 
   for (StuffIter it = ch->roomp->stuff.begin();
-       it != ch->roomp->stuff.end() && (o = *it); ++it) {
+    it != ch->roomp->stuff.end() && (o = *it); ++it) {
     to = dynamic_cast<TObj*>(o);
     if (to && to->spec == SPEC_FACTIONSCORE_BOARD && isname(arg, to->name)) {
       found = 1;
@@ -4726,7 +4730,7 @@ int factionScoreBoard(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1,
     totalscore = 0;
 
     // number of members and total levels
-    db.query("select level from factionmembers where faction='%s'",
+    db.query("select fm.level from factionmembers fm where fm.faction='%s'",
       factnames[i].c_str());
     score = 0;
     float level = 0;
@@ -4744,8 +4748,9 @@ int factionScoreBoard(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1,
 
     // fishing
     db.query(
-      "select sum(fk.weight) as weight from fishkeeper fk, factionmembers fm "
-      "where fk.name=fm.name and fm.faction='%s'",
+      "select sum(fk.weight) as weight from fishkeeper fk "
+      "join factionmembers fm on fk.player_id=fm.player_id "
+      "where fm.faction='%s'",
       factnames[i].c_str());
     score = 0;
     if (db.fetchRow()) {
@@ -4758,8 +4763,9 @@ int factionScoreBoard(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1,
     }
 
     db.query(
-      "select count(*) as count from fishlargest fl, factionmembers fm where  "
-      "fl.name=fm.name and fm.faction='%s'",
+      "select count(*) as count from fishlargest fl "
+      "join factionmembers fm on fl.player_id=fm.player_id "
+      "where fm.faction='%s'",
       factnames[i].c_str());
     if (db.fetchRow()) {
       score += convertTo<int>(db["count"]);
@@ -4778,9 +4784,9 @@ int factionScoreBoard(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1,
     //    trophyplayer t, factionmembers fm where t.name=fm.name and
     //    fm.faction='%s' group by fm.level, t.count", factnames[i].c_str());
     db.query(
-      "select fm.level, t.count from trophyplayer t, factionmembers fm, player "
-      "p where p.name=fm.name and t.player_id=p.id and fm.faction='%s' group "
-      "by fm.level, t.count",
+      "select fm.level, t.count from trophyplayer t "
+      "join factionmembers fm on t.player_id=fm.player_id "
+      "where fm.faction='%s'",
       factnames[i].c_str());
 
     score = 0;
@@ -4796,9 +4802,9 @@ int factionScoreBoard(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o1,
 
     // shops
     db.query(
-      "select count(distinct soa.shop_nr) as count from shopownedaccess soa, "
-      "factionmembers fm where (soa.access & %i)>0 and upper(fm.name) = "
-      "upper(soa.name) and fm.faction='%s'",
+      "select count(distinct soa.shop_nr) as count from shopownedaccess soa "
+      "join factionmembers fm on fm.player_id=soa.player_id "
+      "where (soa.access & %i)>0 and fm.faction='%s'",
       SHOPACCESS_OWNER, factnames[i].c_str());
     score = 0;
     if (db.fetchRow()) {
@@ -5111,24 +5117,24 @@ int HSCopsi(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*) {
 
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
     return FALSE;
-  
-  
+
+
   if(!(pendant = dynamic_cast<TObj *>(ch->equipment[WEAR_NECK])))
     return FALSE;
   if (obj_index[pendant->getItemIndex()].virt != 17258)
     return FALSE;
-  
+
   if(!(hammer1 = dynamic_cast<TObj *>(ch->equipment[HOLD_RIGHT])))
     return FALSE;
   if (obj_index[hammer1->getItemIndex()].virt != 17256 || obj_index[hammer1->getItemIndex()].virt != 17257)
     return FALSE;
-  
+
   if(!(hammer2 = dynamic_cast<TObj *>(ch->equipment[HOLD_RIGHT])))
     return FALSE;
   if (obj_index[hammer2->getItemIndex()].virt != 17256 || obj_index[hammer2->getItemIndex()].virt != 17257)
     return FALSE;
 
-  // yay, he's using all three. 
+  // yay, he's using all three.
   int charge = 0;
   sscanf(pendant->name, "pendant crystal hammer [quest] [charge=%d]", &charge);
 
@@ -5142,11 +5148,11 @@ int HSCopsi(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*) {
   act("Your $o flashes pale <b>blue<1> for a moment.",TRUE,ch,pendant,vict,TO_CHAR,NULL);
   act("$n's $o flashes pale <b>blue<1> for a moment.",TRUE,ch,pendant,vict,TO_NOTVICT,NULL);
   act("$n's $o flashes pale <b>blue<1> for a moment.",TRUE,ch,pendant,vict,TO_VICT,NULL);
- 
-  
+
+
   charge += dam;
   sprintf(pendant->name, "pendant crystal hammer [quest] [charge=%d]", charge);
-  
+
   int rc = ch->reconcileDamage(vict, dam, DAMAGE_DRAIN);
   if (IS_SET_DELETE(rc, DELETE_VICT))
     return DELETE_VICT;
@@ -5331,7 +5337,7 @@ int energyShield(TBeing* v, cmdTypeT cmd, const char*, TObj* o, TObj* weapon) {
   if (!(ch = dynamic_cast<TBeing *>(o->equippedBy))) {
 
     delete o;
-    return FALSE; 
+    return FALSE;
   }
   if(!(generator = dynamic_cast<TObj *>(ch->equipment[WEAR_WAIST]))) {
     act("Your $o collapses.",TRUE,ch,o,NULL,TO_CHAR,NULL);
@@ -5346,40 +5352,40 @@ int energyShield(TBeing* v, cmdTypeT cmd, const char*, TObj* o, TObj* weapon) {
     return FALSE;
   }
 
-  
+
   int isOn = 0; //0 is false, 1 is true
-  
+
   int charge = 0;
   sscanf(generator->name, "generator shield belt [on=%d] [charge=%d]", &isOn, &charge);
   int newcharge = charge;
-  
+
   if (!isOn || charge < 1) {
     act("Your $o collapses.",TRUE,ch,o,NULL,TO_CHAR,NULL);
     act("$n's $o collapses.",TRUE,ch,o,NULL,TO_ROOM,NULL);
     delete o;
     return FALSE;
   }
-  
+
   newcharge = newcharge - max(0,::number(-8,1)); // upkeep.. basically .1 point/round/shield
-  
+
   if(o->getStructPoints() < o->getMaxStructPoints()) {
     o->addToStructPoints(1);
     newcharge = newcharge - 1; // recharge
   }
-  
+
   if ((charge-1) / 100 != (newcharge-1) / 100 || (newcharge == 1000 && charge < 1000)) {
     if (newcharge / 100 <= 3) buf="<r>red";
     else if ( newcharge / 100 <= 6) buf="<Y>yellow";
     else if ( newcharge / 100 <= 9) buf="<g>green";
     else buf="<c>blue";
-    
+
     buf2 = format("The display panel on your $o glows %s<1> as it reads %d0%c.") % buf % (newcharge/100) % '%';
     act(buf2,TRUE,ch,generator,NULL,TO_CHAR,NULL);
     buf2 = format("The display panel on $n's $o glows %s<1>.") % buf;
     act(buf2,TRUE,ch,generator,NULL, TO_ROOM,NULL);
   }
-  
-  
+
+
   sprintf(generator->name, "generator shield belt [on=%d] [charge=%d]", isOn, newcharge);
 
 #endif
@@ -5404,7 +5410,7 @@ int energyShieldGenerator(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o,
   if (cmd == CMD_GENERIC_PULSE) {
 
     sscanf(o->name, "generator shield belt [on=%d] [charge=%d]", &isOn, &charge);
-    
+
     newcharge = charge;
 
     if (charge < 1000 && ch->outside() && is_daytime()) {
@@ -5413,10 +5419,10 @@ int energyShieldGenerator(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o,
     }
 
     if (isOn) {
-      
-      
+
+
       wearSlotT il;
-      
+
       for (il = MIN_WEAR; il < MAX_WEAR; il++) {
 	if (il == HOLD_RIGHT || il == HOLD_LEFT)
 	  continue;
@@ -5426,9 +5432,9 @@ int energyShieldGenerator(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o,
 	    vlogf(LOG_PROC, "Shield generator couldn't load energy shield!");
 	    return TRUE;
 	  }
-	  
+
 	  int bit = (1<<14);
-	  
+
 	  if(il == WEAR_HEAD) bit = ITEM_WEAR_HEAD;
 	  if(il == WEAR_NECK) bit = ITEM_WEAR_NECK;
 	  if(il == WEAR_BACK) bit = ITEM_WEAR_BACK;
@@ -5450,26 +5456,26 @@ int energyShieldGenerator(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o,
 	  if(il == WEAR_EX_LEG_L) bit = ITEM_WEAR_LEGS;
 	  if(il == WEAR_EX_FOOT_R) bit = ITEM_WEAR_FEET;
 	  if(il == WEAR_EX_FOOT_L) bit = ITEM_WEAR_FEET;
-	  
+
 	  shield->obj_flags.wear_flags = bit;
 	  TBaseClothing *armor = NULL;
-	  
+
 	  if ((armor = dynamic_cast<TBaseClothing *>(shield))) {
 	    armor->setDefArmorLevel(ch->GetMaxLevel());
 	    armor->setVolume((int) (((100. * (double) ch->getHeight())) * race_vol_constants[mapSlotToFile(il)] / 100));
 	  }
-	  
+
 	  ch->equipChar(shield, il);
-	  
+
 	  buf2 = format("Your %s is surrounded by a crackling blue aura.") % ch->describeBodySlot((wearSlotT)il);
-	  
+
 	  act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
 	  buf2 = format("$n's %s is surrounded by a crackling blue aura.") % ch->describeBodySlot((wearSlotT)il);
-	  
+
 	  act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
-	  
+
 	  newcharge = newcharge - 10;
-	  
+
 	}
       }
 
@@ -5479,14 +5485,14 @@ int energyShieldGenerator(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o,
       else if ( newcharge / 100 <= 6) buf="<Y>yellow";
       else if ( newcharge / 100 <= 9) buf="<g>green";
       else buf="<c>blue";
-      
+
       buf2 = format("The display panel on your $o glows %s<1> as it reads %d0%c.") % buf % (newcharge/100) % '%';
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
       buf2 = format("The display panel on $n's $o glows %s<1>.") % buf;
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
-      
+
     }
-    
+
     sprintf(o->name, "generator shield belt [on=%d] [charge=%d]", isOn, newcharge);
     return FALSE;
 
@@ -5495,9 +5501,9 @@ int energyShieldGenerator(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o,
     arg2=sstring(arg).word(1);
 
     if (is_abbrev(arg1, "display") && is_abbrev(arg2, "button")) {
-     
+
       sscanf(o->name, "generator shield belt [on=%d] [charge=%d]", &isOn, &charge);
-      
+
       if (charge / 100 <= 3) buf="<r>red";
       else if (charge / 100 <= 6) buf="<Y>yellow";
       else if (charge / 100 <= 9) buf="<g>green";
@@ -5515,12 +5521,12 @@ int energyShieldGenerator(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o,
       buf2 = format("The power LED on your $o is currently %s<1>.") % (isOn ? "<g>on<1>" : "<r>off<1>");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
 
-      
+
       return TRUE;
     } else if (is_abbrev(arg1, "power") && is_abbrev(arg2, "button")) {
       int charge = 0;
       sscanf(o->name, "generator shield belt [on=%d] [charge=%d]", &isOn, &charge);
-      
+
 
 
       act("You press the power button on $p.",TRUE,ch,o,NULL,TO_CHAR,NULL);
@@ -5587,8 +5593,8 @@ int stimPack(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o, TObj* weapon) {
     if (is_abbrev(arg1, "display") && is_abbrev(arg2, "button")) {
       act("You press the display button on your <W>forearm guard<1>.",TRUE,ch,o,NULL,TO_CHAR,NULL);
       act("$n presses a button on $s <W>forearm guard<1>.",TRUE,ch,o,NULL, TO_ROOM,NULL);
-      
-      
+
+
       buf2="The display panel on your <W>forearm guard<1> flips open, revealing a row of lights.";
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
       buf2="A panel on $n's <W>forearm guard<1> flips open, revealing a row of lights.";
@@ -5610,22 +5616,22 @@ int stimPack(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o, TObj* weapon) {
       buf2="You quickly flip the display panel closed again.";
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
 
-      
+
       ret = TRUE;
     } else if (is_abbrev(arg1, "stim") && is_abbrev(arg2, "button")) {
-      
+
       act("You press the stim button on your <W>forearm guard<1>.",TRUE,ch,o,NULL,TO_CHAR,NULL);
       act("$n presses a button on $s <W>forearm guard<1>.",TRUE,ch,o,NULL, TO_ROOM,NULL);
-      
+
       if (charge < 200) {
 	buf2="Nothing seems to happen.";
 	act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
       } else {
-      
+
 	newcharge = charge - 200;
 
 	affectedData aff;
-	
+
 	aff.type = AFFECT_DRUG;
 	aff.level = 50;
 	aff.duration = 2 * Pulse::UPDATES_PER_MUDHOUR;
@@ -5640,7 +5646,7 @@ int stimPack(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o, TObj* weapon) {
 	aff.location = APPLY_CON;
 	aff.bitvector = 0;
 	ch->affectTo(&aff, -1);
-	if (charge == 1000) {  // give an extra boost when stimming from full 
+	if (charge == 1000) {  // give an extra boost when stimming from full
 	  aff.type = SPELL_HASTE;
 	  aff.level = 50;
 	  aff.duration =  1 * Pulse::UPDATES_PER_MUDHOUR;
@@ -5649,7 +5655,7 @@ int stimPack(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o, TObj* weapon) {
 	  aff.bitvector = 0;
 	  ch->affectTo(&aff, -1);
 	}
-	
+
 	act("You feel a <r>sharp prick<1> from your <W>forearm guard<1>.",TRUE,ch,o,NULL,TO_CHAR,NULL);
 	act("<o>Suddenly a tendril of burning fire seems to course through your bloodstream!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
         act("You shudder in pain but simultaneously feel your reflexes become quicker!<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
@@ -5660,7 +5666,7 @@ int stimPack(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o, TObj* weapon) {
 	  return DELETE_VICT;
       }
       ret = TRUE;
-      
+
     } else if (is_abbrev(arg1, "charge") && is_abbrev(arg2, "button")) {
 
       act("You press the charge button on your <W>forearm guard<1>.",TRUE,ch,o,NULL,TO_CHAR,NULL);
@@ -5676,20 +5682,20 @@ int stimPack(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o, TObj* weapon) {
       buf2 = format("The charging LED on your $o turns %s<1>.") % (isOn ? "<P>on<1>" : "<k>off<1>");
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
       buf2 = format("A little %s on $n's <W>forearm guard<1> %s.") %
-	(isOn ? "<k>light<1>" : "<P>light<1>") % 
+	(isOn ? "<k>light<1>" : "<P>light<1>") %
 	(isOn ? "turns <P>on<1>" : "goes <k>out<1>");
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
-      
+
       sprintf(o->name, "forearm-guard guard plastic lights stim wristband [on_%d] [charge_%d]", isOn, newcharge);
       ret = TRUE;
-      
+
     }
-    
+
   }
-  
-  
+
+
   if (newcharge != charge) {
-    // for display lights turning on  
+    // for display lights turning on
     if (newcharge >= 200 && charge < 200) {
       buf2="The <k>first<1> LED on your <W>forearm guard<1> begins to <R>glow<1>.";
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
@@ -5750,7 +5756,7 @@ int stimPack(TBeing* v, cmdTypeT cmd, const char* arg, TObj* o, TObj* weapon) {
       act(buf2,TRUE,ch,o,NULL,TO_CHAR,NULL);
       buf2="One of the <B>lights<1> on $n's <W>forearm guard<1> stops <k>glowing<1>.";
       act(buf2,TRUE,ch,o,NULL, TO_ROOM,NULL);
-      
+
     }
     sprintf(o->name, "forearm-guard guard plastic lights stim wristband [on_%d] [charge_%d]", isOn, newcharge);
   }
@@ -6277,47 +6283,47 @@ int stickerBush(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
 }
 
 int rechargingWand(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
-  if (!o){
+  if (!o) {
     return false;
   }
 
   ch = dynamic_cast<TBeing*>(o->equippedBy);
   TWand* wand = dynamic_cast<TWand*>(o);
-  
-  if (cmd == CMD_GENERIC_PULSE && !::number(0, 49)) {
 
+  if (cmd == CMD_GENERIC_PULSE && !::number(0, 49)) {
     // The proc should only work when a mage mob or PC has the object equipped
     if (!ch) {
       return false;
     }
-  
+
     // The proc should only work on wands that aren't already at max charges
     if (!wand || wand->getCurCharges() >= wand->getMaxCharges())
       return false;
-    
+
     int level = wand->getMagicLevel();
     int manaCost = ::number(10, (50 + level));
 
     // The PC/mob should have enough mana for the proc to work
-    if (ch->getMana() < manaCost){
-      act("$p begins to pull energy from you, but you are too weak.", false, ch, o, nullptr, TO_CHAR);
+    if (ch->getMana() < manaCost) {
+      act("$p begins to pull energy from you, but you are too weak.", false, ch,
+        o, nullptr, TO_CHAR);
       return false;
     }
-  
+
     wand->addToCurCharges(1);
     ch->addToMana(-manaCost);
-    act("You feel <P>energy<z> pulled from you and into $p.", false, ch, wand, nullptr, TO_CHAR);
+    act("You feel <P>energy<z> pulled from you and into $p.", false, ch, wand,
+      nullptr, TO_CHAR);
     return true;
   }
-
-  
 
   if (cmd == CMD_OBJ_USED) {
     if (!ch || !wand) {
       return false;
     }
 
-    int strainChance = max(1,(wand->getMaxCharges() * 5) - ch->getKarReaction());
+    int strainChance =
+      max(1, (wand->getMaxCharges() * 5) - ch->getKarReaction());
     strainChance = min(strainChance, 99);
 
     if (wand->getCurCharges() > 0) {
@@ -6325,32 +6331,34 @@ int rechargingWand(TBeing* ch, cmdTypeT cmd, const char*, TObj* o, TObj*) {
     }
 
     if (!percentChance(strainChance)) {
-      act("$p <C>glows<1> just for a moment, then <k>dims.<z>", false, ch, wand, nullptr, TO_CHAR);
+      act("$p <C>glows<1> just for a moment, then <k>dims.<z>", false, ch, wand,
+        nullptr, TO_CHAR);
       return false;
     }
 
     int maxCharge = wand->getMaxCharges();
     wand->setMaxCharges(maxCharge - 1);
-    act("$p is <p>stressed<1> by the strain of overuse!", false, ch, wand, nullptr, TO_CHAR);
-    act("$p emits <y>sparks<1> and <k>smoke<1> as some magic leaves it.", false, ch, wand, nullptr, TO_CHAR);
-    act("$n's $p emits <y>sparks<1> and <k>smoke<1>!", false, ch, wand, nullptr, TO_ROOM);
+    act("$p is <p>stressed<1> by the strain of overuse!", false, ch, wand,
+      nullptr, TO_CHAR);
+    act("$p emits <y>sparks<1> and <k>smoke<1> as some magic leaves it.", false,
+      ch, wand, nullptr, TO_CHAR);
+    act("$n's $p emits <y>sparks<1> and <k>smoke<1>!", false, ch, wand, nullptr,
+      TO_ROOM);
     wand->dropGas(::number(1, 5), GAS_SMOKE);
 
     if (wand->getMaxCharges() <= 0) {
       act("$p <k>crumbles<1> into dust!", false, ch, wand, nullptr, TO_CHAR);
       act("$p <k>crumbles<1> into dust!", false, ch, wand, nullptr, TO_ROOM);
-      if (!wand->makeScraps()){
-        delete wand;
-        wand = nullptr;
+      if (!wand->makeScraps()) {
+        return DELETE_THIS;
       }
-      return TRUE;
+      return true;
     }
     return TRUE;
   }
 
   return false;
 }
-
 
 int satyrShrine(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   // Validate basic preconditions
@@ -6380,14 +6388,9 @@ int satyrShrine(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   }
 
   // Collect required objects
-  static constexpr std::array<int, 6> required_obj_vnums = {
-    Obj::SOUL_APPLE,
-    Obj::SOUL_CHERRY,
-    Obj::SOUL_PEAR,
-    Obj::SOUL_HICKORY,
-    Obj::SOUL_OAK,
-    Obj::SOUL_CHESTNUT
-  };
+  static constexpr std::array<int, 6> required_obj_vnums = {Obj::SOUL_APPLE,
+    Obj::SOUL_CHERRY, Obj::SOUL_PEAR, Obj::SOUL_HICKORY, Obj::SOUL_OAK,
+    Obj::SOUL_CHESTNUT};
 
   std::vector<TObj*> found_objs;
   for (int vnum : required_obj_vnums) {
@@ -6403,6 +6406,20 @@ int satyrShrine(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
     found_objs.push_back(obj);
   }
 
+  // Create portals before consuming offerings so items aren't lost on failure
+  TObj* portalIn = read_object(Obj::PETRIFIED_PORTAL_IN, VIRTUAL);
+  TObj* portalOut = read_object(Obj::PETRIFIED_PORTAL_OUT, VIRTUAL);
+
+  if (!portalIn || !portalOut) {
+    vlogf(LOG_PROC, "satyrShrine: failed to load portal prototype(s)");
+    ch->sendTo(
+      "The shrine shudders, but its magic seems broken. Something is wrong "
+      "with the portal enchantment.\n\r");
+    delete portalIn;
+    delete portalOut;
+    return false;
+  }
+
   // Consume the required objects
   for (TObj* obj : found_objs) {
     act("You feel $p crumble and be absorbed by the shrine!", false, ch, obj,
@@ -6413,25 +6430,9 @@ int satyrShrine(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
     delete obj;
   }
 
-  // Create and place portals
-  TObj* portalIn = read_object(Obj::PETRIFIED_PORTAL_IN, VIRTUAL);
-  TObj* portalOut = read_object(Obj::PETRIFIED_PORTAL_OUT, VIRTUAL);
-
-  if (!portalIn || !portalOut) {
-    vlogf(LOG_PROC, "satyrShrine: failed to load portal prototype(s)");
-    // Clean up whichever portal was created
-    if (portalIn) {
-      delete portalIn;
-    }
-    if (portalOut) {
-      delete portalOut;
-    }
-    return false;
-  }
-
   *shrine->roomp += *portalIn;
-  act("<k>The shrine dissolves into<1> <c>mist!<z>", false, portalIn, nullptr, nullptr,
-    TO_ROOM);
+  act("<k>The shrine dissolves into<1> <c>mist!<z>", false, portalIn, nullptr,
+    nullptr, TO_ROOM);
 
   // Dump remaining contents
   if (!shrine->stuff.empty()) {
@@ -6451,7 +6452,9 @@ int satyrShrine(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   act("A shimmering portal appears!", false, portalOut, nullptr, nullptr,
     TO_ROOM);
 
-  return DELETE_ITEM;
+  // Command path (CMD_SAY): DELETE_THIS tells parse.cc to delete the object.
+  // DELETE_ITEM would instead signal a player death.
+  return DELETE_THIS;
 }
 
 int skittishObject(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
@@ -6938,7 +6941,7 @@ int mobSpawnGrab(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* me,
   if (cmd != CMD_OBJ_GOTTEN || !cont || !ch || !me)
     return FALSE;
 
-#if 0 
+#if 0
 /* screw it */
   // look for the proc flag in the name
   // it will contain the number of seconds since it was first grabbed, as recorded at the time
@@ -6951,7 +6954,7 @@ int mobSpawnGrab(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* me,
     if (grabbed) {
       if ((double) time(NULL) - grabbed > 2629743) {
         // decay the object after one real month
-        
+
         // equipped, inventory, on ground, on table, in a bag... yeesh
         if (ch) {
           act("Your $p goes poof.", FALSE, ch, me, 0, TO_CHAR, NULL);
@@ -6960,7 +6963,7 @@ int mobSpawnGrab(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* me,
           // on the ground i guess
           act("$n goes poof.", FALSE, o, 0, 0, TO_ROOM);
         }
-        
+
       }
     }
     return FALSE;
@@ -7435,11 +7438,13 @@ int ieComputer(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
       if (is_abbrev(arg3, "redeemed")) {
         sstring contents = "<o>Immortal Exchange Coin Redemption<1>\n\r";
         db.query(
-          "select p1.name as redeemed_for, p2.name as redeemed_by, count(*) as "
-          "coins, date_format(now(), '%%M %%e %%Y %%l:%%i %%p') as "
-          "date_printed from immortal_exchange_coin c1 left join player p1 on "
-          "p1.id = c1.redeemed_for left join player p2 on c1.redeemed_by = "
-          "p2.id group by p1.name, p2.name order by p1.name, p2.name;");
+          "select redeemed_for_name as redeemed_for, "
+          "redeemed_by_name as redeemed_by, count(*) as coins, "
+          "date_format(now(), '%%M %%e %%Y %%l:%%i %%p') as date_printed "
+          "from immortal_exchange_coin "
+          "where date_redeemed is not null "
+          "group by redeemed_for_name, redeemed_by_name "
+          "order by redeemed_for_name, redeemed_by_name");
         if (db.fetchRow()) {
           contents +=
             format("<o>as of<1> <c>%s<1>\n\r\n\r") % db["date_printed"];
@@ -7460,11 +7465,12 @@ int ieComputer(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
       } else {
         sstring contents = "<g>Immortal Exchange Coin Distribution<1>\n\r";
         db.query(
-          "select p1.name as created_for, p2.name as created_by, count(*) as "
-          "coins, date_format(now(), '%%M %%e %%Y %%l:%%i %%p') as "
-          "date_printed from immortal_exchange_coin c1 left join player p1 on "
-          "p1.id = c1.created_for left join player p2 on c1.created_by = p2.id "
-          "group by p1.name, p2.name order by p1.name, p2.name;");
+          "select created_for_name as created_for, "
+          "created_by_name as created_by, count(*) as coins, "
+          "date_format(now(), '%%M %%e %%Y %%l:%%i %%p') as date_printed "
+          "from immortal_exchange_coin "
+          "group by created_for_name, created_by_name "
+          "order by created_for_name, created_by_name");
         if (db.fetchRow()) {
           contents +=
             format("<g>as of<1> <c>%s<1>\n\r\n\r") % db["date_printed"];
@@ -7751,6 +7757,5 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
   {TRUE, "Shadow Weapon", shadowWeapon}, {TRUE, "Living Vines", livingVines},
   {TRUE, "Piety Regen", pietyRegen}, {TRUE, "DK Sword", dkSword},
   {TRUE, "Molten Weapon", moltenWeapon},
-  {TRUE, "Glacial Weapon", glacialWeapon}, //162
-  {FALSE, "satyr shrine", satyrShrine},
-  {FALSE, "last proc", bogusObjProc}};
+  {TRUE, "Glacial Weapon", glacialWeapon},  // 162
+  {FALSE, "satyr shrine", satyrShrine}, {FALSE, "last proc", bogusObjProc}};

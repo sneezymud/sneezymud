@@ -756,12 +756,15 @@ void TPerson::fixPracs() {
   if (isImmortal())
     return;
 
-  for (i = 1; i < 127; i++) {
+  for (i = 1; i <= 127; i++) {
     if (getExpClassLevel(i) > getMaxExp()) {
       level = i - 1;
       break;
     }
   }
+  // exp exceeds all levels up to 127, cap at 127
+  if (!level)
+    level = 127;
 
   for (Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
     if (hasClass(1 << Class))
@@ -862,17 +865,21 @@ short TBeing::expectedPracs() {
     if (!hasClass(1 << Class))
       continue;
     // find level based on experience
-    for (i = 1; i < 127; i++) {
+    for (i = 1; i <= 127; i++) {
       if (getExpClassLevel(i) > getMaxExp()) {
         level = i - 1;
         break;
       }
     }
-    if (!level)
-      vlogf(LOG_BUG, "Level exceeded 127 in expectedPracs.");
-    lvlStart = getExpClassLevel(level);
-    lvlEnd = getExpClassLevel(level + 1);
-    fraction = (getMaxExp() - lvlStart) / (lvlEnd - lvlStart);
+    if (!level) {
+      // exp exceeds all levels up to 127, cap at 127 with full fraction
+      level = 127;
+      fraction = 1.0;
+    } else {
+      lvlStart = getExpClassLevel(level);
+      lvlEnd = getExpClassLevel(level + 1);
+      fraction = (getMaxExp() - lvlStart) / (lvlEnd - lvlStart);
+    }
     double advancedlevel = 30.0 / getIntModForPracs();
     /*
        vlogf(LOG_MAROR, format("level is %d, exp is %f, fraction is %f,

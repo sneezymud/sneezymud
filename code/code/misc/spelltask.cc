@@ -1335,6 +1335,7 @@ int TBeing::checkBadSpellCondition(TBeing* caster, int which) {
     case SPELL_ARCTIC_BLAST:
     case SPELL_ICE_STORM:
     case SPELL_TSUNAMI:
+    case SPELL_BLIZZARD:
     case SPELL_CONJURE_WATER:
     case SPELL_GUSHER:
       return FALSE;
@@ -1408,11 +1409,9 @@ int TBeing::checkBadSpellCondition(TBeing* caster, int which) {
     case SPELL_CELERITE:
     case SPELL_HASTE:
     case SPELL_CALM:
-    case SPELL_SENSE_LIFE:
+    case SPELL_MAGE_SIGHT:
     case SPELL_SENSE_LIFE_SHAMAN:  // shaman
-    case SPELL_DETECT_INVISIBLE:
-    case SPELL_DETECT_SHADOW:  // shaman
-    case SPELL_TRUE_SIGHT:
+    case SPELL_DETECT_SHADOW:      // shaman
     case SPELL_TELEPATHY:
     case SPELL_ROMBLER:     // shaman
     case SPELL_INTIMIDATE:  // shaman
@@ -1476,7 +1475,6 @@ int TBeing::checkBadSpellCondition(TBeing* caster, int which) {
     case SPELL_INVISIBILITY:
     case SPELL_POWERSTONE:
     case SPELL_SHATTER:
-    case SPELL_DETECT_MAGIC:
     case SPELL_DISPEL_MAGIC:
     case SPELL_CHASE_SPIRIT:  // shaman
     case SPELL_ENHANCE_WEAPON:
@@ -1566,12 +1564,6 @@ int TBeing::checkBadSpellCondition(TBeing* caster, int which) {
         return TRUE;
       }
       return FALSE;
-    case SPELL_INFRAVISION:
-      if (victim->isAffected(AFF_BLIND)) {
-        act("Infravision can't work on the blind.", FALSE, caster, 0, victim,
-          TO_CHAR);
-        return SPELL_FALSE;
-      }
     default:
       return FALSE;
   }
@@ -1635,47 +1627,51 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
 
   if (IS_SET(discArray[which]->targets, TAR_CHAR_ROOM) &&
       spelltask->target == 1) {
-    if (!victim) {
+    if (!victim && IS_SET(discArray[which]->targets, TAR_GROUP)) {
+      // Group mode: no individual victim, spell handles its own targeting.
+      ok = true;
+    } else if (!victim) {
       vlogf(LOG_BUG, "No victim where there should be in doSpellCast");
       stopCast(STOP_CAST_GENERIC);
       return FALSE;
-    }
-    if (victim->isPlayerAction(PLR_SOLOQUEST) && (victim != this) &&
-        !isImmortal() && isPc()) {
-      if (styp == SPELL_PRAYER) {
-        act("$N is on a quest, you can't invoke prayers on $M!", FALSE, this,
-          NULL, victim, TO_CHAR);
-      } else if (styp == SPELL_CASTER) {
-        act("$N is on a quest, you can't cast spells on $M!", FALSE, this, NULL,
-          victim, TO_CHAR);
-      } else if (styp == SPELL_DANCER) {
-        act("$N is on a quest, you can't invoke on $M!", FALSE, this, NULL,
-          victim, TO_CHAR);
+    } else {
+      if (victim->isPlayerAction(PLR_SOLOQUEST) && (victim != this) &&
+          !isImmortal() && isPc()) {
+        if (styp == SPELL_PRAYER) {
+          act("$N is on a quest, you can't invoke prayers on $M!", FALSE, this,
+            NULL, victim, TO_CHAR);
+        } else if (styp == SPELL_CASTER) {
+          act("$N is on a quest, you can't cast spells on $M!", FALSE, this,
+            NULL, victim, TO_CHAR);
+        } else if (styp == SPELL_DANCER) {
+          act("$N is on a quest, you can't invoke on $M!", FALSE, this, NULL,
+            victim, TO_CHAR);
+        }
+        stopCast(STOP_CAST_GENERIC);
+        return FALSE;
       }
-      stopCast(STOP_CAST_GENERIC);
-      return FALSE;
-    }
-    if (victim->isPlayerAction(PLR_GRPQUEST) && (victim != this) &&
-        !isImmortal() && isPc() && !isPlayerAction(PLR_GRPQUEST)) {
-      if (styp == SPELL_PRAYER) {
-        act("$N is on a group quest you aren't on!  No prayers allowed!", FALSE,
-          this, NULL, victim, TO_CHAR);
-      } else if (styp == SPELL_CASTER) {
-        act("$N is on a group quest you aren't on! No spells allowed!", FALSE,
-          this, NULL, victim, TO_CHAR);
-      } else if (styp == SPELL_DANCER) {
-        act("$N is on a group quest you aren't on! No invokation allowed!",
-          FALSE, this, NULL, victim, TO_CHAR);
+      if (victim->isPlayerAction(PLR_GRPQUEST) && (victim != this) &&
+          !isImmortal() && isPc() && !isPlayerAction(PLR_GRPQUEST)) {
+        if (styp == SPELL_PRAYER) {
+          act("$N is on a group quest you aren't on!  No prayers allowed!",
+            FALSE, this, NULL, victim, TO_CHAR);
+        } else if (styp == SPELL_CASTER) {
+          act("$N is on a group quest you aren't on! No spells allowed!", FALSE,
+            this, NULL, victim, TO_CHAR);
+        } else if (styp == SPELL_DANCER) {
+          act("$N is on a group quest you aren't on! No invokation allowed!",
+            FALSE, this, NULL, victim, TO_CHAR);
+        }
+        stopCast(STOP_CAST_GENERIC);
+        return FALSE;
       }
-      stopCast(STOP_CAST_GENERIC);
-      return FALSE;
-    }
-    if ((discArray[which]->targets & TAR_VIOLENT) && noHarmCheck(victim)) {
-      stopCast(STOP_CAST_GENERIC);
-      return FALSE;
-    }
+      if ((discArray[which]->targets & TAR_VIOLENT) && noHarmCheck(victim)) {
+        stopCast(STOP_CAST_GENERIC);
+        return FALSE;
+      }
 
-    ok = TRUE;
+      ok = TRUE;
+    }
   }
   if (!ok && (spelltask->target == 1) &&
       (discArray[which]->targets & TAR_CHAR_WORLD)) {
@@ -2160,6 +2156,9 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
     case SPELL_TSUNAMI:
       rc = castTsunami(this);
       break;
+    case SPELL_BLIZZARD:
+      rc = castBlizzard(this);
+      break;
     case SPELL_CONJURE_WATER:
       rc = castConjureElemWater(this);
       break;
@@ -2251,20 +2250,14 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
       } else
         castInvisibility(this, o);
       break;
-    case SPELL_SENSE_LIFE:
-      castSenseLife(this, victim);
+    case SPELL_MAGE_SIGHT:
+      rc = castMageSight(this, victim);
       break;
     case SPELL_SENSE_LIFE_SHAMAN:
       castSenseLifeShaman(this, victim);
       break;
-    case SPELL_DETECT_INVISIBLE:
-      castDetectInvisibility(this, victim);
-      break;
     case SPELL_DETECT_SHADOW:
       castDetectShadow(this, victim);
-      break;
-    case SPELL_TRUE_SIGHT:
-      castTrueSight(this, victim);
       break;
     case SPELL_TELEPATHY:
       castTelepathy(this);
@@ -2308,9 +2301,6 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
       break;
     case SPELL_FARLOOK:
       rc = castFarlook(this, victim);
-      break;
-    case SPELL_DETECT_MAGIC:
-      rc = castDetectMagic(this, victim);
       break;
     case SPELL_DISPEL_MAGIC:
       if (o) {
@@ -2586,12 +2576,6 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
         rc = castFlare(this);
       } else
         vlogf(LOG_BUG, "SPELL_FLARE called with null obj");
-      break;
-    case SPELL_INFRAVISION:
-      if (!o) {
-        rc = castInfravision(this, victim);
-      } else
-        vlogf(LOG_BUG, "SPELL_INFRAVISION called with null obj");
       break;
     case SPELL_STUPIDITY:
       if (!o) {

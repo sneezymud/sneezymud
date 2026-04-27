@@ -175,8 +175,8 @@ void ObjLoad(TBeing* ch, int vnum) {
     "select type, name, short_desc, long_desc, action_flag, wear_flag, val0, "
     "val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, "
     "cur_struct, decay, volume, material, max_exist, action_desc from obj "
-    "where vnum=%i and owner='%s'",
-    vnum, ch->name.c_str());
+    "where vnum=%i and player_id=%i",
+    vnum, ch->getPlayerID());
 
   if (!db.isResults()) {
     ch->sendTo("Object not found.\n\r");
@@ -226,8 +226,8 @@ void ObjLoad(TBeing* ch, int vnum) {
   o->ex_description = NULL;
 
   db.query(
-    "select name, description from objextra where vnum=%i and owner='%s'", vnum,
-    ch->name.c_str());
+    "select name, description from objextra where vnum=%i and player_id=%i",
+    vnum, ch->getPlayerID());
 
   while (db.fetchRow()) {
     new_descr = new extraDescription();
@@ -241,8 +241,8 @@ void ObjLoad(TBeing* ch, int vnum) {
   i = 0;
 
   db.query(
-    "select type, mod1, mod2 from objaffect where vnum=%i and owner='%s'", vnum,
-    ch->name.c_str());
+    "select type, mod1, mod2 from objaffect where vnum=%i and player_id=%i",
+    vnum, ch->getPlayerID());
 
   while (db.fetchRow()) {
     o->affected[i].location = mapFileToApply(convertTo<int>(db["type"]));
@@ -287,36 +287,43 @@ void ObjLoad(TBeing* ch, int vnum) {
 
   *ch += *o;
 }
-static void ObjSave(TBeing* ch, TObj* o, int vnum) {
+void ObjSave(TBeing* ch, TObj* o, int vnum) {
   ch->sendTo("Saving.\n\r");
 
   int tmp1, tmp2, tmp3, tmp4;
   o->getFourValues(&tmp1, &tmp2, &tmp3, &tmp4);
 
   TDatabase db(DB_IMMORTAL);
+  if (!db.query("begin")) {
+    ch->sendTo("Database error starting transaction!\n\r");
+    return;
+  }
 
-  //  db.query("delete from obj where vnum=%i", vnum);
   if (!db.query("insert into obj (vnum, name, short_desc, long_desc, type, "
                 "action_flag, wear_flag, val0, val1, val2, val3, weight, "
                 "price, can_be_seen, spec_proc, max_exist, cur_struct, "
-                "max_struct, decay, volume, material, owner, action_desc) "
+                "max_struct, decay, volume, material, player_id, action_desc) "
                 "values (%i, '%s', '%s', '%s', %i, %i, %i, %i, %i, %i, %i, %f, "
-                "%i, %i, %i, %i, %i, %i, %i, %i, %i, '%s', '%s')",
+                "%i, %i, %i, %i, %i, %i, %i, %i, %i, %i, '%s')",
         vnum, o->name.c_str(), o->shortDescr.c_str(), o->getDescr().c_str(),
         o->itemType(), o->getObjStat(), o->obj_flags.wear_flags, tmp1, tmp2,
         tmp3, tmp4, o->getWeight(), o->obj_flags.cost, o->canBeSeen, o->spec,
         o->max_exist, o->obj_flags.struct_points,
         o->obj_flags.max_struct_points, o->obj_flags.decay_time, o->getVolume(),
-        o->getMaterial(), ch->name.c_str(), o->action_description.c_str())) {
+        o->getMaterial(), ch->getPlayerID(), o->action_description.c_str())) {
+    db.query("rollback");
     ch->sendTo(
       "Unable to save object.  Make sure that an object doesn't already exist "
       "in that slot.\n\r");
-    //    ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   }
 
-  db.query("delete from objextra where vnum=%i and owner='%s'", vnum,
-    ch->name.c_str());
+  if (!db.query("delete from objextra where vnum=%i and player_id=%i", vnum,
+        ch->getPlayerID())) {
+    db.query("rollback");
+    ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
+    return;
+  }
 
   int i, j, k;
   char temp[2048];
@@ -330,24 +337,27 @@ static void ObjSave(TBeing* ch, TObj* o, int vnum) {
       }
       temp[j] = '\0';
 
-      if (!db.query("insert into objextra (name, description, owner, vnum) "
-                    "values ('%s', '%s', '%s', %i)",
-            exdes->keyword.c_str(), temp, ch->name.c_str(), vnum)) {
+      if (!db.query("insert into objextra (name, description, player_id, vnum) "
+                    "values ('%s', '%s', %i, %i)",
+            exdes->keyword.c_str(), temp, ch->getPlayerID(), vnum)) {
+        db.query("rollback");
         ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
         return;
       }
     } else {
-      if (!db.query("insert into objextra (name, description, owner, vnum) "
-                    "values ('%s', '', '%s', %i)",
-            exdes->keyword.c_str(), ch->name.c_str(), vnum)) {
+      if (!db.query("insert into objextra (name, description, player_id, vnum) "
+                    "values ('%s', '', %i, %i)",
+            exdes->keyword.c_str(), ch->getPlayerID(), vnum)) {
+        db.query("rollback");
         ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
         return;
       }
     }
   }
 
-  if (!db.query("delete from objaffect where vnum=%i and owner='%s'", vnum,
-        ch->name.c_str())) {
+  if (!db.query("delete from objaffect where vnum=%i and player_id=%i", vnum,
+        ch->getPlayerID())) {
+    db.query("rollback");
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   }
@@ -362,17 +372,24 @@ static void ObjSave(TBeing* ch, TObj* o, int vnum) {
 #endif
 
     if (o->affected[i].location != APPLY_NONE) {
-      if (!db.query("insert into objaffect (type, mod1, mod2, owner, vnum) "
-                    "values (%i, %i, %i, '%s', %i)",
+      if (!db.query("insert into objaffect (type, mod1, mod2, player_id, vnum) "
+                    "values (%i, %i, %i, %i, %i)",
             mapApplyToFile(o->affected[i].location),
             applyTypeShouldBeSpellnum(o->affected[i].location)
               ? mapSpellnumToFile(spellNumT(o->affected[i].modifier))
               : o->affected[i].modifier,
-            o->affected[i].modifier2, ch->name.c_str(), vnum)) {
+            o->affected[i].modifier2, ch->getPlayerID(), vnum)) {
+        db.query("rollback");
         ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
         return;
       }
     }
+  }
+
+  if (!db.query("commit")) {
+    db.query("rollback");
+    ch->sendTo("Database error committing object save!\n\r");
+    return;
   }
 }
 
@@ -409,13 +426,13 @@ static void olist(TPerson* ch, bool zone = false) {
 
   if (zone) {
     db.query(
-      "select vnum, name from obj where owner='%s' and vnum>%i and vnum<=%i "
+      "select vnum, name from obj where player_id=%i and vnum>%i and vnum<=%i "
       "order by vnum",
-      ch->name.c_str(), zone_table[ch->roomp->getZone()->zone_nr - 1].top,
+      ch->getPlayerID(), zone_table[ch->roomp->getZone()->zone_nr].bottom - 1,
       ch->roomp->getZone()->top);
   } else {
-    db.query("select vnum, name from obj where owner='%s' order by vnum",
-      ch->name.c_str());
+    db.query("select vnum, name from obj where player_id=%i order by vnum",
+      ch->getPlayerID());
   }
 
   if (!db.isResults()) {
@@ -497,24 +514,21 @@ static void oedit(TBeing* ch, const char* arg) {
 void oremove(TBeing* ch, int vnum) {
   TDatabase db(DB_IMMORTAL);
 
-  db.query("select * from obj where vnum=%i and owner='%s'", vnum,
-    ch->name.c_str());
+  db.query("select * from obj where vnum=%i and player_id=%i", vnum,
+    ch->getPlayerID());
 
   if (!db.isResults()) {
     ch->sendTo("Object not found.\n\r");
     return;
   }
 
-  if (!db.query("delete from obj where vnum=%i and owner='%s'", vnum,
-        ch->name.c_str()) ||
-      !db.query("delete from objaffect where vnum=%i and owner='%s'", vnum,
-        ch->name.c_str()) ||
-      !db.query("delete from objextra where vnum=%i and owner='%s'", vnum,
-        ch->name.c_str())) {
+  // FK CASCADE on objaffect and objextra handles child row cleanup
+  if (!db.query("delete from obj where vnum=%i and player_id=%i", vnum,
+        ch->getPlayerID())) {
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
-  } else
-    ch->sendTo("Removed.\n\r");
+  }
+  ch->sendTo("Removed.\n\r");
 }
 
 // This is the main function that controls all the object stuff - Russ
@@ -637,8 +651,8 @@ void TPerson::doOEdit(const char* argument) {
         // assume that sstring is an object name
         TDatabase db(DB_IMMORTAL);
 
-        db.query("select vnum, name from obj where owner='%s'",
-          getName().c_str());
+        db.query("select vnum, name from obj where player_id=%i",
+          getPlayerID());
 
         vnum = -1;
         while (db.fetchRow()) {

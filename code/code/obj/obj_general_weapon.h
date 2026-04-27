@@ -27,7 +27,7 @@ class TGenWeapon : public TBaseWeapon {
     virtual bool sellMeCheck(TBeing*, TMonster*, int, int) const;
 
     virtual weaponT getWeaponType(int which = -1) const;
-    virtual void setWeaponType(weaponT n, int which = 0);
+    virtual void setWeaponType(int n, int which = 0);
     int getWeaponFreq(int which) const;
     void setWeaponFreq(int n, int which = 0);
 

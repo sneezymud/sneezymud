@@ -1,4 +1,5 @@
 #include "monster.h"
+#include "person.h"
 #include "room.h"
 #include "obj_corpse.h"
 #include "obj_drinkcon.h"
@@ -202,34 +203,44 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
 
     if (record_part) {
       TDatabase db(DB_SNEEZY);
+
+      int chopperId = getPlayerIdByName(chopper.c_str());
+
       // get team affiliation for cutesy message below
+      int caddyId = ch->getPlayerID();
       sstring team;
-      bool samaritan = FALSE;
+      sstring caddyTeam;
+      bool samaritan = false;
       db.query(
-        "select (select team from quest_limbs_team where player = '%s') as "
-        "chopper_team, (select team from quest_limbs_team where player = '%s') "
+        "select (select team from quest_limbs_team where player_id=%i) as "
+        "chopper_team, (select team from quest_limbs_team where player_id=%i) "
         "as caddy_team",
-        chopper.c_str(), ch->name.c_str());
+        chopperId, caddyId);
       if (db.fetchRow()) {
         team = db["chopper_team"];
-        if (chopper.compare(ch->name)) {
+        caddyTeam = db["caddy_team"];
+        if (chopperId > 0 && chopperId != caddyId) {
           // turning in someone else's limb
-          samaritan = TRUE;
+          samaritan = true;
         }
-      } else
+      } else {
         team = "";
-      db.query(
-        "insert quest_limbs (player, team, mob_vnum, slot_num, slot_name) "
-        "select '%s', '%s', %i, %i, '%s'",
-        chopper.c_str(), team.c_str(), m_vnum, slot, mob_part.c_str());
-      vlogf(LOG_MAROR, format("Chop shop: %s") % partname);
+      }
+      if (chopperId > 0) {
+        if (db.query("insert into quest_limbs "
+                     "(player_id, team, mob_vnum, slot_num, slot_name) "
+                     "values (%i, '%s', %i, %i, '%s')",
+              chopperId, team.c_str(), m_vnum, slot, mob_part.c_str())) {
+          vlogf(LOG_MAROR, format("Chop shop: %s") % partname);
+        }
+      }
 
       if (!team.empty()) {
         if (samaritan) {
           mob->doWhisper(
             format("%s Why ain't you thoughtful, picking up after %s's mess!") %
             ch->name % chopper);
-          if (team.compare(db["caddy_team"]))
+          if (team != caddyTeam)
             mob->doWhisper(format("%s I'll make sure their gang, <o>%s<1>, "
                                   "gets the blame for this one.") %
                            ch->name % team);

@@ -558,20 +558,10 @@ charFile::charFile() :
 
 charFile::~charFile() {}
 
-// this returns the ID in the database, or creates a new one if needed
+// TMonster path: resolves through desc->original for switched/polyed
+// bodies. Returns 0 for normal mobs - callers must handle this.
 int TBeing::getPlayerID() const {
-  // Handle shapeshifted player
-  if (dynamic_cast<const TMonster*>(this) &&
-      IS_SET(specials.act, ACT_POLYSELF) && desc->original) {
-    if (desc->original->player.player_id == 0)
-      vlogf(LOG_BUG,
-        format("%s has no player ID!") % desc->original->getName());
-    return desc->original->player.player_id;
-  }
-
-  if (player.player_id == 0)
-    vlogf(LOG_BUG, format("%s has no player ID!") % getName());
-  return player.player_id;
+  return desc && desc->original ? desc->original->getPlayerID() : 0;
 }
 
 int TBeing::getAccountID() const {
@@ -1592,17 +1582,22 @@ bool TBeing::applyTattoo(wearSlotT slot, const sstring& tat,
   if (!hasPart(slot) || notBleedSlot(slot))
     return FALSE;
 
+  if (!isPc()) {
+    return false;
+  }
+
   TDatabase db(DB_SNEEZY);
   if (tat.length() == 0) {
     // removal
-    db.query("delete from tattoos where name = '%s' and location = %i",
-      getName().c_str(), int(slot));
+    db.query("delete from tattoos where player_id = %i and location = %i",
+      getPlayerID(), static_cast<int>(slot));
     if (db.rowCount() > 0)
       return TRUE;
   } else if (tat.length() <= 128) {
     // new tat
-    db.query("insert tattoos (name, tattoo, location) select '%s', '%s', %i",
-      getName().c_str(), tat.c_str(), int(slot));
+    db.query(
+      "insert into tattoos (player_id, tattoo, location) values (%i, '%s', %i)",
+      getPlayerID(), tat.c_str(), static_cast<int>(slot));
     if (db.rowCount() > 0)
       return TRUE;
   }

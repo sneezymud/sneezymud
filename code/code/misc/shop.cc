@@ -101,11 +101,10 @@ float shopData::getProfitSell(const TObj* obj, const TBeing* ch) {
   }
 
   // check pricing for player
-  for (iter = sell_player_cache.begin(); ch && iter != sell_player_cache.end();
-       ++iter) {
-    if ((*iter).first == (sstring)ch->name) {
-      profit = ((*iter).second);
-      break;
+  if (ch && ch->isPc()) {
+    if (auto it = sell_player_cache.find(ch->getPlayerID());
+      it != sell_player_cache.end()) {
+      profit = it->second;
     }
   }
 
@@ -161,13 +160,15 @@ bool shopData::ensureCache() {
   }
 
   db.query(
-    "select player, profit_buy, profit_sell, max_num from shopownedplayer "
-    "where shop_nr=%i",
+    "select sop.player_id, sop.profit_buy, sop.profit_sell, sop.max_num "
+    "from shopownedplayer sop "
+    "where sop.shop_nr=%i",
     shop_nr);
   while (db.fetchRow()) {
-    buy_player_cache[db["player"]] = convertTo<float>(db["profit_buy"]);
-    sell_player_cache[db["player"]] = convertTo<float>(db["profit_sell"]);
-    max_player_cache[db["player"]] = convertTo<int>(db["max_num"]);
+    int pid = convertTo<int>(db["player_id"]);
+    buy_player_cache[pid] = convertTo<float>(db["profit_buy"]);
+    sell_player_cache[pid] = convertTo<float>(db["profit_sell"]);
+    max_player_cache[pid] = convertTo<int>(db["max_num"]);
   }
 
   // clear all regular shopowned values to defaults (set only if query returns)
@@ -260,10 +261,12 @@ int shopData::getMaxNum(const TBeing* ch, const TObj* o, int defaultMax) {
   if (o && buy_ratios_cache.count(o->objVnum()))
     return max_ratios_cache[o->objVnum()];
 
-  for (iter = max_player_cache.begin(); ch && iter != max_player_cache.end();
-       ++iter)
-    if ((*iter).first == (sstring)ch->name)
-      return (*iter).second;
+  if (ch && ch->isPc()) {
+    if (auto it = max_player_cache.find(ch->getPlayerID());
+      it != max_player_cache.end()) {
+      return it->second;
+    }
+  }
 
   return max_num >= 0 ? max_num : defaultMax;
 }
@@ -298,13 +301,10 @@ float shopData::getProfitBuy(int vnum, sstring name, const TBeing* ch) {
     profit = profit_buy;
 
   // check for player specific modifiers
-  if (isOwned() && ch) {
-    for (iter = buy_player_cache.begin(); iter != buy_player_cache.end();
-         ++iter) {
-      if ((*iter).first == (sstring)ch->name) {
-        profit = ((*iter).second);
-        break;
-      }
+  if (isOwned() && ch && ch->isPc()) {
+    if (auto it = buy_player_cache.find(ch->getPlayerID());
+      it != buy_player_cache.end()) {
+      profit = it->second;
     }
   }
 
@@ -357,7 +357,7 @@ int TObj::sellPrice(int, int shop_nr, float chr, const TBeing* ch) {
   // make sure we don't have a negative cost
   cost = max(1.0, cost);
 
-  return (int)cost;
+  return saturate_to_int(cost);
 }
 
 // this is price shop will sell it at
@@ -377,7 +377,7 @@ int TObj::shopPrice(int num, int shop_nr, float chr, const TBeing* ch) const {
 
   // cast this back to an int so that we can multiple without inflating the
   // price
-  int singleCost = (int)cost;
+  int singleCost = saturate_to_int(cost);
 
   // finally do the multiplication for number of items
   // we do this last so that the actual price is the same as the single-object
@@ -2436,12 +2436,13 @@ void shoplog(int shop_nr, TBeing* ch, TMonster* keeper, const sstring& name,
   //  now(), %i)", shop_nr, ch?ch->getName():"unknown", action.c_str(),
   //  name.c_str(), cost, keeper->getMoney(), value, count);
 
-  queryqueue.push(format("insert into shoplog values (%i, '%s', '%s', '%s', "
-                         "%i, %i, %i, now(), %i)") %
-                  shop_nr %
-                  ((sstring)(ch ? ch->getName() : "unknown")).escape() %
-                  action.escape() % name.escape() % cost % keeper->getMoney() %
-                  value % count);
+  queryqueue.push(
+    format("insert into shoplog (shop_nr, name, action, item, talens, "
+           "shoptalens, shopvalue, logtime, itemcount) values "
+           "(%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)") %
+    shop_nr % ((sstring)(ch ? ch->getName() : "unknown")).escape() %
+    action.escape() % name.escape() % cost % keeper->getMoney() % value %
+    count);
 }
 
 void bootTheShops() {

@@ -1164,8 +1164,7 @@ bool parse_num_args(TPerson& ch, sstring args, std::vector<int>& vnums) {
   return true;
 }
 
-void mvRoom(TPerson& ch, const sstring& immortal, int block,
-  const sstring& rooms) {
+void mvRoom(TPerson& ch, int playerId, int block, const sstring& rooms) {
   std::vector<int> vnums;
   if (!parse_num_args(ch, rooms, vnums)) {
     ch.sendTo(
@@ -1178,78 +1177,124 @@ void mvRoom(TPerson& ch, const sstring& immortal, int block,
 
   db_beta.query("begin");
 
+  // Pass 1: UPSERT all parent room rows. This ensures every room in the batch
+  // exists before pass 2 inserts roomexit rows that reference them via FK.
+  std::vector<int> foundVnums;
   for (auto vnum : vnums) {
-    //// room
     db_immo.query(
       "select vnum, x, y, z, name, description, zone, room_flag, sector, "
       "teletime, teletarg, telelook, river_speed, river_dir, capacity, height, "
-      "spec from room where owner='%s' and vnum=%i and block=%i",
-      immortal.c_str(), vnum, block);
+      "spec from room where player_id=%i and vnum=%i and block=%i",
+      playerId, vnum, block);
 
     if (db_immo.fetchRow()) {
       ch.sendTo(format("Adding %i ('%s')\n") % vnum % db_immo["name"]);
 
-      db_beta.query("delete from room where vnum=%i", vnum);
-      db_beta.query(
-        "insert into room "
-        "(vnum,x,y,z,name,description,zone,room_flag,sector,teletime,teletarg,"
-        "telelook,river_speed,river_dir,capacity,height,spec) values "
-        "(%s,%s,%s,%s,'%s','%s',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-        db_immo["vnum"].c_str(), db_immo["x"].c_str(), db_immo["y"].c_str(),
-        db_immo["z"].c_str(), db_immo["name"].c_str(),
-        db_immo["description"].c_str(), db_immo["zone"].c_str(),
-        db_immo["room_flag"].c_str(), db_immo["sector"].c_str(),
-        db_immo["teletime"].c_str(), db_immo["teletarg"].c_str(),
-        db_immo["telelook"].c_str(), db_immo["river_speed"].c_str(),
-        db_immo["river_dir"].c_str(), db_immo["capacity"].c_str(),
-        db_immo["height"].c_str(), db_immo["spec"].c_str());
-
-      //// roomextra
-      db_beta.query("delete from roomextra where vnum=%i", vnum);
-
-      db_immo.query(
-        "select vnum, name, description from roomextra where owner='%s' and "
-        "vnum=%i and block=%i",
-        immortal.c_str(), vnum, block);
-
-      while (db_immo.fetchRow()) {
-        db_beta.query(
-          "insert into roomextra (vnum, name, description) values (%s, '%s', "
-          "'%s')",
-          db_immo["vnum"].c_str(), db_immo["name"].c_str(),
-          db_immo["description"].c_str());
+      if (!db_beta.query(
+            "insert into room "
+            "(vnum,x,y,z,name,description,zone,room_flag,sector,teletime,"
+            "teletarg,"
+            "telelook,river_speed,river_dir,capacity,height,spec) values "
+            "(%s,%s,%s,%s,'%s','%s',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) "
+            "ON DUPLICATE KEY UPDATE "
+            "x=VALUES(x), y=VALUES(y), z=VALUES(z), name=VALUES(name), "
+            "description=VALUES(description), zone=VALUES(zone), "
+            "room_flag=VALUES(room_flag), sector=VALUES(sector), "
+            "teletime=VALUES(teletime), teletarg=VALUES(teletarg), "
+            "telelook=VALUES(telelook), river_speed=VALUES(river_speed), "
+            "river_dir=VALUES(river_dir), capacity=VALUES(capacity), "
+            "height=VALUES(height), spec=VALUES(spec)",
+            db_immo["vnum"].c_str(), db_immo["x"].c_str(), db_immo["y"].c_str(),
+            db_immo["z"].c_str(), db_immo["name"].c_str(),
+            db_immo["description"].c_str(),
+            db_immo["zone"].empty() ? "null" : db_immo["zone"].c_str(),
+            db_immo["room_flag"].c_str(), db_immo["sector"].c_str(),
+            db_immo["teletime"].c_str(), db_immo["teletarg"].c_str(),
+            db_immo["telelook"].c_str(), db_immo["river_speed"].c_str(),
+            db_immo["river_dir"].c_str(), db_immo["capacity"].c_str(),
+            db_immo["height"].c_str(), db_immo["spec"].c_str())) {
+        db_beta.query("rollback");
+        ch.sendTo("Error copying room - rolled back all changes.\n");
+        return;
       }
 
-      //// roomexit
-      db_beta.query("delete from roomexit where vnum=%i", vnum);
-
-      db_immo.query(
-        "select vnum, direction, name, description, type, condition_flag, "
-        "lock_difficulty, weight, key_num, destination from roomexit where "
-        "owner='%s' and vnum=%i and block=%i",
-        immortal.c_str(), vnum, block);
-
-      while (db_immo.fetchRow()) {
-        db_beta.query(
-          "insert into roomexit "
-          "(vnum,direction,name,description,type,condition_flag,lock_"
-          "difficulty,weight,key_num,destination) values (%s, "
-          "%s,'%s','%s',%s,%s,%s,%s,%s,%s)",
-          db_immo["vnum"].c_str(), db_immo["direction"].c_str(),
-          db_immo["name"].c_str(), db_immo["description"].c_str(),
-          db_immo["type"].c_str(), db_immo["condition_flag"].c_str(),
-          db_immo["lock_difficulty"].c_str(), db_immo["weight"].c_str(),
-          db_immo["key_num"].c_str(), db_immo["destination"].c_str());
-      }
+      foundVnums.push_back(vnum);
     } else {
       ch.sendTo(format("Not found: %i\n") % vnum);
     }
   }
 
+  // Pass 2: Replace children for all rooms found in pass 1. Each db_immo
+  // fetchRow() loop completes before the next db_immo query, satisfying the
+  // shared-connection constraint.
+  bool ok = true;
+  for (auto vnum : foundVnums) {
+    //// roomextra
+    if (!db_beta.query("delete from roomextra where vnum=%i", vnum)) {
+      ok = false;
+      break;
+    }
+
+    db_immo.query(
+      "select vnum, name, description from roomextra where player_id=%i and "
+      "vnum=%i and block=%i",
+      playerId, vnum, block);
+
+    while (db_immo.fetchRow()) {
+      if (!db_beta.query(
+            "insert into roomextra (vnum, name, description) values (%s, '%s', "
+            "'%s')",
+            db_immo["vnum"].c_str(), db_immo["name"].c_str(),
+            db_immo["description"].c_str())) {
+        ok = false;
+        break;
+      }
+    }
+    if (!ok) {
+      break;
+    }
+
+    //// roomexit
+    if (!db_beta.query("delete from roomexit where vnum=%i", vnum)) {
+      ok = false;
+      break;
+    }
+
+    db_immo.query(
+      "select vnum, direction, name, description, type, condition_flag, "
+      "lock_difficulty, weight, key_num, destination from roomexit where "
+      "player_id=%i and vnum=%i and block=%i",
+      playerId, vnum, block);
+
+    while (db_immo.fetchRow()) {
+      if (!db_beta.query(
+            "insert into roomexit "
+            "(vnum,direction,name,description,type,condition_flag,lock_"
+            "difficulty,weight,key_num,destination) values (%s, "
+            "%s,'%s','%s',%s,%s,%s,%s,%s,%s)",
+            db_immo["vnum"].c_str(), db_immo["direction"].c_str(),
+            db_immo["name"].c_str(), db_immo["description"].c_str(),
+            db_immo["type"].c_str(), db_immo["condition_flag"].c_str(),
+            db_immo["lock_difficulty"].c_str(), db_immo["weight"].c_str(),
+            db_immo["key_num"].c_str(), db_immo["destination"].c_str())) {
+        ok = false;
+        break;
+      }
+    }
+    if (!ok) {
+      break;
+    }
+  }
+
+  if (!ok) {
+    db_beta.query("rollback");
+    ch.sendTo("Error copying child data - rolled back all changes.\n");
+    return;
+  }
   db_beta.query("commit");
 }
 
-void mvObj(TPerson& ch, const sstring& immortal, const sstring& rooms) {
+void mvObj(TPerson& ch, int playerId, const sstring& rooms) {
   std::vector<int> vnums;
   if (!parse_num_args(ch, rooms, vnums)) {
     ch.sendTo(
@@ -1269,9 +1314,9 @@ void mvObj(TPerson& ch, const sstring& immortal, const sstring& rooms) {
       "select "
       "vnum,name,short_desc,long_desc,action_desc,type,action_flag,wear_flag,"
       "val0,val1,val2,val3,weight,price,can_be_seen,spec_proc,max_exist,max_"
-      "struct,cur_struct,decay,volume,material from obj where owner='%s' and "
+      "struct,cur_struct,decay,volume,material from obj where player_id=%i and "
       "vnum=%i",
-      immortal.c_str(), vnum);
+      playerId, vnum);
 
     if (db_immo.fetchRow()) {
       ch.sendTo(format("Adding %i ('%s')\n") % vnum % db_immo["short_desc"]);
@@ -1286,48 +1331,92 @@ void mvObj(TPerson& ch, const sstring& immortal, const sstring& rooms) {
         action_flag = action_flag - (1 << 4);
       }
 
-      db_beta.query("delete from obj where vnum=%i", vnum);
-      db_beta.query(
-        "insert into obj values(%s, '%s', '%s', '%s', '%s', %s, %i, %s, %s, "
-        "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-        db_immo["vnum"].c_str(), db_immo["name"].c_str(),
-        db_immo["short_desc"].c_str(), db_immo["long_desc"].c_str(),
-        db_immo["action_desc"].c_str(), db_immo["type"].c_str(), action_flag,
-        db_immo["wear_flag"].c_str(), db_immo["val0"].c_str(),
-        db_immo["val1"].c_str(), db_immo["val2"].c_str(),
-        db_immo["val3"].c_str(), db_immo["weight"].c_str(),
-        db_immo["price"].c_str(), db_immo["can_be_seen"].c_str(),
-        db_immo["spec_proc"].c_str(), db_immo["max_exist"].c_str(),
-        db_immo["max_struct"].c_str(), db_immo["cur_struct"].c_str(),
-        db_immo["decay"].c_str(), db_immo["volume"].c_str(),
-        db_immo["material"].c_str());
+      if (!db_beta.query(
+            "insert into obj (vnum, name, short_desc, long_desc, action_desc, "
+            "type, action_flag, wear_flag, val0, val1, val2, val3, weight, "
+            "price, can_be_seen, spec_proc, max_exist, max_struct, "
+            "cur_struct, decay, volume, material) "
+            "values (%s, '%s', '%s', '%s', '%s', %s, %i, %s, %s, %s, %s, "
+            "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) "
+            "ON DUPLICATE KEY UPDATE "
+            "name=VALUES(name), short_desc=VALUES(short_desc), "
+            "long_desc=VALUES(long_desc), action_desc=VALUES(action_desc), "
+            "type=VALUES(type), action_flag=VALUES(action_flag), "
+            "wear_flag=VALUES(wear_flag), val0=VALUES(val0), "
+            "val1=VALUES(val1), val2=VALUES(val2), val3=VALUES(val3), "
+            "weight=VALUES(weight), price=VALUES(price), "
+            "can_be_seen=VALUES(can_be_seen), "
+            "spec_proc=VALUES(spec_proc), max_exist=VALUES(max_exist), "
+            "max_struct=VALUES(max_struct), cur_struct=VALUES(cur_struct), "
+            "decay=VALUES(decay), volume=VALUES(volume), "
+            "material=VALUES(material)",
+            db_immo["vnum"].c_str(), db_immo["name"].c_str(),
+            db_immo["short_desc"].c_str(), db_immo["long_desc"].c_str(),
+            db_immo["action_desc"].c_str(), db_immo["type"].c_str(),
+            action_flag, db_immo["wear_flag"].c_str(), db_immo["val0"].c_str(),
+            db_immo["val1"].c_str(), db_immo["val2"].c_str(),
+            db_immo["val3"].c_str(), db_immo["weight"].c_str(),
+            db_immo["price"].c_str(), db_immo["can_be_seen"].c_str(),
+            db_immo["spec_proc"].c_str(), db_immo["max_exist"].c_str(),
+            db_immo["max_struct"].c_str(), db_immo["cur_struct"].c_str(),
+            db_immo["decay"].c_str(), db_immo["volume"].c_str(),
+            db_immo["material"].c_str())) {
+        db_beta.query("rollback");
+        ch.sendTo("Error copying obj - rolled back all changes.\n");
+        return;
+      }
 
       //// objaffect
-      db_beta.query("delete from objaffect where vnum=%i", vnum);
+      if (!db_beta.query("delete from objaffect where vnum=%i", vnum)) {
+        db_beta.query("rollback");
+        ch.sendTo("Error copying child data - rolled back all changes.\n");
+        return;
+      }
 
       db_immo.query(
-        "select vnum, type, mod1, mod2 from objaffect where owner='%s' and "
+        "select vnum, type, mod1, mod2 from objaffect where player_id=%i and "
         "vnum=%i",
-        immortal.c_str(), vnum);
+        playerId, vnum);
 
+      bool ok = true;
       while (db_immo.fetchRow()) {
-        db_beta.query("insert into objaffect values(%s, %s, %s, %s)",
-          db_immo["vnum"].c_str(), db_immo["type"].c_str(),
-          db_immo["mod1"].c_str(), db_immo["mod2"].c_str());
+        if (!db_beta.query("insert into objaffect values(%s, %s, %s, %s)",
+              db_immo["vnum"].c_str(), db_immo["type"].c_str(),
+              db_immo["mod1"].c_str(), db_immo["mod2"].c_str())) {
+          ok = false;
+          break;
+        }
+      }
+      if (!ok) {
+        db_beta.query("rollback");
+        ch.sendTo("Error copying child data - rolled back all changes.\n");
+        return;
       }
 
       //// obj extra
-      db_beta.query("delete from objextra where vnum=%i", vnum);
+      if (!db_beta.query("delete from objextra where vnum=%i", vnum)) {
+        db_beta.query("rollback");
+        ch.sendTo("Error copying child data - rolled back all changes.\n");
+        return;
+      }
 
       db_immo.query(
-        "select vnum, name, description from objextra where owner='%s' and "
+        "select vnum, name, description from objextra where player_id=%i and "
         "vnum=%i",
-        immortal.c_str(), vnum);
+        playerId, vnum);
 
       while (db_immo.fetchRow()) {
-        db_beta.query("insert into objextra values(%s, '%s', '%s')",
-          db_immo["vnum"].c_str(), db_immo["name"].c_str(),
-          db_immo["description"].c_str());
+        if (!db_beta.query("insert into objextra values(%s, '%s', '%s')",
+              db_immo["vnum"].c_str(), db_immo["name"].c_str(),
+              db_immo["description"].c_str())) {
+          ok = false;
+          break;
+        }
+      }
+      if (!ok) {
+        db_beta.query("rollback");
+        ch.sendTo("Error copying child data - rolled back all changes.\n");
+        return;
       }
 
     } else {
@@ -1338,7 +1427,7 @@ void mvObj(TPerson& ch, const sstring& immortal, const sstring& rooms) {
   db_beta.query("commit");
 }
 
-void mvMob(TPerson& ch, const sstring& immortal, const sstring& rooms) {
+void mvMob(TPerson& ch, int playerId, const sstring& rooms) {
   std::vector<int> vnums;
   if (!parse_num_args(ch, rooms, vnums)) {
     ch.sendTo(
@@ -1361,8 +1450,8 @@ void mvMob(TPerson& ch, const sstring& immortal, const sstring& rooms) {
       "hpbonus, damage_level, damage_precision, gold, race, weight, height, "
       "str, bra, con, dex, agi, intel, wis, foc, per, cha, kar, spe, pos, "
       "def_position, sex, spec_proc, skin, vision, can_be_seen, max_exist, "
-      "local_sound, adjacent_sound from mob where owner='%s' and vnum=%i",
-      immortal.c_str(), vnum);
+      "local_sound, adjacent_sound from mob where player_id=%i and vnum=%i",
+      playerId, vnum);
 
     if (db_immo.fetchRow()) {
       ch.sendTo(format("Adding %i ('%s')\n") % vnum % db_immo["short_desc"]);
@@ -1370,59 +1459,117 @@ void mvMob(TPerson& ch, const sstring& immortal, const sstring& rooms) {
       // clear this bit as set in create_mob.cc
       actions = convertTo<int>(db_immo["actions"]) & ~ACT_STRINGS_CHANGED;
 
-      db_beta.query("delete from mob where vnum=%i", vnum);
-      db_beta.query(
-        "insert into mob values(%s, '%s', '%s', '%s', '%s', %i, %s, %s, %s, "
-        "'%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, "
-        "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', "
-        "'%s')",
-        db_immo["vnum"].c_str(), db_immo["name"].c_str(),
-        db_immo["short_desc"].c_str(), db_immo["long_desc"].c_str(),
-        db_immo["description"].c_str(), actions, db_immo["affects"].c_str(),
-        db_immo["faction"].c_str(), db_immo["fact_perc"].c_str(),
-        db_immo["letter"].c_str(), db_immo["attacks"].c_str(),
-        db_immo["class"].c_str(), db_immo["level"].c_str(),
-        db_immo["tohit"].c_str(), db_immo["ac"].c_str(),
-        db_immo["hpbonus"].c_str(), db_immo["damage_level"].c_str(),
-        db_immo["damage_precision"].c_str(), db_immo["gold"].c_str(),
-        db_immo["race"].c_str(), db_immo["weight"].c_str(),
-        db_immo["height"].c_str(), db_immo["str"].c_str(),
-        db_immo["bra"].c_str(), db_immo["con"].c_str(), db_immo["dex"].c_str(),
-        db_immo["agi"].c_str(), db_immo["intel"].c_str(),
-        db_immo["wis"].c_str(), db_immo["foc"].c_str(), db_immo["per"].c_str(),
-        db_immo["cha"].c_str(), db_immo["kar"].c_str(), db_immo["spe"].c_str(),
-        db_immo["pos"].c_str(), db_immo["def_position"].c_str(),
-        db_immo["sex"].c_str(), db_immo["spec_proc"].c_str(),
-        db_immo["skin"].c_str(), db_immo["vision"].c_str(),
-        db_immo["can_be_seen"].c_str(), db_immo["max_exist"].c_str(),
-        db_immo["local_sound"].c_str(), db_immo["adjacent_sound"].c_str());
+      if (!db_beta.query(
+            "insert into mob (vnum, name, short_desc, long_desc, description, "
+            "actions, affects, faction, fact_perc, letter, attacks, class, "
+            "level, tohit, ac, hpbonus, damage_level, damage_precision, gold, "
+            "race, weight, height, str, bra, con, dex, agi, intel, wis, foc, "
+            "per, cha, kar, spe, pos, def_position, sex, spec_proc, skin, "
+            "vision, can_be_seen, max_exist, local_sound, adjacent_sound) "
+            "values (%s, '%s', '%s', '%s', '%s', %i, %s, %s, %s, '%s', %s, "
+            "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, "
+            "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, "
+            "%s, '%s', '%s') "
+            "ON DUPLICATE KEY UPDATE "
+            "name=VALUES(name), short_desc=VALUES(short_desc), "
+            "long_desc=VALUES(long_desc), description=VALUES(description), "
+            "actions=VALUES(actions), affects=VALUES(affects), "
+            "faction=VALUES(faction), fact_perc=VALUES(fact_perc), "
+            "letter=VALUES(letter), attacks=VALUES(attacks), "
+            "class=VALUES(class), level=VALUES(level), tohit=VALUES(tohit), "
+            "ac=VALUES(ac), hpbonus=VALUES(hpbonus), "
+            "damage_level=VALUES(damage_level), "
+            "damage_precision=VALUES(damage_precision), gold=VALUES(gold), "
+            "race=VALUES(race), weight=VALUES(weight), "
+            "height=VALUES(height), str=VALUES(str), bra=VALUES(bra), "
+            "con=VALUES(con), dex=VALUES(dex), agi=VALUES(agi), "
+            "intel=VALUES(intel), wis=VALUES(wis), foc=VALUES(foc), "
+            "per=VALUES(per), cha=VALUES(cha), kar=VALUES(kar), "
+            "spe=VALUES(spe), pos=VALUES(pos), "
+            "def_position=VALUES(def_position), sex=VALUES(sex), "
+            "spec_proc=VALUES(spec_proc), skin=VALUES(skin), "
+            "vision=VALUES(vision), can_be_seen=VALUES(can_be_seen), "
+            "max_exist=VALUES(max_exist), local_sound=VALUES(local_sound), "
+            "adjacent_sound=VALUES(adjacent_sound)",
+            db_immo["vnum"].c_str(), db_immo["name"].c_str(),
+            db_immo["short_desc"].c_str(), db_immo["long_desc"].c_str(),
+            db_immo["description"].c_str(), actions, db_immo["affects"].c_str(),
+            db_immo["faction"].c_str(), db_immo["fact_perc"].c_str(),
+            db_immo["letter"].c_str(), db_immo["attacks"].c_str(),
+            db_immo["class"].c_str(), db_immo["level"].c_str(),
+            db_immo["tohit"].c_str(), db_immo["ac"].c_str(),
+            db_immo["hpbonus"].c_str(), db_immo["damage_level"].c_str(),
+            db_immo["damage_precision"].c_str(), db_immo["gold"].c_str(),
+            db_immo["race"].c_str(), db_immo["weight"].c_str(),
+            db_immo["height"].c_str(), db_immo["str"].c_str(),
+            db_immo["bra"].c_str(), db_immo["con"].c_str(),
+            db_immo["dex"].c_str(), db_immo["agi"].c_str(),
+            db_immo["intel"].c_str(), db_immo["wis"].c_str(),
+            db_immo["foc"].c_str(), db_immo["per"].c_str(),
+            db_immo["cha"].c_str(), db_immo["kar"].c_str(),
+            db_immo["spe"].c_str(), db_immo["pos"].c_str(),
+            db_immo["def_position"].c_str(), db_immo["sex"].c_str(),
+            db_immo["spec_proc"].c_str(), db_immo["skin"].c_str(),
+            db_immo["vision"].c_str(), db_immo["can_be_seen"].c_str(),
+            db_immo["max_exist"].c_str(), db_immo["local_sound"].c_str(),
+            db_immo["adjacent_sound"].c_str())) {
+        db_beta.query("rollback");
+        ch.sendTo("Error copying mob - rolled back all changes.\n");
+        return;
+      }
 
       //// mob_imm
-      db_beta.query("delete from mob_imm where vnum=%i", vnum);
+      if (!db_beta.query("delete from mob_imm where vnum=%i", vnum)) {
+        db_beta.query("rollback");
+        ch.sendTo("Error copying child data - rolled back all changes.\n");
+        return;
+      }
 
       db_immo.query(
-        "select vnum, type, amt from mob_imm where owner='%s' and vnum=%i",
-        immortal.c_str(), vnum);
+        "select vnum, type, amt from mob_imm where player_id=%i and vnum=%i",
+        playerId, vnum);
 
+      bool ok = true;
       while (db_immo.fetchRow()) {
-        db_beta.query("insert into mob_imm values(%s, %s, %s)",
-          db_immo["vnum"].c_str(), db_immo["type"].c_str(),
-          db_immo["amt"].c_str());
+        if (!db_beta.query("insert into mob_imm values(%s, %s, %s)",
+              db_immo["vnum"].c_str(), db_immo["type"].c_str(),
+              db_immo["amt"].c_str())) {
+          ok = false;
+          break;
+        }
+      }
+      if (!ok) {
+        db_beta.query("rollback");
+        ch.sendTo("Error copying child data - rolled back all changes.\n");
+        return;
       }
 
       //// mob_extra
-      db_beta.query("delete from mob_extra where vnum=%i", vnum);
+      if (!db_beta.query("delete from mob_extra where vnum=%i", vnum)) {
+        db_beta.query("rollback");
+        ch.sendTo("Error copying child data - rolled back all changes.\n");
+        return;
+      }
 
       db_immo.query(
-        "select vnum, keyword, description from mob_extra where owner='%s' and "
-        "vnum=%i",
-        immortal.c_str(), vnum);
+        "select vnum, keyword, description from mob_extra where player_id=%i "
+        "and vnum=%i",
+        playerId, vnum);
 
       while (db_immo.fetchRow()) {
-        db_beta.query("insert into mob_extra values(%s, '%s', '%s')",
-          db_immo["vnum"].c_str(), db_immo["keyword"].c_str(),
-          db_immo["description"].c_str());
+        if (!db_beta.query("insert into mob_extra values(%s, '%s', '%s')",
+              db_immo["vnum"].c_str(), db_immo["keyword"].c_str(),
+              db_immo["description"].c_str())) {
+          ok = false;
+          break;
+        }
       }
+      if (!ok) {
+        db_beta.query("rollback");
+        ch.sendTo("Error copying child data - rolled back all changes.\n");
+        return;
+      }
+
     } else {
       ch.sendTo(format("Not found: %i\n") % vnum);
     }
@@ -1436,16 +1583,14 @@ void mvMob(TPerson& ch, const sstring& immortal, const sstring& rooms) {
   would often want to be able to move a builder's mobs over without moving
   any responses as well, to allow auditing of responses first.
 */
-void mvResponse(TPerson& ch, const sstring& immortal,
+void mvResponse(TPerson& ch, int playerId, const sstring& builderName,
   const sstring& vnumsString) {
   static constexpr const char* usage =
     "Syntax: low mvresponse <builder_name> [vnums]\n\rLeave vnums blank to "
     "list mob responses owned by the builder.\n\r";
 
-  if (immortal.empty()) {
-    ch.sendTo(
-      "Must specify the name of the builder who owns the vnums being "
-      "moved.\n\r");
+  if (playerId == 0) {
+    ch.sendTo(std::format("Builder '{}' not found.\n\r", builderName));
     ch.sendTo(usage);
     return;
   }
@@ -1455,14 +1600,15 @@ void mvResponse(TPerson& ch, const sstring& immortal,
 
   if (vnumsString.empty()) {
     std::stringstream output;
-    output << "Mob responses owned by " << immortal << ":\n\r\n\r";
+    output << "Mob responses owned by " << builderName << ":\n\r\n\r";
     output << "  Vnum | Name\n\r";
     output << "-------|-------------------\n\r";
 
     immDb.query(
       "select mobresponses.vnum, mob.name from mobresponses join "
-      "mob on mob.vnum=mobresponses.vnum where mobresponses.owner='%s'",
-      immortal.c_str());
+      "mob on mob.player_id=mobresponses.player_id and "
+      "mob.vnum=mobresponses.vnum where mobresponses.player_id=%i",
+      playerId);
 
     while (immDb.fetchRow())
       output << format("%6i | %s\n\r") % immDb["vnum"] % immDb["name"];
@@ -1486,17 +1632,25 @@ void mvResponse(TPerson& ch, const sstring& immortal,
     format(
       "Copying mob responses for vnums '%s' owned by '%s' from immortal DB to "
       "live DB...\n\r") %
-    vnumsString % immortal);
+    vnumsString % builderName);
 
   for (auto vnum : vnums) {
     immDb.query(
-      "select vnum, response from mobresponses where owner='%s' and vnum=%i",
-      immortal.c_str(), vnum);
+      "select vnum, response from mobresponses where player_id=%i and vnum=%i",
+      playerId, vnum);
 
     if (immDb.fetchRow()) {
-      prodDb.query("delete from mobresponses where vnum=%i", vnum);
-      prodDb.query("insert into mobresponses (vnum, response) values (%s,'%s')",
-        immDb["vnum"].c_str(), immDb["response"].c_str());
+      if (!prodDb.query(
+            "insert into mobresponses (vnum, response) values (%s, '%s') "
+            "ON DUPLICATE KEY UPDATE response=VALUES(response)",
+            immDb["vnum"].c_str(), immDb["response"].c_str())) {
+        prodDb.query("rollback");
+        ch.sendTo(
+          format("Database error copying response for vnum %i - rolled back "
+                 "all changes.\n\r") %
+          vnum);
+        return;
+      }
       ch.sendTo(format("Moved response for vnum %i.\n\r") % vnum);
     } else {
       ch.sendTo(format("No entry found for vnum %i.\n\r") % vnum);
@@ -1530,28 +1684,33 @@ void TPerson::doLow(const sstring& argument) {
     return;
   }
 
-  if (is_abbrev(command, "mvroom")) {
-    int block = convertTo<int>(argument.word(2));
-    if (block != 1 && block != 2) {
-      sendTo("Block must be either 1 or 2\n");
+  if (is_abbrev(command, "mvroom") || is_abbrev(command, "mvobj") ||
+      is_abbrev(command, "mvmob") || is_abbrev(command, "mvresponse")) {
+    sstring builderName = argument.word(1);
+    if (builderName.empty()) {
+      sendTo("Must specify a builder name.\n\r");
       return;
     }
-    mvRoom(*this, argument.word(1), block, argument.dropWords(3));
-    return;
-  }
+    int playerId = getPlayerIdByName(builderName.c_str());
+    if (playerId == 0) {
+      sendTo("Player not found.\n\r");
+      return;
+    }
 
-  if (is_abbrev(command, "mvobj")) {
-    mvObj(*this, argument.word(1), argument.dropWords(2));
-    return;
-  }
-
-  if (is_abbrev(command, "mvmob")) {
-    mvMob(*this, argument.word(1), argument.dropWords(2));
-    return;
-  }
-
-  if (is_abbrev(command, "mvresponse")) {
-    mvResponse(*this, argument.word(1), argument.dropWords(2));
+    if (is_abbrev(command, "mvroom")) {
+      int block = convertTo<int>(argument.word(2));
+      if (block != 1 && block != 2) {
+        sendTo("Block must be either 1 or 2\n");
+        return;
+      }
+      mvRoom(*this, playerId, block, argument.dropWords(3));
+    } else if (is_abbrev(command, "mvobj")) {
+      mvObj(*this, playerId, argument.dropWords(2));
+    } else if (is_abbrev(command, "mvmob")) {
+      mvMob(*this, playerId, argument.dropWords(2));
+    } else {
+      mvResponse(*this, playerId, builderName, argument.dropWords(2));
+    }
     return;
   }
 

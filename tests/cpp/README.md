@@ -4,7 +4,7 @@ Google Test-based tests for SneezyMUD, run via `make test`.
 
 ```
 tests/cpp/
-  unit/           Unit tests - no database or game server
+  unit/           Unit and integration tests
   CMakeLists.txt  Auto-discovers *_test.cc files in unit/
   README.md
 ```
@@ -55,10 +55,52 @@ The fixture handles a complex cleanup sequence: severing descriptor links before
 
 Do not use when:
 
-- You need a database connection, disk files, or a running server
-- You're testing how systems interact (commands, AI responses, game loops)
+- You need a **live database** - use `DatabaseFixture` instead (see below)
+- You're testing how systems interact through the game interface (commands, AI responses, game loops) - use the **functional suite** instead
 
-If you find yourself needing a running server, use the **functional suite** instead.
+For tests that need a database connection, inherit from `DatabaseFixture` (`unit/database_fixture.h`), which extends `GameFixture` with:
+
+- `dbExecute(db, sql)` - run SQL and assert success
+- `dbQueryScalar(db, sql)` - query a single scalar value (returns empty string if no rows)
+- `dbCleanupLater(db, sql)` - register a cleanup query for TearDown (register child table deletes before parent table deletes)
+
+`DatabaseFixture` probes both `DB_SNEEZY` and `DB_IMMORTAL` at suite startup. If either database is unreachable (e.g., CI without MariaDB), all tests in the suite are skipped via `GTEST_SKIP()` rather than failed.
+
+When testing functions that use `BEGIN`/`COMMIT` internally (like the `low mv*` commands), all setup queries must happen before calling the function, and all verification queries after. This is because all `TDatabase` instances of the same `dbTypeT` share a single `MYSQL*` connection - a `BEGIN` on one instance affects all of them.
+
+Functions that live in `.cc` files without headers (like the `mv*` functions in `cmd_low.cc`) can be tested via `extern` declarations in the test file.
+
+For tests that need mob/obj index data, inherit from `WorldFixture` (`unit/world_fixture.h`), which extends `DatabaseFixture` with:
+
+- `insertTestMob(vnum, name, level)` - creates a synthetic `mob_index` entry at the given vnum. Use vnums 99000-99999 to avoid collisions with real data. Cleaned up in TearDown.
+- `insertTestObj(vnum, name, type)` - same for `obj_index`. `type` is an `itemTypeT` like `ITEM_WEAPON`.
+- `loadMob(vnum, room)` - instantiates a mob from the index via `read_mobile()` and places it in the room. Returns a `TestMob&` wrapper that handles cleanup (spec procs, birth room, groups, hatreds/fears). Requires the vnum to exist in `mob_index`.
+- `loadObj(vnum)` - instantiates an object via `read_object()`. Returns a `TestObject&` wrapper.
+- `loadRealMobIndex()` / `loadRealObjIndex()` - opt-in loading of the full mob/obj index from the database. Guarded against double-init. Use these when tests need real game data rather than synthetic entries.
+
+`SetUpTestSuite` also initializes `ItemInfo[]` (via `assign_item_info()`) and the `stats` constants (damage mods, max_exist, etc.) that many game functions depend on.
+
+For tests involving the shopping pipeline, inherit from `ShopFixture` (`unit/shop_fixture.h`), which extends `WorldFixture` with:
+
+- `insertTestShop(shop_nr, keeper_rnum, room_vnum)` - creates a synthetic shop in `shop_index`. The keeper_rnum must be a valid `mob_index` entry (use `insertTestMob` first). Accepts optional `profit_buy` and `profit_sell` parameters.
+- `loadRealShops()` - loads all shops from the database via `bootTheShops()`. Requires `mob_index` and `obj_index` to be populated first.
+
+`PfileHelper` (`unit/pfile_helper.h`) is a standalone RAII utility, not a fixture. Use it when testing functions gated by `load_char()`. The constructor writes a minimal binary pfile to disk, the destructor removes it. Requires a matching `player` row in the database (use `dbExecute` to create one).
+
+```cpp
+PfileHelper pfile("Testchar", 10, RACE_HUMAN);
+// pfile exists at mutable/player/t/testchar
+// destructor removes it automatically
+```
+
+The fixture hierarchy:
+
+```text
+GameFixture              - characters, rooms, spells, races
+  DatabaseFixture        - + database access, cleanup tracking
+    WorldFixture         - + mob/obj index, ItemInfo, stats
+      ShopFixture        - + shop_index
+```
 
 ### Functional tests (`tests/functional/`, `make test-func`)
 

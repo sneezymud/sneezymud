@@ -77,7 +77,6 @@ void TBeing::resetEffectsChar() { return; }
 
 void TPerson::resetChar() {
   char* tmstr;
-  sstring recipient;
   affectedData* af;
 
   roomp = NULL;
@@ -243,11 +242,7 @@ void TPerson::resetChar() {
 #endif
   classSpecificStuff();
 
-  parse_name_sstring(getName(), recipient);
-
-  recipient = recipient.lower();
-
-  if (!Config::NoMail() && has_mail(recipient))
+  if (!Config::NoMail() && has_mail(getPlayerID()))
     sendTo(format("\n\rYou have %sMAIL%s.\n\r") % bold() % norm());
 
   time_t ct = player.time->last_logon ? player.time->last_logon : time(0);
@@ -323,7 +318,7 @@ bool raw_save_char(const char* name, charFile* char_element) {
   TDatabase db(DB_SNEEZY);
   db.query(
     "update player p, account a set p.talens=%i, p.account_id=a.account_id "
-    "where lower(p.name)=lower('%s') and a.name='%s'",
+    "where p.name='%s' and a.name='%s'",
     char_element->money, name, char_element->aname);
 
   return TRUE;
@@ -347,13 +342,13 @@ bool load_char(const sstring& name, charFile* char_element,
     dbase ? std::move(dbase)
           : std::move(std::unique_ptr<IDatabase>(new TDatabase(DB_SNEEZY))));
   db->query(
-    "select talens from player where lower(name)=lower('%s') and talens is not "
+    "select talens from player where name='%s' and talens is not "
     "null",
     name.c_str());
   if (db->fetchRow()) {
     char_element->money = convertTo<int>((*db)["talens"]);
   } else {
-    db->query("update player set talens=%i where lower(name)=lower('%s')",
+    db->query("update player set talens=%i where name='%s'",
       char_element->money, name.c_str());
   }
 
@@ -420,10 +415,8 @@ void TPerson::storeToSt(charFile* st) {
     }
   }
 
-  if ((j >= MAX_AFFECT) && af && af->next)
-    vlogf(LOG_SILENT,
-      format("WARNING: (%s) OUT OF STORE ROOM FOR AFFECTED TYPES!!!") %
-        getName());
+  // Charfile overflow is no longer a concern — affects are saved to DB
+  // without a cap by saveAffectsToDB()
 
   // Save the discipline learning
   // unused disc_learning values should be 0 from charFile ctor
@@ -590,8 +583,7 @@ void TPerson::loadFromDb(const std::string& name) {
   player.account_id = desc->account->account_id;
 
   TDatabase db(DB_SNEEZY);
-  db.query("select * from player where lower(name) = lower('%s')",
-    name.c_str());
+  db.query("select * from player where name='%s'", name.c_str());
   mud_assert(db.fetchRow(), "can't find player in DB");
   desc->playerID = player.player_id = convertTo<int>(db["id"]);
 }
@@ -838,9 +830,13 @@ void TPerson::loadFromSt(charFile* st) {
   // armor spell.  I left it this way cause although duplicative, I forsee
   // someone changing things around and seperating the functions of load and
   // reset char
-  for (i = 0; i < MAX_AFFECT; i++) {
-    if (st->affected[i].type) {
-      rentAffectTo(&st->affected[i]);
+  if (!loadAffectsFromDB()) {
+    // No DB rows yet — fall back to charfile affects for characters who
+    // haven't saved since the migration to DB-backed affects
+    for (i = 0; i < MAX_AFFECT; i++) {
+      if (st->affected[i].type) {
+        rentAffectTo(&st->affected[i]);
+      }
     }
   }
 
@@ -891,6 +887,66 @@ void TPerson::rentAffectTo(saveAffectedData* af) {
   }
 }
 
+void TPerson::saveAffectsToDB() {
+  // Runs within saveChar's TTransaction scope - shares the same DB_SNEEZY
+  // connection, so the DELETE + INSERTs are atomic with the other saves.
+  TDatabase db(DB_SNEEZY);
+  db.query("DELETE FROM player_affect WHERE player_id = %i", getPlayerID());
+
+  for (auto* af = affected; af; af = af->next) {
+    if (af->type == SKILL_SEEKWATER || af->type == SKILL_TRACK ||
+        af->type == SPELL_TRAIL_SEEK)
+      continue;
+
+    int mappedType = mapSpellnumToFile(af->type);
+    if (mappedType == -1)
+      continue;
+
+    long mappedModifier = applyTypeShouldBeSpellnum(af->location)
+                            ? static_cast<long>(mapSpellnumToFile(
+                                static_cast<spellNumT>(af->modifier)))
+                            : af->modifier;
+
+    // Build full query via boost::format to preserve 64-bit bitvector values
+    // (TDatabase %i truncates to int via va_arg)
+    sstring query =
+      (format("INSERT INTO player_affect "
+              "(player_id, type, level, duration, renew, modifier, modifier2, "
+              "location, bitvector) "
+              "VALUES (%i, %i, %i, %i, %i, %ld, %ld, %i, %lu)") %
+        getPlayerID() % mappedType % static_cast<int>(af->level) %
+        af->duration % af->renew % mappedModifier % af->modifier2 %
+        mapApplyToFile(af->location) % af->bitvector)
+        .str();
+    db.query(query.c_str());
+  }
+}
+
+bool TPerson::loadAffectsFromDB() {
+  TDatabase db(DB_SNEEZY);
+  db.query(
+    "SELECT type, level, duration, renew, modifier, modifier2, "
+    "location, bitvector FROM player_affect WHERE player_id = %i",
+    getPlayerID());
+
+  bool found = false;
+  while (db.fetchRow()) {
+    found = true;
+    saveAffectedData af;
+    af.type = convertTo<short>(db["type"]);
+    af.level = convertTo<int>(db["level"]);
+    af.duration = convertTo<int>(db["duration"]);
+    af.renew = convertTo<int>(db["renew"]);
+    af.modifier = convertTo<long>(db["modifier"]);
+    af.modifier2 = convertTo<long>(db["modifier2"]);
+    af.location = convertTo<int>(db["location"]);
+    af.bitvector = convertTo<uint64_t>(db["bitvector"]);
+    rentAffectTo(&af);
+  }
+
+  return found;
+}
+
 void TBeing::convertAbilities() {}
 
 void TBeing::saveChar(int load_room) {
@@ -902,7 +958,7 @@ void TBeing::saveChar(int load_room) {
       unsigned int shop_nr = 0;
       for (; (shop_nr < shop_index.size()) &&
              (shop_index[shop_nr].keeper != this->number);
-           shop_nr++)
+        shop_nr++)
         ;
 
       if (shop_nr >= shop_index.size()) {
@@ -975,12 +1031,15 @@ void TBeing::saveChar(int load_room) {
 
   if (!isImmortal()) {
     db.query(
-      "update player set talens=%i, account_id=%i, load_room=%i, "
+      "update player set account_id=%i, talens=%i, load_room=%i, "
       "last_logon=%i, nutrition=%i where id=%i",
-      chFile.money, accountId, load_room, chFile.last_logon, nutrition,
+      accountId, chFile.money, load_room, chFile.last_logon, nutrition,
       getPlayerID());
 
     chFile.load_room = 0;
+  } else {
+    db.query("update player set account_id=%i where id=%i", accountId,
+      getPlayerID());
   }
 
   assert(getPlayerID());
@@ -1031,6 +1090,9 @@ void TBeing::saveChar(int load_room) {
     vlogf(LOG_BUG, format("link failed in saveChar for %s") % realName);
 
   // Call these on tmp if exists to allow full saving of shapeshifted chars
+  if (auto* person = dynamic_cast<TPerson*>(tmp ? tmp : this))
+    person->saveAffectsToDB();
+
   if (tmp) {
     // save mobile followers
     tmp->saveFollowers(
@@ -1253,8 +1315,10 @@ void do_the_player_stuff(const char* name) {
       }
 
       TDatabase db(DB_SNEEZY);
-      db.query("insert into factionmembers values ('%s', '%s', %i)", st.name,
-        factname, max_level);
+      db.query(
+        "insert into factionmembers (player_id, faction, level) "
+        "select id, '%s', %i from player where name='%s'",
+        factname, max_level, st.name);
     }
 
     // count active
@@ -1280,6 +1344,12 @@ void do_the_player_stuff(const char* name) {
           vsystem(buf);
           wipeRentFile(name);
           wipeCorpseFile(sstring(name).lower().c_str());
+
+          // Delete the player DB row (FK CASCADE handles child tables)
+          {
+            TDatabase db(DB_SNEEZY);
+            db.query("delete from player where name='%s'", name);
+          }
           return;
         } else {
           sprintf(buf, "mutable/rent/%c/%s", LOWER(name[0]),
@@ -1604,7 +1674,7 @@ void TBeing::doReset(sstring arg) {
     }
     // reset the practices of this character
     for (classIndT resetClass = MIN_CLASS_IND; resetClass < MAX_CLASSES;
-         resetClass++) {
+      resetClass++) {
       int practices = 0;
       if (player->resetPractices(resetClass, practices, true)) {
         sendTo(format("You have reset %ss %s practices.  %d practices were "
@@ -2268,4 +2338,13 @@ int numFifties(race_t race, bool perma, sstring account_name) {
   closedir(dfd);
 
   return num_fifties;
+}
+
+int getPlayerIdByName(const char* name) {
+  TDatabase db(DB_SNEEZY);
+  db.query("select id from player where name='%s'", name);
+  if (db.fetchRow()) {
+    return convertTo<int>(db["id"]);
+  }
+  return 0;
 }

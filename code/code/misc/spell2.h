@@ -60,6 +60,8 @@ const unsigned int TAR_VIOLENT = (1 << 12);
 const unsigned int TAR_ROOM = (1 << 13);
 const unsigned int TAR_AREA = (1 << 14);
 const unsigned int TAR_CHAR_VIS_WORLD = (1 << 15);
+const unsigned int TAR_GROUP = (1 << 16);
+const unsigned int TAR_PASSIVE = (1 << 17);
 
 const unsigned int COMP_GESTURAL = (1 << 0);
 const unsigned int COMP_GESTURAL_INIT = (1 << 1);

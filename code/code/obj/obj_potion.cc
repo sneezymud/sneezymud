@@ -93,7 +93,7 @@ int TPotion::sellPrice(int, int shop_nr, float chr, const TBeing* ch) {
   // make sure we don't have a negative cost
   cost = max(1.0, cost);
 
-  return (int)cost;
+  return saturate_to_int(cost);
 }
 
 int TPotion::shopPrice(int num, int shop_nr, float chr,
@@ -114,7 +114,7 @@ int TPotion::shopPrice(int num, int shop_nr, float chr,
   // make sure we don't have a negative cost
   cost = max(1.0, cost);
 
-  return (int)cost;
+  return saturate_to_int(cost);
 }
 
 // return the liquid associated with the shaman spell

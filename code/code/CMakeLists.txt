@@ -64,77 +64,8 @@ add_custom_command(TARGET sneezy POST_BUILD
     COMMENT "Copied sneezy binary to code/sneezy"
 )
 
-if(SNEEZY_BUILD_LOWTOOLS)
-    message(STATUS "Building LOW tools (deprecated)")
 
-    add_library(lowtools_common OBJECT low/lowtools.cc)
-    target_link_libraries(lowtools_common
-        PRIVATE
-            sneezy::lib
-    )
 
-    set(LOWTOOL_NAMES
-        amap
-        sqladdmobs
-        sqladdobjs
-        sqladdresp
-        sqladdwld
-        sqledimmobj
-        sqledmob
-        sqledobj
-        sqledresp
-        sqledshop
-        sqledwld
-    )
-
-    foreach(tool ${LOWTOOL_NAMES})
-        add_executable(${tool} low/${tool}.cc $<TARGET_OBJECTS:lowtools_common>)
-        target_link_libraries(${tool}
-            PRIVATE
-                sneezy::lib
-        )
-    endforeach()
-
-    install(TARGETS ${LOWTOOL_NAMES}
-        RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/code/lowtools
-    )
-endif()
-
-if(SNEEZY_BUILD_CGI)
-    message(STATUS "Building CGI utilities (deprecated)")
-
-    add_library(cgi_session OBJECT cgi/session.cgi.cc)
-    target_link_libraries(cgi_session
-        PRIVATE
-            sneezy::lib
-    )
-
-    add_executable(mudmail.cgi cgi/mudmail.cgi.cc $<TARGET_OBJECTS:cgi_session>)
-    target_link_libraries(mudmail.cgi
-        PRIVATE
-            sneezy::lib
-            PkgConfig::CGICC
-            OpenSSL::Crypto
-    )
-
-    install(TARGETS mudmail.cgi
-        RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/code/cgi
-    )
-endif()
-
-if(SNEEZY_BUILD_SHELL)
-    message(STATUS "Building shell utilities (deprecated)")
-
-    add_executable(econ shell/econ.cc)
-    target_link_libraries(econ
-        PRIVATE
-            sneezy::lib
-    )
-
-    install(TARGETS econ
-        RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/code/shell
-    )
-endif()
 
 list(LENGTH LIBSNEEZY_SOURCES SOURCE_COUNT)
 message(STATUS "Core library: ${SOURCE_COUNT} source files from ${LIBSNEEZY_DIRS}")

@@ -188,6 +188,11 @@ bool TDatabase::query(const char* query, ...) {
 
   t.start();
 
+  if (!pimpl.db) {
+    vlogf(LOG_DB, "query failed: no database connection");
+    return false;
+  }
+
   va_start(ap, query);
   do {
     if (*query == '%') {

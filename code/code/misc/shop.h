@@ -126,13 +126,13 @@ class shopData {
     bool isCached;
     std::map<int, float> buy_ratios_cache;
     std::map<sstring, float> buy_matches_cache;
-    std::map<sstring, float> buy_player_cache;
+    std::map<int, float> buy_player_cache;
     std::map<int, float> sell_ratios_cache;
     std::map<sstring, float> sell_matches_cache;
-    std::map<sstring, float> sell_player_cache;
+    std::map<int, float> sell_player_cache;
     std::map<int, int> max_ratios_cache;
     std::map<sstring, int> max_matches_cache;
-    std::map<sstring, int> max_player_cache;
+    std::map<int, int> max_player_cache;
     int max_num;
     int corp_id;
     double dividend;

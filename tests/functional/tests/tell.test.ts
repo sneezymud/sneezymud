@@ -1,20 +1,19 @@
 /**
- * Tell command alt-detection behavior.
+ * Tell command - online delivery.
  *
- * When an immortal tells to an offline character, the server queries the
- * database for other characters on the same account and reveals any that
- * are currently online. Mortals do not get this hint.
+ * Verifies that telling to an online player succeeds. Alt-detection
+ * privilege gating (immortal vs mortal, offline alts) is tested in
+ * the C++ unit suite (tell_test.cc).
  *
  * Required immortal powers: none beyond being immortal (level > MAX_MORT).
- * The test uses the configured immortal from .env for the immortal role
- * and creates an ephemeral account with two characters for the mortal role.
+ * The test uses the configured immortal from .env for the teller role
+ * and creates an ephemeral account for the target.
  */
 
 import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 
 import {
   ACCOUNT_TEST_TIMEOUT,
-  addCharacterToAccount,
   createAccount,
   DEFAULT_PASSWORD,
   deleteAccount,
@@ -25,12 +24,11 @@ import { loadConfig } from "../harness/config.ts";
 
 const config = loadConfig();
 
-describe("Tell Alt-Detection", () => {
+describe("Tell", () => {
   let imm: MudClient;
 
   let account: string;
-  let charA: string;
-  let charB: string;
+  let character: string;
 
   beforeAll(async () => {
     imm = await MudClient.connect(config);
@@ -38,20 +36,11 @@ describe("Tell Alt-Detection", () => {
 
     const identity = uniqueIdentity();
     account = identity.account;
-    charA = identity.character;
-
-    // Append "b" for a distinct second character name (within length limit).
-    charB = `${charA}b`;
+    character = identity.character;
 
     await createAccount({
       account,
-      character: charA,
-      connection: config,
-      password: DEFAULT_PASSWORD,
-    });
-    await addCharacterToAccount({
-      account,
-      character: charB,
+      character,
       connection: config,
       password: DEFAULT_PASSWORD,
     });
@@ -73,76 +62,26 @@ describe("Tell Alt-Detection", () => {
   });
 
   it(
-    "immortal sees alt suggestion when telling to offline alt",
+    "tell to online player succeeds",
     async () => {
       const mortal = await MudClient.connect(config);
       try {
         await mortal.login({
           account,
-          character: charA,
+          character,
           password: DEFAULT_PASSWORD,
         });
 
-        // Immortal tells to charB (offline, same account as charA)
-        const output = await imm.command(`tell ${charB} test message`);
+        const output = await imm.command(`tell ${character} hello there`);
+        expect(output).toContainCaseInsensitive("you tell");
 
-        expect(output).toContainCaseInsensitive("you fail to tell");
-        expect(output).toContainCaseInsensitive(
-          "logged in under the same account",
-        );
+        // Verify the receiver got the tell
+        const received = await mortal.readUntilIdle(0.5);
+        expect(received).toContainCaseInsensitive("hello there");
       } finally {
         await mortal.close();
       }
     },
     ACCOUNT_TEST_TIMEOUT,
   );
-
-  it(
-    "mortal does NOT see alt suggestion when telling to offline alt",
-    async () => {
-      const mortal = await MudClient.connect(config);
-      try {
-        await mortal.login({
-          account,
-          character: charA,
-          password: DEFAULT_PASSWORD,
-        });
-
-        // Mortal tells to charB (offline, same account)
-        const output = await mortal.command(`tell ${charB} test message`);
-
-        expect(output).toContainCaseInsensitive("you fail to tell");
-        expect(output).not.toContainCaseInsensitive(
-          "logged in under the same account",
-        );
-      } finally {
-        await mortal.close();
-      }
-    },
-    ACCOUNT_TEST_TIMEOUT,
-  );
-
-  it("tell to non-existent player shows simple failure", async () => {
-    const output = await imm.command("tell zzznonexist test message");
-    expect(output).toContainCaseInsensitive("you fail to tell");
-    expect(output).not.toContainCaseInsensitive(
-      "logged in under the same account",
-    );
-  });
-
-  it("tell to online player succeeds", async () => {
-    const mortal = await MudClient.connect(config);
-    try {
-      await mortal.login({
-        account,
-        character: charA,
-        password: DEFAULT_PASSWORD,
-      });
-
-      const output = await imm.command(`tell ${charA} hello there`);
-      expect(output).not.toContainCaseInsensitive("you fail to tell");
-    } finally {
-      await mortal.close();
-    }
-  });
 });

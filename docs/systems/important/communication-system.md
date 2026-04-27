@@ -217,7 +217,7 @@ Group communication iterates the group leader's follower list. Recipients must h
 
 `findTellTarget()` resolves tell recipients through multiple strategies: exact name match among visible characters, then account-based alternate character lookup for immortals. This allows immortals to reach players on different characters within the same account.
 
-The system tracks `desc->last_teller` for reply and `desc->last_told` for retelling. Tells are logged to the `tellhistory` database table with fields: telltime (timestamp), tellfrom (sender name), tellto (receiver name), tell (garbled text as delivered).
+The system tracks `desc->last_teller` for reply and `desc->last_told` for retelling. Tells are logged to the `tellhistory` database table with fields: telltime (timestamp), from_id (sender player ID, FK to player.id), to_id (receiver player ID, FK to player.id), tell (garbled text as delivered). Tell history is capped at 25 rows per recipient.
 
 Descriptor state filtering prevents interrupting editing sessions, mail composition, or bug reporting. The checks examine `desc->connected` for CON_PLYNG state and `desc->str` for active string editing.
 

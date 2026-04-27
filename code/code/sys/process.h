@@ -384,6 +384,12 @@ class procRoomPulse : public TProcess {
     procRoomPulse(const int&);
 };
 
+class procRoomAffects : public TProcess {
+  public:
+    void run(const TPulse&) const;
+    procRoomAffects(const int&);
+};
+
 class procWeightVolumeFumble : public TProcess {
   public:
     void run(const TPulse&) const;
@@ -486,10 +492,10 @@ class procWeatherAndTime : public TProcess {
     procWeatherAndTime(const int&);
 };
 
-class procWholistAndUsageLogs : public TProcess {
+class procWholist : public TProcess {
   public:
     void run(const TPulse&) const;
-    procWholistAndUsageLogs(const int&);
+    procWholist(const int&);
 };
 
 class procCheckForRepo : public TProcess {
@@ -556,6 +562,24 @@ class procUpdateAuction : public TProcess {
   public:
     void run(const TPulse&) const;
     procUpdateAuction(const int&);
+};
+
+class procQuerytimesCleanup : public TProcess {
+  public:
+    void run(const TPulse&) const;
+    procQuerytimesCleanup(const int&);
+};
+
+class procTellHistoryCleanup : public TProcess {
+  public:
+    void run(const TPulse&) const;
+    procTellHistoryCleanup(const int&);
+};
+
+class procShopLogCleanup : public TProcess {
+  public:
+    void run(const TPulse&) const;
+    procShopLogCleanup(const int&);
 };
 
 class procBankInterest : public TProcess {

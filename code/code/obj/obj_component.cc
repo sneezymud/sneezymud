@@ -1206,7 +1206,7 @@ void buildComponentArray() {
     "$n tosses $p at $N.", "$n tosses $p at you.", "You toss $p to the ground.",
     "$n tosses $p to the ground.", "", ""));
   CompInfo.push_back(
-    compInfo(SPELL_TRUE_SIGHT, "You nibble on $p and spit it upon $N.",
+    compInfo(SPELL_MAGE_SIGHT, "You nibble on $p and spit it upon $N.",
       "$n nibbles on $p and spits it at $N.",
       "$n nibbles on $p and spits it at you.",
       "You nibble on $p and swallow it down.",
@@ -1244,6 +1244,8 @@ void buildComponentArray() {
     "$n shatters $p.", "", ""));
   CompInfo.push_back(compInfo(SPELL_TSUNAMI, "", "", "", "You uncork $p.",
     "$n uncorks $p.", "", ""));
+  CompInfo.push_back(compInfo(SPELL_BLIZZARD, "", "", "",
+    "You place $p on your tongue.", "$n places $p on $s tongue.", "", ""));
   CompInfo.push_back(compInfo(SPELL_CONJURE_WATER, "", "", "",
     "You shatter $p.", "$n shatters $p.", "", ""));
   CompInfo.push_back(

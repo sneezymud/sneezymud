@@ -1049,6 +1049,7 @@ class TBeing : public TThing {
     void failSleep(TBeing*);
     void failPara(TBeing*);
     bool inGroup(const TBeing&) const;
+    bool hasGroupmateInRoom() const;
     int inCamp() const;
     int bumpHead(int*);
     virtual int bumpHeadDoor(roomDirData*, int*);
@@ -1185,6 +1186,7 @@ class TBeing : public TThing {
     int fallKill();
     int mostPowerstoneMana() const;
     bool affectedBySpell(spellNumT) const;
+    bool hasStandaloneSpell(spellNumT) const;
     int checkForSkillAttempt(spellNumT);
     void removeSkillAttempt(spellNumT);
 
@@ -1563,7 +1565,9 @@ class TBeing : public TThing {
     virtual bool canSee(const TThing*, infraTypeT = INFRA_NO) const;
 
     // functions for protected member manipulation
-    virtual bool isPc() const { return ((specials.act & ACT_POLYSELF) != 0); }
+    virtual bool isPc() const {
+      return IS_SET(specials.act, ACT_POLYSELF) && desc && desc->original;
+    }
     void setCurLimbHealth(wearSlotT, unsigned short);
     unsigned short getCurLimbHealth(wearSlotT) const;
     void addCurLimbHealth(wearSlotT, int);

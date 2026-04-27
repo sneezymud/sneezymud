@@ -513,8 +513,7 @@ void initialize_fish_records() {
   for (step = 0; step < fishious.size(); step++) {
     db.query("select vnum from fishlargest where vnum = %i", fishious[step]);
     if (!db.isResults())
-      db.query(
-        "insert into fishlargest (name, vnum, weight) select 'no one', %i, 0.0",
+      db.query("insert into fishlargest (vnum, weight) values (%i, 0.0)",
         fishious[step]);
   }
   fishious.clear();
@@ -523,8 +522,7 @@ void initialize_fish_records() {
   for (step = 0; step < fishious.size(); step++) {
     db.query("select vnum from fishlargest where vnum = %i", fishious[step]);
     if (!db.isResults())
-      db.query(
-        "insert into fishlargest (name, vnum, weight) select 'no one', %i, 0.0",
+      db.query("insert into fishlargest (vnum, weight) values (%i, 0.0)",
         fishious[step]);
   }
   fishious.clear();
@@ -533,8 +531,7 @@ void initialize_fish_records() {
   for (step = 0; step < fishious.size(); step++) {
     db.query("select vnum from fishlargest where vnum = %i", fishious[step]);
     if (!db.isResults())
-      db.query(
-        "insert into fishlargest (name, vnum, weight) select 'no one', %i, 0.0",
+      db.query("insert into fishlargest (vnum, weight) values (%i, 0.0)",
         fishious[step]);
   }
   fishious.clear();
@@ -543,8 +540,7 @@ void initialize_fish_records() {
   for (step = 0; step < fishious.size(); step++) {
     db.query("select vnum from fishlargest where vnum = %i", fishious[step]);
     if (!db.isResults())
-      db.query(
-        "insert into fishlargest (name, vnum, weight) select 'no one', %i, 0.0",
+      db.query("insert into fishlargest (vnum, weight) values (%i, 0.0)",
         fishious[step]);
   }
 }

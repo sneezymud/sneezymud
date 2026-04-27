@@ -58,6 +58,8 @@ jobs:
               - 'tests/cpp/**'
             functional_tests:
               - 'tests/functional/**'
+            seed_data:
+              - 'db/**'
 
       - name: Restore cache and build
         id: build
@@ -65,16 +67,9 @@ jobs:
           steps.changes.outputs.infrastructure == 'true' ||
           steps.changes.outputs.gameplay == 'true' ||
           steps.changes.outputs.tests == 'true' ||
-          steps.changes.outputs.functional_tests == 'true'
+          steps.changes.outputs.functional_tests == 'true' ||
+          steps.changes.outputs.seed_data == 'true'
         uses: ./.github/actions/cached-build
-
-      # Only runs when a build actually happened (cache miss). On a cache
-      # hit, nothing changed since the last run that already passed tests.
-      # Uses ctest directly (not `make test`) to avoid re-running cmake
-      # configure and build, which cached-build already did.
-      - name: Run C++ unit tests
-        if: steps.build.outputs.built == 'true'
-        run: ctest --test-dir build/release-clang --output-on-failure
 
       # CI is a required status check, so the workflow must run on every PR.
       # A workflow-level paths filter would prevent it from reporting a status
@@ -83,7 +78,9 @@ jobs:
         if: >-
           github.event_name == 'pull_request' &&
           (steps.changes.outputs.gameplay == 'true' ||
-          steps.changes.outputs.functional_tests == 'true')
+          steps.changes.outputs.tests == 'true' ||
+          steps.changes.outputs.functional_tests == 'true' ||
+          steps.changes.outputs.seed_data == 'true')
         uses: ./.github/actions/validate-pr
 
       # A workflow-level paths filter can't distinguish which pushes need a new

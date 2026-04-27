@@ -10,6 +10,8 @@
 /////////////////////////////////////////////////////////////////
 
 #include "discipline.h"
+#include "disc_cleric_aegis.h"
+#include "disc_mage_water.h"
 #include "extern.h"
 #include "spell2.h"
 #include "toggle.h"
@@ -188,17 +190,17 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_DETECT_MAGIC] =
-    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_ALCHEMY, STAT_INT, "detect magic",
-      TASK_TRIVIAL, LAG_1, POSITION_CRAWLING, MANA_15, LIFEFORCE_0, PRAY_0,
-      TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
-      "Your eyes don't tingle anymore.", "$n's eyes don't twinkle anymore.",
-      "You blink as your eyes sting for a moment.",
-      "$n's eyes seem to water a bit.", START_5, LEARN_17, START_DO_40,
-      LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.0,
-      COMP_GESTURAL | COMP_GESTURAL_RANDOM | COMP_VERBAL | COMP_VERBAL_RANDOM |
-        COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
-      0);
+  discArray[SPELL_DETECT_MAGIC] = new spellInfo(SPELL_MAGE, DISC_ALCHEMY,
+    DISC_ALCHEMY, STAT_INT, "detect magic", TASK_TRIVIAL, LAG_1,
+    POSITION_CRAWLING, MANA_15, LIFEFORCE_0, PRAY_0,
+    TAR_CHAR_ROOM | TAR_FIGHT_SELF | TAR_PASSIVE, SYMBOL_STRESS_0,
+    "Your eyes don't tingle anymore.", "$n's eyes don't twinkle anymore.",
+    "You blink as your eyes sting for a moment.",
+    "$n's eyes seem to water a bit.", START_1, LEARN_10, START_DO_40,
+    LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.0,
+    COMP_GESTURAL | COMP_GESTURAL_RANDOM | COMP_VERBAL | COMP_VERBAL_RANDOM |
+      COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
+    0);
 
   discArray[SPELL_STUNNING_ARROW] = new spellInfo(SPELL_MAGE, DISC_MAGE,
     DISC_SORCERY, STAT_INT, "stunning arrow", TASK_NORMAL, LAG_1,
@@ -284,16 +286,17 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
-  discArray[SPELL_INFRAVISION] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_FIRE,
-    STAT_INT, "infravision", TASK_TRIVIAL, LAG_2, POSITION_CRAWLING, MANA_20,
-    LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
-    "Your eyes lose their red glow.", "$n's eyes don't glow red anymore.",
-    "Your eyes seem less sensitive to heat.", "$n's red eyes flicker.",
-    START_44, LEARN_15, START_DO_50, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
-    LEARN_DIFF_SPELLS, 0.0,
-    COMP_GESTURAL | COMP_GESTURAL_RANDOM | COMP_VERBAL | COMP_VERBAL_RANDOM |
-      COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
-    0);
+  discArray[SPELL_INFRAVISION] =
+    new spellInfo(SPELL_MAGE, DISC_FIRE, DISC_FIRE, STAT_INT, "infravision",
+      TASK_TRIVIAL, LAG_2, POSITION_CRAWLING, MANA_20, LIFEFORCE_0, PRAY_0,
+      TAR_CHAR_ROOM | TAR_FIGHT_SELF | TAR_PASSIVE, SYMBOL_STRESS_0,
+      "Your eyes lose their red glow.", "$n's eyes don't glow red anymore.",
+      "Your eyes seem less sensitive to heat.", "$n's red eyes flicker.",
+      START_10, LEARN_10, START_DO_50, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
+      LEARN_DIFF_SPELLS, 0.0,
+      COMP_GESTURAL | COMP_GESTURAL_RANDOM | COMP_VERBAL | COMP_VERBAL_RANDOM |
+        COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
+      0);
 
   discArray[SPELL_IDENTIFY] = new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_ALCHEMY,
     STAT_EXT, "identify", TASK_TRIVIAL, LAG_2, POSITION_CRAWLING, MANA_20,
@@ -344,11 +347,11 @@ void buildSpellArray() {
 
   discArray[SPELL_SENSE_LIFE] = new spellInfo(SPELL_MAGE, DISC_MAGE,
     DISC_SPIRIT, STAT_INT, "sense life", TASK_EASY, LAG_1, POSITION_CRAWLING,
-    MANA_15, LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF,
+    MANA_15, LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF | TAR_PASSIVE,
     SYMBOL_STRESS_0, "The aqua blue aura fades from your eyes.",
     "The aqua blue aura fades from $n's eyes.",
     "The aqua blue in your eyes flickers slightly.",
-    "The aqua blue in $n's eyes flickers slightly.", START_24, LEARN_18,
+    "The aqua blue in $n's eyes flickers slightly.", START_40, LEARN_10,
     START_DO_40, LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.04,
     COMP_GESTURAL | COMP_GESTURAL_RANDOM | COMP_VERBAL | COMP_VERBAL_RANDOM |
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
@@ -544,14 +547,14 @@ void buildSpellArray() {
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     TOG_HAS_GALVANIZE);
 
-  discArray[SPELL_DETECT_INVISIBLE] = new spellInfo(SPELL_MAGE, DISC_MAGE,
+  discArray[SPELL_DETECT_INVISIBLE] = new spellInfo(SPELL_MAGE, DISC_SPIRIT,
     DISC_SPIRIT, STAT_INT, "detect invisibility", TASK_EASY, LAG_1,
     POSITION_CRAWLING, MANA_15, LIFEFORCE_0, PRAY_0,
-    TAR_CHAR_ROOM | TAR_FIGHT_SELF, SYMBOL_STRESS_0,
+    TAR_CHAR_ROOM | TAR_FIGHT_SELF | TAR_PASSIVE, SYMBOL_STRESS_0,
     "The yellow aura fades from your eyes.",
     "The yellow aura fades from $n's eyes.",
     "The yellow aura in your eyes flickers slightly.",
-    "The yellow aura in $n's eyes flickers slightly.", START_12, LEARN_7,
+    "The yellow aura in $n's eyes flickers slightly.", START_1, LEARN_10,
     START_DO_40, LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.04,
     COMP_GESTURAL | COMP_GESTURAL_RANDOM | COMP_VERBAL | COMP_VERBAL_RANDOM |
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
@@ -976,13 +979,24 @@ void buildSpellArray() {
         COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
       0);
 
+  discArray[SPELL_MAGE_SIGHT] =
+    new spellInfo(SPELL_MAGE, DISC_MAGE, DISC_SORCERY, STAT_INT, "mage sight",
+      TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_25, LIFEFORCE_0, PRAY_0,
+      TAR_CHAR_ROOM | TAR_GROUP, SYMBOL_STRESS_0, "Your enhanced vision fades.",
+      "$n's eyes lose their magical gleam.", "Your enhanced vision flickers.",
+      "$n's eyes flicker momentarily.", START_1, LEARN_10, START_DO_40,
+      LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.04,
+      COMP_GESTURAL | COMP_GESTURAL_RANDOM | COMP_VERBAL | COMP_VERBAL_RANDOM |
+        COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
+      0);
+
   discArray[SPELL_TRUE_SIGHT] = new spellInfo(SPELL_MAGE, DISC_SPIRIT,
     DISC_SPIRIT, STAT_INT, "true sight", TASK_EASY, LAG_1, POSITION_CRAWLING,
-    MANA_25, LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF,
+    MANA_25, LIFEFORCE_0, PRAY_0, TAR_CHAR_ROOM | TAR_FIGHT_SELF | TAR_PASSIVE,
     SYMBOL_STRESS_0, "The silver aura in your eyes fades.",
     "the silver aura in $n's eyes fades.",
     "The silver aura in your eyes flickers slightly.",
-    "The silver aura in $n's eyes fades slightly.", START_1, LEARN_10,
+    "The silver aura in $n's eyes fades slightly.", START_11, LEARN_10,
     START_DO_40, LEARN_DO_5, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.04,
     COMP_GESTURAL | COMP_GESTURAL_RANDOM | COMP_VERBAL | COMP_VERBAL_RANDOM |
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
@@ -1037,6 +1051,16 @@ void buildSpellArray() {
     COMP_GESTURAL | COMP_GESTURAL_RANDOM | COMP_VERBAL | COMP_VERBAL_RANDOM |
       COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
     0);
+
+  discArray[SPELL_BLIZZARD] = new spellInfo(SPELL_MAGE, DISC_WATER, DISC_WATER,
+    STAT_INT, "blizzard", TASK_DIFFICULT, LAG_5, POSITION_SITTING, MANA_50,
+    LIFEFORCE_0, PRAY_0, TAR_AREA | TAR_IGNORE | TAR_VIOLENT, SYMBOL_STRESS_0,
+    "", "", "", "", START_50, LEARN_2, START_DO_40, LEARN_DO_5, START_DO_NO,
+    LEARN_DO_NO, LEARN_DIFF_SPELLS, 0.04,
+    COMP_GESTURAL | COMP_GESTURAL_RANDOM | COMP_VERBAL | COMP_VERBAL_RANDOM |
+      COMP_MATERIAL | COMP_MATERIAL_END | SPELL_TASKED,
+    0);
+  registerBlizzardRoomAffect();
 
   discArray[SPELL_BREATH_OF_SARAHAGE] =
     new spellInfo(SPELL_MAGE, DISC_WATER, DISC_WATER, STAT_INT,
@@ -1434,6 +1458,13 @@ void buildSpellArray() {
     LIFEFORCE_0, PRAY_500, TAR_AREA | TAR_IGNORE, SYMBOL_STRESS_45, "", "", "",
     "", START_80, LEARN_5, START_DO_50, LEARN_DO_5, START_DO_NO, LEARN_DO_NO,
     LEARN_DIFF_PRAYERS, 0.02, COMP_GESTURAL | COMP_VERBAL, 0);
+
+  discArray[SPELL_CONSECRATE] = new spellInfo(SPELL_CLERIC, DISC_AEGIS,
+    DISC_AEGIS, STAT_WIS, "consecrate", TASK_NORMAL, LAG_3, POSITION_SITTING,
+    MANA_0, LIFEFORCE_0, PRAY_400, TAR_AREA | TAR_IGNORE, SYMBOL_STRESS_75, "",
+    "", "", "", START_60, LEARN_5, START_DO_50, LEARN_DO_5, START_DO_NO,
+    LEARN_DO_NO, LEARN_DIFF_PRAYERS, 0.04, COMP_GESTURAL | COMP_VERBAL, 0);
+  registerConsecrateRoomAffect();
 
   // disc_hand_of_god
 

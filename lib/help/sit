@@ -13,7 +13,8 @@ benefit.  Note that SIT BED will sit on the first unoccupied BED in the room.
 
 To stop sitting, merely stand up or change to some other position.
 
-<R>WARNING:<z> Sitting can be detrimental to the lifeforce of a Shaman.
+For details on how recovery works, what bonuses can apply while sitting,
+and how the various classes are affected, see HELP RECOVERY.
 
-See Also: SLEEP, REST, STAND, CRAWL, LIFEFORCE
+See Also: RECOVERY, SLEEP, REST, STAND, CRAWL, LIFEFORCE
 Related Topics: MOVEMENT

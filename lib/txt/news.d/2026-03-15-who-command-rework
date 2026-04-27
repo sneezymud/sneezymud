@@ -1,0 +1,14 @@
+The who command has been completely reworked!
+
+The default who list now shows each player's level, class, race, and
+current area at a glance. Immortals are displayed with colorized rank
+and title. This is all similar to the old who -l
+
+Use 'who <name>' for a detailed view of a specific player, including
+their title, group members, and how long they've been online.
+
+A new --brief option shows only names and titles for a minimal,
+less spoilery view.
+
+The old single-letter filter flags have been removed. 
+Type 'who --help' for the new options.

@@ -67,6 +67,8 @@ class TPerson : public TBeing {
     void setDimensions();
     void setTitle(bool);
     void rentAffectTo(saveAffectedData*);
+    void saveAffectsToDB();
+    bool loadAffectsFromDB();
     void setSelectToggles(TBeing*, classIndT, silentTypeT);
     void advanceSelectDisciplines(classIndT, int, silentTypeT);
     void doLevelSkillsLearn(discNumT, int, int);
@@ -139,6 +141,7 @@ class TPerson : public TBeing {
     virtual void doStat(const sstring& argument);
     virtual void doShow(const sstring& argument);
     virtual bool isPc() const { return TRUE; }
+    int getPlayerID() const override;
     virtual void logf(const char*, ...);
     virtual int manaGain();
     virtual int hitGain();

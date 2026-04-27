@@ -972,13 +972,18 @@ int TBeing::doTell(const sstring& name, const sstring& message, bool visible) {
 
   d->output.push(cptr);
 
-  if (dynamic_cast<TMonster*>(vict) && !(vict->desc)) {
-    // no mob spam in tell history
-  } else {
-    queryqueue.push(format("insert into tellhistory (tellfrom, tellto, tell) "
-                           "values ('%s', '%s', '%s')") %
-                    capbuf.cap().escape() %
-                    ((sstring)vict->getName()).escape() % garbed.escape());
+  // Log tell history for player-to-player tells only.
+  // getPlayerID() returns non-zero for TPerson, polyselfed mobs, and
+  // switched mobs (via desc->original). Plain mobs return 0.
+  {
+    int fromId = getPlayerID();
+    int victId = vict->getPlayerID();
+
+    if (fromId > 0 && victId > 0) {
+      queryqueue.push(format("insert into tellhistory (from_id, to_id, tell) "
+                             "values (%i, %i, '%s')") %
+                      fromId % victId % garbed.escape());
+    }
   }
 
   if ((d && d->m_bIsClient) || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {

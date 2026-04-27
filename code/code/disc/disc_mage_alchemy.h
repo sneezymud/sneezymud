@@ -11,6 +11,7 @@ class CDAlchemy : public CDiscipline {
     CSkill skSpontaneousGeneration;
     CSkill skEtherGate;
     CSkill skStaveCharge;
+    CSkill skDetectMagic;
 
     virtual CDAlchemy* cloneMe() { return new CDAlchemy(*this); }
 
@@ -59,8 +60,6 @@ void illuminate(TBeing*, TMagicItem*, TObj*);
 int illuminate(TBeing*, TObj*, int, short);
 int castIlluminate(TBeing*, TObj*);
 
-int detectMagic(TBeing*, TBeing*);
-int castDetectMagic(TBeing*, TBeing*);
 void detectMagic(TBeing*, TBeing*, TMagicItem*);
 int detectMagic(TBeing*, TBeing*, int, short);
 

@@ -15,34 +15,6 @@
 
 #define GRIMHAVEN_TAX_OFFICE 14
 
-// this function relies on the fact that the db will return rows in the order
-// that they were created, chronologically.  I'm not sure if this is defined
-// behavior or not, so if it stops working, you need to put a timestamp value
-// into the table and sort by that
-bool sameAccount(sstring buf, int shop_nr) {
-  charFile st, stthis;
-
-  load_char(buf, &stthis);
-
-  TDatabase db(DB_SNEEZY);
-
-  db.query("select name from shopownedaccess where shop_nr=%i", shop_nr);
-
-  while (db.fetchRow()) {
-    if (!load_char(db["name"], &st))
-      continue;
-
-    if (!strcmp(stthis.aname, st.aname)) {
-      if (buf.lower() == sstring(db["name"]).lower())
-        return FALSE;
-      else
-        return TRUE;
-    }
-  }
-
-  return FALSE;
-}
-
 sstring transactionToString(transactionTypeT action) {
   switch (action) {
     case TX_BUYING:
@@ -200,23 +172,15 @@ int getShopAccess(int shop_nr, TBeing* ch) {
   int access = 0;
   TDatabase db(DB_SNEEZY);
 
-  if (!ch)
+  if (!ch || !ch->isPc())
     return 0;
 
   db.query(
-    "select access from shopownedaccess where shop_nr=%i and "
-    "upper(name)=upper('%s')",
-    shop_nr, ch->getName().c_str());
+    "select access from shopownedaccess where shop_nr=%i and player_id=%i",
+    shop_nr, ch->getPlayerID());
 
   if (db.fetchRow())
     access = convertTo<int>(db["access"]);
-
-#if 0  
-  if(sameAccount(ch->getName(), shop_nr) && !ch->isImmortal() && access){
-    ch->sendTo("Another character in your account has permissions at this shop, so this character can not use the ownership functions.\n\r");
-    access=0;
-  }
-#endif
 
   if (ch->isImmortal())
     access = SHOPACCESS_OWNER;
@@ -712,8 +676,13 @@ int TShopOwned::setRates(sstring arg) {
     } else if (buf == "player") {
       arg = one_argument(arg, buf);
 
-      db.query("delete from shopownedplayer where shop_nr=%i and player='%s'",
-        shop_nr, buf.c_str());
+      int targetId = getPlayerIdByName(buf.c_str());
+      if (targetId == 0) {
+        keeper->doTell(ch->getName(), "I don't know that player.");
+        return true;
+      }
+      db.query("delete from shopownedplayer where shop_nr=%i and player_id=%i",
+        shop_nr, targetId);
 
       keeper->doTell(ch->getName(), "Done.");
       shoplog(shop_nr, ch, keeper, buf, 0, "clear setrates");
@@ -810,15 +779,17 @@ int TShopOwned::setRates(sstring arg) {
     }
 
     db.query(
-      "select player, profit_buy, profit_sell, max_num from shopownedplayer "
-      "where shop_nr=%i",
+      "select p.name, sop.profit_buy, sop.profit_sell, sop.max_num "
+      "from shopownedplayer sop "
+      "join player p on sop.player_id=p.id "
+      "where sop.shop_nr=%i",
       shop_nr);
 
     while (db.fetchRow()) {
       keeper->doTell(ch->getName(),
         format("%f %f %i player %s") % convertTo<float>(db["profit_buy"]) %
           convertTo<float>(db["profit_sell"]) % convertTo<int>(db["max_num"]) %
-          db["player"]);
+          db["name"]);
     }
 
     return TRUE;
@@ -876,17 +847,26 @@ int TShopOwned::setRates(sstring arg) {
   } else if (buf == "player") {  ////////////////////////////////////////////
     arg = one_argument(arg, buf);
 
-    db.query("select 1 from shopownedplayer where shop_nr=%i and player='%s'",
-      shop_nr, buf.c_str());
+    auto targetPlayerId = getPlayerIdByName(buf.c_str());
+    if (targetPlayerId == 0) {
+      keeper->doTell(ch->getName(),
+        format("I don't know anyone named %s.") % buf);
+      return true;
+    }
+
+    db.query("select 1 from shopownedplayer where shop_nr=%i and player_id=%i",
+      shop_nr, targetPlayerId);
 
     if (!db.fetchRow()) {
-      db.query("insert into shopownedplayer values (%i, '%s', %f, %f, %i)",
-        shop_nr, buf.c_str(), profit_buy, profit_sell, max_num);
+      db.query(
+        "insert into shopownedplayer (shop_nr, player_id, profit_buy, "
+        "profit_sell, max_num) values (%i, %i, %f, %f, %i)",
+        shop_nr, targetPlayerId, profit_buy, profit_sell, max_num);
     } else {
       db.query(
         "update shopownedplayer set profit_buy=%f, profit_sell=%f, max_num=%i "
-        "where shop_nr=%i and player='%s'",
-        profit_buy, profit_sell, max_num, shop_nr, buf.c_str());
+        "where shop_nr=%i and player_id=%i",
+        profit_buy, profit_sell, max_num, shop_nr, targetPlayerId);
     }
 
     keeper->doTell(ch->getName(),
@@ -1226,16 +1206,21 @@ int TShopOwned::setAccess(sstring arg) {
   buf2 = arg.word(1);
 
   if (!buf2.empty()) {  // set value
-    db.query(
-      "delete from shopownedaccess where shop_nr=%i and "
-      "upper(name)=upper('%s')",
-      shop_nr, buf.c_str());
+    auto targetId = getPlayerIdByName(buf.c_str());
+    if (targetId == 0) {
+      keeper->doTell(ch->getName(),
+        format("I don't know anyone named %s.") % buf);
+      return false;
+    }
+
+    db.query("delete from shopownedaccess where shop_nr=%i and player_id=%i",
+      shop_nr, targetId);
 
     if (convertTo<int>(buf2) != 0)
       db.query(
-        "insert into shopownedaccess (shop_nr, name, access) values (%i, '%s', "
-        "%i)",
-        shop_nr, buf.c_str(), convertTo<int>(buf2));
+        "insert into shopownedaccess (shop_nr, player_id, access) values "
+        "(%i, %i, %i)",
+        shop_nr, targetId, convertTo<int>(buf2));
 
     shoplog(shop_nr, ch, keeper, format("%s: %s") % buf % buf2, 0,
       "set access");
@@ -1243,13 +1228,15 @@ int TShopOwned::setAccess(sstring arg) {
   } else {
     if (!buf.empty()) {
       db.query(
-        "select name, access from shopownedaccess where shop_nr=%i and "
-        "upper(name)=upper('%s')",
+        "select p.name, soa.access from shopownedaccess soa "
+        "join player p on soa.player_id=p.id "
+        "where soa.shop_nr=%i and p.name='%s'",
         shop_nr, buf.c_str());
     } else {
       db.query(
-        "select name, access from shopownedaccess where shop_nr=%i order by "
-        "access",
+        "select p.name, soa.access from shopownedaccess soa "
+        "join player p on soa.player_id=p.id "
+        "where soa.shop_nr=%i order by soa.access",
         shop_nr);
     }
     while (db.fetchRow()) {
@@ -1426,7 +1413,7 @@ int TShopOwned::doLogs(sstring arg) {
     if (!arg.empty()) {
       db.query(
         "select name, action, item, talens, shoptalens, shopvalue, logtime "
-        "from shoplog where shop_nr=%i and upper(name)=upper('%s') order by "
+        "from shoplog where shop_nr=%i and name='%s' order by "
         "logtime desc, action desc",
         shop_nr, arg.c_str());
     } else {

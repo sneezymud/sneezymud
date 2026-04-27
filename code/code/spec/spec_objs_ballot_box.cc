@@ -5,7 +5,7 @@
 // create table poll (poll_id int primary key, descr varchar(127), status
 // varchar(8)); create table poll_option (option_id int, poll_id int, descr
 // varchar(127), primary key (option_id, poll_id)); create table poll_vote
-// (account varchar(80), poll_id int, option_id int, primary key (account,
+// (account_id int, poll_id int, option_id int, primary key (account_id,
 // poll_id, option_id));
 
 bool voteAdmin(TBeing* ch) {
@@ -183,8 +183,8 @@ int ballotBox(TBeing* ch, cmdTypeT cmd, const char* argument, TObj* o, TObj*) {
         // vote <poll_id> <option_id>
         option_id = convertTo<int>(tmp);
 
-        db.query("select 1 from poll_vote where poll_id=%i and account='%s'",
-          poll_id, ch->desc->account->name.c_str());
+        db.query("select 1 from poll_vote where poll_id=%i and account_id=%i",
+          poll_id, ch->getAccountID());
 
         if (db.fetchRow()) {
           ch->sendTo("You've already voted in that poll.\n\r");
@@ -207,15 +207,16 @@ int ballotBox(TBeing* ch, cmdTypeT cmd, const char* argument, TObj* o, TObj*) {
           return true;
         }
 
-        db.query("insert into poll_vote values ('%s', %i, %i)",
-          ch->desc->account->name.c_str(), poll_id, option_id);
+        db.query(
+          "insert into poll_vote (account_id, poll_id, option_id) "
+          "values (%i, %i, %i)",
+          ch->getAccountID(), poll_id, option_id);
 
         db.query(
           "select po.descr as descr from poll_option po, poll_vote pv where "
           "po.poll_id=%i and po.option_id=%i and pv.poll_id=%i and "
-          "pv.option_id=%i and pv.account='%s'",
-          poll_id, option_id, poll_id, option_id,
-          ch->desc->account->name.c_str());
+          "pv.option_id=%i and pv.account_id=%i",
+          poll_id, option_id, poll_id, option_id, ch->getAccountID());
 
         if (db.fetchRow()) {
           ch->sendTo(format("You cast your vote for %s.\n\r") % db["descr"]);

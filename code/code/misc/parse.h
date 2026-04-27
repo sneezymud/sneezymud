@@ -34,7 +34,7 @@ class commandInfo {
     ~commandInfo();
 };
 
-enum cmdTypeT {
+enum cmdTypeT : int {
   CMD_NORTH,
   CMD_EAST,
   CMD_SOUTH,

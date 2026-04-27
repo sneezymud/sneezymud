@@ -16,8 +16,14 @@
 
 #include <sys/select.h>  // for fd_set
 #include <cmath>         // for pow
+#include <climits>       // for INT_MAX, INT_MIN
+#include <algorithm>     // for std::clamp
 
 struct PolyType;
+
+inline int saturate_to_int(double v) {
+  return (int)std::clamp(v, (double)INT_MIN, (double)INT_MAX);
+}
 class charFile;
 
 using std::max;
@@ -191,7 +197,12 @@ extern void wipeRentFile(const char*);
 extern void wipeFollowersFile(const char*);
 extern void wipePlayerFile(const char*);
 extern void handleCorrupted(const char*, char*);
-extern void store_mail(const char*, const char*, const char*, int, int);
+// DB query - not cached. Avoid in hot loops.
+[[nodiscard]] extern int getPlayerIdByName(const char* name);
+extern void store_mail(int to_id, const char* from_name, int from_id,
+  const char* message, int talens, int rent_id);
+extern int store_faction_mail(Descriptor* sender_desc, int sender_id,
+  const char* sender_name, const char* message);
 extern void setup_dir(FILE* fl, int room, dirTypeT dir, TRoom* = NULL);
 extern char hostLogList[MAX_BAN_HOSTS][40];
 extern int numberLogHosts;
@@ -232,7 +243,8 @@ extern TPCorpse* pc_corpse_list;
 extern const int spec_skill_array[50];
 unsigned int CountBits(unsigned int);
 extern bool exit_ok(roomDirData*, TRoom**);
-extern spellNumT searchForSpellNum(const sstring& arg, exactTypeT exact, bool unique = FALSE);
+extern spellNumT searchForSpellNum(const sstring& arg, exactTypeT exact,
+  bool unique = FALSE);
 extern bool thingsInRoomVis(TThing*, TRoom*);
 extern int get(TBeing*, TThing*, TThing*, getTypeT, bool);
 extern void portal_flag_change(TPortal*, unsigned int, const char*, setRemT);
@@ -377,6 +389,7 @@ extern const sstring getSectorDescrColor(sectorTypeT, TRoom*);
 extern spellNumT mapWeaponT(weaponT w);
 extern spellNumT getWtype_kluge(weaponT t);
 extern const std::vector<uint16_t> CLASS_BITVALUES;
+extern bool willBreakHide(cmdTypeT);
 
 // these needs C++ linkage to avoid conflict with functions in stdlib
 extern int remove(TBeing*, TThing*);

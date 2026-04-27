@@ -14,7 +14,8 @@ benefit.
 
 To stop sleeping, merely wake up.
 
-<R>WARNING:<z> Sleeping can be detrimental to the liforce of a Shaman.
+For details on how recovery works, what bonuses can apply while sleeping,
+and how the various classes are affected, see HELP RECOVERY.
 
-See Also: WAKE, REST, SIT, STAND, CRAWL, LIFEFORCE
+See Also: RECOVERY, WAKE, REST, SIT, STAND, CRAWL, ENCAMP, LIFEFORCE
 Related Topics: MOVEMENT

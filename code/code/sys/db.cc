@@ -164,6 +164,7 @@ const char* const File::WIZNEWS_DIR =
 
 std::vector<TRoom*> roomspec_db(0);
 std::vector<TRoom*> roomsave_db(0);
+std::vector<TRoom*> affectedRooms_db;
 std::queue<sstring> queryqueue;
 
 struct cached_object {
@@ -2101,41 +2102,6 @@ cached_object* TMobileCache::operator[](int nr) {
   return ret;
 }
 
-void log_object(TObj* obj) {
-  // Don't log objects that are flagged as newbie
-  if (obj->isObjStat(ITEM_NEWBIE)) {
-    return;
-  }
-  // Don't log tools
-  if (dynamic_cast<TTool*>(obj)) {
-    return;
-  }
-  // Don't log commodities
-  if (dynamic_cast<TCommodity*>(obj)) {
-    return;
-  }
-  // Don't log treasures
-  if (dynamic_cast<TTreasure*>(obj)) {
-    return;
-  }
-  // Don't log food
-  if (dynamic_cast<TFood*>(obj)) {
-    return;
-  }
-  // Don't log other
-  if (dynamic_cast<TOtherObj*>(obj)) {
-    return;
-  }
-  // Don't log trash
-  if (dynamic_cast<TTrash*>(obj)) {
-    return;
-  }
-  TDatabase db(DB_SNEEZY);
-  db.query("insert into objlog (vnum, objcount) values (%i, %i)",
-    obj_index[obj->getItemIndex()].virt,
-    obj_index[obj->getItemIndex()].getNumber());
-}
-
 void TObjectCache::preload() {
   TDatabase db(DB_SNEEZY);
 
@@ -2528,8 +2494,8 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing* ch) {
   } else {
     TDatabase db(ch && should_alloc ? DB_IMMORTAL : DB_SNEEZY);
     if (ch && should_alloc) {
-      db.query("select * from mob where owner = '%s' and vnum = %i",
-        ch->name.c_str(), virt);
+      db.query("select * from mob where player_id=%i and vnum=%i",
+        ch->getPlayerID(), virt);
     } else {
       db.query("select * from mob where vnum = %i", virt);
     }
@@ -2678,13 +2644,21 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing* ch) {
       if (db["adjacent_sound"].length() > 0)
         distantSnds = db["adjacent_sound"];
     }
-    db.query("select * from mob_imm where vnum=%i", virt);
+    if (ch && should_alloc)
+      db.query("select * from mob_imm where player_id=%i and vnum=%i",
+        ch->getPlayerID(), virt);
+    else
+      db.query("select * from mob_imm where vnum=%i", virt);
     while (db.fetchRow()) {
-      setImmunity((immuneTypeT)convertTo<int>(db["type"]),
+      setImmunity(static_cast<immuneTypeT>(convertTo<int>(db["type"])),
         convertTo<int>(db["amt"]));
     }
 
-    db.query("select * from mob_extra where vnum=%i", virt);
+    if (ch && should_alloc)
+      db.query("select * from mob_extra where player_id=%i and vnum=%i",
+        ch->getPlayerID(), virt);
+    else
+      db.query("select * from mob_extra where vnum=%i", virt);
     extraDescription* tExDescr;
     while (db.fetchRow()) {
       tExDescr = new extraDescription();
@@ -3264,7 +3238,6 @@ void runResetCmdE(zoneData& zd, resetCom& rs, resetFlag flags, bool&,
   // No need to log prop items
   if (!isPropLoad) {
     mob->logItem(obj, CMD_LOAD);
-    log_object(obj);
   }
 
   // run some sanity checks after load
@@ -3652,7 +3625,6 @@ void runResetCmdP(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
 
   newobj->onObjLoad();
   last_cmd = true;
-  log_object(newobj);
 }
 
 // Change ONE value of the four values upon reset- Russ

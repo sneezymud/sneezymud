@@ -48,16 +48,14 @@ if ! [ -f /var/lib/mysql/.devcontainer-seeded ]; then
   "
 
   for db in immortal sneezy; do
-    for phase in tables views data; do
-      dir="${WORKSPACE}/_Setup-data/sql_${phase}/${db}"
-      [ -d "${dir}" ] || continue
-      shopt -s nullglob
-      for sql in "${dir}"/*.sql; do
-        echo "  loading '${sql}'"
-        mariadb "${db}" < "${sql}"
-      done
-      shopt -u nullglob
+    dir="${WORKSPACE}/db/${db}"
+    [ -d "${dir}" ] || continue
+    shopt -s nullglob
+    for sql in "${dir}"/*.sql; do
+      echo "  loading '${sql}'"
+      mariadb "${db}" < "${sql}"
     done
+    shopt -u nullglob
   done
 
   mariadb-admin shutdown

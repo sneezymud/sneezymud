@@ -21,12 +21,13 @@
 // setrates <X> <Y> <term> loanrate
 // X * (lvl ** Y)
 
-double getPenalty(unsigned int shop_nr, const sstring& name) {
+double getPenalty(unsigned int shop_nr, int player_id) {
   TDatabase db(DB_SNEEZY);
 
   db.query(
-    "select profit_buy from shopownedplayer where player='%s' and shop_nr=%i",
-    name.c_str(), shop_nr);
+    "select profit_buy from shopownedplayer "
+    "where player_id=%i and shop_nr=%i",
+    player_id, shop_nr);
 
   if (db.fetchRow())
     return convertTo<double>(db["profit_buy"]);
@@ -40,12 +41,13 @@ double getPenalty(unsigned int shop_nr, const sstring& name) {
   return shop_index[shop_nr].profit_buy;
 }
 
-double getRate(unsigned int shop_nr, const sstring& name) {
+double getRate(unsigned int shop_nr, int player_id) {
   TDatabase db(DB_SNEEZY);
 
   db.query(
-    "select profit_sell from shopownedplayer where player='%s' and shop_nr=%i",
-    name.c_str(), shop_nr);
+    "select profit_sell from shopownedplayer "
+    "where player_id=%i and shop_nr=%i",
+    player_id, shop_nr);
 
   if (db.fetchRow())
     return convertTo<double>(db["profit_sell"]);
@@ -59,12 +61,13 @@ double getRate(unsigned int shop_nr, const sstring& name) {
   return shop_index[shop_nr].profit_sell;
 }
 
-int getTerm(unsigned int shop_nr, const sstring& name) {
+int getTerm(unsigned int shop_nr, int player_id) {
   TDatabase db(DB_SNEEZY);
 
   db.query(
-    "select max_num from shopownedplayer where player='%s' and shop_nr=%i",
-    name.c_str(), shop_nr);
+    "select max_num from shopownedplayer "
+    "where player_id=%i and shop_nr=%i",
+    player_id, shop_nr);
 
   if (db.fetchRow())
     return convertTo<int>(db["max_num"]);
@@ -126,6 +129,10 @@ int loanShark(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
   if (cmd == CMD_WHISPER)
     return shopWhisper(ch, me, shop_nr, arg);
 
+  if (!ch->isPc()) {
+    return false;
+  }
+
   TShopOwned tso(shop_nr, me, ch);
 
   db.query("select x, y from shopownedloanrate where shop_nr=%i", shop_nr);
@@ -137,7 +144,7 @@ int loanShark(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
 
   double X = convertTo<double>(db["x"]);
   double Y = convertTo<double>(db["y"]);
-  int term = getTerm(shop_nr, ch->getName());
+  int term = getTerm(shop_nr, ch->getPlayerID());
   int amt = (int)(pow(ch->GetMaxLevel(), X) / pow(50, X) * Y);
 
   ////////////////////////////
@@ -224,15 +231,15 @@ int loanShark(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
           format("I can extend you a loan for %i talens.") % amt);
         me->doTell(ch->getName(),
           format("A yearly cumulative interest rate of %.2f%c will apply.") %
-            (getRate(shop_nr, ch->getName()) * 100) % '%');
+            (getRate(shop_nr, ch->getPlayerID()) * 100) % '%');
         me->doTell(ch->getName(),
           format("The term length I can offer is %i years.") % term);
         me->doTell(ch->getName(),
           "One mud year is about 2 weeks in real time.");
-        me->doTell(ch->getName(), format("If you default on the loan, you will "
-                                         "be charged an additional %.2f%c.") %
-                                    (getPenalty(shop_nr, ch->getName()) * 100) %
-                                    '%');
+        me->doTell(ch->getName(),
+          format("If you default on the loan, you will "
+                 "be charged an additional %.2f%c.") %
+            (getPenalty(shop_nr, ch->getPlayerID()) * 100) % '%');
         me->doTell(ch->getName(),
           "Do \"buy loan <amt>\" to take out the loan.");
       }
@@ -243,10 +250,16 @@ int loanShark(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
   ////////////////////////////
   if (cmd == CMD_BUY) {
     if (sstring(arg).word(0) == "repo" && tso.hasAccess(SHOPACCESS_OWNER)) {
+      int targetId = getPlayerIdByName(sstring(arg).word(2).c_str());
+      if (targetId == 0) {
+        me->doTell(ch->getName(), "I don't know that player.");
+        return true;
+      }
+
       db.query(
         "select amt, granted_time, term, rate, default_charge from "
-        "shopownedloans, player where player_id=id and lower(name)=lower('%s')",
-        sstring(arg).word(2).c_str());
+        "shopownedloans where player_id=%i",
+        targetId);
 
       if (!db.fetchRow()) {
         me->doTell(ch->getName(), "I can't find a loan for that player.");
@@ -282,9 +295,17 @@ int loanShark(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
         return true;
       }
 
-      db.query("insert into shopownedloans values (%i, %i, %i, %i, %i, %f, %f)",
-        shop_nr, ch->getPlayerID(), amt, time(NULL), term,
-        getRate(shop_nr, ch->getName()), getPenalty(shop_nr, ch->getName()));
+      if (!db.query(
+            "insert into shopownedloans (shop_nr, player_id, amt, "
+            "granted_time, "
+            "term, rate, default_charge) values (%i, %i, %i, %i, %i, %f, %f)",
+            shop_nr, ch->getPlayerID(), amt, time(nullptr), term,
+            getRate(shop_nr, ch->getPlayerID()),
+            getPenalty(shop_nr, ch->getPlayerID()))) {
+        me->doTell(ch->getName(),
+          "I can't seem to finalize the paperwork right now.");
+        return true;
+      }
 
       me->giveMoney(ch, amt, GOLD_SHOP);
       me->saveItems(shop_nr);

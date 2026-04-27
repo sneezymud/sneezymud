@@ -82,15 +82,20 @@ void MakeNoise(int room, const char* local_snd, const char* distant_snd) {
   TRoom *rp = NULL, *orp = NULL;
   TThing* t = NULL;
 
+  const bool has_local = local_snd && *local_snd;
+  const bool has_distant = distant_snd && *distant_snd;
+
   if ((rp = real_roomp(room))) {
-    for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
-         ++it) {
-      ch = dynamic_cast<TBeing*>(t);
-      if (!ch) {
-        continue;
-      }
-      if (ch->awake()) {
-        ch->sendTo(COLOR_BASIC, local_snd);
+    if (has_local) {
+      for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
+           ++it) {
+        ch = dynamic_cast<TBeing*>(t);
+        if (!ch) {
+          continue;
+        }
+        if (ch->awake()) {
+          ch->sendTo(COLOR_BASIC, local_snd);
+        }
       }
     }
   }
@@ -99,6 +104,8 @@ void MakeNoise(int room, const char* local_snd, const char* distant_snd) {
       format("Testing log: No rp in MakeNoise for %s") % ch->name);
     return;
   }
+  if (!has_distant)
+    return;
   for (door = MIN_DIR; door < MAX_DIR; door++) {
     if (rp->dir_option[door] &&
         (orp = real_roomp(rp->dir_option[door]->to_room))) {

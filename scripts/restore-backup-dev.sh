@@ -23,6 +23,8 @@ TEMP_DIR=""
 RESTART_CONTAINER=false
 PRE_RESTORE_DUMP=""
 BACKUP_REPO="sneezymud/backups"
+SEED_MODE=false
+SEED_DIR=""
 
 # Docker container/volume names (stable across compose projects)
 DB_CONTAINER="sneezy-db"
@@ -56,6 +58,8 @@ Options:
   --docker          Target Docker dev environment (sneezy-db container +
                     sneezy-mutable volume) instead of host-native MariaDB
   --date YYYY-MM-DD Restore a specific backup date (default: latest release)
+  --seed            Restore from db/ seed files instead of a backup
+                    release. Mutually exclusive with --date.
   --yes, -y         Skip confirmation prompt
   --force           Proceed even if the game server is running
   --help, -h        Show this help message
@@ -65,6 +69,8 @@ Examples:
   ./scripts/restore-backup-dev.sh --date 2025-12-28  # Specific date
   ./scripts/restore-backup-dev.sh --docker            # Docker dev environment
   ./scripts/restore-backup-dev.sh --docker --yes      # Docker, no confirmation
+  ./scripts/restore-backup-dev.sh --seed              # Seed data, local DB
+  ./scripts/restore-backup-dev.sh --seed --docker     # Seed data, Docker
 EOF
 }
 
@@ -85,9 +91,14 @@ parse_args() {
       --yes|-y)    SKIP_CONFIRM=true; shift ;;
       --force)     FORCE=true; shift ;;
       --help|-h)   usage; exit 0 ;;
+      --seed)      SEED_MODE=true; shift ;;
       *)           error "Unknown option: $1. See --help for usage." ;;
     esac
   done
+
+  if $SEED_MODE && [[ -n "$BACKUP_DATE" ]]; then
+    error "--seed and --date are mutually exclusive"
+  fi
 }
 
 cleanup() {
@@ -113,9 +124,11 @@ cleanup() {
 }
 
 check_dependencies() {
-  require_cmd gh "https://github.com/cli/cli#installation"
-  require_cmd tar
-  require_cmd xz "sudo apt install xz-utils"
+  if ! $SEED_MODE; then
+    require_cmd gh "https://github.com/cli/cli#installation"
+    require_cmd tar
+    require_cmd xz "sudo apt install xz-utils"
+  fi
   if $DOCKER_MODE; then
     require_cmd docker
   else
@@ -129,12 +142,14 @@ check_dependencies() {
     fi
   fi
 
-  if ! gh auth status &>/dev/null; then
-    error "GitHub CLI is not authenticated.\n  Run: gh auth login"
-  fi
+  if ! $SEED_MODE; then
+    if ! gh auth status &>/dev/null; then
+      error "GitHub CLI is not authenticated.\n  Run: gh auth login"
+    fi
 
-  if ! gh api "repos/${BACKUP_REPO}" &>/dev/null; then
-    error "Cannot access ${BACKUP_REPO}.\n  Your GitHub account must be a member of the 'SneezyMUD hackers' team:\n  https://github.com/orgs/sneezymud/teams/hackers\n  Request access on the SneezyMUD Discord server."
+    if ! gh api "repos/${BACKUP_REPO}" &>/dev/null; then
+      error "Cannot access ${BACKUP_REPO}.\n  Your GitHub account must be a member of the 'SneezyMUD hackers' team:\n  https://github.com/orgs/sneezymud/teams/hackers\n  Request access on the SneezyMUD Discord server."
+    fi
   fi
 }
 
@@ -206,17 +221,28 @@ extract_and_validate() {
   success "Archive validated (dbdump.sql + mutable/)"
 }
 
+validate_seed_data() {
+  local repo_root
+  repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+  SEED_DIR="$repo_root/db"
+  [[ -d "$SEED_DIR" ]] || error "db/ not found at $SEED_DIR\n  Run this script from within the repository."
+  success "Seed data found ($SEED_DIR)"
+}
+
 confirm() {
   $SKIP_CONFIRM && return
 
   local target="local host"
   $DOCKER_MODE && target="Docker ($DB_CONTAINER)"
 
+  local source="backup"
+  $SEED_MODE && source="seed data"
+
   echo
   warning "This will DROP and recreate the sneezy and immortal databases"
   warning "and replace the contents of the mutable/ directory."
   echo
-  read -rp "Restore backup to ${target}? [y/N] " answer
+  read -rp "Restore ${source} to ${target}? [y/N] " answer
   case "$answer" in
     [yY]|[yY][eE][sS]) ;;
     *) echo "Aborted."; exit 0 ;;
@@ -247,8 +273,23 @@ restore_database() {
 
   # The dump contains CREATE DATABASE statements, so we must DROP first.
   # Grants on db.* survive the DROP/recreate cycle.
-  db_cmd mariadb -e "DROP DATABASE IF EXISTS sneezy; DROP DATABASE IF EXISTS immortal;"
-  db_cmd mariadb < "$TEMP_DIR/dbdump.sql"
+  # Drop immortal first: it has cross-database FKs into sneezy.
+  db_cmd mariadb -e "DROP DATABASE IF EXISTS immortal; DROP DATABASE IF EXISTS sneezy;"
+  if $SEED_MODE; then
+    db_cmd mariadb -e "CREATE DATABASE sneezy; CREATE DATABASE immortal;"
+    local db dir sql
+    for db in immortal sneezy; do
+      dir="$SEED_DIR/${db}"
+      [[ -d "$dir" ]] || continue
+      for sql in "$dir"/*.sql; do
+        [[ -f "$sql" ]] || continue
+        info "  $db/$(basename "$sql")"
+        db_cmd mariadb "$db" < "$sql"
+      done
+    done
+  else
+    db_cmd mariadb < "$TEMP_DIR/dbdump.sql"
+  fi
 
   success "Databases restored (sneezy + immortal)"
 }
@@ -275,9 +316,12 @@ restore_mutable() {
       alpine tail -f /dev/null >/dev/null
 
     docker exec "$restore_container" sh -c 'rm -rf /mnt/mutable/* /mnt/mutable/.[!.]*'
-    docker cp "$MUTABLE_SRC/." "$restore_container:/mnt/mutable/"
-    # 1000:1000 matches the UID/GID the game server container runs as
-    docker exec "$restore_container" chown -R 1000:1000 /mnt/mutable
+
+    if ! $SEED_MODE; then
+      docker cp "$MUTABLE_SRC/." "$restore_container:/mnt/mutable/"
+      # 1000:1000 matches the UID/GID the game server container runs as
+      docker exec "$restore_container" chown -R 1000:1000 /mnt/mutable
+    fi
 
     docker rm -f "$restore_container" >/dev/null
   else
@@ -288,7 +332,10 @@ restore_mutable() {
     [[ -d "$target" ]] || error "Directory $target does not exist.\n  Expected the repo root at: $repo_root"
 
     rm -rf "${target:?}"/* "${target:?}"/.[!.]*
-    cp -a "$MUTABLE_SRC/." "$target/"
+
+    if ! $SEED_MODE; then
+      cp -a "$MUTABLE_SRC/." "$target/"
+    fi
   fi
 
   success "Mutable files restored"
@@ -299,8 +346,12 @@ main() {
   trap cleanup EXIT
   check_dependencies
   check_server_running
-  download_backup
-  extract_and_validate
+  if $SEED_MODE; then
+    validate_seed_data
+  else
+    download_backup
+    extract_and_validate
+  fi
   confirm
   restore_database
   restore_mutable
@@ -320,7 +371,11 @@ main() {
   fi
 
   echo
-  success "Backup restore complete!"
+  if $SEED_MODE; then
+    success "Seed restore complete!"
+  else
+    success "Backup restore complete!"
+  fi
 }
 
 main "$@"

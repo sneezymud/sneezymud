@@ -149,7 +149,7 @@ M 0 13741 9999 -99   - ancient cave bear
 A 0 13701 13713
 M 0 13741 9999 -99   - ancient cave bear
 
-M 0 13742 9999 13896 - bloody cave bear
+M 0 13742 1 13896 - bloody cave bear
 
 A 0 13705 13706
 M 0 13743 9999 -99   - weed eel
@@ -192,7 +192,7 @@ M 0 13702 9999 -99   - giant killer frog
 **
 * Upper Dam
 **
-M 0 13705 9999 13776 - headmaster, observation platform
+M 0 13705 1 13776 - headmaster, observation platform
 G 1 13786 1          - key - 13776/13777
 ? 0 2 0 E
 E 1 13725 9999 19    - ruby flanged mace
@@ -286,7 +286,7 @@ M 0 13707 9999 -99   - worker
 A 0 13780 13785      - barracks and hallway of the dam
 M 0 13707 9999 -99   - worker
 
-M 0 13709 9999 13789 - ochre jelly
+M 0 13709 1 13789 - ochre jelly
 
 **
 * Tunnels
@@ -298,7 +298,7 @@ M 0 13710 9999 -99   - cave fisher
 A 0 13791 13802      - west tunnel
 M 0 13710 9999 -99   - cave fisher
 
-M 0 13715 9999 13840 - violet fungi
+M 0 13715 1 13840 - violet fungi
 
 A 0 13791 13802      - west tunnel
 M 0 13725 9999 -99   - slithering tracker
@@ -321,7 +321,7 @@ M 0 13725 9999 -99   - slithering tracker
 A 0 13791 13802      - west tunnel
 M 0 13725 9999 -99   - slithering tracker
 
-M 0 13745 9999 13813 - illithid wizard
+M 0 13745 1 13813 - illithid wizard
 
 A 0 13717 13725
 M 0 13700 9999 -99   - vampire bat
@@ -378,7 +378,7 @@ A 0 13843 13850
 M 0 13724 9999 -99    - slug
 
 * steeder stable
-M 0 13713 9999 13823 - stablemaster
+M 0 13713 1 13823 - stablemaster
 Z 0 4 3              - steeder skin set
 ? 0 3 0 E
 E 1 13737 9999 4     - mushroom breastplate
@@ -406,7 +406,7 @@ M 0 13711 9999 -99   - steeder
 A 0 13824 13825
 M 0 13711 9999 -99   - steeder
 
-M 0 13712 9999 13824  - cocooned person
+M 0 13712 1 13824  - cocooned person
 
 * slave pens
 A 0 13826 13830      - slave pens
@@ -438,12 +438,12 @@ M 0 13722 9999 -99   - human slave
 E 1 13761 9999 15    - loincloth, human sized
 E 1 13764 9999 3     - slave collar
 
-M 0 13723 9999 13830 - human slave
+M 0 13723 1 13830 - human slave
 E 1 13761 9999 15    - loincloth, human sized
 E 1 13764 9999 3     - slave collar
 
 * brewery
-M 0 13727 9999 13876 - brewer
+M 0 13727 1 13876 - brewer
 Z 0 4 3              - steeder skin set
 Z 0 5 10             - green moss set
 
@@ -614,7 +614,7 @@ E 1 13752 9999 19    - axe
 Z 0 6 5            - default dwarven chainmail
 
 
-M 0 13736 9999 13860 - miner
+M 0 13736 1 13860 - miner
 ? 0 2 0 E
 E 1 13778 9999 10    - mining glove
 ? 0 2 0 E
@@ -622,51 +622,51 @@ E 1 13778 9999 11    - mining glove
 ? 0 2 0 E
 E 1 13779 9999 5     - mining helmet
 
-M 0 13732 9999 13862 - blacksmith
+M 0 13732 1 13862 - blacksmith
 ? 0 2 0 E
 E 1 13782 9999 19    - smithy hammer
 
 
-M 0 13730 9999 13865 - governor
+M 0 13730 1 13865 - governor
 Y 0 90 2    - behir scale set (13700-13712)
 ? 0 2 0 E
 E 1 13711 9999 19    - bloodspike
 Z 0 6 5           - default dwarven chainmail
 
-M 0 13734 9999 13858 - warrior
+M 0 13734 4 13858 - warrior
 E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 2 0 E
 E 1 13752 9999 19    - axe
 Z 0 6 5            - default dwarven chainmail
 
-M 0 13734 9999 13858 - warrior
+M 0 13734 4 13858 - warrior
 E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 2 0 E
 E 1 13752 9999 19    - axe
 Z 0 6 5            - default dwarven chainmail
 
-M 0 13734 9999 13858 - warrior
+M 0 13734 4 13858 - warrior
 E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 2 0 E
 E 1 13752 9999 19    - axe
 Z 0 6 5            - default dwarven chainmail
 
-M 0 13734 9999 13858 - warrior
+M 0 13734 4 13858 - warrior
 E 1 13783 9999 3     - tags
 Y 0 88 2 - corundum set (13740-13751)
 ? 0 2 0 E
 E 1 13752 9999 19    - axe
 Z 0 6 5            - default dwarven chainmail
 
-M 0 13731 9999 13858 - old warrior
+M 0 13731 1 13858 - old warrior
 Z 0 6 5            - default dwarven chainmail
 
-M 0 13733 9999 13858 - citizen
-M 0 13733 9999 13858 - citizen
-M 0 13733 9999 13858 - citizen
+M 0 13733 3 13858 - citizen
+M 0 13733 3 13858 - citizen
+M 0 13733 3 13858 - citizen
 
 
 * quest load

@@ -249,6 +249,7 @@ immuneTypeT getTypeImmunity(spellNumT type) {
     case SPELL_ARCTIC_BLAST:
     case SPELL_ICE_STORM:
     case SPELL_FROST_BREATH:
+    case SPELL_BLIZZARD:
     case DAMAGE_TRAP_FROST:
       bit = IMMUNE_COLD;
       break;

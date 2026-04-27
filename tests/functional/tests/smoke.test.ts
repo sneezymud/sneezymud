@@ -19,7 +19,7 @@ describe("Session Basics", () => {
   it("who shows connected player list", async () => {
     const output = await mud.command("who");
     expect(output).toContainCaseInsensitive("Players:");
-    expect(output).toContainCaseInsensitive("Total Players");
+    expect(output).toContainCaseInsensitive("Total:");
   });
 
   it("score shows character vitals", async () => {

@@ -183,7 +183,13 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
             act(
               "Your grasp on $p loosens, but you shift position for a firmer "
               "grip.",
-              FALSE, this, weapon, NULL, TO_CHAR);
+              false, this, weapon, nullptr, TO_CHAR);
+          } else if (doesKnowSkill(SKILL_TELEKINESIS) &&
+                     bSuccess(SKILL_TELEKINESIS)) {
+            act(
+              "Your grasp on $p loosens, but you catch it with the power of "
+              "your mind!",
+              false, this, weapon, nullptr, TO_CHAR);
           } else if ((::number(0, agi) < (30 + getCond(DRUNK))) &&
                      weapon->canDrop()) {
             sprintf(buf,
@@ -214,7 +220,13 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
             act(
               "Your grasp on $p loosens, but you shift position for a firmer "
               "grip.",
-              FALSE, this, weapon, NULL, TO_CHAR);
+              false, this, weapon, nullptr, TO_CHAR);
+          } else if (doesKnowSkill(SKILL_TELEKINESIS) &&
+                     bSuccess(SKILL_TELEKINESIS)) {
+            act(
+              "Your grasp on $p loosens, but you catch it with the power of "
+              "your mind!",
+              false, this, weapon, nullptr, TO_CHAR);
           } else {
             sprintf(buf,
               "You %slose%s your grip on $p and it %sfalls out of your "
@@ -1225,8 +1237,8 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
           // check to see if this should be a limb quest tooth
           int limb_quest = -1;
           TDatabase db(DB_SNEEZY);
-          db.query("select team from quest_limbs_team where player = '%s'",
-            getName().c_str());
+          db.query("select team from quest_limbs_team where player_id=%i",
+            getPlayerID());
           if (db.fetchRow())
             limb_quest = 0;
           buf = format("tooth lost limb %s [q] [tooth] [%d] [%d] [%s]") %

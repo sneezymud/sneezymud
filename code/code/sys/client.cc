@@ -81,7 +81,7 @@ void Descriptor::send_client_inventory() {
     return;
 
   for (StuffIter it = ch->stuff.begin(); it != ch->stuff.end() && (t = *it);
-       ++it) {
+    ++it) {
     TObj* tobj = dynamic_cast<TObj*>(t);
     if (!tobj)
       continue;
@@ -98,7 +98,7 @@ void Descriptor::send_client_room_people() {
     return;
 
   for (StuffIter it = ch->roomp->stuff.begin();
-       it != ch->roomp->stuff.end() && (folx = *it); ++it)
+    it != ch->roomp->stuff.end() && (folx = *it); ++it)
     clientf(format("%d|%d|%s") % CLIENT_ROOMFOLX % ADD % folx->getName());
 }
 
@@ -110,7 +110,7 @@ void Descriptor::send_client_room_objects() {
     return;
 
   for (StuffIter it = ch->roomp->stuff.begin();
-       it != ch->roomp->stuff.end() && (t = *it); ++it)
+    it != ch->roomp->stuff.end() && (t = *it); ++it)
     clientf(format("%d|%d|%s") % CLIENT_ROOMOBJS % ADD % t->getName());
 }
 
@@ -475,54 +475,27 @@ int Descriptor::read_client(char* str2) {
     }
 
     case CLIENT_MAIL: {
+      strncpy(name, nextToken('|', 255, str2).c_str(), sizeof(name) - 1);
+      name[sizeof(name) - 1] = '\0';
+
+      // Convert ^ to \r\n in body
       char buffer[10000];
-      char name[256];
-      const char* tc;
-      int j;
-      int rent_id = 0;
-
-      strcpy(name, nextToken('|', 255, str2).c_str());
-
-      if (ignored.isMailIgnored(this, name)) {
-        vlogf(LOG_OBJ, format("Mail: mail sent by %s was ignored by %s.") %
-                         character->getName() % name);
-        break;
-      }
-
-      for (j = 0, tc = str2; *tc; tc++, j++) {
-        if (j > 9995)
+      int j = 0;
+      for (const char* tc = str2; *tc; tc++, j++) {
+        if (j > 9995) {
           break;
+        }
 
         if (*tc == '^') {
           buffer[j++] = '\r';
           buffer[j] = '\n';
-        } else
+        } else {
           buffer[j] = *tc;
+        }
       }
       buffer[j] = '\0';
 
-      if (obj && obj->canBeMailed(sstring(name))) {
-        ItemSaveDB is("mail", GH_MAIL_SHOP);
-        rent_id = is.raw_write_item(obj, -1 /*NORMAL_SLOT*/, 0);
-        vlogf(LOG_OBJ,
-          format("Mail: %s mailing %s (vnum:%i) to %s rented as rent_id:%i") %
-            character->getName() % obj->getName() % obj->objVnum() % name %
-            rent_id);
-        delete obj;
-      }
-      if (amount > 0) {
-        vlogf(LOG_OBJ, format("Mail: %s mailing %i talens to %s") %
-                         character->getName() % amount % name);
-        character->addToMoney(min(0, -amount), GOLD_XFER);
-      }
-
-      store_mail(name, character->getName().c_str(), buffer, amount, rent_id);
-
-      // clear amount, object, name
-      obj = NULL;
-      *(name) = '\0';
-      amount = 0;
-
+      dispatchMail(buffer);
       break;
     }
     case CLIENT_WHO:
