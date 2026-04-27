@@ -3523,7 +3523,6 @@ int TBeing::stumble(TBeing* victim) {
       sendTo("You stumble and fall on your butt!\n\r");
       act("$n stumbles and falls on $s butt!", true, this, nullptr, nullptr, TO_ROOM);
     }
-    addToWait(combatRound(1));
 
     int rc = trySpringleap(victim);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
@@ -3541,7 +3540,6 @@ int TBeing::stumble(TBeing* victim) {
       sendTo("You stumble, but catch yourself!\n\r");
       act("$n stumbles, but catches $mself!", true, this, nullptr, nullptr, TO_ROOM);
     }
-    addToWait(combatRound(1) / 2);
   }
   return FALSE;
 }
