@@ -1143,6 +1143,7 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme,
       case SPELL_FROST_BREATH:
       case SPELL_WATERY_GRAVE:
       case SPELL_TSUNAMI:
+      case SPELL_BLIZZARD:
       case SPELL_CHLORINE_BREATH:
       case SPELL_DUST_BREATH:
       case SPELL_POISON_DEIKHAN:
@@ -1394,6 +1395,7 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme,
       case SPELL_SANCTUARY:
       case SPELL_RELIVE:
       case SPELL_CRUSADE:
+      case SPELL_CONSECRATE:
       case SPELL_CURE_PARALYSIS:
       case SPELL_SECOND_WIND:
       case SPELL_HEROES_FEAST:
@@ -2006,6 +2008,13 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme,
         }
         break;
       // Not in discarray since it's not a skill
+      case SPELL_CONSECRATE_AFFECT:
+        if (show && aff->shouldGenerateText()) {
+          str +=
+            format("Affected: Consecration.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
       case SPELL_AURA_MIGHT:
         if (show && aff->shouldGenerateText()) {
           str += format("Affected: Aura of Might.  Approx. duration : %s\n\r") %
@@ -4303,6 +4312,9 @@ void TBeing::doEvaluate(const char* argument) {
       sendTo("There is an out-of-control fire here.\n\r");
     if (roomp->isRoomFlag(ROOM_FLOODED))
       sendTo("The room is flooded with water.\n\r");
+
+    // room affect messages
+    sendRoomAffectDescs(this, roomp, true);
 
     int wetness = getRoomWetness(roomp);
     if (wetness != 0)  // show wetness

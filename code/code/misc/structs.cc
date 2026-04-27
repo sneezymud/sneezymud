@@ -539,6 +539,9 @@ TRoom::~TRoom() {
     }
   }
 
+  // remove room from affected rooms registry
+  std::erase(affectedRooms_db, this);
+
   // A whacky what-if contingency thing
   // save rooms 100 200
   // in clean state, goto 100 (creates room 100, puts in db)

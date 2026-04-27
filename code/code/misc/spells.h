@@ -173,6 +173,7 @@ enum spellNumT {
   SPELL_ETHER_GATE,
   SPELL_KNOT,
   SPELL_TRUE_SIGHT,
+  SPELL_BLIZZARD,
 
   // end of mage
   // start of cleric
@@ -232,6 +233,8 @@ enum spellNumT {
   SPELL_KNIT_BONE,
   SPELL_RELIVE,
   SPELL_CRUSADE,
+  SPELL_CONSECRATE,
+  SPELL_CONSECRATE_AFFECT,
 
   // end of cleric
 

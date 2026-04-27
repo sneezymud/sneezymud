@@ -389,6 +389,7 @@ extern const sstring getSectorDescrColor(sectorTypeT, TRoom*);
 extern spellNumT mapWeaponT(weaponT w);
 extern spellNumT getWtype_kluge(weaponT t);
 extern const std::vector<uint16_t> CLASS_BITVALUES;
+extern bool willBreakHide(cmdTypeT);
 
 // these needs C++ linkage to avoid conflict with functions in stdlib
 extern int remove(TBeing*, TThing*);

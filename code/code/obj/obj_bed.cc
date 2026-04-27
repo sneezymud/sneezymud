@@ -7,6 +7,7 @@
 #include "games.h"
 #include "obj_bed.h"
 #include "obj_base_corpse.h"
+#include "task_regen_common.h"
 
 TBed::TBed() :
   TObj(),
@@ -254,8 +255,7 @@ void TBed::sitMe(TBeing* ch) {
       act("$n crawls into the $o and sits upon it.", TRUE, ch, this, 0,
         TO_ROOM);
       ch->setPosition(POSITION_SITTING);
-      if (ch->isPc())
-        start_task(ch, 0, 0, TASK_SIT, "", 350, 0, 1, 0, 4 * ch->regenTime());
+      startRegenTask(*ch, RegenTaskType::SIT);
       ch->mount(this);
       break;
     case POSITION_STANDING:
@@ -267,8 +267,7 @@ void TBed::sitMe(TBeing* ch) {
         act("$n sits down on the $o.", TRUE, ch, this, 0, TO_ROOM);
       }
       ch->setPosition(POSITION_SITTING);
-      if (ch->isPc())
-        start_task(ch, 0, 0, TASK_SIT, "", 350, 0, 1, 0, 4 * ch->regenTime());
+      startRegenTask(*ch, RegenTaskType::SIT);
       if (ch->riding != this)
         ch->mount(this);
       break;
@@ -287,8 +286,7 @@ void TBed::sitMe(TBeing* ch) {
           TO_ROOM);
       }
       ch->setPosition(POSITION_SITTING);
-      if (ch->isPc())
-        start_task(ch, 0, 0, TASK_SIT, "", 350, 0, 1, 0, 4 * ch->regenTime());
+      startRegenTask(*ch, RegenTaskType::SIT);
       if (ch->riding != this)
         ch->mount(this);
       break;
@@ -304,8 +302,7 @@ void TBed::sitMe(TBeing* ch) {
       act("$n stops floating around, and sits down on the $o.", TRUE, ch, this,
         0, TO_ROOM);
       ch->setPosition(POSITION_SITTING);
-      if (ch->isPc())
-        start_task(ch, 0, 0, TASK_SIT, "", 350, 0, 1, 0, 4 * ch->regenTime());
+      startRegenTask(*ch, RegenTaskType::SIT);
       break;
   }
 }
@@ -331,8 +328,7 @@ void TBed::restMe(TBeing* ch) {
       act("$n crawls into the $o and rests $s tired bones.", TRUE, ch, this, 0,
         TO_ROOM);
       ch->setPosition(POSITION_RESTING);
-      if (ch->isPc())
-        start_task(ch, 0, 0, TASK_REST, "", 350, 0, 1, 0, 2 * ch->regenTime());
+      startRegenTask(*ch, RegenTaskType::REST);
       if (ch->riding != this)
         ch->mount(this);
       break;
@@ -348,8 +344,7 @@ void TBed::restMe(TBeing* ch) {
           TO_ROOM);
       }
       ch->setPosition(POSITION_RESTING);
-      if (ch->isPc())
-        start_task(ch, 0, 0, TASK_REST, "", 350, 0, 1, 0, 2 * ch->regenTime());
+      startRegenTask(*ch, RegenTaskType::REST);
       if (ch->riding != this)
         ch->mount(this);
       break;
@@ -367,8 +362,7 @@ void TBed::restMe(TBeing* ch) {
       }
 
       ch->setPosition(POSITION_RESTING);
-      if (ch->isPc())
-        start_task(ch, 0, 0, TASK_REST, "", 350, 0, 1, 0, 2 * ch->regenTime());
+      startRegenTask(*ch, RegenTaskType::REST);
       if (ch->riding != this)
         ch->mount(this);
       break;
@@ -389,8 +383,7 @@ void TBed::restMe(TBeing* ch) {
       act("$n stops floating around, and rests on the $o.", FALSE, ch, this, 0,
         TO_ROOM);
       ch->setPosition(POSITION_RESTING);
-      if (ch->isPc())
-        start_task(ch, 0, 0, TASK_REST, "", 350, 0, 1, 0, 2 * ch->regenTime());
+      startRegenTask(*ch, RegenTaskType::REST);
       if (ch->riding != this)
         ch->mount(this);
       break;
@@ -417,8 +410,7 @@ void TBed::sleepMe(TBeing* ch) {
       act("$n crawls into the $o and goes to sleep.", TRUE, ch, this, 0,
         TO_ROOM);
       ch->setPosition(POSITION_SLEEPING);
-      if (ch->isPc())
-        start_task(ch, 0, 0, TASK_SLEEP, "", 350, 0, 1, 0, ch->regenTime());
+      startRegenTask(*ch, RegenTaskType::SLEEP);
       if (ch->riding != this)
         ch->mount(this);
       break;
@@ -429,8 +421,7 @@ void TBed::sleepMe(TBeing* ch) {
       act("$n lies down and falls asleep in the $o.", TRUE, ch, this, 0,
         TO_ROOM);
       ch->setPosition(POSITION_SLEEPING);
-      if (ch->isPc())
-        start_task(ch, 0, 0, TASK_SLEEP, "", 350, 0, 1, 0, ch->regenTime());
+      startRegenTask(*ch, RegenTaskType::SLEEP);
       if (ch->riding != this)
         ch->mount(this);
       break;
@@ -440,8 +431,7 @@ void TBed::sleepMe(TBeing* ch) {
       act("$n leans back and falls asleep in the $o.", TRUE, ch, this, 0,
         TO_ROOM);
       ch->setPosition(POSITION_SLEEPING);
-      if (ch->isPc())
-        start_task(ch, 0, 0, TASK_SLEEP, "", 350, 0, 1, 0, ch->regenTime());
+      startRegenTask(*ch, RegenTaskType::SLEEP);
       if (ch->riding != this)
         ch->mount(this);
       if (ch->checkBlackjack())
@@ -459,8 +449,7 @@ void TBed::sleepMe(TBeing* ch) {
       act("$n stops floating around, and lies down in the $o.", TRUE, ch, this,
         0, TO_CHAR);
       ch->setPosition(POSITION_SLEEPING);
-      if (ch->isPc())
-        start_task(ch, 0, 0, TASK_SLEEP, "", 350, 0, 1, 0, ch->regenTime());
+      startRegenTask(*ch, RegenTaskType::SLEEP);
       if (ch->riding != this)
         ch->mount(this);
       break;

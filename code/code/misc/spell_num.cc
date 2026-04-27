@@ -298,6 +298,8 @@ int mapSpellnumToFile(spellNumT stt) {
       return 106;
     case SPELL_TRUE_SIGHT:
       return 107;
+    case SPELL_BLIZZARD:
+      return 108;
     case SPELL_WATERY_GRAVE:
       return 110;
     case SPELL_TSUNAMI:
@@ -418,6 +420,10 @@ int mapSpellnumToFile(spellNumT stt) {
       return 204;
     case SPELL_CRUSADE:
       return 205;
+    case SPELL_CONSECRATE:
+      return 206;
+    case SPELL_CONSECRATE_AFFECT:
+      return 207;
     case SKILL_SLAM:
       return 217;
     case SKILL_BASH:
@@ -1468,6 +1474,8 @@ spellNumT mapFileToSpellnum(int stt) {
       return SPELL_SILENCE;
     case 107:
       return SPELL_TRUE_SIGHT;
+    case 108:
+      return SPELL_BLIZZARD;
     case 110:
       return SPELL_WATERY_GRAVE;
     case 111:
@@ -1588,6 +1596,10 @@ spellNumT mapFileToSpellnum(int stt) {
       return SPELL_RELIVE;
     case 205:
       return SPELL_CRUSADE;
+    case 206:
+      return SPELL_CONSECRATE;
+    case 207:
+      return SPELL_CONSECRATE_AFFECT;
     case 217:
       return SKILL_SLAM;
     case 218:

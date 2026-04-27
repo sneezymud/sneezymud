@@ -1253,6 +1253,7 @@ namespace {
     {SPELL_SILENCE, "SPELL_SILENCE"},
     {SPELL_WATERY_GRAVE, "SPELL_WATERY_GRAVE"},
     {SPELL_TSUNAMI, "SPELL_TSUNAMI"},
+    {SPELL_BLIZZARD, "SPELL_BLIZZARD"},
     {SPELL_BREATH_OF_SARAHAGE, "SPELL_BREATH_OF_SARAHAGE"},
     {SPELL_PLASMA_MIRROR, "SPELL_PLASMA_MIRROR"},
     {SPELL_GARMULS_TAIL, "SPELL_GARMULS_TAIL"},
@@ -1313,6 +1314,8 @@ namespace {
     {SPELL_KNIT_BONE, "SPELL_KNIT_BONE"},
     {SPELL_RELIVE, "SPELL_RELIVE"},
     {SPELL_CRUSADE, "SPELL_CRUSADE"},
+    {SPELL_CONSECRATE, "SPELL_CONSECRATE"},
+    {SPELL_CONSECRATE_AFFECT, "SPELL_CONSECRATE_AFFECT"},
     {SPELL_FLATULENCE, "SPELL_FLATULENCE"},
     {SPELL_ENLIVEN, "SPELL_ENLIVEN"},
     {SPELL_BLOOD_BOIL, "SPELL_BLOOD_BOIL"},
@@ -2161,6 +2164,9 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
     case SPELL_TSUNAMI:
       rc = tsunami(this);
       break;
+    case SPELL_BLIZZARD:
+      rc = blizzard(this);
+      break;
     case SPELL_CONJURE_WATER:
       conjureElemWater(this);
       break;
@@ -2446,6 +2452,9 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
       break;
     case SPELL_CRUSADE:
       crusade(this);
+      break;
+    case SPELL_CONSECRATE:
+      consecrate(this);
       break;
     case SPELL_RELIVE:
       relive(this, ch);

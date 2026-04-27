@@ -261,6 +261,7 @@ int TBeing::doBackstab(const char* argument, TBeing* vict) {
     if (!victim->isPc())
       dynamic_cast<TMonster*>(victim)->US(25);
     addSkillLag(SKILL_BACKSTAB, rc);
+    REMOVE_BIT(specials.affectedBy, AFF_HIDE);
   }
 
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
@@ -321,6 +322,10 @@ int backstab(TBeing* thief, TBeing* victim) {
     return FALSE;
   }
   thief->reconcileHurt(victim, 0.04);
+
+  if (thief->isAffected(AFF_HIDE)) {
+    thief->sendTo("You leap from your hiding spot!\n\r");
+  }
 
   int modifier = 0;
 
@@ -595,6 +600,7 @@ int TBeing::doThroatSlit(const char* argument, TBeing* vict) {
     if (!victim->isPc())
       dynamic_cast<TMonster*>(victim)->US(25);
     addSkillLag(SKILL_THROATSLIT, rc);
+    REMOVE_BIT(specials.affectedBy, AFF_HIDE);
   }
 
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
@@ -664,6 +670,10 @@ int throatSlit(TBeing* thief, TBeing* victim) {
     return FALSE;
   }
   thief->reconcileHurt(victim, 0.04);
+
+  if (thief->isAffected(AFF_HIDE)) {
+    thief->sendTo("You leap from your hiding spot!\n\r");
+  }
 
   int modifier = 0;
 

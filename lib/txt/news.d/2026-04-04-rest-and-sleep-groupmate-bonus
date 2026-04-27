@@ -1,0 +1,47 @@
+Made some notable changes to sit/rest/sleep and certain class interactions
+with those tasks
+
+1) The tick rate for resting and sitting have been restored to their
+   historic values.
+    - Rest now ticks half as often as sleep, and sit ticks half as
+       often as rest.
+    - The amount restored per tick is still identical between all
+      three modes - as before, only their tick rate and how quickly
+      one can respond when attacked differentiates them.
+
+2) Thieves now recover more quickly than other classes when resting
+   or sitting.
+    - Specifically, rest for thieves ticks at the same speed as sleep
+      for other classes, and sit ticks at the same speed as rest.
+    - This change represents thieves "sleeping with one eye open" due
+      to their vocation, being able to gain more benefit than other classes
+      from recovering in positions that provide more situational awareness
+      and less comfort.
+    - It's intended to bring thief recovery a bit more into line with other
+      classes while utilizing a more aggressive, hit-and-run playstyle where
+      they might frequently be recovering while being actively hunted.
+    - With this change, thieves should default to using rest over sleep in
+      most situations. Sleeping in a bed will still result in higher total
+      recovery for the amount regained on game ticks, compared to resting in
+      a bed.
+
+3) Resting, sleeping, and sitting now reward you for being prepared.
+    - When you begin one of these tasks, you can gain circumstantial
+      increases to the amount of HP and moves regained per tick.
+    - Any bonuses being applied will be displayed when you begin the task.
+    - See HELP RECOVERY for full details.
+
+4) Made several improvements/fixes to the thief 'hide' skill
+    - It should now be very obvious when hide is successful, when it
+      failed, and when it ends.
+    - Added several new commands to the list of skills that don't break
+      a successful hide (including sit and rest, which ties hide into the
+      new recovery bonuses mechanic).
+
+5) Shamans now recover HP during rest, sit, and sleep like other classes.
+    - Previously they lost lifeforce instead of recovering HP/move. This
+    was pointlessly punishing (even moreso with multiclass enabled now)
+    and served no real gameplay purpose.
+    - Shaman will still take damage when performing actions that reduce
+    their lifeforce when already out of lifeforce. This change only
+    relates to the drain specifically associated with recovery tasks.

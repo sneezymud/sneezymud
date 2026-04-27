@@ -8,9 +8,12 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <algorithm>
 #include <csignal>
 #include <cstdarg>
 #include <cmath>
+#include <ranges>
+#include <vector>
 #include <errno.h>
 #include <stdio.h>
 
@@ -1515,6 +1518,25 @@ void procRoomPulse::run(const TPulse& pl) const {
   }
 }
 
+procRoomAffects::procRoomAffects(const int& p) {
+  trigger_pulse = p;
+  name = "procRoomAffects";
+}
+
+void procRoomAffects::run(const TPulse&) const {
+  // Snapshot the room list before iterating: tick callbacks could
+  // (transitively) call addRoomAffect/removeRoomAffect, which mutate
+  // affectedRooms_db and would invalidate a live iterator. Re-check
+  // membership before dispatching in case a callback removed the room.
+  std::vector<TRoom*> snapshot(affectedRooms_db);
+  for (TRoom* room : snapshot) {
+    if (std::ranges::find(affectedRooms_db, room) == affectedRooms_db.end())
+      continue;
+    if (!room->tickRoomAffects())
+      std::erase(affectedRooms_db, room);
+  }
+}
+
 procCheckTask::procCheckTask(const int& p) {
   trigger_pulse = p;
   name = "procCheckTask";
@@ -1662,6 +1684,7 @@ int TMainSocket::gameLoop() {
   scheduler.add(new procCharDrowning(Pulse::SPEC_PROCS));
   scheduler.add(new procCharResponses(Pulse::SPEC_PROCS));
   scheduler.add(new procPaladinAura(Pulse::SPEC_PROCS));
+  scheduler.add(new procRoomAffects(Pulse::SPEC_PROCS));
 
   // pulse noises (4.8 seconds)
   scheduler.add(new procCharNoise(Pulse::NOISES));

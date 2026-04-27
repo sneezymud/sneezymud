@@ -353,6 +353,8 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
       return &((CDWater*)cd)->skWateryGrave;
     case SPELL_TSUNAMI:
       return &((CDWater*)cd)->skTsunami;
+    case SPELL_BLIZZARD:
+      return &((CDWater*)cd)->skBlizzard;
     case SPELL_BREATH_OF_SARAHAGE:
       return &((CDWater*)cd)->skBreathOfSarahage;
     case SPELL_PLASMA_MIRROR:
@@ -470,6 +472,9 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
       return &((CDAegis*)cd)->skRelive;
     case SPELL_CRUSADE:
       return &((CDAegis*)cd)->skCrusade;
+    case SPELL_CONSECRATE:
+    case SPELL_CONSECRATE_AFFECT:
+      return &((CDAegis*)cd)->skConsecrate;
 
       // disc_hand_of_god
 

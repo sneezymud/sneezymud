@@ -98,63 +98,6 @@ void TBeing::incorrectCommand() const {
          red() % norm());
 }
 
-bool willBreakHide(cmdTypeT tCmd, bool isPre) {
-  switch (tCmd) {
-    case CMD_BACKSTAB:
-      return (isPre ? false : true);
-    case CMD_SLIT:
-      return (isPre ? false : true);
-
-    case CMD_LOOK:
-    case CMD_SCORE:
-    case CMD_TROPHY:
-    case CMD_INVENTORY:
-    case CMD_HELP:
-    case CMD_WHO:
-    case CMD_NEWS:
-    case CMD_EQUIPMENT:
-    case CMD_WEATHER:
-    case CMD_SAVE:
-    case CMD_EXITS:
-    case CMD_TIME:
-    case CMD_HIDE:
-    case CMD_SNEAK:
-    case CMD_QUEST:
-    case CMD_LEVELS:
-    case CMD_WIZLIST:
-    case CMD_CONSIDER:
-    case CMD_CREDITS:
-    case CMD_TITLE:
-    case CMD_ATTRIBUTE:
-    case CMD_WORLD:
-    case CMD_SPY:
-    case CMD_CLS:
-    case CMD_PROMPT:
-    case CMD_ALIAS:
-    case CMD_CLEAR:
-    case CMD_MOTD:
-    case CMD_PRACTICE:
-    case CMD_HISTORY:
-    case CMD_EVALUATE:
-    case CMD_DISGUISE:
-    case CMD_EMAIL:
-    case CMD_AFK:
-    case CMD_SPELLS:
-    case CMD_COMPARE:
-    case CMD_ZONES:
-    case CMD_NEWBIE:
-    case CMD_REQUEST:
-    case CMD_IGNORE:
-    case MAX_CMD_LIST:
-      return false;
-
-    default:
-      return true;
-  }
-
-  return true;
-}
-
 extern int handleMobileResponse(TBeing*, cmdTypeT, const sstring&);
 
 // returns DELETE_THIS if this should be nuked
@@ -352,9 +295,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring& argument, TThing* vict,
             format("%s %s%s") % name % commandArray[cmd]->name % newarg);
       }
     }
-
-    if (IS_SET(specials.affectedBy, AFF_HIDE) && willBreakHide(cmd, true))
-      REMOVE_BIT(specials.affectedBy, AFF_HIDE);
 
     rc = triggerSpecial(NULL, cmd, newarg.c_str());
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -2063,10 +2003,10 @@ int TBeing::parseCommand(const sstring& orig_arg, bool typedIn, bool doAlias) {
     return FALSE;
   }
 
-  if (IS_SET(specials.affectedBy, AFF_HIDE) && cmd != CMD_BACKSTAB)
+  if (isAffected(AFF_HIDE) && willBreakHide(cmd)) {
+    sendTo("You move from your hiding spot.\n\r");
     REMOVE_BIT(specials.affectedBy, AFF_HIDE);
-  if (IS_SET(specials.affectedBy, AFF_HIDE) && cmd != CMD_SLIT)
-    REMOVE_BIT(specials.affectedBy, AFF_HIDE);
+  }
 
   if (getCaptiveOf()) {
     if (!sameRoom(*getCaptiveOf())) {
