@@ -1,0 +1,23 @@
+Syntax: innate
+        innate <ability>
+
+Some races possess innate abilities - magical or biological gifts
+granted by their nature rather than learned through practice.  Unlike
+class skills and spells, innate abilities have no learning curve and
+no chance of failure.  They simply work.  Each ability has its own
+cooldown that limits how often it can be used.
+
+Typing 'innate' with no argument lists every racial ability your
+character is born with, along with each ability's cooldown status -
+either 'ready' or the time remaining until it can be used again.
+
+Typing 'innate <ability>' invokes that ability.  Prefix matching is
+allowed, so 'innate inv' will work as well as 'innate invis'.
+
+Innate abilities are race-locked: only abilities granted to your race
+appear in the list, and you cannot use abilities belonging to another
+race regardless of how you might learn their names.
+
+Currently, drow are the only race with innate abilities.  See 'help
+drow' for the full list.
+

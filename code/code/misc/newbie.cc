@@ -65,10 +65,10 @@ void TBeing::doNewbieEqLoad(race_t num, unsigned short num2, bool initNum) {
 
   int races[] = {RACE_HUMAN, RACE_HOBBIT, RACE_DWARF, RACE_OGRE, RACE_GNOME,
     RACE_ELVEN, RACE_GOBLIN, RACE_ORC, RACE_TROG, RACE_GNOLL, RACE_FISHMAN,
-    RACE_FROGMAN, RACE_BIRDMAN, RACE_TROLL};
+    RACE_FROGMAN, RACE_BIRDMAN, RACE_TROLL, RACE_DROW};
   int* gear[] = {humanGear, hobbitGear, dwarfGear, ogreGear, gnomeGear,
     elvenGear, gnomeGear, humanGear, hobbitGear, ogreGear, fishGear, bullyGear,
-    birdGear, trollGear};
+    birdGear, trollGear, elvenGear};
   int* myGear = humanGear;  // default to humans
 
   for (unsigned int iRace = 0; iRace < cElements(races); iRace++)

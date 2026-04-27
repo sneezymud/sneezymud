@@ -494,7 +494,11 @@ void TRoom::operator>>(const TThing& tThing) {
 }
 
 int TRoom::getLight() {
-  return ((isRoomFlag(ROOM_ALWAYS_LIT)) ? 18 : TThing::getLight());
+  if (isRoomFlag(ROOM_ALWAYS_LIT))
+    return 18;
+  if (hasRoomAffect(SKILL_DROW_DARKNESS))
+    return 0;
+  return TThing::getLight();
 }
 
 TThing* TRoom::findInRoom(const std::function<bool(TThing*)>& predicate) {

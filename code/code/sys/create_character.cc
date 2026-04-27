@@ -97,6 +97,8 @@ territoryT birdmanTerr[] = {HOME_TER_BIRDMAN_URBAN, HOME_TER_BIRDMAN_VILLAGER,
   HOME_TER_BIRDMAN_MOUNTAIN, HOME_TER_BIRDMAN_FOREST, HOME_TER_BIRDMAN_MARINER};
 territoryT trollTerr[] = {HOME_TER_TROLL_URBAN, HOME_TER_TROLL_VILLAGER,
   HOME_TER_TROLL_RECLUSE, HOME_TER_TROLL_HILL, HOME_TER_TROLL_MOUNTAIN};
+territoryT drowTerr[] = {HOME_TER_DROW_URBAN, HOME_TER_DROW_VILLAGER,
+  HOME_TER_DROW_RECLUSE, HOME_TER_DROW_HILL, HOME_TER_DROW_MOUNTAIN};
 
 // struct for holding race-specific data
 typedef struct _TPlayerRace {
@@ -145,6 +147,8 @@ TPlayerRace nannyRaces[] = {
     Room::AERIE_INN, "help/territory help aarakocra", 0},
   {RACE_TROLL, "Troll", 1, trollTerr, cElements(trollTerr), Room::TROLL_INN,
     "help/territory help troll", 0},
+  {RACE_DROW, "Drow", 1, drowTerr, cElements(drowTerr), Room::DROW_START,
+    "help/territory help drow", 0},
 };
 
 // a struct for holding data about customizable stats

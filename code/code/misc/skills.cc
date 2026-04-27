@@ -98,7 +98,19 @@ static bool doesKnow(byte know) {
     return TRUE;
 }
 
+namespace {
+  // Innate cooldown tags use the spellNumT enum but have no discipline,
+  // CSkill, or discArray entry. Add new cooldown tags here AND to the
+  // matching fall-through case block in TBeing::getSkill().
+  bool isInnateCooldownTag(spellNumT skill) {
+    return skill == SKILL_DROW_INVIS || skill == SKILL_DROW_DARKNESS;
+  }
+}  // namespace
+
 CSkill* TBeing::getSkill(spellNumT skill) const {
+  if (isInnateCooldownTag(skill))
+    return nullptr;
+
   discNumT which = getDisciplineNumber(skill, FALSE);
   if (which == DISC_NONE) {
     // silly core-generator, but helps to track down the item that is bad
@@ -1437,6 +1449,10 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
     case AFFECT_PREENED:
     case AFFECT_WET:
     case ABSOLUTE_MAX_SKILL:
+    // Innate cooldown tags — unreachable here (caught by isInnateCooldownTag
+    // at the top of the function); listed for -Wswitch coverage.
+    case SKILL_DROW_INVIS:
+    case SKILL_DROW_DARKNESS:
       break;
   }
 

@@ -1778,6 +1778,7 @@ class TBeing : public TThing {
     int doLeap(const sstring&);
     int doVote(const sstring&);
     int doLayHands(const char*);
+    int doInnate(const char*);
     int doSmoke(const char*);
     void doExtinguish(const sstring&);
     void doLight(const sstring&);
