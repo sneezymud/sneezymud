@@ -3511,29 +3511,23 @@ int TBeing::crashLanding(positionTypeT pos, bool force, bool dam,
 
 int TBeing::stumble(TBeing* victim) {
   if (!isAgile(0)) {
-    setPosition(POSITION_SITTING);
-    sendTo("You stumble and fall on your butt!\n\r");
-    act("$n stumbles and falls on $s butt!", true, this, nullptr, nullptr, TO_ROOM);
+    if (isFlying() && roomp->isFallSector()) {
+      sendTo("You falter in the air, but stay aloft!\n\r");
+      act("$n falters in the air, but stays aloft!", true, this, nullptr, nullptr, TO_ROOM);
+    } else if (isFlying()) {
+      setPosition(POSITION_SITTING);
+      sendTo("You stumble out of the air and land on your butt!\n\r");
+      act("$n stumbles out of the air and lands on $s butt!", true, this, nullptr, nullptr, TO_ROOM);
+    } else {
+      setPosition(POSITION_SITTING);
+      sendTo("You stumble and fall on your butt!\n\r");
+      act("$n stumbles and falls on $s butt!", true, this, nullptr, nullptr, TO_ROOM);
+    }
     addToWait(combatRound(1));
 
-    int stumbleDam = dice(1, 4);
-
-    bool victimDeleted = false;
-    TBeing* springTarget = victim ? victim : fight();
-    if (springTarget) {
-      int rc = trySpringleap(springTarget);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      if (IS_SET_DELETE(rc, DELETE_VICT))
-        victimDeleted = true;
-      if (rc)
-        stumbleDam /= 2;
-    }
-
-    if (reconcileDamage(this, stumbleDam, DAMAGE_FALL) == -1)
-      return DELETE_THIS | (victimDeleted ? DELETE_VICT : 0);
-    if (victimDeleted)
-      return DELETE_VICT;
+    int rc = trySpringleap(victim);
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   } else {
     if (isFlying() && roomp->isFallSector()) {
       sendTo("You falter in the air, but quickly recover!\n\r");

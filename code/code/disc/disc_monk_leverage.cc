@@ -150,20 +150,16 @@ int TBeing::aiHurl(dirTypeT dr, TBeing* victim) {
 
   if (victim->getPosition() <= POSITION_STUNNED) {
     rc = hurlHit(this, victim, dr);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   } else if ((i = specialAttack(victim, SKILL_HURL)) &&
              (i != GUARANTEED_FAILURE) && bSuccess(bKnown, SKILL_HURL)) {
     rc = hurlHit(this, victim, dr);
     if (rc) {
       addSkillLag(SKILL_HURL, rc);
     }
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   } else {
     rc = hurlMiss(this, victim);
     if (rc) {
@@ -292,10 +288,8 @@ int hurl(TBeing* caster, TBeing* victim, char* direction) {
 
   if (victim->getPosition() <= POSITION_STUNNED) {
     rc = hurlHit(caster, victim, dr);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   } else if ((i = caster->specialAttack(victim, SKILL_HURL)) &&
              (i != GUARANTEED_FAILURE) &&
              caster->bSuccess(bKnown + percent, SKILL_HURL)) {
@@ -304,10 +298,8 @@ int hurl(TBeing* caster, TBeing* victim, char* direction) {
       caster->addSkillLag(SKILL_HURL, rc);
     }
 
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   } else {
     rc = hurlMiss(caster, victim);
     if (rc) {
@@ -510,18 +502,14 @@ int shoulderThrow(TBeing* caster, TBeing* victim) {
 
   if (victim->getPosition() <= POSITION_STUNNED) {
     rc = shoulderThrowHit(caster, victim, bKnown + percent);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   } else if ((i = caster->specialAttack(victim, SKILL_SHOULDER_THROW)) &&
              (i != GUARANTEED_FAILURE) &&
              caster->bSuccess(bKnown + percent, SKILL_SHOULDER_THROW)) {
     rc = shoulderThrowHit(caster, victim, bKnown + percent);
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   } else {
     rc = shoulderThrowMiss(caster, victim);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
@@ -768,10 +756,8 @@ int defenestrate(TBeing* caster, TBeing* victim, sstring direction) {
 
   if (victim->getPosition() <= POSITION_STUNNED) {
     rc = defenestrateHit(caster, victim, window->getTarget(), window);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   } else if ((i = caster->specialAttack(victim, SKILL_DEFENESTRATE)) &&
              (i != GUARANTEED_FAILURE) &&
              caster->bSuccess(bKnown + percent, SKILL_DEFENESTRATE)) {
@@ -780,10 +766,8 @@ int defenestrate(TBeing* caster, TBeing* victim, sstring direction) {
       caster->addSkillLag(SKILL_DEFENESTRATE, rc);
     }
 
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   } else {
     rc = defenestrateMiss(caster, victim);
     if (rc) {
