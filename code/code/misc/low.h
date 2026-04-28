@@ -159,6 +159,7 @@ class Obj {
     static constexpr int PETRIFIED_PORTAL_OUT = 5933;
     static constexpr int MINELIFT_UP = 7085;
     static constexpr int MINELIFT_DOWN = 7086;
+    static constexpr int BRIMSTONE_ASH = 7813;
     static constexpr int TALISMAN = 9700;
     static constexpr int PILE_OFFAL = 10030;  // horse poop, etc...
     static constexpr int ITEM_RAINBOW_BRIDGE1 = 10041;

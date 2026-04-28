@@ -735,13 +735,23 @@ int TBeing::doPray(const char* argument) {
   };
 
   spellNumT which = findSpecialCaseByName(args);
-  if (which != TYPE_UNDEFINED)
+  if (which != TYPE_UNDEFINED) {
+    if (!doesKnowSkill(getSkillNum(which))) {
+      sendTo("You don't know that prayer!\n\r");
+      return FALSE;
+    }
     return doDiscipline(which, "");
+  }
 
   if (args.words().size() > 1) {
     which = findSpecialCaseByName(args.dropLastWord());
-    if (which != TYPE_UNDEFINED)
+    if (which != TYPE_UNDEFINED) {
+      if (!doesKnowSkill(getSkillNum(which))) {
+        sendTo("You don't know that prayer!\n\r");
+        return FALSE;
+      }
       return doDiscipline(which, args.lastWord());
+    }
   }
 
   which = findPrayerByName(args);
