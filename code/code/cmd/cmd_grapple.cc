@@ -83,12 +83,7 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
         0, victim, TO_VICT);
       c->cantHit += c->loseRound(5 - (min(50, level) / 12));
 
-      rc = c->crashLanding(POSITION_SITTING);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return rc;
-
-      rc = c->trySpringleap(victim);
-      
+      rc = c->stumble(victim);
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
         return rc;
     } else if (victim->canFocusedAvoidance(bKnown / 2)) {
@@ -191,11 +186,7 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
     c->cantHit += c->loseRound(5 - (min(level, 50) / 12));
     c->addToWait(combatRound(1));
 
-    rc = c->crashLanding(POSITION_SITTING);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return rc;
-
-    rc = c->trySpringleap(victim);
+    rc = c->stumble(victim);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
 

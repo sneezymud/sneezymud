@@ -199,8 +199,6 @@ static int trip(TBeing* c, TBeing* victim, spellNumT skill) {
 }
 
 int TBeing::tripFail(TBeing* victim, spellNumT skill) {
-  int rc;
-
   act("$n attempts to trip $N but $E quickly hops over $n's leg.", FALSE, this,
     0, victim, TO_NOTVICT);
   act("You attempt to trip $N but $E quickly hops over your leg.", FALSE, this,
@@ -208,19 +206,10 @@ int TBeing::tripFail(TBeing* victim, spellNumT skill) {
   act("$n tries to trip you but you quickly hop over $s leg.", FALSE, this, 0,
     victim, TO_VICT);
 
-  if (hasLegs()) {
-    rc = crashLanding(POSITION_SITTING);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
+  int rc = stumble(victim);
+  if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+    return rc;
 
-    sendTo(
-      format("%sYou lose your balance and fall over.%s\n\r") % red() % norm());
-    act("<r>$n loses $s balance and falls over.<1>", TRUE, this, 0, 0, TO_ROOM);
-
-    rc = trySpringleap(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
-      return rc;
-  }
   reconcileDamage(victim, 0, skill);
   return FALSE;
 }

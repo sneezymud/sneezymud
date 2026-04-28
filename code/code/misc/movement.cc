@@ -3510,35 +3510,51 @@ int TBeing::crashLanding(positionTypeT pos, bool force, bool dam,
 }
 
 int TBeing::stumble(TBeing* victim) {
+  if (!hasLegs())
+    return FALSE;
+
+  if (isFlying() && roomp->isFallSector()) {
+    sendTo(format("%sYou falter in the air, but stay aloft!%s\n\r") % green() %
+           norm());
+    act("<g>$n falters in the air, but stays aloft!<1>", true, this, nullptr,
+      nullptr, TO_ROOM);
+    return FALSE;
+  }
+
   if (!isAgile(0)) {
-    if (isFlying() && roomp->isFallSector()) {
-      sendTo("You falter in the air, but stay aloft!\n\r");
-      act("$n falters in the air, but stays aloft!", true, this, nullptr, nullptr, TO_ROOM);
-    } else if (isFlying()) {
-      setPosition(POSITION_SITTING);
-      sendTo("You stumble out of the air and land on your butt!\n\r");
-      act("$n stumbles out of the air and lands on $s butt!", true, this, nullptr, nullptr, TO_ROOM);
+    if (isFlying()) {
+      sendTo(
+        format("%sYou stumble out of the air and land on your butt!%s\n\r") %
+        red() % norm());
+      act("<r>$n stumbles out of the air and lands on $s butt!<1>", true, this,
+        nullptr, nullptr, TO_ROOM);
     } else {
-      setPosition(POSITION_SITTING);
-      sendTo("You stumble and fall on your butt!\n\r");
-      act("$n stumbles and falls on $s butt!", true, this, nullptr, nullptr, TO_ROOM);
+      sendTo(
+        format("%sYou stumble and fall on your butt!%s\n\r") % red() % norm());
+      act("<r>$n stumbles and falls on $s butt!<1>", true, this, nullptr,
+        nullptr, TO_ROOM);
     }
 
-    int rc = trySpringleap(victim);
+    int rc = crashLanding(POSITION_SITTING);
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
+
+    rc = trySpringleap(victim);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   } else {
-    if (isFlying() && roomp->isFallSector()) {
-      sendTo("You falter in the air, but quickly recover!\n\r");
-      act("$n falters in the air, but quickly recovers!", true, this, nullptr, nullptr, TO_ROOM);
-    } else if (isFlying()) {
-      setPosition(POSITION_STANDING);
-      sendTo("You stumble out of the air, but land on your feet!\n\r");
-      act("$n stumbles out of the air, but lands on $s feet!", true, this, nullptr, nullptr, TO_ROOM);
+    setPosition(POSITION_STANDING);
+    if (isFlying()) {
+      sendTo(
+        format("%sYou stumble out of the air, but land on your feet!%s\n\r") %
+        green() % norm());
+      act("<g>$n stumbles out of the air, but lands on $s feet!<1>", true, this,
+        nullptr, nullptr, TO_ROOM);
     } else {
-      setPosition(POSITION_STANDING);
-      sendTo("You stumble, but catch yourself!\n\r");
-      act("$n stumbles, but catches $mself!", true, this, nullptr, nullptr, TO_ROOM);
+      sendTo(
+        format("%sYou stumble, but catch yourself!%s\n\r") % green() % norm());
+      act("<g>$n stumbles, but catches $mself!<1>", true, this, nullptr,
+        nullptr, TO_ROOM);
     }
   }
   return FALSE;
