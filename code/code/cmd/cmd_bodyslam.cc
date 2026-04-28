@@ -112,11 +112,11 @@ int TBeing::bodyslamMiss(TBeing* victim, skillMissT type) {
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   } else {
-    act("$n tries to bodyslam $N but can't get a grip.", false, this, 0, victim,
+    act("$n tries to bodyslam $N but loses $s footing.", false, this, 0, victim,
       TO_NOTVICT);
-    act("You try to bodyslam $N but can't get a grip.", false, this, 0, victim,
+    act("You try to bodyslam $N but lose your footing.", false, this, 0, victim,
       TO_CHAR);
-    act("$n tries to bodyslam you but can't get a grip.", false, this, 0,
+    act("$n tries to bodyslam you but loses $s footing.", false, this, 0,
       victim, TO_VICT);
 
     int rc = stumble(victim);
