@@ -3524,15 +3524,15 @@ int TBeing::stumble(TBeing* victim) {
   if (!isAgile(0)) {
     if (isFlying()) {
       sendTo(
-        format("%sYou stumble out of the air and land on your butt!%s\n\r") %
-        red() % norm());
-      act("<r>$n stumbles out of the air and lands on $s butt!<1>", true, this,
+        format("%sYou stumble out of the air and topple over.%s\n\r") % red() %
+        norm());
+      act("<r>$n stumbles out of the air and topples over.<1>", true, this,
         nullptr, nullptr, TO_ROOM);
     } else {
       sendTo(
-        format("%sYou stumble and fall on your butt!%s\n\r") % red() % norm());
-      act("<r>$n stumbles and falls on $s butt!<1>", true, this, nullptr,
-        nullptr, TO_ROOM);
+        format("%sYou stumble and topple over.%s\n\r") % red() % norm());
+      act("<r>$n stumbles and topples over.<1>", true, this, nullptr, nullptr,
+        TO_ROOM);
     }
 
     int rc = crashLanding(POSITION_SITTING);

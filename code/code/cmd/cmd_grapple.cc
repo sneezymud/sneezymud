@@ -186,14 +186,16 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
     c->cantHit += c->loseRound(5 - (min(level, 50) / 12));
     c->addToWait(combatRound(1));
 
+    act("You try to wrestle $N to the $g, but lose your hold.", true, c, 0,
+      victim, TO_CHAR);
+    act("$n tries to wrestle $N to the $g, but loses $s hold.", true, c, 0,
+      victim, TO_NOTVICT);
+    act("$n tries to wrestle you to the $g, but loses $s hold.", true, c, 0,
+      victim, TO_VICT);
+
     rc = c->stumble(victim);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
-
-    act("You try to wrestle $N to the $g, but end up falling on your butt.",
-      TRUE, c, 0, victim, TO_CHAR);
-    act("$n makes a nice wrestling move, but falls on $s butt.", TRUE, c, 0, 0,
-      TO_ROOM);
 
     if (!victim->fight()) {
       act("$N turns $S attention to $n", TRUE, c, 0, victim, TO_NOTVICT);
