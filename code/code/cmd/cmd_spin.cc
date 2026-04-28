@@ -103,16 +103,16 @@ int TBeing::spinMiss(TBeing* victim, skillMissT type) {
   } else if (type == TYPE_MONK) {
     act("$N deftly counters your attempt at spinning $M.", FALSE, this, 0,
       victim, TO_CHAR, ANSI_RED);
-    act("You trip and land on the $g.", FALSE, this, 0, victim, TO_CHAR,
-      ANSI_RED);
+    act("$N sticks out $S foot and trips you, toppling you.", false, this, 0,
+      victim, TO_CHAR, ANSI_RED);
     act("You deftly counter $n's attempt at spinning you.", FALSE, this, 0,
       victim, TO_VICT);
-    act("You stick out your foot and trip $m to the $g.", FALSE, this, 0,
+    act("You stick out your foot and trip $m, toppling them.", false, this, 0,
       victim, TO_VICT);
     act("$N deftly counters $n's attempt at spinning $M.", FALSE, this, 0,
       victim, TO_NOTVICT);
-    act("$N sticks out $S foot tripping $n to the $g.", FALSE, this, 0, victim,
-      TO_NOTVICT);
+    act("$N sticks out $S foot and trips $n, toppling $m.", false, this, 0,
+      victim, TO_NOTVICT);
 
     int rc = stumble(victim);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))

@@ -90,12 +90,12 @@ int TBeing::bodyslamMiss(TBeing* victim, skillMissT type) {
     act("$N deftly avoids $n's bodyslam attempt.", FALSE, this, 0, victim,
       TO_NOTVICT);
   } else if (type == TYPE_MONK) {
-    act("$N deftly counters your attempt, throwing you to the $g.", FALSE, this,
-      0, victim, TO_CHAR, ANSI_RED);
-    act("You deftly counter $n's bodyslam attempt, and throw $m to the $g.",
-      FALSE, this, 0, victim, TO_VICT);
-    act("$N deftly counters $n's bodyslam attempt, and heaves $m to the $g.",
-      FALSE, this, 0, victim, TO_NOTVICT);
+    act("$N deftly counters your bodyslam, and throws you to the side.", false,
+      this, 0, victim, TO_CHAR, ANSI_RED);
+    act("You deftly counter $n's bodyslam, and throw $m to the side.", false,
+      this, 0, victim, TO_VICT);
+    act("$N deftly counters $n's bodyslam, and throws $m to the side.", false,
+      this, 0, victim, TO_NOTVICT);
 
     int rc = stumble(victim);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))

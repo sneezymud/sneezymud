@@ -75,12 +75,12 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
       !victim->awake()) {
     if (victim->canCounterMove(bKnown / 2)) {
       SV(skill);
-      act("$N blocks your grapple attempt and knocks you to the $g.", TRUE, c,
-        0, victim, TO_CHAR, ANSI_RED);
-      act("$N blocks $n's attempt to grapple, and knocks $m to the $g.", TRUE,
+      act("$N blocks your grapple attempt and knocks you off balance.", true,
+        c, 0, victim, TO_CHAR, ANSI_RED);
+      act("$N blocks $n's attempt to grapple, and knocks $m off balance.", true,
         c, 0, victim, TO_NOTVICT);
-      act("You evade $n's attempt to grapple, and knock $m to the $g.", TRUE, c,
-        0, victim, TO_VICT);
+      act("You evade $n's attempt to grapple, and knock $m off balance.", true,
+        c, 0, victim, TO_VICT);
       c->cantHit += c->loseRound(5 - (min(50, level) / 12));
 
       rc = c->stumble(victim);
