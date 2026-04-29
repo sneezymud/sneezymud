@@ -92,7 +92,8 @@ static void stabBleedCheck(TBeing* thief, TBeing* victim, TGenWeapon* weapon,
   }
 }
 
-// Does NOT add skilllag or move cost - caller is responsible for that
+// Resolves a single stab attempt for one weapon — hit roll through weapon
+// spec proc. Shared between primary-hand and offhand attacks.
 static int stabCore(TBeing* thief, TBeing* victim, TGenWeapon* weapon) {
   int specResult = thief->specialAttack(victim, SKILL_STABBING, 0, STAT_DEX,
     STAT_SPE, STAT_AGI, STAT_PER, false);
@@ -129,17 +130,9 @@ static int stabCore(TBeing* thief, TBeing* victim, TGenWeapon* weapon) {
   stabBleedCheck(thief, victim, weapon, limb);
   stabPoisonCheck(victim, weapon);
 
-  int specRc = weapon->checkSpec(victim, CMD_STAB,
-    reinterpret_cast<char*>(limb), thief);
-  // Translate checkSpec flags: DELETE_VICT = victim, DELETE_ITEM = thief (t2),
-  // DELETE_THIS = weapon (not used after this point, no action needed)
-  int rc = 0;
-  if (IS_SET_DELETE(specRc, DELETE_VICT))
-    rc |= DELETE_VICT;
-  if (IS_SET_DELETE(specRc, DELETE_ITEM))
-    rc |= DELETE_THIS;
-  if (rc)
-    return rc;
+  if (weapon->checkSpec(victim, CMD_STAB, reinterpret_cast<char*>(limb),
+        thief) == DELETE_VICT)
+    return DELETE_VICT;
 
   return TRUE;
 }
@@ -194,16 +187,26 @@ static int stab(TBeing* thief, TBeing* victim, bool isChain = false) {
     return FALSE;
 
   TBeing* thiefMount = dynamic_cast<TBeing*>(thief->riding);
+  if (thief->riding && !thiefMount) {
+    act("You can't stab anyone from atop $p!", false, thief, thief->riding,
+      nullptr, TO_CHAR);
+    return false;
+  }
   if (thiefMount && thief->getSkillValue(SKILL_RIDE) < 80) {
     thief->sendTo("You aren't a skilled enough rider to stab while mounted!\n\r");
-    return FALSE;
+    return false;
   }
 
   TBeing* victimMount = dynamic_cast<TBeing*>(victim->riding);
   bool thiefAirborne = thief->isFlying() || (thiefMount && thiefMount->isFlying());
-  if ((victim->isFlying() || (victimMount && victimMount->isFlying())) && !thiefAirborne && thief->fight() != victim) {
+  bool victimAirborne = victim->isFlying() || (victimMount && victimMount->isFlying());
+  // Mid-fight against the same target bypasses the airborne mismatch —
+  // engaging a flying opponent puts them in stab range. (Backstab has no
+  // such carve-out; its mid-fight gate already requires off-feet, which
+  // flying opponents inherently aren't.)
+  if (victimAirborne && !thiefAirborne && thief->fight() != victim) {
     thief->sendTo("You can't stab a flying person with your feet on the ground!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (thief->noHarmCheck(victim))
@@ -214,7 +217,7 @@ static int stab(TBeing* thief, TBeing* victim, bool isChain = false) {
   TGenWeapon* offWeapon =
     dynamic_cast<TGenWeapon*>(thief->heldInSecHand());
 
-  bool primCanStab = primWeapon && (primWeapon->canStab() || primWeapon->isSpear());
+  bool primCanStab = primWeapon && (primWeapon->canStab() || primWeapon->isPolearm());
   bool offCanStab = offWeapon && offWeapon->canStab();
 
   if (!primCanStab && !offCanStab) {
@@ -230,14 +233,13 @@ static int stab(TBeing* thief, TBeing* victim, bool isChain = false) {
     thief->addToMove(-STAB_MOVE);
   }
 
-  victim->addHated(thief);
-
   int bKnown = thief->getSkillValue(SKILL_STABBING);
   bool stabSuccess = !victim->awake() || thief->bSuccess(bKnown, SKILL_STABBING);
 
   if (!stabSuccess) {
     TGenWeapon* weapon = primCanStab ? primWeapon : offWeapon;
     stabMissMsg(thief, victim, weapon);
+    victim->addHated(thief);
     return TRUE;
   }
 
@@ -248,7 +250,8 @@ static int stab(TBeing* thief, TBeing* victim, bool isChain = false) {
 }
 
 // Chain entry point for backstab. Runs the full stab (preconditions + attack)
-// but skips move cost and skilllag since the calling skill owns those.
+// without charging the stab move cost — the chained stab is a follow-on to
+// backstab, not an independent action.
 int stabChain(TBeing* thief, TBeing* victim) {
   return stab(thief, victim, /*isChain=*/true);
 }

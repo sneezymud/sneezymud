@@ -159,15 +159,10 @@ int TBeing::backstabHit(TBeing* victim, TThing* obj, int modifier) {
         if (weapon) {
           int specRc = weapon->checkSpec(victim, CMD_BACKSTAB,
             "-special-", this);
-          int rc = 0;
-          if (IS_SET_DELETE(specRc, DELETE_VICT))
-            rc |= DELETE_VICT;
-          if (IS_SET_DELETE(specRc, DELETE_ITEM))
-            rc |= DELETE_THIS;
           if (IS_SET_DELETE(specRc, DELETE_THIS))
             weapon = nullptr;  // weapon destroyed, skip poison
-          if (rc)
-            return rc;
+          if (IS_SET_DELETE(specRc, DELETE_VICT))
+            return DELETE_VICT;
         }
 
         // poison — weapon may be null if checkSpec destroyed it
@@ -313,9 +308,14 @@ int backstab(TBeing* thief, TBeing* victim) {
     return FALSE;
   }
   TBeing* thiefMount = dynamic_cast<TBeing*>(thief->riding);
+  if (thief->riding && !thiefMount) {
+    act("You can't backstab anyone from atop $p!", false, thief, thief->riding,
+      nullptr, TO_CHAR);
+    return false;
+  }
   if (thiefMount && thief->getSkillValue(SKILL_RIDE) < 80) {
     thief->sendTo("You aren't a skilled enough rider to backstab while mounted!\n\r");
-    return FALSE;
+    return false;
   }
   TBeing* victimMount = dynamic_cast<TBeing*>(victim->riding);
   bool thiefAirborne = thief->isFlying() || (thiefMount && thiefMount->isFlying());
@@ -346,12 +346,12 @@ int backstab(TBeing* thief, TBeing* victim) {
     }
   }
 
-  if (!obj->canBackstab() && !obj->isSpear()) {
+  if (!obj->canBackstab() && !obj->isPolearm()) {
     act("You can't use $p to backstab.", false, thief, obj, NULL, TO_CHAR);
     return FALSE;
   }
 
-  if (obj->isSpear() && bKnown < 50) {
+  if (obj->isPolearm() && bKnown < 50) {
     act("You are not yet skilled enough to backstab with a spear.", false,
       thief, obj, NULL, TO_CHAR);
     return FALSE;
@@ -401,7 +401,6 @@ int backstab(TBeing* thief, TBeing* victim) {
     act("You sense $m coming as $n attempts to murder you.", FALSE, thief, 0,
       victim, TO_VICT);
   }
-
 
   if ((thief->bSuccess(bKnown, SKILL_BACKSTAB) || !victim->awake())) {
     rc = thief->backstabHit(victim, obj, modifier);
@@ -554,15 +553,10 @@ int TBeing::throatSlitHit(TBeing* victim, TThing* obj, int modifier) {
         if (weapon) {
           int specRc = weapon->checkSpec(victim, CMD_SLIT,
             "-special-", this);
-          int rc = 0;
-          if (IS_SET_DELETE(specRc, DELETE_VICT))
-            rc |= DELETE_VICT;
-          if (IS_SET_DELETE(specRc, DELETE_ITEM))
-            rc |= DELETE_THIS;
           if (IS_SET_DELETE(specRc, DELETE_THIS))
             weapon = nullptr;  // weapon destroyed, skip poison
-          if (rc)
-            return rc;
+          if (IS_SET_DELETE(specRc, DELETE_VICT))
+            return DELETE_VICT;
         }
 
         // poison — weapon may be null if checkSpec destroyed it
@@ -704,6 +698,8 @@ int throatSlit(TBeing* thief, TBeing* victim) {
     return FALSE;
   }
 
+  // throatSlit is intentionally stricter than backstab/stab: no skilled-rider
+  // exception, and no symmetric flying-mount handling for the thief.
   if (thief->riding) {
     thief->sendTo("You cannot attempt murder in that way while mounted!\n\r");
     return FALSE;

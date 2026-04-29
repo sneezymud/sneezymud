@@ -3,6 +3,6 @@
 class TBeing;
 
 // Chain entry point for backstab→stab combo. Runs the full stab
-// (preconditions + attack) but skips move cost and skilllag since
-// the calling skill owns those.
+// (preconditions + attack) without charging the stab move cost — the
+// chained stab is a follow-on to backstab, not an independent action.
 int stabChain(TBeing* thief, TBeing* victim);

@@ -172,7 +172,7 @@ bool TGenWeapon::canStab() const {
   return isPierceWeapon() && getVolume() <= 2000;
 }
 
-bool TGenWeapon::isSpear() const {
+bool TGenWeapon::isPolearm() const {
   return isPierceWeapon() && isPaired();
 }
 

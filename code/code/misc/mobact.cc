@@ -2874,10 +2874,9 @@ int TMonster::takeFirstHit(TBeing& vict) {
   if (hasClass(CLASS_THIEF)) {
     TGenWeapon* tgw = dynamic_cast<TGenWeapon*>(heldInPrimHand());
     if (tgw) {
-      if (tgw->canBackstab() || tgw->isSpear()) {
-        // if this mob's level < 35 use backstab, otherwise use throat slit
-        // except if the weapon is a spear (tgw->isSpear()) then always use backstab
-        if (GetMaxLevel() < 35 || tgw->isSpear()) {
+      if (tgw->canBackstab() || tgw->isPolearm()) {
+        // Polearms route to backstab regardless of level — throat slit rejects them.
+        if (GetMaxLevel() < 35 || tgw->isPolearm()) {
           rc = doBackstab("", &vict);
         } else {
           rc = doThroatSlit("", &vict);
