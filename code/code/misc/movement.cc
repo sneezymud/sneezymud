@@ -3542,7 +3542,6 @@ int TBeing::stumble(TBeing* victim) {
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   } else {
-    setPosition(POSITION_STANDING);
     if (isFlying()) {
       act("<g>You stumble out of the air, but land on your feet!<1>", true,
         this, nullptr, nullptr, TO_CHAR);
@@ -3554,6 +3553,7 @@ int TBeing::stumble(TBeing* victim) {
       act("<g>$n stumbles, but catches $mself!<1>", true, this, nullptr,
         nullptr, TO_ROOM);
     }
+    setPosition(POSITION_STANDING);
   }
   return FALSE;
 }
