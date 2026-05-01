@@ -3514,8 +3514,8 @@ int TBeing::stumble(TBeing* victim) {
     return FALSE;
 
   if (isFlying() && roomp->isFallSector()) {
-    sendTo(format("%sYou falter in the air, but stay aloft!%s\n\r") % green() %
-           norm());
+    act("<g>You falter in the air, but stay aloft!<1>", true, this, nullptr,
+      nullptr, TO_CHAR);
     act("<g>$n falters in the air, but stays aloft!<1>", true, this, nullptr,
       nullptr, TO_ROOM);
     return FALSE;
@@ -3523,14 +3523,13 @@ int TBeing::stumble(TBeing* victim) {
 
   if (!isAgile(0)) {
     if (isFlying()) {
-      sendTo(
-        format("%sYou stumble out of the air and topple over.%s\n\r") % red() %
-        norm());
+      act("<r>You stumble out of the air and topple over.<1>", true, this,
+        nullptr, nullptr, TO_CHAR);
       act("<r>$n stumbles out of the air and topples over.<1>", true, this,
         nullptr, nullptr, TO_ROOM);
     } else {
-      sendTo(
-        format("%sYou stumble and topple over.%s\n\r") % red() % norm());
+      act("<r>You stumble and topple over.<1>", true, this, nullptr, nullptr,
+        TO_CHAR);
       act("<r>$n stumbles and topples over.<1>", true, this, nullptr, nullptr,
         TO_ROOM);
     }
@@ -3545,14 +3544,13 @@ int TBeing::stumble(TBeing* victim) {
   } else {
     setPosition(POSITION_STANDING);
     if (isFlying()) {
-      sendTo(
-        format("%sYou stumble out of the air, but land on your feet!%s\n\r") %
-        green() % norm());
+      act("<g>You stumble out of the air, but land on your feet!<1>", true,
+        this, nullptr, nullptr, TO_CHAR);
       act("<g>$n stumbles out of the air, but lands on $s feet!<1>", true, this,
         nullptr, nullptr, TO_ROOM);
     } else {
-      sendTo(
-        format("%sYou stumble, but catch yourself!%s\n\r") % green() % norm());
+      act("<g>You stumble, but catch yourself!<1>", true, this, nullptr,
+        nullptr, TO_CHAR);
       act("<g>$n stumbles, but catches $mself!<1>", true, this, nullptr,
         nullptr, TO_ROOM);
     }
