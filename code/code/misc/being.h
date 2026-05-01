@@ -1332,7 +1332,7 @@ class TBeing : public TThing {
     void doLand();
     int crashLanding(positionTypeT, bool force = FALSE, bool dam = TRUE,
       bool falling = false);
-    int stumble(TBeing* victim);
+    int stumble(TBeing* opponent);
     int doTurn(const char*, TBeing*);
     virtual void doMedit(const char*);
     void doPreen(sstring& argument);

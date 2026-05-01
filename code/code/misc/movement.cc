@@ -3509,7 +3509,7 @@ int TBeing::crashLanding(positionTypeT pos, bool force, bool dam,
   return TRUE;
 }
 
-int TBeing::stumble(TBeing* victim) {
+int TBeing::stumble(TBeing* opponent) {
   if (!hasLegs())
     return FALSE;
 
@@ -3538,7 +3538,7 @@ int TBeing::stumble(TBeing* victim) {
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
 
-    rc = trySpringleap(victim);
+    rc = trySpringleap(opponent);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   } else {
