@@ -383,7 +383,8 @@ int TBeing::bashSuccess(TBeing* victim, spellNumT skill, bool isHoldingShield,
   if (isLucky(levelLuckModifier(victim->GetMaxLevel())))
     distractionBonus++;
 
-  int rc = wasMounted ? victim->knockOffMount() : victim->crashLanding();
+  int rc = wasMounted ? victim->knockOffMount(getSkillValue(skill) / 5)
+                      : victim->crashLanding();
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_VICT;
 

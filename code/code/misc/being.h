@@ -1493,7 +1493,7 @@ class TBeing : public TThing {
     int preProcDam(spellNumT, int);
     int preProcDam(TBeing*, spellNumT, int);
     TBeing* findAnAttacker() const;
-    int damageEpilog(TBeing*, spellNumT);
+    int damageEpilog(TBeing*, int dam, spellNumT);
     void catchLostLink(TBeing*);
     void throwChar(TBeing* v, dirTypeT dir, bool throwerMove,
       silentTypeT silent, bool forceStand);

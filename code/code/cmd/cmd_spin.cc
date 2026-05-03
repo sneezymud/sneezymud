@@ -147,7 +147,8 @@ int TBeing::spinHit(TBeing* victim) {
   act("$n takes ahold of $N and pulls hard!", false, this, nullptr, victim,
     TO_NOTVICT);
 
-  int rc = wasMounted ? victim->knockOffMount() : victim->crashLanding();
+  int rc = wasMounted ? victim->knockOffMount(getSkillValue(SKILL_SPIN) / 3)
+                      : victim->crashLanding();
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_VICT;
 

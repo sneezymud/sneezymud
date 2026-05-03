@@ -142,23 +142,32 @@ int TBeing::bodyslamHit(TBeing* victim) {
   act("$n grabs $N around the middle, attempting to lift $M overhead!", false,
     this, nullptr, victim, TO_NOTVICT);
 
+  int rc;
   if (wasMounted) {
-    act("You pull $N from $p, throwing $M down!", false, this, victim->riding,
-      victim, TO_CHAR);
-    act("$n pulls you from $p, throwing you down!", false, this, victim->riding,
-      victim, TO_VICT, ANSI_RED);
-    act("$n pulls $N from $p, throwing $M down!", false, this, victim->riding,
-      victim, TO_NOTVICT);
+    TThing* mount =
+      victim->riding;  // capture before knockOffMount may dismount
+    rc = victim->knockOffMount(getSkillValue(SKILL_BODYSLAM) / 2);
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_VICT;
+    // Only narrate the throw when the rider was actually dismounted; if they
+    // hung on, knockOffMount printed its own "hangs on tight" flavor.
+    if (!victim->riding) {
+      act("You pull $N from $p, throwing $M down!", false, this, mount, victim,
+        TO_CHAR);
+      act("$n pulls you from $p, throwing you down!", false, this, mount,
+        victim, TO_VICT, ANSI_RED);
+      act("$n pulls $N from $p, throwing $M down!", false, this, mount, victim,
+        TO_NOTVICT);
+    }
   } else {
     act("You throw $N down hard!", false, this, nullptr, victim, TO_CHAR);
     act("$n throws you down hard!", false, this, nullptr, victim, TO_VICT,
       ANSI_RED);
     act("$n throws $N down hard!", false, this, nullptr, victim, TO_NOTVICT);
+    rc = victim->crashLanding();
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_VICT;
   }
-
-  int rc = wasMounted ? victim->knockOffMount() : victim->crashLanding();
-  if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_VICT;
 
   // see the balance notes for details on what's going on here.
   float wt = combatRound(discArray[SKILL_BODYSLAM]->lag);

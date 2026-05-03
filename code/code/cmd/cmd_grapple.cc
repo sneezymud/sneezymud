@@ -98,7 +98,7 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
       act("You evade $n's attempt to grapple.", TRUE, c, 0, victim, TO_VICT);
     } else {
       if (victim->riding) {
-        int kr = victim->knockOffMount();
+        int kr = victim->knockOffMount(c->getSkillValue(skill) / 4);
         if (IS_SET_DELETE(kr, DELETE_THIS))
           return DELETE_VICT;
         if (victim->riding) {

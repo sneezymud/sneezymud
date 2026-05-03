@@ -4745,13 +4745,18 @@ bool TBeing::canFight(TBeing* target) {
     return FALSE;
   }
 
+  // Pre-check on every attack so swinging from horseback doesn't spam
+  // knockOffMount's hang-on flavor. Only escalate when the rider is already
+  // struggling. Mirror the pattern used in damage.cc.
   if (riding) {
     if (dynamic_cast<TBeing*>(riding)) {
-      rc = knockOffMount();
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      if (rc)
-        return false;
+      if (!rideCheck(0)) {
+        rc = knockOffMount();
+        if (IS_SET_DELETE(rc, DELETE_THIS))
+          return DELETE_THIS;
+        if (rc)
+          return false;
+      }
     } else if (dynamic_cast<TMonster*>(this) && !desc) {
       if (fight() && !isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) &&
           ::number(0, 1)) {
@@ -4762,6 +4767,8 @@ bool TBeing::canFight(TBeing* target) {
   for (t = rider; t; t = t->nextRider) {
     TBeing* tb = dynamic_cast<TBeing*>(t);
     if (!tb)
+      continue;
+    if (tb->rideCheck(0))
       continue;
     rc = tb->knockOffMount();
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
