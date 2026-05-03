@@ -133,22 +133,27 @@ int TBeing::bodyslamMiss(TBeing* victim, skillMissT type) {
 int TBeing::bodyslamHit(TBeing* victim) {
   const bool wasMounted = (victim->riding != nullptr);
 
+  // Setup: the lift attempt. Then a payoff line that varies by mount status.
+  // crashLanding/knockOffMount narrates the impact result afterward.
+  act("You grab $N around the middle, attempting to lift $M overhead!", false,
+    this, nullptr, victim, TO_CHAR);
+  act("$n grabs you around the middle, attempting to lift you overhead!", false,
+    this, nullptr, victim, TO_VICT, ANSI_RED);
+  act("$n grabs $N around the middle, attempting to lift $M overhead!", false,
+    this, nullptr, victim, TO_NOTVICT);
+
   if (wasMounted) {
-    act("You lift $N off $p and slam $M to the $g!", false, this,
-      victim->riding, victim, TO_CHAR);
-    act("$n lifts $N off $p and slams $M to the $g!", false, this,
-      victim->riding, victim, TO_NOTVICT);
-    act("$n lifts you off $p and slams you to the $g!", false, this,
-      victim->riding, victim, TO_VICT);
-  } else {
-    act("$n lifts $N over $s head and slams $M to the $g.", FALSE, this, 0,
-      victim, TO_NOTVICT);
-    act("You lift $N over your head and slam $M to the $g.", FALSE, this, 0,
+    act("You pull $N from $p, throwing $M down!", false, this, victim->riding,
       victim, TO_CHAR);
-    act("You get a great view as $n lifts you over $s head.", FALSE, this, 0,
-      victim, TO_VICT);
-    act("Suddenly, the $g rushes upward and knocks the wind out of you!", FALSE,
-      this, 0, victim, TO_VICT, ANSI_RED);
+    act("$n pulls you from $p, throwing you down!", false, this, victim->riding,
+      victim, TO_VICT, ANSI_RED);
+    act("$n pulls $N from $p, throwing $M down!", false, this, victim->riding,
+      victim, TO_NOTVICT);
+  } else {
+    act("You throw $N down hard!", false, this, nullptr, victim, TO_CHAR);
+    act("$n throws you down hard!", false, this, nullptr, victim, TO_VICT,
+      ANSI_RED);
+    act("$n throws $N down hard!", false, this, nullptr, victim, TO_NOTVICT);
   }
 
   int rc = wasMounted ? victim->knockOffMount() : victim->crashLanding();

@@ -3464,7 +3464,9 @@ int TBeing::crashLanding(int severity, bool falling) {
   // condition. Either way, the sit/sprawl flavor would be misleading, so skip
   // the position-change messaging here.
   if (roomp->isFallSector()) {
-    if (falling || IS_SET_DELETE(checkFalling(), DELETE_THIS))
+    // falling=true is a recursion guard for flightCheck, not a death signal —
+    // skip the recursive checkFalling but don't fabricate a DELETE_THIS.
+    if (!falling && IS_SET_DELETE(checkFalling(), DELETE_THIS))
       return DELETE_THIS;
   } else if (changed && getPosition() == POSITION_SITTING) {
     act("<y>You drop to a sit on the $g.<1>", true, this, nullptr, nullptr,

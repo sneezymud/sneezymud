@@ -334,17 +334,10 @@ int TBeing::bashSuccess(TBeing* victim, spellNumT skill, bool isHoldingShield,
   TObj* itemInSecondaryHand) {
   const bool wasMounted = (victim->riding != nullptr);
 
-  if (wasMounted) {
-    act("You bash $N off $p!", false, this, victim->riding, victim, TO_CHAR);
-    act("$n bashes $N off $p!", false, this, victim->riding, victim,
-      TO_NOTVICT);
-    act("$n bashes you off $p!", false, this, victim->riding, victim, TO_VICT);
-  } else {
-    act("$n knocks $N on $S butt!", FALSE, this, 0, victim, TO_NOTVICT);
-    act("You send $N sprawling.", FALSE, this, 0, victim, TO_CHAR);
-    act("You tumble as $n knocks you over", FALSE, this, 0, victim, TO_VICT,
-      ANSI_BLUE);
-  }
+  // Describe the impact only — crashLanding/knockOffMount narrates the result.
+  act("You crash into $N!", false, this, nullptr, victim, TO_CHAR);
+  act("$n crashes into you!", false, this, nullptr, victim, TO_VICT, ANSI_BLUE);
+  act("$n crashes into $N!", false, this, nullptr, victim, TO_NOTVICT);
 
   int shieldDam =
     getSkillDam(victim, skill, getSkillLevel(skill), getAdvLearning(skill));

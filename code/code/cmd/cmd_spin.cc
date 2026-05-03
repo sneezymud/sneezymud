@@ -139,27 +139,13 @@ int TBeing::spinMiss(TBeing* victim, skillMissT type) {
 int TBeing::spinHit(TBeing* victim) {
   const bool wasMounted = (victim->riding != nullptr);
 
-  if (wasMounted) {
-    act("You grab $N's arm and rip $M off $p!", false, this, victim->riding,
-      victim, TO_CHAR);
-    act("$n grabs $N's arm and rips $M off $p!", false, this, victim->riding,
-      victim, TO_NOTVICT);
-    act("$n grabs your arm and rips you off $p!", false, this, victim->riding,
-      victim, TO_VICT);
-  } else {
-    act("$n grabs $N's arm and spins $M!", FALSE, this, 0, victim, TO_NOTVICT);
-    act("Now dizzy, $N trips and falls to the $g.", FALSE, this, 0, victim,
-      TO_NOTVICT);
-    act("You grab $N's arm and spin $M HARD!", FALSE, this, 0, victim, TO_CHAR);
-    act("Now dizzy $N trips and falls to the $g.", FALSE, this, 0, victim,
-      TO_CHAR);
-    act("$n grabs you by the arm and spins you violently.", FALSE, this, 0,
-      victim, TO_VICT);
-    act(
-      "As the world spins into a blur before your eyes you become "
-      "dazed,\n\rand fall face first to the $g.",
-      FALSE, this, 0, victim, TO_VICT, ANSI_RED);
-  }
+  // Describe the wind-up only — crashLanding/knockOffMount narrates the result.
+  act("You take ahold of $N and pull hard!", false, this, nullptr, victim,
+    TO_CHAR);
+  act("$n takes ahold of you and pulls hard!", false, this, nullptr, victim,
+    TO_VICT, ANSI_RED);
+  act("$n takes ahold of $N and pulls hard!", false, this, nullptr, victim,
+    TO_NOTVICT);
 
   int rc = wasMounted ? victim->knockOffMount() : victim->crashLanding();
   if (IS_SET_DELETE(rc, DELETE_THIS))
