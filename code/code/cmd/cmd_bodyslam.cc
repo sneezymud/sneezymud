@@ -97,8 +97,8 @@ int TBeing::bodyslamMiss(TBeing* victim, skillMissT type) {
     act("$N deftly counters $n's bodyslam, and throws $m to the side.", false,
       this, 0, victim, TO_NOTVICT);
 
-    int rc = stumble(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+    int rc = stumble();
+    if (IS_SET_DELETE(rc, DELETE_THIS))
       return rc;
   } else if (type == TYPE_STR) {
     act("$n tries to bodyslam $N but fails to lift $M.", false, this, 0, victim,
@@ -108,8 +108,8 @@ int TBeing::bodyslamMiss(TBeing* victim, skillMissT type) {
     act("$n tries to bodyslam you but fails to lift you.", false, this, 0,
       victim, TO_VICT);
 
-    int rc = stumble(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+    int rc = stumble();
+    if (IS_SET_DELETE(rc, DELETE_THIS))
       return rc;
   } else {
     act("$n tries to bodyslam $N but loses $s footing.", false, this, 0, victim,
@@ -119,8 +119,8 @@ int TBeing::bodyslamMiss(TBeing* victim, skillMissT type) {
     act("$n tries to bodyslam you but loses $s footing.", false, this, 0,
       victim, TO_VICT);
 
-    int rc = stumble(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+    int rc = stumble();
+    if (IS_SET_DELETE(rc, DELETE_THIS))
       return rc;
   }
 
@@ -131,9 +131,16 @@ int TBeing::bodyslamMiss(TBeing* victim, skillMissT type) {
 }
 
 int TBeing::bodyslamHit(TBeing* victim) {
-  int rc;
+  const bool wasMounted = (victim->riding != nullptr);
 
-  if (!victim->riding) {
+  if (wasMounted) {
+    act("You lift $N off $p and slam $M to the $g!", false, this,
+      victim->riding, victim, TO_CHAR);
+    act("$n lifts $N off $p and slams $M to the $g!", false, this,
+      victim->riding, victim, TO_NOTVICT);
+    act("$n lifts you off $p and slams you to the $g!", false, this,
+      victim->riding, victim, TO_VICT);
+  } else {
     act("$n lifts $N over $s head and slams $M to the $g.", FALSE, this, 0,
       victim, TO_NOTVICT);
     act("You lift $N over your head and slam $M to the $g.", FALSE, this, 0,
@@ -142,29 +149,11 @@ int TBeing::bodyslamHit(TBeing* victim) {
       victim, TO_VICT);
     act("Suddenly, the $g rushes upward and knocks the wind out of you!", FALSE,
       this, 0, victim, TO_VICT, ANSI_RED);
-  } else {
-    act("$n lifts $N off $S $o and slams $M to the $g.", FALSE, this,
-      victim->riding, victim, TO_NOTVICT);
-    act("You lift $N off $S $o and slam $M to the $g.", FALSE, this,
-      victim->riding, victim, TO_CHAR);
-    act("You get a great view as $n lifts you off your $o over $s head.", FALSE,
-      this, victim->riding, victim, TO_VICT);
-    act("Suddenly, the $g rushes upward and knocks the wind out of you!", FALSE,
-      this, victim->riding, victim, TO_VICT, ANSI_RED);
-    victim->dismount(POSITION_RESTING);
   }
 
-  rc = victim->crashLanding(POSITION_SITTING);
+  int rc = wasMounted ? victim->knockOffMount() : victim->crashLanding();
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_VICT;
-
-  rc = victim->trySpringleap(this);
-  if (IS_SET_DELETE(rc, DELETE_THIS) && IS_SET_DELETE(rc, DELETE_VICT))
-    return rc;
-  else if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_VICT;
-  else if (IS_SET_DELETE(rc, DELETE_VICT))
-    return DELETE_THIS;
 
   // see the balance notes for details on what's going on here.
   float wt = combatRound(discArray[SKILL_BODYSLAM]->lag);

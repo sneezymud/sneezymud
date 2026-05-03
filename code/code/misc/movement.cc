@@ -808,7 +808,7 @@ int TBeing::rawMove(dirTypeT dir) {
         sendTo(
           "Oops, you must have crashed into one of those purple elephants you "
           "keep seeing.\n\r");
-        rc = crashLanding(POSITION_SITTING);
+        rc = crashLanding();
         if (IS_SET_DELETE(rc, DELETE_THIS))
           return DELETE_THIS;
         return FALSE;
@@ -1194,7 +1194,7 @@ int TBeing::moveGroup(dirTypeT dir) {
         } else {
           followData* found = NULL;
           for (found = followers; found && found->follower != tft;
-            found = found->next)
+               found = found->next)
             ;
           if (!found) {
             vlogf(LOG_BUG,
@@ -1478,7 +1478,7 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total) {
   --(*this);
   *rp1 += *this;
   for (StuffIter it = rp1->stuff.begin(); it != rp1->stuff.end() && (t = *it);
-    ++it) {
+       ++it) {
     TBeing* ch = dynamic_cast<TBeing*>(t);
     if (!ch)
       continue;
@@ -1566,7 +1566,7 @@ int TBeing::displayMove(dirTypeT dir, int was_in, int total) {
     sprintf(tmp + strlen(tmp), " [%d]", total);
 
   for (StuffIter it = rp2->stuff.begin(); it != rp2->stuff.end() && (t = *it);
-    ++it) {
+       ++it) {
     TBeing* tbt = dynamic_cast<TBeing*>(t);
     if (!tbt)
       continue;
@@ -1672,14 +1672,14 @@ int TBeing::genericMovedIntoRoom(TRoom* rp, int was_in,
   int groupcount = 0;  // used to make mobs not go superaggro on groups - dash
 
   for (StuffIter it = roomp->stuff.begin();
-    it != roomp->stuff.end() && (t3 = *it); ++it) {
+       it != roomp->stuff.end() && (t3 = *it); ++it) {
     TBeing* tbt = dynamic_cast<TBeing*>(t3);
     if (tbt && inGroup(*tbt))
       groupcount++;
   }
   if (was_in != -1) {
     for (StuffIter it = real_roomp(was_in)->stuff.begin();
-      it != real_roomp(was_in)->stuff.end() && (t3 = *it); ++it) {
+         it != real_roomp(was_in)->stuff.end() && (t3 = *it); ++it) {
       TBeing* tbt = dynamic_cast<TBeing*>(t3);
       if (tbt && inGroup(*tbt))
         groupcount++;
@@ -2271,7 +2271,7 @@ bool has_key(TBeing* ch, int key) {
 
   // check inv
   for (StuffIter it = ch->stuff.begin(); it != ch->stuff.end() && (t = *it);
-    ++it) {
+       ++it) {
     o = dynamic_cast<TObj*>(t);
     if (!o)
       continue;
@@ -2282,7 +2282,7 @@ bool has_key(TBeing* ch, int key) {
     if (!ring)
       continue;
     for (StuffIter it = ring->stuff.begin();
-      it != ring->stuff.end() && (t2 = *it); ++it) {
+         it != ring->stuff.end() && (t2 = *it); ++it) {
       o = dynamic_cast<TObj*>(t2);
       if (!o)
         continue;
@@ -2545,7 +2545,7 @@ int TBeing::portalLeaveCheck(char* argum, cmdTypeT cmd) {
 
   one_argument(argum, arg, cElements(arg));
   for (StuffIter it = roomp->stuff.begin();
-    it != roomp->stuff.end() && (t = *it); ++it) {
+       it != roomp->stuff.end() && (t = *it); ++it) {
     o = dynamic_cast<TPortal*>(t);
     if (o && (((cmd == CMD_LEAVE) && (!*arg || isname(arg, o->name))) ||
                ((cmd == CMD_EXITS) && *arg && isname(arg, o->name)))) {
@@ -3445,71 +3445,50 @@ void TBeing::doLand() {
   setPosition(POSITION_STANDING);
 }
 
-int TBeing::crashLanding(positionTypeT pos, bool force, bool dam,
-  bool falling) {
-  if (force) {
-    // option to force this
-    setPosition(pos);
-    sendTo(COLOR_ROOMS,
-      format("You smash into the %s hard!\n\r") % roomp->describeGround());
-    act("$n tumbles end over end as $e crash lands!", TRUE, this, 0, 0,
-      TO_ROOM);
-  } else if (!isFlying()) {
-    setPosition(pos);
-    if ((getPosition() >= POSITION_RESTING) &&
-        ((pos == POSITION_FLYING) || roomp->isFlyingSector())) {
-      sendTo("You start flying around.\n\r");
-      act("$n starts to fly up in the air.", TRUE, this, 0, 0, TO_ROOM);
-      setPosition(POSITION_FLYING);
-      return FALSE;
-    } else if (roomp->isFallSector()) {
-      if (falling || IS_SET_DELETE(checkFalling(), DELETE_THIS))
-        return DELETE_THIS;
-      return TRUE;
-    }
-    return FALSE;
-  } else if (roomp->isFlyingSector()) {
-    if (pos == POSITION_FLYING) {
-      return FALSE;
-    } else if (getPosition() >= POSITION_RESTING) {
-      sendTo("You start flying around.\n\r");
-      act("$n starts to fly up in the air.", TRUE, this, 0, 0, TO_ROOM);
-      setPosition(POSITION_FLYING);
-      return FALSE;
-    } else {
-      setPosition(pos);
-      return FALSE;
-    }
-  } else if (roomp->isFallSector()) {
-    setPosition(pos);
+// Knock the character to the ground. Higher severity makes the agility roll
+// harder, biasing toward POSITION_RESTING over POSITION_SITTING. Severity is
+// currently a placeholder int; future work will tie it to skill damage so each
+// caller passes a meaningful magnitude. Invokes springleap() for monks (return
+// ignored) so they may bounce back to standing in a single chain. Only
+// downgrades position — characters already at or below the rolled outcome keep
+// their current state.
+int TBeing::crashLanding(int severity, bool falling) {
+  positionTypeT newPos =
+    isAgile(-severity) ? POSITION_SITTING : POSITION_RESTING;
+  bool changed = (getPosition() > newPos);
+  if (changed)
+    setPosition(newPos);
+
+  // In fall sectors checkFalling handles the narrative — either the character
+  // plummets (with its own messaging) or is held in place by an upstream
+  // condition. Either way, the sit/sprawl flavor would be misleading, so skip
+  // the position-change messaging here.
+  if (roomp->isFallSector()) {
     if (falling || IS_SET_DELETE(checkFalling(), DELETE_THIS))
       return DELETE_THIS;
-    return TRUE;
-  } else if (doesKnowSkill(SKILL_CATFALL) && bSuccess(SKILL_CATFALL)) {
-    setPosition(POSITION_STANDING);
-    act("$n drops gracefully onto the $g.", FALSE, this, 0, 0, TO_ROOM);
-    sendTo(COLOR_ROOMS,
-      format("You drop gracefully to the %s.\n\r") % roomp->describeGround());
-    dam = false;
-  } else {
-    // Flying person
-    setPosition(pos);
-    sendTo(COLOR_ROOMS,
-      format("You smash into the %s hard!\n\r") % roomp->describeGround());
-    act("$n tumbles end over end as $e crash lands!", TRUE, this, 0, 0,
+  } else if (changed && getPosition() == POSITION_SITTING) {
+    act("<y>You drop to a sit on the $g.<1>", true, this, nullptr, nullptr,
+      TO_CHAR);
+    act("<y>$n drops to a sit on the $g.<1>", true, this, nullptr, nullptr,
+      TO_ROOM);
+  } else if (changed && getPosition() == POSITION_RESTING) {
+    act("<r>You sprawl across the $g.<1>", true, this, nullptr, nullptr,
+      TO_CHAR);
+    act("<r>$n sprawls across the $g.<1>", true, this, nullptr, nullptr,
       TO_ROOM);
   }
 
-  if (dam) {
-    // some things skip damage.  (e.g. already dead when crashed)
-    if (reconcileDamage(this, ::number(2, 8), DAMAGE_FALL) == -1)
-      return DELETE_THIS;
-  }
+  if (doesKnowSkill(SKILL_SPRINGLEAP))
+    springleap();
 
   return TRUE;
 }
 
-int TBeing::stumble(TBeing* opponent) {
+// Attacker self-stumble after a failed attempt. Two layered agility rolls give
+// agile characters a meaningfully better worst case: first roll here decides
+// whether the attacker stays standing; on failure crashLanding rolls again to
+// decide sitting vs. resting. The compounded distribution is intentional.
+int TBeing::stumble() {
   if (!hasLegs())
     return FALSE;
 
@@ -3534,13 +3513,9 @@ int TBeing::stumble(TBeing* opponent) {
         TO_ROOM);
     }
 
-    int rc = crashLanding(POSITION_SITTING);
+    int rc = crashLanding();
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-
-    rc = trySpringleap(opponent);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
-      return rc;
   } else {
     if (isFlying()) {
       act("<g>You stumble out of the air, but land on your feet!<1>", true,

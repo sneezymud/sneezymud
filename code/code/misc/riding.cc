@@ -732,30 +732,106 @@ int TBeing::doMount(const char* arg, cmdTypeT cmd, TBeing* h,
   return TRUE;
 }
 
+// Sum the situational modifiers that apply to any riding skill check.
+// Positive values favor the rider. Includes equipment, class, combat state,
+// stat reactions, intoxication/hunger/thirst, limb injuries, and exhaustion.
+int TBeing::getRideMod() {
+  int mod = 0;
+
+  TBeing* mount = dynamic_cast<TBeing*>(riding);
+  if (!mount)
+    return mod;
+
+  // Roll once and reuse — bSuccess advances skill learning, so multiple calls
+  // would inflate the rider's advanced-riding XP per check.
+  bool advRiding = bSuccess(SKILL_ADVANCED_RIDING);
+
+  // Saddle: master in saddle gets the benefit; advanced riding amplifies it.
+  if (mount->hasSaddle() && mount->horseMaster() == this) {
+    mod += 8;
+    if (advRiding)
+      mod += 5;
+  }
+
+  // Secondary rider (not the master) is at a disadvantage.
+  if (mount->horseMaster() != this)
+    mod -= 5;
+
+  // Deikhan class bonus, plus a variable advanced-riding kicker.
+  if (hasClass(CLASS_DEIKHAN)) {
+    mod += 5;
+    mod +=
+      ::number(0, advancedRidingBonus(dynamic_cast<TMonster*>(mount))) / 15;
+  }
+
+  // Combat state divides attention; deikhans handle it better.
+  if (isTanking()) {
+    mod -= 4;
+    if (hasClass(CLASS_DEIKHAN))
+      mod += 5;  // net +1 for tanking deikhans
+  }
+  if (isAffected(AFF_ENGAGER))
+    mod -= 3;
+  if (fight()) {
+    mod -= 3;
+    if (hasClass(CLASS_DEIKHAN))
+      mod += 4;  // net +1 for fighting deikhans
+  }
+  if (mount->fight())
+    mod -= 5;  // mount in combat is a moving target
+
+  // Mount-type-specific skill bonus.
+  spellNumT mountSkill = mount->mountSkillType();
+  if (doesKnowSkill(mountSkill) && bSuccess(mountSkill))
+    mod += getSkillValue(mountSkill) / 5;
+
+  // Stat reactions — agile/dextrous riders handle motion better. Advanced
+  // riding doubles positive reactions.
+  auto applyStat = [&](int stat) {
+    mod += stat;
+    if (stat > 0 && advRiding)
+      mod += stat;
+  };
+  applyStat(getAgiReaction());
+  applyStat(getDexReaction());
+  applyStat(plotStat(STAT_CURRENT, STAT_BRA, -4, 6, 0));
+
+  // Intoxication.
+  if (getCond(DRUNK) > 5) {
+    mod -= 5;
+    if (!bSuccess(SKILL_ALCOHOLISM))
+      mod -= 10;
+  }
+
+  // Hunger and thirst (low cond values mean depleted; -1 means immortal).
+  if (getCond(FULL) >= 0 && getCond(FULL) < 5)
+    mod -= 5;
+  if (getCond(THIRST) >= 0 && getCond(THIRST) < 5)
+    mod -= 3;
+
+  // Limb injuries — legs grip the mount, arms work the reins.
+  if (eitherLegHurt())
+    mod -= 10;
+  if (bothLegsHurt())
+    mod -= 10;  // additional, total -20
+  if (eitherArmHurt())
+    mod -= 5;
+  if (bothArmsHurt())
+    mod -= 5;  // additional, total -10
+
+  // Exhaustion.
+  if (getMove() <= 0)
+    mod -= 20;
+
+  return mod;
+}
+
 // a positive mod is beneficial to the rider
 int TBeing::rideCheck(int mod) {
-  int learn = 0;
-
   if (isImmortal())
     return TRUE;
 
-  TBeing* tbt = dynamic_cast<TBeing*>(riding);
-  if (tbt && tbt->hasSaddle() && tbt->horseMaster() == this)
-    // only guy in saddle gets benefit
-    mod += 8;
-
-  if (tbt && hasClass(CLASS_DEIKHAN)) {
-    mod += 5;  // default bonus for deikhans
-
-    // 0-6
-    mod += ::number(0, advancedRidingBonus(dynamic_cast<TMonster*>(tbt))) / 15;
-  }
-
-  if (tbt && tbt->horseMaster() != this)
-    mod -= 5;  // secondary rider
-
-  learn = getSkillValue(SKILL_RIDE);
-  learn += (3 * mod);
+  int learn = getSkillValue(SKILL_RIDE) + getRideMod() + mod;
 
   // rideChecks are sometimes made for people sitting on objects
   // use of bSuccess here allows them to learn "ride" while on chairs.
@@ -791,21 +867,15 @@ int TBeing::fallOffMount(TThing* h, positionTypeT pos, bool death) {
 
     // fall off a flying mount..
     if (h->isFlying()) {
-      if (h->roomp->isFlyingSector()) {
-        rc = crashLanding(POSITION_FLYING);
+      if (h->roomp->isFlyingSector() || canFly()) {
+        setPosition(POSITION_FLYING);
       } else if (h->roomp->isFallSector()) {
         rc = checkFalling();
       } else {
-        if (canFly()) {
-          rc = crashLanding(POSITION_FLYING);
-        } else {
-          rc = crashLanding(POSITION_RESTING);
-        }
+        rc = crashLanding();
       }
     } else if (h->roomp->isFallSector()) {
       rc = checkFalling();
-
-    } else {
     }
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
@@ -840,6 +910,60 @@ int TBeing::fallOffMount(TThing* h, positionTypeT pos, bool death) {
     setDistracted(-1, FALSE);
 
   return FALSE;
+}
+
+// Hostile dislodge from a mount — the rider was thrown by an outside force
+// (combat skill, spell, etc.) rather than losing their own balance. Severity
+// threads through crashLanding's agility roll the same way it does for any
+// other "body hits ground" caller.
+int TBeing::knockOffMount(int severity) {
+  TThing* h = riding;
+  if (!h)
+    return false;
+
+  // Riding skill check — higher severity makes hanging on harder. Pass = the
+  // rider keeps their seat; fail = they're thrown.
+  if (rideCheck(-severity)) {
+    if (dynamic_cast<TBeing*>(h)) {
+      act("You hang on tight to $N.", false, this, nullptr, h, TO_CHAR);
+      act("$n hangs on tight to $N.", false, this, nullptr, h, TO_NOTVICT);
+      act("$n hangs on tight to your back.", false, this, nullptr, h, TO_VICT);
+    } else {
+      act("You keep your seat on $p.", false, this, h, nullptr, TO_CHAR);
+      act("$n keeps $s seat on $p.", false, this, h, nullptr, TO_ROOM);
+    }
+    return false;
+  }
+
+  if (auto* tb = dynamic_cast<TBeing*>(h)) {
+    act("$n is thrown clear of $N!", false, this, nullptr, h, TO_NOTVICT,
+      ANSI_RED);
+    act("$n is thrown clear of your back!", false, this, nullptr, h, TO_VICT,
+      ANSI_RED);
+    act("You are thrown clear of $N!", false, this, nullptr, h, TO_CHAR,
+      ANSI_RED);
+
+    if (!tb->isPc())
+      dynamic_cast<TMonster*>(tb)->aiHorse(this);
+  } else {
+    act("$n is knocked off $p!", false, this, h, nullptr, TO_ROOM, ANSI_RED);
+    act("You are knocked off $p!", false, this, h, nullptr, TO_CHAR, ANSI_RED);
+  }
+
+  // Thrown clear of a flying mount — if the rider can stay aloft (own wings,
+  // magical flight, or a flying-sector that holds them up), they catch
+  // themselves instead of crashing.
+  if (h->isFlying() && (canFly() || roomp->isFlyingSector())) {
+    act("You catch yourself in the air.", false, this, nullptr, nullptr,
+      TO_CHAR);
+    act("$n catches $mself in the air.", false, this, nullptr, nullptr,
+      TO_ROOM);
+    dismount(POSITION_FLYING);
+    return true;
+  }
+
+  dismount(POSITION_STANDING);
+  return crashLanding(severity);
 }
 
 // ego is a number representing how "ballsy" the mount is

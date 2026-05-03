@@ -65,8 +65,8 @@ int TBeing::headbuttMiss(TBeing* v) {
     act("You move your head out of the way, causing $n to miss.", false, this,
       0, v, TO_VICT);
 
-    int rc = stumble(v);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+    int rc = stumble();
+    if (IS_SET_DELETE(rc, DELETE_THIS))
       return rc;
   }
   reconcileDamage(v, 0, SKILL_HEADBUTT);
@@ -99,7 +99,8 @@ int TBeing::headbuttHit(TBeing* victim) {
 
     return TRUE;
   } else {
-    static constexpr const char* headbutt_msg = "%s headbutt %s, slamming %s head into %s %s.";
+    static constexpr const char* headbutt_msg =
+      "%s headbutt %s, slamming %s head into %s %s.";
 
     const char* target_area;
     bool causes_wait = false;
@@ -139,9 +140,12 @@ int TBeing::headbuttHit(TBeing* victim) {
       causes_wait = true;
     }
 
-    act(format(headbutt_msg) % "$n" % "$N" % "$s" % "$N's" % target_area, FALSE, this, 0, victim, TO_NOTVICT);
-    act(format(headbutt_msg) % "You" % "$N" % "your" % "$S" % target_area, FALSE, this, 0, victim, TO_CHAR);
-    act(format(headbutt_msg) % "$n" % "you" % "$s" % "your" % target_area, FALSE, this, 0, victim, TO_VICT);
+    act(format(headbutt_msg) % "$n" % "$N" % "$s" % "$N's" % target_area, FALSE,
+      this, 0, victim, TO_NOTVICT);
+    act(format(headbutt_msg) % "You" % "$N" % "your" % "$S" % target_area,
+      FALSE, this, 0, victim, TO_CHAR);
+    act(format(headbutt_msg) % "$n" % "you" % "$s" % "your" % target_area,
+      FALSE, this, 0, victim, TO_VICT);
 
     if (causes_wait) {
       victim->addToWait(combatRound(0.25));

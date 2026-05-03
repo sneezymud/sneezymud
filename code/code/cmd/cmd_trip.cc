@@ -206,8 +206,8 @@ int TBeing::tripFail(TBeing* victim, spellNumT skill) {
   act("$n tries to trip you but you quickly hop over $s leg.", FALSE, this, 0,
     victim, TO_VICT);
 
-  int rc = stumble(victim);
-  if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+  int rc = stumble();
+  if (IS_SET_DELETE(rc, DELETE_THIS))
     return rc;
 
   reconcileDamage(victim, 0, skill);
@@ -230,17 +230,9 @@ int TBeing::tripSuccess(TBeing* victim, spellNumT skill) {
   distNum = 1;
   if (isLucky(levelLuckModifier(victim->GetMaxLevel())))
     distNum++;
-  rc = victim->crashLanding(POSITION_SITTING);
+  rc = victim->crashLanding();
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_VICT;
-
-  rc = victim->trySpringleap(this);
-  if (IS_SET_DELETE(rc, DELETE_THIS) && IS_SET_DELETE(rc, DELETE_VICT))
-    return rc;
-  else if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_VICT;
-  else if (IS_SET_DELETE(rc, DELETE_VICT))
-    return DELETE_THIS;
 
   float wait = combatRound(discArray[SKILL_TRIP]->lag);
   addToMove(-5);

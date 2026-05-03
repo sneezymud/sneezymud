@@ -26,5 +26,3 @@ int shoulderThrow(TBeing*, TBeing*);
 int hurl(TBeing*, TBeing*, char*);
 int defenestrate(TBeing*, TBeing*, sstring);
 int bonebreak(TBeing*, TBeing*);
-int springleap(TBeing*, TBeing*, bool);
-

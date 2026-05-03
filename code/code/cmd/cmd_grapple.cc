@@ -44,7 +44,9 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
     return FALSE;
   }
   if (victim->isFlying() && !c->isFlying()) {
-    c->sendTo("You can't grapple someone that is flying, unless you are also flying.\n\r");
+    c->sendTo(
+      "You can't grapple someone that is flying, unless you are also "
+      "flying.\n\r");
     return FALSE;
   }
 
@@ -69,22 +71,24 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
 
   if ((c->bSuccess(bKnown + percent, skill) &&
         // insure they can hit this critter
-        (i = c->specialAttack(victim, skill, 0, STAT_STR, STAT_DEX, STAT_BRA, STAT_AGI, false)) && i != GUARANTEED_FAILURE &&
+        (i = c->specialAttack(victim, skill, 0, STAT_STR, STAT_DEX, STAT_BRA,
+           STAT_AGI, false)) &&
+        i != GUARANTEED_FAILURE &&
         // make sure they have reasonable training
         (percent < bKnown)) ||
       !victim->awake()) {
     if (victim->canCounterMove(bKnown / 2)) {
       SV(skill);
-      act("$N blocks your grapple attempt and knocks you off balance.", true,
-        c, 0, victim, TO_CHAR, ANSI_RED);
+      act("$N blocks your grapple attempt and knocks you off balance.", true, c,
+        0, victim, TO_CHAR, ANSI_RED);
       act("$N blocks $n's attempt to grapple, and knocks $m off balance.", true,
         c, 0, victim, TO_NOTVICT);
       act("You evade $n's attempt to grapple, and knock $m off balance.", true,
         c, 0, victim, TO_VICT);
       c->cantHit += c->loseRound(5 - (min(50, level) / 12));
 
-      rc = c->stumble(victim);
-      if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      rc = c->stumble();
+      if (IS_SET_DELETE(rc, DELETE_THIS))
         return rc;
     } else if (victim->canFocusedAvoidance(bKnown / 2)) {
       SV(skill);
@@ -94,11 +98,20 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
       act("You evade $n's attempt to grapple.", TRUE, c, 0, victim, TO_VICT);
     } else {
       if (victim->riding) {
-        act("You pull $N off $p.", FALSE, c, victim->riding, victim, TO_CHAR);
-        act("$n pulls $N off $p.", FALSE, c, victim->riding, victim,
-          TO_NOTVICT);
-        act("$n pulls you off $p.", FALSE, c, victim->riding, victim, TO_VICT);
-        victim->dismount(POSITION_STANDING);
+        int kr = victim->knockOffMount();
+        if (IS_SET_DELETE(kr, DELETE_THIS))
+          return DELETE_VICT;
+        if (victim->riding) {
+          // Hung on — grapple can't wrestle a mounted target down.
+          act("Your grapple slips as $N keeps $S seat.", true, c, 0, victim,
+            TO_CHAR);
+          act("$n's grapple slips as $N keeps $S seat.", true, c, 0, victim,
+            TO_NOTVICT);
+          act("$n grapples at you but slips as you keep your seat.", true, c, 0,
+            victim, TO_VICT);
+          c->cantHit += c->loseRound(2);
+          return true;
+        }
       }
       c->sendTo("You tie your opponent up, with an excellent maneuver.\n\r");
       act("$n wrestles $N to the $g with an excellent maneuver.", TRUE, c, 0,
@@ -113,26 +126,17 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
       if (c->reconcileDamage(victim, dam, SKILL_GRAPPLE) == -1)
         return DELETE_VICT;
 
-      rc = c->crashLanding(POSITION_SITTING);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return rc;
-
-      rc = c->trySpringleap(victim);
-      if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
-        return rc;
-
-      positionTypeT pinned = victim->isAgile(0) ? POSITION_SITTING : POSITION_RESTING;
-      rc = victim->crashLanding(pinned);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_VICT;
-
-      rc = victim->trySpringleap(c);
-      if (IS_SET_DELETE(rc, DELETE_THIS) && IS_SET_DELETE(rc, DELETE_VICT))
-        return rc;
-      else if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_VICT;
-      else if (IS_SET_DELETE(rc, DELETE_VICT))
-        return DELETE_THIS;
+      // Both end up pinned on the ground. Use setPosition + pin-specific
+      // flavor instead of crashLanding so the messages match the takedown
+      // context and the auto-springleap chain doesn't fire mid-pin.
+      c->setPosition(POSITION_SITTING);
+      victim->setPosition(POSITION_RESTING);
+      act("<g>You kneel over $N, pinning $M to the $g.<1>", true, c, nullptr,
+        victim, TO_CHAR);
+      act("<r>$n kneels over you, pinning you to the $g.<1>", true, c, nullptr,
+        victim, TO_VICT);
+      act("$n kneels over $N, pinning $M to the $g.", true, c, nullptr, victim,
+        TO_NOTVICT);
 
       if (!victim->fight()) {
         if (c->fight()) {
@@ -193,8 +197,8 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
     act("$n tries to wrestle you to the $g, but loses $s hold.", true, c, 0,
       victim, TO_VICT);
 
-    rc = c->stumble(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+    rc = c->stumble();
+    if (IS_SET_DELETE(rc, DELETE_THIS))
       return rc;
 
     if (!victim->fight()) {

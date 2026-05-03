@@ -322,8 +322,8 @@ int TBeing::bashFail(TBeing* victim, spellNumT skill,
       victim, TO_VICT);
   }
 
-  int rc = stumble(victim);
-  if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+  int rc = stumble();
+  if (IS_SET_DELETE(rc, DELETE_THIS))
     return rc;
 
   reconcileDamage(victim, 0, skill);
@@ -332,12 +332,13 @@ int TBeing::bashFail(TBeing* victim, spellNumT skill,
 
 int TBeing::bashSuccess(TBeing* victim, spellNumT skill, bool isHoldingShield,
   TObj* itemInSecondaryHand) {
-  if (victim->riding) {
-    act("You knock $N off $p.", FALSE, this, victim->riding, victim, TO_CHAR);
-    act("$n knocks $N off $p.", FALSE, this, victim->riding, victim,
+  const bool wasMounted = (victim->riding != nullptr);
+
+  if (wasMounted) {
+    act("You bash $N off $p!", false, this, victim->riding, victim, TO_CHAR);
+    act("$n bashes $N off $p!", false, this, victim->riding, victim,
       TO_NOTVICT);
-    act("$n knocks you off $p.", FALSE, this, victim->riding, victim, TO_VICT);
-    victim->dismount(POSITION_SITTING);
+    act("$n bashes you off $p!", false, this, victim->riding, victim, TO_VICT);
   } else {
     act("$n knocks $N on $S butt!", FALSE, this, 0, victim, TO_NOTVICT);
     act("You send $N sprawling.", FALSE, this, 0, victim, TO_CHAR);
@@ -355,20 +356,20 @@ int TBeing::bashSuccess(TBeing* victim, spellNumT skill, bool isHoldingShield,
   if (!this->isTanking()) {
     limb = WEAR_BACK;
   }
-  if (victim->isAgile(0)){
+  if (victim->isAgile(0)) {
     limb = WEAR_ARM_R;
-    if (percentChance(50)){
+    if (percentChance(50)) {
       limb = WEAR_ARM_L;
     }
 
-    if ((victim->getHeight()*2/3) > this->getHeight()) {
+    if ((victim->getHeight() * 2 / 3) > this->getHeight()) {
       limb = WEAR_LEG_R;
-      if (percentChance(50)){
+      if (percentChance(50)) {
         limb = WEAR_LEG_L;
       }
     }
   }
-  if (this->getHeight() > (3*victim->getHeight()/2)){
+  if (this->getHeight() > (3 * victim->getHeight() / 2)) {
     limb = WEAR_HEAD;
   }
 
@@ -389,17 +390,9 @@ int TBeing::bashSuccess(TBeing* victim, spellNumT skill, bool isHoldingShield,
   if (isLucky(levelLuckModifier(victim->GetMaxLevel())))
     distractionBonus++;
 
-  int rc = victim->crashLanding(POSITION_SITTING);
+  int rc = wasMounted ? victim->knockOffMount() : victim->crashLanding();
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_VICT;
-
-  rc = victim->trySpringleap(this);
-  if (IS_SET_DELETE(rc, DELETE_THIS) && IS_SET_DELETE(rc, DELETE_VICT))
-    return rc;
-  else if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_VICT;
-  else if (IS_SET_DELETE(rc, DELETE_VICT))
-    return DELETE_THIS;
 
   // see balance notes for bash:
   // the effect here should be strictly to prevent skill-use

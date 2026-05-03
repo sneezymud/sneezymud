@@ -667,12 +667,11 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
     appear();
 
   if (v->riding && dynamic_cast<TBeing*>(v->riding)) {
-    if (!v->rideCheck(-3)) {
-      rc = v->fallOffMount(v->riding, POSITION_SITTING);
+    rc = v->knockOffMount(3);
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_VICT;
+    if (rc)
       v->addToWait(combatRound(2));
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_VICT;
-    }
   } else if (v->riding && dynamic_cast<TMonster*>(v) && !v->desc) {
     if (::number(0, 1)) {
       dynamic_cast<TMonster*>(v)->standUp();
@@ -682,14 +681,14 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
   for (t = v->rider; t; t = t2) {
     t2 = t->nextRider;
     TBeing* tb = dynamic_cast<TBeing*>(t);
-    // force a doubly failed rideCheck for riders of victim
-    if (tb && !tb->rideCheck(-3) && !tb->rideCheck(-3)) {
-      rc = tb->fallOffMount(v, POSITION_SITTING);
+    if (!tb)
+      continue;
+    rc = tb->knockOffMount(3);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      delete tb;
+      tb = nullptr;
+    } else if (rc) {
       tb->addToWait(combatRound(2));
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        delete tb;
-        tb = NULL;
-      }
     }
   }
 

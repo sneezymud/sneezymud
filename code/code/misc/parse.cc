@@ -313,7 +313,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring& argument, TThing* vict,
           doUnsaddle(newarg);
           break;
         case CMD_SPRINGLEAP:
-          doSpringleap(newarg, true, dynamic_cast<TBeing*>(vict));
+          doSpringleap();
           break;
         case CMD_HARNESS:
         case CMD_SADDLE:

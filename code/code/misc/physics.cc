@@ -37,6 +37,11 @@ bool TBeing::canClimb() {
   int skill, num;
   TBeing* tbt;
 
+  // Sprawled or worse — can't hold a grip on a vertical surface. Sitting still
+  // counts as holding on (you can sit on a branch); RESTING and below cannot.
+  if (getPosition() < POSITION_SITTING)
+    return false;
+
   if (!isPc() && canFly() && !isFlying()) {
     doFly();
   } else {
@@ -839,9 +844,8 @@ bool TBeing::canFly() const {
 // force to fly, then crash land.
 int TBeing::flightCheck() {
   if (isFlying() && !canFly() && !roomp->isFlyingSector()) {
-    // last argument is true: force landing, don't recheck.
-    // avoids infinite recursion.
-    int rc = crashLanding(POSITION_SITTING, false, true, true);
+    // falling=true: don't recurse into checkFalling.
+    int rc = crashLanding(0, true);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
   }
