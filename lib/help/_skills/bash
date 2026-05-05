@@ -14,4 +14,6 @@ at bashing is also dependent on relative weights and dexterities.
 Bashing is a physical attack, and as such, requires the basher be able to
 successfully hit the victim.  The closer you are to your target the easier it
 is to bash so that person most directly fighting will have the best chance of
-success.  Failure to bash successfully may cause the basher to fall.
+success.  Failure to bash successfully may cause the basher to stumble.
+
+See Also: STUMBLE

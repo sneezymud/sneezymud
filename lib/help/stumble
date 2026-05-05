@@ -1,0 +1,17 @@
+A stumble is what happens when an attacker botches a knockdown attempt
+and risks being knocked down themselves.  Bash, trip, grapple, bodyslam,
+headbutt, and spin can all leave a warrior stumbling on a miss; several
+monk takedowns do the same.
+
+The outcome depends on the attacker's agility.  Agile attackers catch
+themselves and stay standing, losing only a little time to recover their
+footing.  Less agile attackers topple over -- a second roll then decides
+whether they end up sitting or fully sprawled on the ground.
+
+Anyone with the springleap skill will attempt to bounce straight back to
+their feet the moment they hit the ground.
+
+A flier stumbling in a fall sector falters but stays aloft; elsewhere, a
+stumbling flier topples out of the sky.
+
+See Also: SPRINGLEAP, GROUNDFIGHTING, AGILITY

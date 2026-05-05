@@ -31,7 +31,11 @@ It is not possible to mount a creature that is higher level than you,
 nor one involved in a fight.  Karma plays a certain role in determining
 ride success.
 
-
+Riders taking hits in combat can be thrown from their mounts.  Heavier
+hits are harder to shrug off, and better riders are harder to dislodge.
+Deikhans in particular make excellent mounted combatants -- a deikhan
+who specializes in riding a particular kind of mount becomes nearly
+impossible to dislodge at high skill levels.
 
 See Also: DISMOUNT
 Related Topics: MOVEMENT

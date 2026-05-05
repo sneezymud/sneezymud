@@ -7,4 +7,7 @@ grappler rather than the being they were fighting originally. It is
 notoriously difficult to grapple a monk. 
 
 Grappling is a physical attack, and as such, requires the grappler be able to
-successfully hit the victim.  Failure to do so will cause the attempt to fail.
+successfully hit the victim.  Failure to do so will cause the attempt to fail,
+and the grappler to stumble.
+
+See Also: STUMBLE
