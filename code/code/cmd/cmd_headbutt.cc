@@ -52,26 +52,21 @@ bool TBeing::canHeadbutt(TBeing* victim, const silentTypeT silent) const {
 }
 
 int TBeing::headbuttMiss(TBeing* v) {
-  int rc;
-
   if (v->doesKnowSkill(SKILL_COUNTER_MOVE) || isCombatMode(ATTACK_BERSERK)) {
     // I don't understand this logic
     act("$N deftly avoids $n's headbutt.", FALSE, this, 0, v, TO_NOTVICT);
     act("$N deftly avoids your headbutt.", FALSE, this, 0, v, TO_CHAR);
     act("You deftly avoid $n's headbutt.", FALSE, this, 0, v, TO_VICT);
   } else {
-    act("$N avoids $n's headbutt.", FALSE, this, 0, v, TO_NOTVICT);
-    act("$N moves $S head, and you fall down as you miss your headbutt.", FALSE,
-      this, 0, v, TO_CHAR);
-    act("$n tries to headbutt you, but you dodge it.", FALSE, this, 0, v,
-      TO_VICT);
+    act("$N moves $S head out of the way, causing $n to miss.", false, this, 0,
+      v, TO_NOTVICT);
+    act("$N moves $S head out of the way, causing you to miss.", false, this, 0,
+      v, TO_CHAR);
+    act("You move your head out of the way, causing $n to miss.", false, this,
+      0, v, TO_VICT);
 
-    rc = crashLanding(POSITION_SITTING);
+    int rc = stumble();
     if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-
-    rc = trySpringleap(v);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   }
   reconcileDamage(v, 0, SKILL_HEADBUTT);
@@ -104,7 +99,8 @@ int TBeing::headbuttHit(TBeing* victim) {
 
     return TRUE;
   } else {
-    static constexpr const char* headbutt_msg = "%s headbutt %s, slamming %s head into %s %s.";
+    static constexpr const char* headbutt_msg =
+      "%s headbutt %s, slamming %s head into %s %s.";
 
     const char* target_area;
     bool causes_wait = false;
@@ -144,9 +140,12 @@ int TBeing::headbuttHit(TBeing* victim) {
       causes_wait = true;
     }
 
-    act(format(headbutt_msg) % "$n" % "$N" % "$s" % "$N's" % target_area, FALSE, this, 0, victim, TO_NOTVICT);
-    act(format(headbutt_msg) % "You" % "$N" % "your" % "$S" % target_area, FALSE, this, 0, victim, TO_CHAR);
-    act(format(headbutt_msg) % "$n" % "you" % "$s" % "your" % target_area, FALSE, this, 0, victim, TO_VICT);
+    act(format(headbutt_msg) % "$n" % "$N" % "$s" % "$N's" % target_area, FALSE,
+      this, 0, victim, TO_NOTVICT);
+    act(format(headbutt_msg) % "You" % "$N" % "your" % "$S" % target_area,
+      FALSE, this, 0, victim, TO_CHAR);
+    act(format(headbutt_msg) % "$n" % "you" % "$s" % "your" % target_area,
+      FALSE, this, 0, victim, TO_VICT);
 
     if (causes_wait) {
       victim->addToWait(combatRound(0.25));
@@ -215,7 +214,7 @@ int TBeing::doHeadbutt(const char* argument, TBeing* vict) {
   if (rc)
     addSkillLag(SKILL_HEADBUTT, rc);
 
-  if (IS_SET_ONLY(rc, DELETE_VICT)) {
+  if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
       return rc;
     delete v;

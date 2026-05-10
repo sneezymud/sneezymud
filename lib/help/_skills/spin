@@ -10,4 +10,6 @@ brawling specialization is known.
 
 Spinning is a physical attack, and as such, requires the warrior to be able to
 successfully hit the victim.  Failure to do so will cause the attempted spin to
-fail.
+fail, and the warrior to stumble.
+
+See Also: STUMBLE

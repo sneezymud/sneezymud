@@ -632,7 +632,7 @@ int TBeing::applyDamage(TBeing* v, int dam, spellNumT dmg_type) {
   rc = v->tellStatus(dam, (this == v), flying);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_VICT;
-  rc = damageEpilog(v, dmg_type);
+  rc = damageEpilog(v, dam, dmg_type);
   if (IS_SET_DELETE(rc, DELETE_VICT))
     return DELETE_VICT;
 
@@ -641,7 +641,7 @@ int TBeing::applyDamage(TBeing* v, int dam, spellNumT dmg_type) {
 }
 
 // DELETE_VICT or FALSE
-int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
+int TBeing::damageEpilog(TBeing* v, int dam, spellNumT dmg_type) {
   char buf[512], buf2[256];
   sstring taunt_buf;
   sstring discord_taunt_msg;
@@ -666,12 +666,19 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
   if (isAffected(AFF_INVISIBLE) && this != v)
     appear();
 
+  // Pre-check on every hit so routine combat doesn't spam knockOffMount's
+  // hang-on flavor. Severity scales with damage magnitude (capped) so trivial
+  // hits stay trivial and crits don't auto-throw. Only escalate to
+  // knockOffMount (which rolls again as its own save) when the rider already
+  // failed the pre-check.
+  int rideSeverity = std::min(dam, 50);
   if (v->riding && dynamic_cast<TBeing*>(v->riding)) {
-    if (!v->rideCheck(-3)) {
-      rc = v->fallOffMount(v->riding, POSITION_SITTING);
-      v->addToWait(combatRound(2));
+    if (!v->rideCheck(-rideSeverity)) {
+      rc = v->knockOffMount(rideSeverity);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_VICT;
+      if (rc)
+        v->addToWait(combatRound(2));
     }
   } else if (v->riding && dynamic_cast<TMonster*>(v) && !v->desc) {
     if (::number(0, 1)) {
@@ -682,14 +689,16 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
   for (t = v->rider; t; t = t2) {
     t2 = t->nextRider;
     TBeing* tb = dynamic_cast<TBeing*>(t);
-    // force a doubly failed rideCheck for riders of victim
-    if (tb && !tb->rideCheck(-3) && !tb->rideCheck(-3)) {
-      rc = tb->fallOffMount(v, POSITION_SITTING);
+    if (!tb)
+      continue;
+    if (tb->rideCheck(-rideSeverity))
+      continue;
+    rc = tb->knockOffMount(rideSeverity);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      delete tb;
+      tb = nullptr;
+    } else if (rc) {
       tb->addToWait(combatRound(2));
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        delete tb;
-        tb = NULL;
-      }
     }
   }
 

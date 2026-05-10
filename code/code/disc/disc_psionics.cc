@@ -713,8 +713,8 @@ int TBeing::doPsycrush(const char* tString) {
 }
 
 int kwaveDamage(TBeing* caster, TBeing* victim) {
-  int rc = victim->crashLanding(POSITION_SITTING);
-  if (IS_SET_ONLY(rc, DELETE_VICT))
+  int rc = victim->crashLanding();
+  if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_VICT;
 
   float wt = combatRound(discArray[SKILL_KINETIC_WAVE]->lag);

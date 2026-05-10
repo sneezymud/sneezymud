@@ -460,6 +460,7 @@ class TBeing : public TThing {
     virtual void setWimpy(int);
     virtual short int hitLimit() const;
     virtual int fallOffMount(TThing*, positionTypeT, bool death = FALSE);
+    int knockOffMount(int severity = 0);
     virtual bool hasQuestBit(int) const;
     virtual void setQuestBit(int);
     virtual void remQuestBit(int);
@@ -600,7 +601,6 @@ class TBeing : public TThing {
     void checkGuardiansLight();
     int checkAdvDefense();
     int doAdvDefense(TBeing*, TThing*, int*, int, wearSlotT);
-    
 
     // Postmaster
     void postmasterSendMail(const char*, TMonster*);
@@ -621,6 +621,7 @@ class TBeing : public TThing {
     void gainExpPerHit(TBeing*, double, int);
 
     int rideCheck(int);
+    int getRideMod();
     spellNumT mountSkillType() const;
     void calmMount(TBeing*);
     int advancedRidingBonus(TMonster*);
@@ -1009,7 +1010,8 @@ class TBeing : public TThing {
     int preCastCheck();
     int preDiscCheck(spellNumT);
     int doCast(const char*);
-    std::tuple<spellNumT, sstring> parseSpellNum(const sstring&, const sstring& = "") const;
+    std::tuple<spellNumT, sstring> parseSpellNum(const sstring&,
+      const sstring& = "") const;
     int parseTarget(spellNumT, char*, TThing** ret);
     int doTrigger(const char*);
     int doStore(const char*);
@@ -1330,8 +1332,8 @@ class TBeing : public TThing {
     void doScribe(const char*);
     void doFly();
     void doLand();
-    int crashLanding(positionTypeT, bool force = FALSE, bool dam = TRUE,
-      bool falling = false);
+    int crashLanding(int severity = 0, bool falling = false);
+    int stumble();
     int doTurn(const char*, TBeing*);
     virtual void doMedit(const char*);
     void doPreen(sstring& argument);
@@ -1491,7 +1493,7 @@ class TBeing : public TThing {
     int preProcDam(spellNumT, int);
     int preProcDam(TBeing*, spellNumT, int);
     TBeing* findAnAttacker() const;
-    int damageEpilog(TBeing*, spellNumT);
+    int damageEpilog(TBeing*, int dam, spellNumT);
     void catchLostLink(TBeing*);
     void throwChar(TBeing* v, dirTypeT dir, bool throwerMove,
       silentTypeT silent, bool forceStand);
@@ -1513,8 +1515,7 @@ class TBeing : public TThing {
     int hit(TBeing*, int pulse = -1);
     bool canCounterMove(int);
     bool canFocusedAvoidance(int);
-    int trySpringleap(TBeing*);
-      bool maybeDestroyLimb(wearSlotT part_hit, TBeing* v,
+    bool maybeDestroyLimb(wearSlotT part_hit, TBeing* v,
       const TBaseWeapon* weapon, spellNumT attackType);
     int damageLimb(TBeing* v, wearSlotT part_hit, const TThing* maybeWeapon,
       int* dam);
@@ -1862,7 +1863,8 @@ class TBeing : public TThing {
 
     // Monk Skills
     int doQuiveringPalm(const char*, TBeing*);
-    int doSpringleap(sstring, bool, TBeing*);
+    int doSpringleap();
+    int springleap();
     int doShoulderThrow(const char*, TBeing*);
     int doGrappleMonk(const char*, int, TBeing*);
     int doFeignDeath();

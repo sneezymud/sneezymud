@@ -1,11 +1,14 @@
-Syntax: springleap <victim>
+Syntax: springleap
 
-Spring leap is an interesting counter move taught to monks as a response to
-being knocked off their feet.  The move will allow the monk to leap back to
-their feet, and at the same time kick the enemy.  It can be done either
-automatically as a response to some attacks or manually by the monk under the
-right conditions.
+Springleap is a recovery technique taught to monks: a quick spring off the
+ground that brings the monk back to their feet from a sitting or resting
+position.  Anyone who knows springleap will attempt one automatically
+whenever they are knocked down, with no need to issue the command.  The
+springleap can also be invoked manually any time the monk is sitting or
+lying on the ground.
 
-Spring leap is a physical attack, and as such, requires the Jumandoist be able
-to successfully hit the victim.  Failure to do so will cause the attempt to
-fail.
+A successful springleap leaves the monk standing; a failed attempt leaves
+them flopped back where they started.  The chance of success is governed
+by the monk's skill in springleap.
+
+See Also: CATFALL, CATLEAP, COUNTER MOVE, GROUNDFIGHTING

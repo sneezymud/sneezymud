@@ -1410,13 +1410,16 @@ namespace {
       int minDam{20};
       int maxDam{50};
 
-      // onTrigger is optional, as you might want to only display a single trigger message for multiple effects
+      // onTrigger is optional, as you might want to only display a single
+      // trigger message for multiple effects
       const char* onTrigger{nullptr};
 
-      // onDamage is required, as it describes the effect of this specific damage type
+      // onDamage is required, as it describes the effect of this specific
+      // damage type
       const char* onDamage;
 
-      // onSave is optional, as a save being possible depends on the behavior of the proc itself
+      // onSave is optional, as a save being possible depends on the behavior of
+      // the proc itself
       const char* onSave{nullptr};
 
       // All damage types should have an onImmune message to avoid confusion for
@@ -1985,7 +1988,7 @@ knocking the unwary off-guard.<1>\n\r");
     act("$n lands flat on $s back!",
   FALSE, player, 0, 0, TO_ROOM);
 
-    rc = player->crashLanding(POSITION_SITTING);
+    rc = player->crashLanding();
     if (IS_SET_DELETE(rc, DELETE_THIS)){
       delete player;
       player = NULL;

@@ -1217,7 +1217,7 @@ int TMonster::monkMove(TBeing& vict) {
   if (getPosition() <= POSITION_SITTING) {
     if (!doesKnowSkill(SKILL_SPRINGLEAP))
       setSkillValue(SKILL_SPRINGLEAP, min(100, 10 + GetMaxLevel() * 4));
-    return doSpringleap("", false, &vict);
+    return springleap();
   } else {
 #if (0)
     if (GetMaxLevel() > 30 && !::number(0, 4)) {
@@ -1617,15 +1617,13 @@ static spellNumT get_mage_spell(TMonster& ch, TBeing& vict, bool& on_me) {
     spell = SPELL_CHAIN_LIGHTNING;
     if (!::number(0, 4) && (cutoff < discArray[spell]->start) &&
         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the words, 'Zap Zap Zap!'", TRUE, &ch, 0, 0,
-        TO_ROOM);
+      act("$n utters the words, 'Zap Zap Zap!'", TRUE, &ch, 0, 0, TO_ROOM);
       return spell;
     }
     spell = SPELL_LIGHTNING_BOLT;
     if (!::number(0, 2) && (cutoff < discArray[spell]->start) &&
         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
-      act("$n utters the words, 'Time to fry!'", TRUE, &ch, 0, 0,
-        TO_ROOM);
+      act("$n utters the words, 'Time to fry!'", TRUE, &ch, 0, 0, TO_ROOM);
       return spell;
     }
     spell = SPELL_IMMOBILIZE;
@@ -1868,61 +1866,78 @@ static spellNumT get_mage_spell(TMonster& ch, TBeing& vict, bool& on_me) {
 
 // SHAMAN
 
-enum ShamanSpellCategory { SHAMAN_OFFENSIVE, SHAMAN_SITUATIONAL };
+enum ShamanSpellCategory {
+  SHAMAN_OFFENSIVE,
+  SHAMAN_SITUATIONAL
+};
 
 struct ShamanSpellEntry {
-  spellNumT spell;
-  int weight;
-  ShamanSpellCategory category;
-  const char* message;
+    spellNumT spell;
+    int weight;
+    ShamanSpellCategory category;
+    const char* message;
 };
 
 static const int SHAMAN_MIN_SKILL = 60;
 
 static const ShamanSpellEntry shamanSpellTable[] = {
   // SITUATIONAL spells — bypass tier filtering
-  {SPELL_CHASE_SPIRIT,    70, SHAMAN_SITUATIONAL, "$n utters the words, 'Spirits be gone from this pathetic one!'"},
-  {SPELL_INTIMIDATE,      40, SHAMAN_SITUATIONAL, "$n utters the invokation, 'Go Away! Leave me the Hell Alone!'"},
-  {SPELL_FLATULENCE,      20, SHAMAN_SITUATIONAL, "$n utters the invokation, 'He who smelt it, dealt it!'"},
-  {SPELL_STUPIDITY,       10, SHAMAN_SITUATIONAL, "$n utters the invokation, 'DUUHHHHHHHHHHH!!!!!!!!!'"},
-  {SPELL_DEATH_MIST,      10, SHAMAN_SITUATIONAL, "$n utters the invokation, 'Chowe Kondiz Bub!'"},
+  {SPELL_CHASE_SPIRIT, 70, SHAMAN_SITUATIONAL,
+    "$n utters the words, 'Spirits be gone from this pathetic one!'"},
+  {SPELL_INTIMIDATE, 40, SHAMAN_SITUATIONAL,
+    "$n utters the invokation, 'Go Away! Leave me the Hell Alone!'"},
+  {SPELL_FLATULENCE, 20, SHAMAN_SITUATIONAL,
+    "$n utters the invokation, 'He who smelt it, dealt it!'"},
+  {SPELL_STUPIDITY, 10, SHAMAN_SITUATIONAL,
+    "$n utters the invokation, 'DUUHHHHHHHHHHH!!!!!!!!!'"},
+  {SPELL_DEATH_MIST, 10, SHAMAN_SITUATIONAL,
+    "$n utters the invokation, 'Chowe Kondiz Bub!'"},
 
   // OFFENSIVE spells — subject to tier filtering
-  {SPELL_LIFE_LEECH,      20, SHAMAN_OFFENSIVE, "$n utters the invokation, 'I'm gonna suck you dry!!!'"},
-  {SPELL_LICH_TOUCH,      80, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Lich me, SUCKAH!!!'"},
-  {SPELL_RAZE,            80, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Rubbem Ow!'"},
-  {SPELL_VAMPIRIC_TOUCH,  40, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Ahh!! The BLUUD!!!!!'"},
-  {SPELL_SOUL_TWIST,      30, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Internal Pretzel!'"},
-  {SPELL_SQUISH,          10, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Firsta you takka da dough like-a dis...'"},
-  {SPELL_DISTORT,         20, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Houngan's Delight!'"},
-  {SPELL_DEATHWAVE,       80, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Deadly Blackness!'"},
-  {SPELL_AQUATIC_BLAST,   60, SHAMAN_OFFENSIVE, "$n utters the invokation, 'River run DEEEEEEEEEEP!!!!'"},
-  {SPELL_BLOOD_BOIL,      60, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Bubble, bubble. BOILING BLOOD!!'"},
-  {SPELL_CARDIAC_STRESS,  80, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Don't go breakin' my heart!'"},
+  {SPELL_LIFE_LEECH, 20, SHAMAN_OFFENSIVE,
+    "$n utters the invokation, 'I'm gonna suck you dry!!!'"},
+  {SPELL_LICH_TOUCH, 80, SHAMAN_OFFENSIVE,
+    "$n utters the invokation, 'Lich me, SUCKAH!!!'"},
+  {SPELL_RAZE, 80, SHAMAN_OFFENSIVE, "$n utters the invokation, 'Rubbem Ow!'"},
+  {SPELL_VAMPIRIC_TOUCH, 40, SHAMAN_OFFENSIVE,
+    "$n utters the invokation, 'Ahh!! The BLUUD!!!!!'"},
+  {SPELL_SOUL_TWIST, 30, SHAMAN_OFFENSIVE,
+    "$n utters the invokation, 'Internal Pretzel!'"},
+  {SPELL_SQUISH, 10, SHAMAN_OFFENSIVE,
+    "$n utters the invokation, 'Firsta you takka da dough like-a dis...'"},
+  {SPELL_DISTORT, 20, SHAMAN_OFFENSIVE,
+    "$n utters the invokation, 'Houngan's Delight!'"},
+  {SPELL_DEATHWAVE, 80, SHAMAN_OFFENSIVE,
+    "$n utters the invokation, 'Deadly Blackness!'"},
+  {SPELL_AQUATIC_BLAST, 60, SHAMAN_OFFENSIVE,
+    "$n utters the invokation, 'River run DEEEEEEEEEEP!!!!'"},
+  {SPELL_BLOOD_BOIL, 60, SHAMAN_OFFENSIVE,
+    "$n utters the invokation, 'Bubble, bubble. BOILING BLOOD!!'"},
+  {SPELL_CARDIAC_STRESS, 80, SHAMAN_OFFENSIVE,
+    "$n utters the invokation, 'Don't go breakin' my heart!'"},
 };
 
-static bool checkShamanSituational(TMonster& ch, TBeing& vict, spellNumT spell) {
+static bool checkShamanSituational(TMonster& ch, TBeing& vict,
+  spellNumT spell) {
   switch (spell) {
     case SPELL_CHASE_SPIRIT:
       return (vict.affectedBySpell(SPELL_HASTE) ||
-              vict.affectedBySpell(SPELL_CELERITE) ||
-              vict.affectedBySpell(SPELL_PLASMA_MIRROR) ||
-              vict.affectedBySpell(SPELL_THORNFLESH) ||
-              vict.affectedBySpell(SPELL_GILLS_OF_FLESH) ||
-              vict.affectedBySpell(SPELL_AQUALUNG)) &&
+               vict.affectedBySpell(SPELL_CELERITE) ||
+               vict.affectedBySpell(SPELL_PLASMA_MIRROR) ||
+               vict.affectedBySpell(SPELL_THORNFLESH) ||
+               vict.affectedBySpell(SPELL_GILLS_OF_FLESH) ||
+               vict.affectedBySpell(SPELL_AQUALUNG)) &&
              !(vict.affectedBySpell(SPELL_FAERIE_FIRE) ||
                vict.affectedBySpell(SPELL_BIND));
     case SPELL_INTIMIDATE:
-      return !ch.pissed() &&
-             (ch.getHit() < ch.hitLimit() / 8) &&
+      return !ch.pissed() && (ch.getHit() < ch.hitLimit() / 8) &&
              !ch.affectedBySpell(AFFECT_TEST_FIGHT_MOB);
     case SPELL_FLATULENCE:
       return ch.attackers >= 2;
     case SPELL_STUPIDITY:
       return !vict.affectedBySpell(SPELL_STUPIDITY);
     case SPELL_DEATH_MIST:
-      return ch.attackers >= 2 &&
-             !vict.affectedBySpell(SPELL_DEATH_MIST);
+      return ch.attackers >= 2 && !vict.affectedBySpell(SPELL_DEATH_MIST);
     default:
       return false;
   }
@@ -1955,7 +1970,11 @@ static spellNumT get_shaman_spell(TMonster& ch, TBeing& vict, bool& on_me) {
   }
 
   // 2. Build candidate pool
-  struct Candidate { spellNumT spell; int weight; const char* message; };
+  struct Candidate {
+      spellNumT spell;
+      int weight;
+      const char* message;
+  };
   std::vector<Candidate> candidates;
 
   for (const auto& entry : shamanSpellTable) {
@@ -1981,9 +2000,8 @@ static spellNumT get_shaman_spell(TMonster& ch, TBeing& vict, bool& on_me) {
   // 2b. Life-drain boost: when hurt, add the best known drain spell again
   //     to increase its selection weight (may duplicate an existing entry)
   if (ch.getHit() < ch.hitLimit() * 3 / 4) {
-    static const spellNumT drainSpells[] = {
-      SPELL_LICH_TOUCH, SPELL_VAMPIRIC_TOUCH, SPELL_LIFE_LEECH
-    };
+    static const spellNumT drainSpells[] = {SPELL_LICH_TOUCH,
+      SPELL_VAMPIRIC_TOUCH, SPELL_LIFE_LEECH};
     for (auto spell : drainSpells) {
       if (!ch.doesKnowSkill(spell))
         continue;
@@ -2245,7 +2263,7 @@ static spellNumT get_cleric_heal_spell(TMonster& ch, TBeing& targ) {
   }
 
   // cure blindness
-  if(ch.doesKnowSkill(SPELL_CURE_BLINDNESS) &&
+  if (ch.doesKnowSkill(SPELL_CURE_BLINDNESS) &&
       ch.getSkillValue(SPELL_CURE_BLINDNESS) > 33 &&
 #if 0
      targ.isAffected(AFF_BLIND)) {
@@ -2268,10 +2286,12 @@ static spellNumT get_cleric_heal_spell(TMonster& ch, TBeing& targ) {
   if (ch.doesKnowSkill(SPELL_CURE_DISEASE) &&
       ch.getSkillValue(SPELL_CURE_DISEASE) > 33) {
     if (targ.hasDisease(DISEASE_COLD) || targ.hasDisease(DISEASE_FLU) ||
-      targ.hasDisease(DISEASE_FROSTBITE) || targ.hasDisease(DISEASE_LEPROSY) ||
-      targ.hasDisease(DISEASE_PLAGUE) || targ.hasDisease(DISEASE_PNEUMONIA) ||
-      targ.hasDisease(DISEASE_DYSENTERY) || targ.hasDisease(DISEASE_GANGRENE) ||
-      targ.hasDisease(DISEASE_SCURVY) || targ.hasDisease(DISEASE_SYPHILIS)) {
+        targ.hasDisease(DISEASE_FROSTBITE) ||
+        targ.hasDisease(DISEASE_LEPROSY) || targ.hasDisease(DISEASE_PLAGUE) ||
+        targ.hasDisease(DISEASE_PNEUMONIA) ||
+        targ.hasDisease(DISEASE_DYSENTERY) ||
+        targ.hasDisease(DISEASE_GANGRENE) || targ.hasDisease(DISEASE_SCURVY) ||
+        targ.hasDisease(DISEASE_SYPHILIS)) {
       return SPELL_CURE_DISEASE;
     }
   }

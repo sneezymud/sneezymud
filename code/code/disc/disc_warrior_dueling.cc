@@ -58,7 +58,7 @@ int TBeing::doShove(const char* argument, TBeing* vict) {
       act("$n leaps at $N, attempting to topple $M off $S $o, but fails.", TRUE,
         this, victim->riding, victim, TO_NOTVICT);
 
-      rc = crashLanding(POSITION_RESTING);
+      rc = crashLanding();
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
 
@@ -319,16 +319,13 @@ int TBeing::parryWarrior(TBeing* v, TThing* weapon, int* dam, int w_type,
 
     strcpy(type, "parry");
     sprintf(buf, "You %s $n's %s at your %s.", type,
-      attack_hit_text[w_type].singular,
-      v->describeBodySlot(part_hit).c_str());
+      attack_hit_text[w_type].singular, v->describeBodySlot(part_hit).c_str());
     act(buf, FALSE, this, 0, v, TO_VICT, ANSI_CYAN);
     sprintf(buf, "$N %ss your %s at $S %s.", type,
-      attack_hit_text[w_type].singular,
-      v->describeBodySlot(part_hit).c_str());
+      attack_hit_text[w_type].singular, v->describeBodySlot(part_hit).c_str());
     act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_CYAN);
     sprintf(buf, "$N %ss $n's %s at $S %s.", type,
-      attack_hit_text[w_type].singular,
-      v->describeBodySlot(part_hit).c_str());
+      attack_hit_text[w_type].singular, v->describeBodySlot(part_hit).c_str());
     act(buf, TRUE, this, 0, v, TO_NOTVICT);
 
     return TRUE;

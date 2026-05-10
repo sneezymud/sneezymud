@@ -195,7 +195,7 @@ void TBeing::affectChange(uint64_t original, silentTypeT silent) {
       sendTo("You lose your ability to fly.\n\r");
       if (roomp && isFlying()) {
         // roomp is needed since this is sometimes called by dead critters
-        rc = crashLanding(POSITION_SITTING);
+        rc = crashLanding();
         if (IS_SET_DELETE(rc, DELETE_THIS))
           // I don't think this can happen, so won't bother to do work to pass
           // the return if it does

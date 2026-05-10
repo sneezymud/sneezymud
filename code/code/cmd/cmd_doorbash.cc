@@ -41,7 +41,7 @@ int TBeing::slamIntoWall(roomDirData* exitp) {
   addToWait(combatRound(12));
 #else
   int rc;
-  rc = crashLanding(POSITION_RESTING);
+  rc = crashLanding();
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
 #endif

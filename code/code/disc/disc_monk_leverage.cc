@@ -50,18 +50,16 @@ int TBeing::doHurl(const char* argument, TBeing* vict) {
 }
 
 int hurlMiss(TBeing* caster, TBeing* victim) {
-  int rc;
-
-  act("$n misses $s attempt at hurling $N and falls on $s butt!", FALSE, caster,
-    0, victim, TO_NOTVICT);
-  act("You fall as you attempt to hurl $N!", FALSE, caster, 0, victim, TO_CHAR);
-  act("You manage to avoid $n as $e tries to hurl you!", FALSE, caster, 0,
+  act("$n fails to hurl $N correctly and loses $s balance.", false, caster, 0,
+    victim, TO_NOTVICT);
+  act("You fail to hurl $N correctly and lose your balance.", false, caster, 0,
+    victim, TO_CHAR);
+  act("$n fails to hurl you correctly and loses $s balance.", false, caster, 0,
     victim, TO_VICT);
 
-  rc = caster->crashLanding(POSITION_SITTING);
+  int rc = caster->stumble();
   if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_THIS;
-
+    return rc;
   caster->reconcileDamage(victim, 0, SKILL_SHOULDER_THROW);
   return TRUE;
 }
@@ -125,7 +123,7 @@ static int hurlHit(TBeing* caster, TBeing* victim, dirTypeT dr) {
 
     act("$N is hurled into the room!", TRUE, victim, 0, victim, TO_ROOM);
 
-    rc = victim->crashLanding(POSITION_SITTING);
+    rc = victim->crashLanding();
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_VICT;
 
@@ -152,27 +150,23 @@ int TBeing::aiHurl(dirTypeT dr, TBeing* victim) {
 
   if (victim->getPosition() <= POSITION_STUNNED) {
     rc = hurlHit(this, victim, dr);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   } else if ((i = specialAttack(victim, SKILL_HURL)) &&
              (i != GUARANTEED_FAILURE) && bSuccess(bKnown, SKILL_HURL)) {
     rc = hurlHit(this, victim, dr);
     if (rc) {
       addSkillLag(SKILL_HURL, rc);
     }
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   } else {
     rc = hurlMiss(this, victim);
     if (rc) {
       addSkillLag(SKILL_HURL, rc);
     }
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   }
 
   /*
@@ -294,10 +288,8 @@ int hurl(TBeing* caster, TBeing* victim, char* direction) {
 
   if (victim->getPosition() <= POSITION_STUNNED) {
     rc = hurlHit(caster, victim, dr);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   } else if ((i = caster->specialAttack(victim, SKILL_HURL)) &&
              (i != GUARANTEED_FAILURE) &&
              caster->bSuccess(bKnown + percent, SKILL_HURL)) {
@@ -306,18 +298,16 @@ int hurl(TBeing* caster, TBeing* victim, char* direction) {
       caster->addSkillLag(SKILL_HURL, rc);
     }
 
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   } else {
     rc = hurlMiss(caster, victim);
     if (rc) {
       caster->addSkillLag(SKILL_HURL, rc);
     }
 
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   }
   return FALSE;
 }
@@ -365,19 +355,16 @@ int TBeing::doShoulderThrow(const char* argument, TBeing* vict) {
 }
 
 int shoulderThrowMiss(TBeing* caster, TBeing* victim) {
-  int rc;
-
-  act("$n misses $s attempt at shoulder throwing $N and falls on $s butt!",
-    FALSE, caster, 0, victim, TO_NOTVICT);
-  act("You fall as you attempt to shoulder throw $N!", FALSE, caster, 0, victim,
+  act("$n clumsily fails to shoulder throw $N.", false, caster, 0, victim,
+    TO_NOTVICT);
+  act("You clumsily fail to shoulder throw $N.", false, caster, 0, victim,
     TO_CHAR);
-  act("You manage to avoid $n as $e tries to shoulder throw you!", FALSE,
-    caster, 0, victim, TO_VICT);
+  act("$n clumsily fails to shoulder throw you.", false, caster, 0, victim,
+    TO_VICT);
 
-  rc = caster->crashLanding(POSITION_SITTING);
+  int rc = caster->stumble();
   if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_THIS;
-
+    return rc;
   caster->reconcileDamage(victim, 0, SKILL_CHOP);
   return TRUE;
 }
@@ -413,7 +400,7 @@ int shoulderThrowHit(TBeing* caster, TBeing* victim, int) {
   act("$N lands flat on $S back!", FALSE, caster, 0, victim, TO_CHAR);
   act("You land flat on your back!", FALSE, caster, 0, victim, TO_VICT);
 
-  rc = victim->crashLanding(POSITION_SITTING);
+  rc = victim->crashLanding();
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_VICT;
 
@@ -515,22 +502,18 @@ int shoulderThrow(TBeing* caster, TBeing* victim) {
 
   if (victim->getPosition() <= POSITION_STUNNED) {
     rc = shoulderThrowHit(caster, victim, bKnown + percent);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   } else if ((i = caster->specialAttack(victim, SKILL_SHOULDER_THROW)) &&
              (i != GUARANTEED_FAILURE) &&
              caster->bSuccess(bKnown + percent, SKILL_SHOULDER_THROW)) {
     rc = shoulderThrowHit(caster, victim, bKnown + percent);
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   } else {
     rc = shoulderThrowMiss(caster, victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   }
   return TRUE;
 }
@@ -573,19 +556,16 @@ int TBeing::doDefenestrate(const char* argument, TBeing* vict) {
 }
 
 int defenestrateMiss(TBeing* caster, TBeing* victim) {
-  int rc;
-
-  act("$n misses $s attempt at defenestrating $N and falls on $s butt!", FALSE,
-    caster, 0, victim, TO_NOTVICT);
-  act("You fall as you attempt to defenestrate $N!", FALSE, caster, 0, victim,
+  act("$n clumsily fails to throw $N out the window.", false, caster, 0, victim,
+    TO_NOTVICT);
+  act("You clumsily fail to throw $N out the window.", false, caster, 0, victim,
     TO_CHAR);
-  act("You manage to avoid $n as $e tries to defenestrate you!", FALSE, caster,
-    0, victim, TO_VICT);
+  act("$n clumsily fails to throw you out the window.", false, caster, 0,
+    victim, TO_VICT);
 
-  rc = caster->crashLanding(POSITION_SITTING);
+  int rc = caster->stumble();
   if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_THIS;
-
+    return rc;
   caster->reconcileDamage(victim, 0, SKILL_SHOULDER_THROW);
   return TRUE;
 }
@@ -644,7 +624,7 @@ static int defenestrateHit(TBeing* caster, TBeing* victim, int to_room,
 
     act("$N is defenestrated into the room!", TRUE, victim, 0, victim, TO_ROOM);
 
-    rc = victim->crashLanding(POSITION_SITTING);
+    rc = victim->crashLanding();
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_VICT;
 
@@ -776,10 +756,8 @@ int defenestrate(TBeing* caster, TBeing* victim, sstring direction) {
 
   if (victim->getPosition() <= POSITION_STUNNED) {
     rc = defenestrateHit(caster, victim, window->getTarget(), window);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   } else if ((i = caster->specialAttack(victim, SKILL_DEFENESTRATE)) &&
              (i != GUARANTEED_FAILURE) &&
              caster->bSuccess(bKnown + percent, SKILL_DEFENESTRATE)) {
@@ -788,166 +766,59 @@ int defenestrate(TBeing* caster, TBeing* victim, sstring direction) {
       caster->addSkillLag(SKILL_DEFENESTRATE, rc);
     }
 
-    if (IS_SET_DELETE(rc, DELETE_VICT))
-      return DELETE_VICT;
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   } else {
     rc = defenestrateMiss(caster, victim);
     if (rc) {
       caster->addSkillLag(SKILL_DEFENESTRATE, rc);
     }
 
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
+    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+      return rc;
   }
   return FALSE;
 }
 
-// this function is meant to be called from brawling commands so monks
-// automatically springleap.  They can still force it thru doSpringleap
-int TBeing::trySpringleap(TBeing* vict) {
-  if (!doesKnowSkill(SKILL_SPRINGLEAP))
-    return FALSE;
-
-  return doSpringleap("", false, vict);
-}
-
-int TBeing::doSpringleap(sstring argument, bool should_lag, TBeing* vict) {
-  TBeing* victim;
-  sstring name_buf;
-  int rc;
-
+int TBeing::doSpringleap() {
   if (!doesKnowSkill(SKILL_SPRINGLEAP)) {
     sendTo("You don't know how.\n\r");
     return FALSE;
   }
-  one_argument(argument, name_buf);
 
-  if (!(victim = vict)) {
-    if (!(victim = get_char_room_vis(this, name_buf))) {
-      if (!(victim = fight())) {
-        sendTo("Springleap at whom?\n\r");
-        return FALSE;
-      }
-#if 0
-    } else if (!fight()) {
-      sendTo("You are not able to initiate combat with a springleap.\n\r");
-      return FALSE;
-#endif
-    }
+  if (getPosition() < POSITION_RESTING || getPosition() > POSITION_SITTING) {
+    sendTo("You're not in position for that!\n\r");
+    return false;
   }
-  if (!sameRoom(*victim)) {
-    sendTo("That person isn't around.\n\r");
-    return FALSE;
-  }
-  rc = springleap(this, victim, should_lag);
-  if (rc && should_lag)  // auto springleap doesn't lag
+
+  int rc = springleap();
+  if (rc)
     addSkillLag(SKILL_SPRINGLEAP, rc);
 
-  if (IS_SET_DELETE(rc, DELETE_VICT)) {
-    if (vict)
-      return rc;
-    delete victim;
-    victim = NULL;
-    REM_DELETE(rc, DELETE_VICT);
-  }
   return rc;
 }
 
-int springleap(TBeing* caster, TBeing* victim, bool should_lag) {
-  int i, d = 0;
-  int percent;
-  spellNumT iSkill = SKILL_SPRINGLEAP;
-
-  if (caster->checkPeaceful(
-        "You feel too peaceful to contemplate violence.\n\r"))
+int TBeing::springleap() {
+  if (!doesKnowSkill(SKILL_SPRINGLEAP))
     return FALSE;
 
-  if (!caster->doesKnowSkill(iSkill)) {
-    caster->sendTo("You don't know how to do that!\n\r");
-    return FALSE;
-  }
-
-  if (caster->getPosition() > POSITION_SITTING) {
-    caster->sendTo("You're not in position for that!\n\r");
-    return FALSE;
-  }
-
-  if (victim == caster) {
-    caster->sendTo("Aren't we funny today...\n\r");
-    return FALSE;
-  }
-
-  if (caster->noHarmCheck(victim))
+  if (getPosition() < POSITION_RESTING || getPosition() > POSITION_SITTING)
     return FALSE;
 
-  percent = 0;
-  int bKnown = caster->getSkillValue(SKILL_SPRINGLEAP);
-
-  act("$n does a really nifty move, and aims a leg towards $N.", FALSE, caster,
-    0, victim, TO_NOTVICT);
-  act("You leap off the $g at $N.", FALSE, caster, 0, victim, TO_CHAR);
-  act("$n leaps off the $g at you.", FALSE, caster, 0, victim, TO_VICT);
-  caster->reconcileHurt(victim, 0.04);
-
-  if (caster->bSuccess(bKnown + percent, SKILL_SPRINGLEAP)) {
-    if ((i = caster->specialAttack(victim, SKILL_SPRINGLEAP)) ||
-        (i == GUARANTEED_SUCCESS)) {
-      if (victim->getPosition() > POSITION_DEAD) {
-        if (!(d = caster->getActualDamage(victim, NULL,
-                caster->getSkillLevel(SKILL_SPRINGLEAP) >> 1, SKILL_KICK))) {
-          act(
-            "You attempt to kick $N but lose your balance and fall face down "
-            "in some mud that has suddenly appeared.",
-            FALSE, caster, NULL, victim, TO_CHAR);
-          act(
-            "When $n tries to kick you, you quickly make $m fall in some mud "
-            "you create.",
-            FALSE, caster, NULL, victim, TO_VICT);
-          act("$n falls face down in some mud created by $N.", FALSE, caster,
-            NULL, victim, TO_NOTVICT);
-        } else if (caster->willKill(victim, d, SKILL_KICK, TRUE)) {
-          act("Your kick at $N's face splits $S head open.", FALSE, caster,
-            NULL, victim, TO_CHAR);
-          act("$n aims a kick at your face which splits your head in two.",
-            FALSE, caster, NULL, victim, TO_VICT);
-          act("$n neatly kicks $N's head into pieces.", FALSE, caster, NULL,
-            victim, TO_NOTVICT);
-          iSkill = DAMAGE_KICK_HEAD;
-        } else {
-          act("Your kick hits $N in the solar plexus.", FALSE, caster, NULL,
-            victim, TO_CHAR);
-          act("You're hit in the solar plexus, wow, this is breathtaking!",
-            FALSE, caster, NULL, victim, TO_VICT);
-          act("$n kicks $N in the solar plexus, $N is rendered breathless.",
-            FALSE, caster, NULL, victim, TO_NOTVICT);
-        }
-      }
-      if (caster->reconcileDamage(victim, d, iSkill) == -1)
-        return DELETE_VICT;
-    } else {
-      act("You miss your kick at $N's groin, much to $S relief.", FALSE, caster,
-        NULL, victim, TO_CHAR);
-      act("$n misses a kick at your groin, you breathe lighter now.", FALSE,
-        caster, NULL, victim, TO_VICT);
-      act("$n misses a kick at $N's groin.", FALSE, caster, NULL, victim,
-        TO_NOTVICT);
-      caster->reconcileDamage(victim, 0, SKILL_SPRINGLEAP);
-    }
-    if (victim)
-      victim->addToWait(combatRound(1));
+  if (bSuccess(SKILL_SPRINGLEAP)) {
+    act("<g>You spring off the $g and land lightly on your feet.<1>", true,
+      this, nullptr, nullptr, TO_CHAR);
+    act("<g>$n springs off the $g and lands lightly on $s feet.<1>", true, this,
+      nullptr, nullptr, TO_ROOM);
+    setPosition(POSITION_STANDING);
+    updatePos();
   } else {
-    if (victim->getPosition() > POSITION_DEAD) {
-      caster->sendTo("You fall on your butt.\n\r");
-      act("$n falls on $s butt.", FALSE, caster, 0, 0, TO_ROOM);
-      if (caster->reconcileDamage(victim, 0, SKILL_SPRINGLEAP) == -1)
-        return DELETE_VICT;
-    }
-    return TRUE;
+    act("<r>You try to spring up, but flop back down.<1>", true, this, nullptr,
+      nullptr, TO_CHAR);
+    act("<r>$n tries to spring up, but flops back down.<1>", true, this,
+      nullptr, nullptr, TO_ROOM);
   }
-  caster->setPosition(POSITION_STANDING);
-  caster->updatePos();
+
   return TRUE;
 }
 

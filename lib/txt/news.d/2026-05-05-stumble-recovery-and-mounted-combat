@@ -1,0 +1,25 @@
+Combat takedowns and mounted combat have been reworked.
+
+1) Springleap is now a recovery skill rather than an attack.
+    - It no longer takes a target or kicks anyone.  Instead, the monk
+      springs from sitting or resting back to a standing position.
+    - Anyone with springleap will attempt one automatically the moment
+      they hit the ground, with no need to issue the command.
+    - It can still be invoked manually while sitting or resting.
+    - See 'help springleap' for details.
+
+2) Missing a knockdown attempt no longer guarantees you eat dirt.
+    - Bash, trip, grapple, bodyslam, headbutt, and spin can all leave
+      the attacker stumbling on a miss.  An agile attacker now catches
+      themselves and stays standing; a less agile one topples over,
+      with a second roll deciding sitting vs. fully sprawled.
+    - Monks with springleap will bounce straight back to their feet.
+    - See 'help stumble' for details.
+
+3) Combat hits can now throw a rider off their mount.
+    - Heavier hits are harder to shrug off, and better riders are
+      harder to dislodge.
+    - Deikhans, especially those who specialize in a particular kind
+      of mount, become nearly impossible to dislodge at high skill
+      levels.
+    - See 'help ride' for details.

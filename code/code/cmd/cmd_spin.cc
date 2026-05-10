@@ -85,8 +85,6 @@ bool TBeing::canSpin(TBeing* victim, silentTypeT silent) {
 }
 
 int TBeing::spinMiss(TBeing* victim, skillMissT type) {
-  int rc;
-
   if (type == TYPE_DEX) {
     act("$N deftly avoids your attempt at spinning $M.", FALSE, this, 0, victim,
       TO_CHAR);
@@ -105,38 +103,30 @@ int TBeing::spinMiss(TBeing* victim, skillMissT type) {
   } else if (type == TYPE_MONK) {
     act("$N deftly counters your attempt at spinning $M.", FALSE, this, 0,
       victim, TO_CHAR, ANSI_RED);
-    act("You trip and land on the $g.", FALSE, this, 0, victim, TO_CHAR,
-      ANSI_RED);
+    act("$N sticks out $S foot and trips you, toppling you.", false, this, 0,
+      victim, TO_CHAR, ANSI_RED);
     act("You deftly counter $n's attempt at spinning you.", FALSE, this, 0,
       victim, TO_VICT);
-    act("You stick out your foot and trip $m to the $g.", FALSE, this, 0,
+    act("You stick out your foot and trip $m, toppling them.", false, this, 0,
       victim, TO_VICT);
     act("$N deftly counters $n's attempt at spinning $M.", FALSE, this, 0,
       victim, TO_NOTVICT);
-    act("$N sticks out $S foot tripping $n to the $g.", FALSE, this, 0, victim,
-      TO_NOTVICT);
+    act("$N sticks out $S foot and trips $n, toppling $m.", false, this, 0,
+      victim, TO_NOTVICT);
 
-    rc = crashLanding(POSITION_SITTING);
+    int rc = stumble();
     if (IS_SET_DELETE(rc, DELETE_THIS))
-      return rc;
-
-    rc = trySpringleap(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   } else {
-    act("$n tries to spin $N, but ends up falling down.", FALSE, this, 0,
-      victim, TO_NOTVICT);
-    act("You try to spin $N, but end up falling on your face.", FALSE, this, 0,
-      victim, TO_CHAR);
-    act("$n fails to spin you, and tumbles to the $g.", FALSE, this, 0, victim,
+    act("$n tries to spin $N but loses $s footing.", false, this, 0, victim,
+      TO_NOTVICT);
+    act("You try to spin $N but lose your footing.", false, this, 0, victim,
+      TO_CHAR);
+    act("$n tries to spin you but loses $s footing.", false, this, 0, victim,
       TO_VICT);
 
-    rc = crashLanding(POSITION_SITTING);
+    int rc = stumble();
     if (IS_SET_DELETE(rc, DELETE_THIS))
-      return rc;
-
-    rc = trySpringleap(victim);
-    if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   }
 
@@ -147,50 +137,20 @@ int TBeing::spinMiss(TBeing* victim, skillMissT type) {
 }
 
 int TBeing::spinHit(TBeing* victim) {
-  int rc;
+  const bool wasMounted = (victim->riding != nullptr);
 
-  if (!victim->riding) {
-    act("$n grabs $N's arm and spins $M!", FALSE, this, 0, victim, TO_NOTVICT);
-    act("Now dizzy, $N trips and falls to the $g.", FALSE, this, 0, victim,
-      TO_NOTVICT);
-    act("You grab $N's arm and spin $M HARD!", FALSE, this, 0, victim, TO_CHAR);
-    act("Now dizzy $N trips and falls to the $g.", FALSE, this, 0, victim,
-      TO_CHAR);
-    act("$n grabs you by the arm and spins you violently.", FALSE, this, 0,
-      victim, TO_VICT);
-    act(
-      "As the world spins into a blur before your eyes you become "
-      "dazed,\n\rand fall face first to the $g.",
-      FALSE, this, 0, victim, TO_VICT, ANSI_RED);
-  } else {
-    act("$n grabs $N's arm and rips $M off of $S $o!", FALSE, this,
-      victim->riding, victim, TO_NOTVICT);
-    act("$N slams head first into the $g.", FALSE, this, victim->riding, victim,
-      TO_NOTVICT);
-    act("You grab $N's arm and pull $M off of $S $o!", FALSE, this,
-      victim->riding, victim, TO_CHAR);
-    act("$N slams head first into the $g.", FALSE, this, victim->riding, victim,
-      TO_CHAR);
-    act("$n suddenly grabs your arm and gives a hard yank!", FALSE, this,
-      victim->riding, victim, TO_VICT);
-    act("Suddenly, the $g rushes upward as you fall off of your $o.", FALSE,
-      this, victim->riding, victim, TO_VICT, ANSI_RED);
-    act("OOFFF!! Yuck, dirt tastes AWFUL!", FALSE, this, victim->riding, victim,
-      TO_VICT, ANSI_RED);
-    victim->dismount(POSITION_RESTING);
-  }
+  // Describe the wind-up only — crashLanding/knockOffMount narrates the result.
+  act("You take ahold of $N and pull hard!", false, this, nullptr, victim,
+    TO_CHAR);
+  act("$n takes ahold of you and pulls hard!", false, this, nullptr, victim,
+    TO_VICT, ANSI_RED);
+  act("$n takes ahold of $N and pulls hard!", false, this, nullptr, victim,
+    TO_NOTVICT);
 
-  rc = victim->crashLanding(POSITION_SITTING);
+  int rc = wasMounted ? victim->knockOffMount(getSkillValue(SKILL_SPIN) / 3)
+                      : victim->crashLanding();
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_VICT;
-
-  rc = victim->trySpringleap(this);
-  if (IS_SET_DELETE(rc, DELETE_THIS) && IS_SET_DELETE(rc, DELETE_VICT))
-    return rc;
-  else if (IS_SET_DELETE(rc, DELETE_THIS))
-    return DELETE_VICT;
-  else if (IS_SET_DELETE(rc, DELETE_VICT))
-    return DELETE_THIS;
 
   // see the balance notes for details on what's going on here.
   float wt = (combatRound(discArray[SKILL_SPIN]->lag) / 3);

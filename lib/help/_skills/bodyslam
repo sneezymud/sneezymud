@@ -9,4 +9,6 @@ specialization.
 
 Bodyslamming is a physical attack, and as such, requires the bodyslammer be
 able to successfully hit the victim.  Failure to do so will cause the attempt
-to fail.
+to fail, and the bodyslammer to stumble.
+
+See Also: STUMBLE
