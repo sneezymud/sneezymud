@@ -1036,7 +1036,7 @@ namespace {
   // Returns false when affectJoin can't renew an existing non-expired affect.
   // See applyFeatheryDescent (disc_mage_air.cc) for quiet/return semantics.
   [[nodiscard]] bool applyStealth(TBeing* caster, TBeing* victim, int level,
-    int duration, GroupCastMessages messages = GroupCastMessages::Verbose) {
+    int duration, silentTypeT silent = SILENT_NO) {
     affectedData aff;
     aff.type = SPELL_STEALTH;
     aff.level = level;
@@ -1045,7 +1045,7 @@ namespace {
     aff.location = APPLY_NOISE;
     aff.bitvector = 0;
     if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES,
-          messages == GroupCastMessages::Verbose))
+          silent == SILENT_NO))
       return false;
 
     act("$N seems more stealthy!", false, caster, nullptr, victim, TO_NOTVICT,
@@ -1136,8 +1136,7 @@ int castStealth(TBeing* caster, TBeing* victim) {
       caster->reconcileHelp(victim, discArray[SPELL_STEALTH]->alignMod);
   } else {
     bool anyBuffed = forEachGroupBuffTarget(caster, [&](TBeing* target) {
-      if (!applyStealth(caster, target, level, duration,
-            GroupCastMessages::Suppressed))
+      if (!applyStealth(caster, target, level, duration, SILENT_YES))
         return false;
       caster->reconcileHelp(target, discArray[SPELL_STEALTH]->alignMod);
       return true;
@@ -1153,7 +1152,7 @@ namespace {
   // See applyFeatheryDescent (disc_mage_air.cc) for quiet/return semantics.
   // The caller plays the room sound once for the whole cast, not per target.
   [[nodiscard]] bool applyAccelerate(TBeing* caster, TBeing* victim, int level,
-    int duration, GroupCastMessages messages = GroupCastMessages::Verbose) {
+    int duration, silentTypeT silent = SILENT_NO) {
     affectedData aff;
     aff.type = SPELL_ACCELERATE;
     aff.level = level;
@@ -1162,7 +1161,7 @@ namespace {
     aff.location = APPLY_NONE;
     aff.bitvector = 0;
     if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES,
-          messages == GroupCastMessages::Verbose))
+          silent == SILENT_NO))
       return false;
 
     act("$N seems more nimble on $S feet!", false, caster, nullptr, victim,
@@ -1258,8 +1257,7 @@ int castAccelerate(TBeing* caster, TBeing* victim) {
     }
   } else {
     bool anyBuffed = forEachGroupBuffTarget(caster, [&](TBeing* target) {
-      if (!applyAccelerate(caster, target, level, duration,
-            GroupCastMessages::Suppressed))
+      if (!applyAccelerate(caster, target, level, duration, SILENT_YES))
         return false;
       caster->reconcileHelp(target, discArray[SPELL_ACCELERATE]->alignMod);
       return true;
@@ -1278,7 +1276,7 @@ namespace {
   // See applyFeatheryDescent (disc_mage_air.cc) for quiet/return semantics.
   // The caller plays the room sound once for the whole cast, not per target.
   [[nodiscard]] bool applyHaste(TBeing* caster, TBeing* victim, int level,
-    int duration, GroupCastMessages messages = GroupCastMessages::Verbose) {
+    int duration, silentTypeT silent = SILENT_NO) {
     affectedData aff;
     aff.type = SPELL_HASTE;
     aff.level = level;
@@ -1287,7 +1285,7 @@ namespace {
     aff.location = APPLY_NONE;
     aff.bitvector = 0;
     if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES,
-          messages == GroupCastMessages::Verbose))
+          silent == SILENT_NO))
       return false;
 
     act("$N has gained a bounce in $S step!", false, caster, nullptr, victim,
@@ -1375,8 +1373,7 @@ int castHaste(TBeing* caster, TBeing* victim) {
     }
   } else {
     bool anyBuffed = forEachGroupBuffTarget(caster, [&](TBeing* target) {
-      if (!applyHaste(caster, target, level, duration,
-            GroupCastMessages::Suppressed))
+      if (!applyHaste(caster, target, level, duration, SILENT_YES))
         return false;
       caster->reconcileHelp(target, discArray[SPELL_HASTE]->alignMod);
       return true;

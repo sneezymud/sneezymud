@@ -2,14 +2,9 @@
 
 #include <functional>
 
-class TBeing;
+#include "enum.h"
 
-// Whether an applyX helper should let affectJoin emit its own
-// "can't increase the duration of that effect any further" message.
-// Single-target casts want Verbose so the user sees feedback when re-casting
-// on an already-buffed target; group casts want Suppressed so the per-target
-// messages don't spam, leaving the caller to roll up a single epilogue.
-enum class GroupCastMessages { Verbose, Suppressed };
+class TBeing;
 
 // Iterates the caster's room, applying applyFn to each TBeing the caster
 // considers in-group.  skipFn is consulted before applyFn and lets per-spell
