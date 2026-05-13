@@ -1294,6 +1294,16 @@ bool willBreakHide(cmdTypeT tCmd) {
   switch (tCmd) {
     case CMD_BACKSTAB:
     case CMD_SLIT:
+    case CMD_BONEBREAK:
+    case CMD_CHOP:
+    case CMD_HURL:
+    case CMD_KNEESTRIKE:
+    case CMD_SHOOT:
+    case CMD_SHOULDER_THROW:
+    case CMD_SLAM:
+    case CMD_SPIN:
+    case CMD_THROW:
+    case CMD_TRIP:
     case CMD_LOOK:
     case CMD_SCORE:
     case CMD_TROPHY:

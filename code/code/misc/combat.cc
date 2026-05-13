@@ -3165,6 +3165,14 @@ int TBeing::specialAttack(TBeing* target, spellNumT skill,
   if (skulking)
     breakStealth();
 
+  // Hide is consumed here rather than inside breakStealth() because
+  // breakStealth() also fires from sit/rest/sleep, and thieves are
+  // meant to stay hidden while resting (per the rest update).
+  if (isAffected(AFF_HIDE)) {
+    sendTo("You leap from your hiding spot!\n\r");
+    REMOVE_BIT(specials.affectedBy, AFF_HIDE);
+  }
+
   roll = roll * getStatMod(primaryOffenseStat) *
          plotStat(STAT_CURRENT, secondaryOffenseStat, 0.92, 1.08, 1.0) /
          target->getStatMod(primaryDefenseStat) /
