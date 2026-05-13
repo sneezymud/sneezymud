@@ -99,7 +99,6 @@ static int stabCore(TBeing* thief, TBeing* victim, TGenWeapon* weapon) {
     STAT_SPE, STAT_AGI, STAT_PER, false);
   if (specResult != COMPLETE_SUCCESS && specResult != GUARANTEED_SUCCESS) {
     stabMissMsg(thief, victim, weapon);
-    victim->addHated(thief);
     return TRUE;
   }
 
@@ -130,8 +129,11 @@ static int stabCore(TBeing* thief, TBeing* victim, TGenWeapon* weapon) {
   stabBleedCheck(thief, victim, weapon, limb);
   stabPoisonCheck(victim, weapon);
 
-  if (weapon->checkSpec(victim, CMD_STAB, reinterpret_cast<char*>(limb),
-        thief) == DELETE_VICT)
+  int specRc = weapon->checkSpec(victim, CMD_STAB,
+    reinterpret_cast<char*>(limb), thief);
+  if (IS_SET_DELETE(specRc, DELETE_ITEM))
+    return DELETE_THIS;  // thief destroyed by weapon spec
+  if (IS_SET_DELETE(specRc, DELETE_VICT))
     return DELETE_VICT;
 
   return TRUE;
@@ -236,10 +238,11 @@ static int stab(TBeing* thief, TBeing* victim, bool isChain = false) {
   int bKnown = thief->getSkillValue(SKILL_STABBING);
   bool stabSuccess = !victim->awake() || thief->bSuccess(bKnown, SKILL_STABBING);
 
+  victim->addHated(thief);
+
   if (!stabSuccess) {
     TGenWeapon* weapon = primCanStab ? primWeapon : offWeapon;
     stabMissMsg(thief, victim, weapon);
-    victim->addHated(thief);
     return TRUE;
   }
 

@@ -1,4 +1,3 @@
-#include "enum.h"
 #include "cmd_stab.h"
 #include "handler.h"
 #include "being.h"
@@ -161,6 +160,8 @@ int TBeing::backstabHit(TBeing* victim, TThing* obj, int modifier) {
             "-special-", this);
           if (IS_SET_DELETE(specRc, DELETE_THIS))
             weapon = nullptr;  // weapon destroyed, skip poison
+          if (IS_SET_DELETE(specRc, DELETE_ITEM))
+            return DELETE_THIS;  // thief destroyed by weapon spec
           if (IS_SET_DELETE(specRc, DELETE_VICT))
             return DELETE_VICT;
         }
@@ -555,6 +556,8 @@ int TBeing::throatSlitHit(TBeing* victim, TThing* obj, int modifier) {
             "-special-", this);
           if (IS_SET_DELETE(specRc, DELETE_THIS))
             weapon = nullptr;  // weapon destroyed, skip poison
+          if (IS_SET_DELETE(specRc, DELETE_ITEM))
+            return DELETE_THIS;  // thief destroyed by weapon spec
           if (IS_SET_DELETE(specRc, DELETE_VICT))
             return DELETE_VICT;
         }
