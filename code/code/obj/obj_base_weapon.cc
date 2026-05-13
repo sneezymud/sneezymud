@@ -677,6 +677,12 @@ bool TBaseWeapon::isPierceWeapon() const {
   return (pierceType(wtype));
 }
 
+// Pierce weapon currently wielded two-handed. ITEM_PAIRED is a per-instance
+// wear flag, not a type marker — small paired pierce weapons qualify too.
+bool TBaseWeapon::isPolearm() const {
+  return isPierceWeapon() && isPaired();
+}
+
 void TBaseWeapon::divinateMe(TBeing* caster) const {
 #if 1
   caster->sendTo(
