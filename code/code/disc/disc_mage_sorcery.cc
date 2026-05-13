@@ -1246,8 +1246,7 @@ namespace {
   // See applyFeatheryDescent (disc_mage_air.cc) for quiet/return semantics.
   // The caller plays the room sound once for the whole cast, not per target.
   [[nodiscard]] bool applySorcerersGlobe(TBeing* caster, TBeing* victim,
-    int level, int duration,
-    GroupCastMessages messages = GroupCastMessages::Verbose) {
+    int level, int duration, silentTypeT silent = SILENT_NO) {
     affectedData aff;
     aff.type = SPELL_SORCERERS_GLOBE;
     aff.level = level;
@@ -1257,7 +1256,7 @@ namespace {
     aff.bitvector = 0;
 
     if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES,
-          messages == GroupCastMessages::Verbose))
+          silent == SILENT_NO))
       return false;
 
     act("$n is instantly surrounded by a hardened wall of air!", false, victim,
@@ -1316,14 +1315,14 @@ int sorcerersGlobe(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_SORCERERS_GLOBE, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_SORCERERS_GLOBE]->lag;
   diff = discArray[SPELL_SORCERERS_GLOBE]->task;
 
   start_cast(caster, victim, nullptr, caster->roomp, SPELL_SORCERERS_GLOBE,
     diff, 1, "", rounds, caster->in_room, 0, 0, true, 0);
-  return TRUE;
+  return true;
 }
 
 int castSorcerersGlobe(TBeing* caster, TBeing* victim) {
@@ -1345,8 +1344,7 @@ int castSorcerersGlobe(TBeing* caster, TBeing* victim) {
     }
   } else {
     bool anyBuffed = forEachGroupBuffTarget(caster, [&](TBeing* target) {
-      if (!applySorcerersGlobe(caster, target, level, duration,
-            GroupCastMessages::Suppressed))
+      if (!applySorcerersGlobe(caster, target, level, duration, SILENT_YES))
         return false;
       caster->reconcileHelp(target, discArray[SPELL_SORCERERS_GLOBE]->alignMod);
       return true;

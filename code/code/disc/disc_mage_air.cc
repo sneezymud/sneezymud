@@ -1227,12 +1227,11 @@ int castTornado(TBeing* caster) {
 namespace {
 
   // Returns false when affectJoin can't renew an existing non-expired affect.
-  // GroupCastMessages::Suppressed silences affectJoin's "can't increase
-  // duration" message so group-cast loops roll up a single epilogue instead
-  // of one message per target.  See disc_mage_group.h.
+  // SILENT_YES silences affectJoin's "can't increase duration" message so
+  // group-cast loops roll up a single epilogue instead of one message per
+  // target.
   [[nodiscard]] bool applyFeatheryDescent(TBeing* caster, TBeing* victim,
-    int level, int duration,
-    GroupCastMessages messages = GroupCastMessages::Verbose) {
+    int level, int duration, silentTypeT silent = SILENT_NO) {
     affectedData aff;
     aff.type = SPELL_FEATHERY_DESCENT;
     aff.level = level;
@@ -1241,7 +1240,7 @@ namespace {
     aff.location = APPLY_NONE;
     aff.bitvector = 0;
     if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES,
-          messages == GroupCastMessages::Verbose))
+          silent == SILENT_NO))
       return false;
 
     act("$N seems lighter on $S feet!", false, caster, nullptr, victim,
@@ -1271,7 +1270,7 @@ namespace {
     int duration = caster->durationModify(SPELL_FEATHERY_DESCENT,
       level * Pulse::UPDATES_PER_MUDHOUR);
     if (crit)
-      duration >>= 1;
+      duration *= 2;
     return duration;
   }
 
@@ -1332,8 +1331,7 @@ int castFeatheryDescent(TBeing* caster, TBeing* victim) {
         discArray[SPELL_FEATHERY_DESCENT]->alignMod);
   } else {
     bool anyBuffed = forEachGroupBuffTarget(caster, [&](TBeing* target) {
-      if (!applyFeatheryDescent(caster, target, level, duration,
-            GroupCastMessages::Suppressed))
+      if (!applyFeatheryDescent(caster, target, level, duration, SILENT_YES))
         return false;
       caster->reconcileHelp(target,
         discArray[SPELL_FEATHERY_DESCENT]->alignMod);
@@ -1353,7 +1351,7 @@ namespace {
 
   // See applyFeatheryDescent for quiet/return semantics.
   [[nodiscard]] bool applyFly(TBeing* caster, TBeing* victim, int level,
-    int duration, GroupCastMessages messages = GroupCastMessages::Verbose) {
+    int duration, silentTypeT silent = SILENT_NO) {
     affectedData aff;
     aff.type = SPELL_FLY;
     aff.level = level;
@@ -1366,7 +1364,7 @@ namespace {
     weightCorrectDuration(victim, &aff);
 
     if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES,
-          messages == GroupCastMessages::Verbose))
+          silent == SILENT_NO))
       return false;
 
     victim->sendTo("You feel much \"lighter\"!\n\r");
@@ -1392,7 +1390,7 @@ namespace {
     int duration =
       caster->durationModify(SPELL_FLY, 3 * Pulse::UPDATES_PER_MUDHOUR * level);
     if (crit)
-      duration >>= 1;
+      duration *= 2;
     return duration;
   }
 
@@ -1467,8 +1465,7 @@ int castFly(TBeing* caster, TBeing* victim) {
     bool anyBuffed = forEachGroupBuffTarget(
       caster,
       [&](TBeing* target) {
-        if (!applyFly(caster, target, level, duration,
-              GroupCastMessages::Suppressed))
+        if (!applyFly(caster, target, level, duration, SILENT_YES))
           return false;
         caster->reconcileHelp(target, discArray[SPELL_FLY]->alignMod);
         return true;
@@ -1680,7 +1677,7 @@ namespace {
 
   // See applyFeatheryDescent for quiet/return semantics.
   [[nodiscard]] bool applyFalconWings(TBeing* caster, TBeing* victim, int level,
-    int duration, GroupCastMessages messages = GroupCastMessages::Verbose) {
+    int duration, silentTypeT silent = SILENT_NO) {
     affectedData aff;
     aff.type = SPELL_FALCON_WINGS;
     aff.level = level;
@@ -1691,7 +1688,7 @@ namespace {
     weightCorrectDuration(victim, &aff);
 
     if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES,
-          messages == GroupCastMessages::Verbose))
+          silent == SILENT_NO))
       return false;
 
     victim->sendTo("Feathers sprout from your arms!\n\r");
@@ -1720,7 +1717,7 @@ namespace {
     int duration = caster->durationModify(SPELL_FALCON_WINGS,
       3 * Pulse::UPDATES_PER_MUDHOUR);
     if (crit)
-      duration >>= 1;
+      duration *= 2;
     return duration;
   }
 
@@ -1783,8 +1780,7 @@ int castFalconWings(TBeing* caster, TBeing* victim) {
     bool anyBuffed = forEachGroupBuffTarget(
       caster,
       [&](TBeing* target) {
-        if (!applyFalconWings(caster, target, level, duration,
-              GroupCastMessages::Suppressed))
+        if (!applyFalconWings(caster, target, level, duration, SILENT_YES))
           return false;
         caster->reconcileHelp(target, discArray[SPELL_FALCON_WINGS]->alignMod);
         return true;

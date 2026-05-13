@@ -970,8 +970,7 @@ namespace {
 
   // See applyFeatheryDescent (disc_mage_air.cc) for quiet/return semantics.
   [[nodiscard]] bool applyGillsOfFlesh(TBeing* caster, TBeing* victim,
-    int level, int duration,
-    GroupCastMessages messages = GroupCastMessages::Verbose) {
+    int level, int duration, silentTypeT silent = SILENT_NO) {
     affectedData aff;
     aff.type = SPELL_GILLS_OF_FLESH;
     aff.level = level;
@@ -981,7 +980,7 @@ namespace {
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_WATERBREATH;
     if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_NO,
-          messages == GroupCastMessages::Verbose))
+          silent == SILENT_NO))
       return false;
 
     act("You become one with the fishes!", true, victim, nullptr, nullptr,
@@ -1011,7 +1010,7 @@ namespace {
     int duration = caster->durationModify(SPELL_GILLS_OF_FLESH,
       6 * Pulse::UPDATES_PER_MUDHOUR);
     if (crit)
-      duration >>= 1;
+      duration *= 2;
     return duration;
   }
 
@@ -1069,16 +1068,13 @@ int castGillsOfFlesh(TBeing* caster, TBeing* victim) {
   int duration = gillsOfFleshDuration(caster, crit);
 
   if (victim) {
-    if (canBeGilled(caster, victim))
-      return false;
     if (applyGillsOfFlesh(caster, victim, level, duration))
       caster->reconcileHelp(victim, discArray[SPELL_GILLS_OF_FLESH]->alignMod);
   } else {
     bool anyBuffed = forEachGroupBuffTarget(
       caster,
       [&](TBeing* target) {
-        if (!applyGillsOfFlesh(caster, target, level, duration,
-              GroupCastMessages::Suppressed))
+        if (!applyGillsOfFlesh(caster, target, level, duration, SILENT_YES))
           return false;
         caster->reconcileHelp(target,
           discArray[SPELL_GILLS_OF_FLESH]->alignMod);
