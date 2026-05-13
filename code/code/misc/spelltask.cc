@@ -889,6 +889,29 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
         ch->spelltask->distracted = 0;
       }
 
+      // Haste/Celerite: 25% chance each round to accelerate casting
+      if (rounds > 1 && !ch->spelltask->distracted &&
+          (ch->affectedBySpell(SPELL_HASTE) ||
+            ch->affectedBySpell(SPELL_CELERITE))) {
+        if (::number(1, 100) <= 25) {
+          if (typ == SPELL_CASTER)
+            colorAct(COLOR_SPELLS,
+              "<c>Your magical haste quickens the spell's formation.<z>", false,
+              ch, nullptr, nullptr, TO_CHAR);
+          else if (typ == SPELL_PRAYER)
+            colorAct(COLOR_SPELLS,
+              "<c>Your heightened speed lets you complete the prayer's "
+              "gestures faster.<z>",
+              false, ch, nullptr, nullptr, TO_CHAR);
+          else if (typ == SPELL_DANCER)
+            colorAct(COLOR_SPELLS,
+              "<B>Your hastened movements quicken the ritual.<z>", false, ch,
+              nullptr, nullptr, TO_CHAR);
+          ch->spelltask->rounds--;
+          rounds--;
+        }
+      }
+
       // set counter
       if (IS_SET(ch->spelltask->flags, CASTFLAG_CAST_INDEFINITE)) {
         counter = 1;

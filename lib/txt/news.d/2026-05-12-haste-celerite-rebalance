@@ -1,0 +1,20 @@
+Rebalanced haste, celerite, and cheval.
+
+1) Haste and celerite no longer stack for bonus attacks.
+   - Being under both grants only one set of extra attacks, not two.
+   - Stacking the two has always been against the spirit of celerite's
+     warning text; the mechanics now match.
+
+2) Adjusted the command lockout reduction granted by these spells.
+   - Haste:     was 40% reduction, now 30%.
+   - Celerite:  was 40% reduction, now 30%.
+   - Cheval:    was 25% reduction, now 20%.
+   - Accelerate is unchanged at 20%.
+
+3) Haste and celerite now help you cast tasked spells faster.
+   - Each round of a tasked spell, prayer, or ritual has a 25% chance
+     to be shaved off while you are under haste or celerite.
+   - This applies to mage spells, cleric prayers, and shaman rituals
+     alike.
+
+See HELP HASTE and HELP CELERITE for full details.

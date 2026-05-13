@@ -2246,14 +2246,9 @@ void TBeing::blowCount(bool check, float& fx, float& fy) const {
     }
   }
 
-  // haste
-  if (affectedBySpell(SPELL_HASTE) && getPosition() >= POSITION_STANDING) {
-    if (fx > 0.0)
-      fx += 0.5;
-    if (fy > 0.0)
-      fy += 0.5;
-  }
-  if (affectedBySpell(SPELL_CELERITE) && getPosition() >= POSITION_STANDING) {
+  // haste/celerite — do not stack for extra attacks
+  if ((affectedBySpell(SPELL_HASTE) || affectedBySpell(SPELL_CELERITE)) &&
+      getPosition() >= POSITION_STANDING) {
     if (fx > 0.0)
       fx += 0.5;
     if (fy > 0.0)
