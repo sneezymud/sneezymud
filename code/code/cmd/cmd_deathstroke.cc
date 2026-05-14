@@ -1,3 +1,5 @@
+#include <cstddef>
+
 #include "handler.h"
 #include "being.h"
 #include "combat.h"
@@ -40,6 +42,7 @@ int TBeing::doDeathstroke(const char* argument, TBeing* vict) {
 
   bool wasSuccess = FALSE;
   const int DEATHSTROKE_MOVE = 8;
+  int multiplier = 1;
   TBaseWeapon* tw;
   affectedData aff1, aff2;
 
@@ -68,9 +71,8 @@ int TBeing::doDeathstroke(const char* argument, TBeing* vict) {
   }
 
   if (getCombatMode() == ATTACK_BERSERK) {
-    sendTo(
-      "You are berserking! You can't focus enough to deathstroke anyone!\n\r ");
-    return FALSE;
+    sendTo("Your berserker rage amplifies your deathstroke!\n\r ");
+    multiplier = 2;
   }
 
   // Avoid players attacking un-harmable victims
@@ -84,8 +86,8 @@ int TBeing::doDeathstroke(const char* argument, TBeing* vict) {
   }
 
   // Ensure the player has a weapon equipped
-  if (!heldInPrimHand() ||
-      !(tw = dynamic_cast<TBaseWeapon*>(heldInPrimHand()))) {
+  if (isPc() && (!heldInPrimHand() ||
+      !(tw = dynamic_cast<TBaseWeapon*>(heldInPrimHand())))) {
     sendTo(
       "You need to hold a weapon in your primary hand to make this a "
       "success.\n\r");
@@ -106,7 +108,7 @@ int TBeing::doDeathstroke(const char* argument, TBeing* vict) {
   aff1.type = SKILL_DEATHSTROKE;
   aff1.duration = Pulse::UPDATES_PER_MUDHOUR / 3;
   aff1.location = APPLY_ARMOR;
-  aff1.modifier = (GetMaxLevel() * GetMaxLevel()) / 5 - skillLevel;
+  aff1.modifier = static_cast<long>(multiplier * ((GetMaxLevel() * GetMaxLevel()) / 5 - skillLevel));
   aff1.bitvector = 0;
 
   // Success use case
@@ -119,17 +121,20 @@ int TBeing::doDeathstroke(const char* argument, TBeing* vict) {
     aff2.type = SKILL_DEATHSTROKE;
     aff2.duration = Pulse::UPDATES_PER_MUDHOUR / 3;
     aff2.location = APPLY_HITROLL;
-    aff2.modifier = 3;
+    aff2.modifier = static_cast<long>(multiplier * 3);
     aff2.bitvector = 0;
   } else {
     rc = deathstrokeFail(victim);
   }
-  // Applying the debuff and, on success, the buff
-  if (wasSuccess) {
-    affectJoin(this, &aff1, AVG_DUR_YES, AVG_EFF_YES, FALSE);
-    affectJoin(this, &aff2, AVG_DUR_YES, AVG_EFF_YES, FALSE);
-  } else {
-    affectTo(&aff1, -1);
+
+  if (IS_SET_DELETE(rc, DELETE_VICT)) {
+    // Applying the debuff and, on success, the buff - unless the victim died from the deathstroke, in which case we don't want to
+    if (wasSuccess) {
+      affectJoin(this, &aff1, AVG_DUR_YES, AVG_EFF_YES, FALSE);
+      affectJoin(this, &aff2, AVG_DUR_YES, AVG_EFF_YES, FALSE);
+    } else {
+      affectTo(&aff1, -1);
+    }
   }
 
   addSkillLag(SKILL_DEATHSTROKE, rc);
@@ -158,6 +163,9 @@ int TBeing::deathstrokeSuccess(TBeing* victim) {
   int skillLevel = getSkillLevel(SKILL_DEATHSTROKE);
   int dam = getSkillDam(victim, SKILL_DEATHSTROKE, skillLevel,
     getAdvLearning(SKILL_DEATHSTROKE));
+
+  if (getCombatMode() == ATTACK_BERSERK)
+    dam *= 2;
 
   // Handling the use-case where dam is 0
   if (!dam) {

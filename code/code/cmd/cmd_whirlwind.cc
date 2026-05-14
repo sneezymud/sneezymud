@@ -19,6 +19,12 @@ static int whirlwind(TBeing* caster, TBeing* victim, int castLevel,
       TO_VICT);
     dam = caster->getSkillDam(victim, SKILL_WHIRLWIND, castLevel,
       caster->getAdvLearning(SKILL_WHIRLWIND));
+    
+    // Rewarding those players who are crazy enough to whirlwind while berserking
+    if(caster->getCombatMode() == ATTACK_BERSERK) {
+      act("Your berserker rage amplifies your whirlwind attack!\n\r", FALSE, caster, 0, victim, TO_CHAR);
+      dam *= 2;
+    }
   }
   // Failure case
   else {
@@ -64,7 +70,7 @@ int TBeing::doWhirlwind() {
   }
 
   auto* weapon = dynamic_cast<TBaseWeapon*>(heldInPrimHand());
-  if (!weapon) {
+  if (!weapon && isPc()) {
     sendTo(
       "You need to hold a weapon in your primary attack to attempt this "
       "maneuver.\n\r");
@@ -108,12 +114,14 @@ int TBeing::whirlwindSuccess() {
 
   // Determine damage type
   spellNumT damageType = DAMAGE_NORMAL;
-  if (weapon->isBluntWeapon())
-    damageType = DAMAGE_CAVED_SKULL;
-  else if (weapon->isPierceWeapon())
-    damageType = DAMAGE_IMPALE;
-  else if (weapon->isSlashWeapon())
-    damageType = DAMAGE_HACKED;
+  if(weapon) {
+    if (weapon->isBluntWeapon())
+      damageType = DAMAGE_CAVED_SKULL;
+    else if (weapon->isPierceWeapon())
+      damageType = DAMAGE_IMPALE;
+    else if (weapon->isSlashWeapon())
+      damageType = DAMAGE_HACKED;
+  }
 
   // Loop for each person in room and determine if they're a valid whirlwind
   // target. If so, add them to the vector for later.
@@ -121,7 +129,7 @@ int TBeing::whirlwindSuccess() {
   for (TThing* thing : roomp->stuff) {
     auto* being = dynamic_cast<TBeing*>(thing);
     if (!being || (being == this) || inGroup(*being) ||
-        (being->isPc() && IS_SET(desc->autobits, AUTO_NOHARM)) ||
+        (being->isPc() && being->desc && IS_SET(being->desc->autobits, AUTO_NOHARM)) ||
         being->isImmortal() || IS_SET(being->specials.act, ACT_IMMORTAL))
       continue;
 

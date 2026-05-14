@@ -1465,7 +1465,7 @@ int TBeing::chiRoom() {
     for (TThing* thing : roomp->stuff) {
       auto* being = dynamic_cast<TBeing*>(thing);
       if (!being || (being == this) || inGroup(*being) ||
-          (being->isPc() && IS_SET(desc->autobits, AUTO_NOHARM)) ||
+          (being->isPc() && being->desc && IS_SET(being->desc->autobits, AUTO_NOHARM)) ||
           being->isImmortal() || IS_SET(being->specials.act, ACT_IMMORTAL))
         continue;
 

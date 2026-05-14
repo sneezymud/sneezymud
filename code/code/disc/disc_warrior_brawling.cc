@@ -52,8 +52,8 @@ int berserk(TBeing* caster) {
   if (caster->checkPeaceful("This room is too tranquil to go berserk in.\n\r"))
     return FALSE;
 
-  if (!caster->isPc())
-    return FALSE;
+  //if (!caster->isPc())
+  //  return FALSE;
 
   level = caster->getSkillLevel(SKILL_BERSERK);
   int bKnown = caster->getSkillValue(SKILL_BERSERK);

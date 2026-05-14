@@ -1101,18 +1101,13 @@ int TMonster::fighterMove(TBeing& vict) {
   bool badspell = FALSE;
   spellTaskData* ts = NULL;
 
-  if (!awake())
+  if (!awake() || !sameRoom(vict))
     return FALSE;
 
-  // BEYOND HERE IS COMBAT ONLY STUFF
-  if (!sameRoom(vict))
-    return FALSE;
-
-  // let's bash clerics/mages instead of the person we're fighting
   // we'll bash if they are an casting offensive spell on me or the room, or
   // if they are casting non-off on their group members, or sometimes just if
   // they are a mage or cleric.
-  if (!::number(0, 1) && vict.isAffected(AFF_GROUP)) {
+  if (vict.isAffected(AFF_GROUP)) {
     if (!(k = vict.master))
       k = &vict;
     for (f = k->followers; f; f = f->next) {
@@ -1128,81 +1123,119 @@ int TMonster::fighterMove(TBeing& vict) {
       }
       if (t && t->isAffected(AFF_GROUP) &&
           t->hasClass(CLASS_MAGE | CLASS_CLERIC | CLASS_SHAMAN) &&
-          (badspell || !::number(0, 4)) && canBash(t, SILENT_YES) &&
+          (badspell || !::number(0, 6)) && canBash(t, SILENT_YES) &&
           getPosition() > POSITION_SITTING) {
         return doBash("", t);
       }
     }
   }
 
-  // distinguish between fighting a caster and a non-caster
-  if (vict.hasClass(CLASS_MAGE | CLASS_CLERIC | CLASS_SHAMAN) &&
-      vict.getPosition() > POSITION_SITTING) {
-    // caster
-    // knock uhm over or we are toast!
-    // bash, grapple, spin or bodyslam
+  // updated to use more of the warrior toolkit, randomly 
+  const int MAX_ATTEMPTS = 15;  // Safety limit
+  const int MAX_ROLL = 32;   // Number of cases in switch
+  int attempts = 0;
 
-    // use the best option
-    if (getSkillValue(SKILL_BODYSLAM) > 33 &&
-        getPosition() > POSITION_SITTING && mobBSlamCheck(*this, vict) &&
-        canBodyslam(&vict, SILENT_YES)) {
-      return doBodyslam("", &vict);
-    } else if (getSkillValue(SKILL_SPIN) > 33 &&
-               getPosition() > POSITION_SITTING && canSpin(&vict, SILENT_YES)) {
-      return doSpin("", &vict);
-#if 0
-    } else if (getSkillValue(SKILL_GRAPPLE) > 33 &&
-        getPosition() > POSITION_SITTING &&
-        canGrapple(&vict)) {
-#endif
-    } else if (getSkillValue(SKILL_BASH) > 33 &&
-               getPosition() > POSITION_SITTING && canBash(&vict, SILENT_YES)) {
-      return doBash("", &vict);
-    } else if (getSkillValue(SKILL_TRIP) > 33 &&
-               getPosition() > POSITION_SITTING && canTrip(&vict, SILENT_YES)) {
-      return doTrip("", &vict);
+  while(attempts < MAX_ATTEMPTS) {
+    int attackSelection = ::number(1, MAX_ROLL);
+
+    switch(attackSelection) {
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+        if (getSkillValue(SKILL_FOCUS_ATTACK) > 33 && 
+            getPosition() > POSITION_SITTING &&
+            !affectedBySpell(SKILL_FOCUS_ATTACK)) 
+          return doFocusAttack("", &vict);
+        break;
+      case 5:
+      case 6:
+      case 7:
+        if (getSkillValue(SKILL_BODYSLAM) > 33 && 
+            getPosition() > POSITION_SITTING && 
+            mobBSlamCheck(*this, vict) && 
+            canBodyslam(&vict, SILENT_YES)) 
+          return doBodyslam("", &vict);
+        break;
+      case 8:
+      case 9:
+      case 10:
+        if (getSkillValue(SKILL_SPIN) > 33 &&
+            getPosition() > POSITION_SITTING && 
+            canSpin(&vict, SILENT_YES))
+          return doSpin("", &vict);
+        break;
+      case 11:
+      case 12:
+      case 13:
+        if (getSkillValue(SKILL_BASH) > 33 &&
+            getPosition() > POSITION_SITTING && 
+            canBash(&vict, SILENT_YES))
+          return doBash("", &vict);
+        break;
+      case 14:
+      case 15:
+      case 16:
+        if (getSkillValue(SKILL_STOMP) > 33 && 
+            canStomp(&vict, SILENT_YES) &&
+            (vict.getPosition() < POSITION_STANDING ||
+             getHeight() >= 5 * vict.getPosHeight()) &&
+            getPosition() >= POSITION_CRAWLING) 
+          return doStomp("", &vict);
+        break;
+      case 17:
+      case 18:
+      case 19:
+        if (getSkillValue(SKILL_KNEESTRIKE) > 33 &&
+            canKneestrike(&vict, SILENT_YES) &&
+            getPosition() >= POSITION_CRAWLING) 
+          return doKneestrike("", &vict);
+        break;
+      case 20:
+      case 21:
+      case 22:
+        if (getSkillValue(SKILL_HEADBUTT) > 33 &&
+            vict.getPosHeight() <= getHeight() &&
+            canHeadbutt(&vict, SILENT_YES) &&
+            getPosition() >= POSITION_CRAWLING)
+          return doHeadbutt("", &vict);
+        break;
+      case 23:
+      case 24:
+        if (getSkillValue(SKILL_WHIRLWIND) > 33 &&
+            !affectedBySpell(SKILL_WHIRLWIND) &&
+             getPosition() >= POSITION_CRAWLING) 
+          return doWhirlwind();
+        break;
+      case 25:
+      case 26:
+      case 27:
+      case 28:
+      case 29:
+        if (getSkillValue(SKILL_SLAM) > 33 &&
+            getPosition() > POSITION_CRAWLING)
+          return doSlam("", &vict);
+        break;
+      case 30:
+      case 31:
+        if (getSkillValue(SKILL_DEATHSTROKE) > 33 &&
+            getPosition() >= POSITION_STANDING &&
+            !affectedBySpell(SKILL_DEATHSTROKE)) 
+          return doDeathstroke("", &vict);
+        break;
+      case 32:
+        if (getSkillValue(SKILL_RALLY) > 33 &&
+            getPosition() >= POSITION_STANDING &&
+            !affectedBySpell(SKILL_RALLY))
+           doRally();
+        if (getSkillValue(SKILL_BERSERK) > 33 && 
+            getPosition() > POSITION_CRAWLING)
+            return doBerserk();
+        break;
     }
-    // in the event we get here, just fall through and do a damage attack
+    attempts++;
   }
-
-  // use the best skill...  There's no sense in randomness IMO
-  if (getSkillValue(SKILL_STOMP) > 33 && canStomp(&vict, SILENT_YES) &&
-      // stomp only good if very tall or vic on ground
-      (vict.getPosition() < POSITION_STANDING ||
-        getHeight() >= 5 * vict.getPosHeight()) &&
-      (getPosition() >= POSITION_CRAWLING)) {
-    return doStomp("", &vict);
-  } else if (getSkillValue(SKILL_BODYSLAM) > 33 &&
-             canBodyslam(&vict, SILENT_YES) && mobBSlamCheck(*this, vict) &&
-             (getPosition() >= POSITION_CRAWLING)) {
-    return doBodyslam("", &vict);
-  } else if (getSkillValue(SKILL_SPIN) > 33 && canSpin(&vict, SILENT_YES) &&
-             (getPosition() >= POSITION_CRAWLING)) {
-    return doSpin("", &vict);
-  } else if (getSkillValue(SKILL_KNEESTRIKE) > 33 &&
-             canKneestrike(&vict, SILENT_YES) &&
-             (getPosition() >= POSITION_CRAWLING)) {
-    return doKneestrike("", &vict);
-  } else if (getSkillValue(SKILL_HEADBUTT) > 33 &&
-             (vict.getPosHeight() <= getHeight()) &&
-             canHeadbutt(&vict, SILENT_YES) &&
-             (getPosition() >= POSITION_CRAWLING)) {
-    return doHeadbutt("", &vict);
-  } else if (getSkillValue(SKILL_KICK) > 33 && canKick(&vict, SILENT_YES) &&
-             (getPosition() > POSITION_CRAWLING)) {
-    return doKick("", &vict);
-  } else if (getSkillValue(SKILL_BASH) > 33 && canBash(&vict, SILENT_YES) &&
-             (getPosition() >= POSITION_CRAWLING)) {
-    return doBash("", &vict);
-  } else if (getSkillValue(SKILL_TRIP) > 33 && canTrip(&vict, SILENT_YES) &&
-             (getPosition() >= POSITION_CRAWLING)) {
-    return doTrip("", &vict);
-  } else if (getSkillValue(SKILL_DISARM) > 33 && canDisarm(&vict, SILENT_YES) &&
-             (getPosition() >= POSITION_CRAWLING) &&
-             !vict.affectedBySpell(SPELL_FUMBLE)) {
-    return doDisarm("", &vict);
-  }
-  return FALSE;
+  return 0;
 }
 
 int TMonster::monkMove(TBeing& vict) {
