@@ -351,8 +351,7 @@ void TBeing::loseSkulk() {
 
 // Clear all stealth states that should drop when the actor is revealed.
 // AFF_HIDE is intentionally not handled here — it has its own clearing
-// pipeline in parse.cc via willBreakHide(). Once that path is unified,
-// hide can fold into this helper.
+// pipeline in parse.cc via willBreakHide().
 void TBeing::breakStealth() {
   loseSneak();
   loseSkulk();

@@ -3161,11 +3161,10 @@ int TBeing::specialAttack(TBeing* target, spellNumT skill,
   // Apply modifier
   roll -= situationalModifier;
 
-  // Skulk is consumed once the prepared opening has been spent.
-  if (skulking)
-    breakStealth();
+  // Skulk and sneak break upon entering into combat via a specialAttack skill
+  breakStealth();
 
-  // Hide is consumed here rather than inside breakStealth() because
+  // Hide is handled here rather than inside breakStealth() because
   // breakStealth() also fires from sit/rest/sleep, and thieves are
   // meant to stay hidden while resting (per the rest update).
   if (isAffected(AFF_HIDE)) {
