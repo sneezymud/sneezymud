@@ -2738,7 +2738,7 @@ void TBeing::doSit(const sstring& argument) {
   trimString(arg);
 
   if (arg.empty() && (!riding || dynamic_cast<TBeing*>(riding))) {
-    loseSneak();
+    breakStealth();
     switch (getPosition()) {
       case POSITION_STANDING:
       case POSITION_CRAWLING:
@@ -2836,7 +2836,7 @@ void TBeing::doRest(const sstring& argument) {
   trimString(arg);
 
   if (arg.empty() && (!riding || dynamic_cast<TBeing*>(riding))) {
-    loseSneak();
+    breakStealth();
     switch (getPosition()) {
       case POSITION_STANDING:
       case POSITION_CRAWLING:
@@ -2930,7 +2930,7 @@ void TBeing::doSleep(const sstring& argument) {
   trimString(arg);
 
   if (arg.empty() && (!riding || dynamic_cast<TBeing*>(riding))) {
-    loseSneak();
+    breakStealth();
     switch (getPosition()) {
       case POSITION_STANDING:
       case POSITION_RESTING:

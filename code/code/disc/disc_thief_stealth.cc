@@ -822,6 +822,9 @@ int TBeing::doSneak(const char* argument) {
 
   if (*arg) {
     if (is_abbrev(arg, "off") || is_abbrev(arg, "stop")) {
+      // Deliberate: clear ONLY sneak inline. Do NOT call loseSneak() or
+      // breakStealth() here — an explicit 'sneak stop' must not also strip
+      // an unrelated skulk affect. Keep this single-affect.
       if (affectedBySpell(skill) || checkForSkillAttempt(skill)) {
         sendTo("You will no longer try to be sneaky.\n\r");
         removeSkillAttempt(skill);
@@ -1291,6 +1294,21 @@ bool willBreakHide(cmdTypeT tCmd) {
   switch (tCmd) {
     case CMD_BACKSTAB:
     case CMD_SLIT:
+    case CMD_BASH:
+    case CMD_BONEBREAK:
+    case CMD_CHOP:
+    case CMD_CUDGEL:
+    case CMD_HURL:
+    case CMD_KICK:
+    case CMD_KNEESTRIKE:
+    case CMD_QUIVPALM:
+    case CMD_SHOOT:
+    case CMD_SHOULDER_THROW:
+    case CMD_SLAM:
+    case CMD_SPIN:
+    case CMD_STAB:
+    case CMD_THROW:
+    case CMD_TRIP:
     case CMD_LOOK:
     case CMD_SCORE:
     case CMD_TROPHY:
@@ -1305,6 +1323,7 @@ bool willBreakHide(cmdTypeT tCmd) {
     case CMD_TIME:
     case CMD_HIDE:
     case CMD_SNEAK:
+    case CMD_SKULK:
     case CMD_QUEST:
     case CMD_LEVELS:
     case CMD_WIZLIST:
@@ -1344,4 +1363,82 @@ bool willBreakHide(cmdTypeT tCmd) {
     default:
       return true;
   }
+}
+
+int skulk(TBeing* thief, spellNumT skill) {
+  if (thief->fight()) {
+    thief->sendTo("You can't skulk while fighting!\n\r");
+    return FALSE;
+  }
+
+  if (thief->riding) {
+    thief->sendTo("You can't skulk while mounted!\n\r");
+    return FALSE;
+  }
+
+  if (thief->affectedBySpell(SKILL_SKULK)) {
+    thief->sendTo("You are already skulking!\n\r");
+    return FALSE;
+  }
+
+  // Check if they have enough movement points
+  if (thief->getMove() < 15) {
+    thief->sendTo("You're too tired to skulk right now.\n\r");
+    return FALSE;
+  }
+
+  // Deduct initial movement cost
+  thief->addToMove(-15);
+
+  thief->sendTo("You begin practicing your skulking technique.\n\r");
+  act("$n begins practicing $s skulking technique.", TRUE, thief, 0, 0, TO_ROOM);
+
+  // Calculate task time based on skill
+  int taskTime = max(5, 20 - (thief->getSkillValue(skill) / 10));
+
+  // Start the task
+  start_task(thief, NULL, NULL, TASK_SKULK, "", taskTime, thief->in_room, 0, 0, 0);
+
+  return TRUE;
+}
+
+int TBeing::doSkulk(const char* argument) {
+  spellNumT skill = getSkillNum(SKILL_SKULK);
+  char arg[80];
+
+  if (!doesKnowSkill(skill)) {
+    sendTo("You know nothing about skulking.\n\r");
+    return FALSE;
+  }
+
+  one_argument(argument, arg, cElements(arg));
+
+  if (*arg && (is_abbrev(arg, "off") || is_abbrev(arg, "stop"))) {
+    bool wasSkulking = false;
+
+    // If still in the build-up task, abort it cleanly. The task's own
+    // CMD_STOP handler isn't reachable from here, so emit the equivalent
+    // messages inline.
+    if (task && task->task == TASK_SKULK) {
+      sendTo("You stop your skulking.\n\r");
+      act("$n stops skulking.", TRUE, this, 0, 0, TO_ROOM);
+      stopTask();
+      wasSkulking = true;
+    }
+
+    // If the buff is already active, clear it. Use loseSkulk() — NOT
+    // breakStealth() — so an explicit 'skulk stop' does not also strip
+    // an unrelated sneak affect.
+    if (affectedBySpell(SKILL_SKULK)) {
+      loseSkulk();
+      wasSkulking = true;
+    }
+
+    if (!wasSkulking)
+      sendTo("You are not skulking.\n\r");
+
+    return FALSE;
+  }
+
+  return skulk(this, skill);
 }

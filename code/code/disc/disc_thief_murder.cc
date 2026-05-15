@@ -321,10 +321,6 @@ int backstab(TBeing* thief, TBeing* victim) {
   }
   thief->reconcileHurt(victim, 0.04);
 
-  if (thief->isAffected(AFF_HIDE)) {
-    thief->sendTo("You leap from your hiding spot!\n\r");
-  }
-
   int modifier = 0;
 
   modifier -= noise(thief) / 20;
@@ -666,10 +662,6 @@ int throatSlit(TBeing* thief, TBeing* victim) {
     return FALSE;
   }
   thief->reconcileHurt(victim, 0.04);
-
-  if (thief->isAffected(AFF_HIDE)) {
-    thief->sendTo("You leap from your hiding spot!\n\r");
-  }
 
   int modifier = 0;
 

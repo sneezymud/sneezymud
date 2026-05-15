@@ -21,6 +21,7 @@
 #include "mail.h"
 #include "person.h"
 #include "disc_monk.h"
+#include "disc_thief_stealth.h"
 #include "obj_component.h"
 #include "obj_drug.h"
 #include "obj_player_corpse.h"
@@ -1294,6 +1295,33 @@ int TBeing::updateHalfTickStuff() {
     } else {
       setLifeforce(9000);
       updatePos();
+    }
+  }
+
+  // Maintaining a skulk consumes movement — the actor is exerting
+  // continuous, controlled effort to remain unseen. Drain scales inversely
+  // with skill (5 -> 1), matching the per-pulse cost in task_skulk.cc.
+  // One-shot fatigue messages fire when this tick's drain crosses a
+  // quartile threshold, giving the player escalating warning before the
+  // bottom-out drop at < 5 move.
+  if (affectedBySpell(SKILL_SKULK)) {
+    int mvMax = moveLimit();
+    int prev = getMove();
+    addToMove(-skulkMoveCost(getSkillValue(SKILL_SKULK)));
+    int now = getMove();
+
+    if (prev >= (mvMax * 3) / 4 && now < (mvMax * 3) / 4)
+      sendTo("You begin to sweat lightly as you skulk.\n\r");
+    else if (prev >= mvMax / 2 && now < mvMax / 2)
+      sendTo("You keep low as you skulk, tiring your legs.\n\r");
+    else if (prev >= mvMax / 4 && now < mvMax / 4)
+      sendTo("Your legs tremble from the prolonged crouch.\n\r");
+
+    if (now < 5) {
+      sendTo("You are too exhausted to maintain your skulking.\n\r");
+      act("$n's stealthy posture sags from exhaustion.", TRUE, this, 0, 0,
+        TO_ROOM);
+      breakStealth();
     }
   }
 

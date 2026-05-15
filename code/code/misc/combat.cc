@@ -2346,7 +2346,7 @@ int TBeing::hit(TBeing* target, int pulse) {
     return FALSE;
   }
 
-  loseSneak();
+  breakStealth();
 
   // If I'm tasking, tell the task to stop and why.  I lose this round.
   if (task) {
@@ -3138,6 +3138,14 @@ int TBeing::specialAttack(TBeing* target, spellNumT skill,
   else if (situationalModifier > SITUATIONAL_MOD_UPPER_BOUND)
     situationalModifier = SITUATIONAL_MOD_UPPER_BOUND;
 
+  // Skulk is a prepared, single-use stealth bonus that bypasses the
+  // situational cap — the trade is that it requires out-of-combat build-up
+  // and is consumed by the attack regardless of outcome.
+  bool skulking = affectedBySpell(SKILL_SKULK);
+  if (skulking) {
+    situationalModifier += 3 + std::min(4, getSkillValue(SKILL_SKULK) / 25);
+  }
+
   // Adjust for level difference
   int attackerLevel = GetMaxLevel(), defenderLevel = target->GetMaxLevel();
 
@@ -3152,6 +3160,17 @@ int TBeing::specialAttack(TBeing* target, spellNumT skill,
 
   // Apply modifier
   roll -= situationalModifier;
+
+  // Skulk and sneak break upon entering into combat via a specialAttack skill
+  breakStealth();
+
+  // Hide is handled here rather than inside breakStealth() because
+  // breakStealth() also fires from sit/rest/sleep, and thieves are
+  // meant to stay hidden while resting (per the rest update).
+  if (isAffected(AFF_HIDE)) {
+    sendTo("You leap from your hiding spot!\n\r");
+    REMOVE_BIT(specials.affectedBy, AFF_HIDE);
+  }
 
   roll = roll * getStatMod(primaryOffenseStat) *
          plotStat(STAT_CURRENT, secondaryOffenseStat, 0.92, 1.08, 1.0) /
@@ -4345,7 +4364,7 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
           mess_sent |= ONEHIT_MESS_DODGE;
       }
     }
-    loseSneak();
+    breakStealth();
 
     if (mess_sent == 0) {
       if (doesKnowSkill(SKILL_ADVANCED_KICKING) && !weapon && isPc()) {
