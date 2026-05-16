@@ -67,11 +67,10 @@ int TBeing::doSlam(const char* argument, TBeing* vict) {
     return false;
   }
 
-  // Ensure the player has a weapon equipped
-  if (!weapon) {
-    sendTo(
-      "You need to hold a weapon in your primary hand to make this a "
-      "success.\n\r");
+  // Empty hand is fine (unarmed slam). Reject only when something non-weapon
+  // is held (light, scroll, instrument, etc.).
+  if (auto* held = heldInPrimHand(); held && !weapon) {
+    act("You can't slam with $p.", false, this, held, nullptr, TO_CHAR);
     return false;
   }
 
@@ -139,60 +138,86 @@ int TBeing::slamSuccess(TBeing* victim) {
   // Apply the scaling constant
   dam = max((int)(victim->hitLimit() * scalingConstant), dam);
 
+  // Resolve the implement: weapon if held, else worn glove/gauntlet, else
+  // null (truly bare). Picks the impact-damage source slot and the noun shown
+  // in the act messages.
+  TThing* implement =
+    weapon ? static_cast<TThing*>(weapon) : equipment[getPrimaryHand()];
+
+  // $o resolves to the implement's first keyword ("sword", "gauntlet"); for
+  // bare hands fall back to the race-appropriate body-part noun.
+  sstring noun =
+    implement ? sstring("$o") : describeBodySlot(getPrimaryHand());
+
   // Send description text to players in the room
   if (getCombatMode() == ATTACK_BERSERK) {
     dam *= 2;
-    act(
-      "$n slams $N with $s weapon in a <R>berserk fury<z>, inflicting "
-      "considerable damage!",
-      FALSE, this, 0, victim, TO_NOTVICT);
-    act(
-      "You slam your weapon into $N in a <R>berserk fury<z>, inflicting "
-      "considerable damage!",
-      FALSE, this, 0, victim, TO_CHAR);
-    act("$n slams $s weapon into you with a <r>berserker's <z>zeal!", FALSE,
-      this, 0, victim, TO_VICT);
+    act(format("$n slams $N with $s %s in a <R>berserk fury<z>, inflicting "
+               "considerable damage!") %
+          noun,
+      false, this, implement, victim, TO_NOTVICT);
+    act(format("You slam your %s into $N in a <R>berserk fury<z>, inflicting "
+               "considerable damage!") %
+          noun,
+      false, this, implement, victim, TO_CHAR);
+    act(format("$n slams $s %s into you with a <r>berserker's <z>zeal!") %
+          noun,
+      false, this, implement, victim, TO_VICT);
 
   } else {
-    act("$n slams $N with $s weapon, inflicting considerable damage!", FALSE,
-      this, 0, victim, TO_NOTVICT);
-    act("You slam your weapon into $N, inflicting considerable damage!", FALSE,
-      this, 0, victim, TO_CHAR);
-    act("$n slams $s weapon into you!", FALSE, this, 0, victim, TO_VICT);
+    act(format("$n slams $N with $s %s, inflicting considerable damage!") %
+          noun,
+      false, this, implement, victim, TO_NOTVICT);
+    act(format("You slam your %s into $N, inflicting considerable damage!") %
+          noun,
+      false, this, implement, victim, TO_CHAR);
+    act(format("$n slams $s %s into you!") % noun, false, this, implement,
+      victim, TO_VICT);
   }
 
-  // Special use-case for blunt weapons
-  // Determine damage type
+  // Determine damage type: weapon class for armed, generic for unarmed.
   spellNumT damageType = DAMAGE_NORMAL;
+  if (weapon) {
+    if (weapon->isBluntWeapon())
+      damageType = DAMAGE_CAVED_SKULL;
+    else if (weapon->isPierceWeapon())
+      damageType = DAMAGE_IMPALE;
+    else if (weapon->isSlashWeapon())
+      damageType = DAMAGE_HACKED;
+  }
 
-  if (weapon->isBluntWeapon())
-    damageType = DAMAGE_CAVED_SKULL;
-  else if (weapon->isPierceWeapon())
-    damageType = DAMAGE_IMPALE;
-  else if (weapon->isSlashWeapon())
-    damageType = DAMAGE_HACKED;
-
-  // Apply impact effects from weapon contact
-  wearSlotT targetLimb = victim->getPartHit(this, TRUE);
-  dam += impactSpec(this, victim, getPrimaryHold(), targetLimb);
+  // Apply impact effects. impactSpec reads equipment[damSource] itself, so a
+  // worn gauntlet contributes via the hand slot when unarmed.
+  wearSlotT targetLimb = victim->getPartHit(this, true);
+  wearSlotT damSource = weapon ? getPrimaryHold() : getPrimaryHand();
+  dam += impactSpec(this, victim, damSource, targetLimb);
 
   // Reconcile damage
   if (reconcileDamage(victim, dam, damageType) == -1)
     return DELETE_VICT;
-
 
   return true;
 }
 
 int TBeing::slamFail(TBeing* victim) {
   if (victim->getPosition() > POSITION_DEAD) {
+    auto* weapon = dynamic_cast<TBaseWeapon*>(heldInPrimHand());
+    TThing* implement =
+      weapon ? static_cast<TThing*>(weapon) : equipment[getPrimaryHand()];
+    sstring noun =
+      implement ? sstring("$o") : describeBodySlot(getPrimaryHand());
+
     act(
-      "$n's attempt at slamming $N's with $s his weapon fails to make contact.",
-      FALSE, this, 0, victim, TO_NOTVICT);
-    act("Your attempt at slamming $N with your weapon fails to make contact.",
-      FALSE, this, 0, victim, TO_CHAR);
-    act("$n attempts to slam you with $s weapon but comes up short.", FALSE,
-      this, 0, victim, TO_VICT);
+      format("$n's attempt at slamming $N with $s %s fails to make contact.") %
+        noun,
+      false, this, implement, victim, TO_NOTVICT);
+    act(
+      format("Your attempt at slamming $N with your %s fails to make contact.") %
+        noun,
+      false, this, implement, victim, TO_CHAR);
+    act(format("$n attempts to slam you with $s %s but comes up short.") %
+          noun,
+      false, this, implement, victim, TO_VICT);
   }
 
   if (reconcileDamage(victim, 0, SKILL_SLAM) == -1)
