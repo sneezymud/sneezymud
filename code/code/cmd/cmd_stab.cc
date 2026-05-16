@@ -5,13 +5,14 @@
 #include "obj_general_weapon.h"
 #include "materials.h"
 #include "skills.h"
+#include "spells.h"
+#include "cmd_stab.h"
 
-// Forward declarations
 static int stabOffAtk(TBeing* thief, TBeing* victim, TGenWeapon* weapon);
+
 static int stabPrimAtk(TBeing* thief, TBeing* victim, TGenWeapon* primWeapon,
   TGenWeapon* offWeapon);
 
-// Display hit message for a successful stab
 static void stabHitMsg(TBeing* thief, TBeing* victim, TGenWeapon* weapon,
   wearSlotT limb) {
   sstring limbName(victim->describeBodySlot(limb));
@@ -52,20 +53,17 @@ static void stabHitMsg(TBeing* thief, TBeing* victim, TGenWeapon* weapon,
   }
 }
 
-// Display miss message for a failed stab
 static void stabMissMsg(TBeing* thief, TBeing* victim, TGenWeapon* weapon) {
   act("You miss your thrust into $N.", FALSE, thief, weapon, victim, TO_CHAR);
   act("$n misses $s thrust into you.", FALSE, thief, weapon, victim, TO_VICT);
   act("$n misses $s thrust into $N.", FALSE, thief, weapon, victim, TO_NOTVICT);
 }
 
-// Apply poison from weapon if present
 static void stabPoisonCheck(TBeing* victim, TGenWeapon* weapon) {
   if (weapon->isPoisoned())
     weapon->applyPoison(victim);
 }
 
-// Check for bleeding based on weapon sharpness vs limb hardness
 static void stabBleedCheck(TBeing* thief, TBeing* victim, TGenWeapon* weapon,
   wearSlotT limb) {
   if (victim->isUndead() || victim->isImmune(IMMUNE_BLEED, limb))
@@ -79,10 +77,8 @@ static void stabBleedCheck(TBeing* thief, TBeing* victim, TGenWeapon* weapon,
     int duration = sharpness * Pulse::UPDATES_PER_MUDHOUR / 2;
 
     if (victim->isLimbFlags(limb, PART_BLEEDING)) {
-      // Already bleeding - increment the stack
       victim->incrementBleedStack(limb, duration);
     } else {
-      // New bleed
       sstring limbName(victim->describeBodySlot(limb));
       act(format("Your stab opens a <r>bleeding wound<z> on $N's %s!") % limbName,
         FALSE, thief, nullptr, victim, TO_CHAR);
@@ -96,26 +92,21 @@ static void stabBleedCheck(TBeing* thief, TBeing* victim, TGenWeapon* weapon,
   }
 }
 
-// Offhand stab attack - uses SKILL_STABBING for specAttack
-static int stabOffAtk(TBeing* thief, TBeing* victim, TGenWeapon* weapon) {
-  if (!weapon || !weapon->canStab())
-    return FALSE;
-
-  // Use DEX/SPE for offense, AGI/PER for defense
+// Resolves a single stab attempt for one weapon — hit roll through weapon
+// spec proc. Shared between primary-hand and offhand attacks.
+static int stabCore(TBeing* thief, TBeing* victim, TGenWeapon* weapon) {
   int specResult = thief->specialAttack(victim, SKILL_STABBING, 0, STAT_DEX,
     STAT_SPE, STAT_AGI, STAT_PER, false);
   if (specResult != COMPLETE_SUCCESS && specResult != GUARANTEED_SUCCESS) {
     stabMissMsg(thief, victim, weapon);
-    victim->addHated(thief);
     return TRUE;
   }
 
-  // Calculate damage for offhand
   int level = thief->getSkillLevel(SKILL_STABBING);
   int dam = thief->getSkillDam(victim, SKILL_STABBING, level,
     thief->getAdvLearning(SKILL_STABBING));
   dam = thief->getActualDamage(victim, weapon, dam, SKILL_STABBING);
-  
+
   if (dam <= 0) {
     act("Your $o fails to penetrate $N's thick hide.", FALSE, thief, weapon,
       victim, TO_CHAR);
@@ -126,80 +117,42 @@ static int stabOffAtk(TBeing* thief, TBeing* victim, TGenWeapon* weapon) {
     return TRUE;
   }
 
-  // Get target limb
   wearSlotT limb = victim->getPartHit(thief, FALSE);
   if (!victim->hasPart(limb))
     limb = victim->getCritPartHit();
 
-  // Show hit message
   stabHitMsg(thief, victim, weapon, limb);
 
-  // Apply damage
   if (thief->reconcileDamage(victim, dam, SKILL_STABBING) == -1)
     return DELETE_VICT;
 
-  // Check for bleeding and poison
   stabBleedCheck(thief, victim, weapon, limb);
   stabPoisonCheck(victim, weapon);
 
-  // Check weapon spec proc
-  if (weapon->checkSpec(victim, CMD_STAB, reinterpret_cast<char*>(limb),
-        thief) == DELETE_VICT)
+  int specRc = weapon->checkSpec(victim, CMD_STAB,
+    reinterpret_cast<char*>(limb), thief);
+  if (IS_SET_DELETE(specRc, DELETE_ITEM))
+    return DELETE_THIS;  // thief destroyed by weapon spec
+  if (IS_SET_DELETE(specRc, DELETE_VICT))
     return DELETE_VICT;
 
   return TRUE;
 }
 
-// Primary hand stab attack - also attempts offhand if dual wield succeeds
+static int stabOffAtk(TBeing* thief, TBeing* victim, TGenWeapon* weapon) {
+  if (!weapon || !weapon->canStab())
+    return FALSE;
+
+  return stabCore(thief, victim, weapon);
+}
+
 static int stabPrimAtk(TBeing* thief, TBeing* victim, TGenWeapon* primWeapon,
   TGenWeapon* offWeapon) {
-  // Use DEX/SPE for offense, AGI/PER for defense
-  int specResult = thief->specialAttack(victim, SKILL_STABBING, 0, STAT_DEX,
-    STAT_SPE, STAT_AGI, STAT_PER, false);
-  if (specResult != COMPLETE_SUCCESS && specResult != GUARANTEED_SUCCESS) {
-    stabMissMsg(thief, victim, primWeapon);
-    victim->addHated(thief);
-    return TRUE;
-  }
+  int rc = stabCore(thief, victim, primWeapon);
 
-  // Calculate damage for primary
-  int level = thief->getSkillLevel(SKILL_STABBING);
-  int dam = thief->getSkillDam(victim, SKILL_STABBING, level,
-    thief->getAdvLearning(SKILL_STABBING));
-  dam = thief->getActualDamage(victim, primWeapon, dam, SKILL_STABBING);
+  if (IS_SET_DELETE(rc, DELETE_VICT) || IS_SET_DELETE(rc, DELETE_THIS))
+    return rc;
 
-  if (dam <= 0) {
-    act("Your $o fails to penetrate $N's thick hide.", FALSE, thief, primWeapon,
-      victim, TO_CHAR);
-    act("$n's $o fails to penetrate your thick hide.", FALSE, thief, primWeapon,
-      victim, TO_VICT);
-    act("$n's $o fails to penetrate $N's thick hide.", FALSE, thief, primWeapon,
-      victim, TO_NOTVICT);
-    return TRUE;
-  }
-
-  // Get target limb
-  wearSlotT limb = victim->getPartHit(thief, FALSE);
-  if (!victim->hasPart(limb))
-    limb = victim->getCritPartHit();
-
-  // Show hit message
-  stabHitMsg(thief, victim, primWeapon, limb);
-
-  // Apply damage
-  if (thief->reconcileDamage(victim, dam, SKILL_STABBING) == -1)
-    return DELETE_VICT;
-
-  // Check for bleeding and poison
-  stabBleedCheck(thief, victim, primWeapon, limb);
-  stabPoisonCheck(victim, primWeapon);
-
-  // Check weapon spec proc
-  if (primWeapon->checkSpec(victim, CMD_STAB, reinterpret_cast<char*>(limb),
-        thief) == DELETE_VICT)
-    return DELETE_VICT;
-
-  // Attempt offhand attack if dual wielding a canStab weapon and victim still exists
   if (victim && offWeapon && offWeapon->canStab()) {
     int thiefDual = thief->getSkillValue(SKILL_DUAL_WIELD_THIEF);
     int warDual = thief->getSkillValue(SKILL_DUAL_WIELD);
@@ -214,17 +167,17 @@ static int stabPrimAtk(TBeing* thief, TBeing* victim, TGenWeapon* primWeapon,
           thief, nullptr, victim, TO_ROOM, ANSI_PURPLE);
         act("$n shifts $s weight and readies an attack with $s offhand.", FALSE,
           thief, nullptr, victim, TO_VICT, ANSI_PURPLE);
-        int rc = stabOffAtk(thief, victim, offWeapon);
-        if (IS_SET_DELETE(rc, DELETE_VICT))
-          return DELETE_VICT;
+        rc = stabOffAtk(thief, victim, offWeapon);
+        if (IS_SET_DELETE(rc, DELETE_VICT) || IS_SET_DELETE(rc, DELETE_THIS))
+          return rc;
       }
     }
   }
 
-  return TRUE;
+  return rc;
 }
 
-static int stab(TBeing* thief, TBeing* victim) {
+static int stab(TBeing* thief, TBeing* victim, bool isChain = false) {
   const int STAB_MOVE = 2;
 
   if (thief == victim) {
@@ -235,60 +188,75 @@ static int stab(TBeing* thief, TBeing* victim) {
   if (thief->checkPeaceful("Naughty, naughty.  None of that here.\n\r"))
     return FALSE;
 
-  if (thief->riding) {
-    thief->sendTo("Not while mounted!\n\r");
-    return FALSE;
+  TBeing* thiefMount = dynamic_cast<TBeing*>(thief->riding);
+  if (thief->riding && !thiefMount) {
+    act("You can't stab anyone from atop $p!", false, thief, thief->riding,
+      nullptr, TO_CHAR);
+    return false;
+  }
+  if (thiefMount && thief->getSkillValue(SKILL_RIDE) < 80) {
+    thief->sendTo("You aren't a skilled enough rider to stab while mounted!\n\r");
+    return false;
   }
 
-  if (dynamic_cast<TBeing*>(victim->riding)) {
-    thief->sendTo("Not while that person is mounted!\n\r");
-    return FALSE;
+  TBeing* victimMount = dynamic_cast<TBeing*>(victim->riding);
+  bool thiefAirborne = thief->isFlying() || (thiefMount && thiefMount->isFlying());
+  bool victimAirborne = victim->isFlying() || (victimMount && victimMount->isFlying());
+  // Mid-fight against the same target bypasses the airborne mismatch —
+  // engaging a flying opponent puts them in stab range. (Backstab has no
+  // such carve-out; its mid-fight gate already requires off-feet, which
+  // flying opponents inherently aren't.)
+  if (victimAirborne && !thiefAirborne && thief->fight() != victim) {
+    thief->sendTo("You can't stab a flying person with your feet on the ground!\n\r");
+    return false;
   }
 
   if (thief->noHarmCheck(victim))
     return FALSE;
 
-  // Get weapons
   TGenWeapon* primWeapon =
     dynamic_cast<TGenWeapon*>(thief->heldInPrimHand());
   TGenWeapon* offWeapon =
     dynamic_cast<TGenWeapon*>(thief->heldInSecHand());
 
-  bool primCanStab = primWeapon && primWeapon->canStab();
+  bool primCanStab = primWeapon && (primWeapon->canStab() || primWeapon->isPolearm());
   bool offCanStab = offWeapon && offWeapon->canStab();
 
-  // Require at least one stabbing weapon
   if (!primCanStab && !offCanStab) {
     thief->sendTo("You need a stabbing weapon to do that.\n\r");
     return FALSE;
   }
 
-  if (thief->getMove() < STAB_MOVE) {
-    thief->sendTo("You are too tired to stab.\n\r");
-    return FALSE;
+  if (!isChain) {
+    if (thief->getMove() < STAB_MOVE) {
+      thief->sendTo("You are too tired to stab.\n\r");
+      return FALSE;
+    }
+    thief->addToMove(-STAB_MOVE);
   }
 
-  // Deduct move cost and add skill lag upfront (once for entire stab attempt)
-  thief->addToMove(-STAB_MOVE);
-  thief->addSkillLag(SKILL_STABBING, 0);
-  victim->addHated(thief);
-
-  // Check bSuccess for stab skill
   int bKnown = thief->getSkillValue(SKILL_STABBING);
   bool stabSuccess = !victim->awake() || thief->bSuccess(bKnown, SKILL_STABBING);
 
+  victim->addHated(thief);
+
   if (!stabSuccess) {
-    // Failed - show miss message with whichever weapon we would have used
     TGenWeapon* weapon = primCanStab ? primWeapon : offWeapon;
     stabMissMsg(thief, victim, weapon);
     return TRUE;
   }
 
-  // Success - route to appropriate attack function
   if (primCanStab)
     return stabPrimAtk(thief, victim, primWeapon, offWeapon);
   else
     return stabOffAtk(thief, victim, offWeapon);
+}
+
+// Chain entry point for backstab. Runs the full stab (preconditions + attack)
+// without charging the stab move cost — the chained stab is a follow-on to
+// backstab, not an independent action.
+int stabChain(TBeing* thief, TBeing* victim) {
+  return stab(thief, victim, /*isChain=*/true);
 }
 
 int TBeing::doStab(const char* argument, TBeing* vict) {
@@ -322,12 +290,22 @@ int TBeing::doStab(const char* argument, TBeing* vict) {
     return FALSE;
   }
   rc = stab(this, victim);
-  if (IS_SET_DELETE(rc, DELETE_VICT)) {
-    if (vict)
-      return rc;
+  const int lagRc = rc;
+
+  // Clean up locally-resolved victim before the DELETE_THIS early return so
+  // combined DELETE_THIS | DELETE_VICT doesn't leak it. lagRc preserves the
+  // original DELETE_VICT bit so addSkillLag still applies its kill cap.
+  if (IS_SET_DELETE(rc, DELETE_VICT) && !vict) {
     delete victim;
-    victim = NULL;
+    victim = nullptr;
     REM_DELETE(rc, DELETE_VICT);
   }
+
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return rc;
+
+  if (lagRc)
+    addSkillLag(SKILL_STABBING, lagRc);
+
   return rc;
 }

@@ -49,6 +49,7 @@ class TBaseWeapon : public TObj {
     virtual bool isBluntWeapon() const;
     virtual bool isSlashWeapon() const;
     virtual bool isPierceWeapon() const;
+    virtual bool isPolearm() const;
     virtual void objMenu(const TBeing*) const;
     virtual void changeObjValue1(TBeing*);
     virtual void changeObjValue2(TBeing*);

@@ -2570,7 +2570,7 @@ void buildCommandArray(void) {
   commandArray[CMD_HIDE] = new commandInfo("hide", POSITION_STANDING, 0);
   commandArray[CMD_SKULK] = new commandInfo("skulk", POSITION_STANDING, 0);
   commandArray[CMD_BACKSTAB] =
-    new commandInfo("backstab", POSITION_STANDING, 0);
+    new commandInfo("backstab", POSITION_FIGHTING, 0);
   commandArray[CMD_SLIT] = new commandInfo("slit", POSITION_STANDING, 0);
   commandArray[CMD_PICK] = new commandInfo("pick", POSITION_SITTING, 0);
   commandArray[CMD_STEAL] = new commandInfo("steal", POSITION_STANDING, 0);

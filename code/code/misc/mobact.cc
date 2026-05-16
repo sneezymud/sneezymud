@@ -2857,9 +2857,7 @@ int TMonster::clerMove(TBeing& vict) {
 // DELETE_VICT means vict should be deleted
 // DELETE_THIS means delete this
 int TMonster::takeFirstHit(TBeing& vict) {
-  TThing* stabber;
   int rc;
-  TBeing* v2;
 
   if (checkPeaceful("Peaceful rooms are such a pain...\n\r"))
     return FALSE;
@@ -2873,68 +2871,21 @@ int TMonster::takeFirstHit(TBeing& vict) {
   if (!vict.isAffected(AFF_AGGRESSOR))
     SET_BIT(specials.affectedBy, AFF_AGGRESSOR);
 
-  if (hasClass(CLASS_THIEF) && !riding) {
-    if ((stabber = heldInPrimHand())) {
-      if (dynamic_cast<TBaseWeapon*>(stabber)) {
-        if (stabber->isPierceWeapon()) {
-          v2 = dynamic_cast<TBeing*>(vict.riding);
-          // basically if victim is < 35 we want backstab to fire
-          // otherwise lets slit their throat
-          // I would be in favor of discussing a better condition
-          // but until then lets go with this
-          if (GetMaxLevel() < 35) {
-            if (v2) {
-              // can't backstab them (mounted), scrag the horse instead
-              //            rc = backstabHit(v2, stabber);
-              //            addSkillLag(SKILL_BACKSTAB, 0);
-
-              // lets not have automatic success
-              rc = doBackstab("", v2);
-
-              if (IS_SET_DELETE(rc, DELETE_VICT)) {
-                if (vict.riding) {
-                  vlogf(LOG_MISC, "is this called (ping)?");
-                  vict.dismount(POSITION_SITTING);
-                }
-                delete v2;
-                v2 = NULL;
-              }
-              return TRUE;
-            } else {
-              //            rc = backstabHit(&vict, stabber);
-              //            addSkillLag(SKILL_BACKSTAB, 0);
-              rc = doBackstab("", &vict);
-              if (IS_SET_DELETE(rc, DELETE_VICT)) {
-                return DELETE_VICT;
-              }
-              return TRUE;
-            }
-          } else {
-            // Thieves should have slit as well
-            if (v2) {
-              // lets not have automatic success
-              rc = doThroatSlit("", v2);
-
-              if (IS_SET_DELETE(rc, DELETE_VICT)) {
-                if (vict.riding) {
-                  // not sure why were loging here with backstab
-                  // but may as well do the same for slit
-                  vlogf(LOG_MISC, "is this called? (slit-mobact.cc:3183)");
-                  vict.dismount(POSITION_SITTING);
-                }
-                delete v2;
-                v2 = NULL;
-              }
-              return TRUE;
-            } else {
-              rc = doThroatSlit("", &vict);
-              if (IS_SET_DELETE(rc, DELETE_VICT)) {
-                return DELETE_VICT;
-              }
-              return TRUE;
-            }
-          }
+  if (hasClass(CLASS_THIEF)) {
+    TGenWeapon* tgw = dynamic_cast<TGenWeapon*>(heldInPrimHand());
+    if (tgw) {
+      if (tgw->canBackstab() || tgw->isPolearm()) {
+        // Polearms route to backstab regardless of level — throat slit rejects them.
+        if (GetMaxLevel() < 35 || tgw->isPolearm()) {
+          rc = doBackstab("", &vict);
+        } else {
+          rc = doThroatSlit("", &vict);
         }
+        if (IS_SET_DELETE(rc, DELETE_VICT) || IS_SET_DELETE(rc, DELETE_THIS))
+          return rc;
+        if (rc)
+          return TRUE;
+        // Opener rejected (FALSE) — fall through to normal attack
       }
     }
   }
