@@ -1,0 +1,28 @@
+Syntax: skulk [option]
+Options: off, stop
+
+Skulking is a thief's prepared stealth posture, taught alongside hide and
+sneak.  Rather than a single quick attempt at concealment, the thief spends
+time settling into a low, watchful stance, blending into shadows and
+adjusting movement until any approach can be made on careful terms.
+
+Skulking takes time to enter.  The thief cannot skulk while in combat or
+mounted, and the build-up is tiring -- movement drains steadily during the
+attempt, and being attacked aborts it outright.  More skilled thieves
+prepare the posture faster and at lower cost.
+
+Once the posture is set, the thief gains a marked bonus to perception and
+agility, and is harder for others to see.  These benefits last for a
+considerable time, but are removed by the usual things that disturb
+stealth.
+
+A skulking thief also stores an extra burst of focus for the moment they
+break cover.  When the thief next launches a special combat skill --
+backstab, stab, slam and the like -- that stored focus is spent for an
+additional bonus on the attempt.  The bonus is consumed regardless of
+whether the attack lands.
+
+To stop skulking, type "skulk off" or "skulk stop".  Doing so clears only
+the skulk posture; an unrelated sneak or hide is left alone.
+
+See Also: HIDE, SNEAK, BACKSTAB, STAB
