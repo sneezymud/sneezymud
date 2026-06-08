@@ -120,6 +120,9 @@ static int chopHit(TBeing* c, TBeing* v, int score) {
     handSlot = WEAR_HAND_L;
   }
 
+  if (!v->hasPart(pos))
+    pos = v->getPartHit(c, true);
+
   // Use impactSpec to handle all impact effects (spikes, thornflesh, hardness)
   dam += impactSpec(c, v, handSlot, pos);
 

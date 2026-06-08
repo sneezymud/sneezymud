@@ -264,12 +264,14 @@ int hardHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT vicLimb, wearSlotT 
       // Case 1: Weapon hits victim's equipment
     if (weap && vicEq) {
       static constexpr const char* weap_vs_eq_msg =
-        "%s $p strikes %s $P with a solid impact!";
+        "%s %s strikes %s %s with a solid impact!";
       dam += weap->getWeight()/4;
 
-      act(format(weap_vs_eq_msg) % "Your" % "$N's", FALSE, ch, weap, vicEq, TO_CHAR);
-      act(format(weap_vs_eq_msg) % "$n's" % "your", FALSE, ch, weap, vicEq, TO_VICT);
-      act(format(weap_vs_eq_msg) % "$n's" % "$N's", FALSE, ch, weap, vicEq, TO_NOTVICT);
+      sstring weapNoun = fname(weap->name);
+      sstring vicEqNoun = fname(vicEq->name);
+      act(format(weap_vs_eq_msg) % "Your" % weapNoun % "$N's" % vicEqNoun, false, ch, weap, victim, TO_CHAR);
+      act(format(weap_vs_eq_msg) % "$n's" % weapNoun % "your" % vicEqNoun, false, ch, weap, victim, TO_VICT);
+      act(format(weap_vs_eq_msg) % "$n's" % weapNoun % "$N's" % vicEqNoun, false, ch, weap, victim, TO_NOTVICT);
       vicEq->damageItem(eqDamage);
 
       if (vicEq->getStructPoints() <= 0 && !vicEq->makeScraps()) {
@@ -280,13 +282,14 @@ int hardHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT vicLimb, wearSlotT 
     // Case 2: Weapon hits victim's body part
     else if (weap && !vicEq) {
       static constexpr const char* weap_vs_body_msg =
-        "%s $p strikes %s %s with a solid impact!";
+        "%s %s strikes %s %s with a solid impact!";
       dam += weap->getWeight()/4;
 
+      sstring weapNoun = fname(weap->name);
       sstring bodyPart = victim->describeBodySlot(vicLimb);
-      act(format(weap_vs_body_msg) % "Your" % "$N's" % bodyPart, FALSE, ch, weap, victim, TO_CHAR);
-      act(format(weap_vs_body_msg) % "$n's" % "your" % bodyPart, FALSE, ch, weap, victim, TO_VICT);
-      act(format(weap_vs_body_msg) % "$n's" % "$N's" % bodyPart, FALSE, ch, weap, victim, TO_NOTVICT);
+      act(format(weap_vs_body_msg) % "Your" % weapNoun % "$N's" % bodyPart, false, ch, weap, victim, TO_CHAR);
+      act(format(weap_vs_body_msg) % "$n's" % weapNoun % "your" % bodyPart, false, ch, weap, victim, TO_VICT);
+      act(format(weap_vs_body_msg) % "$n's" % weapNoun % "$N's" % bodyPart, false, ch, weap, victim, TO_NOTVICT);
       if (victim->isLimbFlags(vicLimb, PART_BRUISED)) {
         victim->incrementBruiseStack(vicLimb, 100);
       } else {
@@ -296,12 +299,13 @@ int hardHit(TBeing* victim, TBeing* ch, TObj* obj, wearSlotT vicLimb, wearSlotT 
     // Case 3: Body part hits victim's equipment
     else if (!weap && vicEq) {
       static constexpr const char* body_vs_eq_msg =
-        "%s %s strikes %s $p with a solid impact!";
+        "%s %s strikes %s %s with a solid impact!";
 
       sstring bodyPart = ch->describeBodySlot(chLimb);
-      act(format(body_vs_eq_msg) % "Your" % bodyPart % "$N's", FALSE, ch, vicEq, victim, TO_CHAR);
-      act(format(body_vs_eq_msg) % "$n's" % bodyPart % "your", FALSE, ch, vicEq, victim, TO_VICT);
-      act(format(body_vs_eq_msg) % "$n's" % bodyPart % "$N's", FALSE, ch, vicEq, victim, TO_NOTVICT);
+      sstring vicEqNoun = fname(vicEq->name);
+      act(format(body_vs_eq_msg) % "Your" % bodyPart % "$N's" % vicEqNoun, false, ch, vicEq, victim, TO_CHAR);
+      act(format(body_vs_eq_msg) % "$n's" % bodyPart % "your" % vicEqNoun, false, ch, vicEq, victim, TO_VICT);
+      act(format(body_vs_eq_msg) % "$n's" % bodyPart % "$N's" % vicEqNoun, false, ch, vicEq, victim, TO_NOTVICT);
       vicEq->damageItem(eqDamage);
       if (vicEq->getStructPoints() <= 0 && !vicEq->makeScraps()) {
          delete vicEq;
@@ -333,8 +337,8 @@ int spikesBreak(TBeing* victim, TBeing* ch, TObj* obj) {
     return 0;
 
   if ((obj->isObjStat(ITEM_SPIKED)) && percentChance(25) && victim->isTough()) {
-    static constexpr const char* catch_msg = "$n's $o catches on $N's $o!";
-    static constexpr const char* spikes_break_msg = "Some spikes break off, damaging $n's $o!";
+    static constexpr const char* catch_msg = "%s $o catches on %s's $o!";
+    static constexpr const char* spikes_break_msg = "Some spikes break off, damaging %s $o!";
 
     obj->addToStructPoints(-dam);
     obj->addToMaxStructPoints(-1);
@@ -383,7 +387,7 @@ int spikesBreak(TBeing* victim, TBeing* ch, TObj* obj) {
 
 int impactSpec(TBeing* ch, TBeing* victim, wearSlotT damSource, wearSlotT pos) {
   // Get the object at the damage source (if any)
-  if (!ch || !victim || pos == WEAR_NOWHERE) {
+  if (!ch || !victim || pos == WEAR_NOWHERE || !ch->hasPart(damSource)) {
     return 0;
   }
   TObj* obj = dynamic_cast<TObj*>(ch->equipment[damSource]);

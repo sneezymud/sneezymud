@@ -135,7 +135,8 @@ int TBeing::kneestrikeMiss(TBeing* v, int type) {
       addToWait(combatRound(0.25));
 
       // Use impactSpec to handle all impact effects (spikes, thornflesh, hardness)
-      dam += impactSpec(v, this, v->getPrimaryFoot(), WEAR_BODY);
+      dam += impactSpec(v, this, v->getPrimaryFoot(),
+        hasPart(WEAR_BODY) ? WEAR_BODY : getPartHit(v, true));
 
       if (v->reconcileDamage(this, dam, DAMAGE_KICK_HEAD) == -1)
         return DELETE_THIS;
@@ -345,6 +346,8 @@ int TBeing::kneestrikeHit(TBeing* victim) {
   // Use impactSpec to handle all impact effects (spikes, thornflesh, hardness)
   // This includes automatic hardness-based damage to equipment/limbs
   caster_pos = (::number(0, 1) ? WEAR_LEG_L : WEAR_LEG_R);
+  if (!victim->hasPart(pos))
+    pos = victim->getPartHit(this, true);
   dam += impactSpec(this, victim, caster_pos, pos);
   if ((rc = reconcileDamage(victim, dam, dam_type)) == -1)
     return DELETE_VICT;

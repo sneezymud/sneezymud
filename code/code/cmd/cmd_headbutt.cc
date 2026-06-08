@@ -102,7 +102,7 @@ int TBeing::headbuttHit(TBeing* victim) {
     static constexpr const char* headbutt_msg =
       "%s headbutt %s, slamming %s head into %s %s.";
 
-    const char* target_area;
+    sstring target_area;
     bool causes_wait = false;
 
     if (hgt < victim->getPartMinHeight(ITEM_WEAR_LEGS)) {
@@ -140,7 +140,12 @@ int TBeing::headbuttHit(TBeing* victim) {
       causes_wait = true;
     }
 
-    act(format(headbutt_msg) % "$n" % "$N" % "$s" % "$N's" % target_area, FALSE,
+    if (!victim->hasPart(pos)) {
+      pos = victim->getPartHit(this, true);
+      target_area = victim->describeBodySlot(pos);
+    }
+
+    act(format(headbutt_msg) % "$n" % "$N" % "$s" % "$N's" % target_area, false,
       this, 0, victim, TO_NOTVICT);
     act(format(headbutt_msg) % "You" % "$N" % "your" % "$S" % target_area,
       FALSE, this, 0, victim, TO_CHAR);

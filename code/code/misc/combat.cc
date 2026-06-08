@@ -4368,17 +4368,22 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
 
     if (mess_sent == 0) {
       if (doesKnowSkill(SKILL_ADVANCED_KICKING) && !weapon && isPc()) {
-        // switch some "hits" to "kicks"
-        // this is strictly textual and doesn't impact damage at all
-        // damage modification form this is taken into account in ADVKICK
-        // modification to number of hits per round
+        // switch some "hits" to "kicks" -- the hit/kick split is textual;
+        // advanced kicking's damage comes from its modification to the
+        // number of hits per round (handled in ADVKICK).
         double iskick = getSkillValue(SKILL_ADVANCED_KICKING) / 100.0;
         iskick += 1.25;
         iskick *= (isprimary ? 0.6 : 0.4);
 
-        if (*f <= iskick)
+        if (*f <= iskick) {
           normalHitMessage(vict, NULL, TYPE_KICK, dam, part_hit);
-        else
+          // A strong kick drives the boot home: route through impactSpec so
+          // spiked/heavy footwear adds real damage and procs as a follow-on
+          // to the kick line above.
+          if (isStrong())
+            dam += impactSpec(this, vict,
+              isprimary ? getPrimaryFoot() : getSecondaryFoot(), part_hit);
+        } else
           normalHitMessage(vict, NULL, w_type, dam, part_hit);
       } else
         normalHitMessage(vict, weapon, w_type, dam, part_hit);

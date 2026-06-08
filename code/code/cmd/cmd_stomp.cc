@@ -159,6 +159,9 @@ int TBeing::stompHit(TBeing* victim) {
       TO_VICT, ANSI_RED);
   }
 
+  if (!victim->hasPart(targetLimb))
+    targetLimb = victim->getPartHit(this, true);
+
   // Use impactSpec to handle all impact effects (spikes, thornflesh, hardness)
   dam += impactSpec(this, victim, getPrimaryFoot(), targetLimb);
 

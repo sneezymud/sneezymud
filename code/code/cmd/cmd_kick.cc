@@ -304,6 +304,9 @@ static int kickHit(TBeing* caster, TBeing* victim, int score, int level,
     }
   }
 
+  if (!victim->hasPart(slot))
+    slot = victim->getPartHit(caster, true);
+
   // Use impactSpec to handle all impact effects (spikes, thornflesh, hardness)
   dam += impactSpec(caster, victim, caster->getPrimaryFoot(), slot);
 
