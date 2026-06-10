@@ -2592,6 +2592,56 @@ void zoneData::closeDoors() {
   }
 }
 
+// Randomly trap closed locked and/or secret doors at zone reset.  Each locked
+// door has a 5% chance and each secret door a 5% chance (10% if both).  Damage
+// scales with the zone's average mob level; the trap type is fully random.
+// Already-trapped doors are skipped so builder- and player-set traps survive.
+void zoneData::trapDoors() {
+  const double avg = num_mobs ? mob_levels / num_mobs : 0.0;
+  const int maxDam = std::max(1, static_cast<int>(avg));
+  const int bottom = zone_nr ? (zone_table[zone_nr - 1].top + 1) : 0;
+
+  for (int rnum = bottom; rnum <= top; rnum++) {
+    TRoom* rp = real_roomp(rnum);
+    if (!rp)
+      continue;
+
+    for (dirTypeT dir = MIN_DIR; dir < MAX_DIR; dir++) {
+      roomDirData* exitp = rp->dir_option[dir];
+      if (!exitp || exitp->door_type == DOOR_NONE ||
+          !IS_SET(exitp->condition, EXIT_CLOSED) ||
+          IS_SET(exitp->condition,
+            EXIT_TRAPPED | EXIT_DESTROYED | EXIT_CAVED_IN))
+        continue;
+
+      int chance = 0;
+      if (IS_SET(exitp->condition, EXIT_LOCKED))
+        chance += 5;
+      if (IS_SET(exitp->condition, EXIT_SECRET))
+        chance += 5;
+      if (chance == 0 || number(1, 100) > chance)
+        continue;
+
+      const short trapInfo = number(DOOR_TRAP_POISON, DOOR_TRAP_PEBBLE);
+      const short trapDam = number(1, maxDam);
+
+      SET_BIT(exitp->condition, EXIT_TRAPPED);
+      exitp->trap_info = trapInfo;
+      exitp->trap_dam = trapDam;
+
+      // mirror onto the far side so the trap fires from either direction
+      if (TRoom* rp2 = real_roomp(exitp->to_room)) {
+        if (roomDirData* back = rp2->dir_option[rev_dir(dir)];
+            back && back->to_room == rnum) {
+          SET_BIT(back->condition, EXIT_TRAPPED);
+          back->trap_info = trapInfo;
+          back->trap_dam = trapDam;
+        }
+      }
+    }
+  }
+}
+
 // procZoneUpdate
 procZoneUpdate::procZoneUpdate(const int& p) {
   trigger_pulse = p;
@@ -3652,8 +3702,10 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential) {
       break;
   }
 
-  if (!findLoadPotential)
+  if (!findLoadPotential) {
     doGenericReset();  // sends CMD_GENERIC_RESET to all objects in zone
+    trapDoors();       // randomly trap locked/secret doors based on zone level
+  }
 
   this->age = 0;
 }

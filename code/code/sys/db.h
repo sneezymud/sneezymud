@@ -224,6 +224,7 @@ class zoneData {
     bool isEmpty(void);
     void resetZone(bool bootTime, bool findLoadPotential = false);
     void closeDoors(void);
+    void trapDoors(void);
     void logError(char, const char*, int, int);
     void nukeMobs(void);
     void sendTo(sstring, int exclude_room = -1);
