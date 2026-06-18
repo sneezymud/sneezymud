@@ -1545,6 +1545,17 @@ int TBeing::triggerTrap(TTrap* o) {
   return TRUE;
 }
 
+// Single point where trap *physical* damage is dealt. `this` is the victim.
+// carrier = the trap object (for death-log/source attribution), may be null.
+// setter = the trap's setter for XP/kill credit; null today (unattributed,
+// identical to historical behavior). Attribution wiring is a separate effort.
+int TBeing::dealTrapDamage(spellNumT damageClass, int dam, TThing* carrier,
+  TBeing* setter) {
+  if (setter && setter != this)
+    return setter->applyDamage(this, dam, damageClass);
+  return objDamage(damageClass, dam, carrier);
+}
+
 // returns DELETE_THIs or FALSE
 int TBeing::trapDoorTntDamage(int amnt, dirTypeT door) {
   TThing* t;
