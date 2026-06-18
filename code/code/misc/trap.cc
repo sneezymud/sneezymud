@@ -113,6 +113,43 @@ const sstring trap_types[] = {"None", "Poison", "Spike", "Sleep", "Explosive",
 const char* user_trap_types[] = {"exit", "container", "mine", "grenade",
   "arrow", "\n"};
 
+int trapDamMod(doorTrapT type) {
+  switch (type) {
+    case DOOR_TRAP_TNT:
+    case DOOR_TRAP_DISEASE:
+    case DOOR_TRAP_FROST:
+    case DOOR_TRAP_DISK:
+      return 3;
+    case DOOR_TRAP_ENERGY:
+    case DOOR_TRAP_TELEPORT:
+      return 5;
+    case DOOR_TRAP_SLEEP:
+    case DOOR_TRAP_ACID:
+    case DOOR_TRAP_BOLT:
+      return 1;
+    case DOOR_TRAP_POISON:
+      return -1;
+    case DOOR_TRAP_BLADE:
+      return -3;
+    case DOOR_TRAP_SPIKE:
+    case DOOR_TRAP_PEBBLE:
+      return -5;
+    case DOOR_TRAP_HAMMER:
+      return -10;
+    default:
+      return 0;
+  }
+}
+
+// Indexed by trap_targ_t: DOOR=0, CONT=1, MINE=2, GRENADE=3, ARROW=4
+const TrapSourceInfo trapSourceInfo[] = {
+  /* TRAP_TARG_DOOR    */ {10, 2, SKILL_SET_TRAP_DOOR},
+  /* TRAP_TARG_CONT    */ {20, 3, SKILL_SET_TRAP_CONT},
+  /* TRAP_TARG_MINE    */ {20, 2, SKILL_SET_TRAP_MINE},
+  /* TRAP_TARG_GRENADE */ {5, 2, SKILL_SET_TRAP_GREN},
+  /* TRAP_TARG_ARROW   */ {5, 2, SKILL_SET_TRAP_ARROW},
+};
+
 int TBeing::springTrap(TTrap* obj) {
   int adj, fireperc, roll;
 
@@ -4008,6 +4045,13 @@ int TBeing::getArrowTrapDam(doorTrapT trap_type) {
   }
   damage = min(max(damage, 1), 50);
   return damage;
+}
+
+int TBeing::getTrapLearn(trap_targ_t targ) {
+  int learn = getSkillValue(trapSourceInfo[targ].setSkill);
+  if (learn <= 0)
+    return 0;
+  return min(learn, static_cast<int>(MAX_SKILL_LEARNEDNESS));
 }
 
 int TBeing::getDoorTrapLearn(doorTrapT) {

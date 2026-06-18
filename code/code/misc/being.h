@@ -1090,6 +1090,7 @@ class TBeing : public TThing {
     int getMineTrapDam(doorTrapT);
     int getGrenadeTrapDam(doorTrapT);
     int getArrowTrapDam(doorTrapT);
+    int getTrapLearn(trap_targ_t);
     int getDoorTrapLearn(doorTrapT);
     int getContainerTrapLearn(doorTrapT);
     int getMineTrapLearn(doorTrapT);

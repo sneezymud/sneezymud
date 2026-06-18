@@ -105,7 +105,7 @@ int task_trap_door(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   }
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-      learning = ch->getDoorTrapLearn(doorTrapT(ch->task->status));
+      learning = ch->getTrapLearn(TRAP_TARG_DOOR);
       ch->task->calcNextUpdate(pulse,
         Pulse::MOBACT * (5 + ((100 - learning) / 3)));
 
@@ -209,7 +209,7 @@ int task_trap_container(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
   }
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-      learning = ch->getContainerTrapLearn(doorTrapT(ch->task->status));
+      learning = ch->getTrapLearn(TRAP_TARG_CONT);
       ch->task->calcNextUpdate(pulse,
         Pulse::MOBACT * (5 + ((100 - learning) / 3)));
 
@@ -343,7 +343,7 @@ int task_trap_mine(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   }
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-      learning = ch->getMineTrapLearn(doorTrapT(ch->task->status));
+      learning = ch->getTrapLearn(TRAP_TARG_MINE);
       ch->task->calcNextUpdate(pulse,
         Pulse::MOBACT * (5 + ((100 - learning) / 3)));
 
@@ -451,7 +451,7 @@ int task_trap_arrow(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
 
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-      learning = ch->getArrowTrapLearn(doorTrapT(ch->task->status));
+      learning = ch->getTrapLearn(TRAP_TARG_ARROW);
       ch->task->calcNextUpdate(pulse,
         Pulse::MOBACT * (5 + ((100 - learning) / 3)));
 
@@ -576,7 +576,7 @@ int task_trap_grenade(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   }
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-      learning = ch->getGrenadeTrapLearn(doorTrapT(ch->task->status));
+      learning = ch->getTrapLearn(TRAP_TARG_GRENADE);
       ch->task->calcNextUpdate(pulse,
         Pulse::MOBACT * (5 + ((100 - learning) / 3)));
 
