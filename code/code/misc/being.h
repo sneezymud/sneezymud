@@ -1167,6 +1167,7 @@ class TBeing : public TThing {
     virtual void trapDisease(int);
     virtual int trapTeleport(int);
     int dealTrapDamage(spellNumT, int, TThing* = nullptr, TBeing* = nullptr);
+    int applyTrapEffect(doorTrapT, int, TThing* = nullptr, TBeing* = nullptr);
     void informMess();
     int objDam(spellNumT, int, TThing*);
     int objDamage(spellNumT, int, TThing*);

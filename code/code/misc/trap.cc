@@ -1556,6 +1556,180 @@ int TBeing::dealTrapDamage(spellNumT damageClass, int dam, TThing* carrier,
   return objDamage(damageClass, dam, carrier);
 }
 
+// Apply a per-type trap effect to `this` (the victim).
+// `dam` is the already-computed damage amount.
+// `carrier` is the trap object (may be nullptr).
+// `setter` is the trap's setter (may be nullptr).
+// Returns DELETE_THIS if the victim was deleted, else 0.
+int TBeing::applyTrapEffect(doorTrapT type, int dam, TThing* carrier,
+  TBeing* setter) {
+  int rc;
+
+  switch (type) {
+    case DOOR_TRAP_POISON:
+      act("You are sprayed with contact poison!", false, this, nullptr, nullptr,
+        TO_CHAR);
+      act("$n is sprayed with contact poison!", false, this, nullptr, nullptr,
+        TO_ROOM);
+      trapPoison(dam);
+      return 0;
+
+    case DOOR_TRAP_SLEEP:
+      act("You are surrounded by a noxious mist!", false, this, nullptr,
+        nullptr, TO_CHAR);
+      act("$n is surrounded by a noxious mist!", false, this, nullptr, nullptr,
+        TO_ROOM);
+      rc = trapSleep(dam);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      return 0;
+
+    case DOOR_TRAP_DISEASE:
+      act("You are surrounded by the thick cloud!", false, this, nullptr,
+        nullptr, TO_CHAR);
+      act("$n is surrounded by the thick cloud!", false, this, nullptr, nullptr,
+        TO_ROOM);
+      trapDisease(dam);
+      return 0;
+
+    case DOOR_TRAP_TELEPORT:
+      act("You find yourself sucked into the vortex!", false, this, nullptr,
+        nullptr, TO_CHAR);
+      act("$n flails wildly, but falls into the vortex.", false, this, nullptr,
+        nullptr, TO_ROOM);
+      rc = trapTeleport(dam);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      return 0;
+
+    case DOOR_TRAP_FIRE:
+      act("You are burned by the flames!", false, this, nullptr, nullptr,
+        TO_CHAR);
+      act("$n is burned by the flames.", false, this, nullptr, nullptr,
+        TO_ROOM);
+      rc = dealTrapDamage(DAMAGE_TRAP_FIRE, dam, carrier, setter);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      rc = flameEngulfed();
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      return 0;
+
+    case DOOR_TRAP_FROST:
+      act("You are frozen by the icy cloud!", false, this, nullptr, nullptr,
+        TO_CHAR);
+      act("$n is frozen by the icy cloud.", false, this, nullptr, nullptr,
+        TO_ROOM);
+      rc = dealTrapDamage(DAMAGE_TRAP_FROST, dam, carrier, setter);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      rc = frostEngulfed();
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      return 0;
+
+    case DOOR_TRAP_ACID:
+      act("You are surrounded by the horrid acid cloud!", false, this, nullptr,
+        nullptr, TO_CHAR);
+      act("$n is surrounded by the horrid acid cloud.", false, this, nullptr,
+        nullptr, TO_ROOM);
+      rc = dealTrapDamage(DAMAGE_TRAP_ACID, dam, carrier, setter);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      rc = acidEngulfed();
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      return 0;
+
+    case DOOR_TRAP_ENERGY:
+      act("You are devastated by dozens of plasma bolts!", false, this, nullptr,
+        nullptr, TO_CHAR);
+      act("$n is devastated by dozens of plasma bolts.", false, this, nullptr,
+        nullptr, TO_ROOM);
+      rc = dealTrapDamage(DAMAGE_TRAP_ENERGY, dam, carrier, setter);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      return 0;
+
+    case DOOR_TRAP_TNT:
+      act("You are blasted by the explosive!", false, this, nullptr, nullptr,
+        TO_CHAR);
+      act("$n is blasted by the explosion.", false, this, nullptr, nullptr,
+        TO_ROOM);
+      rc = dealTrapDamage(DAMAGE_TRAP_TNT, dam, carrier, setter);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      return 0;
+
+    case DOOR_TRAP_SPIKE:
+      act("You are impaled by the spikes!", false, this, nullptr, nullptr,
+        TO_CHAR);
+      act("$n is pierced by the spikes.", false, this, nullptr, nullptr,
+        TO_ROOM);
+      rc = dealTrapDamage(DAMAGE_TRAP_PIERCE, dam, carrier, setter);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      return 0;
+
+    case DOOR_TRAP_BOLT:
+      act("You are perforated by the bolts!", false, this, nullptr, nullptr,
+        TO_CHAR);
+      act("$n is perforated by the bolts.", false, this, nullptr, nullptr,
+        TO_ROOM);
+      rc = dealTrapDamage(DAMAGE_TRAP_PIERCE, dam, carrier, setter);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      return 0;
+
+    case DOOR_TRAP_BLADE:
+      act("You are slashed by the razor-blades!", false, this, nullptr, nullptr,
+        TO_CHAR);
+      act("$n is slashed by the razor-blades.", false, this, nullptr, nullptr,
+        TO_ROOM);
+      rc = dealTrapDamage(DAMAGE_TRAP_SLASH, dam, carrier, setter);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      return 0;
+
+    case DOOR_TRAP_DISK:
+      act("You are slashed by the razor-disks!", false, this, nullptr, nullptr,
+        TO_CHAR);
+      act("$n is slashed by the razor-disks.", false, this, nullptr, nullptr,
+        TO_ROOM);
+      rc = dealTrapDamage(DAMAGE_TRAP_SLASH, dam, carrier, setter);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      return 0;
+
+    case DOOR_TRAP_HAMMER:
+      act("You are crushed by the heavy weights!", false, this, nullptr,
+        nullptr, TO_CHAR);
+      act("$n is crushed by the hammer trap.", false, this, nullptr, nullptr,
+        TO_ROOM);
+      rc = dealTrapDamage(DAMAGE_TRAP_BLUNT, dam, carrier, setter);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      return 0;
+
+    case DOOR_TRAP_PEBBLE:
+      act("You are hit by the fusillade!", false, this, nullptr, nullptr,
+        TO_CHAR);
+      act("$n is hit by the pebbles.", false, this, nullptr, nullptr, TO_ROOM);
+      rc = dealTrapDamage(DAMAGE_TRAP_BLUNT, dam, carrier, setter);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      return 0;
+
+    case DOOR_TRAP_NONE:
+    case MAX_TRAP_TYPES:
+    default:
+      vlogf(LOG_BUG,
+        format("applyTrapEffect: unknown trap type %d on victim %s") % type %
+          getName());
+      return 0;
+  }
+}
+
 // returns DELETE_THIs or FALSE
 int TBeing::trapDoorTntDamage(int amnt, dirTypeT door) {
   TThing* t;
