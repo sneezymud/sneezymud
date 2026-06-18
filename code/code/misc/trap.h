@@ -74,4 +74,4 @@ struct TrapSourceInfo {
     spellNumT setSkill;
 };
 extern const TrapSourceInfo trapSourceInfo[];
-int trapDamMod(doorTrapT);
+extern int trapDamMod(doorTrapT);
