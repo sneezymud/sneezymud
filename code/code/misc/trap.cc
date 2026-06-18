@@ -1983,7 +1983,7 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
   if (goof_type == TRAP_TARG_DOOR) {
     half_chop(task->orig_arg, buf1, buf2);
 
-    trapdamage = getDoorTrapDam(trap_type);
+    trapdamage = getTrapDam(TRAP_TARG_DOOR, trap_type);
     trapdamage = dice(trapdamage, 8) / 3;
 
     hasTrapComps(buf2, TRAP_TARG_DOOR, -1);  // delete comps
@@ -2119,7 +2119,7 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
     }
     // door traps
   } else if (goof_type == TRAP_TARG_CONT) {
-    trapdamage = getContainerTrapDam(trap_type);
+    trapdamage = getTrapDam(TRAP_TARG_CONT, trap_type);
     trapdamage = dice(trapdamage, 8) / 3;
     obj = task->obj;
 
@@ -2256,7 +2256,7 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
     }
     // cont traps
   } else if (goof_type == TRAP_TARG_MINE) {
-    trapdamage = getMineTrapDam(trap_type);
+    trapdamage = getTrapDam(TRAP_TARG_MINE, trap_type);
     trapdamage = dice(trapdamage, 8) / 3;
 
     hasTrapComps(task->orig_arg, TRAP_TARG_MINE, -1);  // delete comps
@@ -2405,7 +2405,7 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
         break;
     }
   } else if (goof_type == TRAP_TARG_GRENADE) {
-    trapdamage = getGrenadeTrapDam(trap_type);
+    trapdamage = getTrapDam(TRAP_TARG_GRENADE, trap_type);
     trapdamage = dice(trapdamage, 8) / 3;
 
     hasTrapComps(task->orig_arg, TRAP_TARG_GRENADE, -1);  // delete comps
@@ -3757,6 +3757,14 @@ int TObj::grenadeHit(TTrap* o) {
   }
 
   return FALSE;
+}
+
+int TBeing::getTrapDam(trap_targ_t targ, doorTrapT type) {
+  const TrapSourceInfo& si = trapSourceInfo[targ];
+  int damage = si.baseDam + getSkillLevel(si.setSkill) / si.skillDivisor;
+  damage = damage * getTrapLearn(targ) / 100;
+  damage += trapDamMod(type);
+  return min(max(damage, 1), 50);
 }
 
 int TBeing::getDoorTrapDam(doorTrapT trap_type) {

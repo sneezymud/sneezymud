@@ -28,3 +28,10 @@ TEST(TrapDamMod, NegativeModifiers) {
   EXPECT_EQ(trapDamMod(DOOR_TRAP_PEBBLE), -5);
   EXPECT_EQ(trapDamMod(DOOR_TRAP_HAMMER), -10);
 }
+
+// Confirm trapSourceInfo[] ordering matches trap_targ_t enum values so
+// index-based lookup in getTrapDam() is correct.
+TEST(TrapSourceInfo, OrderingMatchesTrapTargT) {
+  EXPECT_EQ(trapSourceInfo[TRAP_TARG_DOOR].setSkill, SKILL_SET_TRAP_DOOR);
+  EXPECT_EQ(trapSourceInfo[TRAP_TARG_ARROW].baseDam, 5);
+}
