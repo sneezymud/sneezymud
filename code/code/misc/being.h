@@ -1073,24 +1073,11 @@ class TBeing : public TThing {
     int checkForInsideTrap(TThing*);
     int checkForGetTrap(TThing*);
     int checkForAnyTrap(TThing*);
-    int trapDoorSlashDamage(int, dirTypeT);
-    int trapDoorFireDamage(int, dirTypeT);
-    int trapDoorPierceDamage(int, dirTypeT);
-    int trapDoorTntDamage(int, dirTypeT);
-    int trapDoorAcidDamage(int, dirTypeT);
-    int trapDoorHammerDamage(int, dirTypeT);
-    int trapDoorEnergyDamage(int, dirTypeT);
-    int trapDoorFrostDamage(int, dirTypeT);
     virtual int grenadeHit(TTrap*);
     virtual bool addHated(TBeing*);
     virtual void setHunting(TBeing*) {}
     void throwGrenade(TTrap*, dirTypeT);
     int getTrapDam(trap_targ_t, doorTrapT);
-    int getDoorTrapDam(doorTrapT);
-    int getContainerTrapDam(doorTrapT);
-    int getMineTrapDam(doorTrapT);
-    int getGrenadeTrapDam(doorTrapT);
-    int getArrowTrapDam(doorTrapT);
     int getTrapLearn(trap_targ_t);
     int getDoorTrapLearn(doorTrapT);
     int getContainerTrapLearn(doorTrapT);
