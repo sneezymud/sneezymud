@@ -524,78 +524,66 @@ int TBeing::triggerArrowTrap(TArrow* obj) {
 
 // returns DELETE_THIS or FALSE
 int TBeing::triggerDoorTrap(dirTypeT door) {
-  roomDirData *exitp, *back = NULL;
-  TRoom* rp;
-  int dam;
-  int rc;
-
-  exitp = exitDir(door);
-  dam = dice(exitp->trap_dam, 8);
+  roomDirData* exitp = exitDir(door);
+  int dam = dice(exitp->trap_dam, 8);
+  doorTrapT type = static_cast<doorTrapT>(exitp->trap_info);
 
   // door traps can be triggered by means other than opening
   // eg trying to set another trap
   //  rawOpenDoor(door);
 
+  // Clear the trapped flag on both sides before anything else so
+  // the damage loops can't re-trigger the same trap.
   REMOVE_BIT(exitp->condition, EXIT_TRAPPED);
-  if ((rp = real_roomp(exitp->to_room)) &&
-      (back = rp->dir_option[rev_dir(door)])) {
+  TRoom* far = real_roomp(exitp->to_room);
+  roomDirData* back = far ? far->dir_option[rev_dir(door)] : nullptr;
+  if (back)
     REMOVE_BIT(back->condition, EXIT_TRAPPED);
+
+  act("You hear a strange noise...", true, this, nullptr, nullptr, TO_ROOM);
+  act("You hear a strange noise...", true, this, nullptr, nullptr, TO_CHAR);
+
+  // TNT destroys the door before the blast.  Read dam and type above, and
+  // capture far before calling destroyDoor — destroyDoor only modifies
+  // condition bits, so far (the room pointer) remains valid after the call.
+  if (type == DOOR_TRAP_TNT)
+    exitp->destroyDoor(door, in_room);
+
+  // Same-room bystanders take half damage.
+  if (roomp) {
+    for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
+      TThing* t = *(it++);
+      TBeing* tbt = dynamic_cast<TBeing*>(t);
+      if (tbt && tbt->desc && tbt != this) {
+        int brc = tbt->applyTrapEffect(type, dam / 2, nullptr);
+        if (IS_SET_DELETE(brc, DELETE_THIS)) {
+          delete tbt;
+          tbt = nullptr;
+        }
+      }
+    }
   }
 
-  act("You hear a strange noise...", TRUE, this, 0, 0, TO_ROOM);
-  act("You hear a strange noise...", TRUE, this, 0, 0, TO_CHAR);
-
-  switch (exitp->trap_info) {
-    case DOOR_TRAP_POISON:
-      sendTo(
-        format(
-          "A small needle lunges out of the %s and punctures your hand.\n\r") %
-        fname(exitp->keyword));
-      trapPoison(dam);
-      break;
-    case DOOR_TRAP_SPIKE:
-      return trapDoorPierceDamage(dam, door);
-    case DOOR_TRAP_SLEEP:
-      sendTo("You are engulfed in a cloud of gas.\n\r");
-      act("$n is engulfed in a cloud of gas.", FALSE, this, 0, 0, TO_ROOM);
-      rc = trapSleep(dam);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      break;
-    case DOOR_TRAP_TNT:
-      exitp->destroyDoor(door, in_room);
-      return trapDoorTntDamage(dam, door);
-    case DOOR_TRAP_FIRE:
-      return trapDoorFireDamage(dam, door);
-    case DOOR_TRAP_ACID:
-      return trapDoorAcidDamage(dam, door);
-    case DOOR_TRAP_DISEASE:
-      sendTo("You are engulfed in a cloud of spores.\n\r");
-      act("$n is engulfed in a cloud of spores.", FALSE, this, 0, 0, TO_ROOM);
-      trapDisease(dam);
-      break;
-    case DOOR_TRAP_TELEPORT:
-      act("A chaotic, swirling vortex surrounds you.", TRUE, this, 0, 0,
-        TO_CHAR);
-      act("A chaotic, swirling vortex surrounds $n.", TRUE, this, 0, 0,
-        TO_ROOM);
-
-      rc = trapTeleport(dam);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      return rc;
-    case DOOR_TRAP_HAMMER:
-      return trapDoorHammerDamage(dam, door);
-    case DOOR_TRAP_BLADE:
-      return trapDoorSlashDamage(dam, door);
-    case DOOR_TRAP_ENERGY:
-      return trapDoorEnergyDamage(dam, door);
-    case DOOR_TRAP_FROST:
-      return trapDoorFrostDamage(dam, door);
-    default:
-      break;
+  // Far-side room occupants take half damage.
+  if (far) {
+    for (StuffIter it = far->stuff.begin(); it != far->stuff.end();) {
+      TThing* t = *(it++);
+      TBeing* tbt = dynamic_cast<TBeing*>(t);
+      if (tbt && tbt->desc) {
+        int brc = tbt->applyTrapEffect(type, dam / 2, nullptr);
+        if (IS_SET_DELETE(brc, DELETE_THIS)) {
+          delete tbt;
+          tbt = nullptr;
+        }
+      }
+    }
   }
-  return FALSE;
+
+  // Opener takes full damage last so bystander loops run on a live `this`.
+  int rc = applyTrapEffect(type, dam, nullptr);
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_THIS;
+  return false;
 }
 
 // returns DELETE_VICT
