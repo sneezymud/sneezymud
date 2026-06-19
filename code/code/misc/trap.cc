@@ -554,7 +554,7 @@ int TBeing::triggerDoorTrap(dirTypeT door) {
     for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
       TThing* t = *(it++);
       TBeing* tbt = dynamic_cast<TBeing*>(t);
-      if (tbt && tbt->desc && tbt != this) {
+      if (tbt && tbt != this && !tbt->isImmortal()) {
         int brc = tbt->applyTrapEffect(type, dam / 2, nullptr);
         if (IS_SET_DELETE(brc, DELETE_THIS)) {
           delete tbt;
@@ -569,7 +569,7 @@ int TBeing::triggerDoorTrap(dirTypeT door) {
     for (StuffIter it = far->stuff.begin(); it != far->stuff.end();) {
       TThing* t = *(it++);
       TBeing* tbt = dynamic_cast<TBeing*>(t);
-      if (tbt && tbt->desc) {
+      if (tbt && !tbt->isImmortal()) {
         int brc = tbt->applyTrapEffect(type, dam / 2, nullptr);
         if (IS_SET_DELETE(brc, DELETE_THIS)) {
           delete tbt;
@@ -718,15 +718,12 @@ int TBeing::triggerTrap(TTrap* o) {
   int dam = o->getTrapDamAmount();
 
   // Bystanders first (half damage), so we never touch `this` mid-iteration.
-  // Predicate matches the old code: desc check limits splash to players only
-  // (not mobs).  All per-type loops in the old code used `tbt->desc &&
-  // tbt != this` uniformly — reproducing that here preserves existing
-  // behaviour.
+  // Splash hits all beings except the primary (`!= this`) and immortals.
   if (o->isTrapEffectType(TRAP_EFF_ROOM) && roomp) {
     for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
       TThing* t = *(it++);
       TBeing* tbt = dynamic_cast<TBeing*>(t);
-      if (tbt && tbt->desc && tbt != this) {
+      if (tbt && tbt != this && !tbt->isImmortal()) {
         int brc = tbt->applyTrapEffect(type, dam / 2, o);
         if (IS_SET_DELETE(brc, DELETE_THIS)) {
           // die() -> genericKillFix() has already called reformGroup(),
