@@ -2964,126 +2964,7 @@ void TBeing::throwGrenade(TTrap* o, dirTypeT dir) {
 }
 
 int TBeing::grenadeHit(TTrap* o) {
-  int rc;
-
-  switch (o->getTrapDamType()) {
-    case DOOR_TRAP_POISON:
-      act("You are sprayed with contact poison!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is sprayed with contact poison!", FALSE, this, o, 0, TO_ROOM);
-      trapPoison(o->getTrapDamAmount());
-      return TRUE;
-    case DOOR_TRAP_SLEEP:
-      act("You are surrounded by a noxious mist!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is surrounded by a noxious mist!", FALSE, this, o, 0, TO_ROOM);
-      rc = trapSleep(o->getTrapDamAmount());
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      return TRUE;
-    case DOOR_TRAP_FIRE:
-      act("You are burned by the flames!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is burned by the flames.", FALSE, this, o, 0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_FIRE, o->getTrapDamAmount(), o);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      rc = flameEngulfed();
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      return TRUE;
-    case DOOR_TRAP_TELEPORT:
-      act("You find yourself sucked into the vortex!", FALSE, this, o, 0,
-        TO_CHAR);
-      act("$n flails wildly, but falls into the vortex.", FALSE, this, o, 0,
-        TO_ROOM);
-
-      rc = trapTeleport(o->getTrapDamAmount());
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      return TRUE;
-    case DOOR_TRAP_DISEASE:
-      act("You are surrounded by the thick cloud!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is surrounded by the thick cloud!", FALSE, this, o, 0, TO_ROOM);
-      trapDisease(o->getTrapDamAmount());
-      return TRUE;
-    case DOOR_TRAP_BOLT:
-      act("You are perforated by the bolts!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is perforated by the bolts.", FALSE, this, o, 0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_PIERCE, o->getTrapDamAmount(), o);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      return TRUE;
-    case DOOR_TRAP_PEBBLE:
-      act("You are hit by the fusillade!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is hit by the pebbles.", FALSE, this, o, 0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_BLUNT, o->getTrapDamAmount(), o);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      return TRUE;
-    case DOOR_TRAP_DISK:
-      act("You are slashed by the razor-disks!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is slashed by the razor-disks.", FALSE, this, o, 0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_SLASH, o->getTrapDamAmount(), o);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      return TRUE;
-    case DOOR_TRAP_TNT:
-      act("You are blasted by $p!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is blasted by fragments from $p.", FALSE, this, o, 0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_TNT, o->getTrapDamAmount(), o);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      return TRUE;
-    case DOOR_TRAP_FROST:
-      act("You are frozen by the icy cloud!", FALSE, this, o, 0, TO_CHAR);
-      act("$n is frozen by the icy cloud.", FALSE, this, o, 0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_FROST, o->getTrapDamAmount(), o);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      rc = frostEngulfed();
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      return TRUE;
-    case DOOR_TRAP_ENERGY:
-      act("You are devastated by dozens of plasma bolts!", FALSE, this, o, 0,
-        TO_CHAR);
-      act("$n is devastated by dozens of plasma bolts.", FALSE, this, o, 0,
-        TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_ENERGY, o->getTrapDamAmount(), o);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      return TRUE;
-    case DOOR_TRAP_ACID:
-      act("You are surrounded by the horrid acid cloud!", FALSE, this, o, 0,
-        TO_CHAR);
-      act("$n is surrounded by the horrid acid cloud.", FALSE, this, o, 0,
-        TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_ACID, o->getTrapDamAmount(), o);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      rc = acidEngulfed();
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      return TRUE;
-    default:
-      return TRUE;
-  }
-
-  return FALSE;
+  return applyTrapEffect(o->getTrapDamType(), o->getTrapDamAmount(), o);
 }
 
 int TMonster::grenadeHit(TTrap* o) {
@@ -3094,18 +2975,16 @@ int TMonster::grenadeHit(TTrap* o) {
 
   if (isPc())
     return rc;
-  if (!rc)
-    return FALSE;
 
   const char* tmp_desc;
-  TBeing* ch = NULL;
+  TBeing* ch = nullptr;
   if (o && o->ex_description &&
       (tmp_desc = o->ex_description->findExtraDesc(GRENADE_EX_DESC))) {
     if ((ch = get_char(tmp_desc, EXACT_YES)))
       pissOff(this, ch);
   }
 
-  return TRUE;
+  return rc;
 }
 
 int TObj::grenadeHit(TTrap* o) {

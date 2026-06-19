@@ -124,63 +124,8 @@ int TTrap::detonateGrenade() {
     }
   }
 
-  switch (getTrapDamType()) {
-    case DOOR_TRAP_POISON:
-      act("A small canister pops out of $n and detonates.", FALSE, this, 0, 0,
-        TO_ROOM);
-      break;
-    case DOOR_TRAP_SLEEP:
-      act("A vaporous fog steams from $n.", FALSE, this, 0, 0, TO_ROOM);
-      break;
-    case DOOR_TRAP_FIRE:
-      act("A tiny spark comes out of $n, just before it erupts in flame.",
-        FALSE, this, 0, 0, TO_ROOM);
-      break;
-    case DOOR_TRAP_TELEPORT:
-      act("A whirling vortex suddenly surrounds $n.", FALSE, this, 0, 0,
-        TO_ROOM);
-      break;
-    case DOOR_TRAP_DISEASE:
-      act("A cloud of spores puffs from $n.", FALSE, this, 0, 0, TO_ROOM);
-      break;
-    case DOOR_TRAP_BOLT:
-      act(
-        "A canister pops out of $n and detonates, scattering hundreds of "
-        "sharp, tiny bolts.",
-        FALSE, this, 0, 0, TO_ROOM);
-      break;
-    case DOOR_TRAP_PEBBLE:
-      act(
-        "A canister pops out of $n and detonates, spraying pebbles everywhere.",
-        FALSE, this, 0, 0, TO_ROOM);
-      break;
-    case DOOR_TRAP_DISK:
-      act(
-        "A canister pops out of $n and detonates, throwing razor-disks in all "
-        "directions.",
-        FALSE, this, 0, 0, TO_ROOM);
-      break;
-    case DOOR_TRAP_TNT:
-      act(
-        "A canister pops out of $n and detonates spraying white hot shrapnel "
-        "and bomb fragments everywhere.",
-        FALSE, this, 0, 0, TO_ROOM);
-      break;
-    case DOOR_TRAP_FROST:
-      act("An icy cloud pours out of $n.", FALSE, this, 0, 0, TO_ROOM);
-      break;
-    case DOOR_TRAP_ENERGY:
-      act("$n glows with magic, before streams of plasma streak out of it.",
-        FALSE, this, 0, 0, TO_ROOM);
-      break;
-    case DOOR_TRAP_ACID:
-      act("A yellow-green cloud billows out of $n.", FALSE, this, 0, 0,
-        TO_ROOM);
-      break;
-    default:
-      act("$n explodes!", FALSE, this, 0, 0, TO_ROOM);
-      break;
-  }
+  act("$n detonates with a deafening blast!", false, this, nullptr, nullptr,
+    TO_ROOM);
 
   TObj* tobj = dynamic_cast<TObj*>(old_parent);
   if (tobj) {
