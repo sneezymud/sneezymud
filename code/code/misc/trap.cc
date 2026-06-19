@@ -250,7 +250,7 @@ int TBeing::doSetTraps(const char* arg) {
         return FALSE;
       }
 
-      if (getDoorTrapLearn(type) <= 0) {
+      if (getTrapLearn(TRAP_TARG_DOOR) <= 0) {
         sendTo("You need more training before setting a door trap.\n\r");
         return FALSE;
       }
@@ -320,7 +320,7 @@ int TBeing::doSetTraps(const char* arg) {
         sendTo("Syntax: trap mine <trap-type>\n\r");
         return FALSE;
       }
-      if (getMineTrapLearn(type) <= 0) {
+      if (getTrapLearn(TRAP_TARG_MINE) <= 0) {
         sendTo("You need more training before setting a mine trap.\n\r");
         return FALSE;
       }
@@ -375,7 +375,7 @@ int TBeing::doSetTraps(const char* arg) {
         return FALSE;
       }
 
-      if (getArrowTrapLearn(type) <= 0) {
+      if (getTrapLearn(TRAP_TARG_ARROW) <= 0) {
         sendTo("You need more training before setting an arrow trap.\n\r");
         return FALSE;
       }
@@ -428,7 +428,7 @@ int TBeing::doSetTraps(const char* arg) {
         sendTo("Syntax: trap grenade <trap-type>\n\r");
         return FALSE;
       }
-      if (getGrenadeTrapLearn(type) <= 0) {
+      if (getTrapLearn(TRAP_TARG_GRENADE) <= 0) {
         sendTo("You need more training before setting a grenade trap.\n\r");
         return FALSE;
       }
@@ -2198,61 +2198,6 @@ int TBeing::getTrapLearn(trap_targ_t targ) {
   if (learn <= 0)
     return 0;
   return min(learn, static_cast<int>(MAX_SKILL_LEARNEDNESS));
-}
-
-int TBeing::getDoorTrapLearn(doorTrapT) {
-  int learn;
-
-  if ((learn = getSkillValue(SKILL_SET_TRAP_DOOR)) <= 0)
-    return 0;
-
-  learn = min(learn, (int)MAX_SKILL_LEARNEDNESS);
-
-  return learn;
-}
-
-int TBeing::getContainerTrapLearn(doorTrapT) {
-  int learn;
-
-  if ((learn = getSkillValue(SKILL_SET_TRAP_CONT)) <= 0)
-    return 0;
-
-  learn = min(learn, (int)MAX_SKILL_LEARNEDNESS);
-
-  return learn;
-}
-
-int TBeing::getMineTrapLearn(doorTrapT) {
-  int learn;
-
-  if ((learn = getSkillValue(SKILL_SET_TRAP_MINE)) <= 0)
-    return 0;
-
-  learn = min(learn, (int)MAX_SKILL_LEARNEDNESS);
-
-  return learn;
-}
-
-int TBeing::getGrenadeTrapLearn(doorTrapT) {
-  int learn;
-
-  if ((learn = getSkillValue(SKILL_SET_TRAP_GREN)) <= 0)
-    return 0;
-
-  learn = min(learn, (int)MAX_SKILL_LEARNEDNESS);
-
-  return learn;
-}
-
-int TBeing::getArrowTrapLearn(doorTrapT) {
-  int learn;
-
-  if ((learn = getSkillValue(SKILL_SET_TRAP_ARROW)) <= 0)
-    return 0;
-
-  learn = min(learn, (int)MAX_SKILL_LEARNEDNESS);
-
-  return learn;
 }
 
 int TObj::trapMe(TBeing* ch, const char* trap_type) {

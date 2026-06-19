@@ -1079,11 +1079,6 @@ class TBeing : public TThing {
     void throwGrenade(TTrap*, dirTypeT);
     int getTrapDam(trap_targ_t, doorTrapT);
     int getTrapLearn(trap_targ_t);
-    int getDoorTrapLearn(doorTrapT);
-    int getContainerTrapLearn(doorTrapT);
-    int getMineTrapLearn(doorTrapT);
-    int getGrenadeTrapLearn(doorTrapT);
-    int getArrowTrapLearn(doorTrapT);
     bool canDoSummon() const;
     bool isSummonable() const;
     bool isTanking();
