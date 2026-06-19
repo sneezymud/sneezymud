@@ -789,159 +789,19 @@ int TBeing::triggerContTrap(TOpenContainer* obj) {
 }
 
 // returns DELETE_THIS or FALSE
-// DELETE_ITEM may be |= with above.
 // triggers when arrow hits
 int TBeing::triggerArrowTrap(TArrow* obj) {
-  int rc = 0;
-  TThing* t;
-  int amnt;
-
-  act("You hear a strange noise...", TRUE, this, 0, 0, TO_ROOM);
-  act("You hear a strange noise...", TRUE, this, 0, 0, TO_CHAR);
+  act("You hear a strange noise...", true, this, nullptr, nullptr, TO_ROOM);
+  act("You hear a strange noise...", true, this, nullptr, nullptr, TO_CHAR);
 
   if (!::number(0, 100)) {
-    act("...But nothing happens.", TRUE, this, 0, 0, TO_CHAR);
-    act("...But nothing happens.", TRUE, this, 0, 0, TO_ROOM);
-
-    return FALSE;
+    act("...But nothing happens.", true, this, nullptr, nullptr, TO_CHAR);
+    act("...But nothing happens.", true, this, nullptr, nullptr, TO_ROOM);
+    return false;
   }
 
-  switch (obj->getTrapDamType()) {
-    case DOOR_TRAP_SLEEP:
-      act("A puff of smoke seeps from $p, enveloping you.", FALSE, this, obj, 0,
-        TO_CHAR);
-      act("A puff of smoke seeps from $p, enveloping $n.", FALSE, this, obj, 0,
-        TO_ROOM);
-      rc = trapSleep(obj->getTrapDamAmount());
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      break;
-    case DOOR_TRAP_FIRE:
-      act("A column of flame shoots from $p at you.", TRUE, this, obj, 0,
-        TO_CHAR);
-      act("A column of flame shoots from $p at $n.", TRUE, this, obj, 0,
-        TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_FIRE, obj->getTrapDamAmount(), obj);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      rc = flameEngulfed();
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      return TRUE;
-    case DOOR_TRAP_TELEPORT:
-      act("A chaotic, swirling vortex surrounds you.", TRUE, this, obj, 0,
-        TO_CHAR);
-      act("A chaotic, swirling vortex surrounds $n.", TRUE, this, obj, 0,
-        TO_ROOM);
-
-      rc = trapTeleport(obj->getTrapDamAmount());
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      return rc;
-    case DOOR_TRAP_SPIKE:
-      act("Sharpened spikes leap from $p at you.", TRUE, this, obj, 0, TO_CHAR);
-      act("Sharpened spikes leap from $p at $n.", TRUE, this, obj, 0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_PIERCE, obj->getTrapDamAmount(), obj);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      return TRUE;
-    case DOOR_TRAP_DISEASE:
-      act("You are engulfed in a cloud of spores.", FALSE, this, 0, 0, TO_ROOM);
-      act("$n is engulfed in a cloud of spores.", FALSE, this, 0, 0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_DISEASE, obj->getTrapDamAmount(), obj);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      return TRUE;
-    case DOOR_TRAP_BLADE:
-      act("Razor sharp blades slice from $p into you.", TRUE, this, obj, 0,
-        TO_CHAR);
-      act("Razor sharp blades slice from $p into $n.", TRUE, this, obj, 0,
-        TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_SLASH, obj->getTrapDamAmount(), obj);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      return TRUE;
-    case DOOR_TRAP_TNT:
-      act("A massive explosion destroys $p, and spews shrapnel into the room!",
-        TRUE, this, obj, 0, TO_CHAR);
-      act("A massive explosion destroys $p, and spews shrapnel into the room!",
-        TRUE, this, obj, 0, TO_ROOM);
-      amnt = obj->getTrapDamAmount();
-
-      // fry people in room
-      for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
-        t = *(it++);
-        TBeing* tbt = dynamic_cast<TBeing*>(t);
-        if (tbt && this != tbt && !tbt->isImmortal()) {
-          act("You are hit by shrapnel!", TRUE, tbt, 0, 0, TO_CHAR);
-          act("$n is hit by shrapnel.", TRUE, tbt, 0, 0, TO_ROOM);
-          rc = tbt->objDamage(DAMAGE_TRAP_TNT, amnt / 2, obj);
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            delete tbt;
-            tbt = NULL;
-          }
-        }
-      }
-
-      rc = objDamage(DAMAGE_TRAP_TNT, amnt, obj);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS | DELETE_ITEM;
-
-      rc = flameEngulfed();
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS | DELETE_ITEM;
-
-      return DELETE_ITEM;
-    case DOOR_TRAP_FROST:
-      act("A frosty blast jets from $p into you.", TRUE, this, obj, 0, TO_CHAR);
-      act("A frosty blast jets from $p into $n.", TRUE, this, obj, 0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_FROST, obj->getTrapDamAmount(), obj);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      rc = frostEngulfed();
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      return TRUE;
-    case DOOR_TRAP_ENERGY:
-      act("Bolts of raw plasma stream from $p into you.", TRUE, this, obj, 0,
-        TO_CHAR);
-      act("Jets of raw plasma stream from $p into $n.", TRUE, this, obj, 0,
-        TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_ENERGY, obj->getTrapDamAmount(), obj);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      return TRUE;
-    case DOOR_TRAP_ACID:
-      act("A steaming liquid splashes from $p covering you.", TRUE, this, obj,
-        0, TO_CHAR);
-      act("A steaming liquid splashes from $p covering $n.", TRUE, this, obj, 0,
-        TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_ACID, obj->getTrapDamAmount(), obj);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      rc = acidEngulfed();
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      return TRUE;
-    default:
-      break;
-  }
-
-  return TRUE;
+  // arrow = single-target (the struck victim); carrier = the arrow
+  return applyTrapEffect(obj->getTrapDamType(), obj->getTrapDamAmount(), obj);
 }
 
 // returns DELETE_THIS or FALSE
