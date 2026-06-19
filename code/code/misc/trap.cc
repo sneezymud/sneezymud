@@ -455,337 +455,52 @@ int TBeing::doSetTraps(const char* arg) {
 // triggered when portal opened or entered
 // returns DELETE_THIS, DELETE_ITEM
 int TBeing::triggerPortalTrap(TPortal* o) {
-  int rc;
-  int amnt;
-  TThing* t;
+  act("You hear a strange noise...", true, this, nullptr, nullptr, TO_ROOM);
+  act("You hear a strange noise...", true, this, nullptr, nullptr, TO_CHAR);
 
-  act("You hear a strange noise...", TRUE, this, 0, 0, TO_ROOM);
-  act("You hear a strange noise...", TRUE, this, 0, 0, TO_CHAR);
+  auto type = static_cast<doorTrapT>(o->getPortalTrapType());
+  int rc = applyTrapEffect(type, o->getPortalTrapDam(), o);
 
-  switch (o->getPortalTrapType()) {
-    case DOOR_TRAP_POISON:
-      act("A tiny needle in $p jams into your hand.", FALSE, this, o, 0,
-        TO_CHAR);
-      act("A tiny needle in $p jams into $n's hand.", FALSE, this, o, 0,
-        TO_ROOM);
-      trapPoison(o->getPortalTrapDam());
-      break;
-    case DOOR_TRAP_SLEEP:
-      act("A puff of smoke seeps from $p, enveloping you.", FALSE, this, o, 0,
-        TO_CHAR);
-      act("A puff of smoke seeps from $p, enveloping $n.", FALSE, this, o, 0,
-        TO_ROOM);
-      rc = trapSleep(o->getPortalTrapDam());
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      break;
-    case DOOR_TRAP_FIRE:
-      act("A column of flame shoots from a concealed jet in $p at you.", TRUE,
-        this, o, 0, TO_CHAR);
-      act("A column of flame shoots from a concealed jet in $p at $n.", TRUE,
-        this, o, 0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_FIRE, o->getPortalTrapDam(), o);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      rc = flameEngulfed();
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      return TRUE;
-    case DOOR_TRAP_TELEPORT:
-      act("A chaotic, swirling vortex surrounds you.", TRUE, this, o, 0,
-        TO_CHAR);
-      act("A chaotic, swirling vortex surrounds $n.", TRUE, this, o, 0,
-        TO_ROOM);
-
-      rc = trapTeleport(o->getPortalTrapDam());
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      return rc;
-    case DOOR_TRAP_SPIKE:
-      act("Sharpened spikes leap from a place of concealment in $p at you.",
-        TRUE, this, o, 0, TO_CHAR);
-      act("Sharpened spikes leap from a place of concealment in $p at $n.",
-        TRUE, this, o, 0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_PIERCE, o->getPortalTrapDam(), o);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      return TRUE;
-    case DOOR_TRAP_DISEASE:
-      act("You are engulfed in a cloud of spores.", FALSE, this, 0, 0, TO_ROOM);
-      act("$n is engulfed in a cloud of spores.", FALSE, this, 0, 0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_DISEASE, o->getPortalTrapDam(), o);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      return TRUE;
-    case DOOR_TRAP_HAMMER:
-      act("Giant weights concealed in $p crash down on you.", TRUE, this, o, 0,
-        TO_CHAR);
-      act("Giant weights concealed in $p crash down on $n.", TRUE, this, o, 0,
-        TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_BLUNT, o->getPortalTrapDam(), o);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      return TRUE;
-    case DOOR_TRAP_BLADE:
-      act(
-        "Razor sharp blades slice from a place of concealment in $p into you.",
-        TRUE, this, o, 0, TO_CHAR);
-      act("Razor sharp blades slice from a place of concealment in $p into $n.",
-        TRUE, this, o, 0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_SLASH, o->getPortalTrapDam(), o);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      return TRUE;
-    case DOOR_TRAP_TNT:
-      act("A massive explosion destroys $p, and spews shrapnel into the room!",
-        TRUE, this, o, 0, TO_CHAR);
-      act("A massive explosion destroys $p, and spews shrapnel into the room!",
-        TRUE, this, o, 0, TO_ROOM);
-      amnt = o->getPortalTrapDam();
-
-      // fry people in room
-
-      for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
-        t = *(it++);
-        TBeing* tbt = dynamic_cast<TBeing*>(t);
-        if (tbt && this != tbt && !tbt->isImmortal()) {
-          act("You are hit by shrapnel!", TRUE, tbt, 0, 0, TO_CHAR);
-          act("$n is hit by shrapnel.", TRUE, tbt, 0, 0, TO_ROOM);
-          rc = tbt->objDamage(DAMAGE_TRAP_TNT, amnt / 2, o);
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            delete tbt;
-            tbt = NULL;
-          }
-        }
-      }
-
-      rc = objDamage(DAMAGE_TRAP_TNT, amnt, o);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS | DELETE_ITEM;
-
-      rc = flameEngulfed();
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS | DELETE_ITEM;
-
-      return DELETE_ITEM;
-    case DOOR_TRAP_FROST:
-      act("A frosty blast jets from a place of concealment in $p into you.",
-        TRUE, this, o, 0, TO_CHAR);
-      act("A frosty blast jets from a place of concealment in $p into $n.",
-        TRUE, this, o, 0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_FROST, o->getPortalTrapDam(), o);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      rc = frostEngulfed();
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      return TRUE;
-    case DOOR_TRAP_ENERGY:
-      act(
-        "Bolts of raw plasma stream from a place of concealment in $p into "
-        "you.",
-        TRUE, this, o, 0, TO_CHAR);
-      act(
-        "Jets of raw plasma stream from a place of concealment in $p into $n.",
-        TRUE, this, o, 0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_ENERGY, o->getPortalTrapDam(), o);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      return TRUE;
-    case DOOR_TRAP_ACID:
-      act(
-        "A steaming liquid splashes from a place of concealment in $p covering "
-        "you.",
-        TRUE, this, o, 0, TO_CHAR);
-      act(
-        "A steaming liquid splashes from a place of concealment in $p covering "
-        "$n.",
-        TRUE, this, o, 0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_ACID, o->getPortalTrapDam(), o);
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      rc = acidEngulfed();
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-
-      return TRUE;
-    default:
-      break;
+  if (type == DOOR_TRAP_TNT) {
+    act("$p is destroyed by the blast!", true, this, o, nullptr, TO_ROOM);
+    ADD_DELETE(rc, DELETE_ITEM);
   }
-  return TRUE;
+  return rc;
 }
 
 // returns DELETE_THIS or FALSE
 // DELETE_ITEM may be |= with above.
 // triggers when obj is opened
 int TBeing::triggerContTrap(TOpenContainer* obj) {
-  int rc = 0;
-  TThing* t;
-  int amnt;
-
-  act("You hear a strange noise...", TRUE, this, 0, 0, TO_ROOM);
-  act("You hear a strange noise...", TRUE, this, 0, 0, TO_CHAR);
+  act("You hear a strange noise...", true, this, nullptr, nullptr, TO_ROOM);
+  act("You hear a strange noise...", true, this, nullptr, nullptr, TO_CHAR);
   obj->remContainerFlag(CONT_TRAPPED);
   obj->remContainerFlag(CONT_CLOSED);
   obj->addContainerFlag(CONT_EMPTYTRAP);
 
   if (!::number(0, 100)) {
-    act("...But nothing happens.", TRUE, this, 0, 0, TO_CHAR);
-    act("...But nothing happens.", TRUE, this, 0, 0, TO_ROOM);
-
-    return FALSE;
+    act("...But nothing happens.", true, this, nullptr, nullptr, TO_CHAR);
+    act("...But nothing happens.", true, this, nullptr, nullptr, TO_ROOM);
+    return false;
   }
 
-  switch (obj->getContainerTrapType()) {
-    case DOOR_TRAP_FIRE:
-      act("$p bursts into flame.", TRUE, this, obj, 0, TO_ROOM);
-      act("$p bursts into flame.", TRUE, this, obj, 0, TO_CHAR);
+  doorTrapT type = obj->getContainerTrapType();
 
-      // bag explodes, contents go boom
-      for (StuffIter it = obj->stuff.begin(); it != obj->stuff.end();) {
-        t = *(it++);
-        delete t;
-        t = NULL;
-      }
-      rc = objDamage(DAMAGE_TRAP_FIRE, obj->getContainerTrapDam(), obj);
-
-      ADD_DELETE(rc, DELETE_ITEM);
-      return rc;
-    case DOOR_TRAP_TNT:
-      act("$p explodes violently, spewing shrapnel into the room!", TRUE, this,
-        obj, 0, TO_ROOM);
-      act("$p explodes violently, spewing shrapnel into the room!", TRUE, this,
-        obj, 0, TO_CHAR);
-      amnt = obj->getContainerTrapDam();
-
-      // bag explodes, contents go boom
-      for (StuffIter it = obj->stuff.begin(); it != obj->stuff.end();) {
-        t = *(it++);
-        delete t;
-        t = NULL;
-      }
-      // fry people in room
-      for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
-        t = *(it++);
-        TBeing* tbt = dynamic_cast<TBeing*>(t);
-        if (tbt && this != tbt) {
-          act("You are hit by shrapnel!", TRUE, tbt, 0, 0, TO_CHAR);
-          act("$n is hit by shrapnel.", TRUE, tbt, 0, 0, TO_ROOM);
-          rc = tbt->objDamage(DAMAGE_TRAP_TNT, amnt / 2, obj);
-          if (IS_SET_DELETE(rc, DELETE_THIS)) {
-            delete tbt;
-            tbt = NULL;
-          }
-        }
-      }
-      rc = objDamage(DAMAGE_TRAP_TNT, amnt, obj);
-
-      ADD_DELETE(rc, DELETE_ITEM);
-      return rc;
-    case DOOR_TRAP_POISON:
-      act("A tiny needle in $p jams into your hand.", FALSE, this, obj, 0,
-        TO_CHAR);
-      trapPoison(obj->getContainerTrapDam());
-      break;
-    case DOOR_TRAP_SLEEP:
-      act("A puff of smoke seeps from $p, enveloping you.", FALSE, this, obj, 0,
-        TO_CHAR);
-      act("A puff of smoke seeps from $p, enveloping $n.", FALSE, this, obj, 0,
-        TO_ROOM);
-      rc = trapSleep(obj->getContainerTrapDam());
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      break;
-    case DOOR_TRAP_SPIKE:
-      act("Sharpened spikes leap from a place of concealment in $p at you.",
-        TRUE, this, obj, 0, TO_CHAR);
-      act("Sharpened spikes leap from a place of concealment in $p at $n.",
-        TRUE, this, obj, 0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_PIERCE, obj->getContainerTrapDam(), obj);
-      return rc;
-    case DOOR_TRAP_DISEASE:
-      act("A cloud of spores pours from $p, engulfing you.", FALSE, this, obj,
-        0, TO_ROOM);
-      act("A cloud of spores pours from $p, engulfing $n.", FALSE, this, obj, 0,
-        TO_ROOM);
-
-      trapDisease(obj->getContainerTrapDam());
-      break;
-    case DOOR_TRAP_TELEPORT:
-      act("As you touch $p, a chaotic, swirling vortex surrounds you.", TRUE,
-        this, obj, 0, TO_CHAR);
-      act("As $n touches $p, a chaotic, swirling vortex surrounds $m.", TRUE,
-        this, obj, 0, TO_ROOM);
-
-      rc = trapTeleport(obj->getContainerTrapDam());
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      return rc;
-    case DOOR_TRAP_PEBBLE:
-      act("Dozens of tiny pebbles shoot from $p, pelting you!", TRUE, this, obj,
-        0, TO_CHAR);
-      act("Dozens of tiny pebbles shoot from $p, pelting $n.", TRUE, this, obj,
-        0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_BLUNT, obj->getContainerTrapDam(), obj);
-      return rc;
-    case DOOR_TRAP_BLADE:
-      act(
-        "Razor sharp blades slide forth from a place of concealment in $p into "
-        "you.",
-        TRUE, this, obj, 0, TO_CHAR);
-      act(
-        "Razor sharp blades slide forth from a place of concealment in $p into "
-        "$n.",
-        TRUE, this, obj, 0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_SLASH, obj->getContainerTrapDam(), obj);
-      return rc;
-    case DOOR_TRAP_FROST:
-      act("A frosty blast jets from a place of concealment in $p into you.",
-        TRUE, this, obj, 0, TO_CHAR);
-      act("A frosty blast jets from a place of concealment in $p into $n.",
-        TRUE, this, obj, 0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_FROST, obj->getContainerTrapDam(), obj);
-      return rc;
-    case DOOR_TRAP_ENERGY:
-      act("Bolts of plasma stream from a place of concealment in $p into you.",
-        TRUE, this, obj, 0, TO_CHAR);
-      act(
-        "Bolts of plasma stream forth from a place of concealment in $p into "
-        "$n.",
-        TRUE, this, obj, 0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_ENERGY, obj->getContainerTrapDam(), obj);
-      return rc;
-    case DOOR_TRAP_ACID:
-      act("A strange liquid pours from a place of concealment in $p onto you.",
-        TRUE, this, obj, 0, TO_CHAR);
-      act("A strange liquid pours from a place of concealment in $p onto $n.",
-        TRUE, this, obj, 0, TO_ROOM);
-
-      rc = objDamage(DAMAGE_TRAP_ACID, obj->getContainerTrapDam(), obj);
-      return rc;
-    default:
-      break;
+  // carrier fate for destructive types: container + contents destroyed
+  bool destroysContainer = (type == DOOR_TRAP_FIRE || type == DOOR_TRAP_TNT);
+  if (destroysContainer) {
+    act("$p is destroyed by its own trap!", true, this, obj, nullptr, TO_ROOM);
+    for (StuffIter it = obj->stuff.begin(); it != obj->stuff.end();) {
+      TThing* t = *(it++);
+      delete t;
+    }
   }
-  return FALSE;
+
+  int rc = applyTrapEffect(type, obj->getContainerTrapDam(), obj);
+
+  if (destroysContainer)
+    ADD_DELETE(rc, DELETE_ITEM);
+  return rc;
 }
 
 // returns DELETE_THIS or FALSE
