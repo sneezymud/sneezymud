@@ -1368,7 +1368,10 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
   }
   hasTrapComps(comps, goof_type, -1);
 
-  int dam = dice(getTrapDam(goof_type, trap_type), 8) / 3;
+  // Goof self-damage is uniformly 1/6 of a successful trap's roll: this
+  // preserves the old door/container value (they applied /3 then /2) and
+  // halves the old mine/grenade value (they applied only /3).
+  int dam = dice(getTrapDam(goof_type, trap_type), 8) / 6;
 
   act("You slip up, and your trap goes off in your face!", false, this, nullptr,
     nullptr, TO_CHAR);
