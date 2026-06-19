@@ -459,12 +459,15 @@ int TBeing::triggerPortalTrap(TPortal* o) {
   act("You hear a strange noise...", true, this, nullptr, nullptr, TO_CHAR);
 
   auto type = static_cast<doorTrapT>(o->getPortalTrapType());
+
+  if (type == DOOR_TRAP_TNT)
+    act("$p is destroyed by the blast!", true, this, o, nullptr, TO_ROOM);
+
   int rc = applyTrapEffect(type, o->getPortalTrapDam(), o);
 
-  if (type == DOOR_TRAP_TNT) {
-    act("$p is destroyed by the blast!", true, this, o, nullptr, TO_ROOM);
+  if (type == DOOR_TRAP_TNT)
     ADD_DELETE(rc, DELETE_ITEM);
-  }
+
   return rc;
 }
 
