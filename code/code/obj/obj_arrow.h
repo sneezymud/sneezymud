@@ -24,6 +24,7 @@ class TArrow : public TBaseWeapon {
     virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_ARROW; }
     virtual int suggestedPrice() const;
+    virtual int disarmMe(TBeing*);
 
     int getTrapLevel() const;
     void setTrapLevel(int r);

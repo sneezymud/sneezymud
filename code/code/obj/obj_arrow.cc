@@ -82,6 +82,44 @@ doorTrapT TArrow::getTrapDamType() const { return trap_dam_type; }
 
 void TArrow::setTrapDamType(doorTrapT r) { trap_dam_type = r; }
 
+int TArrow::disarmMe(TBeing* thief) {
+  if (getTrapDamType() == DOOR_TRAP_NONE) {
+    act("$p is not trapped.", false, thief, this, nullptr, TO_CHAR);
+    return false;
+  }
+
+  sstring trap_type = trap_types[getTrapDamType()];
+  int bKnown = thief->getSkillValue(SKILL_DISARM_TRAP);
+
+  if (thief->bSuccess(bKnown, SKILL_DISARM_TRAP)) {
+    act(format("Click.  You disarm the %s trap on $p.") % trap_type, false,
+      thief, this, nullptr, TO_CHAR);
+    act("$n disarms $p.", false, thief, this, nullptr, TO_ROOM);
+    setTrapLevel(0);
+    setTrapDamType(DOOR_TRAP_NONE);
+    // TODO(reclaim): once reclaimTrapComps (trap-reclaim / PR #736) lands on
+    // master, salvage the trap's components here, gated on
+    // SKILL_SET_TRAP_ARROW.
+    return true;
+  }
+
+  // Fumble: the trap discharges on the thief. An arrow trap is one-shot, so it
+  // is spent afterward whether it kills, destroys the arrow, or just stings.
+  thief->sendTo("Click. (whoops)\n\r");
+  act("$n tries to disarm $p.", false, thief, this, nullptr, TO_ROOM);
+  int rc = thief->triggerArrowTrap(this);
+  int ret = 0;
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    ret |= DELETE_VICT;  // the trap killed the thief
+  if (IS_SET_DELETE(rc, DELETE_ITEM)) {
+    ret |= DELETE_ITEM;  // the arrow was consumed (e.g. a TNT charge)
+  } else {
+    setTrapLevel(0);
+    setTrapDamType(DOOR_TRAP_NONE);
+  }
+  return ret ? ret : true;
+}
+
 bool TArrow::sellMeCheck(TBeing* ch, TMonster* keeper, int, int) const {
   return TBaseWeapon::sellMeCheck(ch, keeper, 1, 50);
 }

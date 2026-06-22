@@ -204,12 +204,16 @@ int TTrap::disarmMe(TBeing* thief) {
 }
 
 int disarmTrapObj(TBeing* thief, TObj* trap) {
-  int rc;
-  rc = trap->disarmMe(thief);
-  if (IS_SET_DELETE(rc, DELETE_VICT)) {
-    return DELETE_THIS;
-  }
-  return FALSE;
+  int rc = trap->disarmMe(thief);
+  int ret = 0;
+  // A sprung trap may kill the thief (DELETE_VICT) and/or destroy the trap
+  // object itself (DELETE_ITEM, e.g. a portal TNT charge) - propagate both so
+  // disarmTrap deletes the object before unwinding the dead thief.
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    ret |= DELETE_THIS;
+  if (IS_SET_DELETE(rc, DELETE_ITEM))
+    ret |= DELETE_ITEM;
+  return ret;
 }
 
 int disarmTrapDoor(TBeing* thief, dirTypeT door) {

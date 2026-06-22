@@ -182,6 +182,42 @@ unsigned short TPortal::getPortalTrapDam() const { return trap_damage; }
 
 void TPortal::setPortalTrapDam(unsigned short r) { trap_damage = r; }
 
+int TPortal::disarmMe(TBeing* thief) {
+  if (!isPortalFlag(EXIT_TRAPPED)) {
+    act("$p is not trapped.", false, thief, this, nullptr, TO_CHAR);
+    return false;
+  }
+
+  sstring trap_type = trap_types[getPortalTrapType()];
+  int bKnown = thief->getSkillValue(SKILL_DISARM_TRAP);
+  // portals mirror doors mechanically, so reuse the door disarm difficulty
+  int learnedness = min(static_cast<int>(MAX_SKILL_LEARNEDNESS), 2 * bKnown);
+
+  if (!thief->bSuccess(learnedness, SKILL_DISARM_TRAP)) {
+    thief->sendTo("Click. (whoops)\n\r");
+    act("$n tries to disarm $p.", false, thief, this, nullptr, TO_ROOM);
+    int rc = thief->triggerPortalTrap(this);
+    int ret = 0;
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      ret |= DELETE_VICT;  // the trap killed the thief
+    if (IS_SET_DELETE(rc, DELETE_ITEM))
+      ret |= DELETE_ITEM;  // the trap destroyed the portal (e.g. a TNT charge)
+    return ret ? ret : true;
+  }
+
+  act(format("Click.  You disarm the %s trap in $p.") % trap_type, false, thief,
+    this, nullptr, TO_CHAR);
+  act("$n disarms $p.", false, thief, this, nullptr, TO_ROOM);
+  remPortalFlag(EXIT_TRAPPED);
+  setPortalTrapType(DOOR_TRAP_NONE);
+  setPortalTrapDam(0);
+
+  // TODO(reclaim): once reclaimTrapComps (trap-reclaim / PR #736) lands on
+  // master, salvage the trap's components here, gated on SKILL_SET_TRAP_DOOR.
+
+  return true;
+}
+
 void TPortal::showMe(TBeing* ch) const {
   if (isPortalFlag(EXIT_CLOSED))
     ch->sendTo("It is closed.\n\r");
