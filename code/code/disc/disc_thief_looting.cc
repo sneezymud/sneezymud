@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#include <unordered_map>
+
 #include "handler.h"
 #include "extern.h"
 #include "room.h"
@@ -9,6 +11,7 @@
 #include "disc_thief_looting.h"
 #include "obj_trap.h"
 #include "obj_portal.h"
+#include "low.h"
 
 int TBeing::doSearch(const char* argument) {
   int rc;
@@ -170,6 +173,93 @@ int TBeing::disarmTrap(const char* arg, TObj* tp) {
   return FALSE;
 }
 
+namespace {
+  // Crafting components yielded by each trap damage type. `launched` is the
+  // variant used for grenades/landmines; empty means the type has no launched
+  // variant and `standard` applies to every form. Keyed by the lowercased
+  // trap_types[] name.
+  struct TrapRecipe {
+      std::vector<int> standard;
+      std::vector<int> launched;
+  };
+
+  const std::unordered_map<std::string, TrapRecipe> kTrapRecipes = {
+    {"fire", {{Obj::ST_FLINT, Obj::ST_SULPHUR, Obj::ST_BAG}, {}}},
+    {"explosive", {{Obj::ST_FLINT, Obj::ST_SULPHUR, Obj::ST_HYDROGEN}, {}}},
+    {"poison", {{Obj::ST_NEEDLE, Obj::ST_SPRING, Obj::ST_POISON},
+                 {Obj::ST_CANISTER, Obj::ST_SPRING, Obj::ST_CON_POISON}}},
+    {"sleep", {{Obj::ST_NOZZLE, Obj::ST_GAS, Obj::ST_HOSE}, {}}},
+    {"acid", {{Obj::ST_NOZZLE, Obj::ST_ACID_VIAL, Obj::ST_BELLOWS},
+               {Obj::ST_CANISTER, Obj::ST_SPRING, Obj::ST_ACID_VIAL}}},
+    {"spore", {{Obj::ST_FUNGUS, Obj::ST_NOZZLE, Obj::ST_BELLOWS},
+                {Obj::ST_CANISTER, Obj::ST_SPRING, Obj::ST_FUNGUS}}},
+    {"spike", {{Obj::ST_SPIKE, Obj::ST_SPRING, Obj::ST_TRIPWIRE}, {}}},
+    {"bolt", {{Obj::ST_TUBING, Obj::ST_CGAS, Obj::ST_BOLTS}, {}}},
+    {"blade", {{Obj::ST_RAZOR_BLADE, Obj::ST_SPRING, Obj::ST_TRIPWIRE}, {}}},
+    {"disc", {{Obj::ST_RAZOR_DISK, Obj::ST_SPRING, Obj::ST_CANISTER}, {}}},
+    {"hammer", {{Obj::ST_CONCRETE, Obj::ST_WEDGE, Obj::ST_TRIPWIRE}, {}}},
+    {"pebble", {{Obj::ST_TUBING, Obj::ST_CGAS, Obj::ST_PEBBLES}, {}}},
+    {"frost", {{Obj::ST_NOZZLE, Obj::ST_HOSE, Obj::ST_FROST}, {}}},
+    {"teleport", {{Obj::ST_PENTAGRAM, Obj::ST_TRIPWIRE, Obj::ST_BLINK},
+                   {Obj::ST_PENTAGRAM, Obj::ST_CRYSTALINE, Obj::ST_BLINK}}},
+    {"power", {{Obj::ST_PENTAGRAM, Obj::ST_TRIPWIRE, Obj::ST_ATHANOR},
+                {Obj::ST_PENTAGRAM, Obj::ST_CRYSTALINE, Obj::ST_ATHANOR}}},
+  };
+}  // namespace
+
+// Salvage a disarmed trap's crafting components into the thief's inventory.
+bool reclaimTrapComps(TBeing* thief, sstring trap_type, TTrap* trap) {
+  sstring key = trap_type;
+  for (auto& c : key)
+    c = tolower(static_cast<unsigned char>(c));
+
+  auto it = kTrapRecipes.find(key);
+  if (it == kTrapRecipes.end())
+    return false;
+
+  // A TTrap is only passed for grenades/mines: they use the launched recipe
+  // (when one exists) and additionally yield their casing.
+  bool isLaunched = trap && (trap->isTrapEffectType(TRAP_EFF_THROW) ||
+                              trap->isTrapEffectType(TRAP_EFF_MOVE));
+  std::vector<int> components = (isLaunched && !it->second.launched.empty())
+                                  ? it->second.launched
+                                  : it->second.standard;
+  if (trap) {
+    if (trap->isTrapEffectType(TRAP_EFF_THROW))
+      components.push_back(Obj::ST_CASE_GRENADE);
+    else if (trap->isTrapEffectType(TRAP_EFF_MOVE))
+      components.push_back(Obj::ST_CASE_MINE);
+  }
+
+  int recovery_chance = 50 + (thief->getSkillValue(SKILL_DISARM_TRAP) / 2);
+  size_t recovered = 0;
+  for (int vnum : components) {
+    if (::number(1, 100) > recovery_chance)
+      continue;
+    if (TObj* comp = read_object(vnum, VIRTUAL)) {
+      // Notify before adding, since the merge into inventory may message too.
+      act("You carefully recover $p from the trap.", false, thief, comp,
+        nullptr, TO_CHAR);
+      *thief += *comp;
+      recovered++;
+    }
+  }
+
+  if (recovered == 0) {
+    act("You were unable to salvage any components from the trap.", false,
+      thief, nullptr, nullptr, TO_CHAR);
+    return false;
+  }
+  if (recovered < components.size())
+    act("You managed to salvage some components from the trap.", false, thief,
+      nullptr, nullptr, TO_CHAR);
+  else
+    act("You successfully recovered all components from the trap!", false,
+      thief, nullptr, nullptr, TO_CHAR);
+
+  return true;
+}
+
 int TObj::disarmMe(TBeing* thief) {
   thief->sendTo("I don't think that's a trap.\n\r");
   return FALSE;
@@ -190,8 +280,35 @@ int TTrap::disarmMe(TBeing* thief) {
   if (thief->bSuccess(bKnown, SKILL_DISARM_TRAP)) {
     thief->sendTo(format("Click.  You disarm the %s trap.\n\r") % trap_type);
     act("$n disarms $p.", FALSE, thief, this, 0, TO_ROOM);
+
+    // Try to salvage components if the thief has the appropriate trap-setting
+    // skills
+    bool canSalvage = false;
+    if (isTrapEffectType(TRAP_EFF_THROW) &&
+        thief->doesKnowSkill(SKILL_SET_TRAP_GREN)) {
+      canSalvage = true;
+    } else if (isTrapEffectType(TRAP_EFF_MOVE) &&
+               !isTrapEffectType(TRAP_EFF_THROW) &&
+               thief->doesKnowSkill(SKILL_SET_TRAP_MINE)) {
+      canSalvage = true;
+    } else if (!isTrapEffectType(TRAP_EFF_THROW) &&
+               !isTrapEffectType(TRAP_EFF_MOVE) &&
+               thief->doesKnowSkill(SKILL_SET_TRAP_CONT)) {
+      canSalvage = true;
+    }
+
+    if (canSalvage) {
+      reclaimTrapComps(thief, trap_type, this);
+    } else {
+      act(
+        "You lack the knowledge to salvage components from this type of "
+        "trap.",
+        false, thief, nullptr, nullptr, TO_CHAR);
+    }
+
     setTrapCharges(0);
-    return TRUE;
+    // Return special flag to indicate trap should be deleted
+    return DELETE_ITEM;
   } else {
     thief->sendTo("Click. (whoops)\n\r");
     act("$n tries to disarm $p.", FALSE, thief, this, 0, TO_ROOM);
@@ -204,12 +321,15 @@ int TTrap::disarmMe(TBeing* thief) {
 }
 
 int disarmTrapObj(TBeing* thief, TObj* trap) {
-  int rc;
-  rc = trap->disarmMe(thief);
+  int rc = trap->disarmMe(thief);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     return DELETE_THIS;
   }
-  return FALSE;
+  if (IS_SET_DELETE(rc, DELETE_ITEM)) {
+    // Pass the DELETE_ITEM flag up so disarmTrap can delete the disarmed trap.
+    return DELETE_ITEM;
+  }
+  return 0;
 }
 
 int disarmTrapDoor(TBeing* thief, dirTypeT door) {
@@ -237,6 +357,19 @@ int disarmTrapDoor(TBeing* thief, dirTypeT door) {
                   trap_type % doorbuf);
     sprintf(buf, "$n disarms the %s trap in the %s.", trap_type, doorbuf);
     act(buf, FALSE, thief, 0, 0, TO_ROOM);
+
+    // Try to salvage components from door traps if the thief has the
+    // appropriate skill
+    if (thief->doesKnowSkill(SKILL_SET_TRAP_DOOR)) {
+      reclaimTrapComps(thief, trap_type,
+        nullptr);  // nullptr = flag trap (no TTrap)
+    } else {
+      act(
+        "You lack the knowledge to salvage components from this type of "
+        "trap.",
+        false, thief, nullptr, nullptr, TO_CHAR);
+    }
+
     REMOVE_BIT(exitp->condition, EXIT_TRAPPED);
     if ((rp = real_roomp(exitp->to_room)) &&
         (back = rp->dir_option[rev_dir(door)])) {

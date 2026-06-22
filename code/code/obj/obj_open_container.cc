@@ -515,6 +515,16 @@ int TOpenContainer::disarmMe(TBeing* thief) {
     act("$n disarms $p.", FALSE, thief, this, 0, TO_ROOM);
     remContainerFlag(CONT_TRAPPED);
 
+    // Salvage components if the thief knows how to set container traps
+    if (thief->doesKnowSkill(SKILL_SET_TRAP_CONT)) {
+      reclaimTrapComps(thief, trap_types[getContainerTrapType()], nullptr);
+    } else {
+      act(
+        "You lack the knowledge to salvage components from this type of "
+        "trap.",
+        false, thief, nullptr, nullptr, TO_CHAR);
+    }
+
     return TRUE;
   } else {
     thief->sendTo("Click. (whoops)\n\r");
