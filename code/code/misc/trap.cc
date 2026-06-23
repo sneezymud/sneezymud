@@ -450,13 +450,13 @@ int TBeing::triggerArrowTrap(TArrow* obj) {
   }
 
   // arrow = single-target (the struck victim); carrier = the arrow
-  return applyTrapEffect(obj->getTrapDamType(), obj->getTrapDamAmount(), obj);
+  return applyTrapEffect(obj->getTrapDamType(), obj->getTrapLevel(), obj);
 }
 
 // returns DELETE_THIS or FALSE
 int TBeing::triggerDoorTrap(dirTypeT door) {
   roomDirData* exitp = exitDir(door);
-  int dam = dice(exitp->trap_dam, 8);
+  int dam = exitp->trap_dam;  // raw power; applyTrapEffect rolls dice(dam, 8)
   doorTrapT type = static_cast<doorTrapT>(exitp->trap_info);
 
   // door traps can be triggered by means other than opening
@@ -486,7 +486,7 @@ int TBeing::triggerDoorTrap(dirTypeT door) {
       TThing* t = *(it++);
       TBeing* tbt = dynamic_cast<TBeing*>(t);
       if (tbt && tbt != this && !tbt->isImmortal()) {
-        int brc = tbt->applyTrapEffect(type, dam / 2, nullptr);
+        int brc = tbt->applyTrapEffect(type, dam, nullptr, nullptr, 2);
         if (IS_SET_DELETE(brc, DELETE_THIS)) {
           delete tbt;
           tbt = nullptr;
@@ -501,7 +501,7 @@ int TBeing::triggerDoorTrap(dirTypeT door) {
       TThing* t = *(it++);
       TBeing* tbt = dynamic_cast<TBeing*>(t);
       if (tbt && !tbt->isImmortal()) {
-        int brc = tbt->applyTrapEffect(type, dam / 2, nullptr);
+        int brc = tbt->applyTrapEffect(type, dam, nullptr, nullptr, 2);
         if (IS_SET_DELETE(brc, DELETE_THIS)) {
           delete tbt;
           tbt = nullptr;
@@ -646,7 +646,7 @@ int TBeing::triggerTrap(TTrap* o) {
   o->setTrapCharges(o->getTrapCharges() - 1);
 
   doorTrapT type = o->getTrapDamType();
-  int dam = o->getTrapDamAmount();
+  int dam = o->getTrapLevel();  // raw power; applyTrapEffect rolls dice(dam, 8)
 
   // Bystanders first (half damage), so we never touch `this` mid-iteration.
   // Splash hits all beings except the primary (`!= this`) and immortals.
@@ -655,7 +655,7 @@ int TBeing::triggerTrap(TTrap* o) {
       TThing* t = *(it++);
       TBeing* tbt = dynamic_cast<TBeing*>(t);
       if (tbt && tbt != this && !tbt->isImmortal()) {
-        int brc = tbt->applyTrapEffect(type, dam / 2, o);
+        int brc = tbt->applyTrapEffect(type, dam, o, nullptr, 2);
         if (IS_SET_DELETE(brc, DELETE_THIS)) {
           // die() -> genericKillFix() has already called reformGroup(),
           // DeleteHatreds(), and DeleteFears() before returning DELETE_THIS,
@@ -686,13 +686,18 @@ int TBeing::dealTrapDamage(spellNumT damageClass, int dam, TThing* carrier,
 }
 
 // Apply a per-type trap effect to `this` (the victim).
-// `dam` is the already-computed damage amount.
+// `trapPower` is the raw trap power (the d8 dice count): door/container/portal
+// trap_dam, or an object trap's level. The damage roll lives here so every
+// trigger path rolls identically — `dam = dice(trapPower, 8) / denom`.
+// `denom` reduces the roll: 1 for the primary victim, 2 for the half-damage
+// room/far-side splash, 6 for goof self-damage.
 // `carrier` is the trap object (may be nullptr).
 // `setter` is the trap's setter (may be nullptr).
 // Returns DELETE_THIS if the victim was deleted, else 0.
-int TBeing::applyTrapEffect(doorTrapT type, int dam, TThing* carrier,
-  TBeing* setter) {
+int TBeing::applyTrapEffect(doorTrapT type, int trapPower, TThing* carrier,
+  TBeing* setter, int denom) {
   int rc;
+  int dam = dice(trapPower, 8) / denom;
 
   switch (type) {
     case DOOR_TRAP_POISON:
@@ -1019,17 +1024,17 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
   }
   hasTrapComps(comps, goof_type, -1);
 
-  // Goof self-damage is uniformly 1/6 of a successful trap's roll: this
-  // preserves the old door/container value (they applied /3 then /2) and
-  // halves the old mine/grenade value (they applied only /3).
-  int dam = dice(getTrapDam(goof_type, trap_type), 8) / 6;
+  // Goof self-damage is uniformly 1/6 of a successful trap's roll (the denom=6
+  // below): this preserves the old door/container value (they applied /3 then
+  // /2) and halves the old mine/grenade value (they applied only /3).
+  int dam = getTrapDam(goof_type, trap_type);  // raw power; rolled below
 
   act("You slip up, and your trap goes off in your face!", false, this, nullptr,
     nullptr, TO_CHAR);
   act("$n slips up, and $s trap goes off in $s face!", false, this, nullptr,
     nullptr, TO_ROOM);
 
-  int rc = applyTrapEffect(trap_type, dam, task->obj);
+  int rc = applyTrapEffect(trap_type, dam, task->obj, nullptr, 6);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
   return false;
@@ -1416,7 +1421,7 @@ void TBeing::throwGrenade(TTrap* o, dirTypeT dir) {
 }
 
 int TBeing::grenadeHit(TTrap* o) {
-  return applyTrapEffect(o->getTrapDamType(), o->getTrapDamAmount(), o);
+  return applyTrapEffect(o->getTrapDamType(), o->getTrapLevel(), o);
 }
 
 int TMonster::grenadeHit(TTrap* o) {
