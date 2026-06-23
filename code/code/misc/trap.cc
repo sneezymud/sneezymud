@@ -699,6 +699,21 @@ int TBeing::applyTrapEffect(doorTrapT type, int trapPower, TThing* carrier,
   int rc;
   int dam = dice(trapPower, 8) / denom;
 
+  // An agile victim rolls with a trap's physical force, taking only half.
+  // This applies to the damage types only — afflictions (poison/sleep/disease/
+  // teleport) are resisted by their own immunity/luck/CON saves, not agility,
+  // so you can't "dodge" a lungful of sleep gas. The check scales with trap
+  // power (`isAgile(-trapPower / 2)`): stronger traps are harder to roll with.
+  bool affliction = (type == DOOR_TRAP_POISON || type == DOOR_TRAP_SLEEP ||
+                     type == DOOR_TRAP_DISEASE || type == DOOR_TRAP_TELEPORT);
+  if (!affliction && isAgile(-trapPower / 2)) {
+    dam = (dam + 1) / 2;
+    act("You roll with the trap, taking only a glancing blow!", false, this,
+      nullptr, nullptr, TO_CHAR);
+    act("$n rolls deftly with the trap, taking only a glancing blow.", true,
+      this, nullptr, nullptr, TO_ROOM);
+  }
+
   switch (type) {
     case DOOR_TRAP_POISON:
       act("You are sprayed with contact poison!", false, this, nullptr, nullptr,
