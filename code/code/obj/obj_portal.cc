@@ -17,6 +17,7 @@
 #include "room.h"
 #include "task.h"
 #include "trap.h"
+#include "disc_thief_looting.h"
 
 TPortal::TPortal(const TRoom* rp) :
   TSeeThru(),
@@ -216,6 +217,45 @@ int TPortal::trapMe(TBeing* ch, const char* trap_type) {
   start_task(ch, this, nullptr, TASK_TRAP_PORTAL, task_arg.c_str(), 3,
     ch->inRoom(), type, 0, 5);
   return false;
+}
+
+int TPortal::disarmMe(TBeing* thief) {
+  if (!isPortalFlag(EXIT_TRAPPED)) {
+    act("$p doesn't appear to be trapped.", false, thief, this, nullptr,
+      TO_CHAR);
+    return false;
+  }
+
+  sstring trap_type = trap_types[getPortalTrapType()];
+  int bKnown = thief->getSkillValue(SKILL_DISARM_TRAP);
+
+  if (thief->bSuccess(bKnown, SKILL_DISARM_TRAP)) {
+    act(format("Click.  You disarm the %s trap on $p.") % trap_type, false,
+      thief, this, nullptr, TO_CHAR);
+    act("$n disarms the trap on $p.", false, thief, this, nullptr, TO_ROOM);
+    remPortalFlag(EXIT_TRAPPED);
+    // Salvage components if the thief knows how to set door/portal traps
+    if (thief->doesKnowSkill(SKILL_SET_TRAP_DOOR))
+      reclaimTrapComps(thief, trap_type, nullptr);
+    else
+      act(
+        "You lack the knowledge to salvage components from this type of "
+        "trap.",
+        false, thief, nullptr, nullptr, TO_CHAR);
+    return true;
+  }
+
+  thief->sendTo("Click. (whoops)\n\r");
+  act("$n tries to disarm the trap on $p.", false, thief, this, nullptr,
+    TO_ROOM);
+  int rc = thief->triggerPortalTrap(this);
+  if (IS_SET_DELETE(rc, DELETE_THIS) && IS_SET_DELETE(rc, DELETE_ITEM))
+    return DELETE_VICT | DELETE_ITEM;
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_VICT;
+  if (IS_SET_DELETE(rc, DELETE_ITEM))
+    return DELETE_ITEM;
+  return true;
 }
 
 void TPortal::showMe(TBeing* ch) const {

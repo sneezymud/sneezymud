@@ -38,6 +38,7 @@ class TPortal : public TSeeThru {
     virtual int detectMe(TBeing*) const;
     virtual void showMe(TBeing*) const;
     virtual int trapMe(TBeing*, const char*);
+    virtual int disarmMe(TBeing*);
 
     char getPortalNumCharges() const;
     void setPortalNumCharges(char r);
