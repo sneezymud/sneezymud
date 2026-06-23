@@ -408,6 +408,10 @@ void TOpenContainer::lookObj(TBeing* ch, int bits) const {
 int TOpenContainer::trapMe(TBeing* ch, const char* trap_type) {
   char buf[256];
 
+  if (!ch->doesKnowSkill(SKILL_SET_TRAP_CONT)) {
+    ch->sendTo("You know nothing about making container traps.\n\r");
+    return false;
+  }
   if (!isCloseable()) {
     act("$p must be closeable to be trapped.", FALSE, ch, this, 0, TO_CHAR);
     return FALSE;
@@ -439,35 +443,10 @@ int TOpenContainer::trapMe(TBeing* ch, const char* trap_type) {
       return DELETE_VICT;
   }
 
-  doorTrapT type;
-  if (is_abbrev(trap_type, "fire")) {
-    type = DOOR_TRAP_FIRE;
-  } else if (is_abbrev(trap_type, "explosive")) {
-    type = DOOR_TRAP_TNT;
-  } else if (is_abbrev(trap_type, "poison")) {
-    type = DOOR_TRAP_POISON;
-  } else if (is_abbrev(trap_type, "sleep")) {
-    type = DOOR_TRAP_SLEEP;
-  } else if (is_abbrev(trap_type, "acid")) {
-    type = DOOR_TRAP_ACID;
-  } else if (is_abbrev(trap_type, "spore")) {
-    type = DOOR_TRAP_DISEASE;
-  } else if (is_abbrev(trap_type, "spike")) {
-    type = DOOR_TRAP_SPIKE;
-  } else if (is_abbrev(trap_type, "blade")) {
-    type = DOOR_TRAP_BLADE;
-  } else if (is_abbrev(trap_type, "pebble")) {
-    type = DOOR_TRAP_PEBBLE;
-  } else if (is_abbrev(trap_type, "frost")) {
-    type = DOOR_TRAP_FROST;
-  } else if (is_abbrev(trap_type, "teleport")) {
-    type = DOOR_TRAP_TELEPORT;
-  } else if (is_abbrev(trap_type, "power")) {
-    type = DOOR_TRAP_ENERGY;
-  } else {
+  doorTrapT type = parseTrapType(trap_type, TRAP_TARG_CONT);
+  if (type == MAX_TRAP_TYPES) {
     ch->sendTo("No such container trap-type.\n\r");
-    ch->sendTo("Syntax: trap container <item> <trap-type>\n\r");
-    return FALSE;
+    return false;
   }
   if (!ch->hasTrapComps(trap_type, TRAP_TARG_CONT, 0)) {
     ch->sendTo("You need more items to make that trap.\n\r");

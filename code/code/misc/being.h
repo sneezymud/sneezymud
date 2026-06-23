@@ -1291,6 +1291,9 @@ class TBeing : public TThing {
     int disarmTrap(const char*, TObj*);
     int detectTrap(const char*, int);
     int doSetTraps(const char*);
+    int makeDoorTrap(dirTypeT, const char*);
+    int makeMineTrap(const char*);
+    int makeGrenadeTrap(const char*);
     int doBerserk();
     int doShoot(const char*);
     void doSeekwater();

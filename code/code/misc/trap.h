@@ -75,3 +75,4 @@ struct TrapSourceInfo {
 };
 extern const TrapSourceInfo trapSourceInfo[];
 extern int trapDamMod(doorTrapT);
+doorTrapT parseTrapType(const char* name, trap_targ_t target);

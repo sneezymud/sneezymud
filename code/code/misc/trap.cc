@@ -110,9 +110,6 @@ const sstring trap_types[] = {"None", "Poison", "Spike", "Sleep", "Explosive",
   "Blade", "Fire", "Acid", "Spore", "Hammer", "Frost", "Teleport", "Power",
   "Bolt", "Disc", "Pebble", "\n"};
 
-const char* user_trap_types[] = {"exit", "container", "mine", "grenade",
-  "arrow", "\n"};
-
 int trapDamMod(doorTrapT type) {
   switch (type) {
     case DOOR_TRAP_TNT:
@@ -150,6 +147,54 @@ const TrapSourceInfo trapSourceInfo[] = {
   /* TRAP_TARG_ARROW   */ {5, 2, SKILL_SET_TRAP_ARROW},
 };
 
+doorTrapT parseTrapType(const char* name, trap_targ_t target) {
+  // Universal types
+  if (is_abbrev(name, "fire"))
+    return DOOR_TRAP_FIRE;
+  if (is_abbrev(name, "explosive"))
+    return DOOR_TRAP_TNT;
+  if (is_abbrev(name, "sleep"))
+    return DOOR_TRAP_SLEEP;
+  if (is_abbrev(name, "acid"))
+    return DOOR_TRAP_ACID;
+  if (is_abbrev(name, "spore"))
+    return DOOR_TRAP_DISEASE;
+  if (is_abbrev(name, "frost"))
+    return DOOR_TRAP_FROST;
+  if (is_abbrev(name, "teleport"))
+    return DOOR_TRAP_TELEPORT;
+  if (is_abbrev(name, "power"))
+    return DOOR_TRAP_ENERGY;
+  // Poison: everywhere except arrows
+  if (target != TRAP_TARG_ARROW && is_abbrev(name, "poison"))
+    return DOOR_TRAP_POISON;
+  // spike/blade: door, container, arrow
+  if (target == TRAP_TARG_DOOR || target == TRAP_TARG_CONT ||
+      target == TRAP_TARG_ARROW) {
+    if (is_abbrev(name, "spike"))
+      return DOOR_TRAP_SPIKE;
+    if (is_abbrev(name, "blade"))
+      return DOOR_TRAP_BLADE;
+  }
+  // hammer: door only
+  if (target == TRAP_TARG_DOOR && is_abbrev(name, "hammer"))
+    return DOOR_TRAP_HAMMER;
+  // pebble: container, arrow, mine, grenade
+  if (target == TRAP_TARG_CONT || target == TRAP_TARG_ARROW ||
+      target == TRAP_TARG_MINE || target == TRAP_TARG_GRENADE) {
+    if (is_abbrev(name, "pebble"))
+      return DOOR_TRAP_PEBBLE;
+  }
+  // bolt/disk: mine, grenade
+  if (target == TRAP_TARG_MINE || target == TRAP_TARG_GRENADE) {
+    if (is_abbrev(name, "bolt"))
+      return DOOR_TRAP_BOLT;
+    if (is_abbrev(name, "disk"))
+      return DOOR_TRAP_DISK;
+  }
+  return MAX_TRAP_TYPES;
+}
+
 int TBeing::springTrap(TTrap* obj) {
   int adj, fireperc, roll;
 
@@ -165,291 +210,177 @@ int TBeing::springTrap(TTrap* obj) {
 }
 
 int TBeing::doSetTraps(const char* arg) {
-  roomDirData* exitp;
-  char buf[256], task_arg[128];
-  char sstring[512], trap_type[40], direct[20];
-  int field, dir;
-  dirTypeT door;
-  doorTrapT type;
-  int rc;
-  TObj* obj;
-
   // prevent people from making traps in peace rooms:
   // policeman may attack if they see you trapping
   // goofup may cause damage
   if (checkPeaceful("You are not permitted to construct traps here.\n\r"))
-    return FALSE;
+    return false;
 
-  bisect_arg(arg, &field, sstring, user_trap_types);
+  // Grammar: trap <target> <type>.  The trap-damage TYPE is always the last
+  // whitespace token; everything before it is the target (a "<name> [dir]"
+  // pair, disarm-style).  Targets resolve object-first-then-door, so
+  // containers/arrows/portals dispatch through the polymorphic TObj::trapMe
+  // and doors go through findDoor.  mine/grenade are explicit creation
+  // keywords and take precedence over object lookup.  Each target path (a
+  // trapMe override or a makeXxxTrap helper) owns its own skill/component/learn
+  // gates; this dispatcher only routes.
+  sstring input = sstring(arg).trim();
+  sstring type = input.lastWord();
+  sstring targetRef = input.dropLastWord().trim();
 
-  switch (field - 1) {
-    case TRAP_TARG_DOOR:  // exit traps
-      if (!doesKnowSkill(SKILL_SET_TRAP_DOOR)) {
-        sendTo("You know nothing about making door traps.\n\r");
-        return FALSE;
-      }
-
-      sscanf(sstring, "%s %s", direct, trap_type);
-      if ((dir = old_search_block(direct, 0, strlen(direct), dirs, 0)) <= 0) {
-        sendTo("No such direction.\n\r");
-        sendTo("Syntax: trap exit <direction> <trap-type>\n\r");
-        return FALSE;
-      }
-      door = dirTypeT(dir - 1);
-      exitp = exitDir(door);
-      if (!exitp || (exitp->door_type == DOOR_NONE)) {
-        sendTo("There is no door there to trap.\n\r");
-        return FALSE;
-      }
-
-      if (!IS_SET(exitp->condition, EXIT_CLOSED)) {
-        sendTo(format("You need to close the %s first.\n\r") %
-               exitp->getName().uncap());
-        return FALSE;
-      }
-      if (IS_SET(exitp->condition, EXIT_TRAPPED)) {
-        sendTo(format("When you try to trap the %s, you set off the trap that "
-                      "is already there!\n\r") %
-               exitp->getName().uncap());
-        rc = triggerDoorTrap(door);
-        if (IS_SET_DELETE(rc, DELETE_THIS))
-          return DELETE_THIS;
-        return FALSE;
-      }
-      if (is_abbrev(trap_type, "fire")) {
-        type = DOOR_TRAP_FIRE;
-      } else if (is_abbrev(trap_type, "explosive")) {
-        type = DOOR_TRAP_TNT;
-      } else if (is_abbrev(trap_type, "poison")) {
-        type = DOOR_TRAP_POISON;
-      } else if (is_abbrev(trap_type, "sleep")) {
-        type = DOOR_TRAP_SLEEP;
-      } else if (is_abbrev(trap_type, "acid")) {
-        type = DOOR_TRAP_ACID;
-      } else if (is_abbrev(trap_type, "spore")) {
-        type = DOOR_TRAP_DISEASE;
-      } else if (is_abbrev(trap_type, "spike")) {
-        type = DOOR_TRAP_SPIKE;
-      } else if (is_abbrev(trap_type, "blade")) {
-        type = DOOR_TRAP_BLADE;
-      } else if (is_abbrev(trap_type, "hammer")) {
-        type = DOOR_TRAP_HAMMER;
-      } else if (is_abbrev(trap_type, "frost")) {
-        type = DOOR_TRAP_FROST;
-      } else if (is_abbrev(trap_type, "teleport")) {
-        type = DOOR_TRAP_TELEPORT;
-      } else if (is_abbrev(trap_type, "power")) {
-        type = DOOR_TRAP_ENERGY;
-      } else {
-        sendTo("No such exit trap-type.\n\r");
-        sendTo("Syntax: trap exit <direction> <trap-type>\n\r");
-        return FALSE;
-      }
-      if (!hasTrapComps(trap_type, TRAP_TARG_DOOR, 0)) {
-        sendTo("You need more items to make that trap.\n\r");
-        return FALSE;
-      }
-
-      if (getTrapLearn(TRAP_TARG_DOOR) <= 0) {
-        sendTo("You need more training before setting a door trap.\n\r");
-        return FALSE;
-      }
-
-      sendTo("You start working on your trap.\n\r");
-      sprintf(buf, "$n starts fiddling with the %s.",
-        exitp->getName().uncap().c_str());
-      act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-      sprintf(task_arg, "%s %s", direct, trap_type);
-      start_task(this, NULL, NULL, TASK_TRAP_DOOR, task_arg, 3, inRoom(), type,
-        door, 5);
-      return FALSE;
-    case TRAP_TARG_CONT:
-      if (!doesKnowSkill(SKILL_SET_TRAP_CONT)) {
-        sendTo("You know nothing about making container traps.\n\r");
-        return FALSE;
-      }
-      sscanf(sstring, "%s %s", direct, trap_type);
-      if (!(obj = get_obj_vis_accessible(this, direct))) {
-        sendTo("No such item present.\n\r");
-        sendTo("Syntax: trap container <item> <trap-type>\n\r");
-        return FALSE;
-      }
-      rc = obj->trapMe(this, trap_type);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        delete obj;
-        obj = NULL;
-      }
-      if (IS_SET_DELETE(rc, DELETE_VICT)) {
-        return DELETE_THIS;
-      }
-      return FALSE;
-    case TRAP_TARG_MINE:
-      if (!doesKnowSkill(SKILL_SET_TRAP_MINE)) {
-        sendTo("You know nothing about making mines.\n\r");
-        return FALSE;
-      }
-
-      sscanf(sstring, "%s", trap_type);
-
-      if (is_abbrev(trap_type, "fire")) {
-        type = DOOR_TRAP_FIRE;
-      } else if (is_abbrev(trap_type, "explosive")) {
-        type = DOOR_TRAP_TNT;
-      } else if (is_abbrev(trap_type, "poison")) {
-        type = DOOR_TRAP_POISON;
-      } else if (is_abbrev(trap_type, "sleep")) {
-        type = DOOR_TRAP_SLEEP;
-      } else if (is_abbrev(trap_type, "acid")) {
-        type = DOOR_TRAP_ACID;
-      } else if (is_abbrev(trap_type, "spore")) {
-        type = DOOR_TRAP_DISEASE;
-      } else if (is_abbrev(trap_type, "bolt")) {
-        type = DOOR_TRAP_BOLT;
-      } else if (is_abbrev(trap_type, "disk")) {
-        type = DOOR_TRAP_DISK;
-      } else if (is_abbrev(trap_type, "pebble")) {
-        type = DOOR_TRAP_PEBBLE;
-      } else if (is_abbrev(trap_type, "frost")) {
-        type = DOOR_TRAP_FROST;
-      } else if (is_abbrev(trap_type, "teleport")) {
-        type = DOOR_TRAP_TELEPORT;
-      } else if (is_abbrev(trap_type, "power")) {
-        type = DOOR_TRAP_ENERGY;
-      } else {
-        sendTo("No such mine trap-type.\n\r");
-        sendTo("Syntax: trap mine <trap-type>\n\r");
-        return FALSE;
-      }
-      if (getTrapLearn(TRAP_TARG_MINE) <= 0) {
-        sendTo("You need more training before setting a mine trap.\n\r");
-        return FALSE;
-      }
-
-      if (!hasTrapComps(trap_type, TRAP_TARG_MINE, 0)) {
-        sendTo("You need more items to make that trap.\n\r");
-        return FALSE;
-      }
-
-      sendTo("You start working on your trap.\n\r");
-      act("$n starts constructing a land-mine.", TRUE, this, 0, 0, TO_ROOM);
-      start_task(this, NULL, NULL, TASK_TRAP_MINE, trap_type, 3, inRoom(), type,
-        0, 5);
-      return FALSE;
-    case TRAP_TARG_ARROW:
-      if (!doesKnowSkill(SKILL_SET_TRAP_ARROW)) {
-        sendTo("You know nothing about making arrow traps.\n\r");
-        return FALSE;
-      }
-      sscanf(sstring, "%s %s", direct, trap_type);
-      if (!(obj = get_obj_vis_accessible(this, direct))) {
-        sendTo("No such item present.\n\r");
-        sendTo("Syntax: trap arrow <item> <trap-type>\n\r");
-        return FALSE;
-      }
-
-      if (is_abbrev(trap_type, "fire")) {
-        type = DOOR_TRAP_FIRE;
-      } else if (is_abbrev(trap_type, "explosive")) {
-        type = DOOR_TRAP_TNT;
-      } else if (is_abbrev(trap_type, "sleep")) {
-        type = DOOR_TRAP_SLEEP;
-      } else if (is_abbrev(trap_type, "acid")) {
-        type = DOOR_TRAP_ACID;
-      } else if (is_abbrev(trap_type, "spore")) {
-        type = DOOR_TRAP_DISEASE;
-      } else if (is_abbrev(trap_type, "spike")) {
-        type = DOOR_TRAP_SPIKE;
-      } else if (is_abbrev(trap_type, "blade")) {
-        type = DOOR_TRAP_BLADE;
-      } else if (is_abbrev(trap_type, "pebble")) {
-        type = DOOR_TRAP_PEBBLE;
-      } else if (is_abbrev(trap_type, "frost")) {
-        type = DOOR_TRAP_FROST;
-      } else if (is_abbrev(trap_type, "teleport")) {
-        type = DOOR_TRAP_TELEPORT;
-      } else if (is_abbrev(trap_type, "power")) {
-        type = DOOR_TRAP_ENERGY;
-      } else {
-        sendTo("No such arrow trap type.\n\r");
-        sendTo("Syntax: trap arrow <trap-type>\n\r");
-        return FALSE;
-      }
-
-      if (getTrapLearn(TRAP_TARG_ARROW) <= 0) {
-        sendTo("You need more training before setting an arrow trap.\n\r");
-        return FALSE;
-      }
-
-      // TODO:: modify hasTrapComps for arrows
-      if (!hasTrapComps(trap_type, TRAP_TARG_CONT, 0)) {
-        sendTo("You need more items to make that trap.\n\r");
-        return FALSE;
-      }
-
-      sendTo("You start working on your arrow.\n\r");
-      act("$n starts trapping an arrow.", TRUE, this, 0, 0, TO_ROOM);
-      start_task(this, obj, NULL, TASK_TRAP_ARROW, trap_type, 3, inRoom(), type,
-        0, 5);
-      break;
-    case TRAP_TARG_GRENADE:
-      if (!doesKnowSkill(SKILL_SET_TRAP_GREN)) {
-        sendTo("You know nothing about making grenades.\n\r");
-        return FALSE;
-      }
-
-      sscanf(sstring, "%s", trap_type);
-
-      if (is_abbrev(trap_type, "fire")) {
-        type = DOOR_TRAP_FIRE;
-      } else if (is_abbrev(trap_type, "explosive")) {
-        type = DOOR_TRAP_TNT;
-      } else if (is_abbrev(trap_type, "poison")) {
-        type = DOOR_TRAP_POISON;
-      } else if (is_abbrev(trap_type, "sleep")) {
-        type = DOOR_TRAP_SLEEP;
-      } else if (is_abbrev(trap_type, "acid")) {
-        type = DOOR_TRAP_ACID;
-      } else if (is_abbrev(trap_type, "spore")) {
-        type = DOOR_TRAP_DISEASE;
-      } else if (is_abbrev(trap_type, "bolt")) {
-        type = DOOR_TRAP_BOLT;
-      } else if (is_abbrev(trap_type, "disk")) {
-        type = DOOR_TRAP_DISK;
-      } else if (is_abbrev(trap_type, "pebble")) {
-        type = DOOR_TRAP_PEBBLE;
-      } else if (is_abbrev(trap_type, "frost")) {
-        type = DOOR_TRAP_FROST;
-      } else if (is_abbrev(trap_type, "teleport")) {
-        type = DOOR_TRAP_TELEPORT;
-      } else if (is_abbrev(trap_type, "power")) {
-        type = DOOR_TRAP_ENERGY;
-      } else {
-        sendTo("No such grenade trap-type.\n\r");
-        sendTo("Syntax: trap grenade <trap-type>\n\r");
-        return FALSE;
-      }
-      if (getTrapLearn(TRAP_TARG_GRENADE) <= 0) {
-        sendTo("You need more training before setting a grenade trap.\n\r");
-        return FALSE;
-      }
-
-      if (!hasTrapComps(trap_type, TRAP_TARG_GRENADE, 0)) {
-        sendTo("You need more items to make that trap.\n\r");
-        return FALSE;
-      }
-
-      sendTo("You start working on your grenade.\n\r");
-      act("$n starts constructing a grenade.", TRUE, this, 0, 0, TO_ROOM);
-      start_task(this, NULL, NULL, TASK_TRAP_GRENADE, trap_type, 3, inRoom(),
-        type, 0, 5);
-      return FALSE;
-    default:
-      sendTo(
-        "Syntax: trap <\"exit\" | \"container\" | \"mine\" | \"grenade\"> "
-        "...\n\r");
-      break;
+  if (targetRef.empty() || type.empty()) {
+    sendTo(
+      "Trap what, with what?  e.g. 'trap north fire' or 'trap chest poison'."
+      "\n\r");
+    return false;
   }
-  return FALSE;
+
+  sstring targetName = targetRef.word(0);
+
+  if (is_abbrev(targetName, "mine"))
+    return makeMineTrap(type.c_str());
+  if (is_abbrev(targetName, "grenade"))
+    return makeGrenadeTrap(type.c_str());
+
+  if (TObj* obj = get_obj_vis_accessible(this, targetName)) {
+    int rc = obj->trapMe(this, type.c_str());
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      delete obj;
+      obj = nullptr;
+    }
+    if (IS_SET_DELETE(rc, DELETE_VICT))
+      return DELETE_THIS;
+    return false;
+  }
+
+  char name[256], dir[256];
+  argument_interpreter(targetRef.c_str(), name, cElements(name), dir,
+    cElements(dir));
+  // A bare direction ("trap north fire") names the exit directly, the way the
+  // legacy "trap exit <dir>" command did.  findDoor only treats its second
+  // argument as a direction, so resolve a leading direction ourselves before
+  // falling back to findDoor for named doors ("trap gate fire", "trap gate
+  // north fire").
+  dirTypeT door = DIR_NONE;
+  if (!*dir) {
+    if (int d = old_search_block(name, 0, strlen(name), dirs, 0); d > 0)
+      door = dirTypeT(d - 1);
+  }
+  if (door == DIR_NONE)
+    door = findDoor(name, dir, DOOR_INTENT_OPEN, SILENT_YES);
+  if (door >= 0)
+    return makeDoorTrap(door, type.c_str());
+
+  sendTo(format("You can't find \"%s\" here.\n\r") % targetRef);
+  return false;
+}
+
+// Door trap creation, reached via the findDoor() resolution in doSetTraps.
+// The body is the preserved legacy door logic.
+int TBeing::makeDoorTrap(dirTypeT door, const char* trap_type) {
+  if (!doesKnowSkill(SKILL_SET_TRAP_DOOR)) {
+    sendTo("You know nothing about making door traps.\n\r");
+    return false;
+  }
+
+  roomDirData* exitp = exitDir(door);
+  if (!exitp || (exitp->door_type == DOOR_NONE)) {
+    sendTo("There is no door there to trap.\n\r");
+    return false;
+  }
+
+  if (!IS_SET(exitp->condition, EXIT_CLOSED)) {
+    sendTo(
+      format("You need to close the %s first.\n\r") % exitp->getName().uncap());
+    return false;
+  }
+  if (IS_SET(exitp->condition, EXIT_TRAPPED)) {
+    sendTo(format("When you try to trap the %s, you set off the trap that "
+                  "is already there!\n\r") %
+           exitp->getName().uncap());
+    int rc = triggerDoorTrap(door);
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
+    return false;
+  }
+
+  doorTrapT type = parseTrapType(trap_type, TRAP_TARG_DOOR);
+  if (type == MAX_TRAP_TYPES) {
+    sendTo("No such door trap-type.\n\r");
+    return false;
+  }
+  if (!hasTrapComps(trap_type, TRAP_TARG_DOOR, 0)) {
+    sendTo("You need more items to make that trap.\n\r");
+    return false;
+  }
+  if (getTrapLearn(TRAP_TARG_DOOR) <= 0) {
+    sendTo("You need more training before setting a door trap.\n\r");
+    return false;
+  }
+
+  sendTo("You start working on your trap.\n\r");
+  act(format("$n starts fiddling with the %s.") % exitp->getName().uncap(),
+    true, this, nullptr, nullptr, TO_ROOM);
+  sstring task_arg = sstring(dirs[door]) + " " + trap_type;
+  start_task(this, nullptr, nullptr, TASK_TRAP_DOOR, task_arg.c_str(), 3,
+    inRoom(), type, door, 5);
+  return false;
+}
+
+int TBeing::makeMineTrap(const char* trap_type) {
+  if (!doesKnowSkill(SKILL_SET_TRAP_MINE)) {
+    sendTo("You know nothing about making mines.\n\r");
+    return false;
+  }
+
+  doorTrapT type = parseTrapType(trap_type, TRAP_TARG_MINE);
+  if (type == MAX_TRAP_TYPES) {
+    sendTo("No such mine trap-type.\n\r");
+    return false;
+  }
+  if (getTrapLearn(TRAP_TARG_MINE) <= 0) {
+    sendTo("You need more training before setting a mine trap.\n\r");
+    return false;
+  }
+  if (!hasTrapComps(trap_type, TRAP_TARG_MINE, 0)) {
+    sendTo("You need more items to make that trap.\n\r");
+    return false;
+  }
+
+  sendTo("You start working on your trap.\n\r");
+  act("$n starts constructing a land-mine.", true, this, nullptr, nullptr,
+    TO_ROOM);
+  start_task(this, nullptr, nullptr, TASK_TRAP_MINE, trap_type, 3, inRoom(),
+    type, 0, 5);
+  return false;
+}
+
+int TBeing::makeGrenadeTrap(const char* trap_type) {
+  if (!doesKnowSkill(SKILL_SET_TRAP_GREN)) {
+    sendTo("You know nothing about making grenades.\n\r");
+    return false;
+  }
+
+  doorTrapT type = parseTrapType(trap_type, TRAP_TARG_GRENADE);
+  if (type == MAX_TRAP_TYPES) {
+    sendTo("No such grenade trap-type.\n\r");
+    return false;
+  }
+  if (getTrapLearn(TRAP_TARG_GRENADE) <= 0) {
+    sendTo("You need more training before setting a grenade trap.\n\r");
+    return false;
+  }
+  if (!hasTrapComps(trap_type, TRAP_TARG_GRENADE, 0)) {
+    sendTo("You need more items to make that trap.\n\r");
+    return false;
+  }
+
+  sendTo("You start working on your grenade.\n\r");
+  act("$n starts constructing a grenade.", true, this, nullptr, nullptr,
+    TO_ROOM);
+  start_task(this, nullptr, nullptr, TASK_TRAP_GRENADE, trap_type, 3, inRoom(),
+    type, 0, 5);
+  return false;
 }
 
 // triggered when portal opened or entered
@@ -1288,6 +1219,21 @@ bool TBeing::hasTrapComps(const char* type, trap_targ_t targ, int amt,
 
 void TBeing::sendTrapMessage(const char* type, trap_targ_t targ, int num) {
   sstring buf;
+
+  // Portals reuse the door trap path, but the per-type matrix below names the
+  // trapped exit via task->flags/dir_option, which a portal has no equivalent
+  // for. Give portals a generic progress line and name the portal at the end.
+  if (task && task->obj && dynamic_cast<TPortal*>(task->obj)) {
+    if (num >= 4) {
+      act("You finish trapping $p.", false, this, task->obj, nullptr, TO_CHAR);
+      act("$n finishes trapping $p.", true, this, task->obj, nullptr, TO_ROOM);
+    } else {
+      sendTo("You continue working on the trap.\n\r");
+      act("$n continues working on the trap.", true, this, nullptr, nullptr,
+        TO_ROOM);
+    }
+    return;
+  }
 
   if (is_abbrev(type, "fire")) {
     if (num == 1) {

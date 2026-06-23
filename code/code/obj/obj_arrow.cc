@@ -8,6 +8,8 @@
 #include "shop.h"
 #include "shopowned.h"
 #include "materials.h"
+#include "trap.h"
+#include "task.h"
 
 TArrow::TArrow() :
   TBaseWeapon(),
@@ -285,4 +287,31 @@ void TArrow::changeObjValue3(TBeing* ch) {
 void TArrow::changeObjValue4(TBeing* ch) {
   ch->specials.edit = CHANGE_ARROW_VALUE4;
   change_arrow_value4(ch, this, "", ENTER_CHECK);
+}
+
+int TArrow::trapMe(TBeing* ch, const char* trap_type) {
+  if (!ch->doesKnowSkill(SKILL_SET_TRAP_ARROW)) {
+    ch->sendTo("You know nothing about making arrow traps.\n\r");
+    return false;
+  }
+  doorTrapT type = parseTrapType(trap_type, TRAP_TARG_ARROW);
+  if (type == MAX_TRAP_TYPES) {
+    ch->sendTo("No such arrow trap-type.\n\r");
+    return false;
+  }
+  if (ch->getTrapLearn(TRAP_TARG_ARROW) <= 0) {
+    ch->sendTo("You need more training before setting an arrow trap.\n\r");
+    return false;
+  }
+  // arrows piggyback on container comps; hasTrapComps has no ARROW branch
+  // (would zero acid/spore/teleport/power)
+  if (!ch->hasTrapComps(trap_type, TRAP_TARG_CONT, 0)) {
+    ch->sendTo("You need more items to make that trap.\n\r");
+    return false;
+  }
+  ch->sendTo("You start working on your arrow.\n\r");
+  act("$n starts trapping an arrow.", true, ch, nullptr, nullptr, TO_ROOM);
+  start_task(ch, this, nullptr, TASK_TRAP_ARROW, trap_type, 3, ch->inRoom(),
+    type, 0, 5);
+  return false;
 }

@@ -15,6 +15,8 @@
 #include "obj_portal.h"
 #include "person.h"
 #include "room.h"
+#include "task.h"
+#include "trap.h"
 
 TPortal::TPortal(const TRoom* rp) :
   TSeeThru(),
@@ -181,6 +183,40 @@ void TPortal::setPortalTrapType(unsigned char r) { trap_type = r; }
 unsigned short TPortal::getPortalTrapDam() const { return trap_damage; }
 
 void TPortal::setPortalTrapDam(unsigned short r) { trap_damage = r; }
+
+int TPortal::trapMe(TBeing* ch, const char* trap_type) {
+  if (!ch->doesKnowSkill(SKILL_SET_TRAP_DOOR)) {
+    ch->sendTo("You know nothing about trapping portals.\n\r");
+    return false;
+  }
+  if (isPortalFlag(EXIT_TRAPPED)) {
+    act("$p is already trapped.", false, ch, this, nullptr, TO_CHAR);
+    return false;
+  }
+  doorTrapT type = parseTrapType(trap_type, TRAP_TARG_DOOR);
+  if (type == MAX_TRAP_TYPES) {
+    ch->sendTo("No such portal trap-type.\n\r");
+    return false;
+  }
+  if (ch->getTrapLearn(TRAP_TARG_DOOR) <= 0) {
+    ch->sendTo("You need more training before trapping a portal.\n\r");
+    return false;
+  }
+  if (!ch->hasTrapComps(trap_type, TRAP_TARG_DOOR, 0)) {
+    ch->sendTo("You need more items to make that trap.\n\r");
+    return false;
+  }
+  ch->sendTo("You start working on your trap.\n\r");
+  act("$n starts fiddling with $p.", true, ch, this, nullptr, TO_ROOM);
+  // goofUpTrap's TRAP_TARG_DOOR path half_chops orig_arg and consumes the
+  // components named by the second token, so give it a door-shaped two-token
+  // arg (the first token is discarded) — otherwise a failed portal trap leaks
+  // its components.
+  sstring task_arg = sstring("portal ") + trap_type;
+  start_task(ch, this, nullptr, TASK_TRAP_PORTAL, task_arg.c_str(), 3,
+    ch->inRoom(), type, 0, 5);
+  return false;
+}
 
 void TPortal::showMe(TBeing* ch) const {
   if (isPortalFlag(EXIT_CLOSED))

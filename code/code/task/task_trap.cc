@@ -11,6 +11,7 @@
 #include "extern.h"
 #include "monster.h"
 #include "obj_open_container.h"
+#include "obj_portal.h"
 #include "obj_trap.h"
 #include "obj_arrow.h"
 
@@ -634,4 +635,97 @@ int task_trap_grenade(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       break;  // eat the command
   }
   return TRUE;
+}
+
+int task_trap_portal(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
+  TObj* obj) {
+  char buf1[256], buf2[256];
+  int learning;
+  int rc;
+  TPortal* portal = nullptr;
+
+  // orig_arg is a door-shaped "<token> <trap type>" (so goofUpTrap's door path
+  // can recover the type); half_chop to the trap type as task_trap_door does.
+  half_chop(ch->task->orig_arg, buf1, buf2);
+
+  if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) ||
+      !ch->hasTrapComps(buf2, TRAP_TARG_DOOR, 0) || !obj ||
+      !(portal = dynamic_cast<TPortal*>(obj)) ||
+      portal->isPortalFlag(EXIT_TRAPPED) ||
+      (ch->getPosition() <= POSITION_SITTING) ||
+      !ch->getDiscipline(DISC_LOOTING)) {
+    if (ch->getPosition() >= POSITION_RESTING) {
+      act("You suddenly stop trapping the portal for some reason.", false, ch,
+        0, 0, TO_CHAR);
+      act("$n stops trapping and looks about confused and embarrassed.", true,
+        ch, 0, 0, TO_ROOM);
+    }
+    ch->stopTask();
+    return false;  // returning false lets command be interpreted
+  }
+
+  if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
+    return false;
+
+  // check for guards that prevent
+  rc = trapGuardCheck(ch);
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_THIS;
+  else if (rc)
+    return false;
+
+  if (ch->task->timeLeft < 0) {
+    // Made it to end, set trap
+    doorTrapT type = doorTrapT(ch->task->status);
+    portal->setPortalTrapType(static_cast<unsigned char>(type));
+    portal->setPortalTrapDam(
+      static_cast<unsigned short>(ch->getTrapDam(TRAP_TARG_DOOR, type)));
+    portal->addPortalFlag(EXIT_TRAPPED);
+
+    ch->sendTo("The trap has been successfully set!\n\r");
+    ch->hasTrapComps(buf2, TRAP_TARG_DOOR, -1);
+    ch->stopTask();
+    return false;
+  }
+  switch (cmd) {
+    case CMD_TASK_CONTINUE:
+      learning = ch->getTrapLearn(TRAP_TARG_DOOR);
+      ch->task->calcNextUpdate(pulse,
+        Pulse::MOBACT * (5 + ((100 - learning) / 3)));
+
+      ch->sendTrapMessage(buf2, TRAP_TARG_DOOR, 4 - ch->task->timeLeft);
+      ch->task->timeLeft--;
+
+      // test for failure
+      // let's not test multiple times, check at end
+      if (ch->task->timeLeft < 0 || !ch->doesKnowSkill(SKILL_SET_TRAP_DOOR)) {
+        if (!ch->bSuccess(learning, SKILL_SET_TRAP_DOOR)) {
+          // trigger trap
+          rc = ch->goofUpTrap(doorTrapT(ch->task->status), TRAP_TARG_DOOR);
+          ch->sendTo("Your attempt to set the trap has failed.\n\r");
+          if (IS_SET_DELETE(rc, DELETE_THIS))
+            return DELETE_THIS;
+
+          ch->stopTask();
+          return false;
+        }
+      }
+      break;
+    case CMD_ABORT:
+    case CMD_STOP:
+      act("You stop trying to trap $p.", false, ch, portal, 0, TO_CHAR);
+      act("$n stops tinkering with $p.", false, ch, portal, 0, TO_ROOM);
+      ch->stopTask();
+      break;
+    case CMD_TASK_FIGHTING:
+      ch->sendTo(
+        "You stop setting the trap so that you can defend yourself!\n\r");
+      ch->stopTask();
+      break;
+    default:
+      if (cmd < MAX_CMD_LIST)
+        warn_busy(ch);
+      break;  // eat the command
+  }
+  return true;
 }

@@ -1,5 +1,6 @@
 This is a short description of the possible trap types for set traps as well
-as a list of the items necessary to set each trap.
+as a list of the items necessary to set each trap.  Portal traps use the same
+trap types and materials as door traps.
 
 ------
 Type "fire":
