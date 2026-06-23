@@ -175,15 +175,16 @@ int TBeing::disarmTrap(const char* arg, TObj* tp) {
 // Salvage a disarmed trap's crafting components into the thief's inventory.
 // Sources the reagents from the shared trapComponents() table (same one the
 // trap gating and flavor messages use), rolls recovery per component, and
-// reads each recovered object into the thief. Pass the TTrap for mines and
-// grenades (selects the portable recipe + yields the casing); pass nullptr for
-// flag-based traps (doors, containers, portals).
-bool reclaimTrapComps(TBeing* thief, sstring trap_type, TTrap* trap) {
-  bool isLaunched = trap && (trap->isTrapEffectType(TRAP_EFF_THROW) ||
-                              trap->isTrapEffectType(TRAP_EFF_MOVE));
+// reads each recovered object into the thief. `targ` picks the recipe for the
+// target the trap was set against. Pass the TTrap for mines and grenades (to
+// also yield the casing); pass nullptr for flag-based traps (doors, containers,
+// portals).
+bool reclaimTrapComps(TBeing* thief, sstring trap_type, trap_targ_t targ,
+  TTrap* trap) {
+  // Source the reagents for the same target the trap was set against, so
+  // reclaim returns exactly what the set path consumed.
   int i1 = 0, i2 = 0, i3 = 0;
-  if (!trapComponents(trap_type.c_str(),
-        isLaunched ? TRAP_TARG_MINE : TRAP_TARG_CONT, i1, i2, i3))
+  if (!trapComponents(trap_type.c_str(), targ, i1, i2, i3))
     return false;
 
   std::vector<int> components = {i1, i2, i3};
@@ -248,7 +249,9 @@ int TTrap::disarmMe(TBeing* thief) {
                       (isTrapEffectType(TRAP_EFF_MOVE) &&
                         thief->doesKnowSkill(SKILL_SET_TRAP_MINE));
     if (canSalvage)
-      reclaimTrapComps(thief, trap_type, this);
+      reclaimTrapComps(thief, trap_type,
+        isTrapEffectType(TRAP_EFF_THROW) ? TRAP_TARG_GRENADE : TRAP_TARG_MINE,
+        this);
     else
       act(
         "You lack the knowledge to salvage components from this type of "
@@ -311,7 +314,7 @@ int disarmTrapDoor(TBeing* thief, dirTypeT door) {
     }
     // Salvage components if the thief knows how to set door traps
     if (thief->doesKnowSkill(SKILL_SET_TRAP_DOOR))
-      reclaimTrapComps(thief, trap_type, nullptr);
+      reclaimTrapComps(thief, trap_type, TRAP_TARG_DOOR, nullptr);
     else
       act(
         "You lack the knowledge to salvage components from this type of "

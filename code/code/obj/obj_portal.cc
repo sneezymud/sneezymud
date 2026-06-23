@@ -236,7 +236,7 @@ int TPortal::disarmMe(TBeing* thief) {
     remPortalFlag(EXIT_TRAPPED);
     // Salvage components if the thief knows how to set door/portal traps
     if (thief->doesKnowSkill(SKILL_SET_TRAP_DOOR))
-      reclaimTrapComps(thief, trap_type, nullptr);
+      reclaimTrapComps(thief, trap_type, TRAP_TARG_DOOR, nullptr);
     else
       act(
         "You lack the knowledge to salvage components from this type of "

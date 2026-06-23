@@ -19,10 +19,11 @@ int disarmTrapObj(TBeing*, TObj*);
 int disarmTrapDoor(TBeing*, dirTypeT);
 
 class TTrap;
-// Salvage trap components on a successful disarm. Pass the TTrap for
-// mines/grenades (portable recipe + casing); pass nullptr for flag-based traps
+// Salvage trap components on a successful disarm. `targ` selects the recipe for
+// the target the trap was set against (door/cont/mine/grenade). Pass the TTrap
+// for mines/grenades (yields the casing); pass nullptr for flag-based traps
 // (doors, containers, portals).
-bool reclaimTrapComps(TBeing*, sstring, TTrap*);
+bool reclaimTrapComps(TBeing*, sstring, trap_targ_t, TTrap*);
 
 int detectTrapObj(TBeing*, const TThing*);
 int detectTrapDoor(TBeing*, int);

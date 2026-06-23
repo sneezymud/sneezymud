@@ -496,7 +496,8 @@ int TOpenContainer::disarmMe(TBeing* thief) {
 
     // Salvage components if the thief knows how to set container traps
     if (thief->doesKnowSkill(SKILL_SET_TRAP_CONT))
-      reclaimTrapComps(thief, trap_types[getContainerTrapType()], nullptr);
+      reclaimTrapComps(thief, trap_types[getContainerTrapType()],
+        TRAP_TARG_CONT, nullptr);
     else
       act(
         "You lack the knowledge to salvage components from this type of "
