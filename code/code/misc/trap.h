@@ -76,3 +76,8 @@ struct TrapSourceInfo {
 extern const TrapSourceInfo trapSourceInfo[];
 extern int trapDamMod(doorTrapT);
 doorTrapT parseTrapType(const char* name, trap_targ_t target);
+// Single source of trap component vnums for a (type, target); fills the three
+// reagent vnums and returns false for an unrecognized type. Shared by trap
+// gating/consumption, the set-trap flavor messages, and disarm reclaim.
+bool trapComponents(const char* type, trap_targ_t targ, int& item1, int& item2,
+  int& item3);
