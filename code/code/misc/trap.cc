@@ -1035,127 +1035,224 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
   return false;
 }
 
+namespace {
+  // Standardized component assembly messages
+  constexpr const char* ATTACH_CHAR_MSG = "You attach the %s to the %s.\n\r";
+  constexpr const char* ATTACH_ROOM_MSG = "$n attaches the %s to the %s.";
+  constexpr const char* PLACE_CHAR_MSG = "You place the %s into the %s.\n\r";
+  constexpr const char* PLACE_ROOM_MSG = "$n places the %s into the %s.";
+  constexpr const char* CONNECT_CHAR_MSG = "You connect the %s to the %s.\n\r";
+  constexpr const char* CONNECT_ROOM_MSG = "$n connects the %s to the %s.";
+  constexpr const char* ARM_CHAR_MSG = "You arm the %s mechanism.\n\r";
+  constexpr const char* ARM_ROOM_MSG = "$n arms the %s mechanism.";
+  constexpr const char* CONCEAL_CHAR_MSG =
+    "You conceal the %s inside the %s.\n\r";
+  constexpr const char* CONCEAL_ROOM_MSG = "$n conceals the %s inside the %s.";
+
+  // Component name mapping for clean messages
+  const char* getComponentName(int vnum) {
+    switch (vnum) {
+      case Obj::ST_FLINT:
+        return "flint";
+      case Obj::ST_SULPHUR:
+        return "sulphur";
+      case Obj::ST_BAG:
+        return "bag";
+      case Obj::ST_BELLOWS:
+        return "bellows";
+      case Obj::ST_HYDROGEN:
+        return "compressed gas";
+      case Obj::ST_NEEDLE:
+        return "needle";
+      case Obj::ST_SPRING:
+        return "spring";
+      case Obj::ST_POISON:
+        return "poison";
+      case Obj::ST_CANISTER:
+        return "canister";
+      case Obj::ST_CON_POISON:
+        return "concentrated poison";
+      case Obj::ST_TRIPWIRE:
+        return "tripwire";
+      case Obj::ST_PENTAGRAM:
+        return "pentagram";
+      case Obj::ST_ATHANOR:
+        return "athanor";
+      case Obj::ST_CRYSTALINE:
+        return "crystal";
+      case Obj::ST_BOLTS:
+        return "bolts";
+      case Obj::ST_TUBING:
+        return "tubing";
+      case Obj::ST_PEBBLES:
+        return "pebbles";
+      case Obj::ST_RAZOR_DISK:
+        return "razor discs";
+      case Obj::ST_FUNGUS:
+        return "spores";
+      case Obj::ST_ACID_VIAL:
+        return "acid vial";
+      case Obj::ST_FROST:
+        return "frost compound";
+      case Obj::ST_CONCRETE:
+        return "concrete weight";
+      case Obj::ST_RAZOR_BLADE:
+        return "razor blade";
+      case Obj::ST_NOZZLE:
+        return "nozzle";
+      case Obj::ST_HOSE:
+        return "hose";
+      case Obj::ST_GAS:
+        return "gas";
+      case Obj::ST_CGAS:
+        return "compressed gas";
+      case Obj::ST_SPIKE:
+        return "spike";
+      case Obj::ST_WEDGE:
+        return "wedge";
+      case Obj::ST_BLINK:
+        return "blink powder";
+      default:
+        return "component";
+    }
+  }
+
+  // Single source of trap component vnums for a (type, target): used by
+  // hasTrapComps() to gate and consume, and by sendTrapMessage() to name the
+  // components. A new trap type needs one entry here, not bespoke message
+  // prose. Returns false for an unrecognized type.
+  bool trapComponents(const char* type, trap_targ_t targ, int& item1,
+    int& item2, int& item3) {
+    item1 = item2 = item3 = 0;
+    if (is_abbrev(type, "fire")) {
+      item1 = Obj::ST_FLINT;
+      item2 = Obj::ST_SULPHUR;
+      item3 = Obj::ST_BAG;
+    } else if (is_abbrev(type, "explosive")) {
+      item1 = Obj::ST_FLINT;
+      item2 = Obj::ST_SULPHUR;
+      item3 = Obj::ST_HYDROGEN;
+    } else if (is_abbrev(type, "poison")) {
+      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
+        item1 = Obj::ST_NEEDLE;
+        item2 = Obj::ST_SPRING;
+        item3 = Obj::ST_POISON;
+      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
+        item1 = Obj::ST_CANISTER;
+        item2 = Obj::ST_SPRING;
+        item3 = Obj::ST_CON_POISON;
+      }
+    } else if (is_abbrev(type, "sleep")) {
+      item1 = Obj::ST_NOZZLE;
+      item2 = Obj::ST_GAS;
+      item3 = Obj::ST_HOSE;
+    } else if (is_abbrev(type, "acid")) {
+      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
+        item1 = Obj::ST_NOZZLE;
+        item2 = Obj::ST_ACID_VIAL;
+        item3 = Obj::ST_BELLOWS;
+      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
+        item1 = Obj::ST_CANISTER;
+        item2 = Obj::ST_SPRING;
+        item3 = Obj::ST_ACID_VIAL;
+      }
+    } else if (is_abbrev(type, "spore")) {
+      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
+        item1 = Obj::ST_FUNGUS;
+        item2 = Obj::ST_NOZZLE;
+        item3 = Obj::ST_BELLOWS;
+      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
+        item1 = Obj::ST_CANISTER;
+        item2 = Obj::ST_SPRING;
+        item3 = Obj::ST_FUNGUS;
+      }
+    } else if (is_abbrev(type, "spike")) {
+      if (targ != TRAP_TARG_DOOR && targ != TRAP_TARG_CONT)
+        vlogf(LOG_MISC,
+          format("spike trap being set  with trap targ: %d") % targ);
+
+      item1 = Obj::ST_SPIKE;
+      item2 = Obj::ST_SPRING;
+      item3 = Obj::ST_TRIPWIRE;
+    } else if (is_abbrev(type, "bolt")) {
+      if (targ != TRAP_TARG_MINE && targ != TRAP_TARG_GRENADE)
+        vlogf(LOG_MISC,
+          format("bolt trap being set  with trap targ: %d") % targ);
+
+      item1 = Obj::ST_TUBING;
+      item2 = Obj::ST_CGAS;
+      item3 = Obj::ST_BOLTS;
+    } else if (is_abbrev(type, "blade")) {
+      if (targ != TRAP_TARG_DOOR && targ != TRAP_TARG_CONT)
+        vlogf(LOG_MISC,
+          format("blade trap being set  with trap targ: %d") % targ);
+
+      item1 = Obj::ST_RAZOR_BLADE;
+      item2 = Obj::ST_SPRING;
+      item3 = Obj::ST_TRIPWIRE;
+    } else if (is_abbrev(type, "disk")) {
+      if (targ != TRAP_TARG_MINE && targ != TRAP_TARG_GRENADE)
+        vlogf(LOG_MISC,
+          format("disk trap being set  with trap targ: %d") % targ);
+
+      item1 = Obj::ST_RAZOR_DISK;
+      item2 = Obj::ST_SPRING;
+      item3 = Obj::ST_CANISTER;
+    } else if (is_abbrev(type, "hammer")) {
+      if (targ != TRAP_TARG_DOOR)
+        vlogf(LOG_MISC,
+          format("hammer trap being set  with trap targ: %d") % targ);
+
+      item1 = Obj::ST_CONCRETE;
+      item2 = Obj::ST_WEDGE;
+      item3 = Obj::ST_TRIPWIRE;
+    } else if (is_abbrev(type, "pebble")) {
+      if (targ != TRAP_TARG_CONT && targ != TRAP_TARG_MINE &&
+          targ != TRAP_TARG_GRENADE)
+        vlogf(LOG_MISC,
+          format("pebble trap being set  with trap targ: %d") % targ);
+
+      item1 = Obj::ST_TUBING;
+      item2 = Obj::ST_CGAS;
+      item3 = Obj::ST_PEBBLES;
+    } else if (is_abbrev(type, "frost")) {
+      item1 = Obj::ST_NOZZLE;
+      item2 = Obj::ST_HOSE;
+      item3 = Obj::ST_FROST;
+    } else if (is_abbrev(type, "teleport")) {
+      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
+        item1 = Obj::ST_PENTAGRAM;
+        item2 = Obj::ST_TRIPWIRE;
+        item3 = Obj::ST_BLINK;
+      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
+        item1 = Obj::ST_PENTAGRAM;
+        item2 = Obj::ST_CRYSTALINE;
+        item3 = Obj::ST_BLINK;
+      }
+    } else if (is_abbrev(type, "power")) {
+      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
+        item1 = Obj::ST_PENTAGRAM;
+        item2 = Obj::ST_TRIPWIRE;
+        item3 = Obj::ST_ATHANOR;
+      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
+        item1 = Obj::ST_PENTAGRAM;
+        item2 = Obj::ST_CRYSTALINE;
+        item3 = Obj::ST_ATHANOR;
+      }
+    } else {
+      vlogf(LOG_MISC, format("Bad call to hasTrapComps() : %s") % type);
+      return false;
+    }
+    return true;
+  }
+}  // namespace
+
 bool TBeing::hasTrapComps(const char* type, trap_targ_t targ, int amt,
   int* price) {
   int item1 = 0, item2 = 0, item3 = 0, item4 = 0;
 
-  if (is_abbrev(type, "fire")) {
-    item1 = Obj::ST_FLINT;
-    item2 = Obj::ST_SULPHUR;
-    item3 = Obj::ST_BAG;
-  } else if (is_abbrev(type, "explosive")) {
-    item1 = Obj::ST_FLINT;
-    item2 = Obj::ST_SULPHUR;
-    item3 = Obj::ST_HYDROGEN;
-  } else if (is_abbrev(type, "poison")) {
-    if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-      item1 = Obj::ST_NEEDLE;
-      item2 = Obj::ST_SPRING;
-      item3 = Obj::ST_POISON;
-    } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-      item1 = Obj::ST_CANISTER;
-      item2 = Obj::ST_SPRING;
-      item3 = Obj::ST_CON_POISON;
-    }
-  } else if (is_abbrev(type, "sleep")) {
-    item1 = Obj::ST_NOZZLE;
-    item2 = Obj::ST_GAS;
-    item3 = Obj::ST_HOSE;
-  } else if (is_abbrev(type, "acid")) {
-    if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-      item1 = Obj::ST_NOZZLE;
-      item2 = Obj::ST_ACID_VIAL;
-      item3 = Obj::ST_BELLOWS;
-    } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-      item1 = Obj::ST_CANISTER;
-      item2 = Obj::ST_SPRING;
-      item3 = Obj::ST_ACID_VIAL;
-    }
-  } else if (is_abbrev(type, "spore")) {
-    if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-      item1 = Obj::ST_FUNGUS;
-      item2 = Obj::ST_NOZZLE;
-      item3 = Obj::ST_BELLOWS;
-    } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-      item1 = Obj::ST_CANISTER;
-      item2 = Obj::ST_SPRING;
-      item3 = Obj::ST_FUNGUS;
-    }
-  } else if (is_abbrev(type, "spike")) {
-    if (targ != TRAP_TARG_DOOR && targ != TRAP_TARG_CONT)
-      vlogf(LOG_MISC,
-        format("spike trap being set  with trap targ: %d") % targ);
-
-    item1 = Obj::ST_SPIKE;
-    item2 = Obj::ST_SPRING;
-    item3 = Obj::ST_TRIPWIRE;
-  } else if (is_abbrev(type, "bolt")) {
-    if (targ != TRAP_TARG_MINE && targ != TRAP_TARG_GRENADE)
-      vlogf(LOG_MISC, format("bolt trap being set  with trap targ: %d") % targ);
-
-    item1 = Obj::ST_TUBING;
-    item2 = Obj::ST_CGAS;
-    item3 = Obj::ST_BOLTS;
-  } else if (is_abbrev(type, "blade")) {
-    if (targ != TRAP_TARG_DOOR && targ != TRAP_TARG_CONT)
-      vlogf(LOG_MISC,
-        format("blade trap being set  with trap targ: %d") % targ);
-
-    item1 = Obj::ST_RAZOR_BLADE;
-    item2 = Obj::ST_SPRING;
-    item3 = Obj::ST_TRIPWIRE;
-  } else if (is_abbrev(type, "disk")) {
-    if (targ != TRAP_TARG_MINE && targ != TRAP_TARG_GRENADE)
-      vlogf(LOG_MISC, format("disk trap being set  with trap targ: %d") % targ);
-
-    item1 = Obj::ST_RAZOR_DISK;
-    item2 = Obj::ST_SPRING;
-    item3 = Obj::ST_CANISTER;
-  } else if (is_abbrev(type, "hammer")) {
-    if (targ != TRAP_TARG_DOOR)
-      vlogf(LOG_MISC,
-        format("hammer trap being set  with trap targ: %d") % targ);
-
-    item1 = Obj::ST_CONCRETE;
-    item2 = Obj::ST_WEDGE;
-    item3 = Obj::ST_TRIPWIRE;
-  } else if (is_abbrev(type, "pebble")) {
-    if (targ != TRAP_TARG_CONT && targ != TRAP_TARG_MINE &&
-        targ != TRAP_TARG_GRENADE)
-      vlogf(LOG_MISC,
-        format("pebble trap being set  with trap targ: %d") % targ);
-
-    item1 = Obj::ST_TUBING;
-    item2 = Obj::ST_CGAS;
-    item3 = Obj::ST_PEBBLES;
-  } else if (is_abbrev(type, "frost")) {
-    item1 = Obj::ST_NOZZLE;
-    item2 = Obj::ST_HOSE;
-    item3 = Obj::ST_FROST;
-  } else if (is_abbrev(type, "teleport")) {
-    if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-      item1 = Obj::ST_PENTAGRAM;
-      item2 = Obj::ST_TRIPWIRE;
-      item3 = Obj::ST_BLINK;
-    } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-      item1 = Obj::ST_PENTAGRAM;
-      item2 = Obj::ST_CRYSTALINE;
-      item3 = Obj::ST_BLINK;
-    }
-  } else if (is_abbrev(type, "power")) {
-    if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-      item1 = Obj::ST_PENTAGRAM;
-      item2 = Obj::ST_TRIPWIRE;
-      item3 = Obj::ST_ATHANOR;
-    } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-      item1 = Obj::ST_PENTAGRAM;
-      item2 = Obj::ST_CRYSTALINE;
-      item3 = Obj::ST_ATHANOR;
-    }
-  } else {
-    vlogf(LOG_MISC, format("Bad call to hasTrapComps() : %s") % type);
+  if (!trapComponents(type, targ, item1, item2, item3))
     return FALSE;
-  }
   item1 = real_object(item1);
   item2 = real_object(item2);
   item3 = real_object(item3);
@@ -1217,802 +1314,64 @@ bool TBeing::hasTrapComps(const char* type, trap_targ_t targ, int amt,
     return (com1 && com2 && com3);
 }
 
-void TBeing::sendTrapMessage(const char* type, trap_targ_t targ, int num) {
-  sstring buf;
+void TBeing::sendTrapMessage(const char* trap_type, trap_targ_t targ,
+  int step) {
+  int item1 = 0, item2 = 0, item3 = 0;
+  if (!trapComponents(trap_type, targ, item1, item2, item3)) {
+    item1 = Obj::ST_SPRING;
+    item2 = Obj::ST_TRIPWIRE;
+    item3 = Obj::ST_CANISTER;
+  }
 
-  // Portals reuse the door trap path, but the per-type matrix below names the
-  // trapped exit via task->flags/dir_option, which a portal has no equivalent
-  // for. Give portals a generic progress line and name the portal at the end.
-  if (task && task->obj && dynamic_cast<TPortal*>(task->obj)) {
-    if (num >= 4) {
-      act("You finish trapping $p.", false, this, task->obj, nullptr, TO_CHAR);
-      act("$n finishes trapping $p.", true, this, task->obj, nullptr, TO_ROOM);
-    } else {
+  switch (step) {
+    case 1:
+      sendTo(format(ATTACH_CHAR_MSG) % getComponentName(item1) %
+             getComponentName(item2));
+      act(format(ATTACH_ROOM_MSG) % getComponentName(item1) %
+            getComponentName(item2),
+        true, this, nullptr, nullptr, TO_ROOM);
+      break;
+    case 2:
+      sendTo(format(CONNECT_CHAR_MSG) % getComponentName(item2) %
+             getComponentName(item3));
+      act(format(CONNECT_ROOM_MSG) % getComponentName(item2) %
+            getComponentName(item3),
+        true, this, nullptr, nullptr, TO_ROOM);
+      break;
+    case 3:
+      sendTo(format(ARM_CHAR_MSG) % "trigger");
+      act(format(ARM_ROOM_MSG) % "trigger", true, this, nullptr, nullptr,
+        TO_ROOM);
+      break;
+    case 4:
+      if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
+        sendTo(format(CONCEAL_CHAR_MSG) % "mechanism" % "casing");
+        act(format(CONCEAL_ROOM_MSG) % "mechanism" % "casing", true, this,
+          nullptr, nullptr, TO_ROOM);
+      } else if (task && task->obj) {
+        // container, portal, or arrow — name the object being trapped
+        act("You finish trapping $p.", false, this, task->obj, nullptr,
+          TO_CHAR);
+        act("$n finishes trapping $p.", true, this, task->obj, nullptr,
+          TO_ROOM);
+      } else if (task && roomp && roomp->dir_option[task->flags]) {
+        // door — name the exit being trapped
+        sstring doorname = roomp->dir_option[task->flags]->getName().uncap();
+        sendTo(format("You finish trapping the %s.\n\r") % doorname);
+        act(format("$n finishes trapping the %s.") % doorname, true, this,
+          nullptr, nullptr, TO_ROOM);
+      } else {
+        sendTo(format(PLACE_CHAR_MSG) % "assembly" % "position");
+        act(format(PLACE_ROOM_MSG) % "assembly" % "position", true, this,
+          nullptr, nullptr, TO_ROOM);
+      }
+      break;
+    default:
       sendTo("You continue working on the trap.\n\r");
       act("$n continues working on the trap.", true, this, nullptr, nullptr,
         TO_ROOM);
-    }
-    return;
+      break;
   }
-
-  if (is_abbrev(type, "fire")) {
-    if (num == 1) {
-      sendTo("You pour your sulphur into a small bag.\n\r");
-      act("$n pours some sulphur into a small bag.", TRUE, this, NULL, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 2) {
-      sendTo("You stick a flint halfway down into the bag of sulphur.\n\r");
-      act("$n puts a small flint down into a small bag.", TRUE, this, NULL,
-        NULL, TO_ROOM);
-      return;
-    } else if (num == 3) {
-      sendTo("You close the top of the bag around the flint.\n\r");
-      act("$n wraps the top of $s bag around a small flint.", TRUE, this, NULL,
-        NULL, TO_ROOM);
-      return;
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You trap the %s with your bag.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n jimmys the %s with $s bag.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You trap $p with your bag.", FALSE, this, task->obj, 0, TO_CHAR);
-        act("$n jimmys $p with $s bag.", TRUE, this, task->obj, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        act("You situate the bag inside the mine casing.", FALSE, this, 0, 0,
-          TO_CHAR);
-        act("$n situates $s bag inside a mine casing.", TRUE, this, NULL, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        act("You situate the bag inside the grenade casing.", FALSE, this, 0, 0,
-          TO_CHAR);
-        act("$n situates $s bag inside a grenade casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "explosive")) {
-    if (num == 1) {
-      sendTo("You attach your sulphur to the hydrogen bottle's neck.\n\r");
-      act("$n attaches some sulphur to a bottle of hydrogen.", TRUE, this, NULL,
-        NULL, TO_ROOM);
-      return;
-    } else if (num == 2) {
-      sendTo("You wedge a piece of flint into the bottle's neck.\n\r");
-      act("$n wedges a piece of flint into $s bottle.", TRUE, this, NULL, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 3) {
-      sendTo("You pour some more sulphur around the piece of flint.\n\r");
-      act("$n pours some more sulphur around the flint.", TRUE, this, NULL,
-        NULL, TO_ROOM);
-      return;
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You afix the bottle to the %s.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n jimmys the %s with $s bottle.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You afix the bottle to $p.", FALSE, this, task->obj, 0, TO_CHAR);
-        act("$n jimmys $p with $s bottle.", TRUE, this, task->obj, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        act("You situate the bottle inside the mine casing.", FALSE, this, 0, 0,
-          TO_CHAR);
-        act("$n situates the bottle inside a mine casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        act("You situate the bottle inside the grenade casing.", FALSE, this, 0,
-          0, TO_CHAR);
-        act("$n situates the bottle inside a grenade casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "poison")) {
-    if (num == 1) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo("You attach a needle to the tiny spring.\n\r");
-        act("$n attaches a thin needle to $s tiny spring.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-        sendTo("You pour the contact poison into the canister.\n\r");
-        act("$n pours a murky liquid into a canister.", TRUE, this, NULL, NULL,
-          TO_ROOM);
-        return;
-      }
-    } else if (num == 2) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo("You screw the needle apparatus into the vial of poison.\n\r");
-        act("$n screws the needle apparatus into the vial of poison.", TRUE,
-          this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-        sendTo("You afix the spring to the canister.\n\r");
-        act("$n fiddles with a canister.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 3) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo("You release the poison into the needle.\n\r");
-        act("$n releases the poison into the needle.", TRUE, this, NULL, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        sendTo(
-          "You gently place the canister apparatus inside the mine "
-          "casing.\n\r");
-        act("$n puts the canister inside a mine casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        sendTo(
-          "You gently place the canister apparatus inside a grenade "
-          "casing.\n\r");
-        act("$n puts the canister inside a grenade casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      }
-
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(
-          format("You conceal the poisoned needle inside the %s's lock.\n\r") %
-          fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n conceals the poisoned needle inside the %s's lock.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You conceal the poisoned needle inside $p's lock.", FALSE, this,
-          task->obj, 0, TO_CHAR);
-        act("$n conceals the poisoned needle inside $p's lock.", TRUE, this,
-          task->obj, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        sendTo("You springload the canister and arm the land mine.\n\r");
-        act("$n fiddles with a land mine.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        sendTo(
-          "You take the safeties off the canister and prepare the grenade for "
-          "use.\n\r");
-        act("$n fiddles with a grenade.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "sleep")) {
-    if (num == 1) {
-      sendTo("You screw a small nozzle into a hose.\n\r");
-      act("$n screw a small nozzle into a hose.", TRUE, this, NULL, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 2) {
-      sendTo("You clamp the hose snuggly around the nozzle.\n\r");
-      act("$n clamps the hose snuggly around the nozzle.", TRUE, this, NULL,
-        NULL, TO_ROOM);
-      return;
-    } else if (num == 3) {
-      sendTo("You afix the hose to the vial of gas.\n\r");
-      act("$n afixes the hose to $s vial of gas.", TRUE, this, NULL, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You conceal the gas apparatus within the %s.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n conceals the apparatus inside the %s.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You conceal the gas apparatus inside $p's lock.", FALSE, this,
-          task->obj, 0, TO_CHAR);
-        act("$n conceals the gas apparatus inside $p's lock.", TRUE, this,
-          task->obj, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        act("You conceal the gas apparatus inside a mine casing.", FALSE, this,
-          0, 0, TO_CHAR);
-        act("$n conceals the gas apparatus inside a mine casing.", TRUE, this,
-          NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        act("You conceal the gas apparatus inside a grenade casing.", FALSE,
-          this, 0, 0, TO_CHAR);
-        act("$n conceals the gas apparatus inside a grenade casing.", TRUE,
-          this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "frost")) {
-    if (num == 1) {
-      sendTo("You screw a small nozzle into a hose.\n\r");
-      act("$n screw a small nozzle into a hose.", TRUE, this, NULL, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 2) {
-      sendTo("You clamp the hose snuggly around the nozzle.\n\r");
-      act("$n clamps the hose snuggly around the nozzle.", TRUE, this, NULL,
-        NULL, TO_ROOM);
-      return;
-    } else if (num == 3) {
-      sendTo("You afix the hose to the cylinder of liquid frost.\n\r");
-      act("$n afixes the hose to $s cylinder of liquid frost.", TRUE, this,
-        NULL, NULL, TO_ROOM);
-      return;
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You conceal the frost apparatus into the %s.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n conceals the apparatus into the %s.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You conceal the frost apparatus inside $p's lock.", FALSE, this,
-          task->obj, 0, TO_CHAR);
-        act("$n conceals the frost apparatus inside $p's lock.", TRUE, this,
-          task->obj, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        act("You conceal the frost apparatus inside a mine casing.", FALSE,
-          this, 0, 0, TO_CHAR);
-        act("$n conceals the frost apparatus inside a mine casing.", TRUE, this,
-          NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        act("You conceal the frost apparatus inside a grenade casing.", FALSE,
-          this, 0, 0, TO_CHAR);
-        act("$n conceals the frost apparatus inside a grenade casing.", TRUE,
-          this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "acid")) {
-    if (num == 1) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo("You attach the vial of acid to the bellows.\n\r");
-        act("$n attach the vial of acid to your bellows.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-        sendTo("You pour the acid into the canister.\n\r");
-        act("$n pours a bubbly liquid into a canister.", TRUE, this, NULL, NULL,
-          TO_ROOM);
-        return;
-      }
-    } else if (num == 2) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo("You attach the nozzle to the end of the bellows.\n\r");
-        act("$n attaches the nozzle to $s bellows.", TRUE, this, NULL, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-        sendTo("You afix the spring to the canister.\n\r");
-        act("$n fiddles with a canister.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 3) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo("You release the acid into the bellows.\n\r");
-        act("$n releases the acid into the bellows.", TRUE, this, NULL, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        sendTo(
-          "You gently place the canister apparatus inside the mine "
-          "casing.\n\r");
-        act("$n puts the canister inside a mine casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        sendTo(
-          "You gently place the canister apparatus inside a grenade "
-          "casing.\n\r");
-        act("$n puts the canister inside a grenade casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You conceal the trap inside the %s.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n conceals the trap inside the %s.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You conceal the trap inside $p.", FALSE, this, task->obj, 0,
-          TO_CHAR);
-        act("$n conceals the trap inside $p.", TRUE, this, task->obj, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        sendTo("You springload the canister and arm the land mine.\n\r");
-        act("$n fiddles with a land mine.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        sendTo(
-          "You take the safeties off the canister and prepare the grenade for "
-          "use.\n\r");
-        act("$n fiddles with a grenade.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "spore")) {
-    if (num == 1) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo("You carefully stuff the fungus into the bellows.\n\r");
-        act("$n stuffs some fungus into $s bellows.", TRUE, this, NULL, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-        sendTo("You pour the fungus spores into the canister.\n\r");
-        act("$n pours some fungus spores into a canister.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 2) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo("You cap the end of the bellows with a nozzle.\n\r");
-        act("$n caps the bellows with a nozzle.", TRUE, this, NULL, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-        sendTo("You afix the spring to the canister.\n\r");
-        act("$n fiddles with a canister.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 3) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo(
-          "You shake the bellows, causing the fungus within to release its "
-          "spores.\n\r");
-        act("$n shakes the bellows vigorously.", TRUE, this, NULL, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        sendTo(
-          "You gently place the canister apparatus inside the mine "
-          "casing.\n\r");
-        act("$n puts the canister inside a mine casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        sendTo(
-          "You gently place the canister apparatus inside a grenade "
-          "casing.\n\r");
-        act("$n puts the canister inside a grenade casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You conceal the trap inside the %s.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n conceals the trap inside the %s.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You conceal the trap inside $p.", FALSE, this, task->obj, 0,
-          TO_CHAR);
-        act("$n conceals the trap inside $p.", TRUE, this, task->obj, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        sendTo("You springload the canister and arm the land mine.\n\r");
-        act("$n fiddles with a land mine.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        sendTo(
-          "You take the safeties off the canister and prepare the grenade for "
-          "use.\n\r");
-        act("$n fiddles with a grenade.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "spike")) {
-    if (num == 1) {
-      sendTo("You afix the spring to your sharpened spike.\n\r");
-      act("$n afixes a spring to a sharpened spike.", TRUE, this, NULL, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 2) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You conceal the spike inside the %s.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n conceals the spike inside the %s.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You conceal the spike inside $p.", FALSE, this, task->obj, 0,
-          TO_CHAR);
-        act("$n conceals the spike inside $p.", TRUE, this, task->obj, NULL,
-          TO_ROOM);
-        return;
-      }
-    } else if (num == 3) {
-      sendTo(
-        "You tie the tripwire to the spike apparatus and springload it.\n\r");
-      act("$n ties a tripwire to the spike and fiddles with it some more.",
-        TRUE, this, NULL, NULL, TO_ROOM);
-      return;
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(
-          format("You stretch the tripwire across the %s and tie it off.\n\r") %
-          fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n stretches a tripwire across the %s and ties it off.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You stretch the tripwire across $p's lock and tie it off.", FALSE,
-          this, task->obj, 0, TO_CHAR);
-        act("$n stretches $s tripwire across $p's lock and ties it off.", TRUE,
-          this, task->obj, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "bolt")) {
-    if (num == 1) {
-      act("You attach some tubing to the outlet valve of the compressed gas.",
-        FALSE, this, 0, 0, TO_CHAR);
-      act("$n fiddles with some tubing and a vial.", TRUE, this, 0, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 2) {
-      act("You pour the bolts into the tubing.", FALSE, this, 0, 0, TO_CHAR);
-      act("$n pours some bolts into the tubing.", TRUE, this, 0, NULL, TO_ROOM);
-      return;
-    } else if (num == 3) {
-      act("You arm the trigger mechanism on the compressed gas.", FALSE, this,
-        0, 0, TO_CHAR);
-      act("$n arm the trigger mechanism on the compressed gas.", TRUE, this, 0,
-        NULL, TO_ROOM);
-      return;
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_MINE) {
-        act("You conceal the tubing inside the mine casing.", FALSE, this, 0, 0,
-          TO_CHAR);
-        act("$n fiddles with a mine casing.", TRUE, this, 0, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        act("You conceal the tubing inside the grenade casing.", FALSE, this, 0,
-          0, TO_CHAR);
-        act("$n fiddles with a grenade casing.", TRUE, this, 0, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "blade")) {
-    if (num == 1) {
-      sendTo("You afix the spring to your razor sharp blade.\n\r");
-      act("$n afixes a spring to $s razor blade.", TRUE, this, NULL, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 2) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You conceal the razor blade inside the %s.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n conceals the razor blade inside the %s.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You conceal the razor blade inside $p.", FALSE, this, task->obj, 0,
-          TO_CHAR);
-        act("$n conceals the razor blade inside $p.", TRUE, this, task->obj,
-          NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 3) {
-      sendTo(
-        "You tie the tripwire to the razor apparatus and springload it.\n\r");
-      act("$n ties a tripwire to the razor and fiddles with it some more.",
-        TRUE, this, NULL, NULL, TO_ROOM);
-      return;
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(
-          format("You stretch the tripwire across the %s and tie it off.\n\r") %
-          fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n stretches a tripwire across the %s and ties it off.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You stretch the tripwire across $p's lock and tie it off.", FALSE,
-          this, task->obj, 0, TO_CHAR);
-        act("$n stretches $s tripwire across $p's lock and ties it off.", TRUE,
-          this, task->obj, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "disk")) {
-    if (num == 1) {
-      sendTo("You pour the razor sharp disks into the canister.\n\r");
-      act("$n pours some razor sharp disks into a canister.", TRUE, this, NULL,
-        NULL, TO_ROOM);
-      return;
-    } else if (num == 2) {
-      sendTo("You afix the spring to the canister.\n\r");
-      act("$n fiddles with a canister.", TRUE, this, NULL, NULL, TO_ROOM);
-      return;
-    } else if (num == 3) {
-      if (targ == TRAP_TARG_MINE) {
-        sendTo(
-          "You gently place the canister apparatus inside the mine "
-          "casing.\n\r");
-        act("$n puts the canister inside a mine casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        sendTo(
-          "You gently place the canister apparatus inside a grenade "
-          "casing.\n\r");
-        act("$n puts the canister inside a grenade casing.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_MINE) {
-        sendTo("You springload the canister and arm the land mine.\n\r");
-        act("$n fiddles with a land mine.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        sendTo(
-          "You take the safeties off the canister and prepare the grenade for "
-          "use.\n\r");
-        act("$n fiddles with a grenade.", TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "hammer")) {
-    if (num == 1) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You pry open the frame of a %s with your wedge.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n pries at a %s's frame.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 2) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You shove the concrete up above the %s's frame.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n stuffs something bulky above the %s.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 3) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo("You tie the tripwire to the frame wedge.\n\r");
-        act("$n ties a tripwire to $s booby trap.", TRUE, this, NULL, NULL,
-          TO_ROOM);
-        return;
-      }
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(
-          format("You stretch the tripwire across the %s and tie it off.\n\r") %
-          fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n stretches a tripwire across the %s and ties it off.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "pebble")) {
-    if (num == 1) {
-      act("You attach some tubing to the outlet valve of the compressed gas.",
-        FALSE, this, 0, 0, TO_CHAR);
-      act("$n fiddles with some tubing and a vial.", TRUE, this, 0, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 2) {
-      act("You pour the pebbles into the tubing.", FALSE, this, 0, 0, TO_CHAR);
-      act("$n pours some stones into the tubing.", TRUE, this, 0, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 3) {
-      act("You arm the trigger mechanism on the compressed gas.", FALSE, this,
-        0, 0, TO_CHAR);
-      act("$n arm the trigger mechanism on the compressed gas.", TRUE, this, 0,
-        NULL, TO_ROOM);
-      return;
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_CONT) {
-        act("You conceal the tubing on $p.", FALSE, this, task->obj, 0,
-          TO_CHAR);
-        act("$n fiddles with $p.", TRUE, this, task->obj, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        act("You conceal the tubing inside the mine casing.", FALSE, this, 0, 0,
-          TO_CHAR);
-        act("$n fiddles with a mine casing.", TRUE, this, 0, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        act("You conceal the tubing inside the grenade casing.", FALSE, this, 0,
-          0, TO_CHAR);
-        act("$n fiddles with a grenade casing.", TRUE, this, 0, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "teleport")) {
-    if (num == 1) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You plaster a pentagram to the %s to focus the magical "
-                      "forces.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n plasters a pentagram to the %s.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You plaster a pentagram to $p to focus the magical forces.", FALSE,
-          this, task->obj, 0, TO_CHAR);
-        act("$n plasters a pentagram to $p.", TRUE, this, task->obj, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        act(
-          "You plaster a pentagram to a mine casing to focus the magical "
-          "forces.",
-          FALSE, this, 0, 0, TO_CHAR);
-        act("$n plasters a pentagram to a mine casing.", TRUE, this, 0, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        act(
-          "You plaster a pentagram to a grenade casing to focus the magical "
-          "forces.",
-          FALSE, this, 0, 0, TO_CHAR);
-        act("$n plasters a pentagram to a grenade casing.", TRUE, this, 0, NULL,
-          TO_ROOM);
-        return;
-      }
-    } else if (num == 2) {
-      sendTo(
-        "You sprinkle the blink powder around the edges of the pentagram.\n\r");
-      act("$n sprinkles some dust on the pentagram.", TRUE, this, NULL, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 3) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo("You bond the tripwire to one side of the pentagram.\n\r");
-        act("$n fiddles with a bit of wire and $s pentagram.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-        sendTo("You trace along the pentagram with the crystalline.\n\r");
-        act("$n fiddles with a crystal and $s pentagram.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(
-          format("You stretch the tripwire across the %s and tie it off.\n\r") %
-          fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n stretches a tripwire across the %s and ties it off.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You stretch the tripwire across $p's lock and tie it off.", FALSE,
-          this, task->obj, 0, TO_CHAR);
-        act("$n stretches $s tripwire across $p's lock and ties it off.", TRUE,
-          this, task->obj, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-        act(
-          "You snap the crystalline, activating the magical forces in the "
-          "pentagram.",
-          FALSE, this, 0, 0, TO_CHAR);
-        act(
-          "As $n snaps $s crystalline in half, the pentagram glows with magic.",
-          TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    }
-  } else if (is_abbrev(type, "power")) {
-    if (num == 1) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(format("You plaster a pentagram to the %s to focus the magical "
-                      "forces.\n\r") %
-               fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n plasters a pentagram to the %s.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You plaster a pentagram to $p to focus the magical forces.", FALSE,
-          this, task->obj, 0, TO_CHAR);
-        act("$n plasters a pentagram to $p.", TRUE, this, task->obj, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE) {
-        act(
-          "You plaster a pentagram to a mine casing to focus the magical "
-          "forces.",
-          FALSE, this, 0, 0, TO_CHAR);
-        act("$n plasters a pentagram to a mine casing.", TRUE, this, 0, NULL,
-          TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_GRENADE) {
-        act(
-          "You plaster a pentagram to a grenade casing to focus the magical "
-          "forces.",
-          FALSE, this, 0, 0, TO_CHAR);
-        act("$n plasters a pentagram to a grenade casing.", TRUE, this, 0, NULL,
-          TO_ROOM);
-        return;
-      }
-    } else if (num == 2) {
-      sendTo(
-        "You position the refined athanor in the center of the pentagram.\n\r");
-      act("$n puts something inside the pentagram.", TRUE, this, NULL, NULL,
-        TO_ROOM);
-      return;
-    } else if (num == 3) {
-      if (targ == TRAP_TARG_DOOR || targ == TRAP_TARG_CONT) {
-        sendTo("You bond the tripwire to one side of the pentagram.\n\r");
-        act("$n fiddles with a bit of wire and $s pentagram.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-        sendTo("You trace along the pentagram with the crystalline.\n\r");
-        act("$n fiddles with a crystal and $s pentagram.", TRUE, this, NULL,
-          NULL, TO_ROOM);
-        return;
-      }
-    } else if (num == 4) {
-      if (targ == TRAP_TARG_DOOR) {
-        sendTo(
-          format("You stretch the tripwire across the %s and tie it off.\n\r") %
-          fname(roomp->dir_option[task->flags]->keyword));
-        buf = format("$n stretches a tripwire across the %s and ties it off.") %
-              fname(roomp->dir_option[task->flags]->keyword);
-        act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_CONT) {
-        act("You stretch the tripwire across $p's lock and tie it off.", FALSE,
-          this, task->obj, 0, TO_CHAR);
-        act("$n stretches $s tripwire across $p's lock and ties it off.", TRUE,
-          this, task->obj, NULL, TO_ROOM);
-        return;
-      } else if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
-        act(
-          "You snap the crystalline, activating the magical forces in the "
-          "pentagram.",
-          FALSE, this, 0, 0, TO_CHAR);
-        act(
-          "As $n snaps $s crystalline in half, the pentagram glows with magic.",
-          TRUE, this, NULL, NULL, TO_ROOM);
-        return;
-      }
-    }
-  }
-
-  vlogf(LOG_BUG, format("Bad trap type (%s, %d, %d) with character %s") % type %
-                   targ % num % getName());
 }
 
 void TBeing::throwGrenade(TTrap* o, dirTypeT dir) {
