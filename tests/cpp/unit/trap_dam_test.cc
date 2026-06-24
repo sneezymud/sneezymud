@@ -1,37 +1,15 @@
-// Verify the per-type additive damage modifiers in trapDamMod() match the
-// table documented in docs/systems/important/trap-system.md.
-// trapDamMod is pure (no game state), so no fixture is needed.
+// Verify trapSetSkill[] stays ordered to match the trap_targ_t enum, so the
+// index-based lookups in getTrapDam()/getTrapLearn() resolve to the correct
+// set-trap skill for each target. Pure table, no game state needed.
 
 #include <gtest/gtest.h>
 
 #include "trap.h"
 
-TEST(TrapDamMod, NoneReturnsZero) { EXPECT_EQ(trapDamMod(DOOR_TRAP_NONE), 0); }
-TEST(TrapDamMod, FireReturnsZero) { EXPECT_EQ(trapDamMod(DOOR_TRAP_FIRE), 0); }
-
-TEST(TrapDamMod, PositiveModifiers) {
-  EXPECT_EQ(trapDamMod(DOOR_TRAP_TNT), 3);
-  EXPECT_EQ(trapDamMod(DOOR_TRAP_DISEASE), 3);
-  EXPECT_EQ(trapDamMod(DOOR_TRAP_FROST), 3);
-  EXPECT_EQ(trapDamMod(DOOR_TRAP_DISK), 3);
-  EXPECT_EQ(trapDamMod(DOOR_TRAP_ENERGY), 5);
-  EXPECT_EQ(trapDamMod(DOOR_TRAP_TELEPORT), 5);
-  EXPECT_EQ(trapDamMod(DOOR_TRAP_SLEEP), 1);
-  EXPECT_EQ(trapDamMod(DOOR_TRAP_ACID), 1);
-  EXPECT_EQ(trapDamMod(DOOR_TRAP_BOLT), 1);
-}
-
-TEST(TrapDamMod, NegativeModifiers) {
-  EXPECT_EQ(trapDamMod(DOOR_TRAP_POISON), -1);
-  EXPECT_EQ(trapDamMod(DOOR_TRAP_BLADE), -3);
-  EXPECT_EQ(trapDamMod(DOOR_TRAP_SPIKE), -5);
-  EXPECT_EQ(trapDamMod(DOOR_TRAP_PEBBLE), -5);
-  EXPECT_EQ(trapDamMod(DOOR_TRAP_HAMMER), -10);
-}
-
-// Confirm trapSourceInfo[] ordering matches trap_targ_t enum values so
-// index-based lookup in getTrapDam() is correct.
-TEST(TrapSourceInfo, OrderingMatchesTrapTargT) {
-  EXPECT_EQ(trapSourceInfo[TRAP_TARG_DOOR].setSkill, SKILL_SET_TRAP_DOOR);
-  EXPECT_EQ(trapSourceInfo[TRAP_TARG_ARROW].baseDam, 5);
+TEST(TrapSetSkill, OrderingMatchesTrapTargT) {
+  EXPECT_EQ(trapSetSkill[TRAP_TARG_DOOR], SKILL_SET_TRAP_DOOR);
+  EXPECT_EQ(trapSetSkill[TRAP_TARG_CONT], SKILL_SET_TRAP_CONT);
+  EXPECT_EQ(trapSetSkill[TRAP_TARG_MINE], SKILL_SET_TRAP_MINE);
+  EXPECT_EQ(trapSetSkill[TRAP_TARG_GRENADE], SKILL_SET_TRAP_GREN);
+  EXPECT_EQ(trapSetSkill[TRAP_TARG_ARROW], SKILL_SET_TRAP_ARROW);
 }

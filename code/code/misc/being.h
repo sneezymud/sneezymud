@@ -1077,7 +1077,7 @@ class TBeing : public TThing {
     virtual bool addHated(TBeing*);
     virtual void setHunting(TBeing*) {}
     void throwGrenade(TTrap*, dirTypeT);
-    int getTrapDam(trap_targ_t, doorTrapT);
+    int getTrapDam(trap_targ_t);
     int getTrapLearn(trap_targ_t);
     bool canDoSummon() const;
     bool isSummonable() const;

@@ -132,42 +132,9 @@ void describeTrapToLooker(TBeing* ch, const TThing* obj,
   }
 }
 
-int trapDamMod(doorTrapT type) {
-  switch (type) {
-    case DOOR_TRAP_TNT:
-    case DOOR_TRAP_DISEASE:
-    case DOOR_TRAP_FROST:
-    case DOOR_TRAP_DISK:
-      return 3;
-    case DOOR_TRAP_ENERGY:
-    case DOOR_TRAP_TELEPORT:
-      return 5;
-    case DOOR_TRAP_SLEEP:
-    case DOOR_TRAP_ACID:
-    case DOOR_TRAP_BOLT:
-      return 1;
-    case DOOR_TRAP_POISON:
-      return -1;
-    case DOOR_TRAP_BLADE:
-      return -3;
-    case DOOR_TRAP_SPIKE:
-    case DOOR_TRAP_PEBBLE:
-      return -5;
-    case DOOR_TRAP_HAMMER:
-      return -10;
-    default:
-      return 0;
-  }
-}
-
 // Indexed by trap_targ_t: DOOR=0, CONT=1, MINE=2, GRENADE=3, ARROW=4
-const TrapSourceInfo trapSourceInfo[] = {
-  /* TRAP_TARG_DOOR    */ {10, 2, SKILL_SET_TRAP_DOOR},
-  /* TRAP_TARG_CONT    */ {20, 3, SKILL_SET_TRAP_CONT},
-  /* TRAP_TARG_MINE    */ {20, 2, SKILL_SET_TRAP_MINE},
-  /* TRAP_TARG_GRENADE */ {5, 2, SKILL_SET_TRAP_GREN},
-  /* TRAP_TARG_ARROW   */ {5, 2, SKILL_SET_TRAP_ARROW},
-};
+const spellNumT trapSetSkill[] = {SKILL_SET_TRAP_DOOR, SKILL_SET_TRAP_CONT,
+  SKILL_SET_TRAP_MINE, SKILL_SET_TRAP_GREN, SKILL_SET_TRAP_ARROW};
 
 doorTrapT parseTrapType(const char* name, trap_targ_t target) {
   // Universal types
@@ -1083,7 +1050,7 @@ int TBeing::goofUpTrap(doorTrapT trap_type, trap_targ_t goof_type) {
   // Goof self-damage is uniformly 1/6 of a successful trap's roll (the denom=6
   // below): this preserves the old door/container value (they applied /3 then
   // /2) and halves the old mine/grenade value (they applied only /3).
-  int dam = getTrapDam(goof_type, trap_type);  // raw power; rolled below
+  int dam = getTrapDam(goof_type);  // raw power; rolled below
 
   act("You slip up, and your trap goes off in your face!", false, this, nullptr,
     nullptr, TO_CHAR);
@@ -1549,16 +1516,21 @@ int TObj::grenadeHit(TTrap* o) {
   return FALSE;
 }
 
-int TBeing::getTrapDam(trap_targ_t targ, doorTrapT type) {
-  const TrapSourceInfo& si = trapSourceInfo[targ];
-  int damage = si.baseDam + getSkillLevel(si.setSkill) / si.skillDivisor;
-  damage = damage * getTrapLearn(targ) / 100;
-  damage += trapDamMod(type);
-  return min(max(damage, 1), 50);
+int TBeing::getTrapDam(trap_targ_t targ) {
+  // Normalized crafted trap level: the governing set-trap skill's level scaled
+  // by how well it's learned, then nudged by INT (+/-25%) and DEX (+/-12.5%).
+  double intMod = 1.0 + plotStat(STAT_CURRENT, STAT_INT, -0.25, 0.25, 0.0, 1.0);
+  double dexMod =
+    1.0 + plotStat(STAT_CURRENT, STAT_DEX, -0.25, 0.25, 0.0, 1.0) / 2.0;
+  double level = getSkillLevel(trapSetSkill[targ]) *
+                 (getTrapLearn(targ) / 100.0) * intMod * dexMod;
+  // Every trap type shares one ceiling; the formula itself tops out near 70 for
+  // a maxed setter, so this is mostly a safety bound.
+  return min(max(static_cast<int>(level), 1), 80);
 }
 
 int TBeing::getTrapLearn(trap_targ_t targ) {
-  int learn = getSkillValue(trapSourceInfo[targ].setSkill);
+  int learn = getSkillValue(trapSetSkill[targ]);
   if (learn <= 0)
     return 0;
   return min(learn, static_cast<int>(MAX_SKILL_LEARNEDNESS));

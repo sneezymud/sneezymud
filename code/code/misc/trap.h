@@ -71,13 +71,8 @@ extern const char* const trap_effects[MAX_TRAP_EFF];
 extern doorTrapT mapFileToDoorTrap(int);
 extern int mapDoorTrapToFile(doorTrapT);
 
-struct TrapSourceInfo {
-    int baseDam;
-    int skillDivisor;
-    spellNumT setSkill;
-};
-extern const TrapSourceInfo trapSourceInfo[];
-extern int trapDamMod(doorTrapT);
+// The set-trap skill that governs each trap_targ_t, indexed by target.
+extern const spellNumT trapSetSkill[];
 doorTrapT parseTrapType(const char* name, trap_targ_t target);
 // Single source of trap component vnums for a (type, target); fills the three
 // reagent vnums and returns false for an unrecognized type. Shared by trap

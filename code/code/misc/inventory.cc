@@ -246,7 +246,9 @@ void TTrap::dropMe(TBeing* ch, showMeT, showRoomT showroom) {
     ed->next = ex_description;
     ex_description = ed;
     ed->keyword = TRAP_EX_DESC;
-    ed->description = getName();
+    // Record who set the trap (not the mine's own name) so the trigger can
+    // recognize the setter and spare their group.
+    ed->description = ch->getName();
 
     // utilize baseclass so we are recursive
     // we already displayed appropriate text (room intentionally concealed)

@@ -87,8 +87,7 @@ int task_trap_door(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
     exitp->trap_info = ch->task->status;
 
     // this is number of 8-sided die to use for damage
-    int trapdamage =
-      ch->getTrapDam(TRAP_TARG_DOOR, doorTrapT(ch->task->status));
+    int trapdamage = ch->getTrapDam(TRAP_TARG_DOOR);
     exitp->trap_dam = trapdamage;
 
     // and now for other side
@@ -201,8 +200,7 @@ int task_trap_container(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
     cont->setContainerTrapType(doorTrapT(ch->task->status));
 
     // this is number of 8-sided die to use for damage
-    int trapdamage =
-      ch->getTrapDam(TRAP_TARG_CONT, doorTrapT(ch->task->status));
+    int trapdamage = ch->getTrapDam(TRAP_TARG_CONT);
     cont->setContainerTrapDam(trapdamage);
 
     ch->sendTo("The trap has been successfully set!\n\r");
@@ -275,7 +273,7 @@ int task_trap_container(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
 
 void TTrap::makeTrapLand(TBeing* ch, doorTrapT status, const char* args) {
   // this should be a number between 1-50
-  int trapdamage = ch->getTrapDam(TRAP_TARG_MINE, status);
+  int trapdamage = ch->getTrapDam(TRAP_TARG_MINE);
 
   int stdflags = TRAP_EFF_MOVE | TRAP_EFF_NORTH | TRAP_EFF_EAST |
                  TRAP_EFF_SOUTH | TRAP_EFF_WEST | TRAP_EFF_UP | TRAP_EFF_DOWN |
@@ -437,8 +435,7 @@ int task_trap_arrow(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
 
   if (ch->task->timeLeft < 0) {
     // Made it to end, set trap
-    arrow->setTrapLevel(
-      ch->getTrapDam(TRAP_TARG_ARROW, doorTrapT(ch->task->status)));
+    arrow->setTrapLevel(ch->getTrapDam(TRAP_TARG_ARROW));
     arrow->setTrapDamType(doorTrapT(ch->task->status));
 
     ch->sendTo("You have successfully constructed an arrow trap!\n\r");
@@ -514,7 +511,7 @@ int task_trap_arrow(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
 
 void TTrap::makeTrapGrenade(TBeing* ch, doorTrapT status, const char* args) {
   // this should be a number between 1-50
-  int trapdamage = ch->getTrapDam(TRAP_TARG_GRENADE, status);
+  int trapdamage = ch->getTrapDam(TRAP_TARG_GRENADE);
 
   setTrapLevel(trapdamage);
 
@@ -679,7 +676,7 @@ int task_trap_portal(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
     doorTrapT type = doorTrapT(ch->task->status);
     portal->setPortalTrapType(static_cast<unsigned char>(type));
     portal->setPortalTrapDam(
-      static_cast<unsigned short>(ch->getTrapDam(TRAP_TARG_DOOR, type)));
+      static_cast<unsigned short>(ch->getTrapDam(TRAP_TARG_DOOR)));
     portal->addPortalFlag(EXIT_TRAPPED);
 
     // Mirror the trap onto the linked partner portal so it ambushes from
