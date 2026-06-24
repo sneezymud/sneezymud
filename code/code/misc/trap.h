@@ -73,6 +73,10 @@ extern int mapDoorTrapToFile(doorTrapT);
 
 // The set-trap skill that governs each trap_targ_t, indexed by target.
 extern const spellNumT trapSetSkill[];
+// Resolve a trap's recorded setter to a live, creditable being, or nullptr.
+// nullptr for any trap with no recorded setter (all world/mob-loaded traps),
+// which routes its damage to the unattributed objDamage() fallback.
+TBeing* trapSetter(const TThing* carrier);
 doorTrapT parseTrapType(const char* name, trap_targ_t target);
 // Single source of trap component vnums for a (type, target); fills the three
 // reagent vnums and returns false for an unrecognized type. Shared by trap

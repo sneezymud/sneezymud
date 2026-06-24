@@ -4,6 +4,8 @@
 
 #include <gtest/gtest.h>
 
+#include "game_fixture.h"
+#include "handler.h"
 #include "trap.h"
 
 TEST(TrapSetSkill, OrderingMatchesTrapTargT) {
@@ -12,4 +14,43 @@ TEST(TrapSetSkill, OrderingMatchesTrapTargT) {
   EXPECT_EQ(trapSetSkill[TRAP_TARG_MINE], SKILL_SET_TRAP_MINE);
   EXPECT_EQ(trapSetSkill[TRAP_TARG_GRENADE], SKILL_SET_TRAP_GREN);
   EXPECT_EQ(trapSetSkill[TRAP_TARG_ARROW], SKILL_SET_TRAP_ARROW);
+}
+
+// Resolution of a trap's recorded setter name to a live being.
+class TrapSetterResolve : public GameFixture {};
+
+TEST_F(TrapSetterResolve, ResolvesStoredNameToLiveBeing) {
+  TRoom& room = makeRoom(49960);
+  TestCharacter& setter = makeCharacter("Settername");
+  placeInRoom(setter, room);
+
+  TChest* carrier = makeContainer();
+  auto* ed = new extraDescription();
+  ed->next = carrier->ex_description;
+  carrier->ex_description = ed;
+  ed->keyword = TRAP_EX_DESC;
+  ed->description = "Settername";
+
+  EXPECT_EQ(trapSetter(carrier), setter.ch);
+
+  delete carrier;
+}
+
+TEST_F(TrapSetterResolve, NullWhenNoSetterRecorded) {
+  TChest* carrier = makeContainer();
+  EXPECT_EQ(trapSetter(carrier), nullptr);
+  delete carrier;
+}
+
+TEST_F(TrapSetterResolve, NullWhenNameUnresolvable) {
+  TChest* carrier = makeContainer();
+  auto* ed = new extraDescription();
+  ed->next = carrier->ex_description;
+  carrier->ex_description = ed;
+  ed->keyword = TRAP_EX_DESC;
+  ed->description = "Nobodyhere";
+
+  EXPECT_EQ(trapSetter(carrier), nullptr);
+
+  delete carrier;
 }

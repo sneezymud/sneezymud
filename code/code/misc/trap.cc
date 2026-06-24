@@ -136,6 +136,17 @@ void describeTrapToLooker(TBeing* ch, const TThing* obj,
 const spellNumT trapSetSkill[] = {SKILL_SET_TRAP_DOOR, SKILL_SET_TRAP_CONT,
   SKILL_SET_TRAP_MINE, SKILL_SET_TRAP_GREN, SKILL_SET_TRAP_ARROW};
 
+TBeing* trapSetter(const TThing* carrier) {
+  if (!carrier || !carrier->ex_description)
+    return nullptr;
+  const char* name = carrier->ex_description->findExtraDesc(TRAP_EX_DESC);
+  if (!name)
+    name = carrier->ex_description->findExtraDesc(GRENADE_EX_DESC);
+  if (!name)
+    return nullptr;
+  return get_char(name, EXACT_YES);
+}
+
 doorTrapT parseTrapType(const char* name, trap_targ_t target) {
   // Universal types
   if (is_abbrev(name, "fire"))
