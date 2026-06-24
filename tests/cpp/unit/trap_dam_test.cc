@@ -54,3 +54,10 @@ TEST_F(TrapSetterResolve, NullWhenNameUnresolvable) {
 
   delete carrier;
 }
+
+// NOTE: the attribution *damage* behavior (a setter-credited hit reaching the
+// victim, and a lethal hit propagating death) is not unit-tested here:
+// TBeing::applyDamage pulls in race-file machinery the lightweight GameFixture
+// cannot satisfy (it asserts "No default race file"). That behavior is verified
+// in the functional suite / on a running server, where full game state exists.
+// This file covers the unit-testable piece: trapSetter() name resolution above.

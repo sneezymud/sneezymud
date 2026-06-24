@@ -695,12 +695,20 @@ int TBeing::triggerTrap(TTrap* o) {
 
 // Single point where trap *physical* damage is dealt. `this` is the victim.
 // carrier = the trap object (for death-log/source attribution), may be null.
-// setter = the trap's setter for XP/kill credit; null today (unattributed,
-// identical to historical behavior). Attribution wiring is a separate effort.
+// setter = the trap's setter for XP/kill credit. When present (and not the
+// victim themselves), the hit is dealt as if the setter struck, so they earn
+// the experience/kill credit. A null setter (all world/mob-loaded traps) falls
+// back to the unattributed objDamage() path, identical to historical behavior.
 int TBeing::dealTrapDamage(spellNumT damageClass, int dam, TThing* carrier,
   TBeing* setter) {
-  if (setter && setter != this)
-    return setter->applyDamage(this, dam, damageClass);
+  if (setter && setter != this) {
+    int rc = setter->applyDamage(this, dam, damageClass);
+    // applyDamage reports the victim's death from the SETTER's frame as
+    // DELETE_VICT; here `this` IS that victim, so translate to DELETE_THIS
+    // (the convention applyTrapEffect's callers check). Without this, an
+    // attributed trap kill slips through unpropagated -> dangling victim.
+    return IS_SET_DELETE(rc, DELETE_VICT) ? DELETE_THIS : 0;
+  }
   return objDamage(damageClass, dam, carrier);
 }
 
