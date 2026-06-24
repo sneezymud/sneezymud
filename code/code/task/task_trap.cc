@@ -682,6 +682,16 @@ int task_trap_portal(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       static_cast<unsigned short>(ch->getTrapDam(TRAP_TARG_DOOR, type)));
     portal->addPortalFlag(EXIT_TRAPPED);
 
+    // Mirror the trap onto the linked partner portal so it ambushes from
+    // either side, the way a door trap mirrors to its reverse exit. Silent on
+    // purpose -- announcing it to the far room would warn the victim. A
+    // one-way or unloaded partner just leaves this side trapped.
+    if (TPortal* partner = portal->findMatchingPortal()) {
+      partner->setPortalTrapType(static_cast<unsigned char>(type));
+      partner->setPortalTrapDam(portal->getPortalTrapDam());
+      partner->addPortalFlag(EXIT_TRAPPED);
+    }
+
     ch->sendTo("The trap has been successfully set!\n\r");
     ch->hasTrapComps(buf2, TRAP_TARG_DOOR, -1);
     ch->stopTask();

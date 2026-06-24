@@ -234,6 +234,10 @@ int TPortal::disarmMe(TBeing* thief) {
       thief, this, nullptr, TO_CHAR);
     act("$n disarms the trap on $p.", false, thief, this, nullptr, TO_ROOM);
     remPortalFlag(EXIT_TRAPPED);
+    // Clear the mirrored trap on the linked partner too, silently (no far-room
+    // message), matching how setting the trap armed both sides.
+    if (TPortal* partner = findMatchingPortal())
+      partner->remPortalFlag(EXIT_TRAPPED);
     // Salvage components if the thief knows how to set door/portal traps
     if (thief->doesKnowSkill(SKILL_SET_TRAP_DOOR))
       reclaimTrapComps(thief, trap_type, TRAP_TARG_DOOR, nullptr);

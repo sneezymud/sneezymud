@@ -413,13 +413,32 @@ int TBeing::triggerPortalTrap(TPortal* o) {
 
   auto type = static_cast<doorTrapT>(o->getPortalTrapType());
 
-  if (type == DOOR_TRAP_TNT)
+  if (type == DOOR_TRAP_TNT) {
     act("$p is destroyed by the blast!", true, this, o, nullptr, TO_ROOM);
+  } else {
+    // A portal trap fires once and then goes inert. Clear EXIT_TRAPPED on this
+    // portal AND its linked partner (warning the far room) so it can't
+    // re-trigger from either side -- parity with door traps, which clear both
+    // sides on trigger.
+    portal_flag_change(o, EXIT_TRAPPED,
+      "%s violently discharges a trap from the other side!\n\r", REMOVE_TYPE);
+  }
 
   int rc = applyTrapEffect(type, o->getPortalTrapDam(), o);
 
-  if (type == DOOR_TRAP_TNT)
+  if (type == DOOR_TRAP_TNT) {
+    // The blast destroys this portal; take its linked partner down with it so
+    // the far side isn't left as a dangling one-way portal (parity with a door
+    // cave-in, which collapses both sides).
+    if (TPortal* partner = o->findMatchingPortal()) {
+      sstring msg =
+        format("%s is destroyed by a blast from the other side!\n\r") %
+        sstring(partner->shortDescr).cap();
+      sendToRoom(msg.c_str(), partner->in_room);
+      delete partner;
+    }
     ADD_DELETE(rc, DELETE_ITEM);
+  }
 
   return rc;
 }
