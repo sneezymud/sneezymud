@@ -263,6 +263,15 @@ void TPortal::showMe(TBeing* ch) const {
     ch->sendTo("It is closed.\n\r");
   else
     ch->sendTo("It seems to lead somewhere...\n\r");
+
+  // A trapped portal is dangerous both closed (opening fires it) and open
+  // (entering fires it), so warn the looker whenever it is trapped.
+  if (isPortalFlag(EXIT_TRAPPED)) {
+    bool detected =
+      ch->doesKnowSkill(SKILL_DETECT_TRAP) && detectTrapObj(ch, this);
+    describeTrapToLooker(ch, this, "", detected, getPortalTrapType(),
+      getPortalTrapDam());
+  }
 }
 
 void TPortal::closeMe(TBeing* ch) {

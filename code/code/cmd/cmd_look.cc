@@ -22,6 +22,8 @@
 #include "monster.h"
 #include "game_crazyeights.h"
 #include "game_drawpoker.h"
+#include "disc_thief_looting.h"
+#include "trap.h"
 
 void TBaseCup::lookObj(TBeing* ch, int) const {
   int temp;
@@ -134,9 +136,15 @@ void TBeing::lookDir(int keyword_no) {
         listExits(rp);
         list_thing_in_room(rp->stuff, this);
       }
-    } else if (!(exitp->condition & EXIT_SECRET))
+    } else if (!(exitp->condition & EXIT_SECRET)) {
       sendTo(format("The %s is closed.\n\r") % exitp->getName());
-    else
+      if (IS_SET(exitp->condition, EXIT_TRAPPED)) {
+        bool detected = doesKnowSkill(SKILL_DETECT_TRAP) &&
+                        detectTrapDoor(this, dirTypeT(keyword_no));
+        describeTrapToLooker(this, nullptr, exitp->getName(), detected,
+          exitp->trap_info, exitp->trap_dam);
+      }
+    } else
       sendTo("You see nothing special.\n\r");
   }
 }

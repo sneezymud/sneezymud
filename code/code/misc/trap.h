@@ -9,6 +9,9 @@
 #include "spells.h"
 #include "sstring.h"
 
+class TBeing;
+class TThing;
+
 const unsigned int TRAP_EFF_MOVE = (1 << 0);     // 1  trigger on movement
 const unsigned int TRAP_EFF_OBJECT = (1 << 1);   // 2  trigger on get or put
 const unsigned int TRAP_EFF_ROOM = (1 << 2);     // 4  affect all in room
@@ -81,3 +84,12 @@ doorTrapT parseTrapType(const char* name, trap_targ_t target);
 // gating/consumption, the set-trap flavor messages, and disarm reclaim.
 bool trapComponents(const char* type, trap_targ_t targ, int& item1, int& item2,
   int& item3);
+
+// Passive trap-sense on look. The caller resolves whether the target is
+// trapped and rolls Detect Trap; this reports the result. A successful skill
+// roll (skillDetected) reveals the trap type and level; otherwise a perceptive
+// looker gets only a vague warning. Pass the trapped TThing as obj (for proper
+// $p naming) for containers/portals, or obj == nullptr with doorName set for
+// exits.
+void describeTrapToLooker(TBeing* ch, const TThing* obj,
+  const sstring& doorName, bool skillDetected, int trapType, int trapDam);

@@ -368,6 +368,21 @@ sstring TOpenContainer::compareMeAgainst(TBeing* ch, TObj* tObj) {
   return StString;
 }
 
+void TOpenContainer::describeTrapOnLook(TBeing* ch) const {
+  if (!isClosed() || !isContainerFlag(CONT_TRAPPED))
+    return;
+  bool detected =
+    ch->doesKnowSkill(SKILL_DETECT_TRAP) && detectTrapObj(ch, this);
+  describeTrapToLooker(ch, this, "", detected, getContainerTrapType(),
+    getContainerTrapDam());
+}
+
+void TOpenContainer::describeObjectSpecifics(const TBeing* ch) const {
+  // Rolling Detect Trap teaches the looker, so ch is logically mutated here
+  // even though the describe path is const.
+  describeTrapOnLook(const_cast<TBeing*>(ch));
+}
+
 void TOpenContainer::lookObj(TBeing* ch, int bits) const {
   if (isClosed()) {
     ch->sendTo("It is closed.\n\r");

@@ -92,6 +92,7 @@ void TToothNecklace::updateDesc() {
 }
 
 void TToothNecklace::describeObjectSpecifics(const TBeing* ch) const {
+  TExpandableContainer::describeObjectSpecifics(ch);
   int count = 0;
   for (StuffIter it = stuff.begin(); it != stuff.end(); ++it) {
     count++;

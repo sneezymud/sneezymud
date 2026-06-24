@@ -110,6 +110,28 @@ const sstring trap_types[] = {"None", "Poison", "Spike", "Sleep", "Explosive",
   "Blade", "Fire", "Acid", "Spore", "Hammer", "Frost", "Teleport", "Power",
   "Bolt", "Disc", "Pebble", "\n"};
 
+void describeTrapToLooker(TBeing* ch, const TThing* obj,
+  const sstring& doorName, bool skillDetected, int trapType, int trapDam) {
+  if (skillDetected) {
+    sstring type = sstring(trap_types[trapType]).uncap();
+    if (obj)
+      act(format("You spot an insidious %s trap rigged to $p (level %d).") %
+            type % trapDam,
+        true, ch, obj, nullptr, TO_CHAR);
+    else
+      ch->sendTo(format("You spot an insidious %s trap rigged to the %s "
+                        "(level %d).\n\r") %
+                 type % doorName % trapDam);
+  } else if (ch->isPerceptive()) {
+    if (obj)
+      act("It seems like someone may have trapped $p.", true, ch, obj, nullptr,
+        TO_CHAR);
+    else
+      ch->sendTo(format("It seems like someone may have trapped the %s.\n\r") %
+                 doorName);
+  }
+}
+
 int trapDamMod(doorTrapT type) {
   switch (type) {
     case DOOR_TRAP_TNT:
