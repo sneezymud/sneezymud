@@ -188,7 +188,7 @@ int TBeing::springTrap(TTrap* obj) {
   int adj, fireperc, roll;
 
   adj = obj->getTrapLevel() - GetMaxLevel();
-  adj -= getDexReaction() * 5;
+  adj -= getAgiReaction() * 5;
   fireperc = 95 + adj;
   roll = ::number(1, 100);
 
