@@ -150,6 +150,10 @@ int TTrap::detonateGrenade() {
     t = *(it++);
     if (t == this)
       continue;
+    // Splash never touches immortals (parity with the mine/door splash loops
+    // in trap.cc); objects still get caught so the blast shreds loose items.
+    if (TBeing* tb = dynamic_cast<TBeing*>(t); tb && tb->isImmortal())
+      continue;
     rc = t->grenadeHit(this);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete t;
