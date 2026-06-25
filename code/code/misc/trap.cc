@@ -413,7 +413,7 @@ int TBeing::triggerPortalTrap(TPortal* o) {
       "%s violently discharges a trap from the other side!\n\r", REMOVE_TYPE);
   }
 
-  int rc = applyTrapEffect(type, o->getPortalTrapDam(), o);
+  int rc = applyTrapEffect(type, o->getPortalTrapDam(), o, trapSetter(o));
 
   if (type == DOOR_TRAP_TNT) {
     // The blast destroys this portal; take its linked partner down with it so
@@ -460,7 +460,8 @@ int TBeing::triggerContTrap(TOpenContainer* obj) {
     }
   }
 
-  int rc = applyTrapEffect(type, obj->getContainerTrapDam(), obj);
+  int rc =
+    applyTrapEffect(type, obj->getContainerTrapDam(), obj, trapSetter(obj));
 
   if (destroysContainer)
     ADD_DELETE(rc, DELETE_ITEM);
@@ -480,7 +481,8 @@ int TBeing::triggerArrowTrap(TArrow* obj) {
   }
 
   // arrow = single-target (the struck victim); carrier = the arrow
-  return applyTrapEffect(obj->getTrapDamType(), obj->getTrapLevel(), obj);
+  return applyTrapEffect(obj->getTrapDamType(), obj->getTrapLevel(), obj,
+    trapSetter(obj));
 }
 
 // returns DELETE_THIS or FALSE
@@ -677,6 +679,7 @@ int TBeing::triggerTrap(TTrap* o) {
 
   doorTrapT type = o->getTrapDamType();
   int dam = o->getTrapLevel();  // raw power; applyTrapEffect rolls dice(dam, 8)
+  TBeing* setter = trapSetter(o);
 
   // Bystanders first (half damage), so we never touch `this` mid-iteration.
   // Splash hits all beings except the primary (`!= this`) and immortals.
@@ -685,7 +688,7 @@ int TBeing::triggerTrap(TTrap* o) {
       TThing* t = *(it++);
       TBeing* tbt = dynamic_cast<TBeing*>(t);
       if (tbt && tbt != this && !tbt->isImmortal()) {
-        int brc = tbt->applyTrapEffect(type, dam, o, nullptr, 2);
+        int brc = tbt->applyTrapEffect(type, dam, o, setter, 2);
         if (IS_SET_DELETE(brc, DELETE_THIS)) {
           // die() -> genericKillFix() has already called reformGroup(),
           // DeleteHatreds(), and DeleteFears() before returning DELETE_THIS,
@@ -698,7 +701,7 @@ int TBeing::triggerTrap(TTrap* o) {
   }
 
   // Triggerer takes full damage.
-  int rc = applyTrapEffect(type, dam, o);
+  int rc = applyTrapEffect(type, dam, o, setter);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
   return true;
@@ -1474,7 +1477,8 @@ void TBeing::throwGrenade(TTrap* o, dirTypeT dir) {
 }
 
 int TBeing::grenadeHit(TTrap* o) {
-  return applyTrapEffect(o->getTrapDamType(), o->getTrapLevel(), o);
+  return applyTrapEffect(o->getTrapDamType(), o->getTrapLevel(), o,
+    trapSetter(o));
 }
 
 int TMonster::grenadeHit(TTrap* o) {
