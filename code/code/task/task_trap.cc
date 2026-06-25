@@ -277,11 +277,13 @@ void TTrap::makeTrapLand(TBeing* ch, doorTrapT status, const char* args) {
   // this should be a number between 1-50
   int trapdamage = ch->getTrapDam(TRAP_TARG_MINE);
 
-  int stdflags = TRAP_EFF_MOVE | TRAP_EFF_NORTH | TRAP_EFF_EAST |
-                 TRAP_EFF_SOUTH | TRAP_EFF_WEST | TRAP_EFF_UP | TRAP_EFF_DOWN |
-                 TRAP_EFF_NE | TRAP_EFF_NW | TRAP_EFF_SE | TRAP_EFF_SW;
-
-  // figure out criteria to add TRAP_EFF_ROOM later
+  // TRAP_EFF_ROOM makes the blast spray everyone in the room (except the
+  // triggerer and immortals), not just the foot that stepped on it. The
+  // splash path lives in TBeing::triggerTrap.
+  int stdflags = TRAP_EFF_MOVE | TRAP_EFF_ROOM | TRAP_EFF_NORTH |
+                 TRAP_EFF_EAST | TRAP_EFF_SOUTH | TRAP_EFF_WEST | TRAP_EFF_UP |
+                 TRAP_EFF_DOWN | TRAP_EFF_NE | TRAP_EFF_NW | TRAP_EFF_SE |
+                 TRAP_EFF_SW;
 
   setTrapLevel(trapdamage);
 
