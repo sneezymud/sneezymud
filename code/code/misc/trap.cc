@@ -693,6 +693,12 @@ int TBeing::triggerTrap(TTrap* o) {
           // die() -> genericKillFix() has already called reformGroup(),
           // DeleteHatreds(), and DeleteFears() before returning DELETE_THIS,
           // so a bare delete here is safe — matching the old per-type loops.
+          // If the setter was the bystander we just freed (they can stand in
+          // their own mine's blast), drop the cached pointer so the remaining
+          // splash hits and the primary fall back to unattributed objDamage
+          // instead of dereferencing freed memory.
+          if (tbt == setter)
+            setter = nullptr;
           delete tbt;
           tbt = nullptr;
         }
