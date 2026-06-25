@@ -147,6 +147,17 @@ TBeing* trapSetter(const TThing* carrier) {
   return get_char(name, EXACT_YES);
 }
 
+void recordTrapSetter(TObj* carrier, const TBeing* setter) {
+  if (!carrier || !setter)
+    return;
+  carrier->swapToStrung();
+  auto* ed = new extraDescription();
+  ed->next = carrier->ex_description;
+  carrier->ex_description = ed;
+  ed->keyword = TRAP_EX_DESC;
+  ed->description = setter->getName();
+}
+
 doorTrapT parseTrapType(const char* name, trap_targ_t target) {
   // Universal types
   if (is_abbrev(name, "fire"))

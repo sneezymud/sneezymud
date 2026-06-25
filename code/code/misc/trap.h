@@ -11,6 +11,7 @@
 
 class TBeing;
 class TThing;
+class TObj;
 
 const unsigned int TRAP_EFF_MOVE = (1 << 0);     // 1  trigger on movement
 const unsigned int TRAP_EFF_OBJECT = (1 << 1);   // 2  trigger on get or put
@@ -77,6 +78,9 @@ extern const spellNumT trapSetSkill[];
 // nullptr for any trap with no recorded setter (all world/mob-loaded traps),
 // which routes its damage to the unattributed objDamage() fallback.
 TBeing* trapSetter(const TThing* carrier);
+// Stamp the setter's name onto a trap carrier so trapSetter() can later credit
+// them. Strings the object first (prototype-safe), mirroring TTrap::dropMe.
+void recordTrapSetter(TObj* carrier, const TBeing* setter);
 doorTrapT parseTrapType(const char* name, trap_targ_t target);
 // Single source of trap component vnums for a (type, target); fills the three
 // reagent vnums and returns false for an unrecognized type. Shared by trap

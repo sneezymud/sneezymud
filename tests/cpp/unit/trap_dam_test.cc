@@ -55,9 +55,14 @@ TEST_F(TrapSetterResolve, NullWhenNameUnresolvable) {
   delete carrier;
 }
 
-// NOTE: the attribution *damage* behavior (a setter-credited hit reaching the
-// victim, and a lethal hit propagating death) is not unit-tested here:
-// TBeing::applyDamage pulls in race-file machinery the lightweight GameFixture
-// cannot satisfy (it asserts "No default race file"). That behavior is verified
-// in the functional suite / on a running server, where full game state exists.
+// NOTE: two pieces of the setter machinery are not unit-tested here because
+// both pull in game state the lightweight GameFixture cannot satisfy:
+//   - recordTrapSetter() string-stamps the carrier via TObj::swapToStrung(),
+//     which dereferences obj_index[getItemIndex()]; a bare makeContainer() has
+//     no index entry, so the record->resolve round-trip can only run against a
+//     real obj table (functional suite / running server).
+//   - The attribution *damage* behavior (a setter-credited hit reaching the
+//     victim, and a lethal hit propagating death) goes through
+//     TBeing::applyDamage, which loads race files (asserts "No default race
+//     file" without them).
 // This file covers the unit-testable piece: trapSetter() name resolution above.

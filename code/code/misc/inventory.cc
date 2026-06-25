@@ -234,21 +234,14 @@ void TPCorpse::dropMe(TBeing* ch, showMeT showme, showRoomT showroom) {
 }
 
 void TTrap::dropMe(TBeing* ch, showMeT, showRoomT showroom) {
-  extraDescription* ed;
-
   if (!isname("grenade", name)) {
     ch->sendTo(COLOR_OBJECTS,
       format("You drop %s, concealing and arming it.\n\r") %
         sstring(getName()).uncap());
 
-    swapToStrung();
-    ed = new extraDescription();
-    ed->next = ex_description;
-    ex_description = ed;
-    ed->keyword = TRAP_EX_DESC;
     // Record who set the trap (not the mine's own name) so the trigger can
-    // recognize the setter and spare their group.
-    ed->description = ch->getName();
+    // recognize the setter (group-spare + damage attribution).
+    recordTrapSetter(this, ch);
 
     // utilize baseclass so we are recursive
     // we already displayed appropriate text (room intentionally concealed)
