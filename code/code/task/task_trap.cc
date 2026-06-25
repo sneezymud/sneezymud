@@ -14,6 +14,7 @@
 #include "obj_portal.h"
 #include "obj_trap.h"
 #include "obj_arrow.h"
+#include "trap.h"
 
 // returns DELETE_THIS for ch
 // returns true if guard disrupts trap pulse
@@ -202,6 +203,7 @@ int task_trap_container(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
     // this is number of 8-sided die to use for damage
     int trapdamage = ch->getTrapDam(TRAP_TARG_CONT);
     cont->setContainerTrapDam(trapdamage);
+    recordTrapSetter(cont, ch);
 
     ch->sendTo("The trap has been successfully set!\n\r");
     ch->hasTrapComps(ch->task->orig_arg, TRAP_TARG_CONT, -1);
@@ -437,6 +439,7 @@ int task_trap_arrow(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
     // Made it to end, set trap
     arrow->setTrapLevel(ch->getTrapDam(TRAP_TARG_ARROW));
     arrow->setTrapDamType(doorTrapT(ch->task->status));
+    recordTrapSetter(arrow, ch);
 
     ch->sendTo("You have successfully constructed an arrow trap!\n\r");
     int price;
@@ -678,6 +681,7 @@ int task_trap_portal(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
     portal->setPortalTrapDam(
       static_cast<unsigned short>(ch->getTrapDam(TRAP_TARG_DOOR)));
     portal->addPortalFlag(EXIT_TRAPPED);
+    recordTrapSetter(portal, ch);
 
     // Mirror the trap onto the linked partner portal so it ambushes from
     // either side, the way a door trap mirrors to its reverse exit. Silent on
@@ -687,6 +691,7 @@ int task_trap_portal(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       partner->setPortalTrapType(static_cast<unsigned char>(type));
       partner->setPortalTrapDam(portal->getPortalTrapDam());
       partner->addPortalFlag(EXIT_TRAPPED);
+      recordTrapSetter(partner, ch);
     }
 
     ch->sendTo("The trap has been successfully set!\n\r");
