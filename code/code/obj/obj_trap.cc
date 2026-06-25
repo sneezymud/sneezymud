@@ -296,13 +296,14 @@ void TTrap::armGrenade(TBeing* ch) {
   TMonster* tm;
 
   std::queue<TMonster*> toFlee;
-  if (::number(0, 1)) {
-    for (StuffIter it = ch->roomp->stuff.begin();
-         it != ch->roomp->stuff.end() && (t = *it); ++it) {
-      if ((tm = dynamic_cast<TMonster*>(t))) {
-        if (tm->canSee(this))
-          toFlee.push(tm);
-      }
+  for (StuffIter it = ch->roomp->stuff.begin();
+       it != ch->roomp->stuff.end() && (t = *it); ++it) {
+    if ((tm = dynamic_cast<TMonster*>(t))) {
+      // A mob flees only if it can see the live grenade and is wise enough to
+      // recognize the danger. isWise() is a WIS-weighted roll, so it carries
+      // its own randomness per mob -- dim creatures stand around and eat it.
+      if (tm->canSee(this) && tm->isWise())
+        toFlee.push(tm);
     }
   }
   while (!toFlee.empty()) {
