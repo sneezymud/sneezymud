@@ -74,7 +74,11 @@ extern int mapDoorTrapToFile(doorTrapT);
 
 // The set-trap skill that governs each trap_targ_t, indexed by target.
 extern const spellNumT trapSetSkill[];
-// Resolve a trap's recorded setter to a live, creditable being, or nullptr.
+// Resolve a recorded setter name to a live, creditable being, or nullptr for
+// an empty name or one that no longer maps to anyone in the game. Doors store
+// the setter as a bare name (no carrier object), so they resolve through this.
+TBeing* trapSetterByName(const sstring& name);
+// Resolve an object trap's recorded setter to a live, creditable being, or
 // nullptr for any trap with no recorded setter (all world/mob-loaded traps),
 // which routes its damage to the unattributed objDamage() fallback.
 TBeing* trapSetter(const TThing* carrier);

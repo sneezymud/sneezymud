@@ -243,6 +243,8 @@ class roomDirData {
     short weight;            // how heavy door is, -1 = no door
     short trap_info;         // Trap flags
     short trap_dam;          // Damage trap will do
+    sstring trap_setter;     // Name of the being who set the trap, for damage
+                             // attribution; empty for builder/reset traps
     int key;                 // Number of object that opens door
     int to_room;             // What room we exit to. -1 means no exit
 

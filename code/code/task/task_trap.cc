@@ -90,6 +90,8 @@ int task_trap_door(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
     // this is number of 8-sided die to use for damage
     int trapdamage = ch->getTrapDam(TRAP_TARG_DOOR);
     exitp->trap_dam = trapdamage;
+    // Record the setter so triggerDoorTrap can credit them for the damage.
+    exitp->trap_setter = ch->getName();
 
     // and now for other side
     if ((rp2 = real_roomp(exitp->to_room)) &&
@@ -99,6 +101,7 @@ int task_trap_door(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       SET_BIT(back->condition, EXIT_TRAPPED);
       back->trap_info = ch->task->status;
       back->trap_dam = trapdamage;
+      back->trap_setter = ch->getName();
     }
     ch->sendTo("The trap has been successfully set!\n\r");
     ch->hasTrapComps(buf2, TRAP_TARG_DOOR, -1);  // delete the components

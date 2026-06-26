@@ -55,6 +55,24 @@ TEST_F(TrapSetterResolve, NullWhenNameUnresolvable) {
   delete carrier;
 }
 
+// Door traps store the setter as a bare name on the exit (no carrier object)
+// and resolve it through trapSetterByName, so cover that resolver directly.
+TEST_F(TrapSetterResolve, ByNameResolvesToLiveBeing) {
+  TRoom& room = makeRoom(49963);
+  TestCharacter& setter = makeCharacter("Doorsetter");
+  placeInRoom(setter, room);
+
+  EXPECT_EQ(trapSetterByName("Doorsetter"), setter.ch);
+}
+
+TEST_F(TrapSetterResolve, ByNameNullWhenEmpty) {
+  EXPECT_EQ(trapSetterByName(""), nullptr);
+}
+
+TEST_F(TrapSetterResolve, ByNameNullWhenUnresolvable) {
+  EXPECT_EQ(trapSetterByName("Nobodyhere"), nullptr);
+}
+
 // NOTE: two pieces of the setter machinery are not unit-tested here because
 // both pull in game state the lightweight GameFixture cannot satisfy:
 //   - recordTrapSetter() string-stamps the carrier via TObj::swapToStrung(),

@@ -136,15 +136,19 @@ void describeTrapToLooker(TBeing* ch, const TThing* obj,
 const spellNumT trapSetSkill[] = {SKILL_SET_TRAP_DOOR, SKILL_SET_TRAP_CONT,
   SKILL_SET_TRAP_MINE, SKILL_SET_TRAP_GREN, SKILL_SET_TRAP_ARROW};
 
+TBeing* trapSetterByName(const sstring& name) {
+  if (name.empty())
+    return nullptr;
+  return get_char(name.c_str(), EXACT_YES);
+}
+
 TBeing* trapSetter(const TThing* carrier) {
   if (!carrier || !carrier->ex_description)
     return nullptr;
   const char* name = carrier->ex_description->findExtraDesc(TRAP_EX_DESC);
   if (!name)
     name = carrier->ex_description->findExtraDesc(GRENADE_EX_DESC);
-  if (!name)
-    return nullptr;
-  return get_char(name, EXACT_YES);
+  return name ? trapSetterByName(name) : nullptr;
 }
 
 void recordTrapSetter(TObj* carrier, const TBeing* setter) {
@@ -490,6 +494,11 @@ int TBeing::triggerDoorTrap(dirTypeT door) {
   roomDirData* exitp = exitDir(door);
   int dam = exitp->trap_dam;  // raw power; applyTrapEffect rolls dice(dam, 8)
   doorTrapT type = static_cast<doorTrapT>(exitp->trap_info);
+  // The setter (player-set traps only) earns the damage credit. Doors have no
+  // carrier object, so the name is stamped on the exit; resolve it by name.
+  // Empty for builder/reset traps -> nullptr -> unattributed, exactly like
+  // every other world trap.
+  TBeing* setter = trapSetterByName(exitp->trap_setter);
 
   // door traps can be triggered by means other than opening
   // eg trying to set another trap
@@ -518,8 +527,14 @@ int TBeing::triggerDoorTrap(dirTypeT door) {
       TThing* t = *(it++);
       TBeing* tbt = dynamic_cast<TBeing*>(t);
       if (tbt && tbt != this && !tbt->isImmortal()) {
-        int brc = tbt->applyTrapEffect(type, dam, nullptr, nullptr, 2);
+        int brc = tbt->applyTrapEffect(type, dam, nullptr, setter, 2);
         if (IS_SET_DELETE(brc, DELETE_THIS)) {
+          // If the setter was the bystander we just freed, drop the cached
+          // pointer so later hits fall back to unattributed objDamage rather
+          // than dereferencing freed memory (see the mine splash in
+          // triggerTrap).
+          if (tbt == setter)
+            setter = nullptr;
           delete tbt;
           tbt = nullptr;
         }
@@ -533,8 +548,10 @@ int TBeing::triggerDoorTrap(dirTypeT door) {
       TThing* t = *(it++);
       TBeing* tbt = dynamic_cast<TBeing*>(t);
       if (tbt && !tbt->isImmortal()) {
-        int brc = tbt->applyTrapEffect(type, dam, nullptr, nullptr, 2);
+        int brc = tbt->applyTrapEffect(type, dam, nullptr, setter, 2);
         if (IS_SET_DELETE(brc, DELETE_THIS)) {
+          if (tbt == setter)
+            setter = nullptr;
           delete tbt;
           tbt = nullptr;
         }
@@ -543,7 +560,7 @@ int TBeing::triggerDoorTrap(dirTypeT door) {
   }
 
   // Opener takes full damage last so bystander loops run on a live `this`.
-  int rc = applyTrapEffect(type, dam, nullptr);
+  int rc = applyTrapEffect(type, dam, nullptr, setter);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
   return false;
