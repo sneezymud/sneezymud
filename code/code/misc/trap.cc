@@ -759,6 +759,14 @@ int TBeing::dealTrapDamage(spellNumT damageClass, int dam, TThing* carrier,
     if (!setter->sameRoom(*this) && getHit() < hitBefore)
       act("You have been awarded for your devious efforts elsewhere.", false,
         setter, nullptr, nullptr, TO_CHAR);
+    // The victim remembers who trapped it. addHated stores the setter by name
+    // (NPC-hates-PC, deduped, persists after the setter leaves), and the mob AI
+    // promotes a hate-list entry to an active hunt on its own once the mob is
+    // healthy and idle -- no need to force ACT_HUNTING or touch the shared
+    // pissOff. Only a live monster can hate.
+    if (!IS_SET_DELETE(rc, DELETE_VICT))
+      if (TMonster* tm = dynamic_cast<TMonster*>(this))
+        tm->addHated(setter);
     return IS_SET_DELETE(rc, DELETE_VICT) ? DELETE_THIS : 0;
   }
   return objDamage(damageClass, dam, carrier);
