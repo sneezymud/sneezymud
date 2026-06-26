@@ -738,12 +738,27 @@ int TBeing::triggerTrap(TTrap* o) {
 // back to the unattributed objDamage() path, identical to historical behavior.
 int TBeing::dealTrapDamage(spellNumT damageClass, int dam, TThing* carrier,
   TBeing* setter) {
+  // Immortals never take trap damage. objDamage (the unattributed path) guards
+  // this via skipImmortals, and the splash loops / afflictions skip immortals
+  // too -- but applyDamage only shields an immortal when the attacker shares
+  // its room, so guard here to close the gap for an immortal triggerer.
+  if (isImmortal())
+    return 0;
   if (setter && setter != this) {
+    // Deal the hit as the setter via applyDamage, NOT reconcileDamage.
+    // reconcileDamage runs getActualDamage -> damDetailsOk, which hard-returns
+    // 0 unless attacker and victim share a room (it's built for melee). A trap
+    // setter is usually elsewhere, so routing through reconcileDamage zeroes
+    // all out-of-room trap damage. applyDamage applies the hit regardless of
+    // room. It reports the victim's death as DELETE_VICT; `this` IS that
+    // victim, so translate to DELETE_THIS for applyTrapEffect's callers.
+    int hitBefore = getHit();
     int rc = setter->applyDamage(this, dam, damageClass);
-    // applyDamage reports the victim's death from the SETTER's frame as
-    // DELETE_VICT; here `this` IS that victim, so translate to DELETE_THIS
-    // (the convention applyTrapEffect's callers check). Without this, an
-    // attributed trap kill slips through unpropagated -> dangling victim.
+    // The setter isn't here to see their handiwork land, so tell them -- but
+    // only when the hit actually connected (agility/protection can soak it).
+    if (!setter->sameRoom(*this) && getHit() < hitBefore)
+      act("You have been awarded for your devious efforts elsewhere.", false,
+        setter, nullptr, nullptr, TO_CHAR);
     return IS_SET_DELETE(rc, DELETE_VICT) ? DELETE_THIS : 0;
   }
   return objDamage(damageClass, dam, carrier);
