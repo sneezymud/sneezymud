@@ -19,6 +19,7 @@
 #include "obj_portal.h"
 #include "obj_open_container.h"
 #include "obj_arrow.h"
+#include "obj_trap_component.h"
 #include "trap.h"
 
 extern const char* const GRENADE_EX_DESC = "__grenade_puller";
@@ -1378,38 +1379,52 @@ bool TBeing::hasTrapComps(const char* type, trap_targ_t targ, int amt,
   TThing* com2 = searchLinkedListVis(this, obj_index[item2].name, stuff);
   TThing* com3 = searchLinkedListVis(this, obj_index[item3].name, stuff);
 
+  // One charge's worth of a reagent. A stacked TTrapComponent's cost covers
+  // all of its charges, but only one charge goes into each trap built, so
+  // price by the unit. Non-component reagents (fallback) use their full cost.
+  auto unitCost = [](TThing* com) -> int {
+    if (auto* comp = dynamic_cast<TTrapComponent*>(com))
+      return comp->pricePerUnit();
+    return dynamic_cast<TObj*>(com)->obj_flags.cost;
+  };
+
   if (price) {
     *price = 0;
-    TObj* obj;
-    if (com1) {
-      obj = dynamic_cast<TObj*>(com1);
-      *price += obj->obj_flags.cost;
-    }
-    if (com2) {
-      obj = dynamic_cast<TObj*>(com2);
-      *price += obj->obj_flags.cost;
-    }
-    if (com3) {
-      obj = dynamic_cast<TObj*>(com3);
-      *price += obj->obj_flags.cost;
-    }
+    if (com1)
+      *price += unitCost(com1);
+    if (com2)
+      *price += unitCost(com2);
+    if (com3)
+      *price += unitCost(com3);
   }
 
   if (amt == -1) {
-    // trap is finished, delete the items
+    // Trap is finished: spend one charge from each reagent, deleting it only
+    // when its charges run out. Reagents that aren't charge-based components
+    // (e.g. the mine/grenade case) fall back to whole-object delete. TObj's
+    // destructor unlinks from inventory, so a bare delete is safe.
     if (!com1 || !com2 || !com3) {
       vlogf(LOG_BUG, "Serious error in hasTrapComps");
       return FALSE;
     }
-    delete com1;
-    delete com2;
-    delete com3;
+    auto spendCharge = [](TThing* com) {
+      if (auto* comp = dynamic_cast<TTrapComponent*>(com)) {
+        comp->addToTrapComponentCharges(-1);
+        if (comp->getTrapComponentCharges() <= 0)
+          delete comp;
+      } else {
+        delete com;
+      }
+    };
+    spendCharge(com1);
+    spendCharge(com2);
+    spendCharge(com3);
     if (targ == TRAP_TARG_MINE || targ == TRAP_TARG_GRENADE) {
       if (!com4) {
         vlogf(LOG_BUG, "Serious error in hasTrapComps (2)");
         return FALSE;
       }
-      delete com4;
+      spendCharge(com4);
     }
     return FALSE;
   }

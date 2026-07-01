@@ -9,6 +9,7 @@
 #include "disc_thief_looting.h"
 #include "obj_trap.h"
 #include "obj_portal.h"
+#include "obj_trap_component.h"
 #include "trap.h"
 #include "low.h"
 
@@ -201,6 +202,10 @@ bool reclaimTrapComps(TBeing* thief, sstring trap_type, trap_targ_t targ,
     if (::number(1, 100) > recovery_chance)
       continue;
     if (TObj* comp = read_object(vnum, VIRTUAL)) {
+      // Each salvaged reagent comes back as a single charge (one trap's
+      // worth); auto-merge folds it into any matching stack the thief carries.
+      if (auto* tc = dynamic_cast<TTrapComponent*>(comp))
+        tc->setTrapComponentCharges(1);
       act("You carefully recover $p from the trap.", false, thief, comp,
         nullptr, TO_CHAR);
       *thief += *comp;
