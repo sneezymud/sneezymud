@@ -1794,12 +1794,14 @@ void shopping_list(sstring argument, TBeing* ch, TMonster* keeper,
     "select r.rent_id as rent_id, \
                 case o.type when %i then r.weight*10 \
                             when %i then r.val0 \
+                            when %i then r.val0 \
                             else count(*) end as count, \
                 case o.type when %i then r.material \
                   else coalesce(rs.short_desc, o.short_desc) end \
                   as short_desc, \
                 coalesce(rs.name, o.name) as name, \
                 case o.type when %i then r.price/(r.weight*10) \
+                            when %i then r.price/r.val0  \
                             when %i then r.price/r.val0  \
                             else r.price end as price, \
                 r.cur_struct as cur_struct, r.max_struct as max_struct, \
@@ -1812,8 +1814,9 @@ void shopping_list(sstring argument, TBeing* ch, TMonster* keeper,
                 %s \
               group by o.vnum, short_desc \
               order by o.vnum",
-    ITEM_RAW_MATERIAL, ITEM_COMPONENT, ITEM_RAW_MATERIAL, ITEM_RAW_MATERIAL,
-    ITEM_COMPONENT, shop_nr, buf.c_str());
+    ITEM_RAW_MATERIAL, ITEM_COMPONENT, ITEM_TRAP_COMPONENT, ITEM_RAW_MATERIAL,
+    ITEM_RAW_MATERIAL, ITEM_COMPONENT, ITEM_TRAP_COMPONENT, shop_nr,
+    buf.c_str());
 
   keeper->doTell(ch->getName(), "You can buy:");
 
@@ -1976,6 +1979,12 @@ void shopping_list(sstring argument, TBeing* ch, TMonster* keeper,
       buf += format("[%8i] %s %s [%6i] %7i\n\r") %
              convertTo<int>(db["rent_id"]) % list_string(short_desc, 30) %
              list_string(spell, 20) % convertTo<int>(db["count"]) %
+             (int)(max((float)1.0, price));
+    } else if (type == ITEM_TRAP_COMPONENT) {
+      // Charge-based like ITEM_COMPONENT, but with no attached spell to show.
+      buf += format("[%8i] %s %s [%6i] %7i\n\r") %
+             convertTo<int>(db["rent_id"]) % list_string(short_desc, 30) %
+             list_string("", 20) % convertTo<int>(db["count"]) %
              (int)(max((float)1.0, price));
     } else {
       buf += format("[%8i] %s %s [%6i] %7i\n\r") %
