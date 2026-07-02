@@ -11,6 +11,9 @@
 #include "room.h"
 #include "extern.h"
 #include "being.h"
+#include "materials.h"
+#include "obj_general_weapon.h"
+#include "limbs.h"
 #include "low.h"
 #include "monster.h"
 #include "disc_thief_looting.h"
@@ -775,27 +778,27 @@ int TBeing::dealTrapDamage(spellNumT damageClass, int dam, TThing* carrier,
 }
 
 // Apply a per-type trap effect to `this` (the victim).
-// `trapPower` is the raw trap power (the d8 dice count): door/container/portal
+// `trapLevel` is the trap's level (the d8 dice count): door/container/portal
 // trap_dam, or an object trap's level. The damage roll lives here so every
-// trigger path rolls identically — `dam = dice(trapPower, 8) / denom`.
+// trigger path rolls identically — `dam = dice(trapLevel, 8) / denom`.
 // `denom` reduces the roll: 1 for the primary victim, 2 for the half-damage
 // room/far-side splash, 6 for goof self-damage.
 // `carrier` is the trap object (may be nullptr).
 // `setter` is the trap's setter (may be nullptr).
 // Returns DELETE_THIS if the victim was deleted, else 0.
-int TBeing::applyTrapEffect(doorTrapT type, int trapPower, TThing* carrier,
+int TBeing::applyTrapEffect(doorTrapT type, int trapLevel, TThing* carrier,
   TBeing* setter, int denom) {
   int rc;
-  int dam = dice(trapPower, 8) / denom;
+  int dam = dice(trapLevel, 8) / denom;
 
   // An agile victim rolls with a trap's physical force, taking only half.
   // This applies to the damage types only — afflictions (poison/sleep/disease/
   // teleport) are resisted by their own immunity/luck/CON saves, not agility,
   // so you can't "dodge" a lungful of sleep gas. The check scales with trap
-  // power (`isAgile(-trapPower / 2)`): stronger traps are harder to roll with.
+  // power (`isAgile(-trapLevel / 2)`): stronger traps are harder to roll with.
   bool affliction = (type == DOOR_TRAP_POISON || type == DOOR_TRAP_SLEEP ||
                      type == DOOR_TRAP_DISEASE || type == DOOR_TRAP_TELEPORT);
-  if (!affliction && isAgile(-trapPower / 2)) {
+  if (!affliction && isAgile(-trapLevel / 2)) {
     dam = (dam + 1) / 2;
     act("You roll with the trap, taking only a glancing blow!", false, this,
       nullptr, nullptr, TO_CHAR);
@@ -848,9 +851,7 @@ int TBeing::applyTrapEffect(doorTrapT type, int trapPower, TThing* carrier,
       rc = dealTrapDamage(DAMAGE_TRAP_FIRE, dam, carrier, setter);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
-      rc = flameEngulfed();
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
+      trapFire(trapLevel);
       return 0;
 
     case DOOR_TRAP_FROST:
@@ -864,6 +865,9 @@ int TBeing::applyTrapEffect(doorTrapT type, int trapPower, TThing* carrier,
       rc = frostEngulfed();
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+      rc = trapFrost(trapLevel);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
       return 0;
 
     case DOOR_TRAP_ACID:
@@ -874,9 +878,7 @@ int TBeing::applyTrapEffect(doorTrapT type, int trapPower, TThing* carrier,
       rc = dealTrapDamage(DAMAGE_TRAP_ACID, dam, carrier, setter);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
-      rc = acidEngulfed();
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
+      trapAcid(trapLevel);
       return 0;
 
     case DOOR_TRAP_ENERGY:
@@ -887,6 +889,7 @@ int TBeing::applyTrapEffect(doorTrapT type, int trapPower, TThing* carrier,
       rc = dealTrapDamage(DAMAGE_TRAP_ENERGY, dam, carrier, setter);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+      trapEnergy(trapLevel);
       return 0;
 
     case DOOR_TRAP_TNT:
@@ -895,6 +898,9 @@ int TBeing::applyTrapEffect(doorTrapT type, int trapPower, TThing* carrier,
       act("$n is blasted by the explosion.", false, this, nullptr, nullptr,
         TO_ROOM);
       rc = dealTrapDamage(DAMAGE_TRAP_TNT, dam, carrier, setter);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      rc = trapTnt(trapLevel, carrier);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return 0;
@@ -907,6 +913,9 @@ int TBeing::applyTrapEffect(doorTrapT type, int trapPower, TThing* carrier,
       rc = dealTrapDamage(DAMAGE_TRAP_PIERCE, dam, carrier, setter);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+      rc = trapSpike(trapLevel);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
       return 0;
 
     case DOOR_TRAP_BOLT:
@@ -915,6 +924,9 @@ int TBeing::applyTrapEffect(doorTrapT type, int trapPower, TThing* carrier,
       act("$n is perforated by the bolts.", false, this, nullptr, nullptr,
         TO_ROOM);
       rc = dealTrapDamage(DAMAGE_TRAP_PIERCE, dam, carrier, setter);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      rc = trapBolt(trapLevel);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return 0;
@@ -927,6 +939,7 @@ int TBeing::applyTrapEffect(doorTrapT type, int trapPower, TThing* carrier,
       rc = dealTrapDamage(DAMAGE_TRAP_SLASH, dam, carrier, setter);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+      trapBlade(trapLevel);
       return 0;
 
     case DOOR_TRAP_DISK:
@@ -937,6 +950,7 @@ int TBeing::applyTrapEffect(doorTrapT type, int trapPower, TThing* carrier,
       rc = dealTrapDamage(DAMAGE_TRAP_SLASH, dam, carrier, setter);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+      trapDisk(trapLevel);
       return 0;
 
     case DOOR_TRAP_HAMMER:
@@ -947,6 +961,7 @@ int TBeing::applyTrapEffect(doorTrapT type, int trapPower, TThing* carrier,
       rc = dealTrapDamage(DAMAGE_TRAP_BLUNT, dam, carrier, setter);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+      trapHammer(trapLevel);
       return 0;
 
     case DOOR_TRAP_PEBBLE:
@@ -956,6 +971,7 @@ int TBeing::applyTrapEffect(doorTrapT type, int trapPower, TThing* carrier,
       rc = dealTrapDamage(DAMAGE_TRAP_BLUNT, dam, carrier, setter);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
+      trapPebble(trapLevel);
       return 0;
 
     case DOOR_TRAP_NONE:
@@ -969,6 +985,388 @@ int TBeing::applyTrapEffect(doorTrapT type, int trapPower, TThing* carrier,
 }
 
 // returns DELETE_THIS
+TObj* createSplinter(int material, int level, bool spiked) {
+  TObj* o = read_object(937, VIRTUAL);
+  TGenWeapon* w = dynamic_cast<TGenWeapon*>(o);
+  if (!w) {
+    delete o;
+    return nullptr;
+  }
+
+  o->swapToStrung();
+  o->setMaterial(static_cast<unsigned short>(material));
+
+  const char* noun;
+  if (o->isMetal())
+    noun = "sliver";
+  else if (o->isHardStick())
+    noun = "splinter";
+  else if (o->isMineral())
+    noun = "shard";
+  else if (o->isHide())
+    noun = "scrap";
+  else if (o->isCloth())
+    noun = "shred";
+  else if (o->isSynthetic())
+    noun = "chunk";
+  else if (o->isElemental())
+    noun = "wisp";
+  else
+    noun = "clump";
+
+  sstring matName = material_nums[material].mat_name;
+  sstring phrase = matName + " " + noun;
+  if (spiked) {
+    bool hard = o->isMetal() || o->isMineral() || o->isHardStick();
+    phrase = sstring(hard ? "spiked " : "jagged ") + phrase;
+    o->addObjStat(ITEM_SPIKED);
+  }
+
+  char c = phrase[0];
+  sstring article =
+    (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') ? "an " : "a ";
+
+  o->name = matName + " " + noun;
+  o->shortDescr = article + phrase;
+  o->setDescr(sstring(format("%s lies here.") % sstring(o->shortDescr).cap()));
+
+  int hardness = material_nums[material].hardness;
+  w->setMaxSharp(hardness);
+  w->setCurSharp(hardness);
+  int dam = level * hardness / 100;
+  if (dam < 1)
+    dam = 1;
+  w->setWeapDamLvl(dam * 4);
+
+  o->obj_flags.decay_time = 400;
+
+  return o;
+}
+
+// Placeholder specialty hooks for the physical trap damage types. Each will
+// eventually layer a per-type effect on top of the raw trap damage.
+int TBeing::trapSpike(int amt) {
+  // The trap sprays amt/10 spikes; each targets a random limb.
+  for (int i = amt / 10; i > 0; --i) {
+    wearSlotT limb = pickRandomLimb();
+    if (!hasPart(limb) || !slotChance(limb) || getStuckIn(limb) ||
+        notBleedSlot(limb))
+      continue;
+
+    TObj* spike = createSplinter(MAT_IRON, amt, ::number(1, 4) == 1);
+    if (!spike)
+      continue;
+    TGenWeapon* w = dynamic_cast<TGenWeapon*>(spike);
+
+    // A spike lodges only if it's sharp enough, like an arrow; else it
+    // clatters off harmlessly.
+    if (!w || ::number(1, 100) >= w->getCurSharp()) {
+      delete spike;
+      continue;
+    }
+
+    if (IS_SET_DELETE(stickIn(spike, limb), DELETE_THIS))
+      return DELETE_THIS;
+
+    // Undead are bloodless, and some victims are immune to bleeding.
+    if (!isUndead() && !isImmune(IMMUNE_BLEED, limb)) {
+      if (isBleeding(limb))
+        incrementBleedStack(limb, 250);
+      else
+        rawBleed(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+    }
+  }
+  return 0;
+}
+int TBeing::trapTnt(int amt, TThing* carrier) {
+  int material = carrier ? carrier->getMaterial() : MAT_WOOD;
+  // The blast throws amt/10 burning shards, each at a random limb.
+  for (int i = amt / 10; i > 0; --i) {
+    wearSlotT limb = pickRandomLimb();
+    if (!hasPart(limb) || !slotChance(limb) || getStuckIn(limb) ||
+        notBleedSlot(limb))
+      continue;
+
+    TObj* shard = createSplinter(material, amt, false);
+    if (!shard)
+      continue;
+    TGenWeapon* w = dynamic_cast<TGenWeapon*>(shard);
+
+    if (!w || ::number(1, 100) >= w->getCurSharp()) {
+      delete shard;
+      continue;
+    }
+
+    shard->setBurning(this);
+    if (IS_SET_DELETE(stickIn(shard, limb), DELETE_THIS))
+      return DELETE_THIS;
+
+    if (!isUndead() && !isImmune(IMMUNE_BLEED, limb)) {
+      if (isBleeding(limb))
+        incrementBleedStack(limb, 250);
+      else
+        rawBleed(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+    }
+  }
+  return 0;
+}
+void TBeing::trapBlade(int amt) {
+  // amt/10 razor-blades, each slashing a random limb.
+  for (int i = amt / 10; i > 0; --i) {
+    wearSlotT limb = pickRandomLimb();
+    if (!hasPart(limb) || !slotChance(limb) || notBleedSlot(limb))
+      continue;
+
+    // Steel's hardness sets how readily a blade bites deep enough to bleed.
+    if (::number(1, 100) >= material_nums[MAT_STEEL].hardness)
+      continue;
+
+    if (!isUndead() && !isImmune(IMMUNE_BLEED, limb)) {
+      if (isBleeding(limb))
+        incrementBleedStack(limb, 250);
+      else
+        rawBleed(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+    }
+  }
+}
+void TBeing::trapFire(int amt) {
+  // amt/10 gouts of flame, each licking at a random limb.
+  for (int i = amt / 10; i > 0; --i) {
+    wearSlotT limb = pickRandomLimb();
+    if (!hasPart(limb) || !slotChance(limb))
+      continue;
+
+    // Set fire to whatever is worn or embedded on the struck limb -- but only
+    // if its material will actually catch (flammability > 0) and it isn't
+    // already ablaze, so repeat gouts don't re-announce a burning item.
+    TObj* worn = dynamic_cast<TObj*>(equipment[limb]);
+    TObj* embedded = dynamic_cast<TObj*>(getStuckIn(limb));
+    for (TObj* item : {worn, embedded}) {
+      if (!item || material_nums[item->getMaterial()].flammability <= 0 ||
+          item->isObjStat(ITEM_BURNING))
+        continue;
+      item->setBurning(this);
+      act("<r>$p bursts into flames!<1>", false, this, item, nullptr, TO_CHAR);
+      act("<r>$p bursts into flames!<1>", false, this, item, nullptr, TO_ROOM);
+    }
+  }
+}
+void TBeing::trapAcid(int trapLevel) {
+  // amt/10 splashes of acid, each on a random limb.
+  for (int i = trapLevel / 10; i > 0; --i) {
+    wearSlotT limb = pickRandomLimb();
+    if (!hasPart(limb) || !slotChance(limb))
+      continue;
+
+    TObj* worn = dynamic_cast<TObj*>(equipment[limb]);
+    TObj* embedded = dynamic_cast<TObj*>(getStuckIn(limb));
+
+    // Melt whatever is worn or embedded on the limb. meltObject self-gates on
+    // acid_susc/isMetal and returns DELETE_THIS if the item dissolves.
+    if (worn || embedded) {
+      int perc = getImmunity(IMMUNE_ACID) ? 1 : 50;
+      if (worn && IS_SET_ONLY(worn->meltObject(this, perc), DELETE_THIS))
+        delete worn;
+      if (embedded &&
+          IS_SET_ONLY(embedded->meltObject(this, perc), DELETE_THIS))
+        delete embedded;
+      continue;
+    }
+
+    // A bare limb: the acid eats at the victim's defenses. A positive
+    // APPLY_ARMOR modifier worsens AC (armor spells use negative to improve).
+    // joinFlagAlwaysRenew sums the penalty and duration onto any existing acid
+    // affect regardless of remaining duration, so splashes accumulate across
+    // passes / repeat traps (plain affectJoin would refuse until half-decayed).
+    affectedData aff;
+    aff.type = SPELL_ACID_BLAST;
+    aff.level = 0;
+    aff.duration = 6 * Pulse::UPDATES_PER_MUDHOUR;
+    aff.location = APPLY_ARMOR;
+    aff.modifier = trapLevel / 10;
+    aff.modifier2 = 0;
+    aff.bitvector = 0;
+    affectJoin2(&aff, joinFlagAlwaysRenew);
+
+    sstring l = describeBodySlot(limb);
+    act(format("Acid sears your exposed %s, eroding your defenses!") % l, false,
+      this, nullptr, nullptr, TO_CHAR);
+    act(format("Acid sears $n's exposed %s.") % l, true, this, nullptr, nullptr,
+      TO_ROOM);
+  }
+}
+void TBeing::trapHammer(int) {
+  // One heavy blow to a single upper-body limb (head through fingers).
+  wearSlotT limb = static_cast<wearSlotT>(::number(WEAR_HEAD, WEAR_WAIST - 1));
+  if (!hasPart(limb) || notBreakSlot(limb, false))
+    return;
+
+  // A tough body, bone-condition immunity, or a body nearly as hard as the
+  // stone hammer resists; the softer the body, the likelier the bone shatters.
+  if (isTough() || isImmune(IMMUNE_BONE_COND, limb))
+    return;
+  int diff = material_nums[MAT_STONE].hardness -
+             material_nums[getMaterial(limb)].hardness;
+  if (::number(1, 100) >= diff)
+    return;
+
+  addToLimbFlags(limb, PART_BROKEN);
+  dropWeapon(limb);
+
+  sstring l = describeBodySlot(limb);
+  act(format("A crushing weight shatters your %s!") % l, false, this, nullptr,
+    nullptr, TO_CHAR);
+  act(format("A crushing weight shatters $n's %s.") % l, true, this, nullptr,
+    nullptr, TO_ROOM);
+}
+int TBeing::trapFrost(int amt) {
+  // amt/10 icicles, each embedding in a random limb.
+  for (int i = amt / 10; i > 0; --i) {
+    wearSlotT limb = pickRandomLimb();
+    if (!hasPart(limb) || !slotChance(limb) || getStuckIn(limb) ||
+        notBleedSlot(limb))
+      continue;
+
+    TObj* shard = createSplinter(MAT_ICE, amt, false);
+    if (!shard)
+      continue;
+    TGenWeapon* w = dynamic_cast<TGenWeapon*>(shard);
+
+    if (!w || ::number(1, 100) >= w->getCurSharp()) {
+      delete shard;
+      continue;
+    }
+
+    if (IS_SET_DELETE(stickIn(shard, limb), DELETE_THIS))
+      return DELETE_THIS;
+
+    if (!isUndead() && !isImmune(IMMUNE_BLEED, limb)) {
+      if (isBleeding(limb))
+        incrementBleedStack(limb, 250);
+      else
+        rawBleed(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+    }
+  }
+  return 0;
+}
+void TBeing::trapEnergy(int trapLevel) {
+  // amt/10 plasma bolts, each striking a random limb.
+  for (int i = trapLevel / 10; i > 0; --i) {
+    wearSlotT limb = pickRandomLimb();
+    if (!hasPart(limb) || !slotChance(limb))
+      continue;
+
+    // Curse whatever is worn or embedded on the struck limb. Only announce a
+    // freshly-applied curse so repeat traps don't spam over already-cursed
+    // gear.
+    TObj* worn = dynamic_cast<TObj*>(equipment[limb]);
+    TObj* embedded = dynamic_cast<TObj*>(getStuckIn(limb));
+    if (worn || embedded) {
+      for (TObj* item : {worn, embedded}) {
+        if (!item || item->isObjStat(ITEM_NODROP))
+          continue;
+        item->addObjStat(ITEM_NODROP);
+        act("$p glows with an ominous light.", false, this, item, nullptr,
+          TO_CHAR);
+        act("$p glows with an ominous light.", false, this, item, nullptr,
+          TO_ROOM);
+      }
+      continue;
+    }
+
+    // A bare limb: sap resistance to drain and energy. joinFlagAlwaysRenew sums
+    // the penalty (modifier2) and duration onto a pre-existing affect of the
+    // same immunity type (matched on modifier for APPLY_IMMUNITY) regardless of
+    // remaining duration, so splashes accumulate across passes / repeat traps
+    // (plain affectJoin would refuse until half-decayed). No match -> fresh.
+    affectedData aff;
+    aff.type = SPELL_ENERGY_DRAIN;
+    aff.level = 0;
+    aff.location = APPLY_IMMUNITY;
+    aff.bitvector = 0;
+
+    aff.duration = 6 * Pulse::UPDATES_PER_MUDHOUR;
+    aff.modifier = IMMUNE_DRAIN;
+    aff.modifier2 = -trapLevel / 10;
+    affectJoin2(&aff, joinFlagAlwaysRenew);
+
+    aff.duration = 6 * Pulse::UPDATES_PER_MUDHOUR;
+    aff.modifier = IMMUNE_ENERGY;
+    aff.modifier2 = -trapLevel / 10;
+    affectJoin2(&aff, joinFlagAlwaysRenew);
+  }
+}
+int TBeing::trapBolt(int amt) {
+  // amt/10 bolts, each embedding in a random limb.
+  for (int i = amt / 10; i > 0; --i) {
+    wearSlotT limb = pickRandomLimb();
+    if (!hasPart(limb) || !slotChance(limb) || getStuckIn(limb) ||
+        notBleedSlot(limb))
+      continue;
+
+    TObj* bolt = read_object(10008, VIRTUAL);
+    if (!bolt)
+      continue;
+    TBaseWeapon* w = dynamic_cast<TBaseWeapon*>(bolt);
+
+    // The bolt lodges only if it's sharp enough, like an arrow; else it
+    // glances off.
+    if (!w || ::number(1, 100) >= w->getCurSharp()) {
+      delete bolt;
+      continue;
+    }
+
+    if (IS_SET_DELETE(stickIn(bolt, limb), DELETE_THIS))
+      return DELETE_THIS;
+
+    if (!isUndead() && !isImmune(IMMUNE_BLEED, limb)) {
+      if (isBleeding(limb))
+        incrementBleedStack(limb, 250);
+      else
+        rawBleed(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+    }
+  }
+  return 0;
+}
+void TBeing::trapDisk(int amt) {
+  // amt/10 razor-disks, each slashing a random limb.
+  for (int i = amt / 10; i > 0; --i) {
+    wearSlotT limb = pickRandomLimb();
+    if (!hasPart(limb) || !slotChance(limb) || notBleedSlot(limb))
+      continue;
+
+    // Steel's hardness sets how readily a disk bites deep enough to bleed.
+    if (::number(1, 100) >= material_nums[MAT_STEEL].hardness)
+      continue;
+
+    if (!isUndead() && !isImmune(IMMUNE_BLEED, limb)) {
+      if (isBleeding(limb))
+        incrementBleedStack(limb, 250);
+      else
+        rawBleed(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+    }
+  }
+}
+void TBeing::trapPebble(int amt) {
+  // amt/10 pebbles, each pelting a random limb.
+  for (int i = amt / 10; i > 0; --i) {
+    wearSlotT limb = pickRandomLimb();
+    if (!hasPart(limb) || !slotChance(limb) || notBleedSlot(limb))
+      continue;
+
+    // Stone's hardness sets how readily a pebble bites deep enough to bleed.
+    if (::number(1, 100) >= material_nums[MAT_STONE].hardness)
+      continue;
+
+    if (!isUndead() && !isImmune(IMMUNE_BLEED, limb)) {
+      if (isBleeding(limb))
+        incrementBleedStack(limb, 250);
+      else
+        rawBleed(limb, 250, SILENT_YES, CHECK_IMMUNITY_NO);
+    }
+  }
+}
+
 int TBeing::trapTeleport(int amt) {
   int rc;
 

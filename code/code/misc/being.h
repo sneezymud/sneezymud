@@ -57,6 +57,8 @@ typedef struct _app_typ {
 
 extern APP_type apply_types[MAX_APPLY_TYPES];
 
+[[nodiscard]] extern TObj* createSplinter(int material, int level, bool spiked);
+
 class playerData {
   public:
     sstring longDescr;
@@ -1149,6 +1151,17 @@ class TBeing : public TThing {
     virtual void trapPoison(int);
     virtual void trapDisease(int);
     virtual int trapTeleport(int);
+    virtual int trapSpike(int);
+    virtual int trapTnt(int, TThing*);
+    virtual void trapBlade(int);
+    virtual void trapFire(int);
+    virtual void trapAcid(int);
+    virtual void trapHammer(int);
+    virtual int trapFrost(int);
+    virtual void trapEnergy(int);
+    virtual int trapBolt(int);
+    virtual void trapDisk(int);
+    virtual void trapPebble(int);
     int dealTrapDamage(spellNumT, int, TThing* = nullptr, TBeing* = nullptr);
     int applyTrapEffect(doorTrapT, int, TThing* = nullptr, TBeing* = nullptr,
       int = 1);

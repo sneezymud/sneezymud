@@ -270,6 +270,8 @@ bool TThing::isMineral() const {
     case MAT_CORUNDUM:
     case MAT_CLAY:
     case MAT_PUMICE:
+    case MAT_CORAL:
+    case MAT_PEARL:
       return TRUE;
     default:
       return FALSE;
@@ -333,9 +335,85 @@ bool TThing::isElemental() const {
     case MAT_ICE:
     case MAT_LIGHTNING:
     case MAT_CHAOS:
+    case MAT_GHOSTLY:
       return TRUE;
     default:
       return FALSE;
+  }
+}
+
+bool TThing::isHide() const {
+  ubyte mat = convertV9MaterialToV10(getMaterial());
+
+  switch (mat) {
+    case MAT_GEN_ORG:
+    case MAT_LEATHER:
+    case MAT_TOUGH_LEATHER:
+    case MAT_DRAGON_SCALE:
+    case MAT_WOOL:
+    case MAT_FUR:
+    case MAT_FEATHERED:
+    case MAT_HAIR:
+    case MAT_HORSEHAIR:
+    case MAT_HUMAN_FLESH:
+    case MAT_FUR_CAT:
+    case MAT_FUR_DOG:
+    case MAT_FUR_RABBIT:
+    case MAT_DWARF_LEATHER:
+    case MAT_SOFT_LEATHER:
+    case MAT_FISHSCALE:
+    case MAT_OGRE_HIDE:
+      return true;
+    default:
+      return false;
+  }
+}
+
+bool TThing::isCloth() const {
+  ubyte mat = convertV9MaterialToV10(getMaterial());
+
+  switch (mat) {
+    case MAT_PAPER:
+    case MAT_CLOTH:
+    case MAT_SILK:
+    case MAT_CARDBOARD:
+    case MAT_STRING:
+    case MAT_TOUGH_CLOTH:
+    case MAT_HEMP:
+      return true;
+    default:
+      return false;
+  }
+}
+
+bool TThing::isHardStick() const {
+  ubyte mat = convertV9MaterialToV10(getMaterial());
+
+  switch (mat) {
+    case MAT_BONE:
+    case MAT_IVORY:
+    case MAT_WOOD:
+    case MAT_DRAGONBONE:
+    case MAT_STRAW:
+      return true;
+    default:
+      return false;
+  }
+}
+
+bool TThing::isSynthetic() const {
+  ubyte mat = convertV9MaterialToV10(getMaterial());
+
+  switch (mat) {
+    case MAT_RUBBER:
+    case MAT_PLASTIC:
+    case MAT_POWDER:
+    case MAT_LAMINATED:
+    case MAT_WAX:
+    case MAT_FOODSTUFF:
+      return true;
+    default:
+      return false;
   }
 }
 
