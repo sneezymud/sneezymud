@@ -58,6 +58,7 @@
 #include "obj_book.h"
 #include "obj_component.h"
 #include "obj_trap_component.h"
+#include "obj_trapcomp_bag.h"
 #include "obj_gemstone.h"
 #include "obj_key.h"
 #include "obj_note.h"
@@ -3898,6 +3899,8 @@ TObj* makeNewObj(itemTypeT tmp) {
       return new TCorpse();
     case ITEM_SPELLBAG:
       return new TSpellBag();
+    case ITEM_TRAPCOMP_BAG:
+      return new TTrapCompBag();
     case ITEM_KEYRING:
       return new TKeyring();
     case ITEM_COMPONENT:

@@ -382,6 +382,10 @@ void assign_item_info() {
     "Weight spellbag can hold", 500, 1, "Special - container flags", 0, 0,
     "Vnum of key that unlocks.  -1 == none", WORLD_SIZE - 1, -1,
     "Volume spellbag can hold", 100000, 1);
+  ItemInfo[ITEM_TRAPCOMP_BAG] = new itemInfo("TrapCompBag", "a component bag",
+    "Weight trap bag can hold", 500, 1, "Special - container flags", 0, 0,
+    "Vnum of key that unlocks.  -1 == none", WORLD_SIZE - 1, -1,
+    "Volume trap bag can hold", 100000, 1);
   ItemInfo[ITEM_COMPONENT] = new itemInfo("Component", "a spell component",
     "Number of uses left", 10, 0, "Maximum number of uses", 10, 0,
     "Spell # component is for", 1000, 0, "Special - decay/useage", 15, 0);

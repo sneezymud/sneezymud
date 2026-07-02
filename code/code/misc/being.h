@@ -1062,6 +1062,7 @@ class TBeing : public TThing {
     bool willBumpHeadDoor(roomDirData*, int*) const;
     void sendTrapMessage(const char*, trap_targ_t, int);
     bool hasTrapComps(const char*, trap_targ_t, int, int* price = NULL);
+    TThing* findTrapComp(const sstring& name);
     int goofUpTrap(doorTrapT, trap_targ_t);
     int springTrap(TTrap*);
     int triggerTrap(TTrap*);

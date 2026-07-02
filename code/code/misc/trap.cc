@@ -20,6 +20,7 @@
 #include "obj_open_container.h"
 #include "obj_arrow.h"
 #include "obj_trap_component.h"
+#include "obj_trapcomp_bag.h"
 #include "trap.h"
 
 extern const char* const GRENADE_EX_DESC = "__grenade_puller";
@@ -1233,6 +1234,13 @@ namespace {
 bool trapComponents(const char* type, trap_targ_t targ, int& item1, int& item2,
   int& item3) {
   item1 = item2 = item3 = 0;
+  // Arrow traps have no reagents of their own -- they reuse the container
+  // recipe. Alias here in the single source so callers (gate, consume, message,
+  // reclaim) can pass TRAP_TARG_ARROW honestly instead of hardcoding CONT, and
+  // so the targ-split types (acid/spore/teleport/power) resolve for arrows
+  // instead of returning empty component lists.
+  if (targ == TRAP_TARG_ARROW)
+    targ = TRAP_TARG_CONT;
   if (is_abbrev(type, "fire")) {
     item1 = Obj::ST_FLINT;
     item2 = Obj::ST_SULPHUR;
@@ -1353,6 +1361,19 @@ bool trapComponents(const char* type, trap_targ_t targ, int& item1, int& item2,
   return true;
 }
 
+// Locate a trap reagent by name -- first loose in top-level inventory, then
+// inside any trap component bag carried, so traps can be built from the bag.
+TThing* TBeing::findTrapComp(const sstring& name) {
+  if (TThing* t = searchLinkedListVis(this, name, stuff))
+    return t;
+  for (StuffIter it = stuff.begin(); it != stuff.end(); ++it) {
+    if (auto* bag = dynamic_cast<TTrapCompBag*>(*it))
+      if (TThing* t = bag->findComponent(this, name))
+        return t;
+  }
+  return nullptr;
+}
+
 bool TBeing::hasTrapComps(const char* type, trap_targ_t targ, int amt,
   int* price) {
   int item1 = 0, item2 = 0, item3 = 0, item4 = 0;
@@ -1368,16 +1389,16 @@ bool TBeing::hasTrapComps(const char* type, trap_targ_t targ, int amt,
   if (targ == TRAP_TARG_MINE) {
     item4 = Obj::ST_CASE_MINE;
     item4 = real_object(item4);
-    com4 = searchLinkedListVis(this, obj_index[item4].name, stuff);
+    com4 = findTrapComp(obj_index[item4].name);
   } else if (targ == TRAP_TARG_GRENADE) {
     item4 = Obj::ST_CASE_GRENADE;
     item4 = real_object(item4);
-    com4 = searchLinkedListVis(this, obj_index[item4].name, stuff);
+    com4 = findTrapComp(obj_index[item4].name);
   }
 
-  TThing* com1 = searchLinkedListVis(this, obj_index[item1].name, stuff);
-  TThing* com2 = searchLinkedListVis(this, obj_index[item2].name, stuff);
-  TThing* com3 = searchLinkedListVis(this, obj_index[item3].name, stuff);
+  TThing* com1 = findTrapComp(obj_index[item1].name);
+  TThing* com2 = findTrapComp(obj_index[item2].name);
+  TThing* com3 = findTrapComp(obj_index[item3].name);
 
   // One charge's worth of a reagent. A stacked TTrapComponent's cost covers
   // all of its charges, but only one charge goes into each trap built, so
