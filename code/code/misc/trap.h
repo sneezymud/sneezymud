@@ -6,6 +6,13 @@
 
 #pragma once
 
+#include "spells.h"
+#include "sstring.h"
+
+class TBeing;
+class TThing;
+class TObj;
+
 const unsigned int TRAP_EFF_MOVE = (1 << 0);     // 1  trigger on movement
 const unsigned int TRAP_EFF_OBJECT = (1 << 1);   // 2  trigger on get or put
 const unsigned int TRAP_EFF_ROOM = (1 << 2);     // 4  affect all in room
@@ -64,3 +71,32 @@ extern const int TrapDir[];
 extern const char* const trap_effects[MAX_TRAP_EFF];
 extern doorTrapT mapFileToDoorTrap(int);
 extern int mapDoorTrapToFile(doorTrapT);
+
+// The set-trap skill that governs each trap_targ_t, indexed by target.
+extern const spellNumT trapSetSkill[];
+// Resolve a recorded setter name to a live, creditable being, or nullptr for
+// an empty name or one that no longer maps to anyone in the game. Doors store
+// the setter as a bare name (no carrier object), so they resolve through this.
+TBeing* trapSetterByName(const sstring& name);
+// Resolve an object trap's recorded setter to a live, creditable being, or
+// nullptr for any trap with no recorded setter (all world/mob-loaded traps),
+// which routes its damage to the unattributed objDamage() fallback.
+TBeing* trapSetter(const TThing* carrier);
+// Stamp the setter's name onto a trap carrier so trapSetter() can later credit
+// them. Strings the object first (prototype-safe), mirroring TTrap::dropMe.
+void recordTrapSetter(TObj* carrier, const TBeing* setter);
+doorTrapT parseTrapType(const char* name, trap_targ_t target);
+// Single source of trap component vnums for a (type, target); fills the three
+// reagent vnums and returns false for an unrecognized type. Shared by trap
+// gating/consumption, the set-trap flavor messages, and disarm reclaim.
+bool trapComponents(const char* type, trap_targ_t targ, int& item1, int& item2,
+  int& item3);
+
+// Passive trap-sense on look. The caller resolves whether the target is
+// trapped and rolls Detect Trap; this reports the result. A successful skill
+// roll (skillDetected) reveals the trap type and level; otherwise a perceptive
+// looker gets only a vague warning. Pass the trapped TThing as obj (for proper
+// $p naming) for containers/portals, or obj == nullptr with doorName set for
+// exits.
+void describeTrapToLooker(TBeing* ch, const TThing* obj,
+  const sstring& doorName, bool skillDetected, int trapType, int trapDam);

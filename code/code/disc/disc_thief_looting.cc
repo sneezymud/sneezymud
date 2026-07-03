@@ -9,6 +9,9 @@
 #include "disc_thief_looting.h"
 #include "obj_trap.h"
 #include "obj_portal.h"
+#include "obj_trap_component.h"
+#include "trap.h"
+#include "low.h"
 
 int TBeing::doSearch(const char* argument) {
   int rc;
@@ -170,6 +173,60 @@ int TBeing::disarmTrap(const char* arg, TObj* tp) {
   return FALSE;
 }
 
+// Salvage a disarmed trap's crafting components into the thief's inventory.
+// Sources the reagents from the shared trapComponents() table (same one the
+// trap gating and flavor messages use), rolls recovery per component, and
+// reads each recovered object into the thief. `targ` picks the recipe for the
+// target the trap was set against. Pass the TTrap for mines and grenades (to
+// also yield the casing); pass nullptr for flag-based traps (doors, containers,
+// portals).
+bool reclaimTrapComps(TBeing* thief, sstring trap_type, trap_targ_t targ,
+  TTrap* trap) {
+  // Source the reagents for the same target the trap was set against, so
+  // reclaim returns exactly what the set path consumed.
+  int i1 = 0, i2 = 0, i3 = 0;
+  if (!trapComponents(trap_type.c_str(), targ, i1, i2, i3))
+    return false;
+
+  std::vector<int> components = {i1, i2, i3};
+  if (trap) {
+    if (trap->isTrapEffectType(TRAP_EFF_THROW))
+      components.push_back(Obj::ST_CASE_GRENADE);
+    else if (trap->isTrapEffectType(TRAP_EFF_MOVE))
+      components.push_back(Obj::ST_CASE_MINE);
+  }
+
+  int recovery_chance = 50 + (thief->getSkillValue(SKILL_DISARM_TRAP) / 2);
+  size_t recovered = 0;
+  for (int vnum : components) {
+    if (::number(1, 100) > recovery_chance)
+      continue;
+    if (TObj* comp = read_object(vnum, VIRTUAL)) {
+      // Each salvaged reagent comes back as a single charge (one trap's
+      // worth); auto-merge folds it into any matching stack the thief carries.
+      if (auto* tc = dynamic_cast<TTrapComponent*>(comp))
+        tc->setTrapComponentCharges(1);
+      act("You carefully recover $p from the trap.", false, thief, comp,
+        nullptr, TO_CHAR);
+      *thief += *comp;
+      recovered++;
+    }
+  }
+
+  if (recovered == 0) {
+    act("You were unable to salvage any components from the trap.", false,
+      thief, nullptr, nullptr, TO_CHAR);
+    return false;
+  }
+  if (recovered < components.size())
+    act("You managed to salvage some components from the trap.", false, thief,
+      nullptr, nullptr, TO_CHAR);
+  else
+    act("You successfully recovered all components from the trap!", false,
+      thief, nullptr, nullptr, TO_CHAR);
+  return true;
+}
+
 int TObj::disarmMe(TBeing* thief) {
   thief->sendTo("I don't think that's a trap.\n\r");
   return FALSE;
@@ -191,7 +248,22 @@ int TTrap::disarmMe(TBeing* thief) {
     thief->sendTo(format("Click.  You disarm the %s trap.\n\r") % trap_type);
     act("$n disarms $p.", FALSE, thief, this, 0, TO_ROOM);
     setTrapCharges(0);
-    return TRUE;
+    // Salvage components if the thief knows how to build this trap type
+    bool canSalvage = (isTrapEffectType(TRAP_EFF_THROW) &&
+                        thief->doesKnowSkill(SKILL_SET_TRAP_GREN)) ||
+                      (isTrapEffectType(TRAP_EFF_MOVE) &&
+                        thief->doesKnowSkill(SKILL_SET_TRAP_MINE));
+    if (canSalvage)
+      reclaimTrapComps(thief, trap_type,
+        isTrapEffectType(TRAP_EFF_THROW) ? TRAP_TARG_GRENADE : TRAP_TARG_MINE,
+        this);
+    else
+      act(
+        "You lack the knowledge to salvage components from this type of "
+        "trap.",
+        false, thief, nullptr, nullptr, TO_CHAR);
+    // Destroy the spent standalone trap object (mine/grenade).
+    return DELETE_ITEM;
   } else {
     thief->sendTo("Click. (whoops)\n\r");
     act("$n tries to disarm $p.", FALSE, thief, this, 0, TO_ROOM);
@@ -204,12 +276,15 @@ int TTrap::disarmMe(TBeing* thief) {
 }
 
 int disarmTrapObj(TBeing* thief, TObj* trap) {
-  int rc;
-  rc = trap->disarmMe(thief);
-  if (IS_SET_DELETE(rc, DELETE_VICT)) {
-    return DELETE_THIS;
-  }
-  return FALSE;
+  int rc = trap->disarmMe(thief);
+  int ret = 0;
+  // The thief (passed as the victim) may die, and/or the trap object may need
+  // deleting (a spent mine/grenade, or a portal that detonated on a botch).
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    ret |= DELETE_THIS;
+  if (IS_SET_DELETE(rc, DELETE_ITEM))
+    ret |= DELETE_ITEM;
+  return ret;
 }
 
 int disarmTrapDoor(TBeing* thief, dirTypeT door) {
@@ -242,6 +317,14 @@ int disarmTrapDoor(TBeing* thief, dirTypeT door) {
         (back = rp->dir_option[rev_dir(door)])) {
       REMOVE_BIT(back->condition, EXIT_TRAPPED);
     }
+    // Salvage components if the thief knows how to set door traps
+    if (thief->doesKnowSkill(SKILL_SET_TRAP_DOOR))
+      reclaimTrapComps(thief, trap_type, TRAP_TARG_DOOR, nullptr);
+    else
+      act(
+        "You lack the knowledge to salvage components from this type of "
+        "trap.",
+        false, thief, nullptr, nullptr, TO_CHAR);
     return TRUE;
   } else {
     thief->sendTo("Click. (whoops)\n\r");

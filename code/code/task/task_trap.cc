@@ -11,8 +11,10 @@
 #include "extern.h"
 #include "monster.h"
 #include "obj_open_container.h"
+#include "obj_portal.h"
 #include "obj_trap.h"
 #include "obj_arrow.h"
+#include "trap.h"
 
 // returns DELETE_THIS for ch
 // returns true if guard disrupts trap pulse
@@ -86,8 +88,10 @@ int task_trap_door(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
     exitp->trap_info = ch->task->status;
 
     // this is number of 8-sided die to use for damage
-    int trapdamage = ch->getDoorTrapDam(doorTrapT(ch->task->status));
+    int trapdamage = ch->getTrapDam(TRAP_TARG_DOOR);
     exitp->trap_dam = trapdamage;
+    // Record the setter so triggerDoorTrap can credit them for the damage.
+    exitp->trap_setter = ch->getName();
 
     // and now for other side
     if ((rp2 = real_roomp(exitp->to_room)) &&
@@ -97,6 +101,7 @@ int task_trap_door(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       SET_BIT(back->condition, EXIT_TRAPPED);
       back->trap_info = ch->task->status;
       back->trap_dam = trapdamage;
+      back->trap_setter = ch->getName();
     }
     ch->sendTo("The trap has been successfully set!\n\r");
     ch->hasTrapComps(buf2, TRAP_TARG_DOOR, -1);  // delete the components
@@ -105,7 +110,7 @@ int task_trap_door(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   }
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-      learning = ch->getDoorTrapLearn(doorTrapT(ch->task->status));
+      learning = ch->getTrapLearn(TRAP_TARG_DOOR);
       ch->task->calcNextUpdate(pulse,
         Pulse::MOBACT * (5 + ((100 - learning) / 3)));
 
@@ -199,8 +204,9 @@ int task_trap_container(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
     cont->setContainerTrapType(doorTrapT(ch->task->status));
 
     // this is number of 8-sided die to use for damage
-    int trapdamage = ch->getContainerTrapDam(doorTrapT(ch->task->status));
+    int trapdamage = ch->getTrapDam(TRAP_TARG_CONT);
     cont->setContainerTrapDam(trapdamage);
+    recordTrapSetter(cont, ch);
 
     ch->sendTo("The trap has been successfully set!\n\r");
     ch->hasTrapComps(ch->task->orig_arg, TRAP_TARG_CONT, -1);
@@ -209,7 +215,7 @@ int task_trap_container(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
   }
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-      learning = ch->getContainerTrapLearn(doorTrapT(ch->task->status));
+      learning = ch->getTrapLearn(TRAP_TARG_CONT);
       ch->task->calcNextUpdate(pulse,
         Pulse::MOBACT * (5 + ((100 - learning) / 3)));
 
@@ -272,13 +278,15 @@ int task_trap_container(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
 
 void TTrap::makeTrapLand(TBeing* ch, doorTrapT status, const char* args) {
   // this should be a number between 1-50
-  int trapdamage = ch->getMineTrapDam(status);
+  int trapdamage = ch->getTrapDam(TRAP_TARG_MINE);
 
-  int stdflags = TRAP_EFF_MOVE | TRAP_EFF_NORTH | TRAP_EFF_EAST |
-                 TRAP_EFF_SOUTH | TRAP_EFF_WEST | TRAP_EFF_UP | TRAP_EFF_DOWN |
-                 TRAP_EFF_NE | TRAP_EFF_NW | TRAP_EFF_SE | TRAP_EFF_SW;
-
-  // figure out criteria to add TRAP_EFF_ROOM later
+  // TRAP_EFF_ROOM makes the blast spray everyone in the room (except the
+  // triggerer and immortals), not just the foot that stepped on it. The
+  // splash path lives in TBeing::triggerTrap.
+  int stdflags = TRAP_EFF_MOVE | TRAP_EFF_ROOM | TRAP_EFF_NORTH |
+                 TRAP_EFF_EAST | TRAP_EFF_SOUTH | TRAP_EFF_WEST | TRAP_EFF_UP |
+                 TRAP_EFF_DOWN | TRAP_EFF_NE | TRAP_EFF_NW | TRAP_EFF_SE |
+                 TRAP_EFF_SW;
 
   setTrapLevel(trapdamage);
 
@@ -343,7 +351,7 @@ int task_trap_mine(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   }
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-      learning = ch->getMineTrapLearn(doorTrapT(ch->task->status));
+      learning = ch->getTrapLearn(TRAP_TARG_MINE);
       ch->task->calcNextUpdate(pulse,
         Pulse::MOBACT * (5 + ((100 - learning) / 3)));
 
@@ -407,7 +415,7 @@ int task_trap_arrow(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   TArrow* arrow;
 
   if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) ||
-      !ch->hasTrapComps(ch->task->orig_arg, TRAP_TARG_CONT, 0) ||
+      !ch->hasTrapComps(ch->task->orig_arg, TRAP_TARG_ARROW, 0) ||
       (ch->getPosition() <= POSITION_SITTING) ||
       !ch->getDiscipline(DISC_LOOTING)) {
     if (ch->getPosition() >= POSITION_RESTING) {
@@ -434,12 +442,13 @@ int task_trap_arrow(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
 
   if (ch->task->timeLeft < 0) {
     // Made it to end, set trap
-    arrow->setTrapLevel(ch->getArrowTrapDam(doorTrapT(ch->task->status)));
+    arrow->setTrapLevel(ch->getTrapDam(TRAP_TARG_ARROW));
     arrow->setTrapDamType(doorTrapT(ch->task->status));
+    recordTrapSetter(arrow, ch);
 
     ch->sendTo("You have successfully constructed an arrow trap!\n\r");
     int price;
-    ch->hasTrapComps(ch->task->orig_arg, TRAP_TARG_CONT, -1, &price);
+    ch->hasTrapComps(ch->task->orig_arg, TRAP_TARG_ARROW, -1, &price);
 
     // set price on the trap to that of the components
     arrow->obj_flags.cost = price;
@@ -451,25 +460,25 @@ int task_trap_arrow(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
 
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-      learning = ch->getArrowTrapLearn(doorTrapT(ch->task->status));
+      learning = ch->getTrapLearn(TRAP_TARG_ARROW);
       ch->task->calcNextUpdate(pulse,
         Pulse::MOBACT * (5 + ((100 - learning) / 3)));
 
       switch (ch->task->timeLeft) {
         case 3:
-          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_CONT, 1);
+          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_ARROW, 1);
           ch->task->timeLeft--;
           break;
         case 2:
-          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_CONT, 2);
+          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_ARROW, 2);
           ch->task->timeLeft--;
           break;
         case 1:
-          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_CONT, 3);
+          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_ARROW, 3);
           ch->task->timeLeft--;
           break;
         case 0:
-          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_CONT, 4);
+          ch->sendTrapMessage(ch->task->orig_arg, TRAP_TARG_ARROW, 4);
           ch->task->timeLeft--;
           break;
       }
@@ -510,7 +519,7 @@ int task_trap_arrow(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
 
 void TTrap::makeTrapGrenade(TBeing* ch, doorTrapT status, const char* args) {
   // this should be a number between 1-50
-  int trapdamage = ch->getGrenadeTrapDam(status);
+  int trapdamage = ch->getTrapDam(TRAP_TARG_GRENADE);
 
   setTrapLevel(trapdamage);
 
@@ -576,7 +585,7 @@ int task_trap_grenade(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   }
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-      learning = ch->getGrenadeTrapLearn(doorTrapT(ch->task->status));
+      learning = ch->getTrapLearn(TRAP_TARG_GRENADE);
       ch->task->calcNextUpdate(pulse,
         Pulse::MOBACT * (5 + ((100 - learning) / 3)));
 
@@ -631,4 +640,109 @@ int task_trap_grenade(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       break;  // eat the command
   }
   return TRUE;
+}
+
+int task_trap_portal(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
+  TObj* obj) {
+  char buf1[256], buf2[256];
+  int learning;
+  int rc;
+  TPortal* portal = nullptr;
+
+  // orig_arg is a door-shaped "<token> <trap type>" (so goofUpTrap's door path
+  // can recover the type); half_chop to the trap type as task_trap_door does.
+  half_chop(ch->task->orig_arg, buf1, buf2);
+
+  if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) ||
+      !ch->hasTrapComps(buf2, TRAP_TARG_DOOR, 0) || !obj ||
+      !(portal = dynamic_cast<TPortal*>(obj)) ||
+      portal->isPortalFlag(EXIT_TRAPPED) ||
+      (ch->getPosition() <= POSITION_SITTING) ||
+      !ch->getDiscipline(DISC_LOOTING)) {
+    if (ch->getPosition() >= POSITION_RESTING) {
+      act("You suddenly stop trapping the portal for some reason.", false, ch,
+        0, 0, TO_CHAR);
+      act("$n stops trapping and looks about confused and embarrassed.", true,
+        ch, 0, 0, TO_ROOM);
+    }
+    ch->stopTask();
+    return false;  // returning false lets command be interpreted
+  }
+
+  if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
+    return false;
+
+  // check for guards that prevent
+  rc = trapGuardCheck(ch);
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_THIS;
+  else if (rc)
+    return false;
+
+  if (ch->task->timeLeft < 0) {
+    // Made it to end, set trap
+    doorTrapT type = doorTrapT(ch->task->status);
+    portal->setPortalTrapType(static_cast<unsigned char>(type));
+    portal->setPortalTrapDam(
+      static_cast<unsigned short>(ch->getTrapDam(TRAP_TARG_DOOR)));
+    portal->addPortalFlag(EXIT_TRAPPED);
+    recordTrapSetter(portal, ch);
+
+    // Mirror the trap onto the linked partner portal so it ambushes from
+    // either side, the way a door trap mirrors to its reverse exit. Silent on
+    // purpose -- announcing it to the far room would warn the victim. A
+    // one-way or unloaded partner just leaves this side trapped.
+    if (TPortal* partner = portal->findMatchingPortal()) {
+      partner->setPortalTrapType(static_cast<unsigned char>(type));
+      partner->setPortalTrapDam(portal->getPortalTrapDam());
+      partner->addPortalFlag(EXIT_TRAPPED);
+      recordTrapSetter(partner, ch);
+    }
+
+    ch->sendTo("The trap has been successfully set!\n\r");
+    ch->hasTrapComps(buf2, TRAP_TARG_DOOR, -1);
+    ch->stopTask();
+    return false;
+  }
+  switch (cmd) {
+    case CMD_TASK_CONTINUE:
+      learning = ch->getTrapLearn(TRAP_TARG_DOOR);
+      ch->task->calcNextUpdate(pulse,
+        Pulse::MOBACT * (5 + ((100 - learning) / 3)));
+
+      ch->sendTrapMessage(buf2, TRAP_TARG_DOOR, 4 - ch->task->timeLeft);
+      ch->task->timeLeft--;
+
+      // test for failure
+      // let's not test multiple times, check at end
+      if (ch->task->timeLeft < 0 || !ch->doesKnowSkill(SKILL_SET_TRAP_DOOR)) {
+        if (!ch->bSuccess(learning, SKILL_SET_TRAP_DOOR)) {
+          // trigger trap
+          rc = ch->goofUpTrap(doorTrapT(ch->task->status), TRAP_TARG_DOOR);
+          ch->sendTo("Your attempt to set the trap has failed.\n\r");
+          if (IS_SET_DELETE(rc, DELETE_THIS))
+            return DELETE_THIS;
+
+          ch->stopTask();
+          return false;
+        }
+      }
+      break;
+    case CMD_ABORT:
+    case CMD_STOP:
+      act("You stop trying to trap $p.", false, ch, portal, 0, TO_CHAR);
+      act("$n stops tinkering with $p.", false, ch, portal, 0, TO_ROOM);
+      ch->stopTask();
+      break;
+    case CMD_TASK_FIGHTING:
+      ch->sendTo(
+        "You stop setting the trap so that you can defend yourself!\n\r");
+      ch->stopTask();
+      break;
+    default:
+      if (cmd < MAX_CMD_LIST)
+        warn_busy(ch);
+      break;  // eat the command
+  }
+  return true;
 }

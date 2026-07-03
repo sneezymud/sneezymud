@@ -3314,6 +3314,18 @@ int TBeing::goDirection(dirTypeT dir) {
         act(buf, TRUE, this, 0, 0, TO_ROOM);
         return FALSE;
       }
+      if (IS_SET(exitp->condition, EXIT_TRAPPED)) {
+        if (doesKnowSkill(SKILL_DETECT_TRAP) && detectTrapDoor(this, dir)) {
+          sendTo(format("You start to open the %s, but then notice an "
+                        "insidious %s trap...\n\r") %
+                 sstring(exitp->getName()) %
+                 sstring(trap_types[exitp->trap_info]).uncap());
+          return false;
+        }
+        rc = triggerDoorTrap(dir);
+        if (IS_SET_DELETE(rc, DELETE_THIS))
+          return DELETE_THIS;
+      }
       rawOpenDoor(dir);
       return 0;
     } else if (!IS_SET(exitp->condition, EXIT_SECRET) &&

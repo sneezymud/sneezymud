@@ -15,6 +15,9 @@
 #include "obj_portal.h"
 #include "person.h"
 #include "room.h"
+#include "task.h"
+#include "trap.h"
+#include "disc_thief_looting.h"
 
 TPortal::TPortal(const TRoom* rp) :
   TSeeThru(),
@@ -182,11 +185,97 @@ unsigned short TPortal::getPortalTrapDam() const { return trap_damage; }
 
 void TPortal::setPortalTrapDam(unsigned short r) { trap_damage = r; }
 
+int TPortal::trapMe(TBeing* ch, const char* trap_type) {
+  if (!ch->doesKnowSkill(SKILL_SET_TRAP_DOOR)) {
+    ch->sendTo("You know nothing about trapping portals.\n\r");
+    return false;
+  }
+  if (isPortalFlag(EXIT_TRAPPED)) {
+    act("$p is already trapped.", false, ch, this, nullptr, TO_CHAR);
+    return false;
+  }
+  doorTrapT type = parseTrapType(trap_type, TRAP_TARG_DOOR);
+  if (type == MAX_TRAP_TYPES) {
+    ch->sendTo("No such portal trap-type.\n\r");
+    return false;
+  }
+  if (ch->getTrapLearn(TRAP_TARG_DOOR) <= 0) {
+    ch->sendTo("You need more training before trapping a portal.\n\r");
+    return false;
+  }
+  if (!ch->hasTrapComps(trap_type, TRAP_TARG_DOOR, 0)) {
+    ch->sendTo("You need more items to make that trap.\n\r");
+    return false;
+  }
+  ch->sendTo("You start working on your trap.\n\r");
+  act("$n starts fiddling with $p.", true, ch, this, nullptr, TO_ROOM);
+  // goofUpTrap's TRAP_TARG_DOOR path half_chops orig_arg and consumes the
+  // components named by the second token, so give it a door-shaped two-token
+  // arg (the first token is discarded) — otherwise a failed portal trap leaks
+  // its components.
+  sstring task_arg = sstring("portal ") + trap_type;
+  start_task(ch, this, nullptr, TASK_TRAP_PORTAL, task_arg.c_str(), 3,
+    ch->inRoom(), type, 0, 5);
+  return false;
+}
+
+int TPortal::disarmMe(TBeing* thief) {
+  if (!isPortalFlag(EXIT_TRAPPED)) {
+    act("$p doesn't appear to be trapped.", false, thief, this, nullptr,
+      TO_CHAR);
+    return false;
+  }
+
+  sstring trap_type = trap_types[getPortalTrapType()];
+  int bKnown = thief->getSkillValue(SKILL_DISARM_TRAP);
+
+  if (thief->bSuccess(bKnown, SKILL_DISARM_TRAP)) {
+    act(format("Click.  You disarm the %s trap on $p.") % trap_type, false,
+      thief, this, nullptr, TO_CHAR);
+    act("$n disarms the trap on $p.", false, thief, this, nullptr, TO_ROOM);
+    remPortalFlag(EXIT_TRAPPED);
+    // Clear the mirrored trap on the linked partner too, silently (no far-room
+    // message), matching how setting the trap armed both sides.
+    if (TPortal* partner = findMatchingPortal())
+      partner->remPortalFlag(EXIT_TRAPPED);
+    // Salvage components if the thief knows how to set door/portal traps
+    if (thief->doesKnowSkill(SKILL_SET_TRAP_DOOR))
+      reclaimTrapComps(thief, trap_type, TRAP_TARG_DOOR, nullptr);
+    else
+      act(
+        "You lack the knowledge to salvage components from this type of "
+        "trap.",
+        false, thief, nullptr, nullptr, TO_CHAR);
+    return true;
+  }
+
+  thief->sendTo("Click. (whoops)\n\r");
+  act("$n tries to disarm the trap on $p.", false, thief, this, nullptr,
+    TO_ROOM);
+  int rc = thief->triggerPortalTrap(this);
+  if (IS_SET_DELETE(rc, DELETE_THIS) && IS_SET_DELETE(rc, DELETE_ITEM))
+    return DELETE_VICT | DELETE_ITEM;
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_VICT;
+  if (IS_SET_DELETE(rc, DELETE_ITEM))
+    return DELETE_ITEM;
+  return true;
+}
+
 void TPortal::showMe(TBeing* ch) const {
   if (isPortalFlag(EXIT_CLOSED))
     ch->sendTo("It is closed.\n\r");
   else
     ch->sendTo("It seems to lead somewhere...\n\r");
+
+  // A trapped portal is dangerous both closed (opening fires it) and open
+  // (entering fires it), so warn the looker whenever it is trapped.
+  if (isPortalFlag(EXIT_TRAPPED)) {
+    bool detected =
+      ch->doesKnowSkill(SKILL_DETECT_TRAP) && detectTrapObj(ch, this);
+    describeTrapToLooker(ch, this, "", detected, getPortalTrapType(),
+      getPortalTrapDam());
+  }
 }
 
 void TPortal::closeMe(TBeing* ch) {

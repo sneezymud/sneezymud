@@ -1,4 +1,7 @@
-Syntax: trap container <item> <trap type>
+Syntax: trap <container> <trap type>         (e.g. "trap chest poison")
+
+The trap type is always the last word of the command; the container must be
+closed before it can be trapped.
 
 Container traps may be placed on chests, bags or other containers.  They
 require a higher skill to do properly due to the higher degree of jostling
@@ -7,8 +10,9 @@ trigger whenever someone opens the container.  Container traps do a moderate
 to high degree of damage to the person opening the trap.
 
 Set traps allows a skillful looter from dissuading an overeager pursuer from
-following or to protect the looter's booty.  Traps come in 4 varieties, 
-exit traps, container traps, land mines and grenades.
+following or to protect the looter's booty.  Traps come in several varieties:
+door (and portal) traps, container traps, arrow traps, land mines, and
+grenades.
 
 All traps take time to set.  Improper training may cause the trap to backfire
 on the looter during the trapping process.  The damage the trap will do depends

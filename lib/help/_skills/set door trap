@@ -1,14 +1,21 @@
-Syntax: trap exit <direction> <trap type>
+Syntax: trap <direction> <trap type>         (e.g. "trap north fire")
+        trap <door> [direction] <trap type>  (named doors, e.g. "trap gate fire")
+        trap <portal> <trap type>            (magical portals)
 
-Exit traps may be placed on doors, gates, or other barriers along the direction
-of travel.  They are easy to set (and relatively easy to detect).  Exit traps
-are triggered when the exit is opened.  Exit traps do a moderate amount of
+The trap type is always the last word of the command; everything before it
+names what you are trapping.
+
+Door traps may be placed on closed doors, gates, or other barriers along the
+direction of travel.  They are easy to set (and relatively easy to detect).
+Door traps are triggered when the exit is opened.  They do a moderate amount of
 damage to the victim opening them, and may also lightly harm others in the
-vicinity.
+vicinity.  This skill also governs trapping magical portals, which are set the
+same way and triggered when someone enters them.
 
 Set traps allows a skillful looter from dissuading an overeager pursuer from
-following or to protect the looter's booty.  Traps come in 4 varieties, 
-exit traps, container traps and land mines and grenades.
+following or to protect the looter's booty.  Traps come in several varieties:
+door (and portal) traps, container traps, arrow traps, land mines, and
+grenades.
 
 All traps take time to set.  Improper training may cause the trap to backfire
 on the looter during the trapping process.  The damage the trap will do depends

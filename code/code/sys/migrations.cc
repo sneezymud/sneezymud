@@ -2776,6 +2776,23 @@ void runMigrations() {
       sneezy.query("DELETE FROM player WHERE account_id IS null");
     },
 
+    // Convert trap-reagent objects (vnums 900-934) to ITEM_TRAP_COMPONENT so
+    // they carry a charge count (val0), stack/merge in inventory, and are
+    // consumed one charge at a time instead of by whole-object delete.
+    // type 77 == ITEM_TRAP_COMPONENT's file value (obj.cc mapFileToItemType);
+    // the enum is append-only, so this value is stable. Seed every reagent at
+    // 1 charge so it stacks on pickup. The "type = 12" (ITEM_OTHER) guard
+    // selects exactly these reagents, excludes the real trap objects 924/925
+    // (type 14 == ITEM_TRAP), and is self-idempotent: a re-run finds nothing
+    // left at type 12.
+    [&]() {
+      vlogf(LOG_MISC,
+        "Converting trap reagents (900-934) to ITEM_TRAP_COMPONENT");
+      sneezy.query(
+        "UPDATE obj SET type = 77, val0 = 1 "
+        "WHERE vnum BETWEEN 900 AND 934 AND type = 12");
+    },
+
   };
 
   int oldVersion = getVersion(sneezy);

@@ -21,6 +21,11 @@ class TOpenContainer : public TBaseContainer {
     int key_num;
     int max_volume;
 
+    // Passive trap-sense when looking at the container. Reached via describeMe
+    // (the shared look-at funnel for every container subclass). No-op unless
+    // closed and trapped.
+    void describeTrapOnLook(TBeing* ch) const;
+
   public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int*, int*, int*, int*) const;
@@ -29,6 +34,7 @@ class TOpenContainer : public TBaseContainer {
     virtual void changeObjValue2(TBeing*);
     virtual bool getObjFromMeCheck(TBeing*);
     virtual void lookObj(TBeing*, int) const;
+    virtual void describeObjectSpecifics(const TBeing*) const override;
     virtual int disarmMe(TBeing*);
     virtual int detectMe(TBeing*) const;
     virtual void pickMe(TBeing*);

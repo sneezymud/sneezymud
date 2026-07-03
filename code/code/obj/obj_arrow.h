@@ -55,6 +55,8 @@ class TArrow : public TBaseWeapon {
     virtual void changeObjValue4(TBeing*);
     virtual sstring displayFourValues();
     virtual bool sellMeCheck(TBeing*, TMonster*, int, int) const;
+    virtual int trapMe(TBeing*, const char*);
+    virtual int disarmMe(TBeing*);
 
     TArrow();
     TArrow(const TArrow& a);

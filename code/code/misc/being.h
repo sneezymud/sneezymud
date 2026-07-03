@@ -57,6 +57,8 @@ typedef struct _app_typ {
 
 extern APP_type apply_types[MAX_APPLY_TYPES];
 
+[[nodiscard]] extern TObj* createSplinter(int material, int level, bool spiked);
+
 class playerData {
   public:
     sstring longDescr;
@@ -1062,6 +1064,7 @@ class TBeing : public TThing {
     bool willBumpHeadDoor(roomDirData*, int*) const;
     void sendTrapMessage(const char*, trap_targ_t, int);
     bool hasTrapComps(const char*, trap_targ_t, int, int* price = NULL);
+    TThing* findTrapComp(const sstring& name);
     int goofUpTrap(doorTrapT, trap_targ_t);
     int springTrap(TTrap*);
     int triggerTrap(TTrap*);
@@ -1073,28 +1076,12 @@ class TBeing : public TThing {
     int checkForInsideTrap(TThing*);
     int checkForGetTrap(TThing*);
     int checkForAnyTrap(TThing*);
-    int trapDoorSlashDamage(int, dirTypeT);
-    int trapDoorFireDamage(int, dirTypeT);
-    int trapDoorPierceDamage(int, dirTypeT);
-    int trapDoorTntDamage(int, dirTypeT);
-    int trapDoorAcidDamage(int, dirTypeT);
-    int trapDoorHammerDamage(int, dirTypeT);
-    int trapDoorEnergyDamage(int, dirTypeT);
-    int trapDoorFrostDamage(int, dirTypeT);
     virtual int grenadeHit(TTrap*);
     virtual bool addHated(TBeing*);
     virtual void setHunting(TBeing*) {}
     void throwGrenade(TTrap*, dirTypeT);
-    int getDoorTrapDam(doorTrapT);
-    int getContainerTrapDam(doorTrapT);
-    int getMineTrapDam(doorTrapT);
-    int getGrenadeTrapDam(doorTrapT);
-    int getArrowTrapDam(doorTrapT);
-    int getDoorTrapLearn(doorTrapT);
-    int getContainerTrapLearn(doorTrapT);
-    int getMineTrapLearn(doorTrapT);
-    int getGrenadeTrapLearn(doorTrapT);
-    int getArrowTrapLearn(doorTrapT);
+    int getTrapDam(trap_targ_t);
+    int getTrapLearn(trap_targ_t);
     bool canDoSummon() const;
     bool isSummonable() const;
     bool isTanking();
@@ -1164,6 +1151,20 @@ class TBeing : public TThing {
     virtual void trapPoison(int);
     virtual void trapDisease(int);
     virtual int trapTeleport(int);
+    virtual int trapSpike(int);
+    virtual int trapTnt(int, TThing*);
+    virtual void trapBlade(int);
+    virtual void trapFire(int);
+    virtual void trapAcid(int);
+    virtual void trapHammer(int);
+    virtual int trapFrost(int);
+    virtual void trapEnergy(int);
+    virtual int trapBolt(int);
+    virtual void trapDisk(int);
+    virtual void trapPebble(int);
+    int dealTrapDamage(spellNumT, int, TThing* = nullptr, TBeing* = nullptr);
+    int applyTrapEffect(doorTrapT, int, TThing* = nullptr, TBeing* = nullptr,
+      int = 1);
     void informMess();
     int objDam(spellNumT, int, TThing*);
     int objDamage(spellNumT, int, TThing*);
@@ -1305,6 +1306,9 @@ class TBeing : public TThing {
     int disarmTrap(const char*, TObj*);
     int detectTrap(const char*, int);
     int doSetTraps(const char*);
+    int makeDoorTrap(dirTypeT, const char*);
+    int makeMineTrap(const char*);
+    int makeGrenadeTrap(const char*);
     int doBerserk();
     int doShoot(const char*);
     void doSeekwater();

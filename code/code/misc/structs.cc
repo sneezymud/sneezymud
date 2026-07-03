@@ -223,7 +223,7 @@ TBeing::~TBeing() {
       // Other beings can hold raw pointers to this via affects. Clear or remove
       // those references here to prevent dangling access after delete.
       for (affectedData *aff = other->affected, *next_aff = nullptr; aff;
-        aff = next_aff) {
+           aff = next_aff) {
         next_aff = aff->next;
         if (aff->be != this) {
           continue;
@@ -768,7 +768,7 @@ TThing& TRoom::operator+=(TThing& t) {
 
       if ((tBeing = dynamic_cast<TBeing*>((tThing = &t)))) {
         for (wearSlotT wearIndex = MIN_WEAR; wearIndex < MAX_WEAR;
-          wearIndex++) {
+             wearIndex++) {
           if ((tObjTemp = dynamic_cast<TObj*>(tBeing->equipment[wearIndex]))) {
             if (tObjTemp->isObjStat(ITEM_PROTOTYPE)) {
               tBeing->unequip(wearIndex);
@@ -780,7 +780,7 @@ TThing& TRoom::operator+=(TThing& t) {
               continue;
 
             for (StuffIter it = tObjTemp->stuff.begin();
-              it != tObjTemp->stuff.end();) {
+                 it != tObjTemp->stuff.end();) {
               tObj = *(it++);
 
               if ((tObjTemp2 = dynamic_cast<TObj*>(tObj)) &&
@@ -808,7 +808,7 @@ TThing& TRoom::operator+=(TThing& t) {
           continue;
 
         for (StuffIter it = tObjTemp->stuff.begin();
-          it != tObjTemp->stuff.end();) {
+             it != tObjTemp->stuff.end();) {
           tThing = *(it++);
 
           if ((tObjTemp2 = dynamic_cast<TObj*>(tThing)) &&
@@ -901,7 +901,7 @@ TThing& TThing::operator--() {
     if (tst && tst->givesOutsideLight()) {
       int best = 0, curr = 0;
       for (StuffIter it = rp->stuff.begin();
-        it != rp->stuff.end() && (tmp = *it); ++it) {
+           it != rp->stuff.end() && (tmp = *it); ++it) {
         TSeeThru* tst2 = dynamic_cast<TSeeThru*>(tmp);
         if (tst2 && tst2->givesOutsideLight()) {
           curr = tst2->getLightFromOutside();
@@ -1713,6 +1713,7 @@ roomDirData::roomDirData() :
   weight(-1),
   trap_info(0),
   trap_dam(0),
+  trap_setter(""),
   key(0),
   to_room(0) {}
 
@@ -1725,6 +1726,7 @@ roomDirData::roomDirData(const roomDirData& a) :
   weight(a.weight),
   trap_info(a.trap_info),
   trap_dam(a.trap_dam),
+  trap_setter(a.trap_setter),
   key(a.key),
   to_room(a.to_room) {}
 
@@ -1737,6 +1739,7 @@ roomDirData& roomDirData::operator=(const roomDirData& a) {
   weight = a.weight;
   trap_info = a.trap_info;
   trap_dam = a.trap_dam;
+  trap_setter = a.trap_setter;
   key = a.key;
   to_room = a.to_room;
   description = a.description;

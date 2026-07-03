@@ -63,6 +63,7 @@ class TThing {
       TRoom,
       TObj,  // there are many object types. Add overloads as needed.
       TComponent,
+      TTrapComponent,
       TBaseContainer,
     };
     virtual TThingKind getKind() const;
@@ -202,6 +203,10 @@ class TThing {
     bool isMineral() const;
     bool isOrganic() const;
     bool isElemental() const;
+    bool isHide() const;
+    bool isCloth() const;
+    bool isHardStick() const;
+    bool isSynthetic() const;
 
     void newOwner(TThing*);
     const char* objs(const TThing* t) const;

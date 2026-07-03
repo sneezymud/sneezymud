@@ -124,63 +124,8 @@ int TTrap::detonateGrenade() {
     }
   }
 
-  switch (getTrapDamType()) {
-    case DOOR_TRAP_POISON:
-      act("A small canister pops out of $n and detonates.", FALSE, this, 0, 0,
-        TO_ROOM);
-      break;
-    case DOOR_TRAP_SLEEP:
-      act("A vaporous fog steams from $n.", FALSE, this, 0, 0, TO_ROOM);
-      break;
-    case DOOR_TRAP_FIRE:
-      act("A tiny spark comes out of $n, just before it erupts in flame.",
-        FALSE, this, 0, 0, TO_ROOM);
-      break;
-    case DOOR_TRAP_TELEPORT:
-      act("A whirling vortex suddenly surrounds $n.", FALSE, this, 0, 0,
-        TO_ROOM);
-      break;
-    case DOOR_TRAP_DISEASE:
-      act("A cloud of spores puffs from $n.", FALSE, this, 0, 0, TO_ROOM);
-      break;
-    case DOOR_TRAP_BOLT:
-      act(
-        "A canister pops out of $n and detonates, scattering hundreds of "
-        "sharp, tiny bolts.",
-        FALSE, this, 0, 0, TO_ROOM);
-      break;
-    case DOOR_TRAP_PEBBLE:
-      act(
-        "A canister pops out of $n and detonates, spraying pebbles everywhere.",
-        FALSE, this, 0, 0, TO_ROOM);
-      break;
-    case DOOR_TRAP_DISK:
-      act(
-        "A canister pops out of $n and detonates, throwing razor-disks in all "
-        "directions.",
-        FALSE, this, 0, 0, TO_ROOM);
-      break;
-    case DOOR_TRAP_TNT:
-      act(
-        "A canister pops out of $n and detonates spraying white hot shrapnel "
-        "and bomb fragments everywhere.",
-        FALSE, this, 0, 0, TO_ROOM);
-      break;
-    case DOOR_TRAP_FROST:
-      act("An icy cloud pours out of $n.", FALSE, this, 0, 0, TO_ROOM);
-      break;
-    case DOOR_TRAP_ENERGY:
-      act("$n glows with magic, before streams of plasma streak out of it.",
-        FALSE, this, 0, 0, TO_ROOM);
-      break;
-    case DOOR_TRAP_ACID:
-      act("A yellow-green cloud billows out of $n.", FALSE, this, 0, 0,
-        TO_ROOM);
-      break;
-    default:
-      act("$n explodes!", FALSE, this, 0, 0, TO_ROOM);
-      break;
-  }
+  act("$n detonates with a deafening blast!", false, this, nullptr, nullptr,
+    TO_ROOM);
 
   TObj* tobj = dynamic_cast<TObj*>(old_parent);
   if (tobj) {
@@ -204,6 +149,10 @@ int TTrap::detonateGrenade() {
   for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
     t = *(it++);
     if (t == this)
+      continue;
+    // Splash never touches immortals (parity with the mine/door splash loops
+    // in trap.cc); objects still get caught so the blast shreds loose items.
+    if (TBeing* tb = dynamic_cast<TBeing*>(t); tb && tb->isImmortal())
       continue;
     rc = t->grenadeHit(this);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -347,13 +296,14 @@ void TTrap::armGrenade(TBeing* ch) {
   TMonster* tm;
 
   std::queue<TMonster*> toFlee;
-  if (::number(0, 1)) {
-    for (StuffIter it = ch->roomp->stuff.begin();
-         it != ch->roomp->stuff.end() && (t = *it); ++it) {
-      if ((tm = dynamic_cast<TMonster*>(t))) {
-        if (tm->canSee(this))
-          toFlee.push(tm);
-      }
+  for (StuffIter it = ch->roomp->stuff.begin();
+       it != ch->roomp->stuff.end() && (t = *it); ++it) {
+    if ((tm = dynamic_cast<TMonster*>(t))) {
+      // A mob flees only if it can see the live grenade and is wise enough to
+      // recognize the danger. isWise() is a WIS-weighted roll, so it carries
+      // its own randomness per mob -- dim creatures stand around and eat it.
+      if (tm->canSee(this) && tm->isWise())
+        toFlee.push(tm);
     }
   }
   while (!toFlee.empty()) {

@@ -136,7 +136,8 @@ int TThing::getCarriedVolume() const {
   }
 
   for (StuffIter it = stuff.begin(); it != stuff.end() && (t = *it); ++it) {
-    if (t->getKind() == TThing::TThingKind::TComponent)
+    if (t->getKind() == TThing::TThingKind::TComponent ||
+        t->getKind() == TThing::TThingKind::TTrapComponent)
       total += (int)(t->getTotalVolume() * 0.10);
     else
       total += t->getTotalVolume();

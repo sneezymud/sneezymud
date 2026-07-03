@@ -76,6 +76,7 @@ TCardDeck& TCardDeck::operator=(const TCardDeck& a) {
 TCardDeck::~TCardDeck() {}
 
 void TCardDeck::describeObjectSpecifics(const TBeing* ch) const {
+  TExpandableContainer::describeObjectSpecifics(ch);
   int count = 0;
   for (StuffIter it = stuff.begin(); it != stuff.end(); ++it) {
     count++;
