@@ -295,6 +295,10 @@ int TArrow::trapMe(TBeing* ch, const char* trap_type) {
     ch->sendTo("You know nothing about making arrow traps.\n\r");
     return false;
   }
+  if (getTrapLevel() > 0 && getTrapDamType() != DOOR_TRAP_NONE) {
+    act("$p is already trapped.", false, ch, this, nullptr, TO_CHAR);
+    return false;
+  }
   doorTrapT type = parseTrapType(trap_type, TRAP_TARG_ARROW);
   if (type == MAX_TRAP_TYPES) {
     ch->sendTo("No such arrow trap-type.\n\r");
