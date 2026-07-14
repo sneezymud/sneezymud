@@ -451,7 +451,11 @@ unsigned short TMonster::getDamPrecision() const { return damPrecision; }
 
 void TMonster::setDamPrecision(unsigned short n) { damPrecision = n; }
 
-int TMonster::getMobDamage() const {
+// Deterministic pre-clamp [min,max] envelope of the random draw getMobDamage()
+// makes, so damage estimates (see meleeDamageRange) can bracket the same
+// spread. Endpoints are the raw draw domain; getMobDamage() applies the final
+// max(1, ...) floor after drawing.
+std::pair<int, int> TMonster::getMobDamageRange() const {
   // this function is based on the balance doctrine
   // we want mob damage to be 0.909 * lev per round
   double dam_rnd = getDamLevel() / 1.1;
@@ -462,10 +466,12 @@ int TMonster::getMobDamage() const {
   int idamrnd = max(1, (int)dam_rnd);
 
   int randomizer_max = (int)(idamrnd * getDamPrecision() / 100);
-  int randomizer_amt = ::number(-randomizer_max, randomizer_max);
+  return {idamrnd - randomizer_max, idamrnd + randomizer_max};
+}
 
-  idamrnd += randomizer_amt;
-  return max(1, idamrnd);
+int TMonster::getMobDamage() const {
+  auto [lo, hi] = getMobDamageRange();
+  return max(1, ::number(lo, hi));
 }
 
 int TMonster::lookForEngaged() {

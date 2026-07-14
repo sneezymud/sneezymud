@@ -2247,10 +2247,27 @@ std::pair<int, int> TBeing::meleeDamageRange(const TBeing* v,
     double base = weap->baseDamage();
     int flux = static_cast<int>(base * weap->getWeapDamDev() / 10.0);
     int extra = extraDam(v, weap);
-    rawMin = scaleWeaponDam(wielded, isprimary,
-      static_cast<int>(base) - flux + extra, rollDam, DAM_ROUND_DOWN);
-    rawMax = scaleWeaponDam(wielded, isprimary,
-      static_cast<int>(base) + flux + extra, rollDam, DAM_ROUND_UP);
+    int swungMin = static_cast<int>(base) - flux + extra;
+    int swungMax = static_cast<int>(base) + flux + extra;
+
+    const TMonster* tmon = dynamic_cast<const TMonster*>(this);
+    if (tmon && !(polyed == POLY_TYPE_DISGUISE)) {
+      // NPC wielding: raw damage is the mob's innate damage plus 1/10 of the
+      // weapon swing (the weapon bonus is withheld from a PC's charmed pet),
+      // mirroring getWeaponDam()'s NPC branch. The mob's own damage dominates,
+      // so bracketing off the weapon's full base badly misjudges it.
+      auto [mobLo, mobHi] = tmon->getMobDamageRange();
+      bool pet = tmon->master && tmon->master->isPc();
+      rawMin = scaleWeaponDam(wielded, isprimary,
+        max(1, mobLo) + (pet ? 0 : swungMin / 10), rollDam, DAM_ROUND_DOWN);
+      rawMax = scaleWeaponDam(wielded, isprimary,
+        max(1, mobHi) + (pet ? 0 : swungMax / 10), rollDam, DAM_ROUND_UP);
+    } else {
+      rawMin =
+        scaleWeaponDam(wielded, isprimary, swungMin, rollDam, DAM_ROUND_DOWN);
+      rawMax =
+        scaleWeaponDam(wielded, isprimary, swungMax, rollDam, DAM_ROUND_UP);
+    }
   } else if (!wielded && doesKnowSkill(SKILL_KUBO)) {
     // KUBO barehand uses its own damage pipeline (getMonkWeaponDam).
     auto [lo, hi] = monkBareHandDamRange();
