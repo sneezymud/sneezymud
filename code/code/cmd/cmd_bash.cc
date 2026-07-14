@@ -325,11 +325,13 @@ int TBeing::bashSuccess(TBeing* victim, spellNumT skill, bool isHoldingShield,
   shieldDam += impactSpec(this, victim, attackerLimb, limb);
 
   int dealt = 0;
-  if (reconcileDamage(victim, shieldDam, SKILL_BASH, &dealt) == -1)
-    return DELETE_VICT;
+  int rc = reconcileDamage(victim, shieldDam, SKILL_BASH, &dealt);
 
   act(format("Your bash deals <r>%d<z> damage to $N.") % dealt, false, this,
     nullptr, victim, TO_CHAR);
+
+  if (rc == -1)
+    return DELETE_VICT;
 
   int distractionBonus = 1;
   /*
@@ -340,8 +342,8 @@ int TBeing::bashSuccess(TBeing* victim, spellNumT skill, bool isHoldingShield,
   if (isLucky(levelLuckModifier(victim->GetMaxLevel())))
     distractionBonus++;
 
-  int rc = wasMounted ? victim->knockOffMount(getSkillValue(skill) / 5)
-                      : victim->crashLanding();
+  rc = wasMounted ? victim->knockOffMount(getSkillValue(skill) / 5)
+                  : victim->crashLanding();
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_VICT;
 

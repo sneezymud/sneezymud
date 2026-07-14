@@ -336,6 +336,8 @@ void TBeing::doConsider(const char* argument) {
         namebuf);
       return;
     }
+    if ((GetMaxLevel() <= MAX_MORT) && !::number(0, roll))
+      learnFromDoing(sknum, SILENT_NO, 0);
     addToWait(combatRound(1));
 
     // Display the skill under the name the player typed (the base skill), but
