@@ -3349,6 +3349,27 @@ int TBeing::specialAttackChance(TBeing* victim, spellNumT skill) {
   return hits;
 }
 
+// Skill-agnostic sibling of specialAttackChance: the same d100 count reduced to
+// its level-gap term only -- no situational modifier, and a stat ratio fixed at
+// 1.0. Models the "bonus vs lower-level foes" asymmetry the live roll applies (a
+// PC gains a full point per level it out-levels the target, but loses only a
+// fifth of a point per level under). A coarse "does my level let me land
+// specials here" gauge for basic `consider`. Keep the level-diff formula in
+// lockstep with specialAttack() below.
+int TBeing::genericSpecialAttackChance(TBeing* victim) {
+  int attackerLevel = GetMaxLevel(), defenderLevel = victim->GetMaxLevel();
+  int mod = (attackerLevel > defenderLevel && isPc())
+              ? (attackerLevel - defenderLevel)
+              : ((attackerLevel - defenderLevel) / 5);
+
+  int hits = 0;
+  for (int roll = 1; roll <= 100; roll++) {
+    if (roll - mod < SUCCESS_THRESHOLD)
+      hits++;
+  }
+  return hits;
+}
+
 // specialAttack() is used for combat specials like kick, bash, grapple, etc.
 int TBeing::specialAttack(TBeing* target, spellNumT skill) {
   int rc = specialAttack(target, skill, 0);

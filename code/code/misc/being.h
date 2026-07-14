@@ -620,6 +620,10 @@ class TBeing : public TThing {
     // Deterministic percent chance (0-100) that specialAttack lands this skill
     // against victim -- mirrors the roll math without rolling. For `consider`.
     int specialAttackChance(TBeing* victim, spellNumT skill);
+    // Skill-agnostic landing chance driven by level gap alone: the
+    // specialAttackChance math stripped to its level-diff term. A rough gauge
+    // for basic `consider`; the per-skill readout stays exact.
+    int genericSpecialAttackChance(TBeing* victim);
 
     void updateStatistics();
     bool checkForDiceHeld() const;

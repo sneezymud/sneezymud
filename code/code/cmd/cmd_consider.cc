@@ -51,6 +51,31 @@ namespace {
                     : "Your blows will almost never land.";
   }
 
+  // Map a generic special-attack landing percent to prose, for lore readouts
+  // below the exact-figure tier. Attacker's perspective only (your specials
+  // landing on the mob), in ten-point bands.
+  const char* specialAttackChanceDescr(int pct) {
+    if (pct >= 90)
+      return "Your special attacks will almost always land.";
+    if (pct >= 80)
+      return "Your special attacks will land easily.";
+    if (pct >= 70)
+      return "Your special attacks will hit a reliable amount.";
+    if (pct >= 60)
+      return "Your special attacks are likely to land.";
+    if (pct >= 50)
+      return "Your special attacks will land more often than not.";
+    if (pct >= 40)
+      return "Your special attacks will hit a bit less than half the time.";
+    if (pct >= 30)
+      return "Your special attacks will land sometimes, but not often.";
+    if (pct >= 20)
+      return "Your special attacks might hit, but you shouldn't bet on it.";
+    if (pct >= 10)
+      return "Your special attacks will rarely land.";
+    return "Your special attacks have only the barest hope of hitting.";
+  }
+
   // The looker's lore value for this mob: the highest learnedness among the
   // creature-knowledge skills that apply to its type. When `announce`, emit the
   // flavorful "you determine that X is a Y" line (suppressed for the focused
@@ -431,6 +456,17 @@ void TBeing::doConsider(const char* argument) {
         sendTo(format("%s\n\r") % hitChanceDescr(myHit, false));
         sendTo(format("%s\n\r") % hitChanceDescr(itsHit, true));
       }
+
+      // Generic special-attack landing chance, level-gap driven -- deliberately
+      // skill-agnostic (the `consider <mob> <skill>` readout is the exact one).
+      // Prose here, exact percentage once lore reaches 50.
+      int specHit = genericSpecialAttackChance(tmon);
+      if (learn >= 50)
+        sendTo(format("Your special attacks will land about %d%% of the "
+                      "time.\n\r") %
+               specHit);
+      else
+        sendTo(format("%s\n\r") % specialAttackChanceDescr(specHit));
     }
 
     // Damage -- your output per hand and its output against you. Prose at 50,
