@@ -1142,20 +1142,10 @@ int subterfugeSuccess(TBeing* thief, TBeing* victim) {
     act("You seem less wary now.", FALSE, thief, NULL, victim, TO_VICT);
   }
 
-  // For mobs, do specialAttack
-  int situationalMod = 0;
-  if (!victim->isWise()) {
-    situationalMod -= 10;
-  }
-  if (!victim->isIntelligent()) {
-    situationalMod -= 10;
-  }
-  if (thief->isCharismatic()) {
-    situationalMod += 10;
-  }
-
+  // For mobs, do specialAttack. Modifier and stats come from the shared
+  // per-skill source (skillSituationalModifier / specialAttackStats).
   int attackValue = thief->specialAttack(victim, SKILL_SUBTERFUGE,
-    situationalMod, STAT_CHA, STAT_INT, STAT_PER, STAT_WIS, true);
+    thief->skillSituationalModifier(victim, SKILL_SUBTERFUGE), true);
 
   if (attackValue <= FAILURE) {
     return subterfugeMiss(thief, victim);
@@ -1391,13 +1381,15 @@ int skulk(TBeing* thief, spellNumT skill) {
   thief->addToMove(-15);
 
   thief->sendTo("You begin practicing your skulking technique.\n\r");
-  act("$n begins practicing $s skulking technique.", TRUE, thief, 0, 0, TO_ROOM);
+  act("$n begins practicing $s skulking technique.", TRUE, thief, 0, 0,
+    TO_ROOM);
 
   // Calculate task time based on skill
   int taskTime = max(5, 20 - (thief->getSkillValue(skill) / 10));
 
   // Start the task
-  start_task(thief, NULL, NULL, TASK_SKULK, "", taskTime, thief->in_room, 0, 0, 0);
+  start_task(thief, NULL, NULL, TASK_SKULK, "", taskTime, thief->in_room, 0, 0,
+    0);
 
   return TRUE;
 }

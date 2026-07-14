@@ -25,6 +25,8 @@
 #include "materials.h"
 #include "range.h"
 #include "combat.h"
+#include "obj_base_weapon.h"
+#include "obj_base_clothing.h"
 #include "spells.h"
 #include "statistics.h"
 #include "person.h"
@@ -926,7 +928,9 @@ int TBeing::damageLimb(TBeing* v, const wearSlotT part_hit,
 }
 
 int TBeing::damageLimb(TBeing* v, wearSlotT part_hit, const TThing* maybeWeapon,
-  int* dam, const spellNumT attackType) {
+  int* dam, const spellNumT attackType, int* limbDamageDealt) {
+  if (limbDamageDealt)
+    *limbDamageDealt = 0;
   auto damage = static_cast<double>(*dam);
 
   // Don't do damage to vital limbs, as destroying one would lead to instant
@@ -1027,6 +1031,11 @@ int TBeing::damageLimb(TBeing* v, wearSlotT part_hit, const TThing* maybeWeapon,
 
   // Ensure at least 1 damage is done to the limb
   const int limbDamage = max(static_cast<int>(damage * levelRatio), 1);
+
+  // Report the uncapped limb-portion damage so callers can show real numbers
+  // (hurtLimb below caps the applied amount at the limb's remaining health).
+  if (limbDamageDealt)
+    *limbDamageDealt = limbDamage;
 
   // Prevent accidental negative damage
   const int mainHpDamage = max(static_cast<int>(damage - limbDamage), 0);
@@ -3086,6 +3095,124 @@ int TBeing::specAttackMod(const TBeing* target) const {
   return mod;
 }
 
+// The offense/defense stats a skill rolls with. Most use FOC/KAR vs AGI/PER;
+// the overrides here mirror what each skill's call site historically passed to
+// the eight-argument specialAttack overload.
+TBeing::SpecialAttackStats TBeing::specialAttackStats(spellNumT skill) {
+  switch (skill) {
+    case SKILL_STABBING:
+      return {STAT_DEX, STAT_SPE, STAT_AGI, STAT_PER};
+    case SKILL_GRAPPLE:
+      return {STAT_STR, STAT_DEX, STAT_BRA, STAT_AGI};
+    case SKILL_SUBTERFUGE:
+      return {STAT_CHA, STAT_INT, STAT_PER, STAT_WIS};
+    default:
+      return {STAT_FOC, STAT_KAR, STAT_AGI, STAT_PER};
+  }
+}
+
+// Bash's circumstantial modifier: advanced-discipline mastery plus an
+// attacker/victim weight differential, each converted into "levels" of
+// advantage. Deliberately over-provisioned so a competent basher reliably hits
+// the situational cap even when other bonuses are absent -- see the clamp in
+// specialAttack(). Extracted verbatim from the old inline cmd_bash.cc block so
+// the live attack and the `consider` readout share one source.
+int TBeing::bashSituationalModifier(TBeing* victim) {
+  int advLearnedness = getAdvLearning(getSkillNum(SKILL_BASH));
+  TBaseWeapon* weaponInPrimaryHand =
+    dynamic_cast<TBaseWeapon*>(heldInPrimHand());
+  TBaseClothing* itemInSecondaryHand =
+    dynamic_cast<TBaseClothing*>(heldInSecHand());
+  bool isWielding2Hander =
+    weaponInPrimaryHand && weaponInPrimaryHand->isPaired();
+  bool isHoldingShield = itemInSecondaryHand && itemInSecondaryHand->isShield();
+
+  // Per combat.cc balance notes, 16.667 points of mod is equivalent to one
+  // level's worth of advantage/disadvantage.
+  const float ONE_LEVEL = 16.667;
+  float modifier = 0.0;
+
+  // Maxed advanced disc lets one bash as if they were 10 levels higher. Bonus
+  // increases linearly with advanced disc learnedness.
+  modifier += ONE_LEVEL * ((float)advLearnedness / 10.0);
+
+  // Attacker with advanced disc using shield to bash can get another bonus of
+  // up to +5 levels to distinguish shield bashing from weapon/shoulder bashing
+  // and also makes bash more of a tank-centric ability.
+  modifier += ONE_LEVEL * ((float)advLearnedness / 20.0);
+
+  float attackerWeight = getWeight();
+  float victimWeight = victim->getWeight();
+
+  // Include attacker's shield or two-handed weapon in weight calculation
+  if (isHoldingShield)
+    attackerWeight += itemInSecondaryHand->getWeight();
+  else if (isWielding2Hander)
+    attackerWeight += weaponInPrimaryHand->getWeight();
+
+  // Each 20% weight difference between attacker and victim modifies chance by
+  // one level's worth, up to max of +/- 10 levels.
+  if (attackerWeight > victimWeight)
+    modifier +=
+      ONE_LEVEL * min(10.0, ((attackerWeight - victimWeight) / victimWeight) *
+                              100.0 / 20.0);
+  else if (victimWeight > attackerWeight)
+    modifier -=
+      ONE_LEVEL * min(10.0, ((victimWeight - attackerWeight) / attackerWeight) *
+                              100.0 / 20.0);
+
+  return static_cast<int>(modifier);
+}
+
+// A noisy-geared thief is heard when the victim is awake to hear it.
+bool TBeing::canHearThief(TBeing* victim) {
+  return makesNoise() && victim->awake();
+}
+
+// A suspicious mob that can see the thief catches the approach at the last
+// moment. Players don't get this reflexive detection.
+bool TBeing::spottedBySuspiciousMob(TBeing* victim) {
+  return victim->awake() && victim->canSee(this) && !victim->isPc() &&
+         dynamic_cast<TMonster*>(victim)->isSusp();
+}
+
+// The per-skill situational modifier passed to specialAttack. Most skills add
+// nothing; the ones that do compute it from the attacker/victim matchup.
+int TBeing::skillSituationalModifier(TBeing* victim, spellNumT skill) {
+  switch (skill) {
+    // getSkillNum(SKILL_BASH) yields the deikhan variant for that class.
+    case SKILL_BASH:
+    case SKILL_BASH_DEIKHAN:
+      return bashSituationalModifier(victim);
+    // Backstab and throatslit share the same stealth-approach math: quieter and
+    // less visible is better, minus penalties when the victim hears or spots
+    // you. The matching warning messages live at each skill's call site.
+    case SKILL_BACKSTAB:
+    case SKILL_THROATSLIT: {
+      int mod = -(noise(this) / 20) + visibility() / 15;
+      if (canHearThief(victim))
+        mod -= 10;
+      if (spottedBySuspiciousMob(victim))
+        mod -= 10;
+      return mod;
+    }
+    case SKILL_SUBTERFUGE: {
+      // A dull-witted victim is easier to fool; a charismatic con artist sells
+      // it better.
+      int mod = 0;
+      if (!victim->isWise())
+        mod -= 10;
+      if (!victim->isIntelligent())
+        mod -= 10;
+      if (isCharismatic())
+        mod += 10;
+      return mod;
+    }
+    default:
+      return 0;
+  }
+}
+
 // specialAttack() is used for combat specials like kick, bash, grapple, etc.
 int TBeing::specialAttack(TBeing* target, spellNumT skill) {
   int rc = specialAttack(target, skill, 0);
@@ -3101,14 +3228,16 @@ int TBeing::specialAttack(TBeing* target, spellNumT skill) {
 */
 int TBeing::specialAttack(TBeing* target, spellNumT skill,
   int situationalModifier) {
-  return specialAttack(target, skill, situationalModifier, STAT_FOC, STAT_KAR,
-    STAT_AGI, STAT_PER, false);
+  auto s = specialAttackStats(skill);
+  return specialAttack(target, skill, situationalModifier, s.off1, s.off2,
+    s.def1, s.def2, false);
 }
 
 int TBeing::specialAttack(TBeing* target, spellNumT skill,
   int situationalModifier, bool partialSuccessAllowed) {
-  return specialAttack(target, skill, situationalModifier, STAT_FOC, STAT_KAR,
-    STAT_AGI, STAT_PER, partialSuccessAllowed);
+  auto s = specialAttackStats(skill);
+  return specialAttack(target, skill, situationalModifier, s.off1, s.off2,
+    s.def1, s.def2, partialSuccessAllowed);
 }
 
 int TBeing::specialAttack(TBeing* target, spellNumT skill,
@@ -3632,14 +3761,10 @@ const char* describe_dam(int dam, int dam_capacity, spellNumT wtype) {
   return "pathetically";
 }
 
-static int REALNUM(TBeing* ch, wearSlotT part_hit) {
-  return (
-    isVitalPart(part_hit) ? ch->getHit() + 11 : ch->getCurLimbHealth(part_hit));
-}
-
 void TBeing::normalHitMessage(TBeing* v, TThing* weapon, spellNumT w_type,
-  int dam, wearSlotT part_hit) {
-  char buf[512];
+  int dam, wearSlotT part_hit, int hpCapacity) {
+  // Color the damage number by the pool it hit: red for HP, cyan for limb.
+  const char* dmgColor = isVitalPart(part_hit) ? "<r>" : "<c>";
   TThing* t = NULL;
   TBeing* other;
 
@@ -3681,19 +3806,16 @@ void TBeing::normalHitMessage(TBeing* v, TThing* weapon, spellNumT w_type,
     if (dam || !(other->desc->autobits & AUTO_NOSPAM)) {
       strcpy(namebuf, other->pers(this));
       strcpy(victbuf, other->pers(v));
-      strcpy(buf, sstring(namebuf).cap().c_str());
-      sprintf(buf + strlen(buf), " %s ", attack_hit_text[w_type].plural);
-      sprintf(buf + strlen(buf), "%s's ", victbuf);
-      sprintf(buf + strlen(buf), "%s ", v->describeBodySlot(part_hit).c_str());
-      sprintf(buf + strlen(buf), "%s",
-        describe_dam(dam, REALNUM(v, part_hit), w_type));
-      sprintf(buf + strlen(buf), "%s", (weapon) ? " with " : "");
-      sprintf(buf + strlen(buf), "%s", (weapon) ? hshr() : "");
-      sprintf(buf + strlen(buf), "%s", (weapon) ? " " : "");
-      sprintf(buf + strlen(buf), "%s.\n\r",
-        weapon ? other->objn(weapon).c_str() : "");
+      sstring weaponPart =
+        weapon ? sstring(format(" with %s %s") % hshr() % other->objn(weapon))
+               : sstring("");
+      sstring msg = format("%s %s %s's %s %s%s (%s%d<1>).\n\r") %
+                    sstring(namebuf).cap() % attack_hit_text[w_type].plural %
+                    victbuf % v->describeBodySlot(part_hit) %
+                    describe_dam(dam, hpCapacity, w_type) % weaponPart %
+                    dmgColor % dam;
 
-      other->sendTo(COLOR_MOBS, buf);
+      other->sendTo(COLOR_MOBS, msg);
       if (snd != MIN_SOUND_NUM)
         other->playsound(snd, SOUND_TYPE_COMBAT, 100, 20, 1);
     }
@@ -3706,13 +3828,14 @@ void TBeing::normalHitMessage(TBeing* v, TThing* weapon, spellNumT w_type,
     else
       strcpy(colorBuf, green());
 
-    sprintf(buf, "You %s%s%s $N's %s%s%s %s%s%s.", colorBuf,
-      attack_hit_text[w_type].singular, norm(), colorBuf,
-      v->describeBodySlot(part_hit).c_str(), norm(),
-      describe_dam(dam, REALNUM(v, part_hit), w_type),
-      (weapon) ? " with your " : "", (weapon) ? objn(weapon).c_str() : "");
+    sstring msg = format("You %s%s%s $N's %s%s%s %s%s%s (%s%d<1>).") %
+                  colorBuf % attack_hit_text[w_type].singular % norm() %
+                  colorBuf % v->describeBodySlot(part_hit) % norm() %
+                  describe_dam(dam, hpCapacity, w_type) %
+                  (weapon ? " with your " : "") %
+                  (weapon ? objn(weapon) : sstring("")) % dmgColor % dam;
 
-    act(buf, FALSE, this, 0, v, TO_CHAR);
+    act(msg, false, this, 0, v, TO_CHAR);
     if (snd != MIN_SOUND_NUM)
       playsound(snd, SOUND_TYPE_COMBAT, 100, 20, 1);
   }
@@ -3723,13 +3846,13 @@ void TBeing::normalHitMessage(TBeing* v, TThing* weapon, spellNumT w_type,
     else
       strcpy(colorBuf, v->red());
 
-    sprintf(buf, "$n %s%s%s your %s%s%s %s%s%s.", colorBuf,
-      attack_hit_text[w_type].plural, v->norm(), colorBuf,
-      v->describeBodySlot(part_hit).c_str(), v->norm(),
-      describe_dam(dam, REALNUM(v, part_hit), w_type),
-      ((weapon) ? " with $s " : ""),
-      ((weapon) ? fname(weapon->name).c_str() : ""));
-    act(buf, FALSE, this, 0, v, TO_VICT);
+    sstring msg = format("$n %s%s%s your %s%s%s %s%s%s (%s%d<1>).") % colorBuf %
+                  attack_hit_text[w_type].plural % v->norm() % colorBuf %
+                  v->describeBodySlot(part_hit) % v->norm() %
+                  describe_dam(dam, hpCapacity, w_type) %
+                  (weapon ? " with $s " : "") %
+                  (weapon ? fname(weapon->name) : sstring("")) % dmgColor % dam;
+    act(msg, false, this, 0, v, TO_VICT);
     if (snd != MIN_SOUND_NUM)
       v->playsound(snd, SOUND_TYPE_COMBAT, 100, 20, 1);
   }
@@ -4366,7 +4489,14 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
     }
     breakStealth();
 
+    // The hit message is emitted after damage is applied (below) so it can
+    // report the HP actually drained. Decide what to show here; emit later.
+    bool showHitMsg = false;
+    TThing* hitMsgWeapon = weapon;
+    spellNumT hitMsgWtype = w_type;
+
     if (mess_sent == 0) {
+      showHitMsg = true;
       if (doesKnowSkill(SKILL_ADVANCED_KICKING) && !weapon && isPc()) {
         // switch some "hits" to "kicks"
         // this is strictly textual and doesn't impact damage at all
@@ -4376,12 +4506,9 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
         iskick += 1.25;
         iskick *= (isprimary ? 0.6 : 0.4);
 
-        if (*f <= iskick)
-          normalHitMessage(vict, NULL, TYPE_KICK, dam, part_hit);
-        else
-          normalHitMessage(vict, NULL, w_type, dam, part_hit);
-      } else
-        normalHitMessage(vict, weapon, w_type, dam, part_hit);
+        hitMsgWeapon = nullptr;
+        hitMsgWtype = (*f <= iskick) ? TYPE_KICK : w_type;
+      }
 
       if (doesKnowSkill(SKILL_CHAIN_ATTACK) && (::number(0, 99) < 10) &&
           getMana() >= 5 && bSuccess(SKILL_CHAIN_ATTACK)) {
@@ -4534,11 +4661,33 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
 
     }  // end check for SENT_MESS
 
+    // Measure the damage this hit actually dealt, after all reductions, so the
+    // message can report the real number. A vital hit drains the HP pool; a
+    // limb hit mostly drains the (tiny, easily-overkilled) limb pool, so we add
+    // the uncapped limb-portion damage reported by damageLimb to the HP drain.
+    const int hpBefore = vict->getHit();
+    const int limbCapBefore = vict->getCurLimbHealth(part_hit);
+    int limbDealt = 0;
+    auto emitHitMsg = [&]() {
+      if (!showHitMsg)
+        return;
+      // One number, colored by the pool it hit: HP damage (red) for vital
+      // hits, limb damage (cyan) for limb hits. Judge severity against that
+      // same pool.
+      const int dealt =
+        isVitalPart(part_hit) ? (hpBefore - vict->getHit()) : limbDealt;
+      const int capacity =
+        isVitalPart(part_hit) ? hpBefore + 11 : limbCapBefore;
+      normalHitMessage(vict, hitMsgWeapon, hitMsgWtype, dealt, part_hit,
+        capacity);
+    };
+
     if (vict->equipment[part_hit])
       vict->damageItem(this, part_hit, w_type, weapon, dam);
 
-    damaged_limb = damageLimb(vict, part_hit, weapon, &dam, w_type);
+    damaged_limb = damageLimb(vict, part_hit, weapon, &dam, w_type, &limbDealt);
     if (IS_SET_DELETE(damaged_limb, DELETE_VICT)) {
+      emitHitMsg();
       critKillCheck(this, vict, mess_sent);
       return retCode | DELETE_VICT;
     }
@@ -4552,12 +4701,14 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
     if (!damaged_limb) {
       rc = applyDamage(vict, dam, w_type);
       if (IS_SET_DELETE(rc, DELETE_VICT)) {
+        emitHitMsg();
         critKillCheck(this, vict, mess_sent);
         combatFatigue(weapon);
         updatePos();
         return (retCode | DELETE_VICT);
       }
     }
+    emitHitMsg();
   }
 
   combatFatigue(weapon);

@@ -29,14 +29,14 @@ static void stabHitMsg(TBeing* thief, TBeing* victim, TGenWeapon* weapon,
     case 1:
       act(format("You stab $N in $S %s with your $o!") % limbName, FALSE, thief,
         weapon, victim, TO_CHAR, ANSI_ORANGE);
-      act(format("$n stabs you in your %s with $s $o!") % limbName, FALSE, thief,
-        weapon, victim, TO_VICT, ANSI_ORANGE);
+      act(format("$n stabs you in your %s with $s $o!") % limbName, FALSE,
+        thief, weapon, victim, TO_VICT, ANSI_ORANGE);
       act(format("$n stabs $N in $S %s with $s $o!") % limbName, FALSE, thief,
         weapon, victim, TO_NOTVICT, ANSI_ORANGE);
       break;
     case 2:
-      act(format("You gouge $N in $S %s with your $o!") % limbName, FALSE, thief,
-        weapon, victim, TO_CHAR, ANSI_ORANGE);
+      act(format("You gouge $N in $S %s with your $o!") % limbName, FALSE,
+        thief, weapon, victim, TO_CHAR, ANSI_ORANGE);
       act(format("$n gouges you in your %s with $s $o!") % limbName, FALSE,
         thief, weapon, victim, TO_VICT, ANSI_ORANGE);
       act(format("$n gouges $N in $S %s with $s $o!") % limbName, FALSE, thief,
@@ -80,11 +80,14 @@ static void stabBleedCheck(TBeing* thief, TBeing* victim, TGenWeapon* weapon,
       victim->incrementBleedStack(limb, duration);
     } else {
       sstring limbName(victim->describeBodySlot(limb));
-      act(format("Your stab opens a <r>bleeding wound<z> on $N's %s!") % limbName,
+      act(
+        format("Your stab opens a <r>bleeding wound<z> on $N's %s!") % limbName,
         FALSE, thief, nullptr, victim, TO_CHAR);
-      act(format("$n's stab opens a <r>bleeding wound<z> on your %s!") % limbName,
+      act(
+        format("$n's stab opens a <r>bleeding wound<z> on your %s!") % limbName,
         FALSE, thief, nullptr, victim, TO_VICT);
-      act(format("$n's stab opens a <r>bleeding wound<z> on $N's %s!") % limbName,
+      act(
+        format("$n's stab opens a <r>bleeding wound<z> on $N's %s!") % limbName,
         FALSE, thief, nullptr, victim, TO_NOTVICT);
 
       victim->rawBleed(limb, duration, SILENT_YES, CHECK_IMMUNITY_NO);
@@ -95,8 +98,7 @@ static void stabBleedCheck(TBeing* thief, TBeing* victim, TGenWeapon* weapon,
 // Resolves a single stab attempt for one weapon — hit roll through weapon
 // spec proc. Shared between primary-hand and offhand attacks.
 static int stabCore(TBeing* thief, TBeing* victim, TGenWeapon* weapon) {
-  int specResult = thief->specialAttack(victim, SKILL_STABBING, 0, STAT_DEX,
-    STAT_SPE, STAT_AGI, STAT_PER, false);
+  int specResult = thief->specialAttack(victim, SKILL_STABBING, 0, false);
   if (specResult != COMPLETE_SUCCESS && specResult != GUARANTEED_SUCCESS) {
     stabMissMsg(thief, victim, weapon);
     return TRUE;
@@ -129,8 +131,8 @@ static int stabCore(TBeing* thief, TBeing* victim, TGenWeapon* weapon) {
   stabBleedCheck(thief, victim, weapon, limb);
   stabPoisonCheck(victim, weapon);
 
-  int specRc = weapon->checkSpec(victim, CMD_STAB,
-    reinterpret_cast<char*>(limb), thief);
+  int specRc =
+    weapon->checkSpec(victim, CMD_STAB, reinterpret_cast<char*>(limb), thief);
   if (IS_SET_DELETE(specRc, DELETE_ITEM))
     return DELETE_THIS;  // thief destroyed by weapon spec
   if (IS_SET_DELETE(specRc, DELETE_VICT))
@@ -158,7 +160,7 @@ static int stabPrimAtk(TBeing* thief, TBeing* victim, TGenWeapon* primWeapon,
     int warDual = thief->getSkillValue(SKILL_DUAL_WIELD);
     if (thief->getAdvLearning(SKILL_STABBING) > 50) {
       if ((thief->doesKnowSkill(SKILL_DUAL_WIELD) &&
-          thief->bSuccess(warDual, SKILL_DUAL_WIELD)) ||
+            thief->bSuccess(warDual, SKILL_DUAL_WIELD)) ||
           ((thief->doesKnowSkill(SKILL_DUAL_WIELD_THIEF) &&
             thief->bSuccess(thiefDual, SKILL_DUAL_WIELD_THIEF)))) {
         act("You shift your weight and ready an attack with your offhand.",
@@ -195,31 +197,34 @@ static int stab(TBeing* thief, TBeing* victim, bool isChain = false) {
     return false;
   }
   if (thiefMount && thief->getSkillValue(SKILL_RIDE) < 80) {
-    thief->sendTo("You aren't a skilled enough rider to stab while mounted!\n\r");
+    thief->sendTo(
+      "You aren't a skilled enough rider to stab while mounted!\n\r");
     return false;
   }
 
   TBeing* victimMount = dynamic_cast<TBeing*>(victim->riding);
-  bool thiefAirborne = thief->isFlying() || (thiefMount && thiefMount->isFlying());
-  bool victimAirborne = victim->isFlying() || (victimMount && victimMount->isFlying());
+  bool thiefAirborne =
+    thief->isFlying() || (thiefMount && thiefMount->isFlying());
+  bool victimAirborne =
+    victim->isFlying() || (victimMount && victimMount->isFlying());
   // Mid-fight against the same target bypasses the airborne mismatch —
   // engaging a flying opponent puts them in stab range. (Backstab has no
   // such carve-out; its mid-fight gate already requires off-feet, which
   // flying opponents inherently aren't.)
   if (victimAirborne && !thiefAirborne && thief->fight() != victim) {
-    thief->sendTo("You can't stab a flying person with your feet on the ground!\n\r");
+    thief->sendTo(
+      "You can't stab a flying person with your feet on the ground!\n\r");
     return false;
   }
 
   if (thief->noHarmCheck(victim))
     return FALSE;
 
-  TGenWeapon* primWeapon =
-    dynamic_cast<TGenWeapon*>(thief->heldInPrimHand());
-  TGenWeapon* offWeapon =
-    dynamic_cast<TGenWeapon*>(thief->heldInSecHand());
+  TGenWeapon* primWeapon = dynamic_cast<TGenWeapon*>(thief->heldInPrimHand());
+  TGenWeapon* offWeapon = dynamic_cast<TGenWeapon*>(thief->heldInSecHand());
 
-  bool primCanStab = primWeapon && (primWeapon->canStab() || primWeapon->isPolearm());
+  bool primCanStab =
+    primWeapon && (primWeapon->canStab() || primWeapon->isPolearm());
   bool offCanStab = offWeapon && offWeapon->canStab();
 
   if (!primCanStab && !offCanStab) {
@@ -236,7 +241,8 @@ static int stab(TBeing* thief, TBeing* victim, bool isChain = false) {
   }
 
   int bKnown = thief->getSkillValue(SKILL_STABBING);
-  bool stabSuccess = !victim->awake() || thief->bSuccess(bKnown, SKILL_STABBING);
+  bool stabSuccess =
+    !victim->awake() || thief->bSuccess(bKnown, SKILL_STABBING);
 
   victim->addHated(thief);
 

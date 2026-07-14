@@ -587,6 +587,23 @@ class TBeing : public TThing {
     int specialAttack(TBeing* target, spellNumT, int, bool);
     int specialAttack(TBeing* target, spellNumT, int, statTypeT, statTypeT,
       statTypeT, statTypeT, bool);
+    // The offense/defense stat quartet a skill feeds to specialAttack. Defaults
+    // to FOC/KAR (offense) vs AGI/PER (defense); a few skills override. Single
+    // source so the live roll and the `consider` readout use the same stats.
+    struct SpecialAttackStats {
+        statTypeT off1, off2, def1, def2;
+    };
+    static SpecialAttackStats specialAttackStats(spellNumT skill);
+    // The circumstantial +/- level modifier a specific skill contributes to its
+    // specialAttack roll (on top of specAttackMod's baseline). 0 for most.
+    int skillSituationalModifier(TBeing* victim, spellNumT skill);
+    int bashSituationalModifier(TBeing* victim);
+    // Stealth-strike detection predicates (backstab/throatslit): whether the
+    // victim hears this thief's noisy gear, and whether a suspicious mob spots
+    // the approach. Each drives both a -10 modifier and its own warning
+    // message.
+    bool canHearThief(TBeing* victim);
+    bool spottedBySuspiciousMob(TBeing* victim);
 
     void updateStatistics();
     bool checkForDiceHeld() const;
@@ -982,7 +999,7 @@ class TBeing : public TThing {
     int reconcileLifeforce(spellNumT, bool, int = 0);
     int useLifeforce(spellNumT);
     double usePiety(spellNumT);
-    int reconcileDamage(TBeing*, int, spellNumT);
+    int reconcileDamage(TBeing*, int, spellNumT, int* damDealt = nullptr);
     virtual int doRent(const sstring&);
     void doRestring(const sstring&);
     void doRelease(const sstring&);
@@ -1466,7 +1483,7 @@ class TBeing : public TThing {
     virtual void reconcileHurt(TBeing*, double) { return; }
     int oneHit(TBeing*, primaryTypeT, TThing*, int, float*);
     bool isHitableAggr(TBeing*);
-    void normalHitMessage(TBeing*, TThing*, spellNumT, int, wearSlotT);
+    void normalHitMessage(TBeing*, TThing*, spellNumT, int, wearSlotT, int);
     int monkDodge(TBeing*, TThing*, int*, int, wearSlotT);
     int thiefDodge(TBeing*, TThing*, int*, int, wearSlotT);
     int parryWarrior(TBeing*, TThing*, int*, int, wearSlotT);
@@ -1491,7 +1508,7 @@ class TBeing : public TThing {
     int getActualDamage(TBeing*, TThing*, int, spellNumT);
     int damageEm(int, sstring, spellNumT);
     int skipImmortals(int) const;
-    int applyDamage(TBeing*, int, spellNumT);
+    int applyDamage(TBeing*, int, spellNumT, int* damDealt = nullptr);
     int preProcDam(spellNumT, int);
     int preProcDam(TBeing*, spellNumT, int);
     TBeing* findAnAttacker() const;
@@ -1522,7 +1539,7 @@ class TBeing : public TThing {
     int damageLimb(TBeing* v, wearSlotT part_hit, const TThing* maybeWeapon,
       int* dam);
     int damageLimb(TBeing* v, wearSlotT part_hit, const TThing* maybeWeapon,
-      int* dam, spellNumT attackType);
+      int* dam, spellNumT attackType, int* limbDamageDealt = nullptr);
     affectedData* isBleeding(wearSlotT limb);
     affectedData* isBruised(wearSlotT limb);
     affectedData* isInfected(wearSlotT limb);

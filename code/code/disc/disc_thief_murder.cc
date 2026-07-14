@@ -156,8 +156,8 @@ int TBeing::backstabHit(TBeing* victim, TThing* obj, int modifier) {
         auto weapon = dynamic_cast<TBaseWeapon*>(obj);
 
         if (weapon) {
-          int specRc = weapon->checkSpec(victim, CMD_BACKSTAB,
-            "-special-", this);
+          int specRc =
+            weapon->checkSpec(victim, CMD_BACKSTAB, "-special-", this);
           if (IS_SET_DELETE(specRc, DELETE_THIS))
             weapon = nullptr;  // weapon destroyed, skip poison
           if (IS_SET_DELETE(specRc, DELETE_ITEM))
@@ -242,7 +242,9 @@ int TBeing::doBackstab(const char* argument, TBeing* vict) {
   if (!vict && !victim) {
     arg = one_argument(arg, namebuf);
 
-    if (!(victim = get_char_room_vis(this, namebuf))) {
+    // Fall back to the current opponent so a bare "backstab" mid-fight targets
+    // whom you're already fighting (as bash and the other attacks do).
+    if (!(victim = get_char_room_vis(this, namebuf)) && !(victim = fight())) {
       sendTo("Backstab whom?\n\r");
       return FALSE;
     }
@@ -315,14 +317,18 @@ int backstab(TBeing* thief, TBeing* victim) {
     return false;
   }
   if (thiefMount && thief->getSkillValue(SKILL_RIDE) < 80) {
-    thief->sendTo("You aren't a skilled enough rider to backstab while mounted!\n\r");
+    thief->sendTo(
+      "You aren't a skilled enough rider to backstab while mounted!\n\r");
     return false;
   }
   TBeing* victimMount = dynamic_cast<TBeing*>(victim->riding);
-  bool thiefAirborne = thief->isFlying() || (thiefMount && thiefMount->isFlying());
-  bool victimAirborne = victim->isFlying() || (victimMount && victimMount->isFlying());
+  bool thiefAirborne =
+    thief->isFlying() || (thiefMount && thiefMount->isFlying());
+  bool victimAirborne =
+    victim->isFlying() || (victimMount && victimMount->isFlying());
   if (victimAirborne && !thiefAirborne) {
-    thief->sendTo("You can't backstab a flying person with your feet on the ground!\n\r");
+    thief->sendTo(
+      "You can't backstab a flying person with your feet on the ground!\n\r");
     return FALSE;
   }
   if (dynamic_cast<TBeing*>(victim->rider)) {
@@ -342,7 +348,9 @@ int backstab(TBeing* thief, TBeing* victim) {
       return FALSE;
     }
     if (victim->getPosition() > POSITION_SITTING) {
-      thief->sendTo("Your target must be off their feet to backstab while under attack.\n\r");
+      thief->sendTo(
+        "Your target must be off their feet to backstab while under "
+        "attack.\n\r");
       return FALSE;
     }
   }
@@ -360,24 +368,21 @@ int backstab(TBeing* thief, TBeing* victim) {
 
   if (thief->fight()) {
     if (bKnown <= 65) {
-      thief->sendTo("You aren't skilled enough to backstab during a fight.\n\r");
+      thief->sendTo(
+        "You aren't skilled enough to backstab during a fight.\n\r");
       return FALSE;
     }
     if (victim->getPosition() > POSITION_SITTING) {
-      thief->sendTo("Your target must be off their feet to backstab mid-fight.\n\r");
+      thief->sendTo(
+        "Your target must be off their feet to backstab mid-fight.\n\r");
       return FALSE;
     }
   }
   thief->reconcileHurt(victim, 0.04);
 
-  int modifier = 0;
+  int modifier = thief->skillSituationalModifier(victim, SKILL_BACKSTAB);
 
-  modifier -= noise(thief) / 20;
-  modifier += thief->visibility() / 15;
-
-  if (thief->makesNoise() && victim->awake()) {
-    modifier -= 10;
-
+  if (thief->canHearThief(victim)) {
     act(
       "$n's armor makes too much noise, and $N is alerted to $n's backstab "
       "attempt.",
@@ -389,10 +394,7 @@ int backstab(TBeing* thief, TBeing* victim) {
       "backstab you.",
       FALSE, thief, 0, victim, TO_VICT);
   }
-  if (victim->awake() && victim->canSee(thief) && !victim->isPc() &&
-      dynamic_cast<TMonster*>(victim)->isSusp()) {
-    modifier -= 10;
-
+  if (thief->spottedBySuspiciousMob(victim)) {
     act("$E is able to see you and notices you coming at the last moment.",
       FALSE, thief, 0, victim, TO_CHAR);
     act("You sense $m coming as $n attempts to murder you.", FALSE, thief, 0,
@@ -548,8 +550,7 @@ int TBeing::throatSlitHit(TBeing* victim, TThing* obj, int modifier) {
         auto weapon = dynamic_cast<TGenWeapon*>(heldInPrimHand());
 
         if (weapon) {
-          int specRc = weapon->checkSpec(victim, CMD_SLIT,
-            "-special-", this);
+          int specRc = weapon->checkSpec(victim, CMD_SLIT, "-special-", this);
           if (IS_SET_DELETE(specRc, DELETE_THIS))
             weapon = nullptr;  // weapon destroyed, skip poison
           if (IS_SET_DELETE(specRc, DELETE_ITEM))
@@ -692,7 +693,8 @@ int throatSlit(TBeing* thief, TBeing* victim) {
     return FALSE;
   }
   if (6 * thief->getHeight() < 3 * victim->getHeight() &&
-      !(thief->isFlying() || (victim->getPosition() < POSITION_STANDING && victim->getPosition() != POSITION_FIGHTING))) {
+      !(thief->isFlying() || (victim->getPosition() < POSITION_STANDING &&
+                               victim->getPosition() != POSITION_FIGHTING))) {
     thief->sendTo("You don't stand a chance, that creature is too tall.\n\r");
     return FALSE;
   }
@@ -734,14 +736,9 @@ int throatSlit(TBeing* thief, TBeing* victim) {
   }
   thief->reconcileHurt(victim, 0.04);
 
-  int modifier = 0;
+  int modifier = thief->skillSituationalModifier(victim, SKILL_THROATSLIT);
 
-  modifier -= noise(thief) / 20;
-  modifier += thief->visibility() / 15;
-
-  if (thief->makesNoise() && victim->awake()) {
-    modifier -= 10;
-
+  if (thief->canHearThief(victim)) {
     act(
       "$n's armor makes too much noise, and $N is alerted to $n's murder "
       "attempt.",
@@ -753,10 +750,7 @@ int throatSlit(TBeing* thief, TBeing* victim) {
       "you.",
       FALSE, thief, 0, victim, TO_VICT);
   }
-  if (victim->awake() && victim->canSee(thief) && !victim->isPc() &&
-      dynamic_cast<TMonster*>(victim)->isSusp()) {
-    modifier -= 10;
-
+  if (thief->spottedBySuspiciousMob(victim)) {
     act("$E is able to see you and notices you coming at the last moment.",
       FALSE, thief, 0, victim, TO_CHAR);
     act("You sense $m coming as $n attempts to murder you.", FALSE, thief, 0,
