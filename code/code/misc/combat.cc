@@ -2228,6 +2228,79 @@ int TBeing::scaleWeaponDam(const TThing* wielded, primaryTypeT isprimary,
   return (dam);
 }
 
+// Vital-part effective melee damage range (min-max) for one hand against v,
+// mirroring the live pipeline: scaleWeaponDam -> damage-type resistance ->
+// vital-slot armor absorption. Deterministic (rounds forced), so it brackets
+// the same spread real combat rolls. Returns {0,0} when no melee estimate
+// applies (guns, non-weapon items, or KUBO-barehand which uses its own damage
+// pipeline).
+std::pair<int, int> TBeing::meleeDamageRange(const TBeing* v,
+  const TThing* wielded, primaryTypeT isprimary) const {
+  if (dynamic_cast<const TGun*>(wielded))
+    return {0, 0};
+
+  int rollDam = weaponRollDam(isprimary);
+  int rawMin = 0, rawMax = 0;
+  if (const TBaseWeapon* weap = dynamic_cast<const TBaseWeapon*>(wielded)) {
+    // Bracket swungObjectDamage(): baseDamage +/- flux, plus the deterministic
+    // extraDam bonus vs the target.
+    double base = weap->baseDamage();
+    int flux = static_cast<int>(base * weap->getWeapDamDev() / 10.0);
+    int extra = extraDam(v, weap);
+    rawMin = scaleWeaponDam(wielded, isprimary,
+      static_cast<int>(base) - flux + extra, rollDam, DAM_ROUND_DOWN);
+    rawMax = scaleWeaponDam(wielded, isprimary,
+      static_cast<int>(base) + flux + extra, rollDam, DAM_ROUND_UP);
+  } else if (!wielded && doesKnowSkill(SKILL_KUBO)) {
+    // KUBO barehand uses its own damage pipeline (getMonkWeaponDam).
+    auto [lo, hi] = monkBareHandDamRange();
+    rawMin = scaleMonkWeaponDam(this, lo, rollDam, DAM_ROUND_DOWN);
+    rawMax = scaleMonkWeaponDam(this, hi, rollDam, DAM_ROUND_UP);
+  } else if (!wielded) {
+    // plain barehand: ::number(1, 3)
+    rawMin = scaleWeaponDam(wielded, isprimary, 1, rollDam, DAM_ROUND_DOWN);
+    rawMax = scaleWeaponDam(wielded, isprimary, 3, rollDam, DAM_ROUND_UP);
+  } else {
+    return {0,
+      0};  // holding a non-weapon (shield, light, etc.): no melee swing
+  }
+
+  spellNumT wtype = getAttackType(wielded, isprimary);
+  int imm = v->getImmunity(getTypeImmunity(wtype));
+  int protection = v->getProtection();
+
+  // Apply the non-armor damage reductions in combat order: damage-type
+  // resistance (preProcDam), magic-weapon immunity (weaponCheck), then
+  // sanctuary/protection (applyDamage). Armor absorption is intentionally NOT
+  // applied, and limb-specific reductions (brawn, level-split) don't apply to a
+  // body hit. Chance-based mitigation (dodge/parry, pierce-resist proc) is also
+  // omitted.
+  auto effective = [&](int raw) {
+    int dam = raw * max(0, 100 - imm) / 100;
+    dam = weaponCheck(v, wielded, wtype, dam);
+    dam = (dam * (100 - protection) + 50) / 100;
+    return max(1, dam);
+  };
+
+  return {effective(rawMin), effective(rawMax)};
+}
+
+// Attacker's per-hit chance to land a critical vs v, as a percent. Mirrors the
+// crit-chance accumulation in critSuccessChance() -- keep the two in sync --
+// and applies the same gun/immunity guards. Severity (crit size) is
+// HP-dependent and deliberately not modeled here.
+double TBeing::critChancePercent(const TBeing* v, const TThing* weapon) const {
+  if (dynamic_cast<const TGun*>(weapon) || isAffected(AFF_ENGAGER))
+    return 0.0;
+
+  spellNumT wtype = getAttackType(weapon, HAND_PRIMARY);
+  if (v->isImmune(getTypeImmunity(wtype), WEAR_BODY))
+    return 0.0;
+
+  // getCritChance() returns critSuccessChance's units where 1000 == 1%.
+  return max(0.0, getCritChance() / 1000.0);
+}
+
 static void checkLearnFromHit(TBeing* ch, int tarLevel, TThing* o,
   bool isPrimary, spellNumT w_type) {
   int myLevel = ch->GetMaxLevel();
@@ -3231,6 +3304,51 @@ int TBeing::skillSituationalModifier(TBeing* victim, spellNumT skill) {
   }
 }
 
+// Deterministic mirror of specialAttack's landing probability: the percentage
+// of d100 rolls that resolve to a hit (COMPLETE_SUCCESS or better), using the
+// same modifier, clamp, level, and stat math the live roll runs -- but without
+// rolling or any side effects. For the `consider` readout. Must be kept in
+// lockstep with the roll logic in specialAttack() below. Models skulk's
+// post-clamp bonus while that affect is active (a consumed one-shot: the shown
+// odds hold for the next strike only), but not the stealth/surprise wary
+// penalty, so it is only offered for non-surprise specialAttack skills.
+int TBeing::specialAttackChance(TBeing* victim, spellNumT skill) {
+  int mod = skillSituationalModifier(victim, skill) + specAttackMod(victim);
+
+  if (mod < SITUATIONAL_MOD_LOWER_BOUND)
+    mod = SITUATIONAL_MOD_LOWER_BOUND;
+  else if (mod > SITUATIONAL_MOD_UPPER_BOUND)
+    mod = SITUATIONAL_MOD_UPPER_BOUND;
+
+  // Skulk is a prepared one-shot added past the clamp, so it lifts the odds
+  // above the situational cap for exactly the next strike. Mirror the live
+  // post-clamp add so a skulking attacker's readout matches the real roll.
+  if (affectedBySpell(SKILL_SKULK))
+    mod += 3 + std::min(4, getSkillValue(SKILL_SKULK) / 25);
+
+  // Level difference is applied after the clamp, matching specialAttack.
+  int attackerLevel = GetMaxLevel(), defenderLevel = victim->GetMaxLevel();
+  mod += (attackerLevel > defenderLevel && isPc())
+           ? (attackerLevel - defenderLevel)
+           : ((attackerLevel - defenderLevel) / 5);
+
+  SpecialAttackStats s = specialAttackStats(skill);
+  double statRatio = getStatMod(s.off1) *
+                     plotStat(STAT_CURRENT, s.off2, 0.92, 1.08, 1.0) /
+                     victim->getStatMod(s.def1) /
+                     victim->plotStat(STAT_CURRENT, s.def2, 0.92, 1.08, 1.0);
+
+  // roll' = (roll - mod) * statRatio; the attack lands when roll' <
+  // SUCCESS_THRESHOLD (guaranteed-success rolls are a subset). Count the d100
+  // outcomes that land -- the count is the percentage.
+  int hits = 0;
+  for (int roll = 1; roll <= 100; roll++) {
+    if ((roll - mod) * statRatio < SUCCESS_THRESHOLD)
+      hits++;
+  }
+  return hits;
+}
+
 // specialAttack() is used for combat specials like kick, bash, grapple, etc.
 int TBeing::specialAttack(TBeing* target, spellNumT skill) {
   int rc = specialAttack(target, skill, 0);
@@ -3406,6 +3524,15 @@ int TBeing::hits(TBeing* v, int mod) {
     return TRUE;
   else
     return FALSE;
+}
+
+// Per-swing chance to land a normal melee hit on target, as a percent.
+// Mirrors the factor math in hits(): the 5% guaranteed hit/miss zones clamp
+// the result to 5-95 regardless of how lopsided the modifiers are.
+int TBeing::meleeHitChance(const TBeing* target) const {
+  int mod = attackRound(target) - target->defendRound(this);
+  int factor = min(max(600 + 9 * mod / 5, 50), 950);
+  return factor / 10;
 }
 
 // returns DELETE_THIS
@@ -4772,7 +4899,8 @@ int TBeing::preProcDam(TBeing* vict, spellNumT type, int dam) {
 
 // Handles the reduction of weapon damage due to weapon-related resists. Only
 // affects attacks that are resisted by slash, blunt, or pierce immunity.
-int TBeing::weaponCheck(TBeing* vict, TThing* o, spellNumT type, int dam) {
+int TBeing::weaponCheck(const TBeing* vict, const TThing* o, spellNumT type,
+  int dam) const {
   immuneTypeT attackResistType = getTypeImmunity(type);
 
   // Check immunity type of incoming attack. If it deals slash, blunt, or pierce
@@ -4793,7 +4921,7 @@ int TBeing::weaponCheck(TBeing* vict, TThing* o, spellNumT type, int dam) {
   };
 
   int magicLevel = 0;
-  auto* tobj = dynamic_cast<TObj*>(o);
+  const auto* tobj = dynamic_cast<const TObj*>(o);
 
   if (tobj) {
     magicLevel = min(tobj->itemHitroll(), 3);

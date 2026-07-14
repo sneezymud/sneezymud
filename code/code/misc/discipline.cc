@@ -1392,6 +1392,22 @@ bool TBeing::bSuccess(spellNumT spell) {
   return bSuccess(getSkillValue(spell), spell);
 }
 
+// Deterministic mirror of bSuccess's success probability (the roll < iLimit
+// test below): the percent chance this being lands the skill's execution roll,
+// scaled by learnedness, difficulty, focus, and karma. No logging or learning.
+int TBeing::skillExecuteChance(spellNumT skill) const {
+  int comp = getSkillValue(skill);
+  if (comp <= 0)
+    return 0;
+  comp = min(comp, (int)MAX_SKILL_LEARNEDNESS);
+
+  double limit = getSkillDiffModifier(skill) * comp / MAX_SKILL_LEARNEDNESS;
+  limit *= getStatMod(STAT_FOC);
+  limit *= plotStat(STAT_CURRENT, STAT_KAR, 0.9, 1.125, 1.0);
+
+  return min(100, max(0, (int)limit));
+}
+
 bool TBeing::bSuccess(int ubCompetence, spellNumT spell) {
   // number of uses
   logSkillAttempts(this, spell, ATTEMPT_ADD_NORM);

@@ -592,6 +592,8 @@ class TBeing : public TThing {
     bool canAttack(primaryTypeT);
     int attackRound(const TBeing* target) const;
     int defendRound(const TBeing* attacker) const;
+    // Per-swing melee hit chance vs target, as a percent (5-95).
+    int meleeHitChance(const TBeing* target) const;
     int specAttackMod(const TBeing* target) const;
     int specialAttack(TBeing* target, spellNumT);
     int specialAttack(TBeing* target, spellNumT, int);
@@ -615,6 +617,9 @@ class TBeing : public TThing {
     // message.
     bool canHearThief(TBeing* victim);
     bool spottedBySuspiciousMob(TBeing* victim);
+    // Deterministic percent chance (0-100) that specialAttack lands this skill
+    // against victim -- mirrors the roll math without rolling. For `consider`.
+    int specialAttackChance(TBeing* victim, spellNumT skill);
 
     void updateStatistics();
     bool checkForDiceHeld() const;
@@ -1479,8 +1484,21 @@ class TBeing : public TThing {
     std::pair<int, int> monkBareHandDamRange() const;
     int scaleWeaponDam(const TThing* wielded, primaryTypeT isprimary,
       int wepDam, int rollDam, damRoundT round) const;
+    // Effective melee damage range (min-max) for one hand vs a vital part of v.
+    std::pair<int, int> meleeDamageRange(const TBeing* v, const TThing* wielded,
+      primaryTypeT isprimary) const;
+    // Estimated post-mitigation damage range for a special attack against v,
+    // mirroring reconcileDamage's reductions (resistance, magic-weapon
+    // immunity, protection). Deterministic; brackets the live spread.
+    std::pair<int, int> skillDamageRange(const TBeing* v,
+      spellNumT skill) const;
+    // Percent chance of landing this skill's execution roll (bSuccess),
+    // deterministic and side-effect free -- for consider's skill readout.
+    int skillExecuteChance(spellNumT skill) const;
     // Accumulated crit chance (critSuccessChance units, 1000 == 1%).
     double getCritChance() const;
+    // Per-hit chance to land a critical against v, as a percent.
+    double critChancePercent(const TBeing* v, const TThing* weapon) const;
     virtual float getStrDamModifier() const;
     virtual float getWisDamModifier() const;
     int getDexReaction() const;
@@ -1495,7 +1513,8 @@ class TBeing : public TThing {
     float getChaShopPenalty() const;
     float getSwindleBonus();
     void combatFatigue(TThing*);
-    int weaponCheck(TBeing* v, TThing* o, spellNumT type, int dam);
+    int weaponCheck(const TBeing* v, const TThing* o, spellNumT type,
+      int dam) const;
     virtual void reconcileHelp(TBeing*, double) { return; }
     virtual void reconcileHurt(TBeing*, double) { return; }
     int oneHit(TBeing*, primaryTypeT, TThing*, int, float*);

@@ -550,3 +550,34 @@ int TBeing::getSkillDam(const TBeing* victim, spellNumT skill, int level,
 
   return dam;
 }
+
+// Estimated post-mitigation damage range for a special attack against v.
+// Brackets getSkillDam's only random term (the ::number(1, level/2) roll) via
+// the Min/Max roll modes, then applies the same deterministic reductions
+// reconcileDamage does -- damage-type resistance (preProcDam), magic-weapon
+// immunity (weaponCheck, always vs a null weapon since reconcileDamage passes
+// none), and protection. The pierce-resist proc and any position/limb effects
+// are chance-based and deliberately omitted, matching meleeDamageRange.
+std::pair<int, int> TBeing::skillDamageRange(const TBeing* v,
+  spellNumT skill) const {
+  int level = getSkillLevel(skill);
+  int adv_learn = getAdvLearning(skill);
+  int rawMin = getSkillDam(v, skill, level, adv_learn, SkillDamRoll::Min);
+  int rawMax = getSkillDam(v, skill, level, adv_learn, SkillDamRoll::Max);
+
+  // getSkillDam returns 0 for skills it doesn't model (non-damage skills);
+  // report an empty range so the caller can say so rather than print "1-1".
+  if (rawMax <= 0)
+    return {0, 0};
+
+  int imm = v->getImmunity(getTypeImmunity(skill));
+  int protection = v->getProtection();
+  auto effective = [&](int raw) {
+    int dam = raw * max(0, 100 - imm) / 100;
+    dam = weaponCheck(v, nullptr, skill, dam);
+    dam = (dam * (100 - protection) + 50) / 100;
+    return max(1, dam);
+  };
+
+  return {effective(rawMin), effective(rawMax)};
+}
