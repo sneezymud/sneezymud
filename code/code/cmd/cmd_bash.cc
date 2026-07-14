@@ -198,59 +198,12 @@ static int bash(TBeing* attacker, TBeing* victim, spellNumT skill) {
   }
 
   /*
-    Calculate modifier for specialAttack
-
-    Per combat.cc balance notes, 16.667 points of mod is equivalent to one
-    level's worth of advantage/disadvantage.
+    The circumstantial modifier for specialAttack (advanced-disc mastery plus
+    weight differential) lives in TBeing::bashSituationalModifier so the live
+    attack and the `consider` readout share one source. Other situational
+    factors (stats, environment, group effects) could be folded in there too.
   */
-  const float ONE_LEVEL = 16.667;
-  float modifier = 0.0;
-
-  /*
-     Maxed advanced disc lets one bash as if they were 10 levels higher. Bonus
-     increases linearly with advanced disc learnedness.
-   */
-  modifier += ONE_LEVEL * ((float)advLearnedness / 10.0);
-
-  /*
-    Attacker with advanced disc using shield to bash can get another bonus of
-    up to +5 levels to distinguish shield bashing from weapon/shoulder bashing
-    and also makes bash more of a tank-centric ability.
-  */
-  modifier += ONE_LEVEL * ((float)advLearnedness / 20.0);
-
-  float attackerWeight = attacker->getWeight();
-  float victimWeight = victim->getWeight();
-
-  // Include attacker's shield or two-handed weapon in weight calculation
-  if (isHoldingShield)
-    attackerWeight += itemInSecondaryHand->getWeight();
-  else if (isWielding2Hander)
-    attackerWeight += weaponInPrimaryHand->getWeight();
-
-  // Each 20% weight difference between attacker and victim modifies
-  // chance by one level's worth, up to max of +/- 10 levels.
-  if (attackerWeight > victimWeight)
-    modifier +=
-      ONE_LEVEL * min(10.0, ((attackerWeight - victimWeight) / victimWeight) *
-                              100.0 / 20.0);
-  else if (victimWeight > attackerWeight)
-    modifier -=
-      ONE_LEVEL * min(10.0, ((victimWeight - attackerWeight) / attackerWeight) *
-                              100.0 / 20.0);
-
-  /*
-    Other possible modifiers that could be applied here: stat-based
-    (bonus/penalty based on low/high attacker/victim str/bra/agi/spd?),
-    environmental factors such as weather/lighting, group-related situations (#
-    of attackers, certain spell effects on victim?)
-
-    Basically, anything that would situationally affect the success of *this
-    specific attempt* can be converted into a +/- level modifier passed to the
-    specialAttack overload, in effect using the circumstances at the time of the
-    attack to make it more or less likely to land against this specific victim
-    based on their level/AC/other defense.
-  */
+  int modifier = attacker->skillSituationalModifier(victim, skill);
 
   int bKnown = attacker->getSkillValue(skill);
   bool wasSkillExecutionSuccessful = attacker->bSuccess(bKnown, skill);
@@ -371,7 +324,13 @@ int TBeing::bashSuccess(TBeing* victim, spellNumT skill, bool isHoldingShield,
   wearSlotT attackerLimb = isHoldingShield ? getSecondaryHold() : atkLimb;
   shieldDam += impactSpec(this, victim, attackerLimb, limb);
 
-  if (reconcileDamage(victim, shieldDam, SKILL_BASH) == -1)
+  int dealt = 0;
+  int rc = reconcileDamage(victim, shieldDam, SKILL_BASH, &dealt);
+
+  act(format("Your bash deals <r>%d<z> damage to $N.") % dealt, false, this,
+    nullptr, victim, TO_CHAR);
+
+  if (rc == -1)
     return DELETE_VICT;
 
   int distractionBonus = 1;
@@ -383,8 +342,8 @@ int TBeing::bashSuccess(TBeing* victim, spellNumT skill, bool isHoldingShield,
   if (isLucky(levelLuckModifier(victim->GetMaxLevel())))
     distractionBonus++;
 
-  int rc = wasMounted ? victim->knockOffMount(getSkillValue(skill) / 5)
-                      : victim->crashLanding();
+  rc = wasMounted ? victim->knockOffMount(getSkillValue(skill) / 5)
+                  : victim->crashLanding();
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_VICT;
 

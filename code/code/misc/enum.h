@@ -676,6 +676,14 @@ enum primaryTypeT {
   HAND_PRIMARY = true,
 };
 
+// Rounding mode for the fractional step in scaleWeaponDam(). Live combat rounds
+// stochastically; damage estimates force the round down/up to bracket a range.
+enum damRoundT {
+  DAM_ROUND_STOCHASTIC,
+  DAM_ROUND_DOWN,
+  DAM_ROUND_UP,
+};
+
 enum primLegT {
   LEG_SECONDARY = 0,
   LEG_PRIMARY = 1,

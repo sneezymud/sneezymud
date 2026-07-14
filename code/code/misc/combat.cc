@@ -25,6 +25,8 @@
 #include "materials.h"
 #include "range.h"
 #include "combat.h"
+#include "obj_base_weapon.h"
+#include "obj_base_clothing.h"
 #include "spells.h"
 #include "statistics.h"
 #include "person.h"
@@ -926,7 +928,9 @@ int TBeing::damageLimb(TBeing* v, const wearSlotT part_hit,
 }
 
 int TBeing::damageLimb(TBeing* v, wearSlotT part_hit, const TThing* maybeWeapon,
-  int* dam, const spellNumT attackType) {
+  int* dam, const spellNumT attackType, int* limbDamageDealt) {
+  if (limbDamageDealt)
+    *limbDamageDealt = 0;
   auto damage = static_cast<double>(*dam);
 
   // Don't do damage to vital limbs, as destroying one would lead to instant
@@ -1027,6 +1031,11 @@ int TBeing::damageLimb(TBeing* v, wearSlotT part_hit, const TThing* maybeWeapon,
 
   // Ensure at least 1 damage is done to the limb
   const int limbDamage = max(static_cast<int>(damage * levelRatio), 1);
+
+  // Report the uncapped limb-portion damage so callers can show real numbers
+  // (hurtLimb below caps the applied amount at the limb's remaining health).
+  if (limbDamageDealt)
+    *limbDamageDealt = limbDamage;
 
   // Prevent accidental negative damage
   const int mainHpDamage = max(static_cast<int>(damage - limbDamage), 0);
@@ -1921,50 +1930,29 @@ int TBeing::extraDam(const TBeing* vict, const TBaseWeapon* weap) const {
   return plus;
 }
 
-static int getMonkWeaponDam(const TBeing* ch, const TBeing* v,
-  primaryTypeT isprimary, int rollDam) {
-  int wepDam;
+// KUBO barehand base damage range, before stat/rollDam scaling.
+// getMonkWeaponDam rolls uniformly within this; damage estimates bracket with
+// the endpoints.
+std::pair<int, int> TBeing::monkBareHandDamRange() const {
+  // treat KUBO learnedness as an effective level, then convert to damage
+  double value = 3.0 * double(getSkillValue(SKILL_KUBO)) / 10.0;
+  value = min(max(value, 0.0), 50.0);
+  float weapDam = (6.0 * sqrt(value) / 2.0);
+  weapDam *= balanceCorrectionForLevel(GetMaxLevel());
 
-  if (!ch->doesKnowSkill(SKILL_KUBO))
-    wepDam = ::number(1, 2);
-  else {
-    // somewhat a clumsy way to do this, but realize that player could be
-    // partially learned in KUBO but have some learning in the advanced spec.
-    double value = 3.0 * double(ch->getSkillValue(SKILL_KUBO)) / 10.0;
+  int center = (int)weapDam;
+  int flux = center / 10;
 
-    // enforce range
-    value = min(max(value, 0.0), 50.0);
+  // force an equivalence to ::number(1,2) for low damages
+  int lo = (flux < 1) ? max(1, center - 1) : center - flux;
+  int hi = (flux < 1) ? center + 1 : center + flux;
+  return {max(1, lo), max(1, hi)};
+}
 
-    // essentially, we can treat "value" as being effectively equivalent to
-    // level at this point.  Realize it is made up by looking at how learned
-    // they are in skills rather than simply doing a GetMaxLevel though.
-
-    // convert level to dam
-    float weapDam = (6.0 * sqrt(value) / 2.0);
-
-    // make balance adjustment
-    weapDam *= balanceCorrectionForLevel(ch->GetMaxLevel());
-    wepDam = (int)weapDam;
-
-    // small randomization around value
-    int flux = wepDam / 10;
-
-    // force an equivalence to ::number(1,2) for low damages
-    if (flux < 1)
-      wepDam = ::number(max(1, wepDam - 1), wepDam + 1);
-    else
-      wepDam = ::number(wepDam - flux, wepDam + flux);
-
-    wepDam = max(1, wepDam);
-  }
-
-  // OK, so if they are incap'd, make the kill go quickly...
-  if (v->getPosition() <= POSITION_INCAP)
-    wepDam += max((3 * wepDam / 10), 1);
-
-  if (v->getPosition() <= POSITION_DEAD)
-    return (0);
-
+// Stat/rounding/global scaling half of KUBO barehand damage, split out so
+// estimates can reuse the exact math with a forced rounding direction.
+static int scaleMonkWeaponDam(const TBeing* ch, int wepDam, int rollDam,
+  damRoundT round) {
   // account for stats
   float statDam = ch->getStrDamModifier();
 
@@ -1982,8 +1970,17 @@ static int getMonkWeaponDam(const TBeing* ch, const TBeing* v,
   int dam = (int)(wepDam * statDam);
 
   float tmp = ((wepDam * statDam) - dam) * 100;
-  if (tmp > ::number(0, 99)) {
-    dam++;
+  switch (round) {
+    case DAM_ROUND_STOCHASTIC:
+      if (tmp > ::number(0, 99))
+        dam++;
+      break;
+    case DAM_ROUND_UP:
+      if (tmp > 0)
+        dam++;
+      break;
+    case DAM_ROUND_DOWN:
+      break;
   }
 
   // add bonuses
@@ -1992,12 +1989,34 @@ static int getMonkWeaponDam(const TBeing* ch, const TBeing* v,
   // adjust for global values
   dam = (int)(dam * stats.barehand_damage_mod);
 
+  return dam;
+}
+
+static int getMonkWeaponDam(const TBeing* ch, const TBeing* v,
+  primaryTypeT isprimary, int rollDam) {
+  int wepDam;
+
+  if (!ch->doesKnowSkill(SKILL_KUBO))
+    wepDam = ::number(1, 2);
+  else {
+    auto [lo, hi] = ch->monkBareHandDamRange();
+    wepDam = ::number(lo, hi);
+  }
+
+  // OK, so if they are incap'd, make the kill go quickly...
+  if (v->getPosition() <= POSITION_INCAP)
+    wepDam += max((3 * wepDam / 10), 1);
+
+  if (v->getPosition() <= POSITION_DEAD)
+    return (0);
+
+  int dam = scaleMonkWeaponDam(ch, wepDam, rollDam, DAM_ROUND_STOCHASTIC);
+
 #if DAMAGE_DEBUG
   vlogf(LOG_COMBAT,
-    format(
-      "MONK %s (%d %s) barehand dam = %d , wep = %d roll = %d, stats = %.2f") %
+    format("MONK %s (%d %s) barehand dam = %d , wep = %d roll = %d") %
       ch->getName() % ch->GetMaxLevel() % ch->getProfName() % dam % wepDam %
-      rollDam % statDam);
+      rollDam);
 #endif
 
   return (dam);
@@ -2024,21 +2043,11 @@ static int getMonkWeaponDam(const TBeing* ch, const TBeing* v,
 // 2h (unlearned) = 110% dam
 // 2h maxed spec = 165% dam
 //
-int TBeing::getWeaponDam(const TBeing* v, const TThing* wielded,
-  primaryTypeT isprimary) const {
-  int bonusDam = 0;
-  int rollDam = 0;
-  int wepLearn = 0;
-  float tempDam = 0.0;
-  float statDam = 0.0;
-  int dam = 0;
-  spellNumT skill = SKILL_BAREHAND_PROF;
-  char buf[MAX_NAME_LENGTH];
+// Damroll for one hand, less the off-hand weapon's damroll when dual-wielding
+// unpaired weapons (so each hand only counts its own contribution).
+int TBeing::weaponRollDam(primaryTypeT isprimary) const {
+  int rollDam = getDamroll();
 
-  rollDam += getDamroll();
-  strcpy(buf, "Barehand");
-
-  // strip off affects of dual wields
   if (isprimary) {
     TObj* obj = dynamic_cast<TObj*>(heldInSecHand());
     if (obj && !obj->isPaired())
@@ -2048,6 +2057,13 @@ int TBeing::getWeaponDam(const TBeing* v, const TThing* wielded,
     if (obj && !obj->isPaired())
       rollDam -= obj->itemDamroll();
   }
+
+  return rollDam;
+}
+
+int TBeing::getWeaponDam(const TBeing* v, const TThing* wielded,
+  primaryTypeT isprimary) const {
+  int rollDam = weaponRollDam(isprimary);
 
   int wepDam = 0;
   const TMonster* tmon = dynamic_cast<const TMonster*>(this);
@@ -2090,21 +2106,32 @@ int TBeing::getWeaponDam(const TBeing* v, const TThing* wielded,
   if (v->getPosition() <= POSITION_DEAD)
     return (0);
 
+  return scaleWeaponDam(wielded, isprimary, wepDam, rollDam,
+    DAM_ROUND_STOCHASTIC);
+}
+
+// The deterministic scaling half of getWeaponDam, split out so damage
+// estimates (see meleeDamageRange) can reuse the exact live-combat math.
+// Only the fractional-rounding step is non-deterministic; `round` selects it:
+// STOCHASTIC reproduces real combat, DOWN/UP give the true min/max for a range.
+int TBeing::scaleWeaponDam(const TThing* wielded, primaryTypeT isprimary,
+  int wepDam, int rollDam, damRoundT round) const {
+  int bonusDam = 0;
+  int wepLearn = 0;
+  float tempDam = 0.0;
+  float statDam = 0.0;
+  int dam = 0;
+  spellNumT skill = SKILL_BAREHAND_PROF;
+
   if (!dynamic_cast<const TMonster*>(this) || (polyed == POLY_TYPE_DISGUISE)) {
     if (!wielded) {
       skill = SKILL_BAREHAND_PROF;
-      // skill2 = SKILL_BAREHAND_SPEC;
-      strcpy(buf, "Barehand");
       statDam = getStrDamModifier();
     } else if (wielded->isBluntWeapon()) {
       skill = SKILL_BLUNT_PROF;
-      // skill2 = SKILL_BLUNT_SPEC;
-      strcpy(buf, "Blunt");
       statDam = getStrDamModifier();
     } else if (wielded->isPierceWeapon()) {
       skill = SKILL_PIERCE_PROF;
-      // skill2 = SKILL_PIERCE_SPEC;
-      strcpy(buf, "Pierce");
       statDam = getStrDamModifier();
 
       // pierce weapons only get 1/3 of the strength modifier
@@ -2113,8 +2140,6 @@ int TBeing::getWeaponDam(const TBeing* v, const TThing* wielded,
       statDam += 1;
     } else if (wielded->isSlashWeapon()) {
       skill = SKILL_SLASH_PROF;
-      // skill2 = SKILL_SLASH_SPEC;
-      strcpy(buf, "Slash");
       statDam = getStrDamModifier();
 
       // slash weapons only get 1/2 of the strength modifier
@@ -2148,18 +2173,20 @@ int TBeing::getWeaponDam(const TBeing* v, const TThing* wielded,
     weapDam *= min(wepLearn, 4 * GetMaxLevel());
     weapDam /= 100;
 
-#if 0
-// Whoa, don't make specialize do more dam, it adds attacks so would
-// double count...
-    // take specialize into account
-    // weapDam is about 25, want to add about 10 for L25 to L35
-    weapDam += .004 * max((byte) 0, getSkillValue(skill2)) * weapDam;
-#endif
-
     dam = (int)weapDam;
     tempDam = weapDam - dam;
-    if (::number(0, 100) < (tempDam * 100))
-      dam += 1;
+    switch (round) {
+      case DAM_ROUND_STOCHASTIC:
+        if (::number(0, 100) < (tempDam * 100))
+          dam += 1;
+        break;
+      case DAM_ROUND_UP:
+        if (tempDam > 0)
+          dam += 1;
+        break;
+      case DAM_ROUND_DOWN:
+        break;
+    }
 
     // c.f. BALANCE NOTES for discussion of why this is done
     // basically, we don't want dual-wielding to be on par with single-wielding
@@ -2199,6 +2226,96 @@ int TBeing::getWeaponDam(const TBeing* v, const TThing* wielded,
 
   dam = max(1, dam);  // Not less than 0 damage
   return (dam);
+}
+
+// Vital-part effective melee damage range (min-max) for one hand against v,
+// mirroring the live pipeline: scaleWeaponDam -> damage-type resistance ->
+// vital-slot armor absorption. Deterministic (rounds forced), so it brackets
+// the same spread real combat rolls. Returns {0,0} when no melee estimate
+// applies (guns, non-weapon items, or KUBO-barehand which uses its own damage
+// pipeline).
+std::pair<int, int> TBeing::meleeDamageRange(const TBeing* v,
+  const TThing* wielded, primaryTypeT isprimary) const {
+  if (dynamic_cast<const TGun*>(wielded))
+    return {0, 0};
+
+  int rollDam = weaponRollDam(isprimary);
+  int rawMin = 0, rawMax = 0;
+  if (const TBaseWeapon* weap = dynamic_cast<const TBaseWeapon*>(wielded)) {
+    // Bracket swungObjectDamage(): baseDamage +/- flux, plus the deterministic
+    // extraDam bonus vs the target.
+    double base = weap->baseDamage();
+    int flux = static_cast<int>(base * weap->getWeapDamDev() / 10.0);
+    int extra = extraDam(v, weap);
+    int swungMin = static_cast<int>(base) - flux + extra;
+    int swungMax = static_cast<int>(base) + flux + extra;
+
+    const TMonster* tmon = dynamic_cast<const TMonster*>(this);
+    if (tmon && !(polyed == POLY_TYPE_DISGUISE)) {
+      // NPC wielding: raw damage is the mob's innate damage plus 1/10 of the
+      // weapon swing (the weapon bonus is withheld from a PC's charmed pet),
+      // mirroring getWeaponDam()'s NPC branch. The mob's own damage dominates,
+      // so bracketing off the weapon's full base badly misjudges it.
+      auto [mobLo, mobHi] = tmon->getMobDamageRange();
+      bool pet = tmon->master && tmon->master->isPc();
+      rawMin = scaleWeaponDam(wielded, isprimary,
+        max(1, mobLo) + (pet ? 0 : swungMin / 10), rollDam, DAM_ROUND_DOWN);
+      rawMax = scaleWeaponDam(wielded, isprimary,
+        max(1, mobHi) + (pet ? 0 : swungMax / 10), rollDam, DAM_ROUND_UP);
+    } else {
+      rawMin =
+        scaleWeaponDam(wielded, isprimary, swungMin, rollDam, DAM_ROUND_DOWN);
+      rawMax =
+        scaleWeaponDam(wielded, isprimary, swungMax, rollDam, DAM_ROUND_UP);
+    }
+  } else if (!wielded && doesKnowSkill(SKILL_KUBO)) {
+    // KUBO barehand uses its own damage pipeline (getMonkWeaponDam).
+    auto [lo, hi] = monkBareHandDamRange();
+    rawMin = scaleMonkWeaponDam(this, lo, rollDam, DAM_ROUND_DOWN);
+    rawMax = scaleMonkWeaponDam(this, hi, rollDam, DAM_ROUND_UP);
+  } else if (!wielded) {
+    // plain barehand: ::number(1, 3)
+    rawMin = scaleWeaponDam(wielded, isprimary, 1, rollDam, DAM_ROUND_DOWN);
+    rawMax = scaleWeaponDam(wielded, isprimary, 3, rollDam, DAM_ROUND_UP);
+  } else {
+    return {0,
+      0};  // holding a non-weapon (shield, light, etc.): no melee swing
+  }
+
+  spellNumT wtype = getAttackType(wielded, isprimary);
+  int imm = v->getImmunity(getTypeImmunity(wtype));
+  int protection = v->getProtection();
+
+  // Apply the non-armor damage reductions in combat order: damage-type
+  // resistance (preProcDam), magic-weapon immunity (weaponCheck), then
+  // sanctuary/protection (applyDamage). Armor absorption is intentionally NOT
+  // applied, and limb-specific reductions (brawn, level-split) don't apply to a
+  // body hit. Chance-based mitigation (dodge/parry, pierce-resist proc) is also
+  // omitted.
+  auto effective = [&](int raw) {
+    int dam = raw * max(0, 100 - imm) / 100;
+    dam = weaponCheck(v, wielded, wtype, dam);
+    dam = (dam * (100 - protection) + 50) / 100;
+    return max(1, dam);
+  };
+
+  return {effective(rawMin), effective(rawMax)};
+}
+
+// Attacker's per-hit chance to land a critical vs v, as a percent. Mirrors the
+// crit-chance accumulation in critSuccessChance() -- keep the two in sync --
+// and applies the same gun/immunity guards. Severity (crit size) is
+// HP-dependent and deliberately not modeled here.
+double TBeing::critChancePercent(const TBeing* v, const TThing* weapon) const {
+  if (dynamic_cast<const TGun*>(weapon) || isAffected(AFF_ENGAGER))
+    return 0.0;
+
+  spellNumT wtype = getAttackType(weapon, HAND_PRIMARY);
+  if (v->isImmune(getTypeImmunity(wtype), WEAR_BODY))
+    return 0.0;
+
+  // getCritChance() returns critSuccessChance's units where 1000 == 1%.
+  return max(0.0, getCritChance() / 1000.0);
 }
 
 static void checkLearnFromHit(TBeing* ch, int tarLevel, TThing* o,
@@ -3086,6 +3203,190 @@ int TBeing::specAttackMod(const TBeing* target) const {
   return mod;
 }
 
+// The offense/defense stats a skill rolls with. Most use FOC/KAR vs AGI/PER;
+// the overrides here mirror what each skill's call site historically passed to
+// the eight-argument specialAttack overload.
+TBeing::SpecialAttackStats TBeing::specialAttackStats(spellNumT skill) {
+  switch (skill) {
+    case SKILL_STABBING:
+      return {STAT_DEX, STAT_SPE, STAT_AGI, STAT_PER};
+    case SKILL_GRAPPLE:
+      return {STAT_STR, STAT_DEX, STAT_BRA, STAT_AGI};
+    case SKILL_SUBTERFUGE:
+      return {STAT_CHA, STAT_INT, STAT_PER, STAT_WIS};
+    default:
+      return {STAT_FOC, STAT_KAR, STAT_AGI, STAT_PER};
+  }
+}
+
+// Bash's circumstantial modifier: advanced-discipline mastery plus an
+// attacker/victim weight differential, each converted into "levels" of
+// advantage. Deliberately over-provisioned so a competent basher reliably hits
+// the situational cap even when other bonuses are absent -- see the clamp in
+// specialAttack(). Extracted verbatim from the old inline cmd_bash.cc block so
+// the live attack and the `consider` readout share one source.
+int TBeing::bashSituationalModifier(TBeing* victim) {
+  int advLearnedness = getAdvLearning(getSkillNum(SKILL_BASH));
+  TBaseWeapon* weaponInPrimaryHand =
+    dynamic_cast<TBaseWeapon*>(heldInPrimHand());
+  TBaseClothing* itemInSecondaryHand =
+    dynamic_cast<TBaseClothing*>(heldInSecHand());
+  bool isWielding2Hander =
+    weaponInPrimaryHand && weaponInPrimaryHand->isPaired();
+  bool isHoldingShield = itemInSecondaryHand && itemInSecondaryHand->isShield();
+
+  // Per combat.cc balance notes, 16.667 points of mod is equivalent to one
+  // level's worth of advantage/disadvantage.
+  const float ONE_LEVEL = 16.667;
+  float modifier = 0.0;
+
+  // Maxed advanced disc lets one bash as if they were 10 levels higher. Bonus
+  // increases linearly with advanced disc learnedness.
+  modifier += ONE_LEVEL * ((float)advLearnedness / 10.0);
+
+  // Attacker with advanced disc using shield to bash can get another bonus of
+  // up to +5 levels to distinguish shield bashing from weapon/shoulder bashing
+  // and also makes bash more of a tank-centric ability.
+  modifier += ONE_LEVEL * ((float)advLearnedness / 20.0);
+
+  float attackerWeight = getWeight();
+  float victimWeight = victim->getWeight();
+
+  // Include attacker's shield or two-handed weapon in weight calculation
+  if (isHoldingShield)
+    attackerWeight += itemInSecondaryHand->getWeight();
+  else if (isWielding2Hander)
+    attackerWeight += weaponInPrimaryHand->getWeight();
+
+  // Each 20% weight difference between attacker and victim modifies chance by
+  // one level's worth, up to max of +/- 10 levels.
+  if (attackerWeight > victimWeight)
+    modifier +=
+      ONE_LEVEL * min(10.0, ((attackerWeight - victimWeight) / victimWeight) *
+                              100.0 / 20.0);
+  else if (victimWeight > attackerWeight)
+    modifier -=
+      ONE_LEVEL * min(10.0, ((victimWeight - attackerWeight) / attackerWeight) *
+                              100.0 / 20.0);
+
+  return static_cast<int>(modifier);
+}
+
+// A noisy-geared thief is heard when the victim is awake to hear it.
+bool TBeing::canHearThief(TBeing* victim) {
+  return makesNoise() && victim->awake();
+}
+
+// A suspicious mob that can see the thief catches the approach at the last
+// moment. Players don't get this reflexive detection.
+bool TBeing::spottedBySuspiciousMob(TBeing* victim) {
+  return victim->awake() && victim->canSee(this) && !victim->isPc() &&
+         dynamic_cast<TMonster*>(victim)->isSusp();
+}
+
+// The per-skill situational modifier passed to specialAttack. Most skills add
+// nothing; the ones that do compute it from the attacker/victim matchup.
+int TBeing::skillSituationalModifier(TBeing* victim, spellNumT skill) {
+  switch (skill) {
+    // getSkillNum(SKILL_BASH) yields the deikhan variant for that class.
+    case SKILL_BASH:
+    case SKILL_BASH_DEIKHAN:
+      return bashSituationalModifier(victim);
+    // Backstab and throatslit share the same stealth-approach math: quieter and
+    // less visible is better, minus penalties when the victim hears or spots
+    // you. The matching warning messages live at each skill's call site.
+    case SKILL_BACKSTAB:
+    case SKILL_THROATSLIT: {
+      int mod = -(noise(this) / 20) + visibility() / 15;
+      if (canHearThief(victim))
+        mod -= 10;
+      if (spottedBySuspiciousMob(victim))
+        mod -= 10;
+      return mod;
+    }
+    case SKILL_SUBTERFUGE: {
+      // A dull-witted victim is easier to fool; a charismatic con artist sells
+      // it better.
+      int mod = 0;
+      if (!victim->isWise())
+        mod -= 10;
+      if (!victim->isIntelligent())
+        mod -= 10;
+      if (isCharismatic())
+        mod += 10;
+      return mod;
+    }
+    default:
+      return 0;
+  }
+}
+
+// Deterministic mirror of specialAttack's landing probability: the percentage
+// of d100 rolls that resolve to a hit (COMPLETE_SUCCESS or better), using the
+// same modifier, clamp, level, and stat math the live roll runs -- but without
+// rolling or any side effects. For the `consider` readout. Must be kept in
+// lockstep with the roll logic in specialAttack() below. Models skulk's
+// post-clamp bonus while that affect is active (a consumed one-shot: the shown
+// odds hold for the next strike only), but not the stealth/surprise wary
+// penalty, so it is only offered for non-surprise specialAttack skills.
+int TBeing::specialAttackChance(TBeing* victim, spellNumT skill) {
+  int mod = skillSituationalModifier(victim, skill) + specAttackMod(victim);
+
+  if (mod < SITUATIONAL_MOD_LOWER_BOUND)
+    mod = SITUATIONAL_MOD_LOWER_BOUND;
+  else if (mod > SITUATIONAL_MOD_UPPER_BOUND)
+    mod = SITUATIONAL_MOD_UPPER_BOUND;
+
+  // Skulk is a prepared one-shot added past the clamp, so it lifts the odds
+  // above the situational cap for exactly the next strike. Mirror the live
+  // post-clamp add so a skulking attacker's readout matches the real roll.
+  if (affectedBySpell(SKILL_SKULK))
+    mod += 3 + std::min(4, getSkillValue(SKILL_SKULK) / 25);
+
+  // Level difference is applied after the clamp, matching specialAttack.
+  int attackerLevel = GetMaxLevel(), defenderLevel = victim->GetMaxLevel();
+  mod += (attackerLevel > defenderLevel && isPc())
+           ? (attackerLevel - defenderLevel)
+           : ((attackerLevel - defenderLevel) / 5);
+
+  SpecialAttackStats s = specialAttackStats(skill);
+  double statRatio = getStatMod(s.off1) *
+                     plotStat(STAT_CURRENT, s.off2, 0.92, 1.08, 1.0) /
+                     victim->getStatMod(s.def1) /
+                     victim->plotStat(STAT_CURRENT, s.def2, 0.92, 1.08, 1.0);
+
+  // roll' = (roll - mod) * statRatio; the attack lands when roll' <
+  // SUCCESS_THRESHOLD (guaranteed-success rolls are a subset). Count the d100
+  // outcomes that land -- the count is the percentage.
+  int hits = 0;
+  for (int roll = 1; roll <= 100; roll++) {
+    if ((roll - mod) * statRatio < SUCCESS_THRESHOLD)
+      hits++;
+  }
+  return hits;
+}
+
+// Skill-agnostic sibling of specialAttackChance: the same d100 count reduced to
+// its level-gap term only -- no situational modifier, and a stat ratio fixed at
+// 1.0. Models the "bonus vs lower-level foes" asymmetry the live roll applies (a
+// PC gains a full point per level it out-levels the target, but loses only a
+// fifth of a point per level under). A coarse "does my level let me land
+// specials here" gauge for basic `consider`. Keep the level-diff formula in
+// lockstep with specialAttack() below.
+int TBeing::genericSpecialAttackChance(TBeing* victim) {
+  int attackerLevel = GetMaxLevel(), defenderLevel = victim->GetMaxLevel();
+  int mod = (attackerLevel > defenderLevel && isPc())
+              ? (attackerLevel - defenderLevel)
+              : ((attackerLevel - defenderLevel) / 5);
+
+  int hits = 0;
+  for (int roll = 1; roll <= 100; roll++) {
+    if (roll - mod < SUCCESS_THRESHOLD)
+      hits++;
+  }
+  return hits;
+}
+
 // specialAttack() is used for combat specials like kick, bash, grapple, etc.
 int TBeing::specialAttack(TBeing* target, spellNumT skill) {
   int rc = specialAttack(target, skill, 0);
@@ -3101,14 +3402,16 @@ int TBeing::specialAttack(TBeing* target, spellNumT skill) {
 */
 int TBeing::specialAttack(TBeing* target, spellNumT skill,
   int situationalModifier) {
-  return specialAttack(target, skill, situationalModifier, STAT_FOC, STAT_KAR,
-    STAT_AGI, STAT_PER, false);
+  auto s = specialAttackStats(skill);
+  return specialAttack(target, skill, situationalModifier, s.off1, s.off2,
+    s.def1, s.def2, false);
 }
 
 int TBeing::specialAttack(TBeing* target, spellNumT skill,
   int situationalModifier, bool partialSuccessAllowed) {
-  return specialAttack(target, skill, situationalModifier, STAT_FOC, STAT_KAR,
-    STAT_AGI, STAT_PER, partialSuccessAllowed);
+  auto s = specialAttackStats(skill);
+  return specialAttack(target, skill, situationalModifier, s.off1, s.off2,
+    s.def1, s.def2, partialSuccessAllowed);
 }
 
 int TBeing::specialAttack(TBeing* target, spellNumT skill,
@@ -3259,6 +3562,15 @@ int TBeing::hits(TBeing* v, int mod) {
     return TRUE;
   else
     return FALSE;
+}
+
+// Per-swing chance to land a normal melee hit on target, as a percent.
+// Mirrors the factor math in hits(): the 5% guaranteed hit/miss zones clamp
+// the result to 5-95 regardless of how lopsided the modifiers are.
+int TBeing::meleeHitChance(const TBeing* target) const {
+  int mod = attackRound(target) - target->defendRound(this);
+  int factor = min(max(600 + 9 * mod / 5, 50), 950);
+  return factor / 10;
 }
 
 // returns DELETE_THIS
@@ -3632,14 +3944,10 @@ const char* describe_dam(int dam, int dam_capacity, spellNumT wtype) {
   return "pathetically";
 }
 
-static int REALNUM(TBeing* ch, wearSlotT part_hit) {
-  return (
-    isVitalPart(part_hit) ? ch->getHit() + 11 : ch->getCurLimbHealth(part_hit));
-}
-
 void TBeing::normalHitMessage(TBeing* v, TThing* weapon, spellNumT w_type,
-  int dam, wearSlotT part_hit) {
-  char buf[512];
+  int dam, wearSlotT part_hit, int hpCapacity) {
+  // Color the damage number by the pool it hit: red for HP, cyan for limb.
+  const char* dmgColor = isVitalPart(part_hit) ? "<r>" : "<c>";
   TThing* t = NULL;
   TBeing* other;
 
@@ -3681,19 +3989,16 @@ void TBeing::normalHitMessage(TBeing* v, TThing* weapon, spellNumT w_type,
     if (dam || !(other->desc->autobits & AUTO_NOSPAM)) {
       strcpy(namebuf, other->pers(this));
       strcpy(victbuf, other->pers(v));
-      strcpy(buf, sstring(namebuf).cap().c_str());
-      sprintf(buf + strlen(buf), " %s ", attack_hit_text[w_type].plural);
-      sprintf(buf + strlen(buf), "%s's ", victbuf);
-      sprintf(buf + strlen(buf), "%s ", v->describeBodySlot(part_hit).c_str());
-      sprintf(buf + strlen(buf), "%s",
-        describe_dam(dam, REALNUM(v, part_hit), w_type));
-      sprintf(buf + strlen(buf), "%s", (weapon) ? " with " : "");
-      sprintf(buf + strlen(buf), "%s", (weapon) ? hshr() : "");
-      sprintf(buf + strlen(buf), "%s", (weapon) ? " " : "");
-      sprintf(buf + strlen(buf), "%s.\n\r",
-        weapon ? other->objn(weapon).c_str() : "");
+      sstring weaponPart =
+        weapon ? sstring(format(" with %s %s") % hshr() % other->objn(weapon))
+               : sstring("");
+      sstring msg = format("%s %s %s's %s %s%s (%s%d<1>).\n\r") %
+                    sstring(namebuf).cap() % attack_hit_text[w_type].plural %
+                    victbuf % v->describeBodySlot(part_hit) %
+                    describe_dam(dam, hpCapacity, w_type) % weaponPart %
+                    dmgColor % dam;
 
-      other->sendTo(COLOR_MOBS, buf);
+      other->sendTo(COLOR_MOBS, msg);
       if (snd != MIN_SOUND_NUM)
         other->playsound(snd, SOUND_TYPE_COMBAT, 100, 20, 1);
     }
@@ -3706,13 +4011,14 @@ void TBeing::normalHitMessage(TBeing* v, TThing* weapon, spellNumT w_type,
     else
       strcpy(colorBuf, green());
 
-    sprintf(buf, "You %s%s%s $N's %s%s%s %s%s%s.", colorBuf,
-      attack_hit_text[w_type].singular, norm(), colorBuf,
-      v->describeBodySlot(part_hit).c_str(), norm(),
-      describe_dam(dam, REALNUM(v, part_hit), w_type),
-      (weapon) ? " with your " : "", (weapon) ? objn(weapon).c_str() : "");
+    sstring msg = format("You %s%s%s $N's %s%s%s %s%s%s (%s%d<1>).") %
+                  colorBuf % attack_hit_text[w_type].singular % norm() %
+                  colorBuf % v->describeBodySlot(part_hit) % norm() %
+                  describe_dam(dam, hpCapacity, w_type) %
+                  (weapon ? " with your " : "") %
+                  (weapon ? objn(weapon) : sstring("")) % dmgColor % dam;
 
-    act(buf, FALSE, this, 0, v, TO_CHAR);
+    act(msg, false, this, 0, v, TO_CHAR);
     if (snd != MIN_SOUND_NUM)
       playsound(snd, SOUND_TYPE_COMBAT, 100, 20, 1);
   }
@@ -3723,13 +4029,13 @@ void TBeing::normalHitMessage(TBeing* v, TThing* weapon, spellNumT w_type,
     else
       strcpy(colorBuf, v->red());
 
-    sprintf(buf, "$n %s%s%s your %s%s%s %s%s%s.", colorBuf,
-      attack_hit_text[w_type].plural, v->norm(), colorBuf,
-      v->describeBodySlot(part_hit).c_str(), v->norm(),
-      describe_dam(dam, REALNUM(v, part_hit), w_type),
-      ((weapon) ? " with $s " : ""),
-      ((weapon) ? fname(weapon->name).c_str() : ""));
-    act(buf, FALSE, this, 0, v, TO_VICT);
+    sstring msg = format("$n %s%s%s your %s%s%s %s%s%s (%s%d<1>).") % colorBuf %
+                  attack_hit_text[w_type].plural % v->norm() % colorBuf %
+                  v->describeBodySlot(part_hit) % v->norm() %
+                  describe_dam(dam, hpCapacity, w_type) %
+                  (weapon ? " with $s " : "") %
+                  (weapon ? fname(weapon->name) : sstring("")) % dmgColor % dam;
+    act(msg, false, this, 0, v, TO_VICT);
     if (snd != MIN_SOUND_NUM)
       v->playsound(snd, SOUND_TYPE_COMBAT, 100, 20, 1);
   }
@@ -4366,7 +4672,14 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
     }
     breakStealth();
 
+    // The hit message is emitted after damage is applied (below) so it can
+    // report the HP actually drained. Decide what to show here; emit later.
+    bool showHitMsg = false;
+    TThing* hitMsgWeapon = weapon;
+    spellNumT hitMsgWtype = w_type;
+
     if (mess_sent == 0) {
+      showHitMsg = true;
       if (doesKnowSkill(SKILL_ADVANCED_KICKING) && !weapon && isPc()) {
         // switch some "hits" to "kicks"
         // this is strictly textual and doesn't impact damage at all
@@ -4376,12 +4689,9 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
         iskick += 1.25;
         iskick *= (isprimary ? 0.6 : 0.4);
 
-        if (*f <= iskick)
-          normalHitMessage(vict, NULL, TYPE_KICK, dam, part_hit);
-        else
-          normalHitMessage(vict, NULL, w_type, dam, part_hit);
-      } else
-        normalHitMessage(vict, weapon, w_type, dam, part_hit);
+        hitMsgWeapon = nullptr;
+        hitMsgWtype = (*f <= iskick) ? TYPE_KICK : w_type;
+      }
 
       if (doesKnowSkill(SKILL_CHAIN_ATTACK) && (::number(0, 99) < 10) &&
           getMana() >= 5 && bSuccess(SKILL_CHAIN_ATTACK)) {
@@ -4534,11 +4844,33 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
 
     }  // end check for SENT_MESS
 
+    // Measure the damage this hit actually dealt, after all reductions, so the
+    // message can report the real number. A vital hit drains the HP pool; a
+    // limb hit mostly drains the (tiny, easily-overkilled) limb pool, so we add
+    // the uncapped limb-portion damage reported by damageLimb to the HP drain.
+    const int hpBefore = vict->getHit();
+    const int limbCapBefore = vict->getCurLimbHealth(part_hit);
+    int limbDealt = 0;
+    auto emitHitMsg = [&]() {
+      if (!showHitMsg)
+        return;
+      // One number, colored by the pool it hit: HP damage (red) for vital
+      // hits, limb damage (cyan) for limb hits. Judge severity against that
+      // same pool.
+      const int dealt =
+        isVitalPart(part_hit) ? (hpBefore - vict->getHit()) : limbDealt;
+      const int capacity =
+        isVitalPart(part_hit) ? hpBefore + 11 : limbCapBefore;
+      normalHitMessage(vict, hitMsgWeapon, hitMsgWtype, dealt, part_hit,
+        capacity);
+    };
+
     if (vict->equipment[part_hit])
       vict->damageItem(this, part_hit, w_type, weapon, dam);
 
-    damaged_limb = damageLimb(vict, part_hit, weapon, &dam, w_type);
+    damaged_limb = damageLimb(vict, part_hit, weapon, &dam, w_type, &limbDealt);
     if (IS_SET_DELETE(damaged_limb, DELETE_VICT)) {
+      emitHitMsg();
       critKillCheck(this, vict, mess_sent);
       return retCode | DELETE_VICT;
     }
@@ -4552,12 +4884,14 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
     if (!damaged_limb) {
       rc = applyDamage(vict, dam, w_type);
       if (IS_SET_DELETE(rc, DELETE_VICT)) {
+        emitHitMsg();
         critKillCheck(this, vict, mess_sent);
         combatFatigue(weapon);
         updatePos();
         return (retCode | DELETE_VICT);
       }
     }
+    emitHitMsg();
   }
 
   combatFatigue(weapon);
@@ -4603,7 +4937,8 @@ int TBeing::preProcDam(TBeing* vict, spellNumT type, int dam) {
 
 // Handles the reduction of weapon damage due to weapon-related resists. Only
 // affects attacks that are resisted by slash, blunt, or pierce immunity.
-int TBeing::weaponCheck(TBeing* vict, TThing* o, spellNumT type, int dam) {
+int TBeing::weaponCheck(const TBeing* vict, const TThing* o, spellNumT type,
+  int dam) const {
   immuneTypeT attackResistType = getTypeImmunity(type);
 
   // Check immunity type of incoming attack. If it deals slash, blunt, or pierce
@@ -4624,7 +4959,7 @@ int TBeing::weaponCheck(TBeing* vict, TThing* o, spellNumT type, int dam) {
   };
 
   int magicLevel = 0;
-  auto* tobj = dynamic_cast<TObj*>(o);
+  const auto* tobj = dynamic_cast<const TObj*>(o);
 
   if (tobj) {
     magicLevel = min(tobj->itemHitroll(), 3);

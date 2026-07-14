@@ -177,6 +177,7 @@ class TMonster : public TBeing {
     void setDamLevel(float);
     unsigned short getDamPrecision() const;
     void setDamPrecision(unsigned short);
+    std::pair<int, int> getMobDamageRange() const;
     int getMobDamage() const;
 
     int aiSocialSwitch(TBeing*, TBeing*, cmdTypeT, aiTarg);

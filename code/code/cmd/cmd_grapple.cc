@@ -71,8 +71,7 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
 
   if ((c->bSuccess(bKnown + percent, skill) &&
         // insure they can hit this critter
-        (i = c->specialAttack(victim, skill, 0, STAT_STR, STAT_DEX, STAT_BRA,
-           STAT_AGI, false)) &&
+        (i = c->specialAttack(victim, skill, 0, false)) &&
         i != GUARANTEED_FAILURE &&
         // make sure they have reasonable training
         (percent < bKnown)) ||
