@@ -1930,50 +1930,29 @@ int TBeing::extraDam(const TBeing* vict, const TBaseWeapon* weap) const {
   return plus;
 }
 
-static int getMonkWeaponDam(const TBeing* ch, const TBeing* v,
-  primaryTypeT isprimary, int rollDam) {
-  int wepDam;
+// KUBO barehand base damage range, before stat/rollDam scaling.
+// getMonkWeaponDam rolls uniformly within this; damage estimates bracket with
+// the endpoints.
+std::pair<int, int> TBeing::monkBareHandDamRange() const {
+  // treat KUBO learnedness as an effective level, then convert to damage
+  double value = 3.0 * double(getSkillValue(SKILL_KUBO)) / 10.0;
+  value = min(max(value, 0.0), 50.0);
+  float weapDam = (6.0 * sqrt(value) / 2.0);
+  weapDam *= balanceCorrectionForLevel(GetMaxLevel());
 
-  if (!ch->doesKnowSkill(SKILL_KUBO))
-    wepDam = ::number(1, 2);
-  else {
-    // somewhat a clumsy way to do this, but realize that player could be
-    // partially learned in KUBO but have some learning in the advanced spec.
-    double value = 3.0 * double(ch->getSkillValue(SKILL_KUBO)) / 10.0;
+  int center = (int)weapDam;
+  int flux = center / 10;
 
-    // enforce range
-    value = min(max(value, 0.0), 50.0);
+  // force an equivalence to ::number(1,2) for low damages
+  int lo = (flux < 1) ? max(1, center - 1) : center - flux;
+  int hi = (flux < 1) ? center + 1 : center + flux;
+  return {max(1, lo), max(1, hi)};
+}
 
-    // essentially, we can treat "value" as being effectively equivalent to
-    // level at this point.  Realize it is made up by looking at how learned
-    // they are in skills rather than simply doing a GetMaxLevel though.
-
-    // convert level to dam
-    float weapDam = (6.0 * sqrt(value) / 2.0);
-
-    // make balance adjustment
-    weapDam *= balanceCorrectionForLevel(ch->GetMaxLevel());
-    wepDam = (int)weapDam;
-
-    // small randomization around value
-    int flux = wepDam / 10;
-
-    // force an equivalence to ::number(1,2) for low damages
-    if (flux < 1)
-      wepDam = ::number(max(1, wepDam - 1), wepDam + 1);
-    else
-      wepDam = ::number(wepDam - flux, wepDam + flux);
-
-    wepDam = max(1, wepDam);
-  }
-
-  // OK, so if they are incap'd, make the kill go quickly...
-  if (v->getPosition() <= POSITION_INCAP)
-    wepDam += max((3 * wepDam / 10), 1);
-
-  if (v->getPosition() <= POSITION_DEAD)
-    return (0);
-
+// Stat/rounding/global scaling half of KUBO barehand damage, split out so
+// estimates can reuse the exact math with a forced rounding direction.
+static int scaleMonkWeaponDam(const TBeing* ch, int wepDam, int rollDam,
+  damRoundT round) {
   // account for stats
   float statDam = ch->getStrDamModifier();
 
@@ -1991,8 +1970,17 @@ static int getMonkWeaponDam(const TBeing* ch, const TBeing* v,
   int dam = (int)(wepDam * statDam);
 
   float tmp = ((wepDam * statDam) - dam) * 100;
-  if (tmp > ::number(0, 99)) {
-    dam++;
+  switch (round) {
+    case DAM_ROUND_STOCHASTIC:
+      if (tmp > ::number(0, 99))
+        dam++;
+      break;
+    case DAM_ROUND_UP:
+      if (tmp > 0)
+        dam++;
+      break;
+    case DAM_ROUND_DOWN:
+      break;
   }
 
   // add bonuses
@@ -2001,12 +1989,34 @@ static int getMonkWeaponDam(const TBeing* ch, const TBeing* v,
   // adjust for global values
   dam = (int)(dam * stats.barehand_damage_mod);
 
+  return dam;
+}
+
+static int getMonkWeaponDam(const TBeing* ch, const TBeing* v,
+  primaryTypeT isprimary, int rollDam) {
+  int wepDam;
+
+  if (!ch->doesKnowSkill(SKILL_KUBO))
+    wepDam = ::number(1, 2);
+  else {
+    auto [lo, hi] = ch->monkBareHandDamRange();
+    wepDam = ::number(lo, hi);
+  }
+
+  // OK, so if they are incap'd, make the kill go quickly...
+  if (v->getPosition() <= POSITION_INCAP)
+    wepDam += max((3 * wepDam / 10), 1);
+
+  if (v->getPosition() <= POSITION_DEAD)
+    return (0);
+
+  int dam = scaleMonkWeaponDam(ch, wepDam, rollDam, DAM_ROUND_STOCHASTIC);
+
 #if DAMAGE_DEBUG
   vlogf(LOG_COMBAT,
-    format(
-      "MONK %s (%d %s) barehand dam = %d , wep = %d roll = %d, stats = %.2f") %
+    format("MONK %s (%d %s) barehand dam = %d , wep = %d roll = %d") %
       ch->getName() % ch->GetMaxLevel() % ch->getProfName() % dam % wepDam %
-      rollDam % statDam);
+      rollDam);
 #endif
 
   return (dam);
@@ -2033,21 +2043,11 @@ static int getMonkWeaponDam(const TBeing* ch, const TBeing* v,
 // 2h (unlearned) = 110% dam
 // 2h maxed spec = 165% dam
 //
-int TBeing::getWeaponDam(const TBeing* v, const TThing* wielded,
-  primaryTypeT isprimary) const {
-  int bonusDam = 0;
-  int rollDam = 0;
-  int wepLearn = 0;
-  float tempDam = 0.0;
-  float statDam = 0.0;
-  int dam = 0;
-  spellNumT skill = SKILL_BAREHAND_PROF;
-  char buf[MAX_NAME_LENGTH];
+// Damroll for one hand, less the off-hand weapon's damroll when dual-wielding
+// unpaired weapons (so each hand only counts its own contribution).
+int TBeing::weaponRollDam(primaryTypeT isprimary) const {
+  int rollDam = getDamroll();
 
-  rollDam += getDamroll();
-  strcpy(buf, "Barehand");
-
-  // strip off affects of dual wields
   if (isprimary) {
     TObj* obj = dynamic_cast<TObj*>(heldInSecHand());
     if (obj && !obj->isPaired())
@@ -2057,6 +2057,13 @@ int TBeing::getWeaponDam(const TBeing* v, const TThing* wielded,
     if (obj && !obj->isPaired())
       rollDam -= obj->itemDamroll();
   }
+
+  return rollDam;
+}
+
+int TBeing::getWeaponDam(const TBeing* v, const TThing* wielded,
+  primaryTypeT isprimary) const {
+  int rollDam = weaponRollDam(isprimary);
 
   int wepDam = 0;
   const TMonster* tmon = dynamic_cast<const TMonster*>(this);
@@ -2099,21 +2106,32 @@ int TBeing::getWeaponDam(const TBeing* v, const TThing* wielded,
   if (v->getPosition() <= POSITION_DEAD)
     return (0);
 
+  return scaleWeaponDam(wielded, isprimary, wepDam, rollDam,
+    DAM_ROUND_STOCHASTIC);
+}
+
+// The deterministic scaling half of getWeaponDam, split out so damage
+// estimates (see meleeDamageRange) can reuse the exact live-combat math.
+// Only the fractional-rounding step is non-deterministic; `round` selects it:
+// STOCHASTIC reproduces real combat, DOWN/UP give the true min/max for a range.
+int TBeing::scaleWeaponDam(const TThing* wielded, primaryTypeT isprimary,
+  int wepDam, int rollDam, damRoundT round) const {
+  int bonusDam = 0;
+  int wepLearn = 0;
+  float tempDam = 0.0;
+  float statDam = 0.0;
+  int dam = 0;
+  spellNumT skill = SKILL_BAREHAND_PROF;
+
   if (!dynamic_cast<const TMonster*>(this) || (polyed == POLY_TYPE_DISGUISE)) {
     if (!wielded) {
       skill = SKILL_BAREHAND_PROF;
-      // skill2 = SKILL_BAREHAND_SPEC;
-      strcpy(buf, "Barehand");
       statDam = getStrDamModifier();
     } else if (wielded->isBluntWeapon()) {
       skill = SKILL_BLUNT_PROF;
-      // skill2 = SKILL_BLUNT_SPEC;
-      strcpy(buf, "Blunt");
       statDam = getStrDamModifier();
     } else if (wielded->isPierceWeapon()) {
       skill = SKILL_PIERCE_PROF;
-      // skill2 = SKILL_PIERCE_SPEC;
-      strcpy(buf, "Pierce");
       statDam = getStrDamModifier();
 
       // pierce weapons only get 1/3 of the strength modifier
@@ -2122,8 +2140,6 @@ int TBeing::getWeaponDam(const TBeing* v, const TThing* wielded,
       statDam += 1;
     } else if (wielded->isSlashWeapon()) {
       skill = SKILL_SLASH_PROF;
-      // skill2 = SKILL_SLASH_SPEC;
-      strcpy(buf, "Slash");
       statDam = getStrDamModifier();
 
       // slash weapons only get 1/2 of the strength modifier
@@ -2157,18 +2173,20 @@ int TBeing::getWeaponDam(const TBeing* v, const TThing* wielded,
     weapDam *= min(wepLearn, 4 * GetMaxLevel());
     weapDam /= 100;
 
-#if 0
-// Whoa, don't make specialize do more dam, it adds attacks so would
-// double count...
-    // take specialize into account
-    // weapDam is about 25, want to add about 10 for L25 to L35
-    weapDam += .004 * max((byte) 0, getSkillValue(skill2)) * weapDam;
-#endif
-
     dam = (int)weapDam;
     tempDam = weapDam - dam;
-    if (::number(0, 100) < (tempDam * 100))
-      dam += 1;
+    switch (round) {
+      case DAM_ROUND_STOCHASTIC:
+        if (::number(0, 100) < (tempDam * 100))
+          dam += 1;
+        break;
+      case DAM_ROUND_UP:
+        if (tempDam > 0)
+          dam += 1;
+        break;
+      case DAM_ROUND_DOWN:
+        break;
+    }
 
     // c.f. BALANCE NOTES for discussion of why this is done
     // basically, we don't want dual-wielding to be on par with single-wielding

@@ -330,7 +330,8 @@ class equipmentData {
 
     // Finds the total sum for objAffect.modifier1 and objAffect.modifier2
     // amongst all worn equipment for the given applyTypeT
-    std::pair<int64_t, int64_t> sumAffectsByApplyType(applyTypeT affectType) {
+    std::pair<int64_t, int64_t> sumAffectsByApplyType(
+      applyTypeT affectType) const {
       int64_t mod1 = 0;
       int64_t mod2 = 0;
 
@@ -357,6 +358,15 @@ class equipmentData {
     equipmentData(const equipmentData& a);
     equipmentData& operator=(const equipmentData& a);
     ~equipmentData();
+};
+
+// Selects which point of a skill's damage spread getSkillDam returns. Random
+// (the default) rolls live; Min/Max return the deterministic endpoints so
+// skillDamageRange can bracket the spread without side effects.
+enum class SkillDamRoll {
+  Random,
+  Min,
+  Max
 };
 
 class TBeing : public TThing {
@@ -571,7 +581,8 @@ class TBeing : public TThing {
     int getAdvLearning(spellNumT) const;
     int getAdvDoLearning(spellNumT) const;
     spellNumT getSkillNum(spellNumT) const;
-    int getSkillDam(const TBeing*, spellNumT, int, int) const;
+    int getSkillDam(const TBeing*, spellNumT, int, int,
+      SkillDamRoll = SkillDamRoll::Random) const;
     void assignCorpsesToRooms();
     void initSkillsBasedOnDiscLearning(discNumT);
     void addAffects(const TObj*);
@@ -1464,6 +1475,12 @@ class TBeing : public TThing {
     int numValidSlots();
     int checkShield(TBeing*, TThing*, wearSlotT, spellNumT, int);
     int getWeaponDam(const TBeing*, const TThing*, primaryTypeT) const;
+    int weaponRollDam(primaryTypeT isprimary) const;
+    std::pair<int, int> monkBareHandDamRange() const;
+    int scaleWeaponDam(const TThing* wielded, primaryTypeT isprimary,
+      int wepDam, int rollDam, damRoundT round) const;
+    // Accumulated crit chance (critSuccessChance units, 1000 == 1%).
+    double getCritChance() const;
     virtual float getStrDamModifier() const;
     virtual float getWisDamModifier() const;
     int getDexReaction() const;
